@@ -1,0 +1,224 @@
+theme = "powerline-light"
+
+[style]
+mode = "nerd_font"
+separator = ""
+
+[[segments]]
+id = "model"
+enabled = true
+
+[segments.icon]
+plain = "🤖"
+nerd_font = ""
+
+[segments.colors.icon]
+r = 0
+g = 0
+b = 0
+
+[segments.colors.text]
+r = 0
+g = 0
+b = 0
+
+[segments.colors.background]
+r = 135
+g = 206
+b = 235
+
+[segments.styles]
+text_bold = false
+
+[segments.options]
+
+[[segments]]
+id = "directory"
+enabled = true
+
+[segments.icon]
+plain = "📁"
+nerd_font = "󰉋"
+
+[segments.colors.icon]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.text]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.background]
+r = 255
+g = 107
+b = 71
+
+[segments.styles]
+text_bold = false
+
+[segments.options]
+
+[[segments]]
+id = "git"
+enabled = true
+
+[segments.icon]
+plain = "🌿"
+nerd_font = "󰊢"
+
+[segments.colors.icon]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.text]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.background]
+r = 79
+g = 179
+b = 217
+
+[segments.styles]
+text_bold = false
+
+[segments.options]
+show_sha = false
+
+[[segments]]
+id = "context_window"
+enabled = true
+
+[segments.icon]
+plain = "⚡️"
+nerd_font = ""
+
+[segments.colors.icon]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.text]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.background]
+r = 107
+g = 114
+b = 128
+
+[segments.styles]
+text_bold = false
+
+[segments.options]
+
+[[segments]]
+id = "usage"
+enabled = false
+
+[segments.icon]
+plain = "📊"
+nerd_font = "󰪞"
+
+[segments.colors.icon]
+c16 = 14
+
+[segments.colors.text]
+c16 = 14
+
+[segments.styles]
+text_bold = false
+
+[segments.options]
+api_base_url = "https://api.anthropic.com"
+cache_duration = 180
+timeout = 2
+
+[[segments]]
+id = "cost"
+enabled = false
+
+[segments.icon]
+plain = "💰"
+nerd_font = ""
+
+[segments.colors.icon]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.text]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.background]
+r = 255
+g = 193
+b = 7
+
+[segments.styles]
+text_bold = false
+
+[segments.options]
+
+[[segments]]
+id = "session"
+enabled = false
+
+[segments.icon]
+plain = "⏱️"
+nerd_font = "󱦻"
+
+[segments.colors.icon]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.text]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.background]
+r = 40
+g = 167
+b = 69
+
+[segments.styles]
+text_bold = false
+
+[segments.options]
+
+[[segments]]
+id = "output_style"
+enabled = false
+
+[segments.icon]
+plain = "🎯"
+nerd_font = "󱋵"
+
+[segments.colors.icon]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.text]
+r = 255
+g = 255
+b = 255
+
+[segments.colors.background]
+r = 32
+g = 201
+b = 151
+
+[segments.styles]
+text_bold = false
+
+[segments.options]

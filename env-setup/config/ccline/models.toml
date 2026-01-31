@@ -1,0 +1,15 @@
+# CCometixLine Model Configuration
+# This file defines model display names and context limits for different LLM models
+# File location: ~/.claude/ccline/models.toml
+
+models = []
+
+# Model configurations
+# Each [[models]] section defines a model pattern and its properties
+# Order matters: first match wins, so put more specific patterns first
+
+# Example of how to add new models:
+# [[models]]
+# pattern = "glm-4.5"
+# display_name = "GLM-4.5"
+# context_limit = 128000
