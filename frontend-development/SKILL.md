@@ -500,6 +500,50 @@ VITE_API_URL=https://api.production.com
 VITE_APP_NAME=My App
 ```
 
+
+
+### Windows下Vite进程管理（重要！）
+
+**问题**：Windows环境下Vite开发服务器退出时，chokidar文件监听器可能不会正确清理，导致僵尸进程占用端口。
+
+**解决方案**：
+
+1. **优化vite.config.js配置**
+```javascript
+export default defineConfig({
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    strictPort: false,
+    watch: { usePolling: false, interval: 1000 }
+  },
+  optimizeDeps: { exclude: ['@vueup/vue-quill'] }
+})
+```
+
+2. **创建清理脚本 stop-dev.bat**
+```batch
+@echo off
+echo Killing Vite processes...
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr :5173 2^>nul ^| findstr LISTENING') do (
+  taskkill /F /PID %%a 2>nul
+)
+echo Done!
+```
+
+3. **创建智能启动脚本 dev.bat**
+```batch
+@echo off
+echo Starting Vite dev server...
+cmd /c npm run dev
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr :5173 2^>nul ^| findstr LISTENING') do (
+  taskkill /F /PID %%a 2>nul
+)
+echo Vite stopped
+```
+
+**使用方法**：使用`dev.bat`启动，`stop-dev.bat`清理，避免后台运行。
+
 ## 注意事项
 - 遵循团队代码规范
 - 编写清晰的注释和文档
@@ -508,3 +552,97 @@ VITE_APP_NAME=My App
 - 优化首屏加载时间
 - 实现错误边界和降级方案
 - 使用 TypeScript 提高代码质量
+
+---
+
+## ⚠️ 文档同步规范（非常重要！）
+
+前端开发完成后，**必须同步更新相关文档**，保持代码与文档一致！
+
+### 必须维护的文档
+
+#### 1. 进度文档 (`docs/frontend/progress.md`)
+记录开发进度、已完成功能、待办事项。
+
+**更新时机**：
+- 完成新页面/组件时
+- 修改技术栈时
+- 完成里程碑时
+
+**文档格式参考**：
+```markdown
+# 前端开发进度
+
+> 最后更新：YYYY-MM-DD
+> 状态：开发中 (X%完成)
+
+## 已完成功能
+### 核心架构
+| 模块 | 状态 | 说明 |
+|------|------|------|
+| 项目初始化 | ✅ | Vite + Vue3 + Pinia |
+
+## 待完成功能
+### 优先级 P1
+- [ ] 深色模式
+
+## 代码统计
+| 类型 | 数量 |
+|------|------|
+| 页面组件 | 8 |
+```
+
+#### 2. API对接文档 (`docs/frontend/api-reference.md`)
+记录后端API接口、请求格式、响应格式。
+
+**更新时机**：
+- 后端新增/修改API时
+- 前端调用新API时
+- API字段变化时
+
+**必须包含**：
+- 服务地址配置
+- 通用响应格式
+- 每个API的详细说明（方法、路径、参数、响应示例）
+- 前端调用示例代码
+
+#### 3. README.md (`frontend/README.md`)
+项目入口文档，快速上手指南。
+
+**必须包含**：
+- 项目简介
+- 技术栈版本
+- 快速启动命令
+- 目录结构
+- 开发注意事项
+- 与后端的对接说明
+
+### 文档同步检查清单
+
+前端开发完成后，问自己：
+
+- [ ] 我更新了 `docs/frontend/progress.md` 吗？
+- [ ] 新API调用记录在 `docs/frontend/api-reference.md` 了吗？
+- [ ] README.md 里的技术栈版本是最新的吗？
+- [ ] 如果有环境变量变化，更新文档了吗？
+- [ ] 代码结构变化后，更新目录结构了吗？
+
+### 文档与代码同步原则
+
+1. **先更新文档再提交代码** - 确保文档反映最新状态
+2. **API变化立即同步** - 后端API变了，前端文档也要更新
+3. **配置变化记录在案** - 环境变量、端口等配置变化要写进文档
+4. **定期Review文档** - 每周检查一次文档是否过时
+5. **删除死链接** - 不存在的功能从文档中移除
+
+### 文档命名规范
+
+| 文档类型 | 路径 | 命名格式 |
+|----------|------|----------|
+| 前端进度 | `docs/frontend/progress.md` | 固定文件名 |
+| API参考 | `docs/frontend/api-reference.md` | 固定文件名 |
+| 后端进度 | `docs/backend/progress.md` | 固定文件名 |
+| 后端API参考 | `docs/backend/api-reference.md` | 固定文件名 |
+| 技术设计 | `docs/plans/YYYY-MM-DD-*.md` | 按日期命名 |
+
+---
