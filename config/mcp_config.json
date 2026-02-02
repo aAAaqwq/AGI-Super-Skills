@@ -14,11 +14,31 @@
     "chrome-devtools": {
       "command": "npx",
       "args": ["-y", "chrome-devtools-mcp@latest"]
+    },
+    "lark-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@larksuiteoapi/lark-mcp",
+        "mcp",
+        "-a", "${FEISHU_APP_ID}",
+        "-s", "${FEISHU_APP_SECRET}",
+        "-t", "preset.light,preset.default,preset.im.default,preset.base.default,preset.base.batch,preset.doc.default,preset.task.default,preset.calendar.default"
+      ]
+    },
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "engram-notion-mcp"],
+      "env": {
+        "NOTION_API_KEY": "${NOTION_API_KEY}"
+      }
     }
   },
   "allowedTools": [
     "mcp__github__*",
     "mcp__context7__*",
-    "mcp__chrome-devtools__*"
+    "mcp__chrome-devtools__*",
+    "mcp__lark-mcp__*",
+    "mcp__notion__*"
   ]
 }
