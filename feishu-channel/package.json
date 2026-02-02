@@ -1,0 +1,26 @@
+{
+  "name": "openclaw-feishu-webhook",
+  "version": "1.0.0",
+  "description": "Feishu Webhook Server for OpenClaw - 飞书消息通道集成",
+  "main": "scripts/feishu-webhook.js",
+  "scripts": {
+    "start": "node scripts/feishu-webhook.js",
+    "dev": "LOG_LEVEL=verbose node scripts/feishu-webhook.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "feishu",
+    "lark",
+    "openclaw",
+    "webhook",
+    "chatbot"
+  ],
+  "license": "MIT"
+}

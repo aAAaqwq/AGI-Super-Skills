@@ -1,0 +1,172 @@
+{
+  "version": "2.0",
+  "last_updated": "2025-01-31",
+  "sources": {
+    "articles": [
+      {
+        "id": "jiqizhixin",
+        "name": "机器之心",
+        "url": "https://www.jiqizhixin.com/",
+        "type": "article",
+        "fetch_method": "web_search",
+        "priority": 10,
+        "language": "zh-CN",
+        "enabled": true
+      },
+      {
+        "id": "36kr",
+        "name": "36氪",
+        "url": "https://36kr.com/",
+        "type": "article",
+        "fetch_method": "web_search",
+        "priority": 9,
+        "language": "zh-CN",
+        "enabled": true
+      },
+      {
+        "id": "huxiu",
+        "name": "虎嗅网",
+        "url": "https://www.huxiu.com/",
+        "type": "article",
+        "fetch_method": "huxiu_fetcher",
+        "priority": 8,
+        "language": "zh-CN",
+        "enabled": true
+      },
+      {
+        "id": "techcrunch",
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com/",
+        "type": "article",
+        "fetch_method": "web_search",
+        "priority": 8,
+        "language": "en-US",
+        "enabled": true
+      },
+      {
+        "id": "theverge",
+        "name": "The Verge",
+        "url": "https://www.theverge.com/",
+        "type": "article",
+        "fetch_method": "web_search",
+        "priority": 7,
+        "language": "en-US",
+        "enabled": true
+      },
+      {
+        "id": "mit-tech-review",
+        "name": "MIT Technology Review",
+        "url": "https://www.technologyreview.org/",
+        "type": "article",
+        "fetch_method": "web_search",
+        "priority": 9,
+        "language": "en-US",
+        "enabled": true
+      }
+    ],
+    "videos": [
+      {
+        "id": "youtube-two-minute-papers",
+        "name": "Two Minute Papers",
+        "platform": "youtube",
+        "url": "https://www.youtube.com/@TwoMinutePapers",
+        "type": "video",
+        "fetch_method": "youtube_fetcher",
+        "priority": 10,
+        "language": "en",
+        "enabled": true
+      },
+      {
+        "id": "youtube-lex-fridman",
+        "name": "Lex Fridman",
+        "platform": "youtube",
+        "url": "https://www.youtube.com/@lexfridman",
+        "type": "video",
+        "fetch_method": "youtube_fetcher",
+        "priority": 9,
+        "language": "en",
+        "enabled": true
+      },
+      {
+        "id": "youtube-ai-addict",
+        "name": "AI Addict",
+        "platform": "youtube",
+        "url": "https://www.youtube.com/@aiaddict",
+        "type": "video",
+        "fetch_method": "youtube_fetcher",
+        "priority": 8,
+        "language": "en",
+        "enabled": true
+      },
+      {
+        "id": "youtube-fireship",
+        "name": "Fireship",
+        "platform": "youtube",
+        "url": "https://www.youtube.com/@Fireship",
+        "type": "video",
+        "fetch_method": "youtube_fetcher",
+        "priority": 8,
+        "language": "en",
+        "enabled": true
+      },
+      {
+        "id": "youtube-3blue1brown",
+        "name": "3Blue1Brown",
+        "platform": "youtube",
+        "url": "https://www.youtube.com/@3blue1brown",
+        "type": "video",
+        "fetch_method": "youtube_fetcher",
+        "priority": 9,
+        "language": "en",
+        "enabled": true
+      }
+    ],
+    "wechat": [
+      {
+        "id": "wechat-quantun-byte",
+        "name": "量子位",
+        "type": "wechat_article",
+        "fetch_method": "wechat_fetcher",
+        "priority": 10,
+        "language": "zh-CN",
+        "enabled": true
+      },
+      {
+        "id": "wechat-jiqizhixin",
+        "name": "机器之心",
+        "type": "wechat_article",
+        "fetch_method": "wechat_fetcher",
+        "priority": 9,
+        "language": "zh-CN",
+        "enabled": true
+      },
+      {
+        "id": "wechat-xinzhiyuan",
+        "name": "新智元",
+        "type": "wechat_article",
+        "fetch_method": "wechat_fetcher",
+        "priority": 9,
+        "language": "zh-CN",
+        "enabled": true
+      },
+      {
+        "id": "wechat-infoq",
+        "name": "InfoQ",
+        "type": "wechat_article",
+        "fetch_method": "wechat_fetcher",
+        "priority": 8,
+        "language": "zh-CN",
+        "enabled": true
+      },
+      {
+        "id": "wechat-leiphone",
+        "name": "雷锋网",
+        "type": "wechat_article",
+        "fetch_method": "wechat_fetcher",
+        "priority": 8,
+        "language": "zh-CN",
+        "enabled": true
+      }
+    ]
+  }
+}

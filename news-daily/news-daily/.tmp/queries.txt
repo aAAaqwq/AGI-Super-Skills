@@ -1,0 +1,6 @@
+SEARCH:36氪:AI 科技 前沿
+FETCH:虎嗅网:https://www.huxiu.com/
+SEARCH:The Verge:AI technology news
+SEARCH:机器之心:AI 人工智能 最新
+SEARCH:TechCrunch:artificial intelligence AI latest
+SEARCH:MIT Technology Review:artificial intelligence breakthrough

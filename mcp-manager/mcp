@@ -1,0 +1,74 @@
+#!/bin/bash
+# MCP Manager - 命令行入口
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# 健康检测
+case "$1" in
+    health)
+        case "$2" in
+            check)
+                python3 "$SCRIPT_DIR/scripts/health_check.py" "${@:3}"
+                ;;
+            monitor)
+                echo "🔍 MCP Health Monitor (Press Ctrl+C to stop)"
+                echo "="
+                while true; do
+                    clear
+                    python3 "$SCRIPT_DIR/scripts/health_check.py"
+                    echo ""
+                    echo "[Last check: $(date '+%Y-%m-%d %H:%M:%S')]"
+                    echo "[Next check in 60 seconds...]"
+                    sleep 60
+                done
+                ;;
+            *)
+                echo "Usage: mcp health <check|monitor> [options]"
+                ;;
+        esac
+        ;;
+    list)
+        python3 "$SCRIPT_DIR/scripts/mcp_manager.py" list
+        ;;
+    show)
+        python3 "$SCRIPT_DIR/scripts/mcp_manager.py" show "$2"
+        ;;
+    enable)
+        python3 "$SCRIPT_DIR/scripts/mcp_manager.py" enable "$2"
+        ;;
+    disable)
+        python3 "$SCRIPT_DIR/scripts/mcp_manager.py" disable "$2"
+        ;;
+    recommend)
+        shift
+        python3 "$SCRIPT_DIR/scripts/mcp_manager.py" recommend "$*"
+        ;;
+    help)
+        cat << EOF
+MCP Manager - MCP 服务器智能管理工具
+
+命令：
+  mcp list                          列出所有 MCP
+  mcp show <name>                   显示 MCP 功能
+  mcp recommend <task>              为任务推荐 MCP
+
+  mcp health check [name]           健康检查
+  mcp health monitor               持续监控
+
+  mcp enable <name>                 启用 MCP
+  mcp disable <name>                禁用 MCP
+
+示例：
+  mcp list                          查看所有 MCP
+  mcp show github                   查看 GitHub MCP 功能
+  mcp recommend 网页自动化          推荐适合的 MCP
+  mcp health check                  检查所有 MCP 状态
+  mcp health monitor               持续监控
+
+文档：~/clawd/skills/mcp-manager/SKILL.md
+EOF
+        ;;
+    *)
+        python3 "$SCRIPT_DIR/scripts/mcp_manager.py" "$@"
+        ;;
+esac
