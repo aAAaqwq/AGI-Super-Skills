@@ -1,0 +1,129 @@
+#!/bin/bash
+# 文件清理工具 - 主启动脚本
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+case "$1" in
+    # 扫描大文件
+    large)
+        shift
+        python3 "$SCRIPT_DIR/scripts/find_large_files.py" "$@"
+        ;;
+
+    # 扫描垃圾文件
+    garbage)
+        shift
+        python3 "$SCRIPT_DIR/scripts/find_garbage.py" "$@"
+        ;;
+
+    # 交互式清理
+    clean)
+        shift
+        python3 "$SCRIPT_DIR/scripts/clean_interactive.py" "$@"
+        ;;
+
+    # 快速扫描（大文件 + 垃圾文件）
+    quick)
+        echo "╔═══════════════════════════════════════════════════════════════╗"
+        echo("║                   快速文件扫描                                ║")
+        echo("╚═══════════════════════════════════════════════════════════════╝")
+        echo()
+
+        echo "1. 扫描大文件（>10MB）"
+        python3 "$SCRIPT_DIR/scripts/find_large_files.py" --show 10
+        echo()
+
+        echo "2. 扫描垃圾文件"
+        python3 "$SCRIPT_DIR/scripts/find_garbage.py" --show 5
+        echo()
+
+        echo "💡 要清理文件，使用："
+        echo("  file-cleaner clean <scan_result.json>")
+        ;;
+
+    # 帮助
+    help|--help|-h)
+        cat << 'EOF'
+文件清理工具 - 扫描和清理大文件、垃圾文件
+
+用法:
+  file-cleaner <command> [options]
+
+命令:
+  large <directory> [options]      扫描大文件
+  garbage <directory> [options]     扫描垃圾文件
+  clean <scan_result.json>         交互式清理
+  quick                          快速扫描（大文件 + 垃圾）
+
+选项:
+  large 命令:
+    --min-size <MB>             最小文件大小（默认: 10）
+    --max-results <N>            最大结果数（默认: 100）
+    --show <N>                   显示的文件数（默认: 20）
+    --export <path>               导出到 JSON
+
+  garbage 命令:
+    --categories <cat1,cat2>     指定扫描类别
+    --show <N>                   每个类别显示的文件数（默认: 10）
+    --export <path>               导出到 JSON
+    --script <path>              生成清理脚本
+
+  clean 命令:
+    --type <garbage|large>       扫描结果类型（默认: garbage）
+    --dry-run                     预演模式（不实际删除）
+
+示例:
+  # 扫描大文件
+  file-cleaner large ~
+
+  # 扫描大于 50MB 的文件
+  file-cleaner large ~ --min-size 50
+
+  # 扫描垃圾文件
+  file-cleaner garbage ~
+
+  # 只扫描缓存文件
+  file-cleaner garbage ~ --categories cache_files temp_files
+
+  # 导出扫描结果
+  file-cleaner garbage ~ --export garbage_scan.json
+
+  # 交互式清理
+  file-cleaner clean garbage_scan.json
+
+  # 预演清理（不实际删除）
+  file-cleaner clean garbage_scan.json --dry-run
+
+  # 快速扫描
+  file-cleaner quick
+
+垃圾文件类别:
+  temp_files      - 临时文件
+  cache_files     - 缓存文件
+  log_files       - 日志文件
+  backup_files    - 备份文件
+  build_artifacts - 构建产物
+  editor_temp    - 编辑器临时文件
+  download_temp   - 下载临时文件
+
+安全提示:
+  • 查看文件内容再删除
+  • 先用 --dry-run 预演
+  • 日志文件可能需要保留
+  • 备份重要文件
+
+EOF
+        ;;
+
+    *)
+        echo "文件清理工具"
+        echo ""
+        echo "使用 'file-cleaner help' 查看所有命令"
+        echo ""
+        echo "快速开始:"
+        echo "  file-cleaner large ~          # 扫描大文件"
+        echo "  file-cleaner garbage ~         # 扫描垃圾文件"
+        echo "  file-cleaner quick              # 快速扫描"
+        echo "  file-cleaner clean results.json  # 交互式清理"
+        ;;
+esac

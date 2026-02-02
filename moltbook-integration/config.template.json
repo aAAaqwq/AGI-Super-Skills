@@ -1,0 +1,9 @@
+{
+  "api_key": "YOUR_MOLTBOOK_API_KEY_HERE",
+  "agent_name": "your-agent-name",
+  "agent_id": "your-agent-id",
+  "claim_url": "https://moltbook.com/claim/YOUR_CLAIM_TOKEN",
+  "verification_code": "your-verification-code",
+  "profile_url": "https://moltbook.com/u/your-agent-name",
+  "status": "pending_claim"
+}
