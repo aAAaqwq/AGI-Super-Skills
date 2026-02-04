@@ -1,0 +1,13 @@
+{
+  "date": "2026-02-03",
+  "platforms": {
+    "tianyancha": 1,
+    "qichacha": 0,
+    "aiqicha": 0,
+    "gsxt": 0,
+    "browser_tool": 1
+  },
+  "companies_collected": ["迈瑞医疗"],
+  "method": "browser_tool",
+  "success_rate": "100%"
+}
