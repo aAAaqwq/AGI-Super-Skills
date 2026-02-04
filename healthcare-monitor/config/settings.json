@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "check_interval": {
+    "high_priority": "1h",
+    "normal": "6h",
+    "low": "24h"
+  },
+  "alert_threshold": {
+    "confidence": 60,
+    "capital_change_percent": 10
+  },
+  "scraper": {
+    "strategy": "free_rotation",
+    "platforms": ["tianyancha", "qichacha", "aiqicha", "gsxt"],
+    "daily_limits": {
+      "tianyancha": 20,
+      "qichacha": 10,
+      "aiqicha": 50,
+      "gsxt": 999
+    },
+    "delay_min": 3,
+    "delay_max": 10,
+    "max_requests_per_hour": 100,
+    "user_agents": [
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"
+    ]
+  },
+  "notification": {
+    "telegram": {
+      "enabled": true,
+      "chat_id": "8518085684",
+      "alert_level": "high"
+    },
+    "feishu": {
+      "enabled": false,
+      "webhook": null,
+      "alert_level": "all"
+    }
+  },
+  "funding_signals": {
+    "strong": {
+      "new_institutional_shareholder": 40,
+      "capital_increase_over_10pct": 30,
+      "founder_equity_dilution": 20
+    },
+    "medium": {
+      "new_individual_shareholder": 15,
+      "scope_expansion": 10,
+      "address_change": 10
+    },
+    "weak": {
+      "capital_increase_only": 10,
+      "legal_representative_change": 5
+    }
+  }
+}

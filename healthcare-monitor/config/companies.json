@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "companies": [
+    {
+      "name": "迈瑞医疗",
+      "full_name": "深圳迈瑞生物医疗电子股份有限公司",
+      "category": "医疗器械",
+      "priority": "high",
+      "tianyancha_id": null,
+      "added_at": "2026-02-03"
+    },
+    {
+      "name": "联影医疗",
+      "full_name": "上海联影医疗科技股份有限公司",
+      "category": "医疗器械",
+      "priority": "high",
+      "tianyancha_id": null,
+      "added_at": "2026-02-03"
+    },
+    {
+      "name": "百济神州",
+      "full_name": "百济神州（北京）生物科技有限公司",
+      "category": "创新药",
+      "priority": "high",
+      "tianyancha_id": null,
+      "added_at": "2026-02-03"
+    },
+    {
+      "name": "信达生物",
+      "full_name": "信达生物制药（苏州）有限公司",
+      "category": "创新药",
+      "priority": "high",
+      "tianyancha_id": null,
+      "added_at": "2026-02-03"
+    },
+    {
+      "name": "推想科技",
+      "full_name": "推想医疗科技股份有限公司",
+      "category": "医疗AI",
+      "priority": "high",
+      "tianyancha_id": null,
+      "added_at": "2026-02-03"
+    },
+    {
+      "name": "数坤科技",
+      "full_name": "北京数坤科技股份有限公司",
+      "category": "医疗AI",
+      "priority": "high",
+      "tianyancha_id": null,
+      "added_at": "2026-02-03"
+    },
+    {
+      "name": "微医集团",
+      "full_name": "微医控股有限公司",
+      "category": "互联网医疗",
+      "priority": "high",
+      "tianyancha_id": null,
+      "added_at": "2026-02-03"
+    },
+    {
+      "name": "丁香园",
+      "full_name": "杭州丁香园网络科技有限公司",
+      "category": "互联网医疗",
+      "priority": "high",
+      "tianyancha_id": null,
+      "added_at": "2026-02-03"
+    },
+    {
+      "name": "华大基因",
+      "full_name": "深圳华大基因股份有限公司",
+      "category": "基因检测",
+      "priority": "high",
+      "tianyancha_id": null,
+      "added_at": "2026-02-03"
+    },
+    {
+      "name": "燃石医学",
+      "full_name": "广州燃石医学检验所有限公司",
+      "category": "基因检测",
+      "priority": "high",
+      "tianyancha_id": null,
+      "added_at": "2026-02-03"
+    }
+  ]
+}

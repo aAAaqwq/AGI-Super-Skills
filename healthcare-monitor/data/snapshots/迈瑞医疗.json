@@ -1,0 +1,45 @@
+{
+  "name": "深圳迈瑞生物医疗电子股份有限公司",
+  "short_name": "迈瑞医疗",
+  "legal_representative": "LI XITING (李西廷)",
+  "capital": "121244.1394万人民币",
+  "capital_amount": 12124413940,
+  "established_date": "1999-01-25",
+  "status": "存续",
+  "credit_code": "914403007084678371",
+  "address": "深圳市南山区高新技术产业园区科技南十二路迈瑞大厦1-4层",
+  "scope": "生产经营医疗电子仪器及其配套试剂及产品的软件开发（不含国家限制项目）；自产产品售后服务，自有房屋租赁。从事货物和技术的进出口业务。",
+  "shareholders": [
+    {
+      "name": "SMAR Smartco Development Limited",
+      "ratio": "26.98%",
+      "type": "企业法人",
+      "shares": "327,072,335股"
+    },
+    {
+      "name": "Magnifice （HK） Limited",
+      "ratio": "24.49%",
+      "type": "企业法人",
+      "shares": "296,951,000股"
+    },
+    {
+      "name": "香港中央结算有限公司",
+      "ratio": "9.62%",
+      "type": "企业法人",
+      "shares": "116,665,132股"
+    },
+    {
+      "name": "Ever Union（H.K.） Limited",
+      "ratio": "3.83%",
+      "type": "企业法人",
+      "shares": "46,482,379股"
+    }
+  ],
+  "source": "tianyancha",
+  "fetched_at": "2026-02-03T23:50:00",
+  "company_type": "股份有限公司(台港澳与境内合资、上市)",
+  "industry": "医疗诊断、监护及治疗设备制造",
+  "employees": "21667人",
+  "listed": true,
+  "stock_code": "300760.SZ"
+}
