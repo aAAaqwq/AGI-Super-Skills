@@ -1,0 +1,11 @@
+{
+  "owner": "joe3112",
+  "slug": "project-context-sync",
+  "displayName": "Project Context Sync",
+  "latest": {
+    "version": "1.0.0",
+    "publishedAt": 1769688081237,
+    "commit": "https://github.com/clawdbot/skills/commit/d9c592376d1b7d6b0bdff4b5c05403228d924e47"
+  },
+  "history": []
+}

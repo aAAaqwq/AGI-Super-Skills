@@ -229,3 +229,61 @@ MIT License
 
 > 注：本仓库已包含 `moltbook-integration/` 作为基础集成。上述 Moltbook 系列技能可根据需要选择性安装。
 
+# Git & GitHub Skills 待添加
+
+从 awesome-openclaw-skills 的 Git & GitHub 部分筛选的高价值 skills：
+
+## 已有
+- ✅ github-automation - GitHub 自动化操作（本地已有）
+
+## 推荐添加
+
+### 核心工具 (优先)
+1. **git-sync** - 自动同步本地 workspace 到 GitHub
+2. **gitclaw** - 备份 OpenClaw workspace 到 GitHub（cron 驱动）
+3. **project-context-sync** - 每次提交后更新项目状态文档
+4. **git-essentials** - Git 核心命令和工作流
+
+### GitLab 支持
+5. **gitlab-manager** - GitLab API 管理
+6. **gitlab-cli-skills** - GitLab CLI (glab)
+
+### 实用工具
+7. **conventional-commits** - 规范化 commit 格式
+8. **commit-analyzer** - 分析 git commit 模式
+9. **github-pr** - 本地预览和测试 PR
+10. **git-crypt-backup** - 加密备份到 GitHub
+
+### 备份相关
+11. **backup** - 备份和恢复 OpenClaw 配置
+12. **clawdbot-backup** - ClawdBot 配置备份
+
+### 其他
+13. **gitea** - Gitea 交互
+14. **read-github** - 通过 gitmcp.io 读取 GitHub 仓库
+15. **skill-publisher-claw-skill** - 准备公开发布 skill
+16. **skill-vetter** - Skill 安全审查
+
+## 安装方法
+
+```bash
+# 使用 ClawHub CLI
+npx clawhub@latest install git-sync
+npx clawhub@latest install gitclaw
+npx clawhub@latest install project-context-sync
+# ... 其他 skills
+
+# 或手动克隆
+cd ~/clawd/skills
+git clone --depth 1 https://github.com/openclaw/skills.git temp_skills
+cp -r temp_skills/skills/*/git-sync .
+cp -r temp_skills/skills/*/gitclaw .
+cp -r temp_skills/skills/*/project-context-sync .
+rm -rf temp_skills
+```
+
+## 优先级
+
+**P0（必须）**: git-sync, gitclaw, project-context-sync
+**P1（推荐）**: git-essentials, conventional-commits, commit-analyzer
+**P2（可选）**: github-pr, git-crypt-backup, backup
