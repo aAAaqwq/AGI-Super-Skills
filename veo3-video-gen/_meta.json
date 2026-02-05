@@ -1,0 +1,11 @@
+{
+  "owner": "bluelyw",
+  "slug": "veo3-video-gen",
+  "displayName": "Veo 3 Video Gen (Gemini API)",
+  "latest": {
+    "version": "0.1.0",
+    "publishedAt": 1769609324187,
+    "commit": "https://github.com/clawdbot/skills/commit/b49a809db575608995a9b85c5485acb9cf60b1ca"
+  },
+  "history": []
+}
