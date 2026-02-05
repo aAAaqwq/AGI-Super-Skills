@@ -1,0 +1,17 @@
+{
+  "owner": "fossilizedcarlos",
+  "slug": "krea-api",
+  "displayName": "Krea.ai API",
+  "latest": {
+    "version": "0.1.3",
+    "publishedAt": 1769097483543,
+    "commit": "https://github.com/clawdbot/skills/commit/333dffa38242234af56596dfa95fa2168e46cdc4"
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "publishedAt": 1769095540828,
+      "commit": "https://github.com/clawdbot/skills/commit/c9795e0b2ef9f46519373f4e7b4cd29b7be78e11"
+    }
+  ]
+}

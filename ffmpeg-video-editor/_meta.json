@@ -1,0 +1,11 @@
+{
+  "owner": "mahmoudadelbghany",
+  "slug": "ffmpeg-video-editor",
+  "displayName": "ffmpeg-video-editor",
+  "latest": {
+    "version": "1.0.0",
+    "publishedAt": 1769908420733,
+    "commit": "https://github.com/clawdbot/skills/commit/7eb34db475a0a8c534dae19606a116b583c01b60"
+  },
+  "history": []
+}
