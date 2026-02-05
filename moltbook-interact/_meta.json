@@ -1,0 +1,11 @@
+{
+  "owner": "lunarcmd",
+  "slug": "moltbook-interact",
+  "displayName": "moltbook-interact",
+  "latest": {
+    "version": "1.0.1",
+    "publishedAt": 1769868359788,
+    "commit": "https://github.com/clawdbot/skills/commit/9000da9931ba737d725dc3f9c30540b55d52558f"
+  },
+  "history": []
+}

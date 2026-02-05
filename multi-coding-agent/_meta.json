@@ -1,0 +1,11 @@
+{
+  "owner": "kesslerio",
+  "slug": "multi-coding-agent",
+  "displayName": "Multi Coding Agent",
+  "latest": {
+    "version": "1.0.0",
+    "publishedAt": 1769838419635,
+    "commit": "https://github.com/clawdbot/skills/commit/9c1a4a6220fcdf8402e37bd1d9be2dc3c5ff8e14"
+  },
+  "history": []
+}
