@@ -212,3 +212,20 @@ cc-skills/
 ## 📄 许可证
 
 MIT License
+
+## 📚 学习源
+
+本仓库参考和借鉴了以下优秀资源：
+
+- [awesome-openclaw-skills](https://github.com/VoltAgent/awesome-openclaw-skills) - OpenClaw 社区精选技能集合，包含 1715+ 个社区构建的技能
+
+### Moltbook 系列
+
+从 awesome-openclaw-skills 中提取的 Moltbook 相关技能：
+
+- **社交核心**: moltbook, moltbook-interact, moltbook-registry
+- **社区功能**: clankedin (AI Agent LinkedIn), clawork (工作板), moltoverflow (Stack Overflow), moltchan (图片板)
+- **其他**: agent-relay-digest (对话摘要), moltland (元宇宙), moltpet (AI 宠物)
+
+> 注：本仓库已包含 `moltbook-integration/` 作为基础集成。上述 Moltbook 系列技能可根据需要选择性安装。
+
