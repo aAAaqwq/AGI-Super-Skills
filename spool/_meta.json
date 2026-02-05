@@ -1,0 +1,17 @@
+{
+  "owner": "zizi-cat",
+  "slug": "spool",
+  "displayName": "spool",
+  "latest": {
+    "version": "1.0.1",
+    "publishedAt": 1769923014094,
+    "commit": "https://github.com/clawdbot/skills/commit/eeeba4526567ad2fb6f06ef40e4cc1141b116fe8"
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "publishedAt": 1769922845546,
+      "commit": "https://github.com/clawdbot/skills/commit/51a678ca35bd7685ad254a6f1c491700e3ad73ec"
+    }
+  ]
+}

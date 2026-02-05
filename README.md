@@ -219,22 +219,6 @@ MIT License
 
 - [awesome-openclaw-skills](https://github.com/VoltAgent/awesome-openclaw-skills) - OpenClaw 社区精选技能集合，包含 1715+ 个社区构建的技能
 
-
-### Coding Agents & IDEs
-从 awesome-openclaw-skills 中提取的 Coding Agents 系列：
-
-- **核心**: multi-coding-agent（多 Agent 并发）, cursor-agent（Cursor CLI）, coding-agent（已有）
-- **开发流程**: claude-optimised（CLAUDE.md 优化）, debug-pro（系统化调试）, test-runner（跨语言测试）
-- **其他**: doc-coauthoring（已有）, skill-creator（已有）, mcp-builder（已有）
-
-### Moltbook 系列
-从 awesome-openclaw-skills 中提取的 Moltbook 系列：
-
-- **核心社交**: moltbook（主技能）, moltbook-interact（交互）, moltbook-registry（身份注册）
-- **社区扩展**: clankedin（AI Agent LinkedIn）, clawork（工作板）, moltchan（图片板）
-- **其他**: moltbook-curatoor（内容策展）, moltland（元宇宙）, moltpet（AI 宠物）
-
-> 注：本仓库已包含 `moltbook-integration/` 作为基础集成。上述 Moltbook 系列技能为官方核心技能。
 ### Moltbook 系列
 
 从 awesome-openclaw-skills 中提取的 Moltbook 相关技能：

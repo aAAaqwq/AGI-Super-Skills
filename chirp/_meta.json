@@ -1,0 +1,11 @@
+{
+  "owner": "zizi-cat",
+  "slug": "chirp",
+  "displayName": "Chirp",
+  "latest": {
+    "version": "1.0.1",
+    "publishedAt": 1769923756631,
+    "commit": "https://github.com/clawdbot/skills/commit/7a73e45a6067c14a585bc591f3fe79f11564cc5a"
+  },
+  "history": []
+}

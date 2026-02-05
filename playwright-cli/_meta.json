@@ -1,0 +1,11 @@
+{
+  "owner": "gumadeiras",
+  "slug": "playwright-cli",
+  "displayName": "playwright-cli",
+  "latest": {
+    "version": "1.0.1",
+    "publishedAt": 1769432940976,
+    "commit": "https://github.com/clawdbot/skills/commit/77023ea43350c1d7ff3d730f9f660d05f90d010a"
+  },
+  "history": []
+}
