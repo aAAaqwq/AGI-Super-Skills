@@ -1,0 +1,11 @@
+{
+  "owner": "theoseo",
+  "slug": "google-web-search",
+  "displayName": "Google Web Search (Gemini Grounding)",
+  "latest": {
+    "version": "1.0.1",
+    "publishedAt": 1769938416779,
+    "commit": "https://github.com/clawdbot/skills/commit/6a93cf0f069562f5c55ed499b05a722fb4e70837"
+  },
+  "history": []
+}

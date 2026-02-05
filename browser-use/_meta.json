@@ -1,0 +1,22 @@
+{
+  "owner": "shawnpana",
+  "slug": "browser-use",
+  "displayName": "Browser Use",
+  "latest": {
+    "version": "1.0.0",
+    "publishedAt": 1769388231012,
+    "commit": "https://github.com/clawdbot/skills/commit/2041cb9ab975d4ba002832ba35cd30be39f0da0d"
+  },
+  "history": [
+    {
+      "version": "1.0.1",
+      "publishedAt": 1769758346221,
+      "commit": "https://github.com/clawdbot/skills/commit/f5cc89736326ae7315a1b0b9ca0ee3eb8855b7e2"
+    },
+    {
+      "version": "1.0.0",
+      "publishedAt": 1769388231012,
+      "commit": "https://github.com/clawdbot/skills/commit/271b69929492251f376d845be39f32e68e16e823"
+    }
+  ]
+}
