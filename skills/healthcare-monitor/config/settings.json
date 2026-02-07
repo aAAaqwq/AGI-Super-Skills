@@ -1,0 +1,32 @@
+{
+  "check_interval": {
+    "high_priority": "1h",
+    "normal": "6h",
+    "low": "24h"
+  },
+  "alert_threshold": {
+    "confidence": 60,
+    "capital_change_percent": 10
+  },
+  "scraper": {
+    "delay_min": 3,
+    "delay_max": 10,
+    "max_requests_per_hour": 100,
+    "use_free_sources": true
+  },
+  "notification": {
+    "telegram": true,
+    "feishu": true,
+    "email": false
+  },
+  "sources": {
+    "qcc": {
+      "enabled": true,
+      "base_url": "https://www.qcc.com"
+    },
+    "tianyancha": {
+      "enabled": false,
+      "base_url": "https://www.tianyancha.com"
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "version": "2.0",
+  "capital": {
+    "total_usd": 3,
+    "allocation": {
+      "low_risk": 1.5,
+      "medium_risk": 1,
+      "high_risk": 0.5
+    }
+  },
+  "risk_profiles": {
+    "conservative": {
+      "label": "低风险（稳定收益）",
+      "capital": 1.5,
+      "strategies": ["holding_rewards", "cme_arbitrage", "high_certainty_no"],
+      "expected_return": "5-20%",
+      "timeframe": "短期"
+    },
+    "moderate": {
+      "label": "中风险（成长潜力）",
+      "capital": 1,
+      "strategies": ["odds_swing", "airdrop_hunting", "defi_yield"],
+      "expected_return": "20-100%",
+      "timeframe": "中期"
+    },
+    "aggressive": {
+      "label": "高风险（高回报）",
+      "capital": 0.5,
+      "strategies":["new_token_sniping", "whale_tracking", "event_trading"],
+      "expected_return": "100-1000%",
+      "timeframe": "短期"
+    }
+  },
+  "strategies": {
+    "polymarket_low": {
+      "name": "Polymarket 低风险",
+      "platform": "polymarket",
+      "opportunities": [
+        "Holding Rewards 4% 年化",
+        "Fed 套利（CME 对比）",
+        "高确定性 No（>80% 概率）"
+      ]
+    },
+    "polymarket_medium": {
+      "name": "Polymarket 中风险",
+      "platform": "polymarket",
+      "opportunities": [
+        "冬奥会赔率波动",
+        "政府关门事件",
+        "产品发布预测"
+      ]
+    },
+    "defi_stable": {
+      "name": "DeFi 稳定收益",
+      "platform": "aave, lend, compound",
+      "opportunities": [
+        "USDC 存款 6-8% APY",
+        "stETH 质押 4-5%",
+        "Lido stRATEGY 5%+"
+      ]
+    },
+    "airdrop_hunting": {
+      "name": "空投狩猎",
+      "platform": "layer3, galxe",
+      "opportunities": [
+        "Layer3 任务赚取 CUBEs",
+        "Galxe 任务积分",
+        "新测试网交互"
+      ],
+      "expected_apy": "不确定（可能 10-1000%）"
+    },
+    "new_token": {
+      "name": "新币狙击",
+      "platform": "dexscreener, gmgn",
+      "opportunities": [
+        "监控新币上线",
+        "流动性提供者奖励",
+        "早期买入机会"
+      ],
+      "risk_level": "high",
+      "expected_return": "50-500%"
+    },
+    "whale_tracking": {
+      "name": "巨鲸追踪",
+      "platform": "etherscan, arkham",
+      "opportunities": [
+        "跟单交易",
+        "早期发现潜力币",
+        "预知大额买卖"
+      ],
+      "whale_addresses": [
+        "0x7a95...B4c0", "0x3f5...CE99"
+      ]
+    },
+    "liquid_staking": {
+      "name": "流动性质押",
+      "platform": "lido, rocketpool",
+      "opportunities": [
+        "ETH 质押 4-5%",
+        "rETH 质押奖励",
+        "双倍奖励活动"
+      ]
+    },
+    "loop_strategy": {
+      "name": "DeFi 套利循环",
+      "platform": "aave, uniswap",
+      "opportunities": [
+        "借出稳定币",
+        "提供流动性",
+        "赚取交易费+奖励"
+      ],
+      "expected_apy": "10-30%"
+    }
+  },
+  "web3_opportunities": {
+    "telegram_channels": [
+      "whale_alert_io",
+      "deals_codes",
+      "gem_finder"
+    ],
+    "twitter_accounts": [
+      "whale_alert",
+      "lookonchain",
+      "tokenterminal"
+    ],
+    "websites": {
+      "dexscreener": "https://dexscreener.com",
+      "gmgn": "https://gmgn.ai",
+      "defillama": "https://defillama.com",
+      "coinmarketcap": "https://coinmarketcap.com"
+    }
+  }
+}

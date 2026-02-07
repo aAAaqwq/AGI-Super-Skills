@@ -1,0 +1,85 @@
+{
+  "version": "1.0",
+  "capital": {
+    "total_usd": 3,
+    "max_bet_per_market": 1,
+    "min_markets": 3,
+    "currency": "USDC",
+    "chain": "polygon"
+  },
+  "risk_profiles": {
+    "conservative": {
+      "label": "低风险（本金 < $5）",
+      "enabled": true,
+      "strategies": ["holding_rewards", "cme_arbitrage", "high_certainty_no"],
+      "max_allocation_pct": 100,
+      "max_single_bet_pct": 33
+    },
+    "moderate": {
+      "label": "中风险（本金 $10-50）",
+      "enabled": false,
+      "strategies": ["odds_swing", "event_prediction"],
+      "max_allocation_pct": 60,
+      "max_single_bet_pct": 20
+    },
+    "aggressive": {
+      "label": "高风险（本金 $50+）",
+      "enabled": false,
+      "strategies": ["liquidity_provision", "short_term_trading"],
+      "max_allocation_pct": 30,
+      "max_single_bet_pct": 10
+    }
+  },
+  "strategies": {
+    "holding_rewards": {
+      "name": "Holding Rewards 套利",
+      "description": "同时买入 Yes 和 No，赚取 4% 年化奖励",
+      "apy": 4.0,
+      "risk": "very_low",
+      "min_capital": 100,
+      "notes": "本金 $3 收益太低（$0.12/年），仅作参考"
+    },
+    "cme_arbitrage": {
+      "name": "CME FedWatch 套利",
+      "description": "对比 Polymarket 与 CME 利率预期差异",
+      "min_spread_pct": 5,
+      "risk": "low",
+      "data_source": "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html"
+    },
+    "high_certainty_no": {
+      "name": "高确定性 No 策略",
+      "description": "对短期内不太可能发生的事件买 No",
+      "min_no_probability": 80,
+      "risk": "low",
+      "expected_return_pct": "15-25"
+    },
+    "odds_swing": {
+      "name": "赔率波动套利",
+      "description": "在事件进行中利用赔率波动低买高卖",
+      "risk": "medium",
+      "requires_monitoring": true
+    },
+    "event_prediction": {
+      "name": "事件预测",
+      "description": "基于信息优势预测事件结果",
+      "risk": "medium_high",
+      "requires_research": true
+    }
+  },
+  "push": {
+    "telegram_bot_token_path": "tokens/telegram-newsrobot",
+    "telegram_chat_id": -1003824568687,
+    "schedule": "0 20 * * *",
+    "timezone": "Asia/Shanghai",
+    "parse_mode": "HTML"
+  },
+  "data_sources": {
+    "polymarket_gamma_api": "https://gamma-api.polymarket.com",
+    "polymarket_clob_api": "https://clob.polymarket.com",
+    "cme_fedwatch": "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html",
+    "news_sources": [
+      "https://techcrunch.com",
+      "https://www.anthropic.com/news"
+    ]
+  }
+}

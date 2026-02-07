@@ -1,0 +1,93 @@
+{
+  "version": "1.0",
+  "updated": "2026-02-07",
+  "categories": {
+    "politics": {
+      "label": "政治/政策",
+      "markets": [
+        {
+          "slug": "will-the-us-government-shut-down-on-february-14",
+          "name": "US Gov Shutdown Feb 14",
+          "type": "binary",
+          "strategy": "event_prediction",
+          "risk": "medium",
+          "notes": "关注国会投票进展"
+        },
+        {
+          "slug": "fed-funds-rate-march-2026",
+          "name": "Fed 3月利率决议",
+          "type": "multi",
+          "strategy": "cme_arbitrage",
+          "risk": "low",
+          "notes": "与 CME FedWatch 对比套利",
+          "cme_compare": true
+        }
+      ]
+    },
+    "tech": {
+      "label": "科技/AI",
+      "markets": [
+        {
+          "slug": "claude-5-release-date",
+          "name": "Claude 5 发布日期",
+          "type": "binary",
+          "strategy": "high_certainty_no",
+          "risk": "low",
+          "notes": "关注 Anthropic 官方动态"
+        },
+        {
+          "slug": "spacex-ipo-valuation",
+          "name": "SpaceX IPO 估值",
+          "type": "binary",
+          "strategy": "event_prediction",
+          "risk": "medium",
+          "notes": "长期市场，适合 Holding Rewards"
+        }
+      ]
+    },
+    "sports": {
+      "label": "体育赛事",
+      "markets": [
+        {
+          "slug": "2026-winter-olympics-most-gold-medals",
+          "name": "冬奥会金牌榜",
+          "type": "multi",
+          "strategy": "odds_swing",
+          "risk": "medium",
+          "notes": "关注每日奖牌分布，赔率波动套利"
+        }
+      ]
+    },
+    "crypto": {
+      "label": "加密货币",
+      "markets": [
+        {
+          "slug": "bitcoin-price-february",
+          "name": "BTC 2月价格",
+          "type": "multi",
+          "strategy": "event_prediction",
+          "risk": "high",
+          "notes": "高波动，谨慎参与"
+        }
+      ]
+    },
+    "geopolitics": {
+      "label": "地缘政治",
+      "markets": [
+        {
+          "slug": "us-strikes-iran",
+          "name": "美国打击伊朗",
+          "type": "binary",
+          "strategy": "event_prediction",
+          "risk": "high",
+          "notes": "超高流动性 $178M，关注新闻"
+        }
+      ]
+    }
+  },
+  "holding_rewards_markets": [
+    "2028-presidential-election",
+    "2026-midterm-elections",
+    "world-leader-departure"
+  ]
+}
