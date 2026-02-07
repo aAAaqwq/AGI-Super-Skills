@@ -1,0 +1,1382 @@
+{
+  "date": "2026-02-06",
+  "total": 10,
+  "checked": 10,
+  "signals_found": 9,
+  "high_confidence": 6,
+  "companies": [
+    {
+      "company": "迈瑞医疗",
+      "has_signal": false,
+      "confidence": 10,
+      "sources_count": 1,
+      "sources": [
+        "Firecrawl"
+      ],
+      "signals": [
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "[PDF] 深圳迈瑞生物医疗电子股份有限公司 - Mindray",
+          "url": "https://www.mindray.com/content/dam/xpace/zh/investor-relations/financialinformation/2020/Mindray_2020_AnnualReport.pdf",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [],
+          "confidence": 10
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "迈瑞医疗：预计国内业务2026年全年有望实现正增长",
+          "url": "https://innomd.com/article/0246ec5569171c56ea1a0123ab622b5d.html",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [],
+          "confidence": 10
+        }
+      ],
+      "checked_at": "2026-02-06T14:31:20.221936",
+      "category": "医疗器械",
+      "priority": "high"
+    },
+    {
+      "company": "联影医疗",
+      "has_signal": true,
+      "confidence": 61,
+      "sources_count": 2,
+      "sources": [
+        "Firecrawl",
+        "新浪财经"
+      ],
+      "signals": [
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "联影智能完成10亿元A轮融资，医疗AI大模型与智能体研发加速 - 医谷",
+          "url": "https://m.medvalley.cn/article/224-0-77456",
+          "keywords": [
+            "融资",
+            "投资",
+            "A轮",
+            "领投"
+          ],
+          "investors": [
+            "金管理有限公司和上国投资",
+            "本次融资由易方达私募基金"
+          ],
+          "confidence": 95,
+          "round": "A轮",
+          "amount": "10亿元"
+        },
+        {
+          "source": "新浪财经",
+          "source_type": "finance_media",
+          "title": "央山医疗完成数千万元preA轮融资山蓝、远毅联合领投",
+          "url": "https://finance.sina.com.cn/stock/estate/integration/2026-02-06/doc-inhkvvnp5208906.shtml",
+          "keywords": [
+            "融资",
+            "投资",
+            "A轮",
+            "领投",
+            "跟投"
+          ],
+          "investors": [
+            "远毅资本",
+            "蓝驰创投",
+            "不构成投资",
+            "本轮融资由医疗专业投资",
+            "医疗专业投资机构山蓝资本"
+          ],
+          "confidence": 95,
+          "round": "A轮"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "中金公司助力联影智能完成10亿元A轮融资，推动医疗AI产业升级",
+          "url": "https://www.cicc.com/news/details311_132216.html",
+          "keywords": [
+            "融资",
+            "A轮"
+          ],
+          "investors": [],
+          "confidence": 55,
+          "round": "A轮",
+          "amount": "10亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "完成10 亿融资，联影智能「元智」领跑医疗大模型排名",
+          "url": "https://www.uii-ai.com/article/409.html",
+          "keywords": [
+            "融资",
+            "A轮"
+          ],
+          "investors": [],
+          "confidence": 55,
+          "round": "A轮",
+          "amount": "10亿"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "机器人、生物医药赛道融资活跃，联影智能完成10亿元A轮融资 - 21财经",
+          "url": "https://www.21jingji.com/article/20250623/herald/a5517493cf2a0ac7c47702b8c9cf46d0.html",
+          "keywords": [
+            "融资",
+            "A轮"
+          ],
+          "investors": [],
+          "confidence": 55,
+          "round": "A轮",
+          "amount": "10亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "10亿融资！又一家百亿独角兽诞生 - ByDrug - 医药魔方",
+          "url": "https://bydrug.pharmcube.com/news/detail/84b1a7cf3a715315b0c4cde5d511f049",
+          "keywords": [
+            "融资",
+            "投资"
+          ],
+          "investors": [
+            "联影医疗拟以自有资金投资"
+          ],
+          "confidence": 48,
+          "amount": "10亿"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "主业承压却豪赌AI，联影医疗组百亿生态局-36氪",
+          "url": "https://m.36kr.com/p/3363697947400328",
+          "keywords": [
+            "融资",
+            "增资",
+            "估值"
+          ],
+          "investors": [],
+          "confidence": 45,
+          "amount": "100亿元"
+        },
+        {
+          "source": "新浪财经",
+          "source_type": "finance_media",
+          "title": "爱尔眼科(300015.SZ)澄清：与湖南恒泰康康复医疗产业发展有限公司及其下属机构不存在股权控制、业务关联或经营管理关系",
+          "url": "https://finance.sina.com.cn/stock/bxjj/2026-02-06/doc-inhkvzum5138296.shtml",
+          "keywords": [
+            "投资"
+          ],
+          "investors": [
+            "爱尔医疗投资",
+            "是爱尔医疗投资与其他投资"
+          ],
+          "confidence": 28
+        }
+      ],
+      "checked_at": "2026-02-06T14:31:25.765880",
+      "category": "医疗器械",
+      "priority": "high"
+    },
+    {
+      "company": "百济神州",
+      "has_signal": true,
+      "confidence": 51,
+      "sources_count": 1,
+      "sources": [
+        "Firecrawl"
+      ],
+      "signals": [
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "百济神州争流史 - 知乎专栏",
+          "url": "https://zhuanlan.zhihu.com/p/506249883",
+          "keywords": [
+            "融资",
+            "投资",
+            "B轮"
+          ],
+          "investors": [
+            "多起投资"
+          ],
+          "confidence": 78,
+          "round": "B轮",
+          "amount": "292.08亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "出海浪潮下的资本创新：详解百济神州8.85亿美元RBF交易战略",
+          "url": "https://www.cbpfcn.com/news/5937",
+          "keywords": [
+            "融资",
+            "投资"
+          ],
+          "investors": [
+            "出海浪潮下的资本",
+            "百济神州与专业特许权投资"
+          ],
+          "confidence": 61,
+          "amount": "8.85亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "8年狂砸700亿搞研发百济神州亟需盈利补现 - 新浪财经",
+          "url": "https://finance.sina.com.cn/zmt/2025-03-04/doc-inennqmp5380202.shtml",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [
+            "百济神州未来资本"
+          ],
+          "confidence": 58,
+          "round": "上市",
+          "amount": "700亿"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "百济神州| 项目信息-36氪 - 创投平台",
+          "url": "https://pitchhub.36kr.com/project/1679650373096194",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [],
+          "confidence": 33,
+          "amount": "20.8亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "百济神州合作方获10亿融资，RNA药物或再迎风口",
+          "url": "https://www.phirda.com/artilce_40448.html?module=trackingCodeGenerator",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [],
+          "confidence": 25,
+          "amount": "14.5亿美元"
+        }
+      ],
+      "checked_at": "2026-02-06T14:31:32.210918",
+      "category": "创新药",
+      "priority": "high"
+    },
+    {
+      "company": "信达生物",
+      "has_signal": true,
+      "confidence": 45,
+      "sources_count": 2,
+      "sources": [
+        "Firecrawl",
+        "新浪财经"
+      ],
+      "signals": [
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "信达生物| 项目信息-36氪 - 创投平台",
+          "url": "https://pitchhub.36kr.com/project/1678290670580739",
+          "keywords": [
+            "融资",
+            "D轮",
+            "E轮",
+            "股权融资",
+            "IPO"
+          ],
+          "investors": [],
+          "confidence": 93,
+          "round": "E轮",
+          "amount": "1.5亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "现有主要投资者 - 信达生物制药",
+          "url": "https://investor.innoventbio.com/cn/investors/current-key-investors",
+          "keywords": [
+            "融资",
+            "投资"
+          ],
+          "investors": [
+            "现有主要投资",
+            "国制药行业最大的私募资本",
+            "得到国际顶级资本",
+            "形成了利用全球资本"
+          ],
+          "confidence": 71,
+          "amount": "5.8亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "信达生物- 维基百科，自由的百科全书",
+          "url": "https://zh.wikipedia.org/zh-hans/%E4%BF%A1%E9%81%94%E7%94%9F%E7%89%A9",
+          "keywords": [
+            "融资",
+            "A轮",
+            "B轮"
+          ],
+          "investors": [],
+          "confidence": 65,
+          "round": "A轮",
+          "amount": "1000万美元"
+        },
+        {
+          "source": "新浪财经",
+          "source_type": "finance_media",
+          "title": "前信达生物高管创业，拿下4.3亿元融资",
+          "url": "https://k.sina.com.cn/article_5953466437_162dab04506709nlow.html",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [
+            "三星风投",
+            "制药等国内外知名产业资本"
+          ],
+          "confidence": 51,
+          "amount": "4.3亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "超43亿港元！信达生物配股融资持续推动全球研发布局 - 医药魔方",
+          "url": "https://www.pharmcube.com/newsLibrary/detail?id=fe91ce5b8288faf2d7f3a0762c6af1f6",
+          "keywords": [
+            "融资",
+            "投资"
+          ],
+          "investors": [
+            "机构或其他投资"
+          ],
+          "confidence": 48,
+          "amount": "43亿"
+        },
+        {
+          "source": "新浪财经",
+          "source_type": "finance_media",
+          "title": "信达生物亮剑了！全球首款双靶点减肥药获批，43亿港元融资抢滩全球市场！",
+          "url": "https://k.sina.com.cn/article_5953466437_162dab04506708fmnu.html",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [],
+          "confidence": 45,
+          "round": "上市",
+          "amount": "43亿"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "信达融资5.5 亿美元，剑指全球化",
+          "url": "https://www.phirda.com/artilce_39346.html?module=trackingCodeGenerator",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [],
+          "confidence": 25,
+          "amount": "5.5亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "[PDF] 信达生物制药集团2025年度期中业绩报告",
+          "url": "https://investor.innoventbio.com/media/1324/%E4%BF%A1%E8%BE%BE%E7%94%9F%E7%89%A9_2025%E5%8D%8A%E5%B9%B4%E5%BA%A6%E4%B8%9A%E7%BB%A9%E5%85%AC%E5%91%8A_%E6%8C%82%E7%BD%91%E7%89%88.pdf",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [],
+          "confidence": 25,
+          "amount": "10亿"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "信达生物超43亿港元配股融资，全球研发战略再升级 - 智慧芽",
+          "url": "https://www.zhihuiya.com/news/info_9651.html",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [],
+          "confidence": 25,
+          "amount": "43亿"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "信达生物折价配股募资约43亿港元近期多家头部药企再融资动作频频",
+          "url": "https://www.stcn.com/article/detail/2285162.html",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [],
+          "confidence": 25,
+          "amount": "43亿"
+        }
+      ],
+      "checked_at": "2026-02-06T14:31:36.494707",
+      "category": "创新药",
+      "priority": "high"
+    },
+    {
+      "company": "推想科技",
+      "has_signal": true,
+      "confidence": 95,
+      "sources_count": 2,
+      "sources": [
+        "Firecrawl",
+        "新浪财经"
+      ],
+      "signals": [
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "【独家】推想科技获红杉领投5000万A轮融资，人工智能开年受宠-36氪",
+          "url": "https://m.36kr.com/p/1721200181249",
+          "keywords": [
+            "融资",
+            "投资",
+            "A轮",
+            "领投",
+            "跟投"
+          ],
+          "investors": [
+            "本轮投资",
+            "推想科技获红杉",
+            "本轮投资由红杉",
+            "上一轮投资人英诺天使基金",
+            "本轮投资由红杉资本"
+          ],
+          "confidence": 95,
+          "round": "A轮",
+          "amount": "5000万"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "推想科技完成1.2亿元B轮融资，泰合资本担任独家财务顾问",
+          "url": "https://www.taihecap.com/news_list_show-9-321.html",
+          "keywords": [
+            "融资",
+            "投资",
+            "B轮",
+            "领投"
+          ],
+          "investors": [
+            "红杉中国联合投资",
+            "泰合资本",
+            "元生资本",
+            "由启明创投"
+          ],
+          "confidence": 95,
+          "round": "B轮",
+          "amount": "1.2亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "1.16融资清单：推想科技完成A轮融资,金额5000万人民币",
+          "url": "https://m.cyzone.cn/article/157052",
+          "keywords": [
+            "融资",
+            "投资",
+            "A轮"
+          ],
+          "investors": [
+            "投资方红杉",
+            "投资方红杉资本中国基金",
+            "投资方红杉资本",
+            "臻云创投",
+            "英诺天使基金"
+          ],
+          "confidence": 95,
+          "round": "A轮",
+          "amount": "5000万人民币"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "推想科技完成1250万天使轮融资 - 动脉网",
+          "url": "https://www.vbdata.cn/intelDetail/537844",
+          "keywords": [
+            "融资",
+            "投资",
+            "天使轮"
+          ],
+          "investors": [
+            "臻云创投",
+            "投资机构包括英诺天使基金"
+          ],
+          "confidence": 95,
+          "round": "天使轮",
+          "amount": "1250万"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "私募通数据日报：医学AI公司推想科技获1.2亿元B轮融资 - 界面新闻",
+          "url": "https://m.jiemian.com/article/1643043.html",
+          "keywords": [
+            "融资",
+            "投资",
+            "B轮",
+            "领投"
+          ],
+          "investors": [
+            "本轮融资由启明",
+            "红杉中国联合投资",
+            "本轮融资由启明创投",
+            "元生资本"
+          ],
+          "confidence": 95,
+          "round": "B轮",
+          "amount": "1.2亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "【熵周刊】推想科技完成3亿元C轮融资美年战略投资智云健康",
+          "url": "http://www.cn-healthcare.com/api/third/article/501696",
+          "keywords": [
+            "融资",
+            "投资",
+            "C轮",
+            "天使轮",
+            "战略投资"
+          ],
+          "investors": [
+            "广发乾和以及英诺天使基金",
+            "月完成由红杉",
+            "臻云创投",
+            "轮融资美年战略投资",
+            "月完成由红杉资本"
+          ],
+          "confidence": 95,
+          "round": "天使轮",
+          "amount": "3亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "启明创投投资企业推想医疗完成D2轮融资，入选联合国全球医药设备 ...",
+          "url": "https://www.qimingvc.com/cn/news/%E5%90%AF%E6%98%8E%E6%98%9F-%E5%90%AF%E6%98%8E%E5%88%9B%E6%8A%95%E6%8A%95%E8%B5%84%E4%BC%81%E4%B8%9A%E6%8E%A8%E6%83%B3%E5%8C%BB%E7%96%97%E5%AE%8C%E6%88%90d2%E8%BD%AE%E8%9E%8D%E8%B5%84%EF%BC%8C%E5%85%A5%E9%80%89%E8%81%94%E5%90%88%E5%9B%BD%E5%85%A8%E7%90%83%E5%8C%BB%E8%8D%AF%E8%AE%BE%E5%A4%87%E9%87%87%E8%B4%AD%E5%90%8D%E5%BD%95",
+          "keywords": [
+            "融资",
+            "投资",
+            "D轮"
+          ],
+          "investors": [
+            "启明创投投资",
+            "启明创投",
+            "投资方包括启峰资本"
+          ],
+          "confidence": 95,
+          "round": "D轮",
+          "amount": "9亿人民币"
+        },
+        {
+          "source": "新浪财经",
+          "source_type": "finance_media",
+          "title": "生数科技完成超6亿元A+轮融资创国内视频生成领域最大单笔融资",
+          "url": "https://cj.sina.com.cn/articles/view/5597884738/14da8f142020021tc8",
+          "keywords": [
+            "融资",
+            "投资",
+            "战略投资",
+            "领投"
+          ],
+          "investors": [
+            "星连资本",
+            "觉中国等上市公司战略投资"
+          ],
+          "confidence": 95,
+          "round": "A+轮",
+          "amount": "6亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "推想科技完成9亿人民币D+轮融资- 资本- 亿邦动力",
+          "url": "https://www.ebrun.com/20210723/444883.shtml",
+          "keywords": [
+            "融资",
+            "投资"
+          ],
+          "investors": [
+            "启峰资本",
+            "中关村并购母基金"
+          ],
+          "confidence": 89,
+          "round": "D+轮",
+          "amount": "9亿人民币"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "关于我们-推想医疗科技股份有限公司-致力成为全院级AI品牌",
+          "url": "https://www.infervision.com/about.html",
+          "keywords": [
+            "融资",
+            "A轮",
+            "B轮",
+            "C轮",
+            "天使轮"
+          ],
+          "investors": [],
+          "confidence": 70,
+          "round": "天使轮"
+        }
+      ],
+      "checked_at": "2026-02-06T14:31:42.217495",
+      "category": "医疗AI",
+      "priority": "high"
+    },
+    {
+      "company": "数坤科技",
+      "has_signal": true,
+      "confidence": 74,
+      "sources_count": 2,
+      "sources": [
+        "Firecrawl",
+        "新浪财经"
+      ],
+      "signals": [
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "1年2次融资过亿元，受资本青睐的数坤科技切中了行业什么痛点？",
+          "url": "https://m.cyzone.cn/article/187038",
+          "keywords": [
+            "融资",
+            "投资",
+            "A轮",
+            "天使轮"
+          ],
+          "investors": [
+            "万元天使轮投资",
+            "月远毅资本",
+            "由华盖资本"
+          ],
+          "confidence": 95,
+          "round": "天使轮",
+          "amount": "2200万元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "数坤科技正式递表港交所：上半年亏损7500万元，红杉等为股东 - Bilibili",
+          "url": "https://www.bilibili.com/read/cv13277825",
+          "keywords": [
+            "融资",
+            "领投",
+            "IPO"
+          ],
+          "investors": [
+            "其完成红杉",
+            "其完成红杉资本",
+            "其完成红杉资本中国基金"
+          ],
+          "confidence": 95,
+          "round": "IPO",
+          "amount": "4亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "数坤科技重启IPO 深度布局人工智能医学影像解决方案 - 证券时报",
+          "url": "https://www.stcn.com/article/detail/787173.html?u_atoken=d45812685b6b86629b14da1c9dd4a3ee&u_asig=ffbfd",
+          "keywords": [
+            "融资",
+            "投资",
+            "D轮",
+            "IPO"
+          ],
+          "investors": [
+            "春华资本",
+            "该轮融资投资"
+          ],
+          "confidence": 95,
+          "round": "D轮",
+          "amount": "7亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "关于数坤-数坤科技官方网站",
+          "url": "https://www.shukun.com/about.html",
+          "keywords": [
+            "融资",
+            "投资",
+            "领投"
+          ],
+          "investors": [
+            "春华资本",
+            "红杉资本",
+            "红杉资本中国基金",
+            "简街资本",
+            "简街资本等联合投资"
+          ],
+          "confidence": 87
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "数坤科技已完成新一轮数亿元融资，闯关IPO后能否杀死比赛？ - 知乎",
+          "url": "https://zhuanlan.zhihu.com/p/1969432046729401148",
+          "keywords": [
+            "融资",
+            "领投",
+            "IPO"
+          ],
+          "investors": [
+            "年官宣获得红杉"
+          ],
+          "confidence": 78,
+          "round": "IPO",
+          "amount": "5.9亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "独家｜AI医疗影像独角兽数坤科技再冲IPO - 新浪财经",
+          "url": "https://finance.sina.com.cn/jjxw/2025-11-03/doc-infwaxxx1471525.shtml",
+          "keywords": [
+            "融资",
+            "D轮",
+            "估值",
+            "IPO"
+          ],
+          "investors": [],
+          "confidence": 75,
+          "round": "D轮",
+          "amount": "94亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "数坤科技再启IPO估值曾达94亿元 - 观点网",
+          "url": "https://www.guandian.cn/article/20251103/521415.html",
+          "keywords": [
+            "融资",
+            "D轮",
+            "估值",
+            "IPO"
+          ],
+          "investors": [],
+          "confidence": 75,
+          "round": "D轮",
+          "amount": "94亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "独家｜AI医疗影像独角兽数坤科技再冲IPO - ByDrug",
+          "url": "https://bydrug.pharmcube.com/news/detail/39595bc3c75acd03b6628758d780ca83",
+          "keywords": [
+            "融资",
+            "D轮",
+            "估值",
+            "IPO"
+          ],
+          "investors": [],
+          "confidence": 75,
+          "round": "D轮",
+          "amount": "94亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "数坤科技| 项目信息-36氪 - 创投平台",
+          "url": "https://pitchhub.36kr.com/project/1678464291927042",
+          "keywords": [
+            "融资",
+            "领投"
+          ],
+          "investors": [
+            "启明创投"
+          ],
+          "confidence": 56,
+          "amount": "2亿元"
+        },
+        {
+          "source": "新浪财经",
+          "source_type": "finance_media",
+          "title": "打造半导体设备国产“强心脏”，槃实科技完成亿元级A轮融资",
+          "url": "https://t.cj.sina.com.cn/articles/view/1960136440/74d54ef8001025cr8",
+          "keywords": [
+            "融资",
+            "A轮"
+          ],
+          "investors": [],
+          "confidence": 40,
+          "round": "A轮"
+        }
+      ],
+      "checked_at": "2026-02-06T14:31:48.478153",
+      "category": "医疗AI",
+      "priority": "high"
+    },
+    {
+      "company": "微医集团",
+      "has_signal": true,
+      "confidence": 64,
+      "sources_count": 1,
+      "sources": [
+        "Firecrawl"
+      ],
+      "signals": [
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "估值480亿独角兽，再闯港交所 - 投中网",
+          "url": "https://www.chinaventure.com.cn/news/111-20250102-384579.html",
+          "keywords": [
+            "融资",
+            "投资",
+            "估值",
+            "IPO"
+          ],
+          "investors": [
+            "红杉资本与千禧投资",
+            "红杉资本"
+          ],
+          "confidence": 95,
+          "round": "Pre-I",
+          "amount": "4亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "微医控股IPO：AI“标签”含金量不足，连年亏损、实控人曾违规 - 维科号",
+          "url": "https://mp.ofweek.com/display/a156714320677",
+          "keywords": [
+            "融资",
+            "IPO"
+          ],
+          "investors": [
+            "微医控股一直是资本"
+          ],
+          "confidence": 76,
+          "round": "IPO",
+          "amount": "14.5亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "微医刚宣布：5亿美金Pre-IPO融资完成，估值55亿美元 - 界面新闻",
+          "url": "https://m.jiemian.com/article/2123201.html",
+          "keywords": [
+            "融资",
+            "领投",
+            "估值",
+            "IPO"
+          ],
+          "investors": [],
+          "confidence": 75,
+          "round": "Pre-I",
+          "amount": "55亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "微医集团| 项目信息 - 创投平台- 36氪",
+          "url": "https://pitchhub.36kr.com/project/1713107181709832",
+          "keywords": [
+            "融资",
+            "股权融资",
+            "IPO"
+          ],
+          "investors": [],
+          "confidence": 73,
+          "round": "Pre-I",
+          "amount": "4亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "单一客户营收占比超50% 微医再冲港股IPO - 中国经营网",
+          "url": "http://www.cb.com.cn/index/show/bzyc/cv/cv135242211641",
+          "keywords": [
+            "融资",
+            "估值",
+            "IPO"
+          ],
+          "investors": [],
+          "confidence": 65,
+          "round": "G轮",
+          "amount": "67亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "微医再度递表港交所，G轮投后估值达67亿美元 - 医药魔方",
+          "url": "https://www.pharmcube.com/newsLibrary/detail?id=bcde2acc93a678c247a6699985035ab9",
+          "keywords": [
+            "融资",
+            "估值"
+          ],
+          "investors": [],
+          "confidence": 55,
+          "round": "G轮",
+          "amount": "67亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "技术霸榜、增长破局与现金流转正：微医控股完成关键一跃 - 中新经纬",
+          "url": "https://www.jwview.com/jingwei/html/m/02-03/657607.shtml",
+          "keywords": [
+            "融资",
+            "投资",
+            "估值"
+          ],
+          "investors": [
+            "中新经纬"
+          ],
+          "confidence": 51
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "硬核AI、高速增长与接近盈利：微医控股提速换挡解锁高质量发展",
+          "url": "https://finance.sina.cn/stock/jdts/2026-02-03/detail-inhkpeii0307892.d.html?vt=4&cid=76993&node_id=76993",
+          "keywords": [
+            "融资",
+            "投资",
+            "估值"
+          ],
+          "investors": [],
+          "confidence": 38
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "微医_百度百科",
+          "url": "https://baike.baidu.com/item/%E5%BE%AE%E5%8C%BB/53194826",
+          "keywords": [
+            "投资"
+          ],
+          "investors": [
+            "中投中财等知名机构投资",
+            "晨兴资本"
+          ],
+          "confidence": 36
+        }
+      ],
+      "checked_at": "2026-02-06T14:31:55.790620",
+      "category": "互联网医疗",
+      "priority": "high"
+    },
+    {
+      "company": "丁香园",
+      "has_signal": true,
+      "confidence": 85,
+      "sources_count": 2,
+      "sources": [
+        "Firecrawl",
+        "新浪财经"
+      ],
+      "signals": [
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "马化腾、雷军加持的丁香园，要赴港上市了？",
+          "url": "https://user.guancha.cn/main/content?id=1510808",
+          "keywords": [
+            "融资",
+            "投资",
+            "A轮",
+            "B轮",
+            "增资"
+          ],
+          "investors": [
+            "市政府设立的创投引导基金",
+            "府设立的创投引导基金投资",
+            "中国投资",
+            "获得杭州市政府设立的创投"
+          ],
+          "confidence": 95,
+          "round": "A轮",
+          "amount": "200万美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "丁香园完成5亿美元E轮融资 - 人民网",
+          "url": "http://capital.people.com.cn/n1/2020/1229/c406063-31983016.html",
+          "keywords": [
+            "融资",
+            "投资",
+            "E轮",
+            "领投",
+            "跟投"
+          ],
+          "investors": [
+            "高瓴创投"
+          ],
+          "confidence": 95,
+          "round": "E轮",
+          "amount": "5亿美元"
+        },
+        {
+          "source": "新浪财经",
+          "source_type": "finance_media",
+          "title": "三石园科技完成近亿元D轮融资",
+          "url": "https://finance.sina.com.cn/tech/roll/2026-02-05/doc-inhkucci5832897.shtml",
+          "keywords": [
+            "融资",
+            "D轮",
+            "领投",
+            "跟投"
+          ],
+          "investors": [
+            "融资由中信金石和光合创投",
+            "静水湖创投",
+            "希扬资本",
+            "励石创投及老股东中南创投"
+          ],
+          "confidence": 95,
+          "round": "D轮"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "放弃博士学位，50岁东北医生，干出一个IPO-36氪",
+          "url": "https://m.36kr.com/p/3461004933305987",
+          "keywords": [
+            "融资",
+            "投资",
+            "IPO"
+          ],
+          "investors": [
+            "顺为资本",
+            "腾讯投资等机构的投资"
+          ],
+          "confidence": 84,
+          "round": "IPO"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "49亿资本苦等15年，丁香园终于IPO？",
+          "url": "https://zhuanlan.zhihu.com/p/1949167130873426569",
+          "keywords": [
+            "融资",
+            "D轮",
+            "估值",
+            "IPO"
+          ],
+          "investors": [],
+          "confidence": 83,
+          "round": "D轮",
+          "amount": "10亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "两次差点“夭折”，医疗独角兽丁香园创业故事",
+          "url": "https://m.cyzone.cn/article/579082",
+          "keywords": [
+            "融资",
+            "D轮",
+            "估值",
+            "IPO"
+          ],
+          "investors": [],
+          "confidence": 75,
+          "round": "D轮",
+          "amount": "1亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "【熵周刊】丁香园估值达10亿美元百奥赛图获4.1亿元C轮融资",
+          "url": "http://www.cn-healthcare.com/api/third/article/502399",
+          "keywords": [
+            "融资",
+            "C轮",
+            "D轮",
+            "估值"
+          ],
+          "investors": [],
+          "confidence": 75,
+          "round": "C轮",
+          "amount": "10亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "成立20年，丁香园终于要IPO！49亿资本的天终于要亮了？ - 新浪财经",
+          "url": "https://cj.sina.cn/articles/view/5953189932/162d6782c067035sm0?froms=ggmp",
+          "keywords": [
+            "融资",
+            "D轮",
+            "IPO"
+          ],
+          "investors": [],
+          "confidence": 73,
+          "round": "D轮",
+          "amount": "6.87亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "丁香园完成5亿美元融资，将持续巩固专业壁垒、加强“上游”布局",
+          "url": "https://m.ikanchai.com/pcarticle/400769",
+          "keywords": [
+            "融资",
+            "领投",
+            "跟投"
+          ],
+          "investors": [
+            "高瓴创投"
+          ],
+          "confidence": 66,
+          "amount": "5亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "丁香园完成5 亿美元融资，腾讯、高瓴创投参投",
+          "url": "https://www.ctoutiao.com/2814347.html",
+          "keywords": [
+            "融资",
+            "领投",
+            "跟投"
+          ],
+          "investors": [
+            "高瓴创投"
+          ],
+          "confidence": 66,
+          "amount": "5亿美元"
+        }
+      ],
+      "checked_at": "2026-02-06T14:32:01.584311",
+      "category": "互联网医疗",
+      "priority": "high"
+    },
+    {
+      "company": "华大基因",
+      "has_signal": true,
+      "confidence": 35,
+      "sources_count": 1,
+      "sources": [
+        "Firecrawl"
+      ],
+      "signals": [
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "交易对价约3.66亿元，华大智造拟收购两大前沿业务 - 南方+",
+          "url": "https://www.nfnews.com/content/n614e1KO3P.html",
+          "keywords": [
+            "融资",
+            "估值"
+          ],
+          "investors": [],
+          "confidence": 35,
+          "amount": "3.66亿元"
+        }
+      ],
+      "checked_at": "2026-02-06T14:32:05.944437",
+      "category": "基因检测",
+      "priority": "high"
+    },
+    {
+      "company": "燃石医学",
+      "has_signal": true,
+      "confidence": 88,
+      "sources_count": 1,
+      "sources": [
+        "Firecrawl"
+      ],
+      "signals": [
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "燃石医学宣布完成C轮8.5亿人民币融资，打造国际领先的肿瘤精准 ...",
+          "url": "https://cn.lavfund.com/blog/c-8-5",
+          "keywords": [
+            "融资",
+            "投资",
+            "C轮",
+            "领投"
+          ],
+          "investors": [
+            "礼来亚洲基金",
+            "新加坡政府投资",
+            "济峰资本"
+          ],
+          "confidence": 95,
+          "round": "C轮",
+          "amount": "8.5亿人民币"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "燃石医学赴美IPO，四年亏损超5亿，基因检测公司盈利难在哪? - 36氪",
+          "url": "https://m.36kr.com/p/738133367825540",
+          "keywords": [
+            "融资",
+            "投资",
+            "IPO"
+          ],
+          "investors": [
+            "比如红杉",
+            "投资方包括多家一线PE",
+            "北极光创投",
+            "比如红杉资本"
+          ],
+          "confidence": 95,
+          "round": "IPO",
+          "amount": "2.4亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "燃石医学美国上市：市值25亿美元医疗已成热门投资赛道 - 新浪财经",
+          "url": "https://finance.sina.cn/hkstock/gggd/2020-06-13/detail-iirczymk6758582.d.html?vt=4",
+          "keywords": [
+            "融资",
+            "投资",
+            "B轮",
+            "C轮"
+          ],
+          "investors": [
+            "亿美元医疗已成热门投资",
+            "新加坡政府投资",
+            "投资方包括红杉",
+            "投资方包括红杉资本",
+            "济峰资本"
+          ],
+          "confidence": 95,
+          "round": "B轮",
+          "amount": "25亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "掘金下一片金矿：燃石医学闯关纳斯达克背后的资本故事- 21世纪经济 ...",
+          "url": "https://m.21jingji.com/article/20200618/5bf0c4d9e04d4c73d9fb9ae65c0d30fa_zaker.html",
+          "keywords": [
+            "融资",
+            "投资",
+            "IPO"
+          ],
+          "investors": [
+            "红杉资本",
+            "红杉资本中国基金",
+            "华的投资人团队囊括了北极光",
+            "济峰资本",
+            "学闯关纳斯达克背后的资本"
+          ],
+          "confidence": 95,
+          "round": "IPO",
+          "amount": "2亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "燃石医学获得B轮3亿元人民币融资_ 企业新闻_ 社区_ 小桔灯网_ 体外 ...",
+          "url": "https://www.iivd.net/thread-35203-1-1.html",
+          "keywords": [
+            "融资",
+            "投资",
+            "B轮"
+          ],
+          "investors": [
+            "投资方包括红杉",
+            "投资方包括红杉资本",
+            "济峰资本"
+          ],
+          "confidence": 95,
+          "round": "B轮",
+          "amount": "3亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "燃石医学获3亿元B轮融资，资本助力肿瘤医疗_CACLP体外诊断资讯网",
+          "url": "https://www.caclp.cn/article/?detail_1991.html",
+          "keywords": [
+            "融资",
+            "B轮"
+          ],
+          "investors": [
+            "融资方包括红杉",
+            "济峰资本",
+            "融资方包括红杉资本"
+          ],
+          "confidence": 86,
+          "round": "B轮",
+          "amount": "3亿元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "来自NGS一哥的教训：不要在谷底，才想起来跑得太快了 - OFweek",
+          "url": "https://m.ofweek.com/medical/2024-02/ART-11163-8420-30626683.html",
+          "keywords": [
+            "融资",
+            "IPO"
+          ],
+          "investors": [
+            "更是成功抓住资本"
+          ],
+          "confidence": 68,
+          "round": "IPO",
+          "amount": "2.4亿美元"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "总融资额超13亿的燃石医学为何成为投资人眼里的香饽饽？ - 动脉网",
+          "url": "https://www.vbdata.cn/40964",
+          "keywords": [
+            "融资",
+            "投资"
+          ],
+          "investors": [
+            "资便得到了联想之星和北极光",
+            "亿的燃石医学为何成为投资"
+          ],
+          "confidence": 61,
+          "amount": "13亿"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "圣诺医药融资2.08亿港币；燃石医学第二季度亏损970万元港股创新药 ...",
+          "url": "https://xueqiu.com/7006267479/351687981",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [],
+          "confidence": 25,
+          "amount": "2.08亿"
+        },
+        {
+          "source": "Firecrawl",
+          "source_type": "search_engine",
+          "title": "圣诺医药融资2.08亿港币；燃石医学第二季度亏损970万元 - ByDrug",
+          "url": "https://bydrug.pharmcube.com/news/detail/1b0409c40383aebf8f5300767d8b3f7a",
+          "keywords": [
+            "融资"
+          ],
+          "investors": [],
+          "confidence": 25,
+          "amount": "2.08亿"
+        }
+      ],
+      "checked_at": "2026-02-06T14:32:11.431059",
+      "category": "基因检测",
+      "priority": "high"
+    }
+  ]
+}

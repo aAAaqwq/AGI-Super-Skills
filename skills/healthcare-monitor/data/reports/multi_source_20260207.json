@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-02-07T19:24:03.717696",
+  "companies": [
+    {
+      "company": "迈瑞医疗",
+      "score": 2,
+      "total": 7,
+      "confidence": 28.57142857142857,
+      "conclusion": "❌ 不确定，不建议跟进",
+      "sources": {
+        "official": true,
+        "tianyancha": true,
+        "qichacha": true,
+        "media_count": 0,
+        "hiring_count": 0
+      }
+    },
+    {
+      "company": "联影医疗",
+      "score": 2,
+      "total": 7,
+      "confidence": 28.57142857142857,
+      "conclusion": "❌ 不确定，不建议跟进",
+      "sources": {
+        "official": true,
+        "tianyancha": true,
+        "qichacha": true,
+        "media_count": 0,
+        "hiring_count": 0
+      }
+    },
+    {
+      "company": "百济神州",
+      "score": 2,
+      "total": 7,
+      "confidence": 28.57142857142857,
+      "conclusion": "❌ 不确定，不建议跟进",
+      "sources": {
+        "official": true,
+        "tianyancha": true,
+        "qichacha": true,
+        "media_count": 0,
+        "hiring_count": 0
+      }
+    }
+  ]
+}
