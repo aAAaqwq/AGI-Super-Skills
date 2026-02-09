@@ -1,8 +1,8 @@
 # CC-Skills 技能库
 
-> 更新时间: 2026-02-06
+> 更新时间: 2026-02-09
 
-Claude Code / OpenClaw 技能集合，包含 96 个专业技能。
+Claude Code / OpenClaw 技能集合，包含 123 个专业技能。
 
 ---
 
@@ -51,6 +51,14 @@ Claude Code / OpenClaw 技能集合，包含 96 个专业技能。
 | [test-runner](./test-runner/) | 测试运行器 |
 | [cursor-agent](./cursor-agent/) | Cursor Agent |
 | [debug-pro](./debug-pro/) | 专业调试 |
+| [docker-essentials](./skills/backend/docker-essentials/) | Docker 容器管理基础命令 |
+| [linux-service-triage](./skills/backend/linux-service-triage/) | Linux 服务故障诊断 |
+| [senior-architect](./skills/backend/senior-architect/) | 系统架构设计 |
+| [senior-devops](./skills/backend/senior-devops/) | DevOps CI/CD 与基础设施 |
+| [backend-patterns](./skills/backend/backend-patterns/) | 后端架构模式 |
+| [sysadmin-toolbox](./skills/backend/sysadmin-toolbox/) | 系统管理员工具箱 |
+| [bat-cat](./skills/coding-agent/bat-cat/) | 现代 cat 替代工具 (语法高亮) |
+| [tdd-guide](./skills/coding-agent/tdd-guide/) | 测试驱动开发指南 |
 
 ### 🌐 浏览器/自动化
 
@@ -160,6 +168,9 @@ Claude Code / OpenClaw 技能集合，包含 96 个专业技能。
 | [github-automation](./github-automation/) | GitHub 自动化 |
 | [gitclaw](./gitclaw/) | OpenClaw Git 备份 |
 | [git-sync](./git-sync/) | Git 同步 |
+| [commit-analyzer](./skills/git-project/commit-analyzer/) | Git 提交分析 |
+| [conventional-commits](./skills/git-project/conventional-commits/) | 约定式提交规范 |
+| [git-essentials](./skills/git-project/git-essentials/) | Git 基础命令 |
 
 ### 🏥 行业专用
 
@@ -188,6 +199,22 @@ Claude Code / OpenClaw 技能集合，包含 96 个专业技能。
 | [email-automation](./email-automation/) | 邮件自动化 |
 | [spool](./spool/) | Spool 任务队列 |
 | [claude-optimised](./claude-optimised/) | Claude 优化 |
+| [auth-manager](./skills/misc/auth-manager/) | 网页登录态管理 |
+| [context-manager](./skills/misc/context-manager/) | AI 上下文管理 |
+| [context-recovery](./skills/misc/context-recovery/) | 会话上下文恢复 |
+| [daily-rhythm](./skills/misc/daily-rhythm/) | 每日节奏规划 |
+| [deepwork-tracker](./skills/misc/deepwork-tracker/) | 深度工作追踪 |
+| [fabric-pattern](./skills/misc/fabric-pattern/) | Fabric 模式集成 |
+| [memory-hygiene](./skills/misc/memory-hygiene/) | 向量记忆清理 |
+| [prompt-optimizer](./skills/misc/prompt-optimizer/) | 提示词优化 |
+| [security-audit](./skills/misc/security-audit/) | 安全审计 |
+| [security-monitor](./skills/misc/security-monitor/) | 安全监控 |
+| [skillforge](./skills/misc/skillforge/) | 智能技能路由与创建 |
+| [task-status](./skills/misc/task-status/) | 任务状态推送 |
+| [clawdbot-backup](./skills/misc/clawdbot-backup/) | 配置备份恢复 |
+| [context-compressor](./skills/misc/context-compressor/) | 上下文压缩 |
+| [god-mode](./skills/misc/god-mode/) | 高级模式 |
+| [skill-vetter](./skills/misc/skill-vetter/) | 技能安全审查 |
 
 ---
 
@@ -227,6 +254,13 @@ AGI-Super-Skills/
 ---
 
 ## 📝 更新日志
+
+### 2026-02-09
+- 技能总数更新至 123 个（新增 27 个技能）
+- **Backend**: 新增 docker-essentials, linux-service-triage, senior-architect, senior-devops, backend-patterns, sysadmin-toolbox
+- **Coding-agent**: 新增 bat-cat, tdd-guide
+- **Git-project**: 新增 commit-analyzer, conventional-commits, git-essentials
+- **Misc**: 新增 auth-manager, context-manager, context-recovery, daily-rhythm, deepwork-tracker, fabric-pattern, memory-hygiene, prompt-optimizer, security-audit, security-monitor, skillforge, task-status, clawdbot-backup, context-compressor, god-mode, skill-vetter
 
 ### 2026-02-06
 - 技能总数更新至 96 个
@@ -273,6 +307,6 @@ MIT License
 
 ## 📋 技能统计
 
-- 总技能数: **96**
+- 总技能数: **123**
 - 分类数: **15**
-- 最后更新: 2026-02-06
+- 最后更新: 2026-02-09

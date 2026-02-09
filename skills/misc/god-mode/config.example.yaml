@@ -1,0 +1,60 @@
+# god-mode configuration
+# Copy to ~/.config/god-mode/config.yaml
+
+# Projects to track
+# Format: provider:owner/repo or provider:org/project/repo
+projects:
+  # GitHub projects
+  - id: github:octocat/Hello-World
+    name: Hello World          # Optional display name
+    priority: high             # high, medium, low
+    tags: [example, demo]
+    local: ~/code/hello-world  # Optional local path
+
+  # Azure DevOps (coming soon)
+  # - id: azure:myorg/myproject/myrepo
+  #   priority: medium
+
+  # GitLab (coming soon)  
+  # - id: gitlab:mygroup/myrepo
+
+  # Local-only repo (no remote)
+  # - id: local:~/code/experiments
+  #   name: Experiments
+
+# Sync settings
+sync:
+  # How far back to look on first sync
+  initialDays: 90
+  
+  # Cache validity (minutes)
+  commitsCacheMinutes: 60
+  prsCacheMinutes: 15
+  issuesCacheMinutes: 15
+
+# Analysis settings
+analysis:
+  # Agent file patterns to search for (in order)
+  agentFiles:
+    - agents.md
+    - AGENTS.md
+    - CLAUDE.md
+    - .github/copilot-instructions.md
+    - .cursor/rules
+    - .cursorrules
+    - CODEX.md
+    - GEMINI.md
+
+  # Days of commit history for agent analysis
+  analysisWindowDays: 90
+
+# Output preferences  
+output:
+  # Use terminal colors
+  colors: true
+  
+  # Default detail level: compact, normal, verbose
+  defaultDetail: normal
+  
+  # Show timestamps in local timezone
+  localTime: true
