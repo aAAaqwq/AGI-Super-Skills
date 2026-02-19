@@ -1,5 +1,6 @@
 {
   "version": "1.0",
+  "mode": "live",
   "capital": {
     "total_usd": 3,
     "max_bet_per_market": 1,

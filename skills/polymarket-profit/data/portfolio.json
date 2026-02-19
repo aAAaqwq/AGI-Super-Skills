@@ -1,43 +1,9 @@
 {
-  "positions": [
-    {
-      "token_id": "khamenei-march31-no",
-      "market": "Khamenei out as Supreme Leader of Iran by March 31?",
-      "outcome": "No",
-      "side": "BUY",
-      "entry_price": 0.845,
-      "amount_usd": 0.6,
-      "shares": 0.7101,
-      "status": "open",
-      "opened_at": "2026-02-12T07:50:20.443538+00:00",
-      "strategy": "high_certainty"
-    },
-    {
-      "token_id": "fed-march-no-change-yes",
-      "market": "Will there be no change in Fed interest rates after the March meeting?",
-      "outcome": "Yes",
-      "side": "BUY",
-      "entry_price": 0.925,
-      "amount_usd": 0.6,
-      "shares": 0.6486,
-      "status": "open",
-      "opened_at": "2026-02-12T07:50:20.444203+00:00",
-      "strategy": "high_certainty"
-    },
-    {
-      "token_id": "russia-ukraine-ceasefire-march31-no",
-      "market": "Russia x Ukraine ceasefire by March 31, 2026?",
-      "outcome": "No",
-      "side": "BUY",
-      "entry_price": 0.935,
-      "amount_usd": 0.6,
-      "shares": 0.6417,
-      "status": "open",
-      "opened_at": "2026-02-12T07:50:20.444867+00:00",
-      "strategy": "high_certainty"
-    }
-  ],
-  "total_invested": 1.7999999999999998,
+  "positions": [],
+  "total_invested": 0,
   "total_realized_pnl": 0,
-  "last_updated": "2026-02-12T07:50:20.444902+00:00"
+  "mode": "live",
+  "capital": 3.0,
+  "last_updated": null,
+  "note": "已从模拟盘切换到真实交易，等待用户准备好钱包和USDC后开始建仓"
 }

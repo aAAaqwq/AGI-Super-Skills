@@ -1,49 +1,41 @@
-# Polymarket 高盈利预测方案
+# Polymarket 量化投资系统
 
-每日分析 Polymarket 预测市场，推送高盈利机会到 DailyNews 群。
+真实交易系统，$3 本金在 Polymarket 预测市场上执行量化策略。
 
 ## 概述
 
-- **目标**: 用 $3 本金在 Polymarket 上最大化盈利
-- **策略**: 低风险套利 + 信息优势预测
-- **推送**: 每日 20:00 CST 推送到 Telegram DailyNews 群
-- **交易所**: OKX（USDT → USDC → Polygon）
+- **模式**: 真实交易（非模拟盘）
+- **本金**: $3 USDC (Polygon)
+- **策略**: 高确定性套利 + CME 套利 + 事件驱动
+- **推送**: DailyNews 群 (@fkkanfnnfbot → -1003824568687)
+- **负责 Agent**: quant（量化投资专员）
+- **协作**: finance（资金核算）、research（情报）、news（新闻）
 
 ## 核心策略
 
-### 低风险策略（本金 < $5）
-1. **Holding Rewards 套利** - 4% 年化，同时买 Yes/No
-2. **Fed 利率市场套利** - 与 CME FedWatch 对比，>5% 差价时下注
-3. **高确定性事件 No** - 如 "Claude 5 by X date" No（低风险稳定）
+### 1. 高确定性 No (60% 仓位 ~$1.80)
+- 买入短期内极不可能发生事件的 No
+- 条件: No ≥ 85%, 剩余 ≤ 60 天
+- 预期: 15-25% 年化
 
-### 中风险策略（本金 $10-50）
-1. **体育赛事赔率波动** - 冬奥会/世界杯等
-2. **事件预测（信息优势）** - 政府关门、产品发布等
+### 2. CME 套利 (20% 仓位 ~$0.60)
+- Polymarket vs CME FedWatch 利率预期价差
+- 条件: 价差 > 5%
+- 预期: 低风险稳定
 
-### 风险控制
-- 本金 $3 **只用低风险策略**
-- 每次最大下注 **$1**
-- 分散 **3 个市场**
+### 3. 事件驱动 (20% 仓位 ~$0.60)
+- 基于新闻情报的信息优势交易
+- 需要 research/news 支持
+- 中风险高回报
 
-## 数据源
+## 风控
 
-| 数据源 | 用途 | 方式 |
-|--------|------|------|
-| Polymarket API | 实时赔率、交易量 | CLOB API / Gamma API |
-| CME FedWatch | 利率预期对比 | web_fetch |
-| 官方公告 | 产品发布、政策 | web_fetch |
-| 新闻源 | 事件跟踪 | web_fetch |
-
-## 使用方法
-
-### 手动运行
-```bash
-cd skills/polymarket-profit
-python3 scripts/daily_analyzer.py
-```
-
-### Cron 自动推送
-每日 20:00 CST 自动运行并推送到 DailyNews 群。
+| 规则 | 值 |
+|------|------|
+| 单笔上限 | $1 |
+| 最少分散 | 3 个市场 |
+| 止损线 | 赔率反向 15% |
+| 总本金 | $3 |
 
 ## 文件结构
 
@@ -54,18 +46,43 @@ skills/polymarket-profit/
 │   ├── markets.json      # 关注市场列表
 │   └── strategies.json   # 策略配置
 ├── scripts/
-│   ├── daily_analyzer.py # 每日分析主脚本
 │   ├── fetcher.py        # Polymarket 数据抓取
-│   └── analyzer.py       # 机会分析引擎
+│   ├── analyzer.py       # 机会分析引擎
+│   └── trader.py         # 真实交易执行模块
 ├── data/
-│   ├── odds/             # 赔率历史记录
-│   └── predictions/      # 预测记录与复盘
+│   ├── odds/             # 赔率历史快照 (JSONL)
+│   ├── portfolio.json    # 当前持仓
+│   ├── trade_log.json    # 交易日志
+│   └── reports/          # 投资报告
 └── templates/
     └── daily_report.md   # 推送模板
 ```
 
-## 推送目标
+## 使用
 
-- **Telegram Bot**: @fkkanfnnfbot (NewsRobot)
-- **群组**: DailyNews (`-1003824568687`)
-- **格式**: HTML（支持加粗、链接）
+```bash
+# 查看持仓
+python3 scripts/trader.py status
+
+# 健康检查
+python3 scripts/trader.py health
+
+# 生成交易指令
+python3 scripts/trader.py instruction --market <slug> --outcome No --amount 0.6 --price 0.85
+```
+
+## 交易流程
+
+1. quant agent 每日分析赔率快照 → 生成交易建议
+2. 推送到 DailyNews 群
+3. 用户确认 → 执行交易（网页手动 或 API 自动）
+4. 记录到 trade_log.json + portfolio.json
+5. finance agent 每周核算盈亏
+
+## 前置条件
+
+- [ ] Polymarket 账户（钱包登录）
+- [ ] $3 USDC 在 Polygon 网络
+- [ ] 少量 MATIC (gas)
+- [ ] (可选) Polymarket API Key
+- [ ] (可选) 钱包私钥（全自动模式）

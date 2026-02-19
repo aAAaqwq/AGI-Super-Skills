@@ -1,0 +1,6 @@
+{
+  "model": "zai/glm-4.7",
+  "subagents": {
+    "allowAgents": ["finance", "research", "news"]
+  }
+}

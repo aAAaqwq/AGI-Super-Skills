@@ -1,0 +1,604 @@
+{
+  "env": {
+    "vars": {
+      "ZAI_API_KEY": "YOUR_API_KEY_HERE",
+      "XINGJIABIAPI_KEY": "YOUR_API_KEY_HERE"
+    }
+  },
+  "auth": {
+    "profiles": {
+      "github-copilot:github": {
+        "provider": "github-copilot",
+        "mode": "token"
+      },
+      "zai:default": {
+        "provider": "zai",
+        "mode": "api_key"
+      },
+      "xingjiabiapi:default": {
+        "provider": "xingjiabiapi",
+        "mode": "api_key"
+      },
+      "moonshot:default": {
+        "provider": "moonshot",
+        "mode": "api_key"
+      },
+      "aixn:default": {
+        "provider": "aixn",
+        "mode": "api_key"
+      }
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "zai": {
+        "baseUrl": "https://open.bigmodel.cn/api/anthropic",
+        "apiKey": "YOUR_API_KEY_HERE",
+        "auth": "api-key",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "glm-4.7",
+            "name": "GLM-4.7",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      },
+      "xingjiabiapi": {
+        "baseUrl": "https://xingjiabiapi.com/v1",
+        "apiKey": "YOUR_API_KEY_HERE",
+        "auth": "api-key",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "gemini-3-pro-preview",
+            "name": "Gemini 3 Pro",
+            "reasoning": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          },
+          {
+            "id": "gemini-3-pro-image-preview",
+            "name": "Gemini 3 Pro Image",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          },
+          {
+            "id": "gemini-2.5-pro-preview-tts",
+            "name": "Gemini 2.5 Pro TTS",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          },
+          {
+            "id": "veo3.1",
+            "name": "Veo 3.1",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      },
+      "moonshot": {
+        "baseUrl": "https://api.moonshot.cn/v1",
+        "apiKey": "YOUR_API_KEY_HERE",
+        "auth": "api-key",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "kimi-k2.5",
+            "name": "Kimi K2.5",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 128000,
+            "maxTokens": 8192
+          }
+        ]
+      },
+      "aixn": {
+        "baseUrl": "https://ai.xn--vuq861bvij35ps8cv0uohm.com/v1",
+        "apiKey": "YOUR_API_KEY_HERE",
+        "auth": "api-key",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6",
+            "reasoning": false,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 5,
+              "output": 25,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 1000000,
+            "maxTokens": 32768
+          }
+        ]
+      },
+      "github-copilot": {
+        "baseUrl": "https://api.githubcopilot.com",
+        "auth": "api-key",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "claude-opus-4.5",
+            "name": "Claude Opus 4.5",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          },
+          {
+            "id": "claude-sonnet-4.5",
+            "name": "Claude Sonnet 4.5",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          },
+          {
+            "id": "gpt-5.2",
+            "name": "GPT-5.2",
+            "reasoning": false,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 16384
+          }
+        ]
+      },
+      "test-opus": {
+        "baseUrl": "http://122.152.193.46:62311/v1",
+        "apiKey": "YOUR_API_KEY_HERE",
+        "auth": "api-key",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6 (Test)",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "aixn/claude-opus-4-6",
+        "fallbacks": [
+          "xingjiabiapi/gemini-3-pro-preview",
+          "zai/glm-4.7"
+        ]
+      },
+      "models": {
+        "zai/glm-4.7": {
+          "alias": "zai47"
+        },
+        "aixn/claude-opus-4-6": {
+          "alias": "opus46"
+        },
+        "xingjiabiapi/gemini-3-pro-preview": {
+          "alias": "xjb-g3p"
+        },
+        "xingjiabiapi/gemini-3-pro-image-preview": {
+          "alias": "xjb-g3pi"
+        },
+        "xingjiabiapi/gemini-2.5-pro-preview-tts": {
+          "alias": "tts"
+        },
+        "xingjiabiapi/veo3.1": {
+          "alias": "xjb-veo3.1"
+        },
+        "moonshot/kimi-k2.5": {
+          "alias": "k2.5"
+        },
+        "github-copilot/claude-opus-4.5": {
+          "alias": "gh-opus45"
+        },
+        "github-copilot/claude-sonnet-4.5": {
+          "alias": "gh-sonnet45"
+        },
+        "github-copilot/gpt-5.2": {
+          "alias": "gpt5.2"
+        },
+        "test-opus/claude-opus-4-6": {
+          "alias": "t-opus46"
+        }
+      },
+      "workspace": "/home/aa/clawd",
+      "contextTokens": 300000,
+      "memorySearch": {
+        "provider": "openai",
+        "remote": {
+          "baseUrl": "https://xingjiabiapi.com/v1",
+          "batch": {
+            "enabled": false
+          }
+        }
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 8,
+      "subagents": {
+        "maxConcurrent": 16
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "subagents": {
+          "allowAgents": [
+            "*"
+          ]
+        }
+      },
+      {
+        "id": "news",
+        "name": "news",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/news/agent",
+        "model": "k2.5"
+      },
+      {
+        "id": "code",
+        "name": "code",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/code/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "research",
+        "name": "research",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/research/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "quick",
+        "name": "quick",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/quick/agent",
+        "model": "xjb-g3p"
+      },
+      {
+        "id": "batch",
+        "name": "batch",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/batch/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "telegram-agent",
+        "name": "telegram-agent",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/telegram-agent/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "whatsapp-agent",
+        "name": "whatsapp-agent",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/whatsapp-agent/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "feishu-agent",
+        "name": "feishu-agent",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/feishu-agent/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "healthcare-monitor",
+        "name": "healthcare-monitor",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/healthcare-monitor/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "multimodal-agent",
+        "name": "multimodal-agent",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/multimodal-agent/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "content",
+        "name": "content",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/content/agent",
+        "model": "k2.5"
+      },
+      {
+        "id": "critic",
+        "name": "critic",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/critic/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "finance",
+        "name": "finance",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/finance/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "knowledge",
+        "name": "knowledge",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/knowledge/agent",
+        "model": "xjb-g3p"
+      },
+      {
+        "id": "legal",
+        "name": "legal",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/legal/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "marketing",
+        "name": "marketing",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/marketing/agent",
+        "model": "k2.5"
+      },
+      {
+        "id": "ops",
+        "name": "ops",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/ops/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "product",
+        "name": "product",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/product/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "sales",
+        "name": "sales",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/sales/agent",
+        "model": "k2.5"
+      },
+      {
+        "id": "support",
+        "name": "support",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/support/agent",
+        "model": "xjb-g3p"
+      },
+      {
+        "id": "data",
+        "name": "data",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/data/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "pm",
+        "name": "pm",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/pm/agent",
+        "model": "opus46"
+      },
+      {
+        "id": "crm",
+        "name": "crm",
+        "workspace": "/home/aa/clawd",
+        "agentDir": "/home/aa/.openclaw/agents/crm/agent",
+        "model": "k2.5"
+      }
+    ]
+  },
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "telegram"
+      }
+    },
+    {
+      "agentId": "telegram-agent",
+      "match": {
+        "channel": "telegram"
+      }
+    },
+    {
+      "agentId": "whatsapp-agent",
+      "match": {
+        "channel": "whatsapp"
+      }
+    }
+  ],
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true
+  },
+  "hooks": {
+    "internal": {
+      "enabled": true,
+      "entries": {
+        "boot-md": {
+          "enabled": true
+        },
+        "command-logger": {
+          "enabled": true
+        },
+        "session-memory": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "channels": {
+    "whatsapp": {
+      "dmPolicy": "allowlist",
+      "selfChatMode": true,
+      "allowFrom": [
+        "+85261427064"
+      ],
+      "groupPolicy": "allowlist",
+      "mediaMaxMb": 50,
+      "debounceMs": 0
+    },
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "allowlist",
+      "botToken": "8390914484:AAGFQOMJkn9Pij-GpykwK8Qy0zW4S_4_EeQ",
+      "allowFrom": [
+        "REDACTED_TG_USER_ID"
+      ],
+      "groupPolicy": "allowlist",
+      "streamMode": "partial"
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "tailnet",
+    "auth": {
+      "mode": "token",
+      "token": "e3f04803caef9f1d6a7d0a55b8d0758c21d6a67e9a0052fc"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    }
+  },
+  "plugins": {
+    "entries": {
+      "whatsapp": {
+        "enabled": true
+      },
+      "telegram": {
+        "enabled": true
+      },
+      "wecom": {
+        "enabled": true
+      }
+    },
+    "installs": {
+      "wecom": {
+        "source": "npm",
+        "spec": "@sunnoy/wecom",
+        "installPath": "/home/aa/.openclaw/extensions/wecom",
+        "version": "1.2.0",
+        "installedAt": "2026-02-12T07:53:20.525Z"
+      }
+    }
+  }
+}

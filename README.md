@@ -1,312 +1,342 @@
-# CC-Skills 技能库
+# AGI-Super-Skills
 
-> 更新时间: 2026-02-09
+OpenClaw 完整环境备份与快速部署仓库。包含 Skills、Agents、配置模板和 Workspace 文件。
 
-Claude Code / OpenClaw 技能集合，包含 123 个专业技能。
+## 目录结构
 
----
+```
+├── skills/          # 200+ OpenClaw Skills
+├── agents/          # Agent 配置（模型、角色）
+├── config/          # OpenClaw 核心配置模板（已脱敏）
+├── workspace/       # Workspace 文件（AGENTS.md, SOUL.md 等）
+├── mcp/             # MCP Server 配置说明
+```
 
-## 📦 技能分类
+## Skills 列表
 
-### 🤖 AI/多模态
-
-| 技能 | 说明 |
-|------|------|
-| [video-generation](./video-generation/) | 视频生成 (Veo/Sora/Kling) |
-| [veo](./veo/) | Veo 视频生成 |
-| [veo3-video-gen](./veo3-video-gen/) | Veo3 视频生成 |
-| [ai-video-gen](./ai-video-gen/) | AI 视频生成 |
-| [multimodal-gen](./multimodal-gen/) | 多模态内容生成 |
-| [model-fallback](./model-fallback/) | 模型自动降级切换 |
-| [multi-agent-architecture](./multi-agent-architecture/) | 多 Agent 架构设计 |
-| [multi-coding-agent](./multi-coding-agent/) | 多 Agent 编程 |
-| [fal-ai](./fal-ai/) | Fal.ai API 集成 |
-| [krea-api](./krea-api/) | Krea.ai API 集成 |
-| [pollinations](./pollinations/) | Pollinations.ai API |
-| [chirp](./chirp/) | Chirp 音频生成 |
-
-### 💬 消息通道
-
-| 技能 | 说明 |
-|------|------|
-| [telegram-push](./telegram-push/) | Telegram 消息推送 |
-| [wechat-channel](./wechat-channel/) | 微信消息通道 |
-| [feishu-automation](./feishu-automation/) | 飞书自动化操作 |
-| [feishu-channel](./feishu-channel/) | 飞书消息通道 |
-| [feishu-doc-optimizer](./feishu-doc-optimizer/) | 飞书文档优化 |
-| [internal-comms](./internal-comms/) | 内部沟通 |
+### 🤖 AI / 生成类
+| Skill | 说明 |
+|-------|------|
+| ai-video-gen | AI 视频生成 |
+| fal-ai | Fal.ai 图像生成 |
+| image-enhancer | 图像增强 |
+| krea-api | Krea AI API |
+| multimodal-gen | 多模态内容生成 |
+| pollinations | Pollinations 图像生成 |
+| veo | Google Veo 视频生成 |
+| veo3-video-gen | Veo 3 视频生成 |
+| ffmpeg-video-editor | FFmpeg 视频编辑 |
+| video-downloader | 视频下载 |
+| video-frames | 视频帧提取 |
 
 ### 💻 开发工具
+| Skill | 说明 |
+|-------|------|
+| backend-development | 后端开发 |
+| frontend-development | 前端开发 |
+| frontend-design | 前端设计 |
+| electron-app-dev | Electron 应用开发 |
+| debug-pro | 高级调试 |
+| tdd-guide | TDD 指南 |
+| test-runner | 测试运行器 |
+| webapp-testing | Web 应用测试 |
+| commit-analyzer | Commit 分析 |
+| conventional-commits | 约定式提交 |
+| changelog-generator | 变更日志生成 |
+| senior-architect | 高级架构师 |
+| senior-devops | 高级 DevOps |
+| multi-coding-agent | 多编码 Agent |
+| claude-optimised | Claude 优化 |
+| prompt-optimizer | Prompt 优化 |
+| uml-diagram-design | UML 图设计 |
 
-| 技能 | 说明 |
-|------|------|
-| [backend-development](./backend-development/) | 后端开发 (Python/Node.js/Go/Java) |
-| [backend-tester](./backend-tester/) | 后端测试 |
-| [frontend-development](./frontend-development/) | 前端开发 |
-| [frontend-design](./frontend-design/) | 前端设计 |
-| [frontend-backend-integration](./frontend-backend-integration/) | 前后端集成 |
-| [electron-app-dev](./electron-app-dev/) | Electron 桌面应用开发 |
-| [docker-deployment](./docker-deployment/) | Docker 部署 |
-| [webapp-testing](./webapp-testing/) | Web 应用测试 |
-| [test-runner](./test-runner/) | 测试运行器 |
-| [cursor-agent](./cursor-agent/) | Cursor Agent |
-| [debug-pro](./debug-pro/) | 专业调试 |
-| [docker-essentials](./skills/backend/docker-essentials/) | Docker 容器管理基础命令 |
-| [linux-service-triage](./skills/backend/linux-service-triage/) | Linux 服务故障诊断 |
-| [senior-architect](./skills/backend/senior-architect/) | 系统架构设计 |
-| [senior-devops](./skills/backend/senior-devops/) | DevOps CI/CD 与基础设施 |
-| [backend-patterns](./skills/backend/backend-patterns/) | 后端架构模式 |
-| [sysadmin-toolbox](./skills/backend/sysadmin-toolbox/) | 系统管理员工具箱 |
-| [bat-cat](./skills/coding-agent/bat-cat/) | 现代 cat 替代工具 (语法高亮) |
-| [tdd-guide](./skills/coding-agent/tdd-guide/) | 测试驱动开发指南 |
+### 🔧 基础设施 / DevOps
+| Skill | 说明 |
+|-------|------|
+| docker-deployment | Docker 部署 |
+| docker-essentials | Docker 基础 |
+| env-setup | 环境配置 |
+| linux-service-triage | Linux 服务排障 |
+| security-audit | 安全审计 |
+| security-monitor | 安全监控 |
+| render-automation | Render 自动化 |
+| vercel-automation | Vercel 自动化 |
 
-### 🌐 浏览器/自动化
+### 📊 项目管理 / 协作
+| Skill | 说明 |
+|-------|------|
+| project-management | 项目管理 |
+| project-planner | 项目规划 |
+| project-context-sync | 项目上下文同步 |
+| task-status | 任务状态追踪 |
+| team-daily-report | 团队日报 |
+| meeting-insights-analyzer | 会议洞察分析 |
+| deepwork-tracker | 深度工作追踪 |
+| daily-rhythm | 日常节奏管理 |
 
-| 技能 | 说明 |
-|------|------|
-| [playwright-automation](./playwright-automation/) | Playwright 自动化（无头浏览器） |
-| [playwright-cli](./playwright-cli/) | Playwright CLI 工具 |
-| [chrome-automation](./chrome-automation/) | Chrome 自动化 |
-| [browser-use](./browser-use/) | 浏览器使用 |
-| [web-scraping-automation](./web-scraping-automation/) | 网页爬虫 |
-| [firecrawl-skills](./firecrawl-skills/) | Firecrawl 网页抓取 |
+### 📝 内容 / 写作
+| Skill | 说明 |
+|-------|------|
+| content-research-writer | 内容研究写作 |
+| seo-content-writing | SEO 内容写作 |
+| doc-coauthoring | 文档协作 |
+| brand-guidelines | 品牌指南 |
+| media-auto-publisher | 媒体自动发布 |
+| internal-comms | 内部通讯 |
+| moltbook / moltbook-interact | Moltbook 电子书 |
+| docx / docx-perfect | DOCX 文档处理 |
+| pdf | PDF 处理 |
+| pptx | PPTX 演示文稿 |
+| xlsx | Excel 处理 |
 
-### 📄 文档处理
+### 🌐 平台自动化（SaaS 集成）
+| Skill | 说明 |
+|-------|------|
+| github-automation | GitHub |
+| gitlab-automation | GitLab |
+| bitbucket-automation | Bitbucket |
+| slack-automation | Slack |
+| discord-automation | Discord |
+| telegram-automation | Telegram |
+| telegram-push | Telegram 推送 |
+| whatsapp-automation | WhatsApp |
+| feishu-automation | 飞书 |
+| feishu-channel | 飞书频道 |
+| wecom-automation | 企业微信 |
+| wecom-cs-automation | 企微客服 |
+| wechat-channel | 微信视频号 |
+| notion-automation | Notion |
+| jira-automation | Jira |
+| linear-automation | Linear |
+| trello-automation | Trello |
+| asana-automation | Asana |
+| clickup-automation | ClickUp |
+| monday-automation | Monday |
+| basecamp-automation | Basecamp |
+| confluence-automation | Confluence |
+| coda-automation | Coda |
+| miro-automation | Miro |
+| figma-automation | Figma |
+| canva-automation | Canva |
+| hubspot-automation | HubSpot |
+| salesforce-automation | Salesforce |
+| pipedrive-automation | Pipedrive |
+| close-automation | Close CRM |
+| zoho-crm-automation | Zoho CRM |
+| stripe-automation | Stripe |
+| square-automation | Square |
+| shopify-automation | Shopify |
+| gmail-automation | Gmail |
+| outlook-automation | Outlook |
+| email-automation | 邮件自动化 |
+| google-calendar-automation | Google Calendar |
+| google-drive-automation | Google Drive |
+| googlesheets-automation | Google Sheets |
+| one-drive-automation | OneDrive |
+| dropbox-automation | Dropbox |
+| box-automation | Box |
+| microsoft-teams-automation | Microsoft Teams |
+| zoom-automation | Zoom |
+| cal-com-automation | Cal.com |
+| calendly-automation | Calendly |
+| todoist-automation | Todoist |
+| airtable-automation | Airtable |
+| nocodb | NocoDB |
+| supabase / supabase-automation | Supabase |
+| webflow-automation | Webflow |
+| make-automation | Make (Integromat) |
+| sendgrid-automation | SendGrid |
+| postmark-automation | Postmark |
+| mailchimp-automation | Mailchimp |
+| convertkit-automation | ConvertKit |
+| brevo-automation | Brevo |
+| klaviyo-automation | Klaviyo |
+| activecampaign-automation | ActiveCampaign |
+| instagram-automation | Instagram |
+| linkedin-automation | LinkedIn |
+| twitter-automation | Twitter/X |
+| reddit-automation | Reddit |
+| tiktok-automation | TikTok |
+| youtube-automation | YouTube |
+| amplitude-automation | Amplitude |
+| mixpanel-automation | Mixpanel |
+| posthog-automation | PostHog |
+| segment-automation | Segment |
+| google-analytics-automation | Google Analytics |
+| datadog-automation | Datadog |
+| sentry-automation | Sentry |
+| pagerduty-automation | PagerDuty |
+| circleci-automation | CircleCI |
+| freshdesk-automation | Freshdesk |
+| freshservice-automation | Freshservice |
+| zendesk-automation | Zendesk |
+| helpdesk-automation | Helpdesk |
+| intercom-automation | Intercom |
+| docusign-automation | DocuSign |
 
-| 技能 | 说明 |
-|------|------|
-| [docx](./docx/) | Word 文档处理 |
-| [docx-perfect](./docx-perfect/) | Word 文档美化 |
-| [pdf](./pdf/) | PDF 处理 |
-| [pptx](./pptx/) | PPT 处理 |
-| [xlsx](./xlsx/) | Excel 处理 |
+### 🔍 研究 / 数据
+| Skill | 说明 |
+|-------|------|
+| web-scraping-automation | 网页抓取 |
+| firecrawl-skills | Firecrawl 爬虫 |
+| google-web-search | Google 搜索 |
+| serper | Serper 搜索 API |
+| readwise | Readwise 阅读 |
+| competitive-ads-extractor | 竞品广告提取 |
+| lead-research-assistant | 线索研究助手 |
+| osint-graph-analyzer | OSINT 图谱分析 |
+| developer-growth-analysis | 开发者增长分析 |
+| langsmith-fetch | LangSmith 数据获取 |
+| news-daily | 每日新闻 |
 
-### 🎬 视频/图像处理
+### 💰 金融 / 商业
+| Skill | 说明 |
+|-------|------|
+| expense-tracker-pro | 费用追踪 |
+| invoice-organizer | 发票整理 |
+| cost-report | 成本报告 |
+| polymarket-profit | Polymarket 交易 |
+| tech-decision | 技术决策 |
+| domain-name-brainstormer | 域名头脑风暴 |
 
-| 技能 | 说明 |
-|------|------|
-| [ffmpeg-video-editor](./ffmpeg-video-editor/) | FFmpeg 视频编辑 |
-| [video-frames](./video-frames/) | 视频帧处理 |
-| [canvas-design](./canvas-design/) | Canvas 设计 |
+### 🏥 健康
+| Skill | 说明 |
+|-------|------|
+| healthcare-monitor | 健康监测 |
 
-### ⚡ n8n 工作流
+### 🛠 OpenClaw 内部
+| Skill | 说明 |
+|-------|------|
+| skill-creator | Skill 创建器 |
+| skillforge | Skill 锻造 |
+| mcp-builder | MCP 构建器 |
+| mcp-installer | MCP 安装器 |
+| mcp-manager | MCP 管理器 |
+| agent-builder | Agent 构建器 |
+| multi-agent-architecture | 多 Agent 架构 |
+| context-manager | 上下文管理 |
+| context-recovery | 上下文恢复 |
+| model-fallback | 模型降级 |
+| permission-manager | 权限管理 |
+| auth-manager | 认证管理 |
+| pass-secrets | 密钥管理 (pass) |
+| api-toolkit | API 工具包 |
+| api-provider-setup | API Provider 配置 |
+| api-provider-status | API Provider 状态 |
+| cron-manager | 定时任务管理 |
+| memory | 记忆系统 |
+| memory-hygiene | 记忆清理 |
+| second-brain | 第二大脑 |
+| self-reflection | 自我反思 |
+| git-sync | Git 同步 |
+| gitclaw | GitClaw |
+| openclaw-inter-instance | OpenClaw 实例间通信 |
+| chirp | Chirp 通知 |
+| spool | Spool 队列 |
+| canvas-design | Canvas 设计 |
+| web-artifacts-builder | Web Artifacts 构建 |
+| theme-factory | 主题工厂 |
 
-| 技能 | 说明 |
-|------|------|
-| [n8n-workflow-automation](./n8n-workflow-automation/) | n8n 工作流自动化 |
-| [n8n-workflow-patterns](./n8n-workflow-patterns/) | n8n 工作流模式 |
-| [n8n-code-javascript](./n8n-code-javascript/) | n8n JavaScript 代码 |
-| [n8n-code-python](./n8n-code-python/) | n8n Python 代码 |
-| [n8n-expression-syntax](./n8n-expression-syntax/) | n8n 表达式语法 |
-| [n8n-mcp-tools-expert](./n8n-mcp-tools-expert/) | n8n MCP 工具专家 |
-| [n8n-node-configuration](./n8n-node-configuration/) | n8n 节点配置 |
-| [n8n-validation-expert](./n8n-validation-expert/) | n8n 验证专家 |
+### 🌐 浏览器 / 自动化
+| Skill | 说明 |
+|-------|------|
+| browser-use | 浏览器使用 |
+| chrome-automation | Chrome 自动化 |
+| playwright-automation | Playwright 自动化 |
+| playwright-cli | Playwright CLI |
+| bat-cat | Bat/Cat 文件查看 |
+| file-cleaner | 文件清理 |
+| fabric-pattern | Fabric Pattern |
+| cursor-agent | Cursor Agent |
+| xiaomo-assistant-template | 小墨助手模板 |
 
-### 🔌 MCP 相关
+## Agents 列表
 
-| 技能 | 说明 |
-|------|------|
-| [mcp-builder](./mcp-builder/) | MCP 服务器构建 |
-| [mcp-installer](./mcp-installer/) | MCP 安装器 |
-| [mcp-manager](./mcp-manager/) | MCP 管理器 |
+| Agent | 默认模型 | 用途 |
+|-------|---------|------|
+| main | aixn/claude-opus-4-6 | 主 Agent，支持所有子 Agent |
+| batch | zai/glm-4.7 | 批处理任务 |
+| code | aixn/claude-opus-4-6 | 代码开发 |
+| content | moonshot/kimi-k2.5 | 内容创作 |
+| critic | aixn/claude-opus-4-6 | 代码/方案评审 |
+| crm | moonshot/kimi-k2.5 | CRM 管理 |
+| data | aixn/claude-opus-4-6 | 数据分析 |
+| feishu-agent | aixn/claude-opus-4-6 | 飞书集成 |
+| finance | zai/glm-4.7 | 财务分析 |
+| healthcare-monitor | aixn/claude-opus-4-6 | 健康监测 |
+| isolated | aixn/claude-opus-4-6 | 隔离执行环境 |
+| knowledge | xingjiabiapi/gemini-3-pro | 知识管理 |
+| legal | aixn/claude-opus-4-6 | 法律咨询 |
+| marketing | moonshot/kimi-k2.5 | 营销策划 |
+| multimodal-agent | aixn/claude-opus-4-6 | 多模态生成 |
+| news | moonshot/kimi-k2.5 | 新闻聚合 |
+| ops | zai/glm-4.7 | 运维管理 |
+| pm | zai/glm-4.7 | 项目管理 |
+| product | zai/glm-4.7 | 产品设计 |
+| quant | zai/glm-4.7 | 量化交易（子Agent: finance, research, news） |
+| quick | xingjiabiapi/gemini-3-pro | 快速响应 |
+| research | aixn/claude-opus-4-6 | 深度研究 |
+| sales | moonshot/kimi-k2.5 | 销售支持 |
+| support | xingjiabiapi/gemini-3-pro | 客户支持 |
+| telegram-agent | aixn/claude-opus-4-6 | Telegram 集成 |
+| whatsapp-agent | aixn/claude-opus-4-6 | WhatsApp 集成 |
 
-### 🎨 设计/创意
+## 模型 Provider
 
-| 技能 | 说明 |
-|------|------|
-| [algorithmic-art](./algorithmic-art/) | 算法艺术 |
-| [brand-guidelines](./brand-guidelines/) | 品牌指南 |
-| [figma-ui-design](./figma-ui-design/) | Figma UI 设计 |
-| [slack-gif-creator](./slack-gif-creator/) | Slack GIF 创建 |
-| [theme-factory](./theme-factory/) | 主题工厂 |
-| [uml-diagram-design](./uml-diagram-design/) | UML 图表设计 |
+| Provider | API | 模型 |
+|----------|-----|------|
+| aixn | OpenAI Completions | Claude Opus 4.6 |
+| zai | Anthropic Messages | GLM-4.7 |
+| xingjiabiapi | OpenAI Completions | Gemini 3 Pro, Gemini 3 Pro Image, Gemini 2.5 Pro TTS, Veo 3.1 |
+| moonshot | OpenAI Completions | Kimi K2.5 |
+| github-copilot | OpenAI Completions | Claude Opus 4.5, Claude Sonnet 4.5, GPT-5.2 |
+| openrouter-vip | OpenAI Completions | GPT-5 系列, GPT-5.1 系列, GPT-5.2 系列 |
 
-### 📝 内容/写作
+## 快速部署
 
-| 技能 | 说明 |
-|------|------|
-| [doc-coauthoring](./doc-coauthoring/) | 文档协作 |
-| [seo-content-writing](./seo-content-writing/) | SEO 内容写作 |
-| [news-daily](./news-daily/) | 每日新闻 |
-| [media-auto-publisher](./media-auto-publisher/) | 自媒体发布 |
-
-### 📡 API/集成
-
-| 技能 | 说明 |
-|------|------|
-| [api-provider-setup](./api-provider-setup/) | 添加第三方 API 供应商 |
-| [api-provider-status](./api-provider-status/) | API 供应商余额和用量监控 |
-| [api-toolkit](./api-toolkit/) | API 工具集 |
-| [google-web-search](./google-web-search/) | Google 网页搜索 |
-| [serper](./serper/) | Serper API |
-
-### 🛠️ 系统/配置
-
-| 技能 | 说明 |
-|------|------|
-| [openclaw-config](./openclaw-config/) | OpenClaw 配置 |
-| [config](./config/) | 配置模板 |
-| [pass-secrets](./pass-secrets/) | 密钥管理 |
-| [permission-manager](./permission-manager/) | 权限管理 |
-| [env-setup](./env-setup/) | 环境配置同步 |
-| [file-cleaner](./file-cleaner/) | 文件清理 |
-| [cron-manager](./cron-manager/) | Cron 任务管理 |
-
-### 📊 项目管理
-
-| 技能 | 说明 |
-|------|------|
-| [project-management](./project-management/) | 项目管理 |
-| [project-planner](./project-planner/) | 项目规划 |
-| [project-context-sync](./project-context-sync/) | 项目上下文同步 |
-| [tech-decision](./tech-decision/) | 技术决策 |
-
-### 🔗 Git/GitHub
-
-| 技能 | 说明 |
-|------|------|
-| [github-automation](./github-automation/) | GitHub 自动化 |
-| [gitclaw](./gitclaw/) | OpenClaw Git 备份 |
-| [git-sync](./git-sync/) | Git 同步 |
-| [commit-analyzer](./skills/git-project/commit-analyzer/) | Git 提交分析 |
-| [conventional-commits](./skills/git-project/conventional-commits/) | 约定式提交规范 |
-| [git-essentials](./skills/git-project/git-essentials/) | Git 基础命令 |
-
-### 🏥 行业专用
-
-| 技能 | 说明 |
-|------|------|
-| [healthcare-monitor](./healthcare-monitor/) | 医疗行业融资监控 |
-
-### 🛡️ Moltbook 系列
-
-| 技能 | 说明 |
-|------|------|
-| [moltbook](./moltbook/) | Moltbook 核心 |
-| [moltbook-integration](./moltbook-integration/) | Moltbook 集成 |
-| [moltbook-interact](./moltbook-interact/) | Moltbook 交互 |
-| [moltbook-registry](./moltbook-registry/) | Moltbook 注册表 |
-
-### 🔧 其他工具
-
-| 技能 | 说明 |
-|------|------|
-| [skill-creator](./skill-creator/) | 技能创建指南 |
-| [skill-search](./skill-search/) | 技能搜索 |
-| [web-artifacts-builder](./web-artifacts-builder/) | Web Artifacts 构建 |
-| [xiaomo-assistant-template](./xiaomo-assistant-template/) | 小墨助手模板 |
-| [notion-automation](./notion-automation/) | Notion 自动化 |
-| [email-automation](./email-automation/) | 邮件自动化 |
-| [spool](./spool/) | Spool 任务队列 |
-| [claude-optimised](./claude-optimised/) | Claude 优化 |
-| [auth-manager](./skills/misc/auth-manager/) | 网页登录态管理 |
-| [context-manager](./skills/misc/context-manager/) | AI 上下文管理 |
-| [context-recovery](./skills/misc/context-recovery/) | 会话上下文恢复 |
-| [daily-rhythm](./skills/misc/daily-rhythm/) | 每日节奏规划 |
-| [deepwork-tracker](./skills/misc/deepwork-tracker/) | 深度工作追踪 |
-| [fabric-pattern](./skills/misc/fabric-pattern/) | Fabric 模式集成 |
-| [memory-hygiene](./skills/misc/memory-hygiene/) | 向量记忆清理 |
-| [prompt-optimizer](./skills/misc/prompt-optimizer/) | 提示词优化 |
-| [security-audit](./skills/misc/security-audit/) | 安全审计 |
-| [security-monitor](./skills/misc/security-monitor/) | 安全监控 |
-| [skillforge](./skills/misc/skillforge/) | 智能技能路由与创建 |
-| [task-status](./skills/misc/task-status/) | 任务状态推送 |
-| [clawdbot-backup](./skills/misc/clawdbot-backup/) | 配置备份恢复 |
-| [context-compressor](./skills/misc/context-compressor/) | 上下文压缩 |
-| [god-mode](./skills/misc/god-mode/) | 高级模式 |
-| [skill-vetter](./skills/misc/skill-vetter/) | 技能安全审查 |
-
----
-
-## 🚀 快速开始
-
-### 安装技能
+### 1. 克隆仓库
 
 ```bash
-# 克隆仓库
-git clone https://github.com/aAAaqwq/AGI-Super-Skills.git ~/.claude/skills
-
-# 或复制到 OpenClaw 工作区
-cp -r AGI-Super-Skills/* ~/clawd/skills/
+git clone git@github.com:aAAaqwq/AGI-Super-Skills.git
+cd AGI-Super-Skills
 ```
 
-### 使用技能
+### 2. 安装 OpenClaw
 
-在 Claude Code 或 OpenClaw 中，技能会自动加载。根据任务描述，AI 会自动选择合适的技能。
+参考 [OpenClaw 官方文档](https://github.com/openclaw) 安装。
 
----
+### 3. 复制配置
 
-## 📁 目录结构
+```bash
+# 复制核心配置模板
+cp config/openclaw.template.json ~/.openclaw/openclaw.json
 
+# 复制 Agent 配置
+for agent in agents/*/; do
+  agent_name=$(basename "$agent")
+  mkdir -p ~/.openclaw/agents/$agent_name/agent
+  cp -r "$agent"/* ~/.openclaw/agents/$agent_name/agent/
+done
+
+# 复制 Skills 到 workspace
+cp -r skills/ /path/to/your/workspace/skills/
+
+# 复制 Workspace 文件
+cp workspace/*.md /path/to/your/workspace/
 ```
-AGI-Super-Skills/
-├── README.md           # 本文件
-├── config/             # 配置模板
-│   ├── agents/         # Agent 配置
-│   ├── mcp/            # MCP 配置
-│   └── plugins/        # Plugin 配置
-├── video-generation/   # 视频生成技能
-│   ├── SKILL.md        # 技能说明
-│   └── video_api.py    # API 脚本
-├── ...                 # 其他 93 个技能
+
+### 4. 配置 API Key
+
+编辑 `~/.openclaw/openclaw.json`，将所有 `YOUR_API_KEY_HERE` 替换为你的实际 API Key。
+
+同样更新各 Agent 的 `~/.openclaw/agents/*/agent/models.json`。
+
+### 5. 启动
+
+```bash
+openclaw gateway start
 ```
 
----
+## 安全说明
 
-## 📝 更新日志
-
-### 2026-02-09
-- 技能总数更新至 123 个（新增 27 个技能）
-- **Backend**: 新增 docker-essentials, linux-service-triage, senior-architect, senior-devops, backend-patterns, sysadmin-toolbox
-- **Coding-agent**: 新增 bat-cat, tdd-guide
-- **Git-project**: 新增 commit-analyzer, conventional-commits, git-essentials
-- **Misc**: 新增 auth-manager, context-manager, context-recovery, daily-rhythm, deepwork-tracker, fabric-pattern, memory-hygiene, prompt-optimizer, security-audit, security-monitor, skillforge, task-status, clawdbot-backup, context-compressor, god-mode, skill-vetter
-
-### 2026-02-06
-- 技能总数更新至 96 个
-- 新增 `config/SKILL.md` - 配置模板说明
-- 新增 `news-daily/SKILL.md` - 每日新闻技能
-- 重新整理分类，补充缺失的目录条目
-
-### 2026-02-04
-- 新增 `video-generation` - 视频生成 (Veo/Sora/Kling)
-- 新增 `multimodal-gen` - 多模态内容生成
-- 新增 `multi-agent-architecture` - 多 Agent 架构
-- 新增 `playwright-automation` - Playwright 自动化
-- 新增 `telegram-push` - Telegram 推送
-- 新增 `healthcare-monitor` - 医疗行业监控
-- 更新 `api-provider-status` - 添加用量追踪
-- 更新 `feishu-automation` - 多租户支持
-
-### 2026-02-02
-- 新增 `model-fallback` - 模型降级切换
-- 新增 `openclaw-config` - OpenClaw 配置规范
-- 新增 `pass-secrets` - 密钥管理
-
----
-
-## 🔗 相关链接
-
-- [OpenClaw 文档](https://docs.openclaw.ai)
-- [Claude Code](https://claude.ai/code)
-- [GitHub 仓库](https://github.com/aAAaqwq/AGI-Super-Skills)
-
----
-
-## 📄 许可证
-
-MIT License
-
-## 📚 学习源
-
-本仓库参考和借鉴了以下优秀资源：
-
-- [awesome-openclaw-skills](https://github.com/VoltAgent/awesome-openclaw-skills) - OpenClaw 社区精选技能集合，包含 1715+ 个社区构建的技能
-
----
-
-## 📋 技能统计
-
-- 总技能数: **123**
-- 分类数: **15**
-- 最后更新: 2026-02-09
+本仓库已脱敏处理，所有 API Key、Token 均已替换为 `YOUR_API_KEY_HERE`。请勿在此仓库中提交任何真实密钥。
