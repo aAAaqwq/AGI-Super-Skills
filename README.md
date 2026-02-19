@@ -1,15 +1,22 @@
-# AGI-Super-Skills
+# AGI-Super-Skills 🦞✨
 
-OpenClaw 完整环境备份与快速部署仓库。包含 Skills、Agents、配置模板和 Workspace 文件。
+> OpenClaw 完整环境备份与快速部署仓库 — 200+ Skills、24 Agents、多模型配置、MCP 集成
+
+[![Last Updated](https://img.shields.io/badge/Last%20Updated-2026--02--19-blue)]()
+[![Skills](https://img.shields.io/badge/Skills-203-green)]()
+[![Agents](https://img.shields.io/badge/Agents-24-orange)]()
+[![License](https://img.shields.io/badge/License-MIT-yellow)]()
 
 ## 目录结构
 
 ```
-├── skills/          # 200+ OpenClaw Skills
-├── agents/          # Agent 配置（模型、角色）
-├── config/          # OpenClaw 核心配置模板（已脱敏）
-├── workspace/       # Workspace 文件（AGENTS.md, SOUL.md 等）
-├── mcp/             # MCP Server 配置说明
+AGI-Super-Skills/
+├── skills/          # 203 个 OpenClaw Skills（自动化、开发、AI生成等）
+├── agents/          # 24 个 Agent 配置（角色定义、模型绑定、系统提示词）
+├── config/          # OpenClaw 核心配置模板（已脱敏，可直接复制使用）
+├── workspace/       # Workspace 文件（AGENTS.md, SOUL.md, IDENTITY.md 等）
+├── mcp/             # MCP Server 配置与说明
+└── README.md        # 本文件
 ```
 
 ## Skills 列表
@@ -340,3 +347,16 @@ openclaw gateway start
 ## 安全说明
 
 本仓库已脱敏处理，所有 API Key、Token 均已替换为 `YOUR_API_KEY_HERE`。请勿在此仓库中提交任何真实密钥。
+
+## 维护
+
+| 项目 | 说明 |
+|------|------|
+| 维护者 | Daniel Li (@danielli) |
+| 更新频率 | 持续同步 |
+| 最后更新 | 2026-02-19 |
+| OpenClaw 版本 | 2026.2.15+ |
+
+---
+
+*由 [OpenClaw](https://github.com/openclaw/openclaw) 驱动 🦞*
