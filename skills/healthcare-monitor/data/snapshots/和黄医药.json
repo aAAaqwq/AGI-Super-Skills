@@ -1,0 +1,19 @@
+{
+  "company_name": "和黄医药",
+  "registered_capital": "10000万人民币",
+  "legal_person": "示例法人",
+  "establish_date": "2010-01-01",
+  "business_scope": "医疗器械研发、生产、销售",
+  "shareholders": [
+    {
+      "name": "创始股东A",
+      "ratio": "60%"
+    },
+    {
+      "name": "创始股东B",
+      "ratio": "40%"
+    }
+  ],
+  "status": "在业",
+  "fetch_time": "2026-02-19T09:03:32.346810"
+}

@@ -1,0 +1,193 @@
+{
+  "script_execution": {
+    "name": "脚本执行任务",
+    "description": "定时执行 Python/Shell 脚本并推送结果",
+    "use_when": "需要定时运行脚本、获取数据、生成报告",
+    "template": {
+      "name": "{{任务名称}}",
+      "agentId": "telegram-agent",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "{{cron表达式}}",
+        "tz": "Asia/Shanghai"
+      },
+      "sessionTarget": "isolated",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "执行任务：\n\n```bash\n{{脚本命令}}\n```\n\n将结果通过 ~/clawd/skills/telegram-push/telegram-push.sh 推送。",
+        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "timeoutSeconds": 180,
+        "deliver": true,
+        "channel": "telegram",
+        "to": "REDACTED_TG_USER_ID"
+      }
+    },
+    "examples": [
+      {
+        "request": "每天9点执行基金监控",
+        "schedule": {"kind": "cron", "expr": "0 9 * * *", "tz": "Asia/Shanghai"},
+        "script": "python3 ~/clawd/scripts/fund_monitor.py"
+      },
+      {
+        "request": "工作日9:30、11:30、14:30执行股票监控",
+        "schedule": {"kind": "cron", "expr": "30 9,11,14 * * 1-5", "tz": "Asia/Shanghai"},
+        "script": "python3 ~/clawd/scripts/stock_monitor.py"
+      }
+    ]
+  },
+  
+  "data_monitoring": {
+    "name": "数据监控任务",
+    "description": "定时监控数据变化，异常时告警",
+    "use_when": "需要监控价格、状态、指标等数据变化",
+    "template": {
+      "name": "{{监控对象}}监控",
+      "agentId": "telegram-agent",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "{{cron表达式}}",
+        "tz": "Asia/Shanghai"
+      },
+      "sessionTarget": "isolated",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "执行{{监控对象}}监控任务：\n\n1. 获取最新数据\n2. 与历史数据对比\n3. 如有显著变化或异常，立即告警\n4. 生成监控报告并推送\n\n监控项目：{{监控项目列表}}\n数据来源：{{数据来源}}",
+        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "timeoutSeconds": 180,
+        "deliver": true,
+        "channel": "telegram",
+        "to": "REDACTED_TG_USER_ID"
+      }
+    }
+  },
+  
+  "ai_learning": {
+    "name": "AI学习任务",
+    "description": "AI自主学习和研究",
+    "use_when": "需要AI定期学习新知识、研究主题",
+    "template": {
+      "name": "{{学习主题}}",
+      "agentId": "telegram-agent",
+      "enabled": true,
+      "schedule": {
+        "kind": "every",
+        "everyMs": "{{间隔毫秒}}"
+      },
+      "sessionTarget": "isolated",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "【学习任务】\n\n请执行以下学习步骤：\n\n1. 学习主题：{{学习主题}}\n2. 学习来源：{{学习来源}}\n3. 记录笔记到 ~/clawd/memory/learning-log.md\n4. 推送学习报告",
+        "model": "anapi/claude-opus-4-5-20250514",
+        "timeoutSeconds": 600,
+        "deliver": true,
+        "channel": "telegram",
+        "to": "REDACTED_TG_USER_ID",
+        "bestEffortDeliver": true
+      }
+    }
+  },
+  
+  "one_time_reminder": {
+    "name": "一次性提醒",
+    "description": "在指定时间触发一次提醒",
+    "use_when": "需要在特定时间提醒某事",
+    "template": {
+      "name": "提醒: {{提醒内容}}",
+      "agentId": "telegram-agent",
+      "enabled": true,
+      "schedule": {
+        "kind": "at",
+        "atMs": "{{目标时间戳毫秒}}"
+      },
+      "sessionTarget": "isolated",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "⏰ 提醒：{{提醒内容}}\n\n{{附加信息}}",
+        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "timeoutSeconds": 60,
+        "deliver": true,
+        "channel": "telegram",
+        "to": "REDACTED_TG_USER_ID"
+      }
+    },
+    "note": "atMs 需要设置为目标时间的 Unix 毫秒时间戳"
+  },
+  
+  "daily_report": {
+    "name": "每日报告",
+    "description": "每天固定时间生成并推送报告",
+    "use_when": "需要每日汇总、统计、报告",
+    "template": {
+      "name": "每日{{报告类型}}报告",
+      "agentId": "telegram-agent",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 {{小时}} * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "sessionTarget": "isolated",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "生成每日{{报告类型}}报告：\n\n1. 收集{{数据来源}}数据\n2. 分析趋势和变化\n3. 生成报告摘要\n4. 使用 telegram-push.sh 推送",
+        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "timeoutSeconds": 300,
+        "deliver": true,
+        "channel": "telegram",
+        "to": "REDACTED_TG_USER_ID"
+      }
+    }
+  },
+  
+  "news_push": {
+    "name": "新闻推送",
+    "description": "定时抓取和推送新闻",
+    "use_when": "需要定时获取新闻、资讯",
+    "template": {
+      "name": "{{新闻类型}}推送",
+      "agentId": "telegram-agent",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 {{时间列表}} * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "sessionTarget": "isolated",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "执行{{新闻类型}}推送任务：\n\n```bash\npython3 ~/clawd/scripts/news_push.py\n```\n\n该脚本会抓取新闻并推送到 Telegram。",
+        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "timeoutSeconds": 180,
+        "deliver": true,
+        "channel": "telegram",
+        "to": "REDACTED_TG_USER_ID"
+      }
+    }
+  },
+  
+  "health_check": {
+    "name": "健康检查",
+    "description": "定时检查系统/服务状态",
+    "use_when": "需要监控服务可用性、API状态",
+    "template": {
+      "name": "{{服务名}}健康检查",
+      "agentId": "telegram-agent",
+      "enabled": true,
+      "schedule": {
+        "kind": "every",
+        "everyMs": "{{间隔毫秒}}"
+      },
+      "sessionTarget": "isolated",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "执行{{服务名}}健康检查：\n\n1. 检查服务状态\n2. 测试关键功能\n3. 如有异常立即告警\n4. 正常则静默（不推送）",
+        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "timeoutSeconds": 120,
+        "deliver": false
+      }
+    },
+    "note": "deliver: false 表示正常时不推送，只在异常时通过脚本主动推送"
+  }
+}

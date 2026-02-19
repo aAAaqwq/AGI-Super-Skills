@@ -1,0 +1,25 @@
+# Python 依赖
+
+# LLM
+openai>=1.0.0
+
+# 数据库
+psycopg2-binary>=2.9.9
+pgvector>=0.2.4
+
+# HTTP 请求
+requests>=2.31.0
+
+# 文件处理
+python-docx>=1.1.0
+PyPDF2>=3.0.1
+pdfplumber>=0.10.3
+
+# 图片处理
+Pillow>=10.1.0
+
+# 环境变量
+python-dotenv>=1.0.0
+
+# 日志
+colorlog>=6.8.0

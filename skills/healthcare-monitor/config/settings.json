@@ -11,22 +11,11 @@
   "scraper": {
     "delay_min": 3,
     "delay_max": 10,
-    "max_requests_per_hour": 100,
-    "use_free_sources": true
+    "max_requests_per_hour": 100
   },
   "notification": {
     "telegram": true,
-    "feishu": true,
-    "email": false
+    "feishu": false
   },
-  "sources": {
-    "qcc": {
-      "enabled": true,
-      "base_url": "https://www.qcc.com"
-    },
-    "tianyancha": {
-      "enabled": false,
-      "base_url": "https://www.tianyancha.com"
-    }
-  }
+  "data_sources": ["tianyancha", "qcc"]
 }

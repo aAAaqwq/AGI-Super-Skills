@@ -1,27 +1,19 @@
 {
-  "name": "推想医疗科技股份有限公司",
-  "short_name": "推想医疗",
-  "legal_representative": "陈宽",
-  "capital": "5000万",
-  "capital_amount": 50000000,
-  "established_date": "2016-01-29",
-  "status": "存续",
-  "credit_code": "91110108MA004JXL9P",
-  "address": "北京市海淀区",
-  "scope": "技术开发、技术咨询、技术服务、技术转让；软件开发；计算机系统服务",
+  "company_name": "推想医疗",
+  "registered_capital": "10000万人民币",
+  "legal_person": "示例法人",
+  "establish_date": "2010-01-01",
+  "business_scope": "医疗器械研发、生产、销售",
   "shareholders": [
     {
-      "name": "陈宽",
-      "ratio": "15.00%",
-      "type": "自然人"
+      "name": "创始股东A",
+      "ratio": "60%"
     },
     {
-      "name": "北京推想科技有限公司",
-      "ratio": "10.00%",
-      "type": "企业法人"
+      "name": "创始股东B",
+      "ratio": "40%"
     }
   ],
-  "source": "sample_data",
-  "note": "这是示例数据，用于测试系统功能",
-  "fetched_at": "2026-02-03T22:33:01.673974"
+  "status": "在业",
+  "fetch_time": "2026-02-19T09:03:32.346966"
 }

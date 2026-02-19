@@ -1,0 +1,145 @@
+{
+  "date": "2026-02-13",
+  "time": "09:03",
+  "total_companies": 10,
+  "companies": [
+    {
+      "name": "迈瑞医疗",
+      "category": "医疗器械",
+      "priority": "high",
+      "analysis": {
+        "confidence": 10,
+        "signals": [
+          "已上市企业，主要关注二级市场"
+        ],
+        "status": "已上市"
+      }
+    },
+    {
+      "name": "联影医疗",
+      "category": "医疗器械",
+      "priority": "high",
+      "analysis": {
+        "confidence": 10,
+        "signals": [
+          "已上市企业，主要关注二级市场"
+        ],
+        "status": "已上市"
+      }
+    },
+    {
+      "name": "百济神州",
+      "category": "创新药",
+      "priority": "high",
+      "analysis": {
+        "confidence": 10,
+        "signals": [
+          "已上市企业，主要关注二级市场"
+        ],
+        "status": "已上市"
+      }
+    },
+    {
+      "name": "信达生物",
+      "category": "创新药",
+      "priority": "high",
+      "analysis": {
+        "confidence": 10,
+        "signals": [
+          "已上市企业，主要关注二级市场"
+        ],
+        "status": "已上市"
+      }
+    },
+    {
+      "name": "君实生物",
+      "category": "创新药",
+      "priority": "high",
+      "analysis": {
+        "confidence": 10,
+        "signals": [
+          "已上市企业，主要关注二级市场"
+        ],
+        "status": "已上市"
+      }
+    },
+    {
+      "name": "再鼎医药",
+      "category": "创新药",
+      "priority": "high",
+      "analysis": {
+        "confidence": 10,
+        "signals": [
+          "已上市企业，主要关注二级市场"
+        ],
+        "status": "已上市"
+      }
+    },
+    {
+      "name": "和黄医药",
+      "category": "创新药",
+      "priority": "high",
+      "analysis": {
+        "confidence": 10,
+        "signals": [
+          "已上市企业，主要关注二级市场"
+        ],
+        "status": "已上市"
+      }
+    },
+    {
+      "name": "推想医疗",
+      "category": "医疗AI",
+      "priority": "normal",
+      "analysis": {
+        "confidence": 40,
+        "signals": [
+          "IPO进程中，可能存在pre-IPO融资"
+        ],
+        "status": "已上市/申请中"
+      }
+    },
+    {
+      "name": "数坤科技",
+      "category": "医疗AI",
+      "priority": "normal",
+      "analysis": {
+        "confidence": 40,
+        "signals": [
+          "IPO进程中，可能存在pre-IPO融资"
+        ],
+        "status": "未上市"
+      }
+    },
+    {
+      "name": "深睿医疗",
+      "category": "医疗AI",
+      "priority": "normal",
+      "analysis": {
+        "confidence": 40,
+        "signals": [
+          "IPO进程中，可能存在pre-IPO融资"
+        ],
+        "status": "未上市"
+      }
+    }
+  ],
+  "funding_signals": [
+    {
+      "company": "推想医疗",
+      "confidence": 40,
+      "category": "医疗AI"
+    },
+    {
+      "company": "数坤科技",
+      "confidence": 40,
+      "category": "医疗AI"
+    },
+    {
+      "company": "深睿医疗",
+      "confidence": 40,
+      "category": "医疗AI"
+    }
+  ],
+  "summary": "发现 3 条潜在融资信号 (高置信: 0)"
+}

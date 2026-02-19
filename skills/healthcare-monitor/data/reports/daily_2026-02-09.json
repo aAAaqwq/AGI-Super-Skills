@@ -1,0 +1,12 @@
+{
+  "date": "2026-02-09",
+  "timestamp": "2026-02-09T12:01:23.244402",
+  "total_companies": 10,
+  "categories": {
+    "医疗器械": 2,
+    "创新药": 5,
+    "医疗AI": 3
+  },
+  "funding_signals": [],
+  "summary": "今日无异常"
+}

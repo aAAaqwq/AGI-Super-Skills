@@ -1,0 +1,42 @@
+{
+  "capital_usd": 3,
+  "mode": "paper",
+  "risk_limits": {
+    "max_single_bet_usd": 2,
+    "max_total_exposure_usd": 10,
+    "max_positions": 8,
+    "max_daily_loss_pct": 20,
+    "stop_loss_pct": 30,
+    "take_profit_pct": 50
+  },
+  "strategies": {
+    "high_certainty": {
+      "enabled": true,
+      "capital_pct": 40,
+      "min_probability": 80,
+      "max_days_left": 60,
+      "min_return_pct": 5,
+      "min_volume": 100000
+    },
+    "arbitrage": {
+      "enabled": true,
+      "capital_pct": 30,
+      "min_profit_pct": 1.5
+    },
+    "event_driven": {
+      "enabled": true,
+      "capital_pct": 20,
+      "probability_range": [35, 65],
+      "max_days_left": 14,
+      "min_volume": 500000
+    },
+    "momentum": {
+      "enabled": true,
+      "capital_pct": 10,
+      "min_change_pct": 5,
+      "lookback_days": 3
+    }
+  },
+  "auto_trade": false,
+  "notes": "先用 paper 模式积累数据和验证策略，确认胜率后再切 live"
+}

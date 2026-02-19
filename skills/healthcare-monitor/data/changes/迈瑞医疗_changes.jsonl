@@ -1,0 +1,1 @@
+{"company_name": "迈瑞医疗", "confidence": 35, "signals": [{"type": "new_shareholder", "strength": "medium", "detail": "新增股东: 创始股东A"}, {"type": "new_shareholder", "strength": "medium", "detail": "新增股东: 创始股东B"}, {"type": "legal_person_change", "strength": "weak", "detail": "法人变更: None → 示例法人"}], "timestamp": "2026-02-19T09:03:23.749253"}
