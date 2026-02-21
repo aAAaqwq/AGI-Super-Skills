@@ -1,1 +1,57 @@
 healthcare-monitor/.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment Variables & Secrets
+.env
+.env.*
+.secrets
+config.json
+secrets.json
+passwords.txt
+auth.json
+
+# Logs
+*.log
+logs/
+
+# Mac
+.DS_Store
+
+# Feishu/Lark specific
+feishu_tokens.json
+user_access_token.json
+tenant_access_token.json
+app_token.json
