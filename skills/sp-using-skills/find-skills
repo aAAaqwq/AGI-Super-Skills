@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+# find-skills - Find and list skills with when_to_use guidance
+# Shows all skills by default, filters by pattern if provided
+
+set -euo pipefail
+
+# Determine directories
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILLS_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+SUPERPOWERS_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/superpowers"
+LOG_FILE="${SUPERPOWERS_DIR}/search-log.jsonl"
+
+# Show help
+if [[ "${1:-}" == "--help" ]] || [[ "${1:-}" == "-h" ]]; then
+    cat <<'EOF'
+find-skills - Find and list skills with when_to_use guidance
+
+USAGE:
+  find-skills              Show all skills with when_to_use guidance
+  find-skills PATTERN      Filter skills by grep pattern
+  find-skills --help       Show this help
+
+EXAMPLES:
+  find-skills                        # All skills
+  find-skills test                   # Skills matching "test"
+  find-skills 'test.*driven|TDD'     # Regex pattern
+
+OUTPUT:
+  Each line shows: Use skill-path/SKILL.md when [trigger]
+  Paths include /SKILL.md for direct use with Read tool
+
+SEARCH:
+  Searches both skill content AND path names.
+  Skills location: ~/.config/superpowers/skills/
+EOF
+    exit 0
+fi
+
+# Get pattern (optional)
+PATTERN="${1:-}"
+
+# Function to extract when_to_use from SKILL.md
+get_when_to_use() {
+    local file="$1"
+    grep "^when_to_use:" "$file" 2>/dev/null | head -1 | sed 's/when_to_use: *//' || echo ""
+}
+
+# Function to get relative skill path (includes /SKILL.md)
+get_skill_path() {
+    local file="$1"
+    local base_dir="$2"
+    local rel_path="${file#$base_dir/}"
+    echo "$rel_path"
+}
+
+# Collect all matching skills
+results=()
+
+# If pattern provided, log the search
+if [[ -n "$PATTERN" ]]; then
+    timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+    echo "{\"timestamp\":\"$timestamp\",\"query\":\"$PATTERN\"}" >> "$LOG_FILE" 2>/dev/null || true
+fi
+
+# Search skills directory
+while IFS= read -r file; do
+    [[ -z "$file" ]] && continue
+
+    skill_path=$(get_skill_path "$file" "$SKILLS_DIR")
+    when_to_use=$(get_when_to_use "$file")
+    results+=("$skill_path|$when_to_use")
+done < <(
+    if [[ -n "$PATTERN" ]]; then
+        # Pattern mode: search content and paths
+        {
+            grep -E -r -- "$PATTERN" "$SKILLS_DIR/" --include="SKILL.md" -l 2>/dev/null || true
+            find "$SKILLS_DIR/" -name "SKILL.md" -type f 2>/dev/null | grep -E -- "$PATTERN" 2>/dev/null || true
+        } | sort -u
+    else
+        # Show all
+        find "$SKILLS_DIR/" -name "SKILL.md" -type f 2>/dev/null || true
+    fi
+)
+
+# Check if we found anything
+if [[ ${#results[@]} -eq 0 ]]; then
+    if [[ -n "$PATTERN" ]]; then
+        echo "❌ No skills found matching: $PATTERN"
+        echo ""
+        echo "Search logged. If a skill should exist, consider writing it!"
+    else
+        echo "❌ No skills found"
+    fi
+    exit 0
+fi
+
+# Sort and display results
+printf "%s\n" "${results[@]}" | sort | while IFS='|' read -r skill_path when_to_use; do
+    if [[ -n "$when_to_use" ]]; then
+        echo "Use $skill_path $when_to_use"
+    else
+        echo "$skill_path"
+    fi
+done
+
+exit 0

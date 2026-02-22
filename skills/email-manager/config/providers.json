@@ -1,0 +1,52 @@
+{
+  "gmail": {
+    "name": "Gmail",
+    "imap_server": "imap.gmail.com",
+    "imap_port": 993,
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "use_ssl": true,
+    "auth_type": "app_password",
+    "instructions": "需在 Google 账户设置中开启 IMAP，并生成应用专用密码"
+  },
+  "qq": {
+    "name": "QQ邮箱",
+    "imap_server": "imap.qq.com",
+    "imap_port": 993,
+    "smtp_server": "smtp.qq.com",
+    "smtp_port": 587,
+    "use_ssl": true,
+    "auth_type": "auth_code",
+    "instructions": "需在 QQ 邮箱设置中开启 IMAP 服务，获取授权码"
+  },
+  "outlook": {
+    "name": "Outlook",
+    "imap_server": "outlook.office365.com",
+    "imap_port": 993,
+    "smtp_server": "smtp.office365.com",
+    "smtp_port": 587,
+    "use_ssl": true,
+    "auth_type": "app_password",
+    "instructions": "需在 Microsoft 账户中生成应用密码"
+  },
+  "163": {
+    "name": "163邮箱",
+    "imap_server": "imap.163.com",
+    "imap_port": 993,
+    "smtp_server": "smtp.163.com",
+    "smtp_port": 465,
+    "use_ssl": true,
+    "auth_type": "auth_code",
+    "instructions": "需在 163 邮箱设置中开启 IMAP，获取授权码"
+  },
+  "126": {
+    "name": "126邮箱",
+    "imap_server": "imap.126.com",
+    "imap_port": 993,
+    "smtp_server": "smtp.126.com",
+    "smtp_port": 465,
+    "use_ssl": true,
+    "auth_type": "auth_code",
+    "instructions": "需在 126 邮箱设置中开启 IMAP，获取授权码"
+  }
+}

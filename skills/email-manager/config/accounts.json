@@ -1,0 +1,16 @@
+{
+  "accounts": [],
+  "settings": {
+    "check_interval_hours": [8, 17],
+    "max_emails_per_check": 50,
+    "summary_model": "glm5",
+    "notification_channel": "whatsapp",
+    "notification_target": "+85261427064",
+    "auto_archive_read": false,
+    "important_keywords": ["urgent", "重要", "紧急", "deadline", "截止"],
+    "exclude_labels": ["SPAM", "TRASH"]
+  },
+  "_instructions": {
+    "add_account": "1. 使用 pass 存储凭据：pass insert email/<provider>/<email>\n2. 在 accounts 数组中添加账号配置\n3. 运行脚本测试连接"
+  }
+}

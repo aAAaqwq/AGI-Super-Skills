@@ -1,0 +1,10 @@
+#!/bin/bash
+# Auto-index conversation after session ends
+# Copy to ~/.claude/hooks/sessionEnd to enable
+
+INDEXER="$HOME/.claude/skills/collaboration/remembering-conversations/tool/index-conversations"
+
+if [ -n "$SESSION_ID" ] && [ -x "$INDEXER" ]; then
+  # Run in background, suppress output
+  "$INDEXER" --session "$SESSION_ID" > /dev/null 2>&1 &
+fi

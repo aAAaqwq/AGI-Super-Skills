@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Generic runner for skill scripts
+#
+# Usage: scripts/skill-run <skill-relative-path> [args...]
+# Example: scripts/skill-run skills/collaboration/remembering-conversations/tool/search-conversations "query"
+
+set -euo pipefail
+
+if [[ $# -eq 0 ]]; then
+    cat <<'EOF'
+Usage: scripts/skill-run <skill-relative-path> [args...]
+
+Runs scripts from skills directory.
+
+Examples:
+  scripts/skill-run skills/collaboration/remembering-conversations/tool/search-conversations "query"
+  scripts/skill-run skills/collaboration/remembering-conversations/tool/index-conversations --cleanup
+
+The script will be found at:
+  ${SUPERPOWERS_SKILLS_ROOT}/<skill-relative-path>
+EOF
+    exit 1
+fi
+
+# Get the script path to run
+SCRIPT_PATH="$1"
+shift  # Remove script path from args, leaving remaining args
+
+# Determine directories
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILLS_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# Try to run the script
+SCRIPT="${SKILLS_ROOT}/${SCRIPT_PATH}"
+if [[ -x "$SCRIPT" ]]; then
+    exec "$SCRIPT" "$@"
+fi
+
+# Not found
+echo "Error: Script not found: $SCRIPT_PATH" >&2
+echo "" >&2
+echo "Searched:" >&2
+echo "  $SCRIPT" >&2
+exit 1

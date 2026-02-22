@@ -1,0 +1,82 @@
+#!/bin/bash
+# Install sessionEnd hook with merge support
+
+HOOK_DIR="$HOME/.claude/hooks"
+HOOK_FILE="$HOOK_DIR/sessionEnd"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SOURCE_HOOK="$SCRIPT_DIR/hooks/sessionEnd"
+
+echo "Installing conversation indexing hook..."
+
+# Create hooks directory
+mkdir -p "$HOOK_DIR"
+
+# Handle existing hook
+if [ -f "$HOOK_FILE" ]; then
+  echo "⚠️  Existing sessionEnd hook found"
+
+  # Check if our indexer is already installed
+  if grep -q "remembering-conversations.*index-conversations" "$HOOK_FILE"; then
+    echo "✓ Indexer already installed in existing hook"
+    exit 0
+  fi
+
+  # Create backup
+  BACKUP="$HOOK_FILE.backup.$(date +%s)"
+  cp "$HOOK_FILE" "$BACKUP"
+  echo "Created backup: $BACKUP"
+
+  # Offer merge or replace
+  echo ""
+  echo "Options:"
+  echo "  (m) Merge - Add indexer to existing hook"
+  echo "  (r) Replace - Overwrite with our hook"
+  echo "  (c) Cancel - Exit without changes"
+  echo ""
+  read -p "Choose [m/r/c]: " choice
+
+  case "$choice" in
+    m|M)
+      # Append our indexer
+      cat >> "$HOOK_FILE" <<'EOF'
+
+# Auto-index conversations (remembering-conversations skill)
+INDEXER="$HOME/.claude/skills/collaboration/remembering-conversations/tool/index-conversations"
+if [ -n "$SESSION_ID" ] && [ -x "$INDEXER" ]; then
+  "$INDEXER" --session "$SESSION_ID" > /dev/null 2>&1 &
+fi
+EOF
+      echo "✓ Merged indexer into existing hook"
+      ;;
+    r|R)
+      cp "$SOURCE_HOOK" "$HOOK_FILE"
+      chmod +x "$HOOK_FILE"
+      echo "✓ Replaced hook with our version"
+      ;;
+    c|C)
+      echo "Installation cancelled"
+      exit 1
+      ;;
+    *)
+      echo "Invalid choice. Exiting."
+      exit 1
+      ;;
+  esac
+else
+  # No existing hook, install fresh
+  cp "$SOURCE_HOOK" "$HOOK_FILE"
+  chmod +x "$HOOK_FILE"
+  echo "✓ Installed sessionEnd hook"
+fi
+
+# Verify executable
+if [ ! -x "$HOOK_FILE" ]; then
+  chmod +x "$HOOK_FILE"
+fi
+
+echo ""
+echo "Hook installed successfully!"
+echo "Location: $HOOK_FILE"
+echo ""
+echo "Test it:"
+echo "  SESSION_ID=test-\$(date +%s) $HOOK_FILE"
