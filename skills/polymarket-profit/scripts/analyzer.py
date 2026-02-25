@@ -21,7 +21,12 @@ def analyze_low_risk_opportunities(markets, capital_usd=3):
         if 'No' in outcomes or 'no' in outcomes:
             no_pct = outcomes.get('No') or outcomes.get('no', 0)
             if no_pct >= 80:  # No 概率 >= 80%
-                potential_return = round(100 / (100 - no_pct) - 1, 2) * 100
+                # 防止除零：No >= 99.5% 时，收益封顶 200%
+                diff = 100 - no_pct
+                if diff < 0.5:
+                    potential_return = 200  # 封顶高收益
+                else:
+                    potential_return = round(100 / diff - 1, 2) * 100
                 if potential_return >= 15:  # 期望收益 >= 15%
                     opportunities.append({
                         'strategy': 'high_certainty_no',

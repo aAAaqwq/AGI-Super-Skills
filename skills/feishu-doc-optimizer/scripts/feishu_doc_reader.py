@@ -8,34 +8,17 @@ import sys
 import requests
 import json
 
-# 租户配置 - 密钥从环境变量获取，切勿硬编码！
-# 使用: export FEISHU_APP_SECRET_HANXING=xxx FEISHU_APP_SECRET_PERSONAL=xxx
+# 租户配置
 TENANTS = {
     "hanxing": {
-        "app_id": os.environ.get("FEISHU_APP_ID_HANXING", "REDACTED_FEISHU_HANXING_APP_ID"),
-        "app_secret": os.environ.get("FEISHU_APP_SECRET_HANXING", ""),
+        "app_id": "REDACTED_FEISHU_HANXING_APP_ID",
+        "app_secret": "REDACTED_FEISHU_HANXING_SECRET",
     },
     "personal": {
-        "app_id": os.environ.get("FEISHU_APP_ID_PERSONAL", "REDACTED_FEISHU_PERSONAL_APP_ID"),
-        "app_secret": os.environ.get("FEISHU_APP_SECRET_PERSONAL", ""),
+        "app_id": "REDACTED_FEISHU_PERSONAL_APP_ID",
+        "app_secret": "REDACTED_FEISHU_PERSONAL_SECRET",
     }
 }
-
-# 尝试从 pass 加载密钥
-def _load_secrets():
-    try:
-        import subprocess
-        for tenant, pass_path in [("hanxing", "api/feishu-hanxing"), ("personal", "api/feishu-personal")]:
-            result = subprocess.run(["pass", "show", pass_path], capture_output=True, text=True, timeout=5)
-            if result.returncode == 0:
-                for line in result.stdout.strip().split('\n'):
-                    if 'secret' in line.lower():
-                        TENANTS[tenant]["app_secret"] = line.split('=')[-1].strip() if '=' in line else line.strip()
-                        break
-    except Exception:
-        pass
-
-_load_secrets()
 
 def get_token(tenant="hanxing"):
     """获取 tenant_access_token"""

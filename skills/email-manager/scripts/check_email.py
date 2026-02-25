@@ -94,14 +94,8 @@ def check_all_emails() -> str:
     
     for client in clients:
         try:
-            # 测试连接
-            success, message = client.test_connection()
-            if not success:
-                all_emails[client.config.get('name', client.email_address)] = []
-                continue
-            
-            # 获取未读邮件
-            emails = client.fetch_unread(limit=50)
+            # 直接获取未读邮件（跳过 test_connection 节省连接时间）
+            emails = client.fetch_unread(limit=10)
             account_name = client.config.get('name', client.email_address)
             all_emails[account_name] = emails
             

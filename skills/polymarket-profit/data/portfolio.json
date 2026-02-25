@@ -1,9 +1,23 @@
 {
-  "positions": [],
-  "total_invested": 0,
+  "positions": [
+    {
+      "id": 1,
+      "market": "bitcoin-75k-february",
+      "question": "Will Bitcoin reach $75,000 in February?",
+      "outcome": "Yes",
+      "shares": 5,
+      "entry_price": 0.14,
+      "cost_usd": 0.70,
+      "status": "open",
+      "type": "limit",
+      "order_id": "0x60926e3a02067065e6ffec082da1415abe24855b6ae98d650c90f8c9455618b6",
+      "created_at": "2026-02-21T23:15:13+08:00",
+      "expiry": "2026-02-28"
+    }
+  ],
+  "total_invested": 0.70,
   "total_realized_pnl": 0,
   "mode": "live",
   "capital": 3.0,
-  "last_updated": null,
-  "note": "已从模拟盘切换到真实交易，等待用户准备好钱包和USDC后开始建仓"
+  "last_updated": "2026-02-21T23:18:00+08:00"
 }

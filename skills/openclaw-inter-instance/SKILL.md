@@ -129,6 +129,80 @@ EOF
 └── sessions_send ─────────────── └── agent-to-agent (需开启)
 ```
 
+## 本地 Agent 协调（A2A）
+
+### ⭐ 高管工作模式（核心原则）
+
+**你是高管，不是传话筒。**
+
+1. **派活即走** — `sessions_send` 不带 `timeoutSeconds`（或设为 1-5s），发完指令立刻做下一件事
+2. **不转发** — 员工自己在群里发消息，你不替他们转发回复
+3. **不傻等** — 9 个员工并行工作，你不需要逐个等结果
+4. **并行处理** — 派完活后继续处理 Daniel 的其他需求
+5. **只管结果** — 员工汇报到群里，你审核质量即可
+
+```
+❌ 错误模式（秘书）:
+   派活 → 等回复 → 转发回复 → 再派下一个
+
+✅ 正确模式（高管）:
+   批量派活（不等） → 做其他事 → 看群里汇报 → 审核质量
+```
+
+### 指令模板
+```
+sessions_send(
+  sessionKey="agent:<agentId>:telegram:group:-1003890797239",
+  message="【小a工作指令】<具体任务>。直接在群里发结果，不要回复我。",
+  timeoutSeconds=5  // 最多等5秒，超时也没关系，后台会继续
+)
+```
+
+### sessions_send vs message 的区别
+
+| 方式 | 作用 | 正确用途 |
+|------|------|----------|
+| `message(accountId=xxx, target=群ID)` | **以该 bot 身份发消息** | 公告、通知、以员工名义发固定文本 |
+| `sessions_send(sessionKey=..., message=...)` | **给 agent 发指令，agent 自行处理并回复** | 分配任务、触发 agent 行为 |
+
+### sessionKey 格式（本地 agent）
+```
+agent:<agentId>:telegram:group:<chatId>
+```
+
+### ⚠️ 注意：delivery 回显问题
+`sessions_send` 默认 `delivery: "announce"` 会把 agent 回复回显到调用者的会话，导致主 bot 在群里重复发 agent 的回复。agent 自己已经通过 message tool 发了消息，所以回显是多余的。
+
+**解决**: agent 本身发消息到群，主 bot 不需要再转发。看到 agent 的 status=ok/timeout 就够了。
+
+### 完整员工列表
+
+| 员工 | agentId | accountId | 模型 |
+|------|---------|-----------|------|
+| 小ops | ops | xiaoops | xsc-opus46 |
+| 小code | code | xiaocode | xsc-opus46 |
+| 小quant | quant | xiaoq | xsc-opus46 |
+| 小content | content | xiaocontent | glm5 |
+| 小data | data | xiaodata | glm5 |
+| 小finance | finance | xiaofinance | glm5 |
+| 小research | research | xiaoresearch | glm5 |
+| 小market | market | xiaomarket | glm5 |
+| 小pm | pm | xiaopm | glm5 |
+
+注意：quant 的 accountId 是 `xiaoq`（不是 xiaoquant）。
+
+### GLM-5 身份覆盖问题
+GLM-5 有内置 "Kiro" 人设，会覆盖 SOUL.md 身份。解决方案：在 AGENTS.md 顶部加 `CRITICAL IDENTITY` 强制声明。
+
+### 批量调度
+```python
+for agent_id in ["ops", "code", "quant", "content", "data", "finance", "research", "market", "pm"]:
+    sessions_send(
+        sessionKey=f"agent:{agent_id}:telegram:group:-1003890797239",
+        message="你的任务指令"
+    )
+```
+
 ## 触发词
 
 - "给小m发消息"

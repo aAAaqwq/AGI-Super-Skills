@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "timestamp": "2026-02-21T23:15:13.509339",
+    "market": "bitcoin-75k-february",
+    "question": "Will Bitcoin reach $75,000 in February?",
+    "outcome": "Yes",
+    "shares": 5,
+    "price": 0.14,
+    "cost": 0.7000000000000001,
+    "type": "limit",
+    "status": "open",
+    "order_id": "{'errorMsg': '', 'orderID': '0x60926e3a02067065e6ffec082da1415abe24855b6ae98d650c90f8c9455618b6', 'takingAmount': '', 'makingAmount': '', 'status': 'live', 'success': True}"
+  }
+]

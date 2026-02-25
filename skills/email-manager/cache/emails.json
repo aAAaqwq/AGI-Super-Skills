@@ -1,0 +1,189 @@
+{
+  "timestamp": "2026-02-25T08:04:52.136399",
+  "emails": {
+    "QQ邮箱": [
+      {
+        "id": "818",
+        "subject": "阿里云快照服务开通成功提醒",
+        "from": "阿里云 <system@notice.aliyun.com>",
+        "to": "REDACTED_EMAIL",
+        "date": "Fri, 13 Feb 2026 18:25:47 +0800 (CST)",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "839",
+        "subject": "【阿里云】云安全中心周报",
+        "from": "阿里云 <monitor@monitor.aliyun.com>",
+        "to": "REDACTED_EMAIL",
+        "date": "Thu, 19 Feb 2026 08:03:21 +0800 (CST)",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "840",
+        "subject": "[GitHub] Your GitHub Enterprise trial has ended",
+        "from": "GitHub <support@github.com>",
+        "to": "ArMatrix_admin <REDACTED_EMAIL>",
+        "date": "Wed, 18 Feb 2026 18:12:34 -0800",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "841",
+        "subject": "云安全中心云平台配置安全检查告警通知",
+        "from": "阿里云 <system@notice.aliyun.com>",
+        "to": "REDACTED_EMAIL",
+        "date": "Thu, 19 Feb 2026 11:41:54 +0800 (CST)",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "842",
+        "subject": "【到期预警】阿里云ECS即将到期提醒",
+        "from": "阿里云 <system@notice.aliyun.com>",
+        "to": "REDACTED_EMAIL",
+        "date": "Thu, 19 Feb 2026 12:04:08 +0800 (CST)",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "843",
+        "subject": "Action Required: Cloudinary Account Upgrade",
+        "from": "Cloudinary <support@cloudinary.com>",
+        "to": "REDACTED_EMAIL",
+        "date": "Thu, 19 Feb 2026 06:48:26 +0000",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "847",
+        "subject": "[aAAaqwq/AGI-Super-Skills] Possible valid secrets detected",
+        "from": "GitHub <support@github.com>",
+        "to": "Daniel Li <REDACTED_EMAIL>",
+        "date": "Thu, 19 Feb 2026 01:25:53 -0800",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "863",
+        "subject": "QQ邮箱祝你生日快乐",
+        "from": "\"QQ邮箱管理员\" <admin@qq.com>",
+        "to": "\"=?utf-8?B?MjA2NzA4OTQ1MQ==?=\" <REDACTED_EMAIL>",
+        "date": "Wed, 13 Oct 2021 09:45:34 +0800",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "865",
+        "subject": "΢յĺ룬ҵ΢ͨ",
+        "from": "\"腾讯企业微信\" <10000@qq.com>",
+        "to": "",
+        "date": "",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "869",
+        "subject": "更安全、更高效、更强大，尽在QQ邮箱APP",
+        "from": "QQ邮箱团队 <10000@qq.com>",
+        "to": "=?utf-8?B?44CA44CA44CA44CA44CA44CA=?= <REDACTED_EMAIL>",
+        "date": "Tue, 24 Feb 2026 20:58:39 +0800",
+        "body": "",
+        "has_attachment": false
+      }
+    ],
+    "Gmail": [
+      {
+        "id": "442",
+        "subject": "New login to X from ChromeDesktop on Windows",
+        "from": "X <verify@x.com>",
+        "to": "AA a <aaqwqaa68@gmail.com>",
+        "date": "Sun, 22 Feb 2026 11:45:32 +0000",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "443",
+        "subject": "996367 is your Polymarket login code",
+        "from": "Polymarket <noreply@trymagic.com>",
+        "to": "aaqwqaa68@gmail.com",
+        "date": "Sun, 22 Feb 2026 13:17:36 +0000 (UTC)",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "444",
+        "subject": "Feb 22 - Breaking News in The Last 24hrs 🚨",
+        "from": "Polymarket <noreply@polymarket.com>",
+        "to": "aaqwqaa68@gmail.com",
+        "date": "Sun, 22 Feb 2026 14:02:09 +0000",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "445",
+        "subject": "712934 is your Polymarket login code",
+        "from": "Polymarket <noreply@trymagic.com>",
+        "to": "aaqwqaa68@gmail.com",
+        "date": "Sun, 22 Feb 2026 14:38:49 +0000 (UTC)",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "446",
+        "subject": "Breaking news: Man is fatally shot at Mar-a-Lago, Secret Service says",
+        "from": "The New York Times <breakingnews@nytimes.com>",
+        "to": "aaqwqaa68@gmail.com",
+        "date": "Sun, 22 Feb 2026 14:54:29 +0000",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "447",
+        "subject": "The World: Knocking on Beijing’s door",
+        "from": "The New York Times <nytdirect@nytimes.com>",
+        "to": "aaqwqaa68@gmail.com",
+        "date": "Sun, 22 Feb 2026 21:04:51 +0000",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "448",
+        "subject": "Breaking news: Trump is considering a larger attack on Iran if\r\n diplomacy or a targeted strike fails",
+        "from": "The New York Times <breakingnews@nytimes.com>",
+        "to": "aaqwqaa68@gmail.com",
+        "date": "Sun, 22 Feb 2026 22:03:13 +0000",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "449",
+        "subject": "191270 is your Polymarket login code",
+        "from": "Polymarket <noreply@trymagic.com>",
+        "to": "aaqwqaa68@gmail.com",
+        "date": "Mon, 23 Feb 2026 01:47:34 +0000 (UTC)",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "464",
+        "subject": "The World: A chokehold on Cuba",
+        "from": "The New York Times <nytdirect@nytimes.com>",
+        "to": "aaqwqaa68@gmail.com",
+        "date": "Tue, 24 Feb 2026 21:02:31 +0000",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "465",
+        "subject": "What was said. Covered from all angles.",
+        "from": "The New York Times <nytimes@e.newyorktimes.com>",
+        "to": "aaqwqaa68@gmail.com",
+        "date": "Tue, 24 Feb 2026 23:11:39 +0000",
+        "body": "",
+        "has_attachment": false
+      }
+    ]
+  }
+}

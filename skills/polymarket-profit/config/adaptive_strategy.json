@@ -1,0 +1,68 @@
+{
+  "version": "2.1",
+  "updated": "2026-02-22",
+  "capital": {
+    "total": 3.00,
+    "available": 2.01,
+    "currency": "USDC",
+    "note": "本金小，需要高频低风险策略"
+  },
+  
+  "active_strategy": {
+    "name": "高频确定性收割",
+    "description": "本金$3太小，传统策略收益不足。采用高频、极低风险策略积累本金",
+    
+    "step_1_accumulation": {
+      "name": "积累期",
+      "target": "$10",
+      "method": "每2-3天执行一次高确定性No交易",
+      "expected_per_trade": "2-5%",
+      "trades_needed": "~20次",
+      "time_estimate": "2个月"
+    },
+    
+    "step_2_scaling": {
+      "name": "扩展期", 
+      "trigger": "本金达到$10",
+      "method": "增加策略多样性，事件驱动",
+      "expected_monthly": "$1-3"
+    },
+    
+    "current_opportunities": [
+      {
+        "market": "fed-decision-in-march-885",
+        "outcome": "25 bps decrease",
+        "action": "buy_no",
+        "no_price": 0.967,
+        "return_pct": "3.4%",
+        "confidence": "极高",
+        "amount": 1.00,
+        "expected_profit": 0.034
+      },
+      {
+        "market": "fed-decision-in-march-885", 
+        "outcome": "50+ bps decrease",
+        "action": "buy_no",
+        "no_price": 0.99,
+        "return_pct": "1%",
+        "confidence": "极高",
+        "amount": 0.50,
+        "expected_profit": 0.005
+      }
+    ],
+    
+    "execution_rules": {
+      "min_return_pct": 2.0,
+      "min_confidence": "高",
+      "max_per_day": 1,
+      "require_user_confirm": true
+    }
+  },
+  
+  "strategies_disabled": {
+    "note": "以下策略在积累期暂时停用",
+    "contrarian_yes": "风险高，本金不足",
+    "event_driven": "需要更多本金",
+    "arbitrage": "机会少"
+  }
+}

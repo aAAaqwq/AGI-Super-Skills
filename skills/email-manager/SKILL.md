@@ -178,5 +178,24 @@ AI: [生成回复草稿]
 
 ---
 
+## 故障排查
+
+### SSL/连接问题
+- **症状**: `Connection reset by peer`, `SSL: UNEXPECTED_EOF_WHILE_READING`
+- **根因**: Mihomo/Clash TUN 模式劫持 IMAP 长连接不稳定
+- **解决**:
+  - Gmail 等海外邮箱：在 Mihomo `Merge.yaml` 添加 `DOMAIN-SUFFIX,imap.gmail.com,DIRECT`
+  - QQ/163 等国内邮箱：需走国内代理出口，不可直连（海外 VPS）
+  - 代码已内置 ssl_context + 3次重试 + 2s退避
+
+### 编码问题
+- **症状**: `LookupError: unknown encoding: unknown-8bit`
+- **解决**: `_parse_email` 已添加 try/except 兜底用 utf-8 解码
+
+### 超时问题
+- **症状**: `check_email.py` 被 SIGKILL
+- **解决**: 跳过 `test_connection`、limit 降到 10、使用 `headers_only=True`
+
 *创建日期: 2026-02-19*
-*版本: 1.0.0*
+*更新日期: 2026-02-24*
+*版本: 1.1.0*

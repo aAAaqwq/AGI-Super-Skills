@@ -4,7 +4,7 @@
     "imap_server": "imap.gmail.com",
     "imap_port": 993,
     "smtp_server": "smtp.gmail.com",
-    "smtp_port": 587,
+    "smtp_port": 465,
     "use_ssl": true,
     "auth_type": "app_password",
     "instructions": "需在 Google 账户设置中开启 IMAP，并生成应用专用密码"
@@ -14,7 +14,7 @@
     "imap_server": "imap.qq.com",
     "imap_port": 993,
     "smtp_server": "smtp.qq.com",
-    "smtp_port": 587,
+    "smtp_port": 465,
     "use_ssl": true,
     "auth_type": "auth_code",
     "instructions": "需在 QQ 邮箱设置中开启 IMAP 服务，获取授权码"

@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-02-22T11:10:10.954008",
+  "wallet": "0xd91eF877D04ACB06a9dE22e536765D2Ace246A9b",
+  "results": [
+    {
+      "test": "query_balance",
+      "status": "partial",
+      "details": {
+        "error": "401 Client Error: Unauthorized for url: https://polygon-rpc.com/"
+      }
+    },
+    {
+      "test": "query_orders",
+      "status": "partial",
+      "details": {
+        "note": "\u67e5\u8be2\u516c\u5f00\u8ba2\u5355\u7c3f\u9700\u8981API\u7b7e\u540d\uff0c\u79c1\u94a5\u67e5\u8be2\u53d7\u9650"
+      }
+    },
+    {
+      "test": "execute_trade",
+      "status": "ready",
+      "details": {
+        "private_key": "\u5df2\u914d\u7f6e",
+        "note": "\u4ea4\u6613\u80fd\u529b\u5c31\u7eea\uff0c\u9700\u8981\u4f59\u989d\u548c\u7528\u6237\u786e\u8ba4"
+      }
+    },
+    {
+      "test": "browser_use",
+      "status": "ready",
+      "details": {
+        "browser_use": "\u5df2\u5b89\u88c5",
+        "chrome": "\u5df2\u5b89\u88c5",
+        "llm_api": "\u5df2\u914d\u7f6e",
+        "note": "browser-use\u80fd\u529b\u5c31\u7eea"
+      }
+    }
+  ]
+}

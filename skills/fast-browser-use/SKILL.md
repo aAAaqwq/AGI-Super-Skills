@@ -3,6 +3,9 @@ name: fast-browser-use
 displayName: Fastest Browser Use
 emoji: "⚡"
 summary: Rust-powered browser automation that rips through DOMs 10x faster than Puppeteer.
+aliases:
+  - fbu
+  - use fbu
 homepage: https://github.com/rknoche6/fast-browser-use
 primaryEnv: bash
 os:
@@ -30,6 +33,110 @@ config:
 A Rust-based browser automation engine that provides a lightweight binary driving Chrome directly via CDP. It is optimized for token-efficient DOM extraction, robust session management, and speed.
 
 ![Terminal Demo](https://placehold.co/800x400/1e1e1e/ffffff?text=Terminal+Demo+Coming+Soon)
+
+## ⚠️ Important: Command Behavior
+
+- **`navigate`** is a one-shot command — it opens the page, completes, then **immediately kills Chrome**. Do NOT use it if the user wants to see/interact with the browser.
+- **`login`** keeps Chrome open and waits for user input (Enter) before saving session and closing. Use this when the user needs to interact manually.
+- **`--headless false`** shows the Chrome window on the user's desktop (requires X11/Wayland display). Use this when the user wants to watch operations.
+- **`--user-data-dir`** reuses an existing Chrome profile (login state, cookies, extensions). However, it may conflict if Chrome is already running with that profile. Prefer `--load-session` for saved sessions instead.
+
+### 🔴 超时与自动关闭（必须遵守）
+
+**所有 fbu 命令必须用 `timeout` 包裹**，防止 Chrome 进程残留：
+
+```bash
+# 标准用法：60秒超时，超时后先 SIGTERM，5秒后 SIGKILL
+timeout --kill-after=5 60 fast-browser-use snapshot --url "https://example.com"
+
+# 长任务（如 harvest）：120秒超时
+timeout --kill-after=5 120 fast-browser-use harvest --url "https://example.com" --selector "a"
+```
+
+**超时后清理残留 Chrome 进程**（在 cron/自动化任务中建议加）：
+```bash
+# 命令结束后确保无残留
+timeout --kill-after=5 60 fast-browser-use snapshot --url "..." || true
+# 清理可能残留的 Chrome 进程（仅清理 fbu 启动的）
+pkill -f "chrome.*--remote-debugging" 2>/dev/null || true
+```
+
+**推荐超时时间**：
+- `snapshot`: 30-60s
+- `navigate`: 30-60s
+- `screenshot`: 30-60s
+- `harvest`: 60-120s
+- `login`: 300s（需要人工交互）
+- Cloudflare 站点（`--headless false`）: 翻倍
+
+### 🔐 Platform Authorization & Login Workflow
+
+When you need to access a platform that requires the user's login (e.g. Polymarket, GitHub, Twitter), follow this complete workflow:
+
+#### Session Persistence: `--user-data-dir` vs `--load-session`
+
+- **`--load-session`** only restores cookies. Many modern platforms (OAuth, wallet-based, SPA) store auth state in localStorage/IndexedDB, so cookies alone are **insufficient**.
+- **`--user-data-dir`** persists the **entire Chrome profile** (cookies + localStorage + IndexedDB + service workers). This is the **recommended approach** for most platforms.
+- Use a **dedicated profile directory per platform** (e.g. `~/.openclaw/chrome-profiles/polymarket/`) to avoid lock conflicts with the user's running Chrome.
+
+#### Complete Workflow
+
+**Step 1: Create dedicated profile directory**
+```bash
+mkdir -p ~/.openclaw/chrome-profiles/<platform-name>
+```
+
+**Step 2: Open visible browser with `login` command**
+```bash
+export CHROME_PATH=/usr/bin/google-chrome  # adjust per system
+fast-browser-use login \
+  --url "https://platform.com" \
+  --headless false \
+  --user-data-dir ~/.openclaw/chrome-profiles/<platform-name> \
+  --save-session ./<platform-name>-session.json
+```
+- `--headless false` so the user can see and interact with Chrome
+- `--user-data-dir` for full state persistence
+- `--save-session` as a backup (cookies-only fallback)
+- The command will print "Press Enter after you have logged in..." and **wait**
+
+**Step 3: Ask user to log in**
+- Tell the user to log in manually in the Chrome window
+- **Do NOT send Enter until the user explicitly confirms they have logged in**
+
+**Step 4: User confirms → Save session**
+- Once the user says they've logged in, send Enter (newline) to the process stdin
+- fbu saves cookies to the session file and closes Chrome
+
+**Step 5: Verify login state**
+- Open a **new headless instance** with the same `--user-data-dir` and run `snapshot`:
+```bash
+fast-browser-use snapshot \
+  --url "https://platform.com" \
+  --user-data-dir ~/.openclaw/chrome-profiles/<platform-name>
+```
+- Check the DOM output for **logged-in indicators**: username, avatar, portfolio balance, dashboard content, account menu, etc.
+- If you see "Login" / "Sign up" / "Register" buttons instead → login was NOT saved. Inform the user and re-run from Step 2.
+
+**Step 6: Confirm to user**
+- Report what you found (e.g. "✅ Verified: logged in, portfolio balance $6.02")
+- The profile is now ready for future automated use
+
+#### Subsequent Usage (After Login)
+```bash
+# All future commands for this platform just add --user-data-dir
+fast-browser-use navigate \
+  --url "https://platform.com/dashboard" \
+  --user-data-dir ~/.openclaw/chrome-profiles/<platform-name>
+
+fast-browser-use snapshot \
+  --url "https://platform.com/portfolio" \
+  --user-data-dir ~/.openclaw/chrome-profiles/<platform-name>
+```
+
+#### Session Expiry
+- Before automated tasks, always **snapshot first and verify** the login is still valid
+- If expired, re-run the login workflow from Step 2 (the profile dir already exists)
 
 ## 🧪 Recipes for Agents
 

@@ -1,0 +1,358 @@
+{
+  "generated_at": "2026-02-21T15:20:10.884561+00:00",
+  "total_markets": 500,
+  "total_outcomes": 1000,
+  "clob_strategy": {
+    "budget": 1,
+    "max_price": 0.19,
+    "count": 10,
+    "opportunities": [
+      {
+        "question": "Will the US next strike Iran on February 20, 2026 (ET)?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 634513.4380399999,
+        "end_date": "2026-02-28T00:00:00Z",
+        "url": "https://polymarket.com/event/will-the-us-next-strike-iran-on-february-20-2026-et",
+        "condition_id": "0xee4520e0dc6e83786f8ad5822656d6d44878ae4077548295f0009f871e784ce5"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $72,000 on February 21?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 423111.5959299998,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-72k-on-february-21",
+        "condition_id": "0x4f9810d734d26513250eb3e23dc1af391a96fc4cb566dd88762b2c34575ada3a"
+      },
+      {
+        "question": "Will Elon Musk post 90-114 tweets from February 19 to February 21, 2026?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 274832.575756,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/elon-musk-of-tweets-february-19-february-21-90-114",
+        "condition_id": "0x367e1fde4a30513ea88ce52b6fb34411dd41e5aca3d070288e3c780eb09f2f8f"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $70,000 on February 21?",
+        "outcome": "Yes",
+        "price": 0.005,
+        "return_rate": 199.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 268143.00042599987,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-70k-on-february-21",
+        "condition_id": "0x0733ad8324639e31f337a88842f4ad78cff949be61cc0a56e6acefe48a87d435"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $60,000 on February 21?",
+        "outcome": "No",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 265780.89800300007,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-60k-on-february-21",
+        "condition_id": "0xc3cbd8245b3b7e289e69effd54d7bde46e33c78975535413e6a56e8fab55d322"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $74,000 on February 21?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 236621.042061,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-74k-on-february-21",
+        "condition_id": "0xf1855fd6b15728edb02bb8ef4805f9ba65ddcad36def720aec41009ac5c50abb"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $66,000 on February 21?",
+        "outcome": "No",
+        "price": 0.0015,
+        "return_rate": 665.67,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 233470.65451,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-66k-on-february-21",
+        "condition_id": "0x62f1335fd07e424487e1703dcc92b896699ff150a3da0492619628d476c7b59b"
+      },
+      {
+        "question": "Will Elon Musk post 240-259 tweets from February 17 to February 24, 2026?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 223669.89021299995,
+        "end_date": "2026-02-24T17:00:00Z",
+        "url": "https://polymarket.com/event/elon-musk-of-tweets-february-17-february-24-240-259",
+        "condition_id": "0x361346697adc8f92e3d033488d778bc845e716184ab70a1b756b00fbd84ec5aa"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $62,000 on February 21?",
+        "outcome": "No",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 220143.838702,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-62k-on-february-21",
+        "condition_id": "0x5cde2c50fff87b36334a049f11e294a679574d9ca427d39770e3aaf98822dd4f"
+      },
+      {
+        "question": "Will the price of Bitcoin be between $60,000 and $62,000 on February 21?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 186125.4670689999,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/will-the-price-of-bitcoin-be-between-60000-62000-on-february-21",
+        "condition_id": "0x204915db75d8990515393191f8c8ca103b6c8c432eb3de068bc595d272134e05"
+      }
+    ]
+  },
+  "website_strategy": {
+    "budget": 6,
+    "count": 10,
+    "opportunities": [
+      {
+        "question": "Will the US next strike Iran on February 20, 2026 (ET)?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 634513.4380399999,
+        "end_date": "2026-02-28T00:00:00Z",
+        "url": "https://polymarket.com/event/will-the-us-next-strike-iran-on-february-20-2026-et",
+        "condition_id": "0xee4520e0dc6e83786f8ad5822656d6d44878ae4077548295f0009f871e784ce5"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $72,000 on February 21?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 423111.5959299998,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-72k-on-february-21",
+        "condition_id": "0x4f9810d734d26513250eb3e23dc1af391a96fc4cb566dd88762b2c34575ada3a"
+      },
+      {
+        "question": "Will Elon Musk post 90-114 tweets from February 19 to February 21, 2026?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 274832.575756,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/elon-musk-of-tweets-february-19-february-21-90-114",
+        "condition_id": "0x367e1fde4a30513ea88ce52b6fb34411dd41e5aca3d070288e3c780eb09f2f8f"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $70,000 on February 21?",
+        "outcome": "Yes",
+        "price": 0.005,
+        "return_rate": 199.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 268143.00042599987,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-70k-on-february-21",
+        "condition_id": "0x0733ad8324639e31f337a88842f4ad78cff949be61cc0a56e6acefe48a87d435"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $60,000 on February 21?",
+        "outcome": "No",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 265780.89800300007,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-60k-on-february-21",
+        "condition_id": "0xc3cbd8245b3b7e289e69effd54d7bde46e33c78975535413e6a56e8fab55d322"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $74,000 on February 21?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 236621.042061,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-74k-on-february-21",
+        "condition_id": "0xf1855fd6b15728edb02bb8ef4805f9ba65ddcad36def720aec41009ac5c50abb"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $66,000 on February 21?",
+        "outcome": "No",
+        "price": 0.0015,
+        "return_rate": 665.67,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 233470.65451,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-66k-on-february-21",
+        "condition_id": "0x62f1335fd07e424487e1703dcc92b896699ff150a3da0492619628d476c7b59b"
+      },
+      {
+        "question": "Will Elon Musk post 240-259 tweets from February 17 to February 24, 2026?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 223669.89021299995,
+        "end_date": "2026-02-24T17:00:00Z",
+        "url": "https://polymarket.com/event/elon-musk-of-tweets-february-17-february-24-240-259",
+        "condition_id": "0x361346697adc8f92e3d033488d778bc845e716184ab70a1b756b00fbd84ec5aa"
+      },
+      {
+        "question": "Will the price of Bitcoin be above $62,000 on February 21?",
+        "outcome": "No",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 220143.838702,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/bitcoin-above-62k-on-february-21",
+        "condition_id": "0x5cde2c50fff87b36334a049f11e294a679574d9ca427d39770e3aaf98822dd4f"
+      },
+      {
+        "question": "Will the price of Bitcoin be between $60,000 and $62,000 on February 21?",
+        "outcome": "Yes",
+        "price": 0.0005,
+        "return_rate": 1999.0,
+        "score": 100,
+        "scores": {
+          "certainty": 40,
+          "timeliness": 20,
+          "liquidity": 20,
+          "value": 20
+        },
+        "volume24hr": 186125.4670689999,
+        "end_date": "2026-02-21T17:00:00Z",
+        "url": "https://polymarket.com/event/will-the-price-of-bitcoin-be-between-60000-62000-on-february-21",
+        "condition_id": "0x204915db75d8990515393191f8c8ca103b6c8c432eb3de068bc595d272134e05"
+      }
+    ]
+  }
+}

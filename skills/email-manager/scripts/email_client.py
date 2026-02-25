@@ -49,33 +49,57 @@ class EmailClient:
         
         raise ValueError(f"未找到邮箱凭据: {self.email_address}")
     
-    def connect_imap(self) -> imaplib.IMAP4_SSL:
-        """连接 IMAP 服务器"""
+    def connect_imap(self, retries: int = 3) -> imaplib.IMAP4_SSL:
+        """连接 IMAP 服务器（带重试）"""
+        import ssl, time
         password = self._get_password()
         
-        mail = imaplib.IMAP4_SSL(
-            self.provider['imap_server'],
-            self.provider['imap_port']
-        )
-        
-        mail.login(self.email_address, password)
-        return mail
+        for attempt in range(retries):
+            try:
+                ctx = ssl.create_default_context()
+                mail = imaplib.IMAP4_SSL(
+                    self.provider['imap_server'],
+                    self.provider['imap_port'],
+                    ssl_context=ctx
+                )
+                mail.login(self.email_address, password)
+                return mail
+            except (ssl.SSLEOFError, ConnectionResetError, OSError) as e:
+                if attempt < retries - 1:
+                    time.sleep(2 * (attempt + 1))
+                    continue
+                raise
     
-    def connect_smtp(self) -> smtplib.SMTP:
-        """连接 SMTP 服务器"""
+    def connect_smtp(self, retries: int = 3):
+        """连接 SMTP 服务器（带重试）"""
+        import ssl, time
         password = self._get_password()
+        port = self.provider['smtp_port']
         
-        smtp = smtplib.SMTP(
-            self.provider['smtp_server'],
-            self.provider['smtp_port']
-        )
-        
-        smtp.starttls()
-        smtp.login(self.email_address, password)
-        return smtp
+        for attempt in range(retries):
+            try:
+                ctx = ssl.create_default_context()
+                if port == 465:
+                    smtp = smtplib.SMTP_SSL(self.provider['smtp_server'], port, context=ctx)
+                else:
+                    smtp = smtplib.SMTP(self.provider['smtp_server'], port)
+                    smtp.starttls(context=ctx)
+                
+                smtp.login(self.email_address, password)
+                return smtp
+            except (ssl.SSLEOFError, ConnectionResetError, OSError) as e:
+                if attempt < retries - 1:
+                    time.sleep(2 * (attempt + 1))
+                    continue
+                raise
     
-    def fetch_unread(self, limit: int = 50) -> List[Dict]:
-        """获取未读邮件"""
+    def fetch_unread(self, limit: int = 20, headers_only: bool = True) -> List[Dict]:
+        """获取未读邮件
+        
+        Args:
+            limit: 最多获取多少封
+            headers_only: True=只取标题/发件人(快), False=取完整内容(慢)
+        """
         mail = self.connect_imap()
         mail.select('INBOX')
         
@@ -88,15 +112,29 @@ class EmailClient:
             return []
         
         email_ids = messages[0].split()
-        email_ids = email_ids[-limit:]  # 限制数量
+        email_ids = email_ids[-limit:]  # 只取最新的
         
         emails = []
         for email_id in email_ids:
-            status, msg_data = mail.fetch(email_id, '(RFC822)')
-            if status == 'OK':
-                msg = email.message_from_bytes(msg_data[0][1])
-                email_data = self._parse_email(msg, email_id.decode())
-                emails.append(email_data)
+            try:
+                if headers_only:
+                    # 只获取头部信息，速度快 10x+
+                    status, msg_data = mail.fetch(email_id, '(BODY[HEADER.FIELDS (FROM TO SUBJECT DATE)])')
+                    if status == 'OK' and msg_data[0] is not None:
+                        header_bytes = msg_data[0][1] if isinstance(msg_data[0], tuple) else b''
+                        msg = email.message_from_bytes(header_bytes)
+                        email_data = self._parse_email(msg, email_id.decode())
+                        email_data['body'] = ''  # 头部模式无正文
+                        emails.append(email_data)
+                else:
+                    status, msg_data = mail.fetch(email_id, '(RFC822)')
+                    if status == 'OK':
+                        msg = email.message_from_bytes(msg_data[0][1])
+                        email_data = self._parse_email(msg, email_id.decode())
+                        emails.append(email_data)
+            except Exception as e:
+                print(f"  跳过邮件 {email_id}: {e}")
+                continue
         
         mail.close()
         mail.logout()
@@ -140,7 +178,10 @@ class EmailClient:
             subject_parts = []
             for part, charset in decoded_parts:
                 if isinstance(part, bytes):
-                    subject_parts.append(part.decode(charset or 'utf-8', errors='ignore'))
+                    try:
+                        subject_parts.append(part.decode(charset or 'utf-8', errors='ignore'))
+                    except (LookupError, UnicodeDecodeError):
+                        subject_parts.append(part.decode('utf-8', errors='ignore'))
                 else:
                     subject_parts.append(part)
             subject = ''.join(subject_parts)
@@ -152,7 +193,10 @@ class EmailClient:
             from_parts = []
             for part, charset in decoded_parts:
                 if isinstance(part, bytes):
-                    from_parts.append(part.decode(charset or 'utf-8', errors='ignore'))
+                    try:
+                        from_parts.append(part.decode(charset or 'utf-8', errors='ignore'))
+                    except (LookupError, UnicodeDecodeError):
+                        from_parts.append(part.decode('utf-8', errors='ignore'))
                 else:
                     from_parts.append(part)
             from_ = ''.join(from_parts)
