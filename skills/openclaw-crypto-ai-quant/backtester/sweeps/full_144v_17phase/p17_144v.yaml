@@ -1,0 +1,45 @@
+# p17_144v
+# Auto-generated from full_144v coverage.
+# Values are reduced for phase-grid practicality.
+initial_balance: 10000.0
+lookback: 200
+axes:
+- path: market_regime.auto_reverse_breadth_low
+  values:
+  - 7.0
+  - 10.0
+  - 13.0
+- path: thresholds.entry.ave_avg_atr_window
+  values:
+  - 30.0
+  - 50.0
+  - 80.0
+- path: thresholds.ranging.min_signals
+  values:
+  - 1.0
+  - 2.0
+  - 3.0
+- path: trade.adx_sizing_full_adx
+  values:
+  - 28.0
+  - 40.0
+  - 52.0
+- path: trade.enable_breakeven_stop
+  values:
+  - 0.0
+  - 1.0
+- path: trade.leverage_medium
+  values:
+  - 2.0
+  - 4.0
+  - 5.0
+- path: trade.rsi_exit_lb_lo_profit
+  values:
+  - 14.0
+  - 20.0
+  - 26.0
+- path: trade.trailing_start_atr_low_conf
+  values:
+  - 0.0
+  - 0.5
+  - 1.0

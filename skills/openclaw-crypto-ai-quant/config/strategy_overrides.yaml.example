@@ -1,0 +1,246 @@
+# v6.100 — Unified config: backtester + engine share this file
+# ALL params explicit. Both systems read identical values from this YAML.
+# v6.100: tp_partial_atr_mult sweep optimal (1h/3m, 13-day, $253 balance).
+# WARNING: Sweep-optimised values from historical runs are shown as comments only.
+# WARNING: This example ships conservative defaults for safer first-time paper/live trials.
+# WARNING: Validate in paper mode first before promoting to live.
+global:
+  trade:
+    # --- Core sizing ---
+    allocation_pct: 0.03              # conservative default (aggressive sweep example: 0.20)
+    sl_atr_mult: 2.0                  # SWEPT (default 2.0, same)
+    tp_atr_mult: 6.0                  # SWEPT (default 4.0)
+    leverage: 2.0                     # conservative default (aggressive sweep example: 3.0)
+    max_open_positions: 20            # default
+    max_total_margin_pct: 0.25        # conservative default (aggressive sweep example: 0.60)
+    min_notional_usd: 10.0            # default
+    min_atr_pct: 0.003                # SWEPT optimal (was 0)
+    bump_to_min_notional: true        # bump <$10 orders to $10
+
+    # --- Dynamic leverage ---
+    leverage_low: 1.0                 # SWEPT (default 1.0, same)
+    leverage_medium: 5.0              # SWEPT (default 3.0)
+    leverage_high: 5.0                # SWEPT (default 5.0, same)
+
+    # --- Execution ---
+    use_bbo_for_fills: true           # engine-only (backtester: no orderbook data)
+    slippage_bps: 10.0                # conservative, matches backtester
+
+    # --- Dynamic sizing ---
+    enable_dynamic_sizing: false      # SWEPT (default true)
+    confidence_mult_high: 1.0         # SWEPT optimal (was 1.4)
+    confidence_mult_medium: 0.7       # SWEPT optimal (was 1.0)
+    confidence_mult_low: 0.5          # SWEPT optimal (was 0.7)
+    adx_sizing_min_mult: 0.6          # SWEPT optimal (was 0.75)
+    adx_sizing_full_adx: 40.0         # default
+    vol_baseline_pct: 0.01            # default
+    vol_scalar_min: 0.5               # default
+    vol_scalar_max: 1.0               # default
+
+    # --- Pyramiding ---
+    enable_pyramiding: true           # default
+    max_adds_per_symbol: 2            # SWEPT optimal (was 3)
+    add_fraction_of_base_margin: 0.5  # SWEPT optimal (was 0.75)
+    add_cooldown_minutes: 60          # default
+    add_min_profit_atr: 0.5           # default
+    add_min_confidence: medium        # default
+
+    # --- Partial TP ---
+    enable_partial_tp: true           # default
+    tp_partial_pct: 0.7               # SWEPT v6.100 (was 0.5)
+    tp_partial_atr_mult: 1.0          # SWEPT v6.100 (new — partial TP at 1×ATR)
+    tp_partial_min_notional_usd: 10.0 # default
+
+    # --- Trailing ---
+    trailing_start_atr: 1.0           # SWEPT optimal (was 0.9)
+    trailing_distance_atr: 0.5        # SWEPT v6.100 (was 0.8)
+    trailing_start_atr_low_conf: 0.0  # default (0 = use main value)
+    trailing_distance_atr_low_conf: 0.0 # default (0 = use main value)
+    enable_vol_buffered_trailing: true # default
+
+    # --- Reentry cooldown ---
+    reentry_cooldown_minutes: 60      # default
+    reentry_cooldown_min_mins: 45     # SWEPT optimal (was 55)
+    reentry_cooldown_max_mins: 180    # default
+
+    # --- REEF ---
+    enable_reef_filter: true          # default
+    reef_long_rsi_block_gt: 70.0      # default
+    reef_short_rsi_block_lt: 30.0     # default
+    reef_adx_threshold: 45.0          # default
+    reef_long_rsi_extreme_gt: 75.0    # default
+    reef_short_rsi_extreme_lt: 25.0   # default
+
+    # --- TSME ---
+    tsme_min_profit_atr: 1.0          # default
+    tsme_require_adx_slope_negative: true # default
+
+    # --- SSF + Breakeven ---
+    enable_ssf_filter: true           # default
+    enable_breakeven_stop: false       # SWEPT v6.100 (was true)
+    breakeven_start_atr: 0.5          # SWEPT v6.100 (was 0.7)
+    breakeven_buffer_atr: 0.05        # default
+
+    # --- RSI Overextension exit ---
+    enable_rsi_overextension_exit: true # default
+    rsi_exit_profit_atr_switch: 1.5   # default
+    rsi_exit_ub_lo_profit: 80.0       # default
+    rsi_exit_ub_hi_profit: 70.0       # default
+    rsi_exit_lb_lo_profit: 20.0       # default
+    rsi_exit_lb_hi_profit: 30.0       # default
+    rsi_exit_ub_lo_profit_low_conf: 0.0 # default (0 = use main value)
+    rsi_exit_ub_hi_profit_low_conf: 0.0 # default (0 = use main value)
+    rsi_exit_lb_lo_profit_low_conf: 0.0 # default (0 = use main value)
+    rsi_exit_lb_hi_profit_low_conf: 0.0 # default (0 = use main value)
+
+    # --- Smart exit ADX exhaustion ---
+    smart_exit_adx_exhaustion_lt: 0.0 # legacy fallback disabled — new positions use entry_adx_threshold
+    smart_exit_adx_exhaustion_lt_low_conf: 0.0 # legacy fallback disabled
+
+    # --- Signal / misc ---
+    reverse_entry_signal: false       # default
+    entry_min_confidence: low         # SWEPT (default high)
+    block_exits_on_extreme_dev: false # default
+    glitch_price_dev_pct: 0.40        # default
+    glitch_atr_mult: 12.0             # default
+
+    # --- Rate limits ---
+    entry_cooldown_s: 20              # engine-only (backtester: N/A, sub-bar timing)
+    exit_cooldown_s: 15               # engine-only (backtester: N/A, sub-bar timing)
+    max_entry_orders_per_loop: 6      # default
+
+  indicators:
+    adx_window: 10                    # SWEPT (default 14)
+    ema_fast_window: 8                # SWEPT (default 20)
+    ema_slow_window: 15               # SWEPT (default 50)
+    bb_window: 15                     # SWEPT (default 20)
+    ema_macro_window: 200             # default
+    atr_window: 14                    # default
+    rsi_window: 14                    # default
+    bb_width_avg_window: 30           # default
+    vol_sma_window: 20                # default
+    vol_trend_window: 5               # default
+    stoch_rsi_window: 14              # default
+    stoch_rsi_smooth1: 3              # default
+    stoch_rsi_smooth2: 3              # default
+
+  filters:
+    enable_extension_filter: true     # default
+    enable_ranging_filter: false      # SWEPT (default true)
+    enable_anomaly_filter: false      # SWEPT (default true)
+    require_btc_alignment: true       # default
+    require_volume_confirmation: false # SWEPT optimal (was true)
+    require_macro_alignment: false    # SWEPT optimal (was true)
+    require_adx_rising: true          # default
+    adx_rising_saturation: 40.0       # default
+    vol_confirm_include_prev: true    # default
+    use_stoch_rsi_filter: true        # default
+
+  thresholds:
+    entry:
+      min_adx: 15.0                   # SWEPT (default 22.0)
+      max_dist_ema_fast: 0.03         # SWEPT (default 0.04)
+      btc_adx_override: 40.0          # default
+      high_conf_volume_mult: 2.5      # default
+      ave_enabled: true               # default
+      ave_atr_ratio_gt: 1.5           # default
+      ave_adx_mult: 1.25              # default
+      ave_avg_atr_window: 50          # default
+      macd_hist_entry_mode: accel     # default
+      enable_pullback_entries: false   # default
+      pullback_confidence: low        # default
+      pullback_min_adx: 22.0          # default
+      pullback_rsi_long_min: 50.0     # default
+      pullback_rsi_short_max: 50.0    # default
+      pullback_require_macd_sign: true # default
+      enable_slow_drift_entries: false # default
+      slow_drift_slope_window: 20     # default
+      slow_drift_min_slope_pct: 0.0006 # default
+      slow_drift_min_adx: 10.0        # default
+      slow_drift_rsi_long_min: 50.0   # default
+      slow_drift_rsi_short_max: 50.0  # default
+      slow_drift_require_macd_sign: true # default
+    ranging:
+      min_signals: 2                  # default
+      adx_below: 21.0                 # default
+      bb_width_ratio_below: 0.8       # default
+      rsi_low: 47.0                   # default
+      rsi_high: 53.0                  # default
+    anomaly:
+      price_change_pct_gt: 0.10       # default
+      ema_fast_dev_pct_gt: 0.50       # default
+    tp_and_momentum:
+      adx_strong_gt: 40.0             # default
+      adx_weak_lt: 30.0               # default
+      tp_mult_strong: 7.0             # default
+      tp_mult_weak: 3.0               # default
+      rsi_long_strong: 52.0           # default
+      rsi_long_weak: 56.0             # default
+      rsi_short_strong: 48.0          # default
+      rsi_short_weak: 44.0            # default
+    stoch_rsi:
+      block_long_if_k_gt: 0.85        # default
+      block_short_if_k_lt: 0.15       # default
+
+  market_regime:
+    enable_regime_filter: false       # default
+    enable_auto_reverse: false        # default
+    breadth_block_short_above: 90.0   # default
+    breadth_block_long_below: 10.0    # default
+    auto_reverse_breadth_low: 10.0    # default
+    auto_reverse_breadth_high: 90.0   # default
+    enable_regime_gate: false         # default (global entry block when regime is not trend OK)
+    regime_gate_breadth_low: 20.0     # default (inside [low, high] => gate OFF)
+    regime_gate_breadth_high: 80.0    # default
+    regime_gate_btc_adx_min: 20.0     # default
+    regime_gate_btc_atr_pct_min: 0.003 # default
+    regime_gate_fail_open: false      # default (if metrics missing)
+
+  watchlist_exclude:
+    - BERA
+    - INJ
+    - STABLE
+    - ZK
+    - ZRO
+
+  engine:                             # engine-only (Rust ignores)
+    interval: 30m                     # main indicator candle (NOT hot-reloadable)
+    entry_interval: 3m                # entry signal granularity (hot-reloadable)
+    exit_interval: 3m                 # exit price candle (hot-reloadable)
+    loop_target_s: 60
+    signal_on_candle_close: true
+
+# Optional strategy-mode overlays (AQC-1002).
+# Enable by setting AI_QUANT_STRATEGY_MODE=primary|fallback|conservative|flat.
+#
+# Notes:
+# - Changing global.engine.interval requires a restart (engine.interval is not hot-reloadable).
+# - entry_interval / exit_interval are hot-reloadable.
+modes:
+  primary:
+    global:
+      engine:
+        interval: 30m
+        entry_interval: 3m
+        exit_interval: 3m
+  fallback:
+    global:
+      engine:
+        interval: 1h
+        entry_interval: 3m
+        exit_interval: 3m
+  conservative:
+    global:
+      engine:
+        interval: 1h
+        entry_interval: 15m
+        exit_interval: 15m
+  flat:
+    global:
+      engine:
+        interval: 1h
+        entry_interval: 15m
+        exit_interval: 15m
+
+# No `live:` section — live engine uses identical global config as backtester.
+# What you replay = what you trade.

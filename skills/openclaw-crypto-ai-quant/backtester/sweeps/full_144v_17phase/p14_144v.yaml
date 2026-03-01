@@ -1,0 +1,45 @@
+# p14_144v
+# Auto-generated from full_144v coverage.
+# Values are reduced for phase-grid practicality.
+initial_balance: 10000.0
+lookback: 200
+axes:
+- path: indicators.vol_sma_window
+  values:
+  - 10.0
+  - 20.0
+  - 30.0
+- path: thresholds.anomaly.price_change_pct_gt
+  values:
+  - 0.07
+  - 0.1
+  - 0.13
+- path: thresholds.entry.slow_drift_require_macd_sign
+  values:
+  - 0.0
+  - 1.0
+- path: thresholds.entry.slow_drift_slope_window
+  values:
+  - 10.0
+  - 25.0
+  - 40.0
+- path: trade.add_fraction_of_base_margin
+  values:
+  - 0.25
+  - 0.75
+  - 1.0
+- path: trade.leverage_high
+  values:
+  - 3.5
+  - 5.0
+  - 6.5
+- path: trade.reentry_cooldown_minutes
+  values:
+  - 42.0
+  - 60.0
+  - 78.0
+- path: trade.trailing_distance_atr
+  values:
+  - 0.3
+  - 0.7
+  - 1.2

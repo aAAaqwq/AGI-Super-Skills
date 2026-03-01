@@ -1,0 +1,15 @@
+{
+  "slug": "unum-strat",
+  "name": "Unum (Strat)",
+  "version": "3.1.0",
+  "description": "Universal fee-aware trading strategy design and audit skill for crypto, stocks, ETFs, forex, and futures. Defaults to passive spot-style execution with realistic validation.",
+  "author": "Antonis Corpu",
+  "license": "MIT",
+  "homepage": "https://github.com/corpunum/unum-strat",
+  "repository": "https://github.com/corpunum/unum-strat.git",
+  "tags": ["trading", "strategy", "crypto", "stocks", "forex", "fee-aware", "backtesting", "openclaw"],
+  "openclaw": {
+    "emoji": "⚡",
+    "skillKey": "unum-strat"
+  }
+}

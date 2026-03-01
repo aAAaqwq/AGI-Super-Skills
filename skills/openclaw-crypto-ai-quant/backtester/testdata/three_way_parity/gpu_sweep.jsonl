@@ -1,0 +1,3 @@
+{"config_id": "cfg_001", "total_pnl": 150.25, "final_balance": 10150.25, "total_trades": 38, "total_wins": 16, "win_rate": 0.4211, "profit_factor": 1.85, "max_drawdown_pct": 0.012}
+{"config_id": "cfg_002", "total_pnl": 185.35, "final_balance": 10185.35, "total_trades": 42, "total_wins": 18, "win_rate": 0.4286, "profit_factor": 2.00, "max_drawdown_pct": 0.010}
+{"config_id": "cfg_003", "total_pnl": 120.80, "final_balance": 10120.80, "total_trades": 35, "total_wins": 14, "win_rate": 0.4000, "profit_factor": 1.65, "max_drawdown_pct": 0.015}

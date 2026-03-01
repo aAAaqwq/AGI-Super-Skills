@@ -1,0 +1,26 @@
+# Example strategy ensemble spec (AQC-1003).
+#
+# This is a *runner* spec, not a strategy config. Each strategy process gets:
+# - a base YAML (strategy_yaml)
+# - optional dotpath overrides merged into that YAML
+# - optional per-process environment overrides
+#
+# Notes:
+# - Keep it small (2-3). Larger "ensembles" become hard to reason about.
+# - Risk caps are enforced by RiskManager inside each daemon.
+strategies:
+  - name: primary
+    strategy_yaml: config/strategy_overrides.yaml
+    overrides:
+      # Budget example: scale sizing down to allocate portfolio heat across strategies.
+      trade.size_multiplier: 0.6
+    env:
+      AI_QUANT_STRATEGY_MODE: primary
+
+  - name: conservative
+    strategy_yaml: config/strategy_overrides.yaml
+    overrides:
+      trade.size_multiplier: 0.4
+    env:
+      AI_QUANT_STRATEGY_MODE: conservative
+

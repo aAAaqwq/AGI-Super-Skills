@@ -1,0 +1,8 @@
+[package]
+name = "bt-data"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bt-core = { path = "../bt-core" }
+rusqlite = { version = "0.33", features = ["bundled"] }

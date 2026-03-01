@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "command": ".cursor/hooks/pre-tool-use.sh",
+        "matcher": "Write|Edit|Shell|Read",
+        "timeout": 5
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": ".cursor/hooks/post-tool-use.sh",
+        "matcher": "Write|Edit",
+        "timeout": 5
+      }
+    ],
+    "stop": [
+      {
+        "command": ".cursor/hooks/stop.sh",
+        "timeout": 10,
+        "loop_limit": 3
+      }
+    ]
+  }
+}

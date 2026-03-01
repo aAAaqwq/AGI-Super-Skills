@@ -1,0 +1,21 @@
+# Risk-critical paths — require @fol2 review.
+#
+# GitHub enforces these rules on protected branches.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# --- Order execution & risk ---
+/engine/oms.py                    @fol2
+/engine/oms_reconciler.py         @fol2
+/live/                            @fol2
+/exchange/                        @fol2
+
+# --- Kill-switch & risk modules (current + future) ---
+/engine/kill_switch*              @fol2
+/engine/risk*                     @fol2
+
+# --- Production config ---
+/config/strategy_overrides.yaml   @fol2
+
+# --- Governance docs (changing guardrails = risk decision) ---
+/docs/success_metrics.md          @fol2
+/docs/strategy_lifecycle.md       @fol2

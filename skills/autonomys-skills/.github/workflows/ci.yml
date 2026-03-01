@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  typecheck:
+    name: TypeScript type check, lint, and test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: autonomys/auto-respawn
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npx tsc --noEmit
+      - run: npx eslint .
+      - run: npm test
+
+  shellcheck:
+    name: Shell script lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint shell scripts
+        run: |
+          # Check all scripts except _lib.sh (library sourced by others, not run directly).
+          # -x follows source directives so _lib.sh is validated in context.
+          find autonomys/auto-memory/scripts -name '*.sh' ! -name '_lib.sh' -print0 \
+            | xargs -0 shellcheck -x -S warning

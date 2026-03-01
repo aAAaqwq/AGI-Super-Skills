@@ -1,0 +1,22 @@
+name: GPU Parity Gate
+
+on:
+  pull_request:
+    paths:
+      - 'backtester/crates/bt-gpu/**'
+      - 'backtester/crates/bt-core/src/kernel_exits.rs'
+      - 'backtester/crates/bt-core/src/decision_kernel.rs'
+      - 'backtester/crates/bt-core/src/kernel_entries.rs'
+      - 'backtester/crates/bt-core/src/engine.rs'
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Run CPU-side parity checks
+        working-directory: backtester
+        run: cargo test --release -p bt-core -- gpu_cpu_parity --nocapture
+        env:
+          AQC_GPU_PARITY_TOLERANCE: "1.0"

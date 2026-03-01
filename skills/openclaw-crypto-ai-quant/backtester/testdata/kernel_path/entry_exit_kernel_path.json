@@ -1,0 +1,104 @@
+{
+  "final_cash": 10099.265,
+  "traces": [
+    {
+      "event_id": 1,
+      "source": "fixture-open",
+      "timestamp_ms": 1000,
+      "symbol": "BTC",
+      "signal": "BUY",
+      "requested_notional_usd": 1000.0,
+      "requested_price": 100.0,
+      "schema_version": 1,
+      "step": 1,
+      "state_step": 1,
+      "state_cash_usd": 9666.316666666668,
+      "state_positions": 1,
+      "intent_count": 1,
+      "fill_count": 1,
+      "warnings": [],
+      "errors": [],
+      "intents": [
+        {
+          "kind": "open",
+          "side": "long",
+          "symbol": "BTC",
+          "quantity": 10.0,
+          "price": 100.0,
+          "notional_usd": 1000.0,
+          "fee_rate": 0.00035
+        }
+      ],
+      "fills": [
+        {
+          "side": "long",
+          "symbol": "BTC",
+          "quantity": 10.0,
+          "price": 100.0,
+          "notional_usd": 1000.0,
+          "fee_usd": 0.35,
+          "pnl_usd": 0.0
+        }
+      ],
+      "applied_to_kernel_state": true,
+      "active_params": {
+        "min_adx": 22.0,
+        "reef_adx_threshold": 45.0,
+        "reef_long_rsi_block_gt": 70.0,
+        "pullback_rsi_long_min": 50.0,
+        "pullback_rsi_short_max": 50.0,
+        "leverage": 3.0,
+        "taker_fee_bps": 3.5,
+        "maker_fee_bps": 3.5
+      }
+    },
+    {
+      "event_id": 2,
+      "source": "fixture-exit",
+      "timestamp_ms": 2000,
+      "symbol": "BTC",
+      "signal": "SELL",
+      "requested_notional_usd": 1000.0,
+      "requested_price": 110.0,
+      "schema_version": 1,
+      "step": 2,
+      "state_step": 2,
+      "state_cash_usd": 10099.265,
+      "state_positions": 0,
+      "intent_count": 1,
+      "fill_count": 1,
+      "warnings": [],
+      "errors": [],
+      "intents": [
+        {
+          "kind": "close",
+          "side": "long",
+          "symbol": "BTC",
+          "quantity": 10.0,
+          "price": 110.0,
+          "notional_usd": 1100.0,
+          "fee_rate": 0.00035
+        }
+      ],
+      "fills": [
+        {
+          "side": "long",
+          "symbol": "BTC",
+          "quantity": 10.0,
+          "price": 110.0,
+          "notional_usd": 1100.0,
+          "fee_usd": 0.385,
+          "pnl_usd": 100.0
+        }
+      ],
+      "applied_to_kernel_state": true,
+      "active_params": {
+        "sl_atr_mult": 2.0,
+        "tp_atr_mult": 4.0,
+        "trailing_start_atr": 1.0,
+        "tsme_min_profit_atr": 1.0,
+        "smart_exit_adx_exhaustion_lt": 18.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+name: Bug Report
+description: Report a bug in the trading engine, backtester, or tooling
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please fill in as much detail as possible.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - Trading Engine (engine/)
+        - Strategy (strategy/)
+        - Live Trader (live/)
+        - Exchange Adapter (exchange/)
+        - Rust Backtester (backtester/)
+        - WS Sidecar (ws_sidecar/)
+        - Hub Dashboard (hub/)
+        - Monitor Dashboard (monitor/)
+        - Tools (tools/)
+        - Configuration (config/)
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Trading Mode
+      options:
+        - Paper
+        - Dry Live
+        - Live
+        - Backtest
+        - N/A
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened? What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Minimal steps to trigger the bug
+      placeholder: |
+        1. Set config X to Y
+        2. Run `AI_QUANT_MODE=paper python -m engine.daemon`
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs
+      description: Paste logs, tracebacks, or backtest output
+      render: shell
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuration
+      description: Relevant YAML config or env vars (redact secrets)
+      render: yaml

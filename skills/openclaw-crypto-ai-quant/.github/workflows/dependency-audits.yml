@@ -1,0 +1,70 @@
+name: Dependency Audits
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - "pyproject.toml"
+      - "uv.lock"
+      - "backtester/Cargo.toml"
+      - "backtester/Cargo.lock"
+      - "backtester/**/Cargo.lock"
+      - ".github/workflows/dependency-audits.yml"
+  push:
+    branches: [master]
+    paths:
+      - "pyproject.toml"
+      - "uv.lock"
+      - "backtester/Cargo.toml"
+      - "backtester/Cargo.lock"
+      - "backtester/**/Cargo.lock"
+      - ".github/workflows/dependency-audits.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pip-audit:
+    name: Python dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --quiet uv
+
+      - name: Sync dependencies
+        run: uv sync --frozen --dev
+
+      - name: Run pip-audit
+        run: |
+          uv export --frozen --format requirements-txt > requirements.audit.txt
+          uvx --from pip-audit pip-audit --progress-spinner off -r requirements.audit.txt
+
+  cargo-audit:
+    name: Rust dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --locked
+
+      - name: Run cargo-audit
+        working-directory: backtester
+        run: cargo audit

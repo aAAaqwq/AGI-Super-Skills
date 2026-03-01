@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenClaw AI Quant Nightly Strategy Factory Timer
+
+[Timer]
+OnCalendar=*-*-* 00:30:00 UTC
+Persistent=true
+Unit=openclaw-ai-quant-factory.service
+
+[Install]
+WantedBy=timers.target
+

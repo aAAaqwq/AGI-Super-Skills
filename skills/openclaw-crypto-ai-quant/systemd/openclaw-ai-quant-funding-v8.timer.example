@@ -1,0 +1,12 @@
+[Unit]
+Description=OpenClaw AI Quant Funding Rates Fetch Timer (v8)
+
+[Timer]
+OnBootSec=5m
+OnUnitActiveSec=6h
+Persistent=true
+Unit=openclaw-ai-quant-funding-v8.service
+
+[Install]
+WantedBy=timers.target
+

@@ -1,0 +1,49 @@
+# p02_144v
+# Auto-generated from full_144v coverage.
+# Values are reduced for phase-grid practicality.
+initial_balance: 10000.0
+lookback: 200
+axes:
+- path: indicators.atr_window
+  values:
+  - 10.0
+  - 14.0
+  - 16.0
+  - 20.0
+- path: thresholds.entry.high_conf_volume_mult
+  values:
+  - 1.75
+  - 2.5
+  - 3.25
+- path: thresholds.ranging.rsi_low
+  values:
+  - 32.9
+  - 47.0
+  - 61.1
+- path: trade.allocation_pct
+  values:
+  - 0.05
+  - 0.15
+  - 0.3
+- path: trade.enable_dynamic_sizing
+  values:
+  - 0.0
+  - 1.0
+- path: trade.max_entry_orders_per_loop
+  values:
+  - 4.0
+  - 6.0
+  - 8.0
+- path: trade.rsi_exit_profit_atr_switch
+  values:
+  - 1.05
+  - 1.5
+  - 1.95
+- path: trade.vol_baseline_pct
+  gate:
+    path: trade.enable_dynamic_sizing
+    eq: 1
+  values:
+  - 0.007
+  - 0.01
+  - 0.013

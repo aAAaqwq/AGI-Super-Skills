@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/fol2/openclaw-crypto-ai-quant/schemas/gpu_candidate_schema.json",
+  "title": "GPU Candidate Output Schema",
+  "type": "object",
+  "required": [
+    "config_id",
+    "schema_version",
+    "output_mode",
+    "overrides",
+    "total_pnl",
+    "total_trades",
+    "profit_factor",
+    "max_drawdown_pct",
+    "candidate_mode"
+  ],
+  "properties": {
+    "config_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1
+    },
+    "output_mode": {
+      "type": "string",
+      "enum": [
+        "candidate"
+      ]
+    },
+    "overrides": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "number",
+          "string",
+          "boolean",
+          "null"
+        ]
+      }
+    },
+    "total_pnl": {
+      "type": "number"
+    },
+    "total_trades": {
+      "type": "number",
+      "minimum": 0
+    },
+    "profit_factor": {
+      "type": "number"
+    },
+    "max_drawdown_pct": {
+      "type": "number",
+      "minimum": 0
+    },
+    "candidate_mode": {
+      "type": "boolean",
+      "const": true
+    }
+  },
+  "additionalProperties": true
+}

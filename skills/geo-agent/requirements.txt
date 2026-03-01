@@ -1,0 +1,5 @@
+# GEO Agent Python Dependencies
+httpx>=0.26.0
+beautifulsoup4>=4.12.0
+playwright>=1.40.0
+loguru>=0.7.0

@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenClaw AI Quant Prune Runtime Logs Timer (v8)
+
+[Timer]
+OnCalendar=*-*-* 01:45:00 UTC
+Persistent=true
+Unit=openclaw-ai-quant-prune-runtime-logs-v8.service
+
+[Install]
+WantedBy=timers.target
+

@@ -1,0 +1,11 @@
+{
+  "name": "slidev-multi-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync:references": "node scripts/sync-references.mjs",
+    "check:shell": "bash -n scripts/*.sh"
+  },
+  "packageManager": "pnpm@10.28.0"
+}

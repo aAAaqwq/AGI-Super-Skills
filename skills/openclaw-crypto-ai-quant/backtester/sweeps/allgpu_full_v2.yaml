@@ -1,0 +1,80 @@
+# v2 Full sweep: fix ema_slow blind spot + sweep filter toggles
+#
+# v1 locked ema_slow_window=15 and never swept filters → every config
+# produced 0 trades or negative PnL.  v2 sweeps the missing axes.
+#
+# Indicator axes:  3×4×2×2×2 = 96  combos
+# Filter axes:     2×4×2×5×2 = 160 combos
+# StochRSI axes:   3×3 = 9 combos
+# Trade axes:      4×4×3×2×2 = 192 combos
+# Total: 96 × 160 × 9 × 192 = 26,542,080 combos
+#
+# At ~83 combos/s (GPU), ETA ~30 min.
+
+axes:
+  # ── Indicator axes (96 combos) ─────────────────────────────────
+  - path: indicators.ema_fast_window
+    values: [8.0, 12.0, 20.0]
+
+  - path: indicators.ema_slow_window          # THE FIX: was locked at 15
+    values: [30.0, 50.0, 75.0, 100.0]
+
+  - path: indicators.adx_window
+    values: [10.0, 14.0]
+
+  - path: indicators.atr_window
+    values: [10.0, 14.0]
+
+  - path: indicators.bb_window
+    values: [15.0, 20.0]
+
+  # ── Filter axes (160 combos) ──────────────────────────────────
+  - path: filters.require_btc_alignment       # Currently blocking all longs
+    values: [0.0, 1.0]
+
+  - path: thresholds.entry.btc_adx_override
+    values: [15, 25, 35, 40]
+
+  - path: filters.require_adx_rising
+    values: [0.0, 1.0]
+
+  - path: filters.adx_rising_saturation
+    gate:
+      path: filters.require_adx_rising
+      eq: 1
+    values: [20, 25, 30, 35, 40]
+
+  - path: filters.use_stoch_rsi_filter
+    values: [0.0, 1.0]
+
+  # ── StochRSI axes (9 combos) ────────────────────────────────
+  - path: thresholds.stoch_rsi.overbought
+    gate:
+      path: filters.use_stoch_rsi_filter
+      eq: 1
+    values: [0.80, 0.85, 0.90]
+
+  - path: thresholds.stoch_rsi.oversold
+    gate:
+      path: filters.use_stoch_rsi_filter
+      eq: 1
+    values: [0.10, 0.15, 0.20]
+
+  # ── Trade axes (192 combos) ────────────────────────────────────
+  - path: trade.sl_atr_mult
+    values: [1.5, 2.0, 2.5, 3.0]
+
+  - path: trade.tp_atr_mult
+    values: [3.0, 4.0, 6.0, 8.0]
+
+  - path: trade.allocation_pct
+    values: [0.05, 0.10, 0.15]
+
+  - path: trade.trailing_start_atr
+    values: [1.0, 2.0]
+
+  - path: trade.trailing_distance_atr
+    values: [0.5, 1.0]
+
+lookback: 200
+initial_balance: 10000

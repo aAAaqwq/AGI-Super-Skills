@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Polymarket 5m Compare UI</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Polymarket 5m Prediction Compare</h1>
+      <p class="muted">Compare bot prediction vs actual next 5-minute move.</p>
+
+      <section class="card">
+        <div class="row">
+          <button id="refresh">Get Prediction</button>
+          <span id="status">idle</span>
+        </div>
+        <div id="snapshot" class="grid"></div>
+      </section>
+
+      <section class="card">
+        <h2>Auto Compare (5m)</h2>
+        <div class="form">
+          <label>Entry YES price <input id="entryYes" type="number" min="0" max="1" step="0.0001" /></label>
+          <label>Auto settle delay (sec) <input id="delaySec" type="number" min="10" step="1" value="300" /></label>
+          <button id="startAuto">Start Auto Compare</button>
+        </div>
+        <p class="muted" id="pendingInfo">No pending auto-compare.</p>
+      </section>
+
+      <section class="card">
+        <h2>Whale Panel (live sample)</h2>
+        <div id="whaleStats" class="muted">No whale data yet.</div>
+        <table>
+          <thead>
+            <tr><th>Wallet</th><th>Net YES $</th><th>Gross $</th><th>Bias</th></tr>
+          </thead>
+          <tbody id="whales"></tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>History</h2>
+        <div id="stats" class="muted"></div>
+        <table>
+          <thead>
+            <tr><th>Time</th><th>Market</th><th>Pred Side</th><th>Entry</th><th>Exit</th><th>Actual</th><th>Correct</th></tr>
+          </thead>
+          <tbody id="history"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

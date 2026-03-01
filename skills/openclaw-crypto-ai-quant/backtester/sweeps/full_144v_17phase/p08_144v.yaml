@@ -1,0 +1,49 @@
+# p08_144v
+# Auto-generated from full_144v coverage.
+# Values are reduced for phase-grid practicality.
+initial_balance: 10000.0
+lookback: 200
+axes:
+- path: filters.require_adx_rising
+  values:
+  - 0.0
+  - 1.0
+- path: indicators.stoch_rsi_smooth1
+  values:
+  - 2.0
+  - 3.0
+  - 4.0
+  - 5.0
+- path: market_regime.enable_auto_reverse
+  values:
+  - 0.0
+  - 1.0
+- path: thresholds.entry.pullback_rsi_long_min
+  values:
+  - 35.0
+  - 50.0
+  - 65.0
+- path: thresholds.tp_and_momentum.rsi_long_weak
+  values:
+  - 39.2
+  - 56.0
+  - 72.8
+- path: trade.enable_vol_buffered_trailing
+  values:
+  - 0.0
+  - 1.0
+- path: trade.entry_cooldown_s
+  values:
+  - 14.0
+  - 20.0
+  - 26.0
+- path: trade.reef_long_rsi_block_gt
+  values:
+  - 49.0
+  - 70.0
+  - 91.0
+- path: trade.slippage_bps
+  values:
+  - 7.0
+  - 10.0
+  - 13.0

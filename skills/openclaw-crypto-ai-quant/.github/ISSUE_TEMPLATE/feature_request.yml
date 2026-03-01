@@ -1,0 +1,56 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the feature you'd like and why it matters.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - Trading Engine (engine/)
+        - Strategy (strategy/)
+        - Live Trader (live/)
+        - Rust Backtester (backtester/)
+        - WS Sidecar (ws_sidecar/)
+        - Hub Dashboard (hub/)
+        - Monitor Dashboard (monitor/)
+        - Tools (tools/)
+        - Configuration (config/)
+        - Strategy Factory (factory)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Motivation
+      description: What problem does this solve? Why is it needed?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How should this work? Include config examples, CLI flags, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Other approaches you've thought about
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Nice to have
+        - Important
+        - Critical (blocking live trading)
+    validations:
+      required: true

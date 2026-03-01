@@ -1,0 +1,42 @@
+# p01_144v
+# Auto-generated from full_144v coverage.
+# Values are reduced for phase-grid practicality.
+initial_balance: 10000.0
+lookback: 200
+axes:
+- path: indicators.adx_window
+  values:
+  - 8.0
+  - 12.0
+  - 14.0
+  - 18.0
+- path: thresholds.entry.btc_adx_override
+  values:
+  - 28.0
+  - 40.0
+  - 52.0
+- path: thresholds.ranging.rsi_high
+  values:
+  - 37.1
+  - 53.0
+  - 68.9
+- path: trade.adx_sizing_min_mult
+  values:
+  - 0.42
+  - 0.6
+  - 0.78
+- path: trade.max_adds_per_symbol
+  values:
+  - 0.0
+  - 2.0
+  - 3.0
+- path: trade.rsi_exit_lb_lo_profit_low_conf
+  values:
+  - 0.0
+  - 30.0
+  - 50.0
+- path: trade.tsme_min_profit_atr
+  values:
+  - 0.7
+  - 1.0
+  - 1.3

@@ -1,0 +1,106 @@
+# AI Quant Trading — local-only runtime/state
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtualenv
+venv/
+.venv/
+
+# SQLite + locks
+*.db
+*.db.*
+*.db-shm
+*.db-wal
+*.db-journal
+*.lock
+# Lockfiles should be tracked (dependency reproducibility)
+!uv.lock
+!Cargo.lock
+!**/Cargo.lock
+*.bak*
+
+# Logs
+daemon_log*.txt
+live_daemon_log*.txt
+monitor_log*.txt
+
+# Secrets / env
+secrets.json
+.env
+.env.*
+*.key
+*.pem
+# Keep templates
+!.env.example
+
+# Generated artifacts
+*.png
+# Keep README screenshots
+!docs/screenshots/*.png
+
+# Generated analysis outputs (reproducible)
+backtest_results.json
+analyst_state.json
+
+# Test artifacts
+.coverage
+.pytest_cache/
+
+# Rust build artifacts
+backtester/target/
+ws_sidecar/target/
+
+# PyO3 shared objects (built from Rust, copied to project root)
+bt_runtime.so
+
+# Local strategy config files: keep templates/examples only
+config/*.yaml
+config/*.yml
+!config/*.example.yaml
+!config/*.example.yml
+!config/ensemble.example.yaml
+!config/secrets.json.example
+
+# Candle databases (large, fetched at runtime)
+candles_dbs/
+
+# Archive (old zips, DB backups, legacy scripts)
+archive/
+
+# Exports (trade CSV data)
+exports/
+
+# Sweep — track scripts, ignore configs + results
+sweep_full/*.yaml
+sweep_full/*.csv
+sweep_full/*.json
+sweep_full/*.jsonl
+sweep_full/results/
+sweep_full/results_*/
+
+# Linter cache
+.ruff_cache/
+
+# Runtime state
+strategy_changelog.json
+kernel_state*.json
+kernel_shadow_report*.json
+
+# Timestamped sweep configs (generated, not canonical)
+strategy_tpe_*.yaml
+
+# Developer-local files (ad-hoc scripts, experiments, temp)
+local/
+
+# Reports (generated analysis markdown)
+reports/
+artifacts/
+sweep_results.jsonl
+
+# Backtester binaries (built locally)
+backtester/dist/
+
+# Cursor IDE local config
+.cursor/

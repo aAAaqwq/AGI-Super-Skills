@@ -1,0 +1,15 @@
+# GPU sweep smoke test — small grid (~288 combos)
+axes:
+  - path: trade.sl_atr_mult
+    values: [1.5, 2.0, 2.5, 3.0]
+  - path: trade.tp_atr_mult
+    values: [3.0, 4.0, 5.0, 6.0]
+  - path: trade.allocation_pct
+    values: [0.10, 0.15, 0.20]
+  - path: trade.trailing_start_atr
+    values: [1.5, 2.0, 2.5]
+  - path: trade.trailing_distance_atr
+    values: [0.5, 1.0]
+
+lookback: 200
+initial_balance: 10000

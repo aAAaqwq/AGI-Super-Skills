@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerability
+    url: https://github.com/fol2/openclaw-crypto-ai-quant/security/advisories/new
+    about: Report security issues privately — do NOT open a public issue
+  - name: Documentation
+    url: https://github.com/fol2/openclaw-crypto-ai-quant/tree/master/docs
+    about: Check the docs before opening an issue

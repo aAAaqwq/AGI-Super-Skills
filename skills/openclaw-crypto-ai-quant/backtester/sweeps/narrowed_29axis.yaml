@@ -1,0 +1,153 @@
+# Narrowed 29-axis TPE sweep spec (from 500K-trial convergence analysis)
+# 5 LOCKED axes removed → fixed in base config
+# 16 NARROW axes → P10-P90 range from top 1% of 500K trials
+# 13 OPEN axes → original range preserved
+#
+# Usage: mei-backtester sweep --gpu --tpe --tpe-trials 500000 --tpe-batch 4096 \
+#   --sweep-spec backtester/sweeps/narrowed_29axis.yaml \
+#   --balance-from /tmp/live_state.json \
+#   --config strategy_tpe_500k_1h3m_20260208_locked.yaml \
+#   --interval 1h --entry-interval 3m --exit-interval 3m \
+#   --output /tmp/sweep_narrowed_500k.jsonl
+
+initial_balance: 10000.0
+lookback: 200
+
+axes:
+  # ═══════════════════════════════════════════════════════════════
+  # INDICATOR AXES (13) — 1 locked out (stoch_rsi_smooth1=3)
+  # ═══════════════════════════════════════════════════════════════
+
+  # NARROW: P25=11, P75=12 → expand slightly
+  - path: indicators.ema_fast_window
+    values: [9, 10, 11, 12, 13]
+
+  # OPEN: CV=34%, wide spread (min must exceed max(ema_fast)=13)
+  - path: indicators.ema_slow_window
+    values: [14, 15, 16, 18, 20, 25]
+
+  # OPEN: CV=22%
+  - path: indicators.adx_window
+    values: [8, 9, 10, 11, 12, 14, 16]
+
+  # NARROW: P25=19, P75=24
+  - path: indicators.bb_window
+    values: [16, 18, 19, 20, 22, 24, 26]
+
+  # OPEN: CV=20%, bimodal (14 and 20)
+  - path: indicators.atr_window
+    values: [10, 12, 14, 16, 18, 20]
+
+  # NARROW: P25=16, P75=20
+  - path: indicators.rsi_window
+    values: [15, 16, 17, 18, 19, 20]
+
+  # OPEN: CV=22%
+  - path: indicators.bb_width_avg_window
+    values: [20, 25, 27, 30, 35, 40, 45, 50]
+
+  # OPEN: CV=33%
+  - path: indicators.vol_sma_window
+    values: [10, 15, 18, 20, 25, 29, 30]
+
+  # OPEN: CV=45%
+  - path: indicators.vol_trend_window
+    values: [3, 4, 5, 6, 7, 8, 9, 10]
+
+  # OPEN: CV=21%
+  - path: indicators.stoch_rsi_window
+    values: [10, 11, 12, 14, 15, 17, 20]
+
+  # stoch_rsi_smooth1: LOCKED at 3, removed from sweep
+
+  # OPEN: CV=24%
+  - path: indicators.stoch_rsi_smooth2
+    values: [2, 3, 4, 5]
+
+  # NARROW: P25=47, P75=52
+  - path: thresholds.entry.ave_avg_atr_window
+    values: [38, 42, 46, 49, 52, 56, 61]
+
+  # OPEN: CV=26%
+  - path: thresholds.entry.slow_drift_slope_window
+    values: [10, 14, 18, 20, 22, 23, 26, 30]
+
+  # ═══════════════════════════════════════════════════════════════
+  # TRADE AXES (15) — 4 locked out
+  # Locked: enable_dynamic_sizing=OFF, enable_breakeven_stop=OFF,
+  #         max_adds_per_symbol=2, trailing_start_atr=1.73
+  # ═══════════════════════════════════════════════════════════════
+
+  # NARROW: P10=0.17, P90=0.30
+  - path: trade.allocation_pct
+    values: [0.17, 0.20, 0.24, 0.26, 0.28, 0.29, 0.30]
+
+  # NARROW: P10=1.70, P90=2.66
+  - path: trade.sl_atr_mult
+    values: [1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.4, 2.6]
+
+  # NARROW: P10=4.43, P90=6.01
+  - path: trade.tp_atr_mult
+    values: [4.4, 4.6, 4.8, 5.0, 5.2, 5.5, 6.0]
+
+  # OPEN: CV=30%
+  - path: trade.trailing_distance_atr
+    values: [0.3, 0.4, 0.5, 0.55, 0.6, 0.7, 0.8, 1.0]
+
+  # OPEN: CV=34%
+  - path: trade.min_atr_pct
+    values: [0.001, 0.002, 0.003, 0.004, 0.005]
+
+  # NARROW: leans low (69%)
+  - path: trade.entry_min_confidence
+    values: [0.0, 1.0, 2.0]  # 0=low, 1=medium, 2=high
+
+  # NARROW: leans OFF (56%) — keep both options
+  - path: filters.enable_ranging_filter
+    values: [0.0, 1.0]
+
+  # NARROW: leans ON (70%) — keep both options
+  - path: filters.require_volume_confirmation
+    values: [0.0, 1.0]
+
+  # NARROW: P10=0.74, P90=0.97
+  - path: trade.add_fraction_of_base_margin
+    values: [0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00]
+
+  # NARROW: P10=56, P90=80
+  - path: trade.reentry_cooldown_min_mins
+    values: [50.0, 55.0, 60.0, 65.0, 70.0, 75.0, 80.0]
+
+  # OPEN: CV=24%, but narrow IQR 12.1-13.2
+  - path: thresholds.entry.min_adx
+    values: [10.0, 11.0, 12.0, 13.0, 14.0, 16.0, 20.0]
+
+  # NARROW: P10=0.028, P90=0.046
+  - path: thresholds.entry.max_dist_ema_fast
+    values: [0.028, 0.032, 0.034, 0.036, 0.038, 0.042, 0.046]
+
+  # NARROW: P10=2.90, P90=4.68
+  - path: trade.leverage_medium
+    values: [2.5, 3.0, 3.3, 3.5, 3.8, 4.0, 4.5]
+
+  # OPEN: CV=27%
+  - path: trade.confidence_mult_medium
+    values: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+
+  # NARROW: P10=0.63, P90=0.88
+  - path: trade.breakeven_start_atr
+    values: [0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.90]
+
+  # Partial TP (CPU sweep optimal: enabled, pct=0.7, mult=1.0)
+  - path: trade.enable_partial_tp
+    values: [0.0, 1.0]
+  - path: trade.tp_partial_pct
+    gate:
+      path: trade.enable_partial_tp
+      eq: 1
+    values: [0.5, 0.6, 0.7, 0.8]
+  - path: trade.tp_partial_atr_mult
+    gate:
+      path: trade.enable_partial_tp
+      eq: 1
+    values: [0.0, 0.5, 1.0, 1.5, 2.0, 3.0]

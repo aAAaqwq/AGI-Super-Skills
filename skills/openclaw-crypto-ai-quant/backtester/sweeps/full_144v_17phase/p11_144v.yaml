@@ -1,0 +1,45 @@
+# p11_144v
+# Auto-generated from full_144v coverage.
+# Values are reduced for phase-grid practicality.
+initial_balance: 10000.0
+lookback: 200
+axes:
+- path: filters.adx_rising_saturation
+  values:
+  - 28.0
+  - 40.0
+  - 52.0
+- path: market_regime.breadth_block_long_below
+  values:
+  - 7.0
+  - 10.0
+  - 13.0
+- path: thresholds.entry.enable_pullback_entries
+  values:
+  - 0.0
+  - 1.0
+- path: thresholds.entry.slow_drift_min_slope_pct
+  values:
+  - 0.00042
+  - 0.0006
+  - 0.00078
+- path: thresholds.tp_and_momentum.tp_mult_strong
+  values:
+  - 4.9
+  - 7.0
+  - 9.1
+- path: trade.glitch_atr_mult
+  values:
+  - 8.4
+  - 12.0
+  - 15.6
+- path: trade.reef_short_rsi_extreme_lt
+  values:
+  - 17.5
+  - 25.0
+  - 32.5
+- path: trade.tp_atr_mult
+  values:
+  - 3.0
+  - 5.5
+  - 8.0

@@ -1,0 +1,38 @@
+[Unit]
+Description=OpenClaw AI Quant Scheduled Replay Alignment Gate
+After=network-online.target openclaw-ai-quant-ws-sidecar.service
+Wants=network-online.target
+Requires=openclaw-ai-quant-ws-sidecar.service
+StartLimitBurst=3
+StartLimitIntervalSec=300
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h
+EnvironmentFile=-%h/.config/openclaw/ai-quant-live.env
+EnvironmentFile=-%h/.config/openclaw/ai-quant-replay-gate.env
+ExecStart=/usr/bin/env bash -lc "cd \"$PROJECT_DIR\" && \"$PROJECT_DIR/.venv/bin/python3\" -u tools/run_scheduled_replay_alignment_gate.py"
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=false
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+SystemCallFilter=@system-service
+ReadWritePaths=%h/openclaw-plugins/ai_quant /tmp/openclaw-ai-quant
+
+# Resource limits
+MemoryMax=3G
+TasksMax=512
+TimeoutStartSec=3600
+TimeoutStopSec=30
+
+[Install]
+WantedBy=default.target

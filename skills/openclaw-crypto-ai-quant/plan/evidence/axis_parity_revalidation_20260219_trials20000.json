@@ -1,0 +1,62 @@
+[
+  {
+    "sample": "sample_01",
+    "status": "PASS",
+    "returncode": 0,
+    "summary": [1, 1, 0, 0]
+  },
+  {
+    "sample": "sample_02",
+    "status": "PASS",
+    "returncode": 0,
+    "summary": [1, 1, 0, 0]
+  },
+  {
+    "sample": "sample_03",
+    "status": "PASS",
+    "returncode": 0,
+    "summary": [1, 1, 0, 0]
+  },
+  {
+    "sample": "sample_04",
+    "status": "PASS",
+    "returncode": 0,
+    "summary": [1, 1, 0, 0]
+  },
+  {
+    "sample": "sample_05",
+    "status": "PASS",
+    "returncode": 0,
+    "summary": [1, 1, 0, 0]
+  },
+  {
+    "sample": "sample_06",
+    "status": "PASS",
+    "returncode": 0,
+    "summary": [1, 1, 0, 0]
+  },
+  {
+    "sample": "sample_07",
+    "status": "PASS",
+    "returncode": 0,
+    "summary": [1, 1, 0, 0]
+  },
+  {
+    "sample": "sample_08",
+    "status": "PASS",
+    "returncode": 0,
+    "summary": [1, 1, 0, 0]
+  },
+  {
+    "sample": "sample_09",
+    "status": "PASS",
+    "returncode": 0,
+    "summary": [1, 1, 0, 0]
+  },
+  {
+    "sample": "sample_10",
+    "status": "PASS",
+    "returncode": 0,
+    "summary": [1, 1, 0, 0]
+  }
+]

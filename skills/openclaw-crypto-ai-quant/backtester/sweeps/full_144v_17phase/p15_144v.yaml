@@ -1,0 +1,45 @@
+# p15_144v
+# Auto-generated from full_144v coverage.
+# Values are reduced for phase-grid practicality.
+initial_balance: 10000.0
+lookback: 200
+axes:
+- path: indicators.vol_trend_window
+  values:
+  - 3.0
+  - 7.0
+  - 10.0
+- path: thresholds.entry.ave_adx_mult
+  values:
+  - 0.875
+  - 1.25
+  - 1.625
+- path: thresholds.ranging.adx_below
+  values:
+  - 14.7
+  - 21.0
+  - 27.3
+- path: trade.add_min_confidence
+  values:
+  - 0.0
+  - 1.0
+  - 2.0
+- path: trade.block_exits_on_extreme_dev
+  values:
+  - 0.0
+  - 1.0
+- path: trade.leverage_low
+  values:
+  - 0.7
+  - 1.0
+  - 1.3
+- path: trade.rsi_exit_lb_hi_profit
+  values:
+  - 21.0
+  - 30.0
+  - 39.0
+- path: trade.trailing_distance_atr_low_conf
+  values:
+  - 0.0
+  - 0.5
+  - 1.0

@@ -1,0 +1,46 @@
+# p03_144v
+# Auto-generated from full_144v coverage.
+# Values are reduced for phase-grid practicality.
+initial_balance: 10000.0
+lookback: 200
+axes:
+- path: indicators.bb_width_avg_window
+  values:
+  - 15.0
+  - 25.0
+  - 40.0
+  - 50.0
+- path: thresholds.entry.macd_hist_entry_mode
+  values:
+  - 0.0
+  - 1.0
+  - 2.0
+- path: thresholds.stoch_rsi.block_long_if_k_gt
+  values:
+  - 0.595
+  - 0.85
+  - 1.105
+- path: trade.breakeven_buffer_atr
+  values:
+  - 0.035
+  - 0.05
+  - 0.065
+- path: trade.enable_partial_tp
+  values:
+  - 0.0
+  - 1.0
+- path: trade.max_open_positions
+  values:
+  - 14.0
+  - 20.0
+  - 26.0
+- path: trade.rsi_exit_ub_hi_profit
+  values:
+  - 49.0
+  - 70.0
+  - 91.0
+- path: trade.vol_scalar_max
+  values:
+  - 0.7
+  - 1.0
+  - 1.3
