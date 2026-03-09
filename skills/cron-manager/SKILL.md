@@ -73,7 +73,7 @@
 | 目标 | ID | 说明 |
 |------|-----|------|
 | Daniel 私聊 | `REDACTED_TG_USER_ID` | ✅ 推荐，最稳定 |
-| DailyNews 群 | `-1003824568687` | ⚠️ 需确认 bot 在群内 |
+| DailyNews 群 | `YOUR_NEWS_CHAT_ID` | ⚠️ 需确认 bot 在群内 |
 
 ---
 

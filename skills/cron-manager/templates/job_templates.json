@@ -20,7 +20,7 @@
         "timeoutSeconds": 180,
         "deliver": true,
         "channel": "telegram",
-        "to": "REDACTED_TG_USER_ID"
+        "to": "YOUR_TELEGRAM_ID"
       }
     },
     "examples": [
@@ -58,7 +58,7 @@
         "timeoutSeconds": 180,
         "deliver": true,
         "channel": "telegram",
-        "to": "REDACTED_TG_USER_ID"
+        "to": "YOUR_TELEGRAM_ID"
       }
     }
   },
@@ -83,7 +83,7 @@
         "timeoutSeconds": 600,
         "deliver": true,
         "channel": "telegram",
-        "to": "REDACTED_TG_USER_ID",
+        "to": "YOUR_TELEGRAM_ID",
         "bestEffortDeliver": true
       }
     }
@@ -109,7 +109,7 @@
         "timeoutSeconds": 60,
         "deliver": true,
         "channel": "telegram",
-        "to": "REDACTED_TG_USER_ID"
+        "to": "YOUR_TELEGRAM_ID"
       }
     },
     "note": "atMs 需要设置为目标时间的 Unix 毫秒时间戳"
@@ -136,7 +136,7 @@
         "timeoutSeconds": 300,
         "deliver": true,
         "channel": "telegram",
-        "to": "REDACTED_TG_USER_ID"
+        "to": "YOUR_TELEGRAM_ID"
       }
     }
   },
@@ -162,7 +162,7 @@
         "timeoutSeconds": 180,
         "deliver": true,
         "channel": "telegram",
-        "to": "REDACTED_TG_USER_ID"
+        "to": "YOUR_TELEGRAM_ID"
       }
     }
   },

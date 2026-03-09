@@ -161,7 +161,7 @@ def format_quick_report(opportunities, period="早报"):
 def send_telegram(text):
     """发送到 Telegram"""
     token = subprocess.check_output(['pass', 'show', 'tokens/telegram-newsrobot'], text=True).strip()
-    chat_id = -1003824568687
+    chat_id = YOUR_NEWS_CHAT_ID
     
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     data = json.dumps({"chat_id": chat_id, "text": text}).encode('utf-8')

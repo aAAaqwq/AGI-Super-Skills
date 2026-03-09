@@ -11,12 +11,12 @@ import json
 # 租户配置
 TENANTS = {
     "hanxing": {
-        "app_id": "REDACTED_FEISHU_HANXING_APP_ID",
-        "app_secret": "REDACTED_FEISHU_HANXING_SECRET",
+        "app_id": "YOUR_APP_ID",
+        "app_secret": "YOUR_APP_SECRET",
     },
     "personal": {
-        "app_id": "REDACTED_FEISHU_PERSONAL_APP_ID",
-        "app_secret": "REDACTED_FEISHU_PERSONAL_SECRET",
+        "app_id": "YOUR_APP_ID",
+        "app_secret": "YOUR_APP_SECRET",
     }
 }
 

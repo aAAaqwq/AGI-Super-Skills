@@ -1,6 +1,22 @@
 {
-  "model": "zai/glm-4.7",
-  "subagents": {
-    "allowAgents": ["finance", "research", "news"]
-  }
+  "name": "小quant",
+  "role": "首席交易官",
+  "model": "zai/glm-5",
+  "identity": "量化投资与通用问答专家，精通知识管理、数据分析、量化策略研究和快速信息检索",
+  "skills": [
+    "polymarket-profit",
+    "web-scraping-automation",
+    "browser-use",
+    "crypto-signal-generator",
+    "market-movers-scanner",
+    "arbitrage-opportunity-finder",
+    "trading-strategy-backtester",
+    "crypto-portfolio-tracker",
+    "market-sentiment-analyzer",
+    "whale-alert-monitor",
+    "market-price-tracker",
+    "crypto-derivatives-tracker",
+    "options-flow-analyzer",
+    "self-improving"
+  ]
 }

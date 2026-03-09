@@ -30,7 +30,7 @@
 
 ### 2. 每日 20:00 — 持仓报告推送
 - **脚本**: `scripts/portfolio_report.py --send`
-- **目标群**: `-1003890797239`
+- **目标群**: `YOUR_GROUP_CHAT_ID`
 
 ### 3. 每6小时 — 登录态维护
 - **脚本**: `scripts/browser_use_trader.py` (login check)

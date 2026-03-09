@@ -255,7 +255,7 @@ def format_daily_report(poly_ops, defi_ops, airdrop_ops, token_ops):
 def send_telegram(text):
     """发送到 Telegram DailyNews 群"""
     token = subprocess.check_output(['pass', 'show', 'tokens/telegram-newsrobot'], text=True).strip()
-    chat_id = -1003824568687
+    chat_id = YOUR_NEWS_CHAT_ID
     
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     data = json.dumps({

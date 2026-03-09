@@ -69,7 +69,7 @@
   },
   "push": {
     "telegram_bot_token_path": "tokens/telegram-newsrobot",
-    "telegram_chat_id": -1003824568687,
+    "telegram_chat_id": YOUR_NEWS_CHAT_ID,
     "schedule": "0 20 * * *",
     "timezone": "Asia/Shanghai",
     "parse_mode": "HTML"

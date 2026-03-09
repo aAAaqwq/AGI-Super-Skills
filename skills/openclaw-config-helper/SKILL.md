@@ -97,7 +97,7 @@ openclaw status
 **错误**：把群 ID 放在 `groupAllowFrom` 里
 ```json
 // ❌ 错误
-"groupAllowFrom": [-1003531486855, -1003890797239]  // 这是群 ID，不是用户 ID！
+"groupAllowFrom": [-1003531486855, YOUR_GROUP_CHAT_ID]  // 这是群 ID，不是用户 ID！
 
 // ✅ 正确
 "groupAllowFrom": ["REDACTED_TG_USER_ID"]  // 用户 ID

@@ -68,19 +68,19 @@
 
 | 成员 | sessionKey | 派活场景 |
 |------|-----------|---------|
-| 小pm | agent:pm:telegram:group:-1003890797239 | 项目拆解、任务验收、质量检查 |
-| 小code | agent:code:telegram:group:-1003890797239 | 写代码、修Bug、架构设计 |
-| 小ops | agent:ops:telegram:group:-1003890797239 | 部署、环境、运维 |
-| 小research | agent:research:telegram:group:-1003890797239 | 技术调研、竞品分析 |
-| 小data | agent:data:telegram:group:-1003890797239 | 数据采集、爬虫 |
-| 小market | agent:market:telegram:group:-1003890797239 | SEO、推广策略 |
-| 小content | agent:content:telegram:group:-1003890797239 | 内容生成、文案 |
-| 小finance | agent:finance:telegram:group:-1003890797239 | 成本分析 |
-| 小quant | agent:quant:telegram:group:-1003890797239 | 量化分析 |
+| 小pm | agent:pm:telegram:group:YOUR_GROUP_CHAT_ID | 项目拆解、任务验收、质量检查 |
+| 小code | agent:code:telegram:group:YOUR_GROUP_CHAT_ID | 写代码、修Bug、架构设计 |
+| 小ops | agent:ops:telegram:group:YOUR_GROUP_CHAT_ID | 部署、环境、运维 |
+| 小research | agent:research:telegram:group:YOUR_GROUP_CHAT_ID | 技术调研、竞品分析 |
+| 小data | agent:data:telegram:group:YOUR_GROUP_CHAT_ID | 数据采集、爬虫 |
+| 小market | agent:market:telegram:group:YOUR_GROUP_CHAT_ID | SEO、推广策略 |
+| 小content | agent:content:telegram:group:YOUR_GROUP_CHAT_ID | 内容生成、文案 |
+| 小finance | agent:finance:telegram:group:YOUR_GROUP_CHAT_ID | 成本分析 |
+| 小quant | agent:quant:telegram:group:YOUR_GROUP_CHAT_ID | 量化分析 |
 
 ## 派活方式
 ```
-sessions_send(sessionKey="agent:<id>:telegram:group:-1003890797239", message="【CEO指令】具体任务描述。完成后将结果写入 <指定文件路径>，并用 message 发到群里。")
+sessions_send(sessionKey="agent:<id>:telegram:group:YOUR_GROUP_CHAT_ID", message="【CEO指令】具体任务描述。完成后将结果写入 <指定文件路径>，并用 message 发到群里。")
 ```
 - 不带 timeoutSeconds，派完即走
 - 要求 agent 将产出写入指定文件（方便检查）

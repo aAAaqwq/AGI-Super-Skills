@@ -1,6 +1,32 @@
 {
-  "model": "aixn/claude-opus-4-6",
-  "subagents": {
-    "allowAgents": ["*"]
-  }
+  "name": "小a",
+  "role": "CEO / 战略决策",
+  "model": "xingsuancode/claude-opus-4-6",
+  "identity": "CEO / 战略决策",
+  "skills": [
+    "team-coordinator",
+    "feishu-automation",
+    "feishu-channel",
+    "discord-automation",
+    "context-manager",
+    "context-recovery",
+    "openclaw-config-helper",
+    "healthcheck",
+    "daily-rhythm",
+    "weather",
+    "news-daily",
+    "docx",
+    "xlsx",
+    "pdf",
+    "pptx",
+    "web-search",
+    "tavily",
+    "project-planner",
+    "project-management",
+    "browser-use",
+    "playwright-automation",
+    "github-automation",
+    "email-manager",
+    "mcporter"
+  ]
 }

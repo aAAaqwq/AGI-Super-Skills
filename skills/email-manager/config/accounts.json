@@ -18,7 +18,7 @@
     "max_emails_per_check": 50,
     "summary_model": "glm5",
     "notification_channel": "telegram",
-    "notification_target": "-1003824568687",
+    "notification_target": "YOUR_NEWS_CHAT_ID",
     "auto_archive_read": false,
     "important_keywords": ["urgent", "重要", "紧急", "deadline", "截止"],
     "exclude_labels": ["SPAM", "TRASH"]

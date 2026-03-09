@@ -1,83 +1,83 @@
 # 🚀 AGI Super Skills
 
-[中文](./README_CN.md) | English
+中文 | [English](./README.md)
 
-> **285+ curated skills** for [OpenClaw](https://github.com/openclaw/openclaw) — the open-source AI agent framework.
-> Build your AI-native company with a full C-suite of digital employees.
+> **285+ 精选 Skills** 适用于 [OpenClaw](https://github.com/openclaw/openclaw) — 开源 AI Agent 框架。
+> 用 AI 团队构建你的一人公司 (OPC)。
 
-## 📊 Overview
+## 📊 概览
 
-| Metric | Value |
-|--------|-------|
+| 指标 | 数值 |
+|------|------|
 | **Skills** | 285+ |
-| **Categories** | 18 |
+| **分类** | 18 |
 | **Agents** | 13 |
-| **Framework** | [OpenClaw](https://github.com/openclaw/openclaw) |
+| **框架** | [OpenClaw](https://github.com/openclaw/openclaw) |
 
-## 🏗️ Architecture
+## 🏗️ 团队架构
 
 ```
-Daniel (CEO/Creator)
-  └── 小a (AI CEO / Coordinator)
-        ├── 小code (Chief Engineer)
-        ├── 小quant (Chief Trading Officer)
-        ├── 小data (Chief Data Officer)
-        ├── 小ops (Chief DevOps)
-        ├── 小content (Chief Content Officer)
-        ├── 小research (Chief Research Officer)
-        ├── 小finance (Chief Financial Officer)
-        ├── 小market (Chief Marketing Officer)
-        ├── 小pm (Chief Project Officer)
-        ├── 小law (Chief Legal Officer)
-        ├── 小product (Chief Product Officer)
-        └── 小sales (Chief Sales Officer)
+Daniel (创始人/决策者)
+  └── 小a (AI CEO / 协调者)
+        ├── 小code (首席工程师)
+        ├── 小quant (首席交易官)
+        ├── 小data (首席数据官)
+        ├── 小ops (首席运维官)
+        ├── 小content (首席内容官)
+        ├── 小research (首席研究官)
+        ├── 小finance (首席财务官)
+        ├── 小market (首席营销官)
+        ├── 小pm (首席项目官)
+        ├── 小law (首席法务官)
+        ├── 小product (首席产品官)
+        └── 小sales (首席销售官)
 ```
 
-## 👥 Agents
+## 👥 Agent 团队
 
-| ID | Name | Role | Model |
-|-----|------|------|-------|
-| `main` | 小a | CEO / Strategic Decision | `xingsuancode/claude-opus-4-6` |
-| `code` | 小code | Chief Engineer | `zai/glm-5` |
-| `quant` | 小quant | Chief Trading Officer | `zai/glm-5` |
-| `data` | 小data | Chief Data Officer | `zai/glm-5` |
-| `ops` | 小ops | Chief DevOps | `zai/glm-5` |
-| `content` | 小content | Chief Content Officer | `zai/glm-5` |
-| `research` | 小research | Chief Research Officer | `zai/glm-5` |
-| `finance` | 小finance | Chief Financial Officer | `zai/glm-5` |
-| `market` | 小market | Chief Marketing Officer | `zai/glm-5` |
-| `pm` | 小pm | Chief Project Officer | `zai/glm-5` |
-| `law` | 小law | Chief Legal Officer | `minimax/MiniMax-M2.5` |
-| `product` | 小product | Chief Product Officer | `zai/glm-5` |
-| `sales` | 小sales | Chief Sales Officer | `zai/glm-5` |
+| ID | 名称 | 职责 | 模型 |
+|----|------|------|------|
+| `main` | 小a | CEO / 战略决策 | `xingsuancode/claude-opus-4-6` |
+| `code` | 小code | 首席工程师 | `zai/glm-5` |
+| `quant` | 小quant | 首席交易官 | `zai/glm-5` |
+| `data` | 小data | 首席数据官 | `zai/glm-5` |
+| `ops` | 小ops | 首席运维官 | `zai/glm-5` |
+| `content` | 小content | 首席内容官 | `zai/glm-5` |
+| `research` | 小research | 首席研究官 | `zai/glm-5` |
+| `finance` | 小finance | 首席财务官 | `zai/glm-5` |
+| `market` | 小market | 首席营销官 | `zai/glm-5` |
+| `pm` | 小pm | 首席项目官 | `zai/glm-5` |
+| `law` | 小law | 首席法务官 | `minimax/MiniMax-M2.5` |
+| `product` | 小product | 首席产品官 | `zai/glm-5` |
+| `sales` | 小sales | 首席销售官 | `zai/glm-5` |
 
-> Each agent config is in [`agents/<id>/agent.json`](./agents/) (sanitized, no secrets).
+> Agent 配置在 [`agents/<id>/agent.json`](./agents/)（已脱敏）。
 
-## 🛠️ Skills
+## 🛠️ Skills 目录
 
-- [⚙️ OpenClaw Tools (21)](#-openclaw-tools)
-- [🤖 AI Agent Patterns (20)](#-ai-agent-patterns)
-- [🔧 Development (26)](#-development)
-- [💰 Trading & Finance (27)](#-trading--finance)
-- [📝 Content & Writing (22)](#-content--writing)
-- [📊 Data & Analytics (15)](#-data--analytics)
-- [📈 Marketing & SEO (14)](#-marketing--seo)
-- [🎨 Design & Media (12)](#-design--media)
-- [🌐 Browser Automation (6)](#-browser-automation)
-- [🏢 Business & Strategy (10)](#-business--strategy)
-- [📋 Project Management (13)](#-project-management)
-- [🧠 Knowledge & Research (3)](#-knowledge--research)
-- [💬 Communication (10)](#-communication)
-- [🔌 SaaS Integrations (61)](#-saas-integrations)
-- [⚙️ DevOps & Infra (7)](#-devops--infrastructure)
-- [🔒 Security (4)](#-security)
-- [⚖️ Legal & Compliance (1)](#-legal--compliance)
-- [🧩 Other (13)](#-other)
+- [⚙️ OpenClaw Tools OpenClaw 配置工具 (21)](#-OpenClaw-配置工具)
+- [🤖 AI Agent Patterns AI Agent 模式 (20)](#-AI-Agent-模式)
+- [🔧 Development 开发工具 (26)](#-开发工具)
+- [💰 Trading & Finance 交易与金融 (27)](#-交易与金融)
+- [📝 Content & Writing 内容创作 (22)](#-内容创作)
+- [📊 Data & Analytics 数据与分析 (15)](#-数据与分析)
+- [📈 Marketing & SEO 营销与 SEO (14)](#-营销与-SEO)
+- [🎨 Design & Media 设计与媒体 (12)](#-设计与媒体)
+- [🌐 Browser Automation 浏览器自动化 (6)](#-浏览器自动化)
+- [🏢 Business & Strategy 商业与战略 (10)](#-商业与战略)
+- [📋 Project Management 项目管理 (13)](#-项目管理)
+- [🧠 Knowledge & Research 知识与研究 (3)](#-知识与研究)
+- [💬 Communication 通讯与推送 (10)](#-通讯与推送)
+- [🔌 SaaS Integrations SaaS 集成 (61)](#-SaaS-集成)
+- [⚙️ DevOps & Infra 运维与基础设施 (7)](#-运维与基础设施)
+- [🔒 Security 安全 (4)](#-安全)
+- [⚖️ Legal & Compliance 法务与合规 (1)](#-法务与合规)
+- [🧩 Other 其他 (13)](#-其他)
 
 ### ⚙️ OpenClaw Tools
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`api-provider-setup`](./skills/api-provider-setup/) | 添加和配置第三方 API 中转站供应商到 OpenClaw。当用户需要添加新的 API 供应商、配置中转站、设置自定义模型端点时使用此技能。支持 Anthropic 兼容和 OpenAI 兼容的 API 格式。 |
 | [`api-provider-status`](./skills/api-provider-status/) | API 供应商状态查询与余额监控。 |
 | [`auth-manager`](./skills/auth-manager/) | 网页登录态管理。使用 fast-browser-use (fbu) 管理各平台登录状态，定期检查可用性，新平台授权时自动保存 profile。 |
@@ -102,8 +102,8 @@ Daniel (CEO/Creator)
 
 ### 🤖 AI Agent Patterns
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`agent-patterns`](./skills/agent-patterns/) | Execute this skill should be used when the user asks about "SPAWN REQUEST format", "agent reports", "agent coordination" |
 | [`env-setup`](./skills/env-setup/) | Claude Code 环境一键同步工具。从 GitHub 仓库同步所有配置到本地：output-styles 风格、CLAUDE.md 全局提示词、MCP 服务器配置、Agent 配置、Plugin 配置。适用于多设备统一环境、换电脑恢复 |
 | [`erc-8004`](./skills/erc-8004/) | Register AI agents on Ethereum mainnet using ERC-8004 (Trustless Agents). Use when the user wants to register their agen |
@@ -127,8 +127,8 @@ Daniel (CEO/Creator)
 
 ### 🔧 Development
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`architecture-decision-records`](./skills/architecture-decision-records/) | Write and maintain Architecture Decision Records (ADRs) following best practices for technical decision documentation. U |
 | [`backend-development`](./skills/backend-development/) | 后端服务开发专家（通才）。精通多种后端技术栈，能够根据需求选择最合适的技术方案。  当用户需要开发API、数据库设计、微服务架构或后端业务逻辑时使用此技能。  根据用户需求的技术栈，自动切换到对应语言的专家模式： - Python → 查看 |
 | [`bat-cat`](./skills/bat-cat/) | A cat clone with syntax highlighting, line numbers, and Git integration - a modern replacement for cat. |
@@ -158,8 +158,8 @@ Daniel (CEO/Creator)
 
 ### 💰 Trading & Finance
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`arbitrage-opportunity-finder`](./skills/arbitrage-opportunity-finder/) | Detect profitable arbitrage opportunities across CEX, DEX, and cross-chain markets in real-time. Use when scanning for p |
 | [`backtesting-frameworks`](./skills/backtesting-frameworks/) | Build robust backtesting systems for trading strategies with proper handling of look-ahead bias, survivorship bias, and  |
 | [`bankr`](./skills/bankr/) | AI-powered crypto trading agent and LLM gateway via natural language. Use when the user wants to trade crypto, check por |
@@ -190,8 +190,8 @@ Daniel (CEO/Creator)
 
 ### 📝 Content & Writing
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`content-creator`](./skills/content-creator/) | Create SEO-optimized marketing content with consistent brand voice. Includes brand voice analyzer, SEO optimizer, conten |
 | [`content-marketer`](./skills/content-marketer/) | Elite content marketing strategist specializing in AI-powered content creation, omnichannel distribution, SEO optimizati |
 | [`content-research-writer`](./skills/content-research-writer/) | Assists in writing high-quality content by conducting research, adding citations, improving hooks, iterating on outlines |
@@ -217,8 +217,8 @@ Daniel (CEO/Creator)
 
 ### 📊 Data & Analytics
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`analytics-tracking`](./skills/analytics-tracking/) | name: analytics-tracking |
 | [`arxiv-automation`](./skills/arxiv-automation/) | Search and monitor arXiv papers. Query by topic, author, or category. Track new papers, download PDFs, and summarize abs |
 | [`data-engineering-data-pipeline`](./skills/data-engineering-data-pipeline/) | You are a data pipeline architecture expert specializing in scalable, reliable, and cost-effective data pipelines for ba |
@@ -237,8 +237,8 @@ Daniel (CEO/Creator)
 
 ### 📈 Marketing & SEO
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`brand-guidelines`](./skills/brand-guidelines/) | Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic' |
 | [`competitive-ads-extractor`](./skills/competitive-ads-extractor/) | Extracts and analyzes competitors' ads from ad libraries (Facebook, LinkedIn, etc.) to understand what messaging, proble |
 | [`competitor-alternatives`](./skills/competitor-alternatives/) | When the user wants to create competitor comparison or alternative pages for SEO and sales enablement. Also use when the |
@@ -256,8 +256,8 @@ Daniel (CEO/Creator)
 
 ### 🎨 Design & Media
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`ai-image-generation`](./skills/ai-image-generation/) | Generate images using ModelScope Z-Image-Turbo API. Use when user asks to generate, create, or make images, pictures, or |
 | [`figma-automation`](./skills/figma-automation/) | Automate Figma tasks via Rube MCP (Composio): files, components, design tokens, comments, exports. Always search tools f |
 | [`image-enhancer`](./skills/image-enhancer/) | Improves the quality of images, especially screenshots, by enhancing resolution, sharpness, and clarity. Perfect for pre |
@@ -273,8 +273,8 @@ Daniel (CEO/Creator)
 
 ### 🌐 Browser Automation
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`browser-use`](./skills/browser-use/) | AI驱动的智能浏览器自动化工具。使用LLM理解页面并自动执行任务，比传统Playwright更智能、更省token。适用于复杂交互、动态页面、需要智能决策的浏览器操作。Chrome浏览器优先。 |
 | [`chrome-automation`](./skills/chrome-automation/) | Chrome 浏览器自动化操作。当用户需要自动化浏览器操作、网页测试、数据抓取或 UI 自动化时使用此技能。 |
 | [`fast-browser-use`](./skills/fast-browser-use/) | name: fast-browser-use |
@@ -284,8 +284,8 @@ Daniel (CEO/Creator)
 
 ### 🏢 Business & Strategy
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`business-analyst`](./skills/business-analyst/) | name: business-analyst |
 | [`market-sizing-analysis`](./skills/market-sizing-analysis/) | name: market-sizing-analysis |
 | [`meeting-insights-analyzer`](./skills/meeting-insights-analyzer/) | Analyzes meeting transcripts and recordings to uncover behavioral patterns, communication insights, and actionable feedb |
@@ -299,8 +299,8 @@ Daniel (CEO/Creator)
 
 ### 📋 Project Management
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`daily-rhythm`](./skills/daily-rhythm/) | Automated daily planning and reflection system with morning briefs, wind-down prompts, sleep nudges, and weekly reviews. |
 | [`domain-name-brainstormer`](./skills/domain-name-brainstormer/) | Generates creative domain name ideas for your project and checks availability across multiple TLDs (.com, .io, .dev, .ai |
 | [`gitlab-automation`](./skills/gitlab-automation/) | Automate GitLab project management, issues, merge requests, pipelines, branches, and user operations via Rube MCP (Compo |
@@ -317,16 +317,16 @@ Daniel (CEO/Creator)
 
 ### 🧠 Knowledge & Research
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`memory-hygiene`](./skills/memory-hygiene/) | Audit, clean, and optimize Clawdbot's vector memory (LanceDB). Use when memory is bloated with junk, token usage is high |
 | [`research-engineer`](./skills/research-engineer/) | An uncompromising Academic Research Engineer. Operates with absolute scientific rigor, objective criticism, and zero fla |
 | [`search-specialist`](./skills/search-specialist/) | Expert web researcher using advanced search techniques and synthesis. Masters search operators, result filtering, and mu |
 
 ### 💬 Communication
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`email-automation`](./skills/email-automation/) | 邮箱自动化：读取、搜索、草拟、发送邮件。 |
 | [`email-manager`](./skills/email-manager/) | 多邮箱统一管理与智能助手。支持 Gmail、QQ邮箱等 IMAP 邮箱，定时查看邮件，AI 生成摘要和回复草稿，发送前需用户确认。 |
 | [`feishu-automation`](./skills/feishu-automation/) | 飞书（Lark）全通道自动化。使用 lark-mcp 工具操作飞书多维表格（Bitable）、发送消息、管理文档、创建群组、自动化工作流等。当用户需要操作飞书平台、同步数据到飞书表格、发送飞书通知、管理飞书文档或自动化飞书业务流程时使用此技 |
@@ -340,8 +340,8 @@ Daniel (CEO/Creator)
 
 ### 🔌 SaaS Integrations
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`activecampaign-automation`](./skills/activecampaign-automation/) | Automate ActiveCampaign tasks via Rube MCP (Composio): manage contacts, tags, list subscriptions, automation enrollment, |
 | [`airtable-automation`](./skills/airtable-automation/) | Automate Airtable tasks via Rube MCP (Composio): records, bases, tables, fields, views. Always search tools first for cu |
 | [`amplitude-automation`](./skills/amplitude-automation/) | Automate Amplitude tasks via Rube MCP (Composio): events, user activity, cohorts, user identification. Always search too |
@@ -406,8 +406,8 @@ Daniel (CEO/Creator)
 
 ### ⚙️ DevOps & Infra
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`aws-cost-cleanup`](./skills/aws-cost-cleanup/) | Automated cleanup of unused AWS resources to reduce costs |
 | [`cost-optimization`](./skills/cost-optimization/) | Optimize cloud costs through resource rightsizing, tagging strategies, reserved instances, and spending analysis. Use wh |
 | [`docker-deployment`](./skills/docker-deployment/) | Docker container deployment with Nginx HTTPS configuration and Cloudflare Tunnel integration. Use when deploying web app |
@@ -418,8 +418,8 @@ Daniel (CEO/Creator)
 
 ### 🔒 Security
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`openssf-security`](./skills/openssf-security/) | Comprehensive OpenSSF security guidance for software projects. Invoke this skill when developers need help with: - Creat |
 | [`performing-security-code-review`](./skills/performing-security-code-review/) | Execute this skill enables AI assistant to conduct a security-focused code review using the security-agent plugin. it an |
 | [`security-audit`](./skills/security-audit/) | Comprehensive security auditing for Clawdbot deployments. Scans for exposed credentials, open ports, weak configs, and v |
@@ -427,14 +427,14 @@ Daniel (CEO/Creator)
 
 ### ⚖️ Legal & Compliance
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`web-design-guidelines`](./skills/web-design-guidelines/) | Review UI code for Web Interface Guidelines compliance. Use when asked to "review my UI", "check accessibility", "audit  |
 
 ### 🧩 Other
 
-| Skill | Description |
-|-------|-------------|
+| Skill | 描述 |
+|-------|------|
 | [`api-toolkit`](./skills/api-toolkit/) | 通用 API 调用工具包，用于快速接入任何 RESTful API。 |
 | [`context-recovery`](./skills/context-recovery/) | Automatically recover working context after session compaction or when continuation is implied but context is missing. W |
 | [`deepwork-tracker`](./skills/deepwork-tracker/) | Track deep work sessions locally (start/stop/status) and generate a GitHub-contribution-graph style minutes-per-day heat |
@@ -449,19 +449,19 @@ Daniel (CEO/Creator)
 | [`tech-decision`](./skills/tech-decision/) | This skill should be used when the user asks to "기술 의사결정", "뭐 쓸지 고민", "A vs B", "비교 분석", "라이브러리 선택", "아키텍처 결정", "어떤 걸 써야 |
 | [`twitter-automation`](./skills/twitter-automation/) | Automate Twitter/X tasks via Rube MCP (Composio): posts, search, users, bookmarks, lists, media. Always search tools fir |
 
-## 📦 Installation
+## 📦 安装
 
 ```bash
-# Clone the repo
+# 克隆仓库
 git clone https://github.com/aAAaqwq/AGI-Super-Skills.git
 
-# Copy a skill to your OpenClaw skills directory
+# 复制 skill 到 OpenClaw 目录
 cp -r AGI-Super-Skills/skills/<skill-name> ~/.openclaw/skills/
 
-# Or symlink for easy updates
+# 或创建软链接（方便更新）
 ln -s $(pwd)/AGI-Super-Skills/skills/<skill-name> ~/.openclaw/skills/
 ```
 
-## 📄 License
+## 📄 许可证
 
 MIT

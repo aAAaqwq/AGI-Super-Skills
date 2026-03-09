@@ -31,7 +31,7 @@ browser-use → 扫描数据 → smart_scanner.py → 机会分析 → 推送
 
 ## 推送目标
 
-- Telegram群: -1003890797239 (Daniel's super agents Center)
+- Telegram群: YOUR_GROUP_CHAT_ID (Daniel's super agents Center)
 - 格式: 简洁的卡片式消息
 
 ## 文件
