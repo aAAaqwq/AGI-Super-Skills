@@ -1,0 +1,11 @@
+{
+  "owner": "1kalin",
+  "slug": "afrexai-compliance-audit",
+  "displayName": "Compliance Audit Generator",
+  "latest": {
+    "version": "1.0.0",
+    "publishedAt": 1770981229419,
+    "commit": "https://github.com/openclaw/skills/commit/a8eae35a27c648318d93806a1f7c48b440d3b56c"
+  },
+  "history": []
+}

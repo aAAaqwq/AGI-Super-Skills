@@ -1,0 +1,108 @@
+name: Bug report
+description: Report a defect or unexpected behavior in this skill repository.
+title: "bug: <symptom> when <condition>"
+labels:
+  - bug
+  - needs triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing this report. Keep it concise, reproducible, and evidence-based.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One-sentence statement of what is broken.
+      placeholder: Wrapper rejects valid CLI flags on macOS.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Provide the shortest deterministic repro path.
+      placeholder: |
+        1. cd /path/to/repo
+        2. export FOO=bar
+        3. ./scripts/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen if the bug does not exist.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead, including user-visible errors.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Skill version/ref
+      description: Exact branch/commit/tag tested.
+      placeholder: main@<sha>
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: OS and shell where this occurs.
+      placeholder: macOS 15.x + zsh / Ubuntu 24.04 + bash
+    validations:
+      required: true
+
+  - type: input
+    id: tooling
+    attributes:
+      label: Related tool versions
+      description: Include versions for codex/gh/claude if relevant.
+      placeholder: codex --version, gh --version, claude --version
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs, screenshots, and evidence
+      description: Include redacted logs/screenshots/recordings that prove the behavior.
+      render: shell
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact and severity
+      description: |
+        Explain who is affected, severity, frequency, and practical consequence.
+        Include:
+        - Affected users/workflows
+        - Severity (annoying, blocks workflow, data risk, etc.)
+        - Frequency (always/intermittent/edge case)
+        - Consequence (failed reviews, incorrect fallback, extra manual work, etc.)
+
+  - type: textarea
+    id: additional_information
+    attributes:
+      label: Additional information
+      description: Any context that helps triage but does not fit above.
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I reproduced this on the latest `main`.
+          required: true
+        - label: I searched existing issues and did not find a duplicate.
+          required: true

@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Calculator Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .calculator-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .calculator-card.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .time-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button.calculate {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button.calculate:hover {
+            transform: translateY(-2px);
+        }
+
+        button.calculate:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .result-value {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 30px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .table-wrapper {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .add-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #e0e7ff;
+            color: #667eea;
+            border-radius: 6px;
+            margin: 4px;
+            font-size: 14px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .split-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .split-view {
+                grid-template-columns: 1fr;
+            }
+            .time-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .summary-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 Financial Calculator Pro</h1>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('future-value')">Future Value</button>
+            <button class="tab" onclick="showTab('present-value')">Present Value</button>
+            <button class="tab" onclick="showTab('discount')">Discount</button>
+            <button class="tab" onclick="showTab('markup')">Markup</button>
+            <button class="tab" onclick="showTab('compound')">Compound Interest</button>
+            <button class="tab" onclick="showTab('fv-table')">Comparison Table</button>
+            <button class="tab" onclick="showTab('growth-chart')">Growth Chart</button>
+        </div>
+
+        <!-- Future Value Calculator -->
+        <div id="future-value" class="calculator-card active">
+            <h2>Future Value Calculator</h2>
+            <p style="color: #666; margin-bottom: 20px;">Calculate what your investment will be worth in the future.</p>
+            
+            <div class="form-group">
+                <label>Principal Amount ($)</label>
+                <input type="number" id="fv-principal" value="10000" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Annual Interest Rate (%)</label>
+                <input type="number" id="fv-rate" value="5" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Time Period</label>
+                <div class="time-inputs">
+                    <div>
+                        <label>Years</label>
+                        <input type="number" id="fv-years" value="10" step="1" min="0">
+                    </div>
+                    <div>
+                        <label>Months</label>
+                        <input type="number" id="fv-months" value="0" step="1" min="0" max="11">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Compound Frequency</label>
+                <select id="fv-frequency">
+                    <option value="1">Annually</option>
+                    <option value="4">Quarterly</option>
+                    <option value="12" selected>Monthly</option>
+                    <option value="365">Daily</option>
+                </select>
+            </div>
+            
+            <button class="calculate" onclick="calculateFV()">Calculate</button>
+            
+            <div id="fv-result" class="result">
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <span class="summary-label">Future Value</span>
+                        <span class="summary-value" id="fv-value">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Gain</span>
+                        <span class="summary-value" id="fv-gain">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Gain Percentage</span>
+                        <span class="summary-value" id="fv-gain-pct">0.00%</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="fv-chart"></canvas>
+                </div>
+
+                <h3>Growth Timeline</h3>
+                <div class="table-wrapper">
+                    <table id="fv-timeline"></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Present Value Calculator -->
+        <div id="present-value" class="calculator-card">
+            <h2>Present Value Calculator</h2>
+            <p style="color: #666; margin-bottom: 20px;">Calculate the current value of a future amount.</p>
+            
+            <div class="form-group">
+                <label>Future Value ($)</label>
+                <input type="number" id="pv-future" value="20000" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Annual Discount Rate (%)</label>
+                <input type="number" id="pv-rate" value="5" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Time Period</label>
+                <div class="time-inputs">
+                    <div>
+                        <label>Years</label>
+                        <input type="number" id="pv-years" value="10" step="1" min="0">
+                    </div>
+                    <div>
+                        <label>Months</label>
+                        <input type="number" id="pv-months" value="0" step="1" min="0" max="11">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Compound Frequency</label>
+                <select id="pv-frequency">
+                    <option value="1">Annually</option>
+                    <option value="4">Quarterly</option>
+                    <option value="12" selected>Monthly</option>
+                    <option value="365">Daily</option>
+                </select>
+            </div>
+            
+            <button class="calculate" onclick="calculatePV()">Calculate</button>
+            
+            <div id="pv-result" class="result">
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <span class="summary-label">Present Value</span>
+                        <span class="summary-value" id="pv-value">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Future Value</span>
+                        <span class="summary-value" id="pv-future-display">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Discount Amount</span>
+                        <span class="summary-value" id="pv-discount">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="pv-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discount Calculator -->
+        <div id="discount" class="calculator-card">
+            <h2>Discount Calculator</h2>
+            <p style="color: #666; margin-bottom: 20px;">Calculate the final price after discount.</p>
+            
+            <div class="form-group">
+                <label>Original Price ($)</label>
+                <input type="number" id="discount-price" value="100" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Discount Percentage (%)</label>
+                <input type="number" id="discount-percent" value="20" step="0.01">
+            </div>
+            
+            <button class="calculate" onclick="calculateDiscount()">Calculate</button>
+            
+            <div id="discount-result" class="result">
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <span class="summary-label">Final Price</span>
+                        <span class="summary-value" id="discount-final">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">You Save</span>
+                        <span class="summary-value" id="discount-amount">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="discount-chart"></canvas>
+                </div>
+
+                <h3>Multiple Discount Scenarios</h3>
+                <div class="table-wrapper">
+                    <table id="discount-scenarios"></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Markup Calculator -->
+        <div id="markup" class="calculator-card">
+            <h2>Markup Calculator</h2>
+            <p style="color: #666; margin-bottom: 20px;">Calculate selling price from cost and markup.</p>
+            
+            <div class="form-group">
+                <label>Cost ($)</label>
+                <input type="number" id="markup-cost" value="100" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Markup Percentage (%)</label>
+                <input type="number" id="markup-percent" value="30" step="0.01">
+            </div>
+            
+            <button class="calculate" onclick="calculateMarkup()">Calculate</button>
+            
+            <div id="markup-result" class="result">
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <span class="summary-label">Selling Price</span>
+                        <span class="summary-value" id="markup-selling">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Markup Amount</span>
+                        <span class="summary-value" id="markup-amount">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Profit Margin</span>
+                        <span class="summary-value" id="markup-margin">0.00%</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="markup-chart"></canvas>
+                </div>
+
+                <h3>Markup vs Margin Comparison</h3>
+                <div class="table-wrapper">
+                    <table id="markup-table"></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compound Interest Calculator -->
+        <div id="compound" class="calculator-card">
+            <h2>Compound Interest Calculator</h2>
+            <p style="color: #666; margin-bottom: 20px;">Detailed compound interest breakdown with growth visualization.</p>
+            
+            <div class="form-group">
+                <label>Principal ($)</label>
+                <input type="number" id="compound-principal" value="10000" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Annual Interest Rate (%)</label>
+                <input type="number" id="compound-rate" value="5" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Time Period</label>
+                <div class="time-inputs">
+                    <div>
+                        <label>Years</label>
+                        <input type="number" id="compound-years" value="10" step="1" min="0">
+                    </div>
+                    <div>
+                        <label>Months</label>
+                        <input type="number" id="compound-months" value="0" step="1" min="0" max="11">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Compound Frequency</label>
+                <select id="compound-frequency">
+                    <option value="1">Annually</option>
+                    <option value="4">Quarterly</option>
+                    <option value="12" selected>Monthly</option>
+                    <option value="365">Daily</option>
+                </select>
+            </div>
+            
+            <button class="calculate" onclick="calculateCompound()">Calculate</button>
+            
+            <div id="compound-result" class="result">
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <span class="summary-label">Final Amount</span>
+                        <span class="summary-value" id="compound-final">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Interest</span>
+                        <span class="summary-value" id="compound-interest">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Effective Annual Rate</span>
+                        <span class="summary-value" id="compound-effective">0.00%</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="compound-chart"></canvas>
+                </div>
+
+                <h3>Year-by-Year Breakdown</h3>
+                <div class="table-wrapper">
+                    <table id="compound-breakdown"></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <div id="fv-table" class="calculator-card">
+            <h2>Investment Comparison Table</h2>
+            <p style="color: #666; margin-bottom: 20px;">Compare different rates and time periods side-by-side.</p>
+            
+            <div class="form-group">
+                <label>Principal ($)</label>
+                <input type="number" id="table-principal" value="10000" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Interest Rates (%) - Add multiple</label>
+                <div class="input-group">
+                    <input type="number" id="table-rate-input" value="5" step="0.01">
+                    <button class="add-btn" onclick="addRate()">Add Rate</button>
+                </div>
+                <div id="rates-tags" class="tags-container">
+                    <span class="tag">5%</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Time Periods (years) - Add multiple</label>
+                <div class="input-group">
+                    <input type="number" id="table-period-input" value="10" step="1">
+                    <button class="add-btn" onclick="addPeriod()">Add Period</button>
+                </div>
+                <div id="periods-tags" class="tags-container">
+                    <span class="tag">10 years</span>
+                </div>
+            </div>
+            
+            <button class="calculate" onclick="generateFVTable()">Generate Comparison</button>
+            
+            <div id="fv-table-result" class="result">
+                <div class="table-wrapper">
+                    <table id="fv-table-content"></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Growth Chart -->
+        <div id="growth-chart" class="calculator-card">
+            <h2>Multi-Rate Growth Chart</h2>
+            <p style="color: #666; margin-bottom: 20px;">Visualize and compare multiple investment scenarios.</p>
+            
+            <div class="form-group">
+                <label>Principal ($)</label>
+                <input type="number" id="chart-principal" value="10000" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Compare Interest Rates (%)</label>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <input type="number" id="chart-rate1" value="3" step="0.01" placeholder="Rate 1">
+                    <input type="number" id="chart-rate2" value="5" step="0.01" placeholder="Rate 2">
+                    <input type="number" id="chart-rate3" value="7" step="0.01" placeholder="Rate 3">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Time Period (years)</label>
+                <input type="number" id="chart-years" value="20" step="1" min="1">
+            </div>
+            
+            <div class="form-group">
+                <label>Compound Frequency</label>
+                <select id="chart-frequency">
+                    <option value="1">Annually</option>
+                    <option value="4">Quarterly</option>
+                    <option value="12" selected>Monthly</option>
+                    <option value="365">Daily</option>
+                </select>
+            </div>
+            
+            <button class="calculate" onclick="generateGrowthChart()">Generate Chart</button>
+            
+            <div id="chart-result" class="result">
+                <div class="chart-container" style="height: 500px;">
+                    <canvas id="multi-growth-chart"></canvas>
+                </div>
+
+                <h3>Final Values Comparison</h3>
+                <div class="table-wrapper">
+                    <table id="chart-comparison-table"></table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let rates = [5];
+        let periods = [10];
+        let chartInstances = {};
+
+        function showTab(tabName) {
+            document.querySelectorAll('.calculator-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function formatCurrency(value) {
+            return '$' + parseFloat(value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function getTotalYears(years, months) {
+            return parseFloat(years) + (parseFloat(months) / 12);
+        }
+
+        function destroyChart(chartId) {
+            if (chartInstances[chartId]) {
+                chartInstances[chartId].destroy();
+                delete chartInstances[chartId];
+            }
+        }
+
+        // Future Value
+        async function calculateFV() {
+            const principal = document.getElementById('fv-principal').value;
+            const rate = document.getElementById('fv-rate').value;
+            const years = document.getElementById('fv-years').value;
+            const months = document.getElementById('fv-months').value;
+            const frequency = document.getElementById('fv-frequency').value;
+            const totalYears = getTotalYears(years, months);
+
+            const response = await fetch('/api/future-value', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({principal, rate, years: totalYears, frequency})
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                const fv = data.future_value;
+                const gain = fv - principal;
+                const gainPct = (gain / principal) * 100;
+
+                document.getElementById('fv-value').textContent = formatCurrency(fv);
+                document.getElementById('fv-gain').textContent = formatCurrency(gain);
+                document.getElementById('fv-gain-pct').textContent = gainPct.toFixed(2) + '%';
+                document.getElementById('fv-result').classList.add('show');
+
+                // Generate timeline chart
+                await generateFVTimeline(principal, rate, totalYears, frequency);
+            }
+        }
+
+        async function generateFVTimeline(principal, rate, years, frequency) {
+            const timeline = await fetch('/api/growth-timeline', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({principal, rate, years, frequency})
+            });
+            
+            const data = await timeline.json();
+            if (data.success) {
+                // Draw chart
+                destroyChart('fv-chart');
+                const ctx = document.getElementById('fv-chart').getContext('2d');
+                chartInstances['fv-chart'] = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.timeline.map(d => 'Year ' + d.year),
+                        datasets: [{
+                            label: 'Balance',
+                            data: data.timeline.map(d => d.balance),
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Draw table
+                const table = document.getElementById('fv-timeline');
+                let html = '<thead><tr><th>Year</th><th>Balance</th><th>Interest Earned</th><th>Total Interest</th></tr></thead><tbody>';
+                data.timeline.forEach(row => {
+                    html += `<tr>
+                        <td>${row.year}</td>
+                        <td>${formatCurrency(row.balance)}</td>
+                        <td>${formatCurrency(row.interest)}</td>
+                        <td>${formatCurrency(row.total_interest)}</td>
+                    </tr>`;
+                });
+                html += '</tbody>';
+                table.innerHTML = html;
+            }
+        }
+
+        // Present Value
+        async function calculatePV() {
+            const future_value = document.getElementById('pv-future').value;
+            const rate = document.getElementById('pv-rate').value;
+            const years = document.getElementById('pv-years').value;
+            const months = document.getElementById('pv-months').value;
+            const frequency = document.getElementById('pv-frequency').value;
+            const totalYears = getTotalYears(years, months);
+
+            const response = await fetch('/api/present-value', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({future_value, rate, years: totalYears, frequency})
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                const pv = data.present_value;
+                const discount = future_value - pv;
+                
+                document.getElementById('pv-value').textContent = formatCurrency(pv);
+                document.getElementById('pv-future-display').textContent = formatCurrency(future_value);
+                document.getElementById('pv-discount').textContent = formatCurrency(discount);
+                document.getElementById('pv-result').classList.add('show');
+
+                // Draw chart
+                destroyChart('pv-chart');
+                const ctx = document.getElementById('pv-chart').getContext('2d');
+                chartInstances['pv-chart'] = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Present Value', 'Discount'],
+                        datasets: [{
+                            data: [pv, discount],
+                            backgroundColor: ['#667eea', '#e0e7ff']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+        }
+
+        // Discount
+        async function calculateDiscount() {
+            const price = document.getElementById('discount-price').value;
+            const discount = document.getElementById('discount-percent').value;
+
+            const response = await fetch('/api/discount', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({price, discount})
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                const r = data.result;
+                document.getElementById('discount-final').textContent = formatCurrency(r.final_price);
+                document.getElementById('discount-amount').textContent = formatCurrency(r.discount_amount);
+                document.getElementById('discount-result').classList.add('show');
+
+                // Draw chart
+                destroyChart('discount-chart');
+                const ctx = document.getElementById('discount-chart').getContext('2d');
+                chartInstances['discount-chart'] = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Original Price', 'Final Price'],
+                        datasets: [{
+                            label: 'Price',
+                            data: [r.original_price, r.final_price],
+                            backgroundColor: ['#764ba2', '#667eea']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Generate scenarios table
+                const scenarios = [10, 15, 20, 25, 30, 35, 40, 50];
+                const table = document.getElementById('discount-scenarios');
+                let html = '<thead><tr><th>Discount %</th><th>Discount Amount</th><th>Final Price</th><th>Savings</th></tr></thead><tbody>';
+                scenarios.forEach(pct => {
+                    const discountAmt = price * (pct / 100);
+                    const finalPrice = price - discountAmt;
+                    html += `<tr>
+                        <td>${pct}%</td>
+                        <td>${formatCurrency(discountAmt)}</td>
+                        <td>${formatCurrency(finalPrice)}</td>
+                        <td>${formatCurrency(discountAmt)}</td>
+                    </tr>`;
+                });
+                html += '</tbody>';
+                table.innerHTML = html;
+            }
+        }
+
+        // Markup
+        async function calculateMarkup() {
+            const cost = document.getElementById('markup-cost').value;
+            const markup = document.getElementById('markup-percent').value;
+
+            const response = await fetch('/api/markup', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({cost, markup})
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                const r = data.result;
+                document.getElementById('markup-selling').textContent = formatCurrency(r.selling_price);
+                document.getElementById('markup-amount').textContent = formatCurrency(r.markup_amount);
+                document.getElementById('markup-margin').textContent = r.margin_percent.toFixed(2) + '%';
+                document.getElementById('markup-result').classList.add('show');
+
+                // Draw chart
+                destroyChart('markup-chart');
+                const ctx = document.getElementById('markup-chart').getContext('2d');
+                chartInstances['markup-chart'] = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Cost', 'Selling Price'],
+                        datasets: [{
+                            label: 'Amount',
+                            data: [r.cost, r.selling_price],
+                            backgroundColor: ['#764ba2', '#667eea']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Generate comparison table
+                const markups = [10, 20, 30, 40, 50, 75, 100];
+                const table = document.getElementById('markup-table');
+                let html = '<thead><tr><th>Markup %</th><th>Selling Price</th><th>Margin %</th><th>Profit</th></tr></thead><tbody>';
+                markups.forEach(m => {
+                    const sellingPrice = parseFloat(cost) * (1 + m/100);
+                    const profit = sellingPrice - cost;
+                    const margin = (profit / sellingPrice) * 100;
+                    html += `<tr>
+                        <td>${m}%</td>
+                        <td>${formatCurrency(sellingPrice)}</td>
+                        <td>${margin.toFixed(2)}%</td>
+                        <td>${formatCurrency(profit)}</td>
+                    </tr>`;
+                });
+                html += '</tbody>';
+                table.innerHTML = html;
+            }
+        }
+
+        // Compound Interest
+        async function calculateCompound() {
+            const principal = document.getElementById('compound-principal').value;
+            const rate = document.getElementById('compound-rate').value;
+            const years = document.getElementById('compound-years').value;
+            const months = document.getElementById('compound-months').value;
+            const frequency = document.getElementById('compound-frequency').value;
+            const totalYears = getTotalYears(years, months);
+
+            const response = await fetch('/api/compound-interest', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({principal, rate, years: totalYears, frequency})
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                const r = data.result;
+                document.getElementById('compound-final').textContent = formatCurrency(r.final_amount);
+                document.getElementById('compound-interest').textContent = formatCurrency(r.total_interest);
+                document.getElementById('compound-effective').textContent = (r.effective_annual_rate * 100).toFixed(2) + '%';
+                document.getElementById('compound-result').classList.add('show');
+
+                // Generate timeline for chart
+                await generateCompoundBreakdown(principal, rate, totalYears, frequency);
+            }
+        }
+
+        async function generateCompoundBreakdown(principal, rate, years, frequency) {
+            const timeline = await fetch('/api/growth-timeline', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({principal, rate, years, frequency})
+            });
+            
+            const data = await timeline.json();
+            if (data.success) {
+                // Draw chart
+                destroyChart('compound-chart');
+                const ctx = document.getElementById('compound-chart').getContext('2d');
+                chartInstances['compound-chart'] = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.timeline.map(d => 'Year ' + d.year),
+                        datasets: [
+                            {
+                                label: 'Principal',
+                                data: data.timeline.map(d => principal),
+                                backgroundColor: '#764ba2'
+                            },
+                            {
+                                label: 'Interest',
+                                data: data.timeline.map(d => d.total_interest),
+                                backgroundColor: '#667eea'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { stacked: true },
+                            y: {
+                                stacked: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Draw table
+                const table = document.getElementById('compound-breakdown');
+                let html = '<thead><tr><th>Year</th><th>Balance</th><th>Interest Earned</th><th>Total Interest</th></tr></thead><tbody>';
+                data.timeline.forEach(row => {
+                    html += `<tr>
+                        <td>${row.year}</td>
+                        <td>${formatCurrency(row.balance)}</td>
+                        <td>${formatCurrency(row.interest)}</td>
+                        <td>${formatCurrency(row.total_interest)}</td>
+                    </tr>`;
+                });
+                html += '</tbody>';
+                table.innerHTML = html;
+            }
+        }
+
+        // Table Management
+        function addRate() {
+            const rateInput = document.getElementById('table-rate-input');
+            const rate = parseFloat(rateInput.value);
+            if (!rates.includes(rate)) {
+                rates.push(rate);
+                updateRatesTags();
+            }
+        }
+
+        function updateRatesTags() {
+            const container = document.getElementById('rates-tags');
+            container.innerHTML = rates.map(r => `<span class="tag">${r}%</span>`).join('');
+        }
+
+        function addPeriod() {
+            const periodInput = document.getElementById('table-period-input');
+            const period = parseInt(periodInput.value);
+            if (!periods.includes(period)) {
+                periods.push(period);
+                updatePeriodsTags();
+            }
+        }
+
+        function updatePeriodsTags() {
+            const container = document.getElementById('periods-tags');
+            container.innerHTML = periods.map(p => `<span class="tag">${p} years</span>`).join('');
+        }
+
+        async function generateFVTable() {
+            const principal = document.getElementById('table-principal').value;
+
+            const response = await fetch('/api/fv-table', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({principal, rates, periods})
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                const table = document.getElementById('fv-table-content');
+                let html = '<thead><tr><th>Rate</th><th>Period</th><th>Future Value</th><th>Total Gain</th><th>Gain %</th></tr></thead><tbody>';
+                
+                data.table.forEach(row => {
+                    html += `<tr>
+                        <td>${row.rate_percent.toFixed(2)}%</td>
+                        <td>${row.period_years} years</td>
+                        <td>${formatCurrency(row.future_value)}</td>
+                        <td>${formatCurrency(row.total_gain)}</td>
+                        <td>${row.gain_percent.toFixed(2)}%</td>
+                    </tr>`;
+                });
+                
+                html += '</tbody>';
+                table.innerHTML = html;
+                document.getElementById('fv-table-result').classList.add('show');
+            }
+        }
+
+        // Growth Chart
+        async function generateGrowthChart() {
+            const principal = document.getElementById('chart-principal').value;
+            const rate1 = document.getElementById('chart-rate1').value;
+            const rate2 = document.getElementById('chart-rate2').value;
+            const rate3 = document.getElementById('chart-rate3').value;
+            const years = document.getElementById('chart-years').value;
+            const frequency = document.getElementById('chart-frequency').value;
+
+            const rates = [rate1, rate2, rate3].filter(r => r);
+            
+            const response = await fetch('/api/multi-growth', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({principal, rates, years, frequency})
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                // Draw chart
+                destroyChart('multi-growth-chart');
+                const ctx = document.getElementById('multi-growth-chart').getContext('2d');
+                
+                const colors = ['#667eea', '#764ba2', '#48bb78'];
+                const datasets = data.series.map((series, i) => ({
+                    label: series.rate.toFixed(2) + '% Rate',
+                    data: series.values,
+                    borderColor: colors[i],
+                    backgroundColor: colors[i] + '20',
+                    fill: false,
+                    tension: 0.4
+                }));
+
+                chartInstances['multi-growth-chart'] = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({length: parseInt(years) + 1}, (_, i) => 'Year ' + i),
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top' }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Draw comparison table
+                const table = document.getElementById('chart-comparison-table');
+                let html = '<thead><tr><th>Rate</th><th>Final Value</th><th>Total Gain</th><th>Gain %</th></tr></thead><tbody>';
+                data.series.forEach(series => {
+                    const finalValue = series.values[series.values.length - 1];
+                    const gain = finalValue - principal;
+                    const gainPct = (gain / principal) * 100;
+                    html += `<tr>
+                        <td>${series.rate.toFixed(2)}%</td>
+                        <td>${formatCurrency(finalValue)}</td>
+                        <td>${formatCurrency(gain)}</td>
+                        <td>${gainPct.toFixed(2)}%</td>
+                    </tr>`;
+                });
+                html += '</tbody>';
+                table.innerHTML = html;
+
+                document.getElementById('chart-result').classList.add('show');
+            }
+        }
+    </script>
+</body>
+</html>

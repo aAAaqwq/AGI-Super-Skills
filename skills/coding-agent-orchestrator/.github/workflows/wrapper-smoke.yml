@@ -1,0 +1,40 @@
+name: Wrapper Smoke Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  wrappers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Bash syntax check
+        run: |
+          set -euo pipefail
+          while IFS= read -r script; do
+            [[ -f "$script" ]] || continue
+            bash -n "$script"
+          done < <(git ls-files scripts)
+
+      - name: Shellcheck
+        run: |
+          set -euo pipefail
+          while IFS= read -r script; do
+            [[ -f "$script" ]] || continue
+            shellcheck "$script"
+          done < <(git ls-files scripts)
+
+      - name: Codex doc drift checks
+        run: ./scripts/doc-drift-check
+
+      - name: Wrapper smoke tests
+        run: ./scripts/smoke-wrappers.sh

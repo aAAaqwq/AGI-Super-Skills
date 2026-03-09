@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+usage() {
+  cat >&2 <<'USAGE'
+Usage:
+  plan-review-live [--engine <lobster|legacy>] [--resume-token <token>] [other code-plan-review-live flags]
+
+Defaults:
+  --engine lobster (falls back to legacy when lobster binary is unavailable)
+USAGE
+}
+
+ENGINE="${PLAN_REVIEW_LIVE_ENGINE:-lobster}"
+RESUME_TOKEN=""
+PASSTHROUGH=()
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --engine)
+      ENGINE="${2:-}"
+      shift 2
+      ;;
+    --resume-token)
+      RESUME_TOKEN="${2:-}"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exec "$SCRIPT_DIR/code-plan-review" --mode live --help
+      ;;
+    *)
+      PASSTHROUGH+=("$1")
+      shift
+      ;;
+  esac
+done
+
+if [[ "$ENGINE" != "lobster" && "$ENGINE" != "legacy" ]]; then
+  echo "Error: --engine must be lobster or legacy" >&2
+  exit 1
+fi
+
+if [[ "$ENGINE" == "lobster" ]]; then
+  if command -v lobster >/dev/null 2>&1; then
+    lobster_args=("${PASSTHROUGH[@]}")
+    if [[ -n "$RESUME_TOKEN" ]]; then
+      lobster_args+=(--resume-token "$RESUME_TOKEN")
+    fi
+    exec "$SCRIPT_DIR/plan-review-live-lobster" "${lobster_args[@]}"
+  fi
+  echo "Warning: lobster not found; falling back to legacy live review engine." >&2
+  ENGINE="legacy"
+fi
+
+if [[ -n "$RESUME_TOKEN" ]]; then
+  echo "Error: --resume-token is only supported when --engine lobster." >&2
+  exit 1
+fi
+
+exec "$SCRIPT_DIR/code-plan-review" --mode live "${PASSTHROUGH[@]}"

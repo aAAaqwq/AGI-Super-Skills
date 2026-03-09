@@ -1,0 +1,341 @@
+#!/usr/bin/env bash
+# code-implement - Wrapper for code implementation with proper timeout
+#
+# Usage:
+#   code-implement "Implement feature X in /path/to/project"
+#   code-implement --plan .ai/plans/<plan>.md [--force]
+
+set -euo pipefail
+
+export PATH="$PATH:/run/current-system/sw/bin"
+
+usage() {
+  cat >&2 <<'USAGE'
+Usage:
+  code-implement "<prompt>"
+  code-implement --plan <path> [--force]
+USAGE
+}
+
+PLAN_PATH=""
+FORCE=0
+PROMPT=""
+EXEC_REPO="$(pwd)"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --plan)
+      PLAN_PATH="${2:-}"
+      shift 2
+      ;;
+    --force)
+      FORCE=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      if [[ -z "$PROMPT" ]]; then
+        PROMPT="$1"
+      else
+        PROMPT="$PROMPT $1"
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ $# -gt 0 ]]; then
+  if [[ -z "$PROMPT" ]]; then
+    PROMPT="$*"
+  else
+    PROMPT="$PROMPT $*"
+  fi
+fi
+
+if [[ -n "$PLAN_PATH" && -n "$PROMPT" ]]; then
+  echo "Error: provide either --plan or a prompt, not both" >&2
+  exit 1
+fi
+
+if [[ -z "$PLAN_PATH" && -z "$PROMPT" ]]; then
+  usage
+  exit 1
+fi
+
+TIMEOUT_MS="${CODE_IMPLEMENT_TIMEOUT:-180000}"
+if [[ ! "$TIMEOUT_MS" =~ ^[0-9]+$ ]]; then
+  echo "Error: CODE_IMPLEMENT_TIMEOUT must be a number (milliseconds)" >&2
+  echo "Got: $TIMEOUT_MS" >&2
+  exit 1
+fi
+TIMEOUT_SEC=$((TIMEOUT_MS / 1000))
+
+get_frontmatter_field() {
+  local file="$1"
+  local key="$2"
+  awk -F': ' -v wanted="$key" '
+    BEGIN { in_fm=0 }
+    $0 == "---" {
+      if (in_fm == 0) { in_fm=1; next }
+      else { exit }
+    }
+    in_fm == 1 {
+      if (index($0, wanted ":") == 1) {
+        sub("^[^:]+:[ ]*", "", $0)
+        print $0
+        exit
+      }
+    }
+  ' "$file"
+}
+
+set_frontmatter_field() {
+  local file="$1"
+  local key="$2"
+  local value="$3"
+  local tmp
+  tmp="$(mktemp)"
+  awk -v k="$key" -v v="$value" '
+    BEGIN { in_fm=0; replaced=0 }
+    $0 == "---" {
+      if (in_fm == 0) { in_fm=1; print; next }
+      if (in_fm == 1) {
+        if (replaced == 0) { print k ": " v }
+        in_fm=2
+        print
+        next
+      }
+    }
+    in_fm == 1 {
+      if (index($0, k ":") == 1) {
+        print k ": " v
+        replaced=1
+        next
+      }
+    }
+    { print }
+  ' "$file" > "$tmp"
+  mv "$tmp" "$file"
+}
+
+json_extract_string() {
+  local file="$1"
+  local key="$2"
+  sed -nE "s/^[[:space:]]*\"${key}\"[[:space:]]*:[[:space:]]*\"([^\"]*)\"[[:space:]]*,?[[:space:]]*$/\1/p" "$file" | head -n 1
+}
+
+json_extract_bool() {
+  local file="$1"
+  local key="$2"
+  sed -nE "s/^[[:space:]]*\"${key}\"[[:space:]]*:[[:space:]]*(true|false)[[:space:]]*,?[[:space:]]*$/\1/p" "$file" | head -n 1
+}
+
+json_extract_number() {
+  local file="$1"
+  local key="$2"
+  sed -nE "s/^[[:space:]]*\"${key}\"[[:space:]]*:[[:space:]]*([0-9]+)[[:space:]]*,?[[:space:]]*$/\1/p" "$file" | head -n 1
+}
+
+json_array_length() {
+  local file="$1"
+  local key="$2"
+  local line
+  local content
+  line="$(grep -m1 "\"${key}\"" "$file" || true)"
+  if [[ -z "$line" ]]; then
+    echo "-1"
+    return 0
+  fi
+  content="$(printf '%s\n' "$line" | sed -nE "s/^[[:space:]]*\"${key}\"[[:space:]]*:[[:space:]]*\\[(.*)\\][[:space:]]*,?[[:space:]]*$/\1/p")"
+  if [[ -z "$content" && "$line" != *"[]"* ]]; then
+    echo "-1"
+    return 0
+  fi
+  if [[ -z "$content" ]]; then
+    echo "0"
+    return 0
+  fi
+  printf '%s\n' "$content" | grep -o '"[^"]*"' | wc -l | tr -d '[:space:]'
+}
+
+review_gate_blocked() {
+  local message="$1"
+  local plan_path="$2"
+  echo "Error: review gate blocked implementation." >&2
+  echo "Reason: $message" >&2
+  echo "Remediation:" >&2
+  echo "  1) Run interactive review to resolve blocking decisions:" >&2
+  echo "     ./scripts/plan-review-live --plan $plan_path" >&2
+  echo "  2) Or run batch review to refresh report context:" >&2
+  echo "     ./scripts/plan-review --plan $plan_path" >&2
+  echo "  3) Use --force only when you explicitly accept bypass risk." >&2
+  exit 1
+}
+
+validate_review_gate() {
+  local plan_path="$1"
+  local plan_id="$2"
+  local repo_path="$3"
+  local metadata_file
+  local schema_version
+  local metadata_plan_id
+  local metadata_plan_path
+  local metadata_mode
+  local ready
+  local created_at
+  local review_markdown_path
+  local blocking_count
+
+  metadata_file="$repo_path/.ai/plan-reviews/latest-${plan_id}.json"
+
+  if [[ ! -f "$metadata_file" ]]; then
+    review_gate_blocked "Missing review metadata: $metadata_file" "$plan_path"
+  fi
+
+  schema_version="$(json_extract_number "$metadata_file" "schema_version")"
+  metadata_plan_id="$(json_extract_string "$metadata_file" "plan_id")"
+  metadata_plan_path="$(json_extract_string "$metadata_file" "plan_path")"
+  metadata_mode="$(json_extract_string "$metadata_file" "mode")"
+  ready="$(json_extract_bool "$metadata_file" "ready_for_implementation")"
+  created_at="$(json_extract_string "$metadata_file" "created_at")"
+  review_markdown_path="$(json_extract_string "$metadata_file" "review_markdown_path")"
+  blocking_count="$(json_array_length "$metadata_file" "blocking_decisions")"
+
+  if [[ "$schema_version" != "1" ]]; then
+    review_gate_blocked "Invalid schema_version in $metadata_file (expected 1)." "$plan_path"
+  fi
+  if [[ -z "$metadata_plan_id" || "$metadata_plan_id" != "$plan_id" ]]; then
+    review_gate_blocked "Metadata plan_id mismatch in $metadata_file." "$plan_path"
+  fi
+  if [[ -z "$metadata_plan_path" || "$metadata_plan_path" != "$plan_path" ]]; then
+    review_gate_blocked "Metadata plan_path mismatch in $metadata_file." "$plan_path"
+  fi
+  if [[ "$metadata_mode" != "batch" && "$metadata_mode" != "live" ]]; then
+    review_gate_blocked "Invalid mode in $metadata_file (expected batch/live)." "$plan_path"
+  fi
+  if [[ "$ready" != "true" && "$ready" != "false" ]]; then
+    review_gate_blocked "Invalid ready_for_implementation in $metadata_file." "$plan_path"
+  fi
+  if [[ -z "$created_at" ]]; then
+    review_gate_blocked "Missing created_at in $metadata_file." "$plan_path"
+  fi
+  if [[ -z "$review_markdown_path" || ! -f "$review_markdown_path" ]]; then
+    review_gate_blocked "Missing review_markdown_path target in $metadata_file." "$plan_path"
+  fi
+
+  if [[ "$ready" != "true" ]]; then
+    review_gate_blocked "Latest review is not ready for implementation (ready_for_implementation=false)." "$plan_path"
+  fi
+  if [[ ! "$blocking_count" =~ ^-?[0-9]+$ ]] || (( blocking_count < 0 )); then
+    review_gate_blocked "Invalid blocking_decisions array in $metadata_file." "$plan_path"
+  fi
+  if (( blocking_count > 0 )); then
+    review_gate_blocked "Latest review still has unresolved blocking_decisions." "$plan_path"
+  fi
+}
+
+if [[ -n "$PLAN_PATH" ]]; then
+  if [[ ! -f "$PLAN_PATH" ]]; then
+    echo "Error: plan file not found: $PLAN_PATH" >&2
+    exit 1
+  fi
+
+  PLAN_PATH="$(cd "$(dirname "$PLAN_PATH")" && pwd)/$(basename "$PLAN_PATH")"
+
+  status="$(get_frontmatter_field "$PLAN_PATH" "status")"
+  plan_id="$(get_frontmatter_field "$PLAN_PATH" "id")"
+  if [[ -z "$plan_id" ]]; then
+    plan_id="$(basename "$PLAN_PATH" .md)"
+  fi
+
+  repo_from_plan="$(get_frontmatter_field "$PLAN_PATH" "repo_path")"
+  if [[ -n "$repo_from_plan" ]]; then
+    if ! git -C "$repo_from_plan" rev-parse --git-dir >/dev/null 2>&1; then
+      echo "Error: repo_path from plan is not a git repo: $repo_from_plan" >&2
+      exit 1
+    fi
+    EXEC_REPO="$repo_from_plan"
+  fi
+
+  if [[ "$status" != "APPROVED" && "$FORCE" != "1" ]]; then
+    echo "⚠️  Plan $plan_id is currently ${status:-PENDING}."
+    read -r -p "Do you approve this plan for execution? [y/N/revise] " answer
+    case "${answer,,}" in
+      y|yes)
+        set_frontmatter_field "$PLAN_PATH" "status" "APPROVED"
+        set_frontmatter_field "$PLAN_PATH" "approved_by" "${USER:-unknown}"
+        set_frontmatter_field "$PLAN_PATH" "approved_at" "$(date -Iseconds)"
+        ;;
+      revise)
+        echo "Plan left unchanged. Revise by rerunning code-plan with updated guidance." >&2
+        exit 1
+        ;;
+      *)
+        echo "Execution cancelled." >&2
+        exit 1
+        ;;
+    esac
+  fi
+
+  status="$(get_frontmatter_field "$PLAN_PATH" "status")"
+  if [[ "$status" != "APPROVED" && "$FORCE" != "1" ]]; then
+    echo "Error: plan status must be APPROVED to execute. Use --force to bypass." >&2
+    exit 1
+  fi
+
+  if [[ "$FORCE" == "1" ]]; then
+    echo "⚠️  --force enabled: bypassing plan-review readiness gate." >&2
+  else
+    validate_review_gate "$PLAN_PATH" "$plan_id" "$EXEC_REPO"
+  fi
+
+  echo "Executing approved plan: $PLAN_PATH" >&2
+  plan_body="$(cat "$PLAN_PATH")"
+  PROMPT=$(cat <<EOF
+Executing approved plan: $PLAN_PATH
+
+Follow this plan exactly unless blocked by new evidence. If blocked, explain deviation and proceed with the safest minimal change set.
+
+PLAN CONTENT:
+$plan_body
+EOF
+)
+fi
+
+echo "Starting implementation in tmux with ${TIMEOUT_SEC}s timeout..." >&2
+echo "Execution repository: $EXEC_REPO" >&2
+
+if ! command -v codex &> /dev/null; then
+  echo "Error: codex CLI not found. Please install: npm install -g @openai/codex" >&2
+  exit 1
+fi
+
+if ! command -v tmux &> /dev/null; then
+  echo "Error: tmux not found. Install tmux or use a host with tmux available." >&2
+  exit 1
+fi
+
+if ! command -v timeout &> /dev/null; then
+  echo "Error: timeout command not found. Install coreutils (brew install coreutils on macOS)." >&2
+  exit 1
+fi
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+TMUX_RUN="$SCRIPT_DIR/tmux-run"
+if [[ ! -x "$TMUX_RUN" ]]; then
+  echo "Error: tmux-run not found or not executable: $TMUX_RUN" >&2
+  exit 1
+fi
+
+(
+  cd "$EXEC_REPO"
+  CODEX_TMUX_SESSION_PREFIX="${CODEX_TMUX_SESSION_PREFIX:-codex-impl}" \
+    "$TMUX_RUN" timeout "${TIMEOUT_SEC}s" codex exec --full-auto "$PROMPT"
+)

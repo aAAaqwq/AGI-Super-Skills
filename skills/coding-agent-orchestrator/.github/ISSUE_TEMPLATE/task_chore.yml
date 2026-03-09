@@ -1,0 +1,72 @@
+name: "🧹 Task / chore"
+description: Track maintenance/refactor/process work.
+title: "TODO: <cleanup> after <dependency>"
+labels:
+  - chore
+  - needs triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for concrete, non-feature work with clear verification steps.
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What needs to be done and why now?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Explicit in-scope and out-of-scope items.
+      placeholder: |
+        In scope:
+        - ...
+
+        Out of scope:
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: plan
+    attributes:
+      label: Execution plan
+      description: Ordered implementation steps.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification commands
+      description: Exact commands and expected outcomes.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks and rollback
+      description: Main risks + how to revert safely.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: done_definition
+    attributes:
+      label: Definition of done
+      options:
+        - label: Scope, plan, and verification are specific and testable.
+          required: true
+        - label: Risk and rollback plan is documented.
+          required: true

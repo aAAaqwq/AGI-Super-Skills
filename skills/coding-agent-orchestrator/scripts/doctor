@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# doctor - preflight checks for OpenClaw coding skill wrappers
+set -euo pipefail
+
+# Ensure standard tools are available on NixOS
+export PATH="$PATH:/run/current-system/sw/bin"
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/lib/resolve-cli.sh"
+
+failures=0
+
+check_cmd() {
+  local name="$1"
+  local remediation="$2"
+
+  if command -v "$name" &>/dev/null; then
+    printf '[ok] %s: %s\n' "$name" "$(command -v "$name")"
+  else
+    printf '[fail] %s: not found\n' "$name" >&2
+    printf '       Fix: %s\n' "$remediation" >&2
+    failures=$((failures + 1))
+  fi
+}
+
+printf 'OpenClaw wrapper preflight\n'
+printf '==========================\n'
+
+check_cmd "codex" "npm install -g @openai/codex"
+check_cmd "gh" "brew install gh"
+check_cmd "timeout" "brew install coreutils && mkdir -p \"$HOME/.local/bin\" && ln -sf \"\$(brew --prefix coreutils)/bin/gtimeout\" \"$HOME/.local/bin/timeout\""
+
+if claude_bin="$(resolve_claude_bin)"; then
+  printf '[ok] claude: %s\n' "$claude_bin"
+else
+  if [[ -n "${CODING_AGENT_CLAUDE_BIN:-}" ]]; then
+    printf '[fail] claude: CODING_AGENT_CLAUDE_BIN is set but not executable: %s\n' "${CODING_AGENT_CLAUDE_BIN}" >&2
+    printf '       Fix: unset CODING_AGENT_CLAUDE_BIN or point it to a valid Claude binary\n' >&2
+  else
+    printf '[fail] claude: not found (checked CODING_AGENT_CLAUDE_BIN, ~/.claude/local/claude, then PATH)\n' >&2
+    printf '       Fix (PATH install): npm install -g @anthropic-ai/claude-code\n' >&2
+    printf '       Fix (local binary): install/use ~/.claude/local/claude\n' >&2
+  fi
+  failures=$((failures + 1))
+fi
+
+if acpx_bin="$(resolve_acpx_bin)"; then
+  printf '[ok] acpx: %s\n' "$acpx_bin"
+else
+  if [[ -n "${CODING_AGENT_ACPX_CMD:-}" ]]; then
+    printf '[warn] acpx: CODING_AGENT_ACPX_CMD is set but not executable: %s\n' "${CODING_AGENT_ACPX_CMD}" >&2
+    printf '       Fallback: wrappers will use direct CLI chain when ACP is unavailable\n' >&2
+  else
+    printf '[warn] acpx: not found (checked CODING_AGENT_ACPX_CMD, then PATH)\n' >&2
+    printf '       Fallback: wrappers will use direct CLI chain when ACP is unavailable\n' >&2
+  fi
+fi
+
+printf '[info] implementation mode default: %s (set CODING_AGENT_IMPL_MODE=direct|tmux|auto to override)\n' "${CODING_AGENT_IMPL_MODE:-direct}"
+printf '[info] ACP-first routing: %s (set CODING_AGENT_ACP_ENABLE=0 to skip ACP attempt)\n' "${CODING_AGENT_ACP_ENABLE:-1}"
+printf '[info] ACP agent alias: %s (set CODING_AGENT_ACP_AGENT to override)\n' "${CODING_AGENT_ACP_AGENT:-codex}"
+
+verbose_mode="off"
+case "${CODING_AGENT_VERBOSE:-}" in
+  1|[Tt][Rr][Uu][Ee]|[Oo][Nn]|[Yy][Ee][Ss]|[Vv][Ee][Rr][Bb][Oo][Ss][Ee])
+    verbose_mode="on"
+    ;;
+esac
+printf '[info] progress verbosity: %s (set CODING_AGENT_VERBOSE=1 to enable Now/Why/Next updates)\n' "$verbose_mode"
+
+if [[ "$failures" -gt 0 ]]; then
+  printf '\nPreflight failed with %s issue(s).\n' "$failures" >&2
+  exit 1
+fi
+
+printf '\nPreflight passed.\n'

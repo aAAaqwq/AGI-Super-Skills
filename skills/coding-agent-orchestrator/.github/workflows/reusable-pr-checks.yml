@@ -1,0 +1,161 @@
+name: Reusable PR Checks
+
+on:
+  workflow_call:
+    inputs:
+      pr_number:
+        description: Pull request number
+        required: true
+        type: string
+      pr_title:
+        description: Pull request title
+        required: true
+        type: string
+      pr_body:
+        description: Pull request body
+        required: true
+        type: string
+      head_ref:
+        description: Source branch name
+        required: true
+        type: string
+      base_ref:
+        description: Target branch name
+        required: true
+        type: string
+      author_login:
+        description: PR author login
+        required: false
+        default: ""
+        type: string
+      labels_json:
+        description: JSON array of PR labels
+        required: false
+        default: "[]"
+        type: string
+
+concurrency:
+  group: pr-checks-${{ github.repository }}-${{ inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  policy-context:
+    name: Policy Context
+    runs-on: ubuntu-latest
+    outputs:
+      exempt: ${{ steps.exemption.outputs.exempt }}
+      reason: ${{ steps.exemption.outputs.reason }}
+    steps:
+      - name: Evaluate policy exemptions
+        id: exemption
+        env:
+          AUTHOR_LOGIN: ${{ inputs.author_login }}
+          LABELS_JSON: ${{ inputs.labels_json }}
+        run: |
+          set -euo pipefail
+          labels_compact="$(printf '%s' "${LABELS_JSON}" | tr -d '[:space:]')"
+          exempt="false"
+          reason=""
+          if [[ "${AUTHOR_LOGIN}" == "dependabot[bot]" || "${AUTHOR_LOGIN}" == "renovate[bot]" ]]; then
+            exempt="true"
+            reason="bot allowlist (${AUTHOR_LOGIN})"
+          elif [[ "${labels_compact}" == *"\"name\":\"policy-exempt\""* ]]; then
+            exempt="true"
+            reason="policy-exempt label"
+          fi
+          echo "exempt=${exempt}" >> "$GITHUB_OUTPUT"
+          echo "reason=${reason}" >> "$GITHUB_OUTPUT"
+
+  exemption-notice:
+    name: Policy Exemption Notice
+    runs-on: ubuntu-latest
+    needs:
+      - policy-context
+    if: needs.policy-context.outputs.exempt == 'true'
+    steps:
+      - name: Emit exemption warning
+        env:
+          REASON: ${{ needs.policy-context.outputs.reason }}
+          PR_BODY: ${{ inputs.pr_body }}
+        run: |
+          set -euo pipefail
+          echo "::warning title=Policy Gate Exempted::Policy checks bypassed (${REASON})."
+          if [[ "${REASON}" == "policy-exempt label" ]]; then
+            echo "::warning title=Justification Required::Include policy exemption rationale in the PR body."
+            if ! printf '%s' "${PR_BODY}" | grep -Eiq 'policy[ -]?exempt(ion)?|justification|emergency'; then
+              echo "::warning title=Missing Justification::No exemption rationale detected in PR body text."
+            fi
+          fi
+
+  branch-policy:
+    name: Branch Policy
+    runs-on: ubuntu-latest
+    needs:
+      - policy-context
+    if: needs.policy-context.outputs.exempt != 'true'
+    steps:
+      - name: Branch policy gate
+        env:
+          BRANCH_NAME: ${{ inputs.head_ref }}
+        run: |
+          set -euo pipefail
+          branch_regex='^kesslerio/(feat|fix|docs|chore|refactor|test|style)/[a-z0-9][a-z0-9._/-]*$'
+          if [[ ! "${BRANCH_NAME}" =~ ${branch_regex} ]]; then
+            echo "❌ Branch policy violation"
+            echo "Observed: ${BRANCH_NAME}"
+            echo "Expected regex: ${branch_regex}"
+            echo "Remediation examples:"
+            echo "- kesslerio/feat/add-pr-policy-gates"
+            echo "- kesslerio/fix/timeout-cleanup"
+            exit 1
+          fi
+          echo "✅ Branch policy passed: ${BRANCH_NAME}"
+
+  title-policy:
+    name: PR Title Policy
+    runs-on: ubuntu-latest
+    needs:
+      - policy-context
+    if: needs.policy-context.outputs.exempt != 'true'
+    steps:
+      - name: Title policy gate
+        env:
+          PR_TITLE: ${{ inputs.pr_title }}
+        run: |
+          set -euo pipefail
+          title_regex='^(feat|fix|docs|style|refactor|test|chore)(\([a-z0-9._/-]+\))?: [^ ].+$'
+          if [[ ! "${PR_TITLE}" =~ ${title_regex} ]]; then
+            echo "❌ PR title policy violation"
+            echo "Observed: ${PR_TITLE}"
+            echo "Expected regex: ${title_regex}"
+            echo "Remediation examples:"
+            echo "- feat(ci): add reusable pr policy workflow"
+            echo "- docs(reviews): enforce config safety checklist"
+            exit 1
+          fi
+          echo "✅ PR title policy passed: ${PR_TITLE}"
+
+  linked-issue-policy:
+    name: Linked Issue Policy
+    runs-on: ubuntu-latest
+    needs:
+      - policy-context
+    if: needs.policy-context.outputs.exempt != 'true'
+    steps:
+      - name: Linked issue gate
+        env:
+          PR_BODY: ${{ inputs.pr_body }}
+        run: |
+          set -euo pipefail
+          issue_regex='\b(closes|fixes|resolves|relates to)\s+#[0-9]+\b'
+          if ! printf '%s' "${PR_BODY}" | grep -Eiq "${issue_regex}"; then
+            echo "❌ Linked issue policy violation"
+            echo "Observed: no required issue reference pattern in PR body"
+            echo "Expected regex (case-insensitive): ${issue_regex}"
+            echo "Remediation examples:"
+            echo "- Closes #33"
+            echo "- Fixes #12"
+            echo "- Relates to #101"
+            exit 1
+          fi
+          echo "✅ Linked issue policy passed"

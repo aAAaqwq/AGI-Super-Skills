@@ -1,0 +1,38 @@
+name: "📗 Documentation issue"
+description: Tell us if documentation is missing, incorrect, or confusing.
+labels:
+  - docs
+  - needs triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for submitting a documentation issue.
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: What is the type of issue?
+      multiple: true
+      options:
+        - Documentation is missing
+        - Documentation is incorrect
+        - Documentation is confusing
+        - Example command is not working
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What is the issue?
+      description: Explain what should be changed.
+    validations:
+      required: true
+  - type: textarea
+    id: locations
+    attributes:
+      label: Where did you find it?
+      description: Provide file paths and/or URLs.
+      placeholder: README.md, references/quick-reference.md
+    validations:
+      required: true

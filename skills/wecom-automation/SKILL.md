@@ -150,7 +150,7 @@ LLM_API_BASE=https://api.moonshot.cn/v1
 LLM_MODEL=moonshot-v1-8k
 
 # 人工介入通知
-NOTIFICATION_CHANNEL=telegram:REDACTED_TG_USER_ID
+NOTIFICATION_CHANNEL=telegram:YOUR_TELEGRAM_ID
 NOTIFICATION_ENABLED=true
 
 # OpenClaw Gateway 配置

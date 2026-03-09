@@ -12,7 +12,7 @@ A **plug-and-play AI team template** — deploy a complete virtual company in mi
 
 | Metric | Value |
 |--------|-------|
-| **Skills** | 285+ |
+| **Skills** | 360+ |
 | **Categories** | 18 |
 | **Agents** | 13 (fully customizable) |
 | **Framework** | [OpenClaw](https://github.com/openclaw/openclaw) |
@@ -62,24 +62,24 @@ You (CEO / Creator)
 
 | Category | Count | Highlights |
 |----------|:-----:|-----------|
-| [⚙️ OpenClaw Tools](#-openclaw-tools) | 21 | Config helpers, auth manager, cron, token guard |
-| [🤖 AI Agent Patterns](#-ai-agent-patterns) | 20 | Multi-agent orchestration, parallel execution, prompt optimization |
-| [🔧 Development](#-development) | 26 | Backend/frontend dev, Docker, Git, TDD, debugging |
-| [💰 Trading & Finance](#-trading--finance) | 27 | Crypto trading, Polymarket, DeFi, portfolio management |
-| [📝 Content & Writing](#-content--writing) | 22 | SEO writing, social media, documentation, copywriting |
-| [📊 Data & Analytics](#-data--analytics) | 15 | Web scraping, spreadsheets, arXiv, data pipelines |
-| [📈 Marketing & SEO](#-marketing--seo) | 14 | SEO audits, paid ads, competitor analysis, GEO |
-| [🎨 Design & Media](#-design--media) | 12 | Image generation, UI/UX, slides, video |
-| [🌐 Browser Automation](#-browser-automation) | 6 | Playwright, Chrome, headless browsing |
-| [🏢 Business & Strategy](#-business--strategy) | 10 | SaaS launch, financial modeling, startup analysis |
-| [📋 Project Management](#-project-management) | 13 | Task tracking, daily reports, team coordination |
-| [🧠 Knowledge & Research](#-knowledge--research) | 3 | Memory management, academic research, web search |
-| [💬 Communication](#-communication) | 10 | Email, Feishu/Lark, WeChat, Slack integration |
-| [🔌 SaaS Integrations](#-saas-integrations) | 61 | Notion, Airtable, HubSpot, Stripe, Shopify, 55+ more |
-| [⚙️ DevOps & Infra](#-devops--infra) | 7 | AWS, Docker, Linux troubleshooting, monitoring |
-| [🔒 Security](#-security) | 4 | Code review, security audit, credential scanning |
-| [⚖️ Legal & Compliance](#-legal--compliance) | 1 | Web accessibility guidelines |
-| [🧩 Other](#-other) | 13 | RSS, calendars, presentations, skill creation |
+| [⚙️ OpenClaw Tools](#-openclaw-tools) | 25 | Config helpers, auth manager, cron, token guard, model switcher |
+| [🤖 AI Agent Patterns](#-ai-agent-patterns) | 25 | Multi-agent orchestration, parallel execution, first principles thinking |
+| [🔧 Development](#-development) | 35 | Backend/frontend, Docker, Git, TDD, API design, auth systems |
+| [💰 Trading & Finance](#-trading--finance) | 32 | Crypto trading, Polymarket, DeFi, portfolio management, CT monitor |
+| [📝 Content & Writing](#-content--writing) | 30 | SEO writing, social media, viral content, anti-AI-slop, Xiaohongshu |
+| [📊 Data & Analytics](#-data--analytics) | 21 | Web scraping, DuckDB, CSV pipelines, arXiv, multi-engine search |
+| [📈 Marketing & SEO](#-marketing--seo) | 19 | SEO audits, GEO optimization, A/B testing, churn prevention |
+| [🎨 Design & Media](#-design--media) | 15 | Image generation (Gemini 3 Pro), UI/UX, slides, brand identity |
+| [🌐 Browser Automation](#-browser-automation) | 7 | Playwright, Chrome, AI-driven browsing, agent browser |
+| [🏢 Business & Strategy](#-business--strategy) | 15 | SaaS launch, competitor teardown, financial modeling, personal finance |
+| [📋 Project Management](#-project-management) | 18 | PRD writing, roadmaps, Scrum, team coordination, daily reports |
+| [🧠 Knowledge & Research](#-knowledge--research) | 6 | Vector memory, brave search, academic research, semantic search |
+| [💬 Communication](#-communication) | 14 | Email, Feishu/Lark, WeChat, cross-instance messaging |
+| [🔌 SaaS Integrations](#-saas-integrations) | 63 | Notion, Airtable, HubSpot, Stripe, Shopify, 55+ more |
+| [⚙️ DevOps & Infra](#-devops--infra) | 9 | AWS, Docker, Linux troubleshooting, observability, runbooks |
+| [🔒 Security](#-security) | 7 | Code review, GDPR, PCI compliance, security audit |
+| [⚖️ Legal & Compliance](#-legal--compliance) | 6 | Contracts, customs/trade, employment law, legal advisory |
+| [🧩 Other](#-other) | 15 | RSS, calendars, presentations, skill creation, design thinking |
 
 <details>
 <summary>📋 Full Skill List (click to expand)</summary>
@@ -109,6 +109,10 @@ You (CEO / Creator)
 | [`token-guard`](./skills/token-guard/) | Token usage monitoring with budgets and auto-downgrade |
 | [`wechat-channel`](./skills/wechat-channel/) | WeChat ↔ OpenClaw bidirectional messaging channel |
 | [`xiaomo-assistant-template`](./skills/xiaomo-assistant-template/) | Quick-start assistant configuration template |
+| [`agent-model-switcher`](./skills/agent-model-switcher/) | Batch switch models across all sub-agents |
+| [`inference-optimizer`](./skills/inference-optimizer/) | Audit token usage, purge stale sessions, optimize speed |
+| [`model-hierarchy-skill`](./skills/model-hierarchy-skill/) | Intelligent model selection hierarchy |
+| [`openclaw-memory-enhancer`](./skills/openclaw-memory-enhancer/) | Edge-optimized RAG memory system (<10MB) |
 
 ### 🤖 AI Agent Patterns
 
@@ -134,6 +138,11 @@ You (CEO / Creator)
 | [`sp-simplification-cascades`](./skills/sp-simplification-cascades/) | Find one insight that eliminates multiple components |
 | [`sp-when-stuck`](./skills/sp-when-stuck/) | Dispatch to the right problem-solving technique |
 | [`subagent-driven-development`](./skills/subagent-driven-development/) | Execute implementation plans with independent sub-tasks |
+| [`agent-team-orchestration`](./skills/agent-team-orchestration/) | Orchestrate multi-agent teams with roles and handoff protocols |
+| [`agent-task-confirm`](./skills/agent-task-confirm/) | Verify agent task receipt and execution status |
+| [`coding-agent-backup`](./skills/coding-agent-backup/) | Delegate coding to Codex, Claude Code, or Pi agents |
+| [`coding-agent-orchestrator`](./skills/coding-agent-orchestrator/) | Plan-first coding workflow orchestration |
+| [`first-principles-thinking`](./skills/first-principles-thinking/) | Socratic coach for breaking problems to fundamental truths |
 
 ### 🔧 Development
 
@@ -165,6 +174,15 @@ You (CEO / Creator)
 | [`test-automator`](./skills/test-automator/) | Automated test generation |
 | [`vibe-code-auditor`](./skills/vibe-code-auditor/) | Audit AI-generated code for production risks |
 | [`web-artifacts-builder`](./skills/web-artifacts-builder/) | Multi-component HTML artifacts with modern frontend |
+| [`api-designer`](./skills/api-designer/) | Design RESTful/GraphQL APIs with best practices |
+| [`auth-system`](./skills/auth-system/) | Implement JWT, OAuth2, Session auth systems |
+| [`cli-developer`](./skills/cli-developer/) | Build CLI tools with argument parsing and completions |
+| [`css-ninja`](./skills/css-ninja/) | Master CSS with Tailwind, animations, responsive layouts |
+| [`db-migrator`](./skills/db-migrator/) | Database schema migration and rollback management |
+| [`frontend-design-ultimate`](./skills/frontend-design-ultimate/) | Production-grade static sites with React + Tailwind + shadcn/ui |
+| [`collaboration`](./skills/collaboration/) | Guide for collaborating on GitHub projects |
+| [`dependency-auditor`](./skills/dependency-auditor/) | Audit dependencies for vulnerabilities |
+| [`full-cycle-skill`](./skills/full-cycle-skill/) | Full-cycle development from ideation to deployment |
 
 ### 💰 Trading & Finance
 
@@ -197,6 +215,11 @@ You (CEO / Creator)
 | [`trading-strategy-backtester`](./skills/trading-strategy-backtester/) | Backtest crypto and traditional strategies |
 | [`unum-strat`](./skills/unum-strat/) | Universal fee-aware strategy design and audit |
 | [`whale-alert-monitor`](./skills/whale-alert-monitor/) | Track whale transactions and wallet movements |
+| [`ct-monitor-skill`](./skills/ct-monitor-skill/) | Crypto Intelligence — monitor 5000+ KOL tweets in real-time |
+| [`trade-prediction-markets`](./skills/trade-prediction-markets/) | Trade prediction markets with quantitative strategies |
+| [`portfolio-manager`](./skills/portfolio-manager/) | Portfolio management with allocation optimization |
+| [`financial-calculator`](./skills/financial-calculator/) | Advanced financial calculator — FV, PV, discount rates |
+| [`hft-quant-expert`](./skills/hft-quant-expert/) | Quantitative trading for DeFi and crypto derivatives |
 
 ### 📝 Content & Writing
 
@@ -224,6 +247,14 @@ You (CEO / Creator)
 | [`wiki-page-writer`](./skills/wiki-page-writer/) | Technical documentation with Mermaid diagrams |
 | [`wiki-qa`](./skills/wiki-qa/) | Answer questions about a code repository |
 | [`xiaohongshu-workflow`](./skills/xiaohongshu-workflow/) | Xiaohongshu (RED) full operations workflow |
+| [`create-viral-content`](./skills/create-viral-content/) | Create viral content with proven engagement patterns |
+| [`content-repurposing`](./skills/content-repurposing/) | Atomize one piece of content into many formats |
+| [`content-factory`](./skills/content-factory/) | Automated content pipeline from 10+ platforms |
+| [`humanize`](./skills/humanize/) | Remove AI writing patterns from text |
+| [`humanize-zh`](./skills/humanize-zh/) | 将AI文本转换为自然人类写作风格 |
+| [`the-antislop`](./skills/the-antislop/) | Anti-AI-slop writing with authentic voice |
+| [`write-xiaohongshu`](./skills/write-xiaohongshu/) | Xiaohongshu content writing coach |
+| [`x-articles`](./skills/x-articles/) | Publish viral X (Twitter) long-form articles |
 
 ### 📊 Data & Analytics
 
@@ -244,6 +275,12 @@ You (CEO / Creator)
 | [`web-scraping-automation`](./skills/web-scraping-automation/) | Automated web scraping and API data extraction |
 | [`web-search`](./skills/web-search/) | Multi-tool web search and content fetching |
 | [`xlsx`](./skills/xlsx/) | Spreadsheet creation, editing, and analysis |
+| [`data-analyst`](./skills/data-analyst/) | Data visualization, reports, SQL, and spreadsheet automation |
+| [`csv-pipeline`](./skills/csv-pipeline/) | Process, transform, and analyze CSV/JSON data files |
+| [`duckdb-cli-ai-skills`](./skills/duckdb-cli-ai-skills/) | DuckDB CLI for SQL analysis and data processing |
+| [`last30days-skill`](./skills/last30days-skill/) | Research any topic from the last 30 days |
+| [`multi-search-engine`](./skills/multi-search-engine/) | 17 search engines (8 CN + 9 Global) integration |
+| [`mineru-extract`](./skills/mineru-extract/) | Convert URLs/PDFs to markdown via MinerU API |
 
 ### 📈 Marketing & SEO
 
@@ -263,6 +300,11 @@ You (CEO / Creator)
 | [`seo-audit`](./skills/seo-audit/) | SEO audit workflows |
 | [`seo-meta-optimizer`](./skills/seo-meta-optimizer/) | SEO meta tag optimization |
 | [`twitter-algorithm-optimizer`](./skills/twitter-algorithm-optimizer/) | Optimize tweets for Twitter's algorithm |
+| [`geo-content-optimizer`](./skills/geo-content-optimizer/) | Optimize content for AI search engines (ChatGPT, Perplexity) |
+| [`seo-geo`](./skills/seo-geo/) | Generative Engine Optimization strategies |
+| [`market-ab-test-setup`](./skills/market-ab-test-setup/) | Plan and implement A/B tests and experiments |
+| [`market-churn-prevention`](./skills/market-churn-prevention/) | Reduce churn with cancel flows and save offers |
+| [`content-extract`](./skills/content-extract/) | Robust URL-to-Markdown extraction |
 
 ### 🎨 Design & Media
 
@@ -280,6 +322,8 @@ You (CEO / Creator)
 | [`ui-ux-pro-max`](./skills/ui-ux-pro-max/) | UI/UX design — 50 styles, 21 palettes, 9 stacks |
 | [`uml-diagram-design`](./skills/uml-diagram-design/) | UML diagrams — class, sequence, use case |
 | [`video-downloader`](./skills/video-downloader/) | Download YouTube videos |
+| [`nano-banana-pro`](./skills/nano-banana-pro/) | Generate/edit images with Gemini 3 Pro Image (1K/2K/4K) |
+| [`brand-identity`](./skills/brand-identity/) | Build complete brand identity for solopreneurs |
 
 ### 🌐 Browser Automation
 
@@ -291,6 +335,7 @@ You (CEO / Creator)
 | [`media-auto-publisher`](./skills/media-auto-publisher/) | Auto-publish to 6 Chinese content platforms |
 | [`playwright-automation`](./skills/playwright-automation/) | Playwright browser automation for scraping/testing |
 | [`webapp-testing`](./skills/webapp-testing/) | Web application testing with Playwright |
+| [`agent-browser`](./skills/agent-browser/) | Fast Rust-based headless browser automation CLI |
 
 ### 🏢 Business & Strategy
 
@@ -306,6 +351,11 @@ You (CEO / Creator)
 | [`startup-business-analyst-financial-projections`](./skills/startup-business-analyst-financial-projections/) | Financial projections for startups |
 | [`startup-financial-modeling`](./skills/startup-financial-modeling/) | Startup financial modeling |
 | [`startup-metrics-framework`](./skills/startup-metrics-framework/) | SaaS metrics — CAC, LTV, unit economics |
+| [`company-analyzer`](./skills/company-analyzer/) | Investment research with 8 specialized frameworks |
+| [`competitor-teardown`](./skills/competitor-teardown/) | Structured competitive analysis with SWOT and positioning |
+| [`customer-success-manager`](./skills/customer-success-manager/) | Monitor customer health and predict churn |
+| [`contract-and-proposal-writer`](./skills/contract-and-proposal-writer/) | Write professional contracts and proposals |
+| [`afrexai-personal-finance`](./skills/afrexai-personal-finance/) | Complete personal finance — budgeting, investing, tax optimization |
 
 ### 📋 Project Management
 
@@ -324,6 +374,11 @@ You (CEO / Creator)
 | [`task-status`](./skills/task-status/) | Status updates for long-running tasks |
 | [`team-coordinator`](./skills/team-coordinator/) | Intelligent task dispatch across team agents |
 | [`team-daily-report`](./skills/team-daily-report/) | Auto-generate team daily reports |
+| [`prd-development`](./skills/prd-development/) | Structured PRD creation with problem framing and success criteria |
+| [`roadmap-planning`](./skills/roadmap-planning/) | Strategic roadmap with prioritization and release sequencing |
+| [`scrum-master`](./skills/scrum-master/) | Scrum methodology with sprint planning and retrospectives |
+| [`senior-pm`](./skills/senior-pm/) | Senior PM workflows for complex project delivery |
+| [`user-story`](./skills/user-story/) | User stories with Gherkin acceptance criteria |
 
 ### 🧠 Knowledge & Research
 
@@ -332,6 +387,9 @@ You (CEO / Creator)
 | [`memory-hygiene`](./skills/memory-hygiene/) | Audit and optimize vector memory |
 | [`research-engineer`](./skills/research-engineer/) | Academic research with scientific rigor |
 | [`search-specialist`](./skills/search-specialist/) | Advanced web research and synthesis |
+| [`elite-longterm-memory`](./skills/elite-longterm-memory/) | WAL-protected AI agent memory system |
+| [`brave-search`](./skills/brave-search/) | Web search via Brave Search API |
+| [`search-layer`](./skills/search-layer/) | Multi-source semantic search layer |
 
 ### 💬 Communication
 
@@ -347,6 +405,9 @@ You (CEO / Creator)
 | [`outlook-automation`](./skills/outlook-automation/) | Outlook email, calendar, contacts |
 | [`postmark-automation`](./skills/postmark-automation/) | Postmark email delivery automation |
 | [`wecom-cs-automation`](./skills/wecom-cs-automation/) | WeCom customer service automation |
+| [`cross-instance-comm`](./skills/cross-instance-comm/) | Cross-machine OpenClaw instance communication via Tailscale |
+| [`cross-team-comm`](./skills/cross-team-comm/) | Cross-team communication via SSH + Gateway API |
+| [`tg-channel-reader`](./skills/tg-channel-reader/) | Read and monitor Telegram channels |
 
 ### 🔌 SaaS Integrations
 
@@ -413,6 +474,7 @@ You (CEO / Creator)
 | [`zendesk-automation`](./skills/zendesk-automation/) | Zendesk tickets, users, organizations |
 | [`zoho-crm-automation`](./skills/zoho-crm-automation/) | Zoho CRM records, leads, contacts |
 | [`zoom-automation`](./skills/zoom-automation/) | Zoom meetings, recordings, webinars |
+| [`api-gateway`](./skills/api-gateway/) | Connect to 100+ APIs with managed OAuth via Maton.ai |
 
 ### ⚙️ DevOps & Infra
 
@@ -425,6 +487,8 @@ You (CEO / Creator)
 | [`linux-service-triage`](./skills/linux-service-triage/) | Diagnose Linux service issues |
 | [`linux-troubleshooting`](./skills/linux-troubleshooting/) | Linux system troubleshooting workflow |
 | [`senior-devops`](./skills/senior-devops/) | Comprehensive DevOps for CI/CD and cloud |
+| [`observability-designer`](./skills/observability-designer/) | Design observability systems for production |
+| [`runbook-generator`](./skills/runbook-generator/) | Generate operational runbooks for incident response |
 
 ### 🔒 Security
 
@@ -434,12 +498,20 @@ You (CEO / Creator)
 | [`performing-security-code-review`](./skills/performing-security-code-review/) | Security-focused code review |
 | [`security-audit`](./skills/security-audit/) | Security auditing for deployments |
 | [`security-monitor`](./skills/security-monitor/) | Real-time security monitoring |
+| [`gdpr-dsgvo-expert`](./skills/gdpr-dsgvo-expert/) | GDPR/DSGVO compliance automation |
+| [`pci-compliance`](./skills/pci-compliance/) | PCI DSS compliance auditing |
+| [`afrexai-compliance-audit`](./skills/afrexai-compliance-audit/) | Internal compliance audits against major frameworks |
 
 ### ⚖️ Legal & Compliance
 
 | Skill | Description |
 |-------|-------------|
 | [`web-design-guidelines`](./skills/web-design-guidelines/) | Web accessibility and UI compliance |
+| [`customs-trade-compliance`](./skills/customs-trade-compliance/) | Customs documentation and tariff classification |
+| [`contract-reviewer`](./skills/contract-reviewer/) | AI-powered contract review and risk analysis |
+| [`legal-advisor`](./skills/legal-advisor/) | Draft privacy policies, terms, and legal notices |
+| [`legal-cog`](./skills/legal-cog/) | Legal reasoning with frontier-level precision |
+| [`employment-contract-templates`](./skills/employment-contract-templates/) | Employment contracts and HR policy documents |
 
 ### 🧩 Other
 
@@ -458,6 +530,11 @@ You (CEO / Creator)
 | [`skill-search`](./skills/skill-search/) | Search and install skills from GitHub/SkillsMP |
 | [`tech-decision`](./skills/tech-decision/) | Technical decision making — A vs B analysis |
 | [`twitter-automation`](./skills/twitter-automation/) | Twitter/X posts, search, bookmarks, media |
+| [`design-thinking`](./skills/design-thinking/) | Design Thinking 5-phase methodology (IDEO/Stanford) |
+| [`find-skills`](./skills/find-skills/) | Discover and install agent skills |
+| [`gog`](./skills/gog/) | Google Workspace CLI — Gmail, Calendar, Drive, Sheets |
+| [`notion`](./skills/notion/) | Notion API for pages, databases, and blocks |
+| [`prototype-prompt-generator`](./skills/prototype-prompt-generator/) | Generate detailed UI/UX prototype prompts |
 
 </details>
 
@@ -503,7 +580,13 @@ If this project helps you build your AI team, please give it a ⭐!
 
 Every star motivates us to add more skills, improve agent templates, and build better tooling.
 
-[![Star History Chart](https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date)](https://star-history.com/#aAAaqwq/AGI-Super-Team&Date)
+<a href="https://star-history.com/#aAAaqwq/AGI-Super-Team&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date" />
+ </picture>
+</a>
 
 ## 📄 License
 

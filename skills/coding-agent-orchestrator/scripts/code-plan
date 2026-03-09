@@ -1,0 +1,319 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PATH="$PATH:/run/current-system/sw/bin"
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+SYSTEM_PROMPT_FILE="$ROOT_DIR/references/templates/plan-system-prompt.txt"
+
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/lib/resolve-cli.sh"
+
+usage() {
+  cat >&2 <<'USAGE'
+Usage:
+  code-plan [--engine codex|claude] [--model <name>] [--repo <path>] [--base <branch>] [--prompt <text>]
+  code-plan [--engine codex|claude] [--model <name>] [--repo <path>] [--base <branch>] "<prompt>"
+
+Defaults:
+  --engine codex
+  --repo   current working directory
+  --base   auto-detected origin default branch (fallback: main)
+USAGE
+}
+
+ENGINE="${CODING_AGENT_PLAN_ENGINE:-codex}"
+MODEL=""
+REPO_PATH="$(pwd)"
+BASE_BRANCH=""
+PROMPT=""
+STATUS_PING_SECONDS="${CODING_AGENT_STATUS_PING_SECONDS:-20}"
+LONG_RUN_THRESHOLD_SECONDS="${CODING_AGENT_LONG_RUN_THRESHOLD_SECONDS:-30}"
+CURRENT_CHILD_PID=""
+
+emit_run_event() {
+  local event="$1"
+  local details="${2:-}"
+  if [[ -n "$details" ]]; then
+    echo "RUN_EVENT $event ts=$(date -Iseconds) $details" >&2
+  else
+    echo "RUN_EVENT $event ts=$(date -Iseconds)" >&2
+  fi
+}
+
+validate_positive_int() {
+  local value="$1"
+  local name="$2"
+  if [[ ! "$value" =~ ^[0-9]+$ ]] || (( value <= 0 )); then
+    echo "Error: $name must be a positive integer, got '$value'" >&2
+    exit 1
+  fi
+}
+
+handle_interrupt() {
+  local signal_name="$1"
+  emit_run_event "interrupted" "phase=code-plan signal=$signal_name"
+  if [[ -n "$CURRENT_CHILD_PID" ]] && kill -0 "$CURRENT_CHILD_PID" >/dev/null 2>&1; then
+    kill "-$signal_name" "$CURRENT_CHILD_PID" >/dev/null 2>&1 || true
+  fi
+  exit 130
+}
+
+run_command_with_status() {
+  local output_file="$1"
+  shift
+  local -a cmd=("$@")
+  local start_ts
+  local now_ts
+  local elapsed
+  local last_ping=0
+  local rc
+
+  start_ts="$(date +%s)"
+  emit_run_event "start" "phase=code-plan engine=$ENGINE repo=$REPO_PATH"
+  (
+    cd "$REPO_PATH"
+    "${cmd[@]}"
+  ) > "$output_file" &
+  CURRENT_CHILD_PID=$!
+
+  while kill -0 "$CURRENT_CHILD_PID" >/dev/null 2>&1; do
+    now_ts="$(date +%s)"
+    elapsed=$((now_ts - start_ts))
+    if (( elapsed >= LONG_RUN_THRESHOLD_SECONDS )); then
+      if (( last_ping == 0 || now_ts - last_ping >= STATUS_PING_SECONDS )); then
+        emit_run_event "heartbeat" "phase=code-plan elapsed=${elapsed}s engine=$ENGINE"
+        last_ping="$now_ts"
+      fi
+    fi
+    sleep 1
+  done
+
+  set +e
+  wait "$CURRENT_CHILD_PID"
+  rc=$?
+  set -e
+  CURRENT_CHILD_PID=""
+
+  now_ts="$(date +%s)"
+  elapsed=$((now_ts - start_ts))
+  if [[ "$rc" == "0" ]]; then
+    emit_run_event "done" "phase=code-plan elapsed=${elapsed}s engine=$ENGINE"
+  elif [[ "$rc" == "130" || "$rc" == "143" || "$rc" == "124" || "$rc" == "137" ]]; then
+    emit_run_event "interrupted" "phase=code-plan exit_code=$rc elapsed=${elapsed}s engine=$ENGINE"
+  else
+    emit_run_event "failed" "phase=code-plan exit_code=$rc elapsed=${elapsed}s engine=$ENGINE"
+  fi
+  return "$rc"
+}
+
+trap 'handle_interrupt INT' INT
+trap 'handle_interrupt TERM' TERM
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --engine)
+      ENGINE="${2:-}"
+      shift 2
+      ;;
+    --model)
+      MODEL="${2:-}"
+      shift 2
+      ;;
+    --repo)
+      REPO_PATH="${2:-}"
+      shift 2
+      ;;
+    --base)
+      BASE_BRANCH="${2:-}"
+      shift 2
+      ;;
+    --prompt)
+      PROMPT="${2:-}"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      if [[ -z "$PROMPT" ]]; then
+        PROMPT="$1"
+      else
+        PROMPT="$PROMPT $1"
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ $# -gt 0 ]]; then
+  if [[ -z "$PROMPT" ]]; then
+    PROMPT="$*"
+  else
+    PROMPT="$PROMPT $*"
+  fi
+fi
+
+if [[ -z "$PROMPT" ]]; then
+  usage
+  exit 1
+fi
+
+if [[ "$ENGINE" != "codex" && "$ENGINE" != "claude" ]]; then
+  echo "Error: --engine must be codex or claude" >&2
+  exit 1
+fi
+
+validate_positive_int "$STATUS_PING_SECONDS" "CODING_AGENT_STATUS_PING_SECONDS"
+validate_positive_int "$LONG_RUN_THRESHOLD_SECONDS" "CODING_AGENT_LONG_RUN_THRESHOLD_SECONDS"
+
+REPO_PATH="$(cd "$REPO_PATH" && pwd)"
+if ! git -C "$REPO_PATH" rev-parse --git-dir >/dev/null 2>&1; then
+  echo "Error: --repo must point to a git repository" >&2
+  exit 1
+fi
+
+if [[ -z "$BASE_BRANCH" ]]; then
+  BASE_BRANCH="$(git -C "$REPO_PATH" symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')"
+fi
+if [[ -z "$BASE_BRANCH" ]]; then
+  BASE_BRANCH="main"
+fi
+
+CURRENT_BRANCH="$(git -C "$REPO_PATH" rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"
+HEAD_SHA="$(git -C "$REPO_PATH" rev-parse HEAD 2>/dev/null || echo unknown)"
+REPO_REMOTE="$(git -C "$REPO_PATH" remote get-url origin 2>/dev/null || echo unknown)"
+
+PLAN_DIR="$REPO_PATH/.ai/plans"
+FAILED_DIR="$PLAN_DIR/.failed"
+mkdir -p "$PLAN_DIR" "$FAILED_DIR"
+
+TIMESTAMP="$(date +"%Y-%m-%d-%H%M%S")"
+CREATED_AT="$(date -Iseconds)"
+slugify() {
+  echo "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//' | cut -c1-40
+}
+SLUG="$(slugify "$PROMPT")"
+if [[ -z "$SLUG" ]]; then
+  SLUG="plan"
+fi
+PLAN_FILENAME="${TIMESTAMP}-${SLUG}.md"
+PLAN_PATH="$PLAN_DIR/$PLAN_FILENAME"
+FAILED_PATH="$FAILED_DIR/${TIMESTAMP}-${SLUG}.raw.md"
+PLAN_ID="${PLAN_FILENAME%.md}"
+
+TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TMP_DIR"' EXIT
+RAW_OUTPUT_FILE="$TMP_DIR/raw.md"
+SYSTEM_PROMPT="$TMP_DIR/system_prompt.txt"
+
+cat "$SYSTEM_PROMPT_FILE" > "$SYSTEM_PROMPT"
+cat >> "$SYSTEM_PROMPT" <<EOF
+
+TASK CONTEXT:
+- Repository: $REPO_PATH
+- Base branch: $BASE_BRANCH
+- Current branch: $CURRENT_BRANCH
+- Head SHA: $HEAD_SHA
+
+USER REQUEST:
+$PROMPT
+EOF
+
+prompt_payload="$(cat "$SYSTEM_PROMPT")"
+if [[ "$ENGINE" == "codex" ]]; then
+  run_cmd=(codex exec --sandbox read-only --ephemeral)
+  if [[ -n "$MODEL" ]]; then
+    run_cmd+=(--model "$MODEL")
+  fi
+  run_cmd+=(-- "$prompt_payload")
+else
+  if ! claude_bin="$(resolve_claude_bin)"; then
+    echo "Error: Claude CLI not found" >&2
+    exit 1
+  fi
+  run_cmd=("$claude_bin" -p --permission-mode plan --no-session-persistence)
+  if [[ -n "$MODEL" ]]; then
+    run_cmd+=(--model "$MODEL")
+  fi
+  run_cmd+=("$prompt_payload")
+fi
+
+set +e
+run_command_with_status "$RAW_OUTPUT_FILE" "${run_cmd[@]}"
+run_rc=$?
+set -e
+if [[ "$run_rc" != "0" ]]; then
+  if [[ "$run_rc" == "130" || "$run_rc" == "143" || "$run_rc" == "124" || "$run_rc" == "137" ]]; then
+    echo "⚠️ code-plan interrupted. Re-run the same command to continue." >&2
+  else
+    echo "❌ code-plan failed (exit $run_rc)." >&2
+  fi
+  exit "$run_rc"
+fi
+
+validate_headings() {
+  local file="$1"
+  local -a headings=(
+    "# Plan:"
+    "## Fast-Path"
+    "## 1. Problem statement"
+    "## 2. Current state evidence"
+    "## 3. Proposed approach"
+    "## 4. Step-by-step change list"
+    "## 5. Risks + rollback"
+    "## 6. Test plan"
+    "## 7. Out-of-scope"
+    "## 8. Approval prompt"
+  )
+
+  local prev=0
+  local found
+  for heading in "${headings[@]}"; do
+    found="$(grep -nF "$heading" "$file" | head -1 | cut -d: -f1 || true)"
+    if [[ -z "$found" ]]; then
+      echo "missing heading: $heading" >&2
+      return 1
+    fi
+    if (( found <= prev )); then
+      echo "heading out of order: $heading" >&2
+      return 1
+    fi
+    prev=$found
+  done
+  return 0
+}
+
+if ! validate_headings "$RAW_OUTPUT_FILE"; then
+  cp "$RAW_OUTPUT_FILE" "$FAILED_PATH"
+  echo "❌ Plan validation failed. Raw output saved to: $FAILED_PATH" >&2
+  exit 1
+fi
+
+{
+  echo "---"
+  echo "id: $PLAN_ID"
+  echo "status: PENDING"
+  echo "created_at: $CREATED_AT"
+  echo "repo_path: $REPO_PATH"
+  echo "repo_remote: $REPO_REMOTE"
+  echo "base_branch: $BASE_BRANCH"
+  echo "current_branch: $CURRENT_BRANCH"
+  echo "head_sha: $HEAD_SHA"
+  echo "engine: $ENGINE"
+  echo "model: ${MODEL:-default}"
+  echo "invocation: code-plan --engine $ENGINE${MODEL:+ --model $MODEL} --repo $REPO_PATH --base $BASE_BRANCH"
+  echo "approved_by:"
+  echo "approved_at:"
+  echo "---"
+  cat "$RAW_OUTPUT_FILE"
+} > "$PLAN_PATH"
+
+echo "✅ Plan generated: $PLAN_PATH"
+echo "Next: code-implement --plan $PLAN_PATH"

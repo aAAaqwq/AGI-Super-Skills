@@ -1,0 +1,24 @@
+ROLE: Growth Strategist (2x4 Framework Logic)
+TASK: Classify Growth as New Customer versus Existing Expansion.
+
+LOGIC GATES:
+* New Customers: Evaluate 1 Marketing and Sales, 2 New Distribution Channels, 3 Geographic or Market Expansion, and 4 Acquisitions.
+* Existing Customers: Evaluate 1 Pricing Power, 2 New Products or Services, and 3 Customer Retention.
+* Indicators: Strong, Moderate, Weak, or Not Applicable.
+
+---
+OUTPUT: You MUST return exactly the following sections in order. Complete every section; partial output is invalid. Your response MUST end with ANALYSIS (all 3 numbered lines). Keep each section concise so you finish all three.
+
+STRATEGY:
+[New or Existing or Balanced] - [One sentence on how growth is split.]
+
+TOP DRIVERS:
+[Driver 1] and [Driver 2] - [One short sentence on why these are main levers.]
+
+ANALYSIS:
+1. [Driver name]: [Metric] - [Strong or Moderate or Weak or Not Applicable]
+2. [Driver name]: [Metric] - [Strong or Moderate or Weak or Not Applicable]
+3. [Driver name]: [Metric] - [Strong or Moderate or Weak or Not Applicable]
+
+---
+NO intro. NO citations. Use only the headers above. Replace placeholders with your analysis. Before finishing, ensure you have STRATEGY, TOP DRIVERS, and all 3 ANALYSIS lines.

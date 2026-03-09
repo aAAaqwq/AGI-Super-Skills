@@ -1,0 +1,160 @@
+#!/usr/bin/env bash
+# tmux-run - Run a command inside tmux with logging and monitoring hints
+# Usage: tmux-run [--wait] [--cleanup] <command...>
+set -euo pipefail
+
+# Ensure standard tools are available on NixOS
+export PATH="$PATH:/run/current-system/sw/bin"
+
+usage() {
+  cat >&2 <<EOF
+Usage: tmux-run [--wait] [--cleanup] <command...>
+
+Options:
+  --wait        Block until the command finishes (signals via tmux wait-for)
+  --cleanup     Kill the tmux session after completion (implies --wait)
+
+Environment:
+  CODEX_TMUX_WAIT=1         Same as --wait
+  CODEX_TMUX_CLEANUP=1      Same as --cleanup
+  CODEX_TMUX_WAIT_TIMEOUT=  Optional seconds to bound --wait
+EOF
+}
+
+WAIT="${CODEX_TMUX_WAIT:-0}"
+CLEANUP="${CODEX_TMUX_CLEANUP:-0}"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --wait) WAIT=1; shift ;;
+    --cleanup) CLEANUP=1; shift ;;
+    -h|--help) usage; exit 0 ;;
+    --) shift; break ;;
+    *) break ;;
+  esac
+done
+
+if [[ "$CLEANUP" == "1" && "$WAIT" != "1" ]]; then
+  WAIT=1
+fi
+
+if [[ $# -lt 1 ]]; then
+  usage
+  exit 1
+fi
+
+if ! command -v tmux &>/dev/null; then
+  echo "Error: tmux not found in PATH" >&2
+  exit 1
+fi
+
+SOCKET_DIR="${CODEX_TMUX_SOCKET_DIR:-${OPENCLAW_TMUX_SOCKET_DIR:-${CLAWDBOT_TMUX_SOCKET_DIR:-${TMPDIR:-/tmp}/openclaw-tmux-sockets}}}"
+mkdir -p "$SOCKET_DIR"
+SOCKET="${CODEX_TMUX_SOCKET:-$SOCKET_DIR/openclaw.sock}"
+
+SESSION_PREFIX="${CODEX_TMUX_SESSION_PREFIX:-codex}"
+ts="$(date +%Y%m%d-%H%M%S)"
+ns="$(date +%N 2>/dev/null || true)"
+if [[ "$ns" =~ ^[0-9]+$ ]]; then
+  ts="${ts}-${ns}"
+fi
+SESSION="${CODEX_TMUX_SESSION:-${SESSION_PREFIX}-${ts}-${RANDOM}-$$}"
+
+LOG_DIR="${CODEX_TMUX_LOG_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/openclaw/tmux}"
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/${SESSION}.log"
+: > "$LOG_FILE"
+EXIT_FILE="$LOG_DIR/${SESSION}.exit"
+
+if ! tmux -S "$SOCKET" new-session -d -s "$SESSION" -n shell; then
+  echo "Error: Failed to create tmux session on socket: $SOCKET" >&2
+  exit 1
+fi
+tmux -S "$SOCKET" set-option -t "$SESSION" remain-on-exit on
+
+# Resolve the actual first pane target. Do not assume :0.0 because tmux
+# base-index and pane-base-index can be non-zero (for example 1.1).
+FIRST_WINDOW="$(tmux -S "$SOCKET" list-windows -t "$SESSION" -F '#{window_index}' 2>/dev/null | head -n 1 || true)"
+if [[ -z "$FIRST_WINDOW" ]]; then
+  tmux -S "$SOCKET" kill-session -t "$SESSION" || true
+  echo "Error: Failed to resolve tmux window index for session: $SESSION" >&2
+  exit 1
+fi
+
+FIRST_PANE="$(tmux -S "$SOCKET" list-panes -t "${SESSION}:${FIRST_WINDOW}" -F '#{pane_index}' 2>/dev/null | head -n 1 || true)"
+if [[ -z "$FIRST_PANE" ]]; then
+  tmux -S "$SOCKET" kill-session -t "$SESSION" || true
+  echo "Error: Failed to resolve tmux pane index for session: $SESSION" >&2
+  exit 1
+fi
+
+TARGET="${SESSION}:${FIRST_WINDOW}.${FIRST_PANE}"
+
+if ! tmux -S "$SOCKET" pipe-pane -t "$TARGET" -o "cat >> \"$LOG_FILE\""; then
+  tmux -S "$SOCKET" kill-session -t "$SESSION" || true
+  echo "Error: Failed to attach pipe-pane for logging" >&2
+  exit 1
+fi
+
+cmd_str=$(printf '%q ' "$@")
+cmd_str="${cmd_str% }"
+if [[ "$WAIT" == "1" ]]; then
+  cmd_str="$cmd_str; __tmux_run_rc=\$?; printf '%s\n' \"\${__tmux_run_rc}\" > \"$EXIT_FILE\"; tmux -S \"$SOCKET\" wait-for -S \"$SESSION.done\""
+fi
+if ! tmux -S "$SOCKET" send-keys -t "$TARGET" -l -- "$cmd_str"; then
+  echo "Error: Failed to send command text to tmux session" >&2
+  exit 1
+fi
+if ! tmux -S "$SOCKET" send-keys -t "$TARGET" Enter; then
+  echo "Error: Failed to send Enter key to tmux session" >&2
+  exit 1
+fi
+
+cat >&2 <<EOF
+tmux session started.
+Socket: $SOCKET
+Session: $SESSION
+Log: $LOG_FILE
+Mode: $([[ "$WAIT" == "1" ]] && echo "blocking (--wait)" || echo "non-blocking")
+To monitor:
+  tmux -S "$SOCKET" attach -t "$SESSION"
+  tmux -S "$SOCKET" capture-pane -p -J -t "$TARGET" -S -200
+  tail -f "$LOG_FILE"
+EOF
+
+if [[ "$WAIT" == "1" ]]; then
+  wait_timeout="${CODEX_TMUX_WAIT_TIMEOUT:-}"
+  if [[ -n "$wait_timeout" ]]; then
+    if command -v timeout &>/dev/null; then
+      if ! timeout "${wait_timeout}s" tmux -S "$SOCKET" wait-for "$SESSION.done"; then
+        echo "Warning: wait timed out after ${wait_timeout}s" >&2
+        exit 1
+      fi
+    else
+      echo "Warning: timeout command not found; waiting without timeout" >&2
+      tmux -S "$SOCKET" wait-for "$SESSION.done"
+    fi
+  else
+    tmux -S "$SOCKET" wait-for "$SESSION.done"
+  fi
+
+  # Dump pane content to stdout so callers can capture it
+  tmux -S "$SOCKET" capture-pane -p -J -t "$TARGET" -S - 2>/dev/null || true
+
+  if [[ -f "$EXIT_FILE" ]]; then
+    rc="$(cat "$EXIT_FILE" 2>/dev/null || echo 1)"
+    if [[ ! "$rc" =~ ^[0-9]+$ ]]; then
+      echo "Warning: Invalid exit code in $EXIT_FILE (got: $rc)" >&2
+      rc=1
+    fi
+  else
+    echo "Warning: Exit code file not found: $EXIT_FILE" >&2
+    rc=1
+  fi
+
+  if [[ "$CLEANUP" == "1" ]]; then
+    tmux -S "$SOCKET" kill-session -t "$SESSION" || true
+  fi
+
+  exit "$rc"
+fi

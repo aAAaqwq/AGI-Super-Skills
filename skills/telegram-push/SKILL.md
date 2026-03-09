@@ -14,7 +14,7 @@
 | 群/对象 | Chat ID | 推送Bot | 说明 |
 |---------|---------|---------|------|
 | DailyNews群 | `YOUR_NEWS_CHAT_ID` | NewsRobot | 新闻、skill收集、学习报告等 |
-| Daniel私聊 | `REDACTED_TG_USER_ID` | 主Bot (message tool) | 告警、私人通知 |
+| Daniel私聊 | `YOUR_TELEGRAM_ID` | 主Bot (message tool) | 告警、私人通知 |
 
 ## 推送规则
 

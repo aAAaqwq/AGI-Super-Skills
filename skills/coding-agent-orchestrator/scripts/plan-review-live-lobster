@@ -1,0 +1,879 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PATH="$PATH:/run/current-system/sw/bin"
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+SYSTEM_PROMPT_FILE="$ROOT_DIR/references/templates/plan-review-system-prompt.txt"
+DEFAULT_WORKFLOW_FILE="$ROOT_DIR/workflows/plan-review-live.lobster"
+
+usage() {
+  cat >&2 <<'USAGE'
+Usage:
+  plan-review-live-lobster [--repo <path>] [--base <branch>] [--plan <path>] [--model <name>] [--output <path>] [--resolve-file <path>] [--decisions <csv>] [--blocking <csv|none>] [--non-tty <auto|error>] [--resume-token <token>] [--workflow <path>]
+
+Defaults:
+  --repo   current working directory
+  --base   auto-detected origin default branch (fallback: main)
+  --plan   latest generated .ai/plans/*.md (timestamped filename)
+  --output .ai/plan-reviews/<timestamp>-<plan-id>.md
+  --non-tty auto
+USAGE
+}
+
+REPO_PATH="$(pwd)"
+BASE_BRANCH=""
+PLAN_PATH=""
+MODEL=""
+OUTPUT_PATH=""
+RESOLVE_FILE_PATH=""
+DECISIONS_INPUT=""
+BLOCKING_INPUT=""
+NON_TTY_MODE="auto"
+RESUME_TOKEN=""
+WORKFLOW_FILE="${PLAN_REVIEW_LOBSTER_FILE:-$DEFAULT_WORKFLOW_FILE}"
+SECTION_TIMEOUT="${PLAN_REVIEW_LIVE_SECTION_TIMEOUT:-600}"
+TOTAL_TIMEOUT="${PLAN_REVIEW_LIVE_TOTAL_TIMEOUT:-2400}"
+ALLOW_NON_TTY="${PLAN_REVIEW_LIVE_ALLOW_NON_TTY:-0}"
+STATUS_PING_SECONDS="${CODING_AGENT_STATUS_PING_SECONDS:-20}"
+LONG_RUN_THRESHOLD_SECONDS="${CODING_AGENT_LONG_RUN_THRESHOLD_SECONDS:-30}"
+SCHEMA_VERSION=1
+LIVE_INCOMPLETE_MARKER="Live review incomplete or failed"
+METADATA_WRITE_SEQ=0
+LAST_METADATA_HISTORY_PATH=""
+HEARTBEAT_PID=""
+WRAPPER_START_TS=""
+RUN_FINALIZED=0
+INTERRUPTED_BY_SIGNAL=0
+LAST_RESUME_TOKEN=""
+LAST_PENDING_SECTION_NAME=""
+LAST_PENDING_RESUME_TOKEN=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --repo)
+      REPO_PATH="${2:-}"
+      shift 2
+      ;;
+    --base)
+      BASE_BRANCH="${2:-}"
+      shift 2
+      ;;
+    --plan)
+      PLAN_PATH="${2:-}"
+      shift 2
+      ;;
+    --model)
+      MODEL="${2:-}"
+      shift 2
+      ;;
+    --output)
+      OUTPUT_PATH="${2:-}"
+      shift 2
+      ;;
+    --resolve-file)
+      RESOLVE_FILE_PATH="${2:-}"
+      shift 2
+      ;;
+    --decisions)
+      DECISIONS_INPUT="${2:-}"
+      shift 2
+      ;;
+    --blocking)
+      BLOCKING_INPUT="${2:-}"
+      shift 2
+      ;;
+    --non-tty)
+      NON_TTY_MODE="${2:-}"
+      shift 2
+      ;;
+    --resume-token)
+      RESUME_TOKEN="${2:-}"
+      shift 2
+      ;;
+    --workflow)
+      WORKFLOW_FILE="${2:-}"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Error: unknown argument: $1" >&2
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+if [[ ! "$STATUS_PING_SECONDS" =~ ^[0-9]+$ ]] || (( STATUS_PING_SECONDS <= 0 )); then
+  echo "Error: CODING_AGENT_STATUS_PING_SECONDS must be a positive integer (seconds)" >&2
+  exit 1
+fi
+if [[ ! "$LONG_RUN_THRESHOLD_SECONDS" =~ ^[0-9]+$ ]] || (( LONG_RUN_THRESHOLD_SECONDS < 0 )); then
+  echo "Error: CODING_AGENT_LONG_RUN_THRESHOLD_SECONDS must be a non-negative integer (seconds)" >&2
+  exit 1
+fi
+
+emit_run_event() {
+  local event="$1"
+  local details="${2:-}"
+  if [[ -n "$details" ]]; then
+    echo "RUN_EVENT $event ts=$(date -Iseconds) $details" >&2
+  else
+    echo "RUN_EVENT $event ts=$(date -Iseconds)" >&2
+  fi
+}
+
+start_heartbeat() {
+  (
+    while true; do
+      sleep "$STATUS_PING_SECONDS"
+      local now elapsed
+      now="$(date +%s)"
+      elapsed=$((now - WRAPPER_START_TS))
+      if (( elapsed >= LONG_RUN_THRESHOLD_SECONDS )); then
+        emit_run_event "heartbeat" "phase=plan-review mode=live plan_id=$PLAN_ID elapsed=${elapsed}s repo=$REPO_PATH"
+      fi
+    done
+  ) &
+  HEARTBEAT_PID=$!
+}
+
+stop_heartbeat() {
+  if [[ -n "$HEARTBEAT_PID" ]]; then
+    kill "$HEARTBEAT_PID" >/dev/null 2>&1 || true
+    wait "$HEARTBEAT_PID" 2>/dev/null || true
+    HEARTBEAT_PID=""
+  fi
+}
+
+handle_signal_interrupt() {
+  local signal="$1"
+  INTERRUPTED_BY_SIGNAL=1
+  RUN_FINALIZED=1
+  stop_heartbeat
+  emit_run_event "interrupted" "phase=plan-review mode=live plan_id=$PLAN_ID signal=$signal repo=$REPO_PATH"
+  exit 130
+}
+
+if [[ "$NON_TTY_MODE" != "auto" && "$NON_TTY_MODE" != "error" ]]; then
+  echo "Error: --non-tty must be auto or error" >&2
+  exit 1
+fi
+
+if [[ -n "$RESOLVE_FILE_PATH" && ( -n "$DECISIONS_INPUT" || -n "$BLOCKING_INPUT" ) ]]; then
+  echo "Error: --resolve-file cannot be combined with --decisions or --blocking." >&2
+  exit 1
+fi
+
+if [[ ! "$SECTION_TIMEOUT" =~ ^[0-9]+$ ]] || (( SECTION_TIMEOUT <= 0 )); then
+  echo "Error: PLAN_REVIEW_LIVE_SECTION_TIMEOUT must be a positive integer (seconds)" >&2
+  exit 1
+fi
+if [[ ! "$TOTAL_TIMEOUT" =~ ^[0-9]+$ ]] || (( TOTAL_TIMEOUT <= 0 )); then
+  echo "Error: PLAN_REVIEW_LIVE_TOTAL_TIMEOUT must be a positive integer (seconds)" >&2
+  exit 1
+fi
+
+if ! command -v lobster >/dev/null 2>&1; then
+  echo "Error: lobster command not found" >&2
+  exit 1
+fi
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "Error: python3 command not found" >&2
+  exit 1
+fi
+
+REPO_PATH="$(cd "$REPO_PATH" && pwd)"
+if ! git -C "$REPO_PATH" rev-parse --git-dir >/dev/null 2>&1; then
+  echo "Error: --repo must point to a git repository" >&2
+  exit 1
+fi
+
+if [[ -z "$BASE_BRANCH" ]]; then
+  BASE_BRANCH="$(git -C "$REPO_PATH" symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || true)"
+fi
+if [[ -z "$BASE_BRANCH" ]]; then
+  BASE_BRANCH="main"
+fi
+
+select_latest_generated_plan() {
+  local dir="$1"
+  local best_path=""
+  local best_name=""
+  local path
+  local name
+
+  shopt -s nullglob
+  for path in "$dir"/*.md; do
+    name="$(basename "$path")"
+    if [[ "$name" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}-.*\.md$ ]]; then
+      if [[ -z "$best_name" || "$name" > "$best_name" ]]; then
+        best_name="$name"
+        best_path="$path"
+      fi
+    fi
+  done
+  shopt -u nullglob
+
+  if [[ -n "$best_path" ]]; then
+    printf '%s\n' "$best_path"
+  fi
+}
+
+if [[ -z "$PLAN_PATH" ]]; then
+  PLAN_PATH="$(select_latest_generated_plan "$REPO_PATH/.ai/plans")"
+fi
+if [[ -z "$PLAN_PATH" ]]; then
+  echo "Error: no generated plan found. Provide --plan or run scripts/plan first." >&2
+  exit 1
+fi
+
+if [[ "$PLAN_PATH" != /* ]]; then
+  PLAN_PATH="$REPO_PATH/$PLAN_PATH"
+fi
+if [[ ! -f "$PLAN_PATH" ]]; then
+  echo "Error: plan file not found: $PLAN_PATH" >&2
+  exit 1
+fi
+
+if [[ "$WORKFLOW_FILE" != /* ]]; then
+  WORKFLOW_FILE="$REPO_PATH/$WORKFLOW_FILE"
+fi
+if [[ ! -f "$WORKFLOW_FILE" ]]; then
+  echo "Error: workflow file not found: $WORKFLOW_FILE" >&2
+  exit 1
+fi
+
+PLAN_FILENAME="$(basename "$PLAN_PATH")"
+PLAN_ID="${PLAN_FILENAME%.md}"
+CURRENT_BRANCH="$(git -C "$REPO_PATH" rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"
+HEAD_SHA="$(git -C "$REPO_PATH" rev-parse HEAD 2>/dev/null || echo unknown)"
+CREATED_AT="$(date -Iseconds)"
+
+REVIEW_DIR="$REPO_PATH/.ai/plan-reviews"
+mkdir -p "$REVIEW_DIR"
+
+if [[ -z "$OUTPUT_PATH" ]]; then
+  TIMESTAMP="$(date +"%Y-%m-%d-%H%M%S")"
+  OUTPUT_PATH="$REVIEW_DIR/${TIMESTAMP}-${PLAN_ID}.md"
+fi
+if [[ "$OUTPUT_PATH" != /* ]]; then
+  OUTPUT_PATH="$REPO_PATH/$OUTPUT_PATH"
+fi
+mkdir -p "$(dirname "$OUTPUT_PATH")"
+
+TIMESTAMP="$(date +"%Y-%m-%d-%H%M%S")"
+METADATA_RUN_ID="${TIMESTAMP}-$$-${RANDOM}"
+if ns="$(date +%N 2>/dev/null)"; then
+  if [[ "$ns" =~ ^[0-9]+$ ]]; then
+    METADATA_RUN_ID="${TIMESTAMP}-${ns}-$$-${RANDOM}"
+  fi
+fi
+METADATA_HISTORY_PREFIX="$REVIEW_DIR/${TIMESTAMP}-${PLAN_ID}-${METADATA_RUN_ID}"
+METADATA_LATEST_PATH="$REVIEW_DIR/latest-${PLAN_ID}.json"
+SESSION_STATE_PATH="${OUTPUT_PATH}.lobster-session.json"
+
+TMP_DIR="$(mktemp -d)"
+TMP_OUTPUT="$TMP_DIR/review-output.md"
+RESOLVED_FILE="$TMP_DIR/resolved-decisions.txt"
+BLOCKING_FILE="$TMP_DIR/blocking-decisions.txt"
+RESPONSE_FILE="$TMP_DIR/lobster-response.json"
+: > "$RESOLVED_FILE"
+: > "$BLOCKING_FILE"
+
+WRAPPER_START_TS="$(date +%s)"
+emit_run_event "start" "phase=plan-review mode=live plan_id=$PLAN_ID repo=$REPO_PATH"
+start_heartbeat
+trap 'handle_signal_interrupt TERM' TERM
+trap 'handle_signal_interrupt INT' INT
+trap 'handle_signal_interrupt HUP' HUP
+trap '
+  rc=$?
+  if (( RUN_FINALIZED == 0 )); then
+    stop_heartbeat
+    if (( INTERRUPTED_BY_SIGNAL == 0 && rc != 0 )); then
+      emit_run_event "failed" "phase=plan-review mode=live plan_id=$PLAN_ID exit=$rc repo=$REPO_PATH"
+    fi
+  fi
+  rm -rf "$TMP_DIR"
+' EXIT
+
+json_escape() {
+  local s="$1"
+  s="${s//\\/\\\\}"
+  s="${s//\"/\\\"}"
+  s="${s//$'\n'/\\n}"
+  s="${s//$'\r'/\\r}"
+  s="${s//$'\t'/\\t}"
+  printf '%s' "$s"
+}
+
+trim_value() {
+  local value="$1"
+  value="$(printf '%s' "$value" | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//')"
+  printf '%s' "$value"
+}
+
+append_list_entries() {
+  local raw="$1"
+  local file="$2"
+  local normalized
+  local part
+  local trimmed
+  local lowered
+  normalized="${raw//$'\n'/,}"
+  IFS=',' read -r -a parts <<< "$normalized"
+  for part in "${parts[@]}"; do
+    trimmed="$(trim_value "$part")"
+    if [[ -z "$trimmed" ]]; then
+      continue
+    fi
+    lowered="$(printf '%s' "$trimmed" | tr '[:upper:]' '[:lower:]')"
+    if [[ "$lowered" == "none" ]]; then
+      continue
+    fi
+    printf '%s\n' "$trimmed" >> "$file"
+  done
+}
+
+dedupe_file() {
+  local file="$1"
+  local tmp_file
+  tmp_file="$(mktemp)"
+  awk 'NF && !seen[$0]++' "$file" > "$tmp_file"
+  mv "$tmp_file" "$file"
+}
+
+json_array_from_file() {
+  local file="$1"
+  local first=1
+  local line
+  printf '['
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    if [[ -z "$line" ]]; then
+      continue
+    fi
+    if (( first == 0 )); then
+      printf ', '
+    fi
+    first=0
+    printf '"%s"' "$(json_escape "$line")"
+  done < "$file"
+  printf ']'
+}
+
+has_resolution_inputs() {
+  if [[ -n "$RESOLVE_FILE_PATH" || -n "$DECISIONS_INPUT" || -n "$BLOCKING_INPUT" ]]; then
+    return 0
+  fi
+  return 1
+}
+
+resolution_usage_hint() {
+  cat >&2 <<'TXT'
+Examples:
+  ./scripts/plan-review-live --repo /path/to/repo --decisions "1A,2B,3A,4A" --blocking none
+  ./scripts/plan-review-live --repo /path/to/repo --resolve-file /path/to/decisions.json
+TXT
+}
+
+parse_resolution_file() {
+  local source_path="$1"
+  local resolved_out="$2"
+  local blocking_out="$3"
+  local abs_path="$source_path"
+
+  if [[ "$abs_path" != /* ]]; then
+    abs_path="$REPO_PATH/$abs_path"
+  fi
+  if [[ ! -f "$abs_path" ]]; then
+    echo "Error: --resolve-file not found: $abs_path" >&2
+    exit 1
+  fi
+
+  if ! python3 - "$abs_path" "$resolved_out" "$blocking_out" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+resolve_path = Path(sys.argv[1])
+resolved_out = Path(sys.argv[2])
+blocking_out = Path(sys.argv[3])
+
+try:
+    payload = json.loads(resolve_path.read_text(encoding="utf-8"))
+except Exception as exc:
+    print(f"Error: invalid resolve file JSON: {exc}", file=sys.stderr)
+    raise SystemExit(1)
+
+if not isinstance(payload, dict):
+    print("Error: resolve file must be a JSON object.", file=sys.stderr)
+    raise SystemExit(1)
+
+for key in ("resolved_decisions", "blocking_decisions"):
+    if key not in payload:
+        print(f"Error: resolve file missing required key '{key}'.", file=sys.stderr)
+        raise SystemExit(1)
+    if not isinstance(payload[key], list):
+        print(f"Error: resolve file key '{key}' must be an array of strings.", file=sys.stderr)
+        raise SystemExit(1)
+
+
+def normalize(values, key_name):
+    normalized = []
+    for idx, value in enumerate(values):
+        if not isinstance(value, str):
+            print(
+                f"Error: resolve file key '{key_name}' contains non-string entry at index {idx}.",
+                file=sys.stderr,
+            )
+            raise SystemExit(1)
+        trimmed = value.strip()
+        if not trimmed:
+            continue
+        if trimmed.lower() == "none":
+            continue
+        normalized.append(trimmed)
+    return normalized
+
+resolved = normalize(payload["resolved_decisions"], "resolved_decisions")
+blocking = normalize(payload["blocking_decisions"], "blocking_decisions")
+
+resolved_out.write_text("".join(f"{item}\n" for item in resolved), encoding="utf-8")
+blocking_out.write_text("".join(f"{item}\n" for item in blocking), encoding="utf-8")
+PY
+  then
+    exit 1
+  fi
+}
+
+load_resolution_inputs() {
+  : > "$RESOLVED_FILE"
+  : > "$BLOCKING_FILE"
+
+  if [[ -n "$RESOLVE_FILE_PATH" ]]; then
+    parse_resolution_file "$RESOLVE_FILE_PATH" "$RESOLVED_FILE" "$BLOCKING_FILE"
+  else
+    append_list_entries "$DECISIONS_INPUT" "$RESOLVED_FILE"
+    append_list_entries "$BLOCKING_INPUT" "$BLOCKING_FILE"
+  fi
+}
+
+reset_session_state() {
+  rm -f "$SESSION_STATE_PATH"
+}
+
+save_session_state() {
+  local resume_token="${1:-}"
+  local pending_section_name="${2:-}"
+  local pending_resume_token="${3:-}"
+  local tmp_state
+  local resolved_json
+  local blocking_json
+  dedupe_file "$RESOLVED_FILE"
+  dedupe_file "$BLOCKING_FILE"
+  resolved_json="$(json_array_from_file "$RESOLVED_FILE")"
+  blocking_json="$(json_array_from_file "$BLOCKING_FILE")"
+  tmp_state="$(mktemp)"
+  cat > "$tmp_state" <<JSON
+{
+  "schema_version": 1,
+  "plan_id": "$(json_escape "$PLAN_ID")",
+  "plan_path": "$(json_escape "$PLAN_PATH")",
+  "review_markdown_path": "$(json_escape "$OUTPUT_PATH")",
+  "resume_token": "$(json_escape "$resume_token")",
+  "pending_section_name": "$(json_escape "$pending_section_name")",
+  "pending_resume_token": "$(json_escape "$pending_resume_token")",
+  "resolved_decisions": $resolved_json,
+  "blocking_decisions": $blocking_json,
+  "updated_at": "$(date -Iseconds)"
+}
+JSON
+  mv "$tmp_state" "$SESSION_STATE_PATH"
+}
+
+load_session_state() {
+  if [[ ! -f "$SESSION_STATE_PATH" ]]; then
+    return 0
+  fi
+  session_fields="$(python3 - "$SESSION_STATE_PATH" "$RESOLVED_FILE" "$BLOCKING_FILE" "$PLAN_ID" "$PLAN_PATH" "$OUTPUT_PATH" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+session_path = Path(sys.argv[1])
+resolved_out = Path(sys.argv[2])
+blocking_out = Path(sys.argv[3])
+expected_plan_id = sys.argv[4]
+expected_plan_path = sys.argv[5]
+expected_output = sys.argv[6]
+
+try:
+    payload = json.loads(session_path.read_text(encoding="utf-8"))
+except Exception as exc:
+    print(f"Error: invalid session state JSON: {exc}", file=sys.stderr)
+    raise SystemExit(1)
+
+if not isinstance(payload, dict):
+    print("Error: session state must be a JSON object.", file=sys.stderr)
+    raise SystemExit(1)
+
+plan_id = payload.get("plan_id")
+if plan_id != expected_plan_id:
+    print("Error: session state plan_id does not match current plan.", file=sys.stderr)
+    raise SystemExit(1)
+
+plan_path = payload.get("plan_path")
+if plan_path != expected_plan_path:
+    print("Error: session state plan_path does not match current plan.", file=sys.stderr)
+    raise SystemExit(1)
+
+output_path = payload.get("review_markdown_path")
+if output_path != expected_output:
+    print("Error: session state review_markdown_path does not match current output path.", file=sys.stderr)
+    raise SystemExit(1)
+
+for key in ("resolved_decisions", "blocking_decisions"):
+    value = payload.get(key)
+    if not isinstance(value, list):
+        print(f"Error: session state key '{key}' must be an array of strings.", file=sys.stderr)
+        raise SystemExit(1)
+    normalized = []
+    for idx, item in enumerate(value):
+        if not isinstance(item, str):
+            print(f"Error: session state key '{key}' contains non-string entry at index {idx}.", file=sys.stderr)
+            raise SystemExit(1)
+        trimmed = item.strip()
+        if not trimmed:
+            continue
+        normalized.append(trimmed)
+    target = resolved_out if key == "resolved_decisions" else blocking_out
+    target.write_text("".join(f"{entry}\n" for entry in normalized), encoding="utf-8")
+
+resume_token = payload.get("resume_token")
+if resume_token is None:
+    resume_token = ""
+if not isinstance(resume_token, str):
+    print("Error: session state key 'resume_token' must be a string.", file=sys.stderr)
+    raise SystemExit(1)
+pending_section_name = payload.get("pending_section_name")
+if pending_section_name is None:
+    pending_section_name = ""
+if not isinstance(pending_section_name, str):
+    print("Error: session state key 'pending_section_name' must be a string.", file=sys.stderr)
+    raise SystemExit(1)
+pending_resume_token = payload.get("pending_resume_token")
+if pending_resume_token is None:
+    pending_resume_token = ""
+if not isinstance(pending_resume_token, str):
+    print("Error: session state key 'pending_resume_token' must be a string.", file=sys.stderr)
+    raise SystemExit(1)
+print(resume_token)
+print(pending_section_name)
+print(pending_resume_token)
+PY
+)" || {
+    exit 1
+  }
+  mapfile -t session_lines <<< "$session_fields"
+  LAST_RESUME_TOKEN="${session_lines[0]:-}"
+  LAST_PENDING_SECTION_NAME="${session_lines[1]:-}"
+  LAST_PENDING_RESUME_TOKEN="${session_lines[2]:-}"
+}
+
+write_metadata() {
+  local ready="$1"
+  local mode_override="live"
+  local history_path
+  local tmp_meta
+  local latest_tmp
+  local resolved_json
+  local blocking_json
+  METADATA_WRITE_SEQ=$((METADATA_WRITE_SEQ + 1))
+  history_path="${METADATA_HISTORY_PREFIX}-${METADATA_WRITE_SEQ}.json"
+  tmp_meta="$(mktemp)"
+  latest_tmp="$(mktemp)"
+
+  dedupe_file "$RESOLVED_FILE"
+  dedupe_file "$BLOCKING_FILE"
+
+  resolved_json="$(json_array_from_file "$RESOLVED_FILE")"
+  blocking_json="$(json_array_from_file "$BLOCKING_FILE")"
+
+  cat > "$tmp_meta" <<JSON
+{
+  "schema_version": $SCHEMA_VERSION,
+  "plan_id": "$(json_escape "$PLAN_ID")",
+  "plan_path": "$(json_escape "$PLAN_PATH")",
+  "mode": "$(json_escape "$mode_override")",
+  "ready_for_implementation": $ready,
+  "blocking_decisions": $blocking_json,
+  "resolved_decisions": $resolved_json,
+  "created_at": "$(json_escape "$CREATED_AT")",
+  "review_markdown_path": "$(json_escape "$OUTPUT_PATH")"
+}
+JSON
+
+  mv "$tmp_meta" "$history_path"
+  cp "$history_path" "$latest_tmp"
+  mv "$latest_tmp" "$METADATA_LATEST_PATH"
+  LAST_METADATA_HISTORY_PATH="$history_path"
+}
+
+response_status() {
+  python3 - "$RESPONSE_FILE" <<'PY'
+import json
+import sys
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+print(payload.get("status", ""))
+PY
+}
+
+response_prompt() {
+  python3 - "$RESPONSE_FILE" <<'PY'
+import json
+import sys
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+print(payload.get("requiresApproval", {}).get("prompt", ""))
+PY
+}
+
+response_preview() {
+  python3 - "$RESPONSE_FILE" <<'PY'
+import json
+import sys
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+print(payload.get("requiresApproval", {}).get("preview", ""))
+PY
+}
+
+response_token() {
+  python3 - "$RESPONSE_FILE" <<'PY'
+import json
+import sys
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+print(payload.get("requiresApproval", {}).get("resumeToken", ""))
+PY
+}
+
+run_lobster_start() {
+  local total_deadline_epoch="$1"
+  local args_json
+
+  args_json="$(python3 - "$SCRIPT_DIR" "$REPO_PATH" "$BASE_BRANCH" "$PLAN_PATH" "$CURRENT_BRANCH" "$HEAD_SHA" "$SYSTEM_PROMPT_FILE" "$SECTION_TIMEOUT" "$total_deadline_epoch" "$MODEL" <<'PY'
+import json
+import sys
+payload = {
+    "script_dir": sys.argv[1] + "/plan-review-lobster",
+    "repo_path": sys.argv[2],
+    "base_branch": sys.argv[3],
+    "plan_path": sys.argv[4],
+    "current_branch": sys.argv[5],
+    "head_sha": sys.argv[6],
+    "system_prompt_file": sys.argv[7],
+    "section_timeout": sys.argv[8],
+    "total_deadline_epoch": sys.argv[9],
+    "model": sys.argv[10],
+}
+print(json.dumps(payload))
+PY
+)"
+
+  lobster run --mode tool --file "$WORKFLOW_FILE" --args-json "$args_json" > "$RESPONSE_FILE"
+}
+
+run_lobster_resume() {
+  local token="$1"
+  lobster resume --mode tool --token "$token" --approve yes > "$RESPONSE_FILE"
+}
+
+if [[ -n "$RESUME_TOKEN" && -z "$OUTPUT_PATH" ]]; then
+  echo "Error: --resume-token requires --output so previous section output can be reused." >&2
+  exit 1
+fi
+
+non_tty=0
+if [[ ! -t 0 || ! -t 1 ]]; then
+  non_tty=1
+fi
+
+if (( non_tty == 1 )); then
+  if has_resolution_inputs; then
+    reset_session_state
+    load_resolution_inputs
+    {
+      echo "# Plan Review (Live Auto-Fallback)"
+      echo
+      echo "- Plan: $PLAN_PATH"
+      echo "- Mode: live (non-tty auto-apply)"
+      echo "- Applied at: $CREATED_AT"
+      echo
+    } > "$TMP_OUTPUT"
+    dedupe_file "$BLOCKING_FILE"
+    if [[ -s "$BLOCKING_FILE" ]]; then
+      write_metadata "false"
+    else
+      write_metadata "true"
+    fi
+    mv "$TMP_OUTPUT" "$OUTPUT_PATH"
+    stop_heartbeat
+    RUN_FINALIZED=1
+    emit_run_event "done" "phase=plan-review mode=live plan_id=$PLAN_ID output=$OUTPUT_PATH"
+    echo
+    echo "✅ Plan review saved: $OUTPUT_PATH"
+    echo "✅ Plan review metadata (history): $LAST_METADATA_HISTORY_PATH"
+    echo "✅ Plan review metadata (latest): $METADATA_LATEST_PATH"
+    exit 0
+  elif [[ "$ALLOW_NON_TTY" == "1" ]]; then
+    echo "Warning: PLAN_REVIEW_LIVE_ALLOW_NON_TTY=1 set; bypassing TTY requirement for live mode." >&2
+  elif [[ "$NON_TTY_MODE" == "error" ]]; then
+    echo "Error: live mode requires an interactive terminal (TTY)." >&2
+    resolution_usage_hint
+    exit 1
+  else
+    echo "Error: non-TTY live mode requires decision input. Use --resolve-file or --decisions/--blocking." >&2
+    resolution_usage_hint
+    exit 1
+  fi
+fi
+
+if [[ -n "$RESUME_TOKEN" && ! -f "$OUTPUT_PATH" ]]; then
+  {
+    echo "# Plan Review (Live)"
+    echo
+    echo "- Plan: $PLAN_PATH"
+    echo "- Mode: live"
+    echo "- Started at: $CREATED_AT"
+    echo
+  } > "$OUTPUT_PATH"
+fi
+
+if [[ -n "$RESUME_TOKEN" ]]; then
+  if [[ ! -f "$SESSION_STATE_PATH" ]]; then
+    echo "Error: resume token requires existing session state: $SESSION_STATE_PATH" >&2
+    echo "Restart without --resume-token to begin a new live review session." >&2
+    exit 1
+  fi
+  load_session_state
+  if [[ -n "$LAST_RESUME_TOKEN" && "$LAST_RESUME_TOKEN" != "$RESUME_TOKEN" ]]; then
+    echo "Warning: provided --resume-token does not match session state's last resume token; continuing anyway." >&2
+  fi
+else
+  reset_session_state
+fi
+
+if [[ -f "$OUTPUT_PATH" ]]; then
+  cp "$OUTPUT_PATH" "$TMP_OUTPUT"
+else
+  {
+    echo "# Plan Review (Live)"
+    echo
+    echo "- Plan: $PLAN_PATH"
+    echo "- Mode: live"
+    echo "- Started at: $CREATED_AT"
+    echo
+  } > "$TMP_OUTPUT"
+fi
+
+printf '%s\n' "$LIVE_INCOMPLETE_MARKER" >> "$BLOCKING_FILE"
+save_session_state "$RESUME_TOKEN"
+write_metadata "false"
+
+if [[ -n "$RESUME_TOKEN" ]]; then
+  if [[ -n "$LAST_PENDING_SECTION_NAME" && -n "$LAST_PENDING_RESUME_TOKEN" ]]; then
+    if [[ "$RESUME_TOKEN" != "$LAST_PENDING_RESUME_TOKEN" ]]; then
+      echo "Warning: pending section token in session state differs from --resume-token." >&2
+    fi
+    echo "[$LAST_PENDING_SECTION_NAME] Resume recovered pending checkpoint." >&2
+    echo "[$LAST_PENDING_SECTION_NAME] Enter selected decision labels (comma-separated, or none):" >&2
+    read -r selected_input
+    append_list_entries "$selected_input" "$RESOLVED_FILE"
+    echo "[$LAST_PENDING_SECTION_NAME] Enter unresolved blocking decision IDs/descriptions (comma-separated, or none):" >&2
+    read -r blocking_input
+    append_list_entries "$blocking_input" "$BLOCKING_FILE"
+    save_session_state "$RESUME_TOKEN"
+  fi
+  run_lobster_resume "$RESUME_TOKEN"
+else
+  start_epoch="$(date +%s)"
+  deadline_epoch=$((start_epoch + TOTAL_TIMEOUT))
+  run_lobster_start "$deadline_epoch"
+fi
+
+while true; do
+  status="$(response_status)"
+  if [[ "$status" == "needs_approval" ]]; then
+    prompt="$(response_prompt)"
+    preview="$(response_preview)"
+    token="$(response_token)"
+    if [[ -z "$token" ]]; then
+      echo "Error: lobster response missing resume token for approval step." >&2
+      exit 1
+    fi
+
+    if [[ -n "$preview" ]]; then
+      {
+        echo
+        echo "$preview"
+        echo
+      } >> "$TMP_OUTPUT"
+      cp "$TMP_OUTPUT" "$OUTPUT_PATH"
+    fi
+
+    section_name="$(printf '%s' "$prompt" | sed -nE 's/^\[([^]]+)\].*/\1/p')"
+    if [[ -z "$section_name" ]]; then
+      section_name="Section"
+    fi
+    echo "[$section_name] Resume token: $token" >&2
+    save_session_state "$token" "$section_name" "$token"
+
+    echo "[$section_name] Enter selected decision labels (comma-separated, or none):" >&2
+    read -r selected_input
+    append_list_entries "$selected_input" "$RESOLVED_FILE"
+
+    echo "[$section_name] Enter unresolved blocking decision IDs/descriptions (comma-separated, or none):" >&2
+    read -r blocking_input
+    append_list_entries "$blocking_input" "$BLOCKING_FILE"
+    save_session_state "$token"
+
+    run_lobster_resume "$token"
+    continue
+  fi
+
+  if [[ "$status" == "ok" ]]; then
+    break
+  fi
+
+  echo "Error: unexpected lobster workflow status: $status" >&2
+  if [[ -f "$RESPONSE_FILE" ]]; then
+    cat "$RESPONSE_FILE" >&2
+  fi
+  exit 1
+done
+
+tmp_filtered="$(mktemp)"
+grep -Fxv "$LIVE_INCOMPLETE_MARKER" "$BLOCKING_FILE" > "$tmp_filtered" || true
+mv "$tmp_filtered" "$BLOCKING_FILE"
+dedupe_file "$BLOCKING_FILE"
+if [[ -s "$BLOCKING_FILE" ]]; then
+  write_metadata "false"
+else
+  write_metadata "true"
+fi
+
+reset_session_state
+
+mv "$TMP_OUTPUT" "$OUTPUT_PATH"
+
+stop_heartbeat
+RUN_FINALIZED=1
+emit_run_event "done" "phase=plan-review mode=live plan_id=$PLAN_ID output=$OUTPUT_PATH"
+
+echo
+echo "✅ Plan review saved: $OUTPUT_PATH"
+echo "✅ Plan review metadata (history): $LAST_METADATA_HISTORY_PATH"
+echo "✅ Plan review metadata (latest): $METADATA_LATEST_PATH"

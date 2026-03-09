@@ -1,0 +1,11 @@
+*.session
+*.session-journal
+.tg-reader.json
+.tg-reader-state.json
+.env
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+.DS_Store

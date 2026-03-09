@@ -1,0 +1,31 @@
+name: PR Policy Gates
+
+on:
+  pull_request_target:
+    branches:
+      - main
+      - master
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+      - ready_for_review
+      - labeled
+      - unlabeled
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  policy-checks:
+    uses: ./.github/workflows/reusable-pr-checks.yml
+    with:
+      pr_number: ${{ github.event.pull_request.number }}
+      pr_title: ${{ github.event.pull_request.title }}
+      pr_body: ${{ github.event.pull_request.body || '' }}
+      head_ref: ${{ github.event.pull_request.head.ref }}
+      base_ref: ${{ github.event.pull_request.base.ref }}
+      author_login: ${{ github.event.pull_request.user.login }}
+      labels_json: ${{ toJson(github.event.pull_request.labels) }}

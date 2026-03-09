@@ -1,0 +1,17 @@
+{
+  "name": "last30days",
+  "owner": {
+    "name": "mvanhorn",
+    "url": "https://github.com/mvanhorn"
+  },
+  "metadata": {
+    "description": "Research any topic from the last 30 days across Reddit, X, YouTube, and the web",
+    "version": "2.1.0"
+  },
+  "plugins": [
+    {
+      "name": "last30days",
+      "source": "."
+    }
+  ]
+}

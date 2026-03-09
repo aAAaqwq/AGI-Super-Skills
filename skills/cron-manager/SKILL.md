@@ -72,7 +72,7 @@
 
 | 目标 | ID | 说明 |
 |------|-----|------|
-| Daniel 私聊 | `REDACTED_TG_USER_ID` | ✅ 推荐，最稳定 |
+| Daniel 私聊 | `YOUR_TELEGRAM_ID` | ✅ 推荐，最稳定 |
 | DailyNews 群 | `YOUR_NEWS_CHAT_ID` | ⚠️ 需确认 bot 在群内 |
 
 ---
@@ -98,7 +98,7 @@
     "timeoutSeconds": 180,
     "deliver": true,
     "channel": "telegram",
-    "to": "REDACTED_TG_USER_ID"
+    "to": "YOUR_TELEGRAM_ID"
   }
 }
 ```
@@ -122,7 +122,7 @@
     "timeoutSeconds": 180,
     "deliver": true,
     "channel": "telegram",
-    "to": "REDACTED_TG_USER_ID"
+    "to": "YOUR_TELEGRAM_ID"
   }
 }
 ```
@@ -145,7 +145,7 @@
     "timeoutSeconds": 600,
     "deliver": true,
     "channel": "telegram",
-    "to": "REDACTED_TG_USER_ID",
+    "to": "YOUR_TELEGRAM_ID",
     "bestEffortDeliver": true
   }
 }
@@ -169,7 +169,7 @@
     "timeoutSeconds": 60,
     "deliver": true,
     "channel": "telegram",
-    "to": "REDACTED_TG_USER_ID"
+    "to": "YOUR_TELEGRAM_ID"
   }
 }
 ```
@@ -193,7 +193,7 @@
     "timeoutSeconds": 300,
     "deliver": true,
     "channel": "telegram",
-    "to": "REDACTED_TG_USER_ID"
+    "to": "YOUR_TELEGRAM_ID"
   }
 }
 ```
@@ -232,7 +232,7 @@
 
 ### 错误1: "chat not found"
 **原因**: Bot 未加入群组或群组 ID 错误
-**修复**: 改用私聊 ID `REDACTED_TG_USER_ID`
+**修复**: 改用私聊 ID `YOUR_TELEGRAM_ID`
 
 ### 错误2: "model not allowed"
 **原因**: Agent 不允许使用该模型

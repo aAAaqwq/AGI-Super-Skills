@@ -100,7 +100,7 @@ openclaw status
 "groupAllowFrom": [-1003531486855, YOUR_GROUP_CHAT_ID]  // 这是群 ID，不是用户 ID！
 
 // ✅ 正确
-"groupAllowFrom": ["REDACTED_TG_USER_ID"]  // 用户 ID
+"groupAllowFrom": ["YOUR_TELEGRAM_ID"]  // 用户 ID
 "groups": {
   "-1003531486855": {"groupPolicy": "open", "requireMention": true}
 }

@@ -12,7 +12,7 @@ English | [中文](./README_CN.md)
 
 | 指标 | 数值 |
 |------|------|
-| **技能** | 285+ |
+| **技能** | 360+ |
 | **分类** | 18 |
 | **Agent** | 13（完全可定制） |
 | **框架** | [OpenClaw](https://github.com/openclaw/openclaw) |
@@ -62,24 +62,24 @@ English | [中文](./README_CN.md)
 
 | 分类 | 数量 | 亮点 |
 |------|:----:|------|
-| [⚙️ OpenClaw 工具](#-openclaw-工具) | 21 | 配置助手、认证管理、定时任务、Token 监控 |
-| [🤖 AI Agent 模式](#-ai-agent-模式) | 20 | 多 Agent 编排、并行执行、提示词优化 |
-| [🔧 开发](#-开发) | 26 | 前后端开发、Docker、Git、TDD、调试 |
-| [💰 交易与金融](#-交易与金融) | 27 | 加密货币交易、Polymarket、DeFi、投资组合管理 |
-| [📝 内容与写作](#-内容与写作) | 22 | SEO 写作、社交媒体、文档、文案 |
-| [📊 数据与分析](#-数据与分析) | 15 | 网页抓取、电子表格、arXiv、数据管道 |
-| [📈 营销与 SEO](#-营销与-seo) | 14 | SEO 审计、付费广告、竞品分析、GEO |
-| [🎨 设计与媒体](#-设计与媒体) | 12 | 图像生成、UI/UX、幻灯片、视频 |
-| [🌐 浏览器自动化](#-浏览器自动化) | 6 | Playwright、Chrome、无头浏览器 |
-| [🏢 商业与战略](#-商业与战略) | 10 | SaaS 启动、财务建模、创业分析 |
-| [📋 项目管理](#-项目管理) | 13 | 任务跟踪、日报、团队协调 |
-| [🧠 知识与研究](#-知识与研究) | 3 | 记忆管理、学术研究、网络搜索 |
-| [💬 通讯](#-通讯) | 10 | 邮件、飞书、微信、Slack 集成 |
-| [🔌 SaaS 集成](#-saas-集成) | 61 | Notion、Airtable、HubSpot、Stripe、Shopify 等 55+ |
-| [⚙️ DevOps 与基础设施](#-devops-与基础设施) | 7 | AWS、Docker、Linux 排障、监控 |
-| [🔒 安全](#-安全) | 4 | 代码审查、安全审计、凭证扫描 |
-| [⚖️ 法律与合规](#-法律与合规) | 1 | Web 无障碍指南 |
-| [🧩 其他](#-其他) | 13 | RSS、日历、演示文稿、技能创建 |
+| [⚙️ OpenClaw 工具](#-openclaw-工具) | 25 | 配置助手、认证管理、定时任务、Token 监控、模型切换 |
+| [🤖 AI Agent 模式](#-ai-agent-模式) | 25 | 多 Agent 编排、并行执行、第一性原理思维 |
+| [🔧 开发](#-开发) | 35 | 前后端开发、Docker、Git、TDD、API 设计、认证系统 |
+| [💰 交易与金融](#-交易与金融) | 32 | 加密货币交易、Polymarket、DeFi、投资组合管理、CT 监控 |
+| [📝 内容与写作](#-内容与写作) | 30 | SEO 写作、社交媒体、爆款内容、反 AI 味、小红书 |
+| [📊 数据与分析](#-数据与分析) | 21 | 网页抓取、DuckDB、CSV 管道、arXiv、多引擎搜索 |
+| [📈 营销与 SEO](#-营销与-seo) | 19 | SEO 审计、GEO 优化、A/B 测试、流失预防 |
+| [🎨 设计与媒体](#-设计与媒体) | 15 | 图像生成（Gemini 3 Pro）、UI/UX、幻灯片、品牌 |
+| [🌐 浏览器自动化](#-浏览器自动化) | 7 | Playwright、Chrome、AI 驱动浏览、Agent 浏览器 |
+| [🏢 商业与战略](#-商业与战略) | 15 | SaaS 启动、竞品拆解、财务建模、个人理财 |
+| [📋 项目管理](#-项目管理) | 18 | PRD 编写、路线图、Scrum、团队协调、日报 |
+| [🧠 知识与研究](#-知识与研究) | 6 | 向量记忆、Brave 搜索、学术研究、语义搜索 |
+| [💬 通讯](#-通讯) | 14 | 邮件、飞书、微信、跨实例通信 |
+| [🔌 SaaS 集成](#-saas-集成) | 63 | Notion、Airtable、HubSpot、Stripe、Shopify 等 55+ |
+| [⚙️ DevOps 与基础设施](#-devops-与基础设施) | 9 | AWS、Docker、Linux 排障、可观测性、Runbook |
+| [🔒 安全](#-安全) | 7 | 代码审查、GDPR、PCI 合规、安全审计 |
+| [⚖️ 法律与合规](#-法律与合规) | 6 | 合同、海关/贸易、劳动法、法律顾问 |
+| [🧩 其他](#-其他) | 15 | RSS、日历、演示文稿、技能创建、设计思维 |
 
 > 📋 完整技能列表请查看 [英文 README](./README.md)
 
@@ -125,7 +125,13 @@ Agent 配置都是**模板** — 根据你的需求自定义：
 
 每一个 Star 都是我们持续添加技能、优化 Agent 模板、打造更好工具的动力。
 
-[![Star History Chart](https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date)](https://star-history.com/#aAAaqwq/AGI-Super-Team&Date)
+<a href="https://star-history.com/#aAAaqwq/AGI-Super-Team&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date" />
+ </picture>
+</a>
 
 ## 📄 开源协议
 

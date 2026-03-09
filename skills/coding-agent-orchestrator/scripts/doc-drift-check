@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# doc-drift-check - verify documented Codex commands/flags still exist
+set -euo pipefail
+
+# Ensure standard tools are available on NixOS
+export PATH="$PATH:/run/current-system/sw/bin"
+
+if ! command -v codex >/dev/null 2>&1; then
+  if [[ "${CI:-}" == "true" || "${GITHUB_ACTIONS:-}" == "true" ]]; then
+    echo "[skip] codex not found in PATH; skipping doc drift checks in CI" >&2
+    exit 0
+  fi
+  echo "Error: codex not found in PATH" >&2
+  exit 1
+fi
+
+assert_contains() {
+  local haystack="$1"
+  local needle="$2"
+  local label="$3"
+
+  if ! grep -Fq -- "$needle" <<<"$haystack"; then
+    echo "[fail] missing '${needle}' in ${label}" >&2
+    return 1
+  fi
+
+  echo "[ok] ${label}: ${needle}" >&2
+}
+
+root_help="$(codex --help)"
+exec_help="$(codex exec --help)"
+review_help="$(codex review --help)"
+resume_help="$(codex exec resume --help)"
+mcp_help="$(codex mcp --help)"
+
+assert_contains "$root_help" "exec" "codex --help"
+assert_contains "$root_help" "review" "codex --help"
+assert_contains "$root_help" "mcp" "codex --help"
+assert_contains "$root_help" "mcp-server" "codex --help"
+assert_contains "$root_help" "resume" "codex --help"
+
+assert_contains "$exec_help" "--json" "codex exec --help"
+assert_contains "$exec_help" "--output-schema" "codex exec --help"
+assert_contains "$exec_help" "--output-last-message" "codex exec --help"
+assert_contains "$exec_help" "--skip-git-repo-check" "codex exec --help"
+assert_contains "$exec_help" "--full-auto" "codex exec --help"
+assert_contains "$exec_help" "--dangerously-bypass-approvals-and-sandbox" "codex exec --help"
+
+assert_contains "$review_help" "--base" "codex review --help"
+assert_contains "$resume_help" "--last" "codex exec resume --help"
+assert_contains "$mcp_help" "add" "codex mcp --help"
+
+echo "Codex doc drift checks passed." >&2
