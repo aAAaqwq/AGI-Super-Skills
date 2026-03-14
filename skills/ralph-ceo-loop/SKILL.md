@@ -1,132 +1,112 @@
-# Ralph CEO 循环 — 项目交付闭环
+# Ralph CEO Loop — GEO Agent 项目交付
 
-> CEO 不是执行者，CEO 是调度者。Ralph 循环的本质：持续调度团队，检查反馈，调整方向，直到项目真正能跑。
+持久循环驱动 GEO Agent 项目从开发到部署到验收的完整闭环。
 
 ## 触发条件
-用户说"用 Ralph 完成 XXX 项目"、"Ralph 循环"、"持续开发 XXX 直到完成"
 
-## 核心闭环
+- "启动ralph"、"ralph循环"、"GEO项目推进"
+- "继续开发GEO"、"部署到小m"
 
-```
-┌─────────────────────────────────────────────┐
-│  1. 项目初始化                                │
-│  新项目 → 创建 workspace → 初始化 git          │
-│  已有项目 → cd 到 workspace → git pull         │
-└──────────────────┬──────────────────────────┘
-                   ▼
-┌─────────────────────────────────────────────┐
-│  2. 需求理解                                  │
-│  读代码/文档 → 理解项目全貌                     │
-│  派小pm 拆解项目 → 获取任务清单+验收标准         │
-└──────────────────┬──────────────────────────┘
-                   ▼
-┌─────────────────────────────────────────────┐
-│  3. CEO 审核计划                              │
-│  审核小pm的拆解 → 调整优先级 → 确定本轮任务      │
-└──────────────────┬──────────────────────────┘
-                   ▼
-┌─────────────────────────────────────────────┐
-│  4. 分配任务给员工                             │
-│  根据任务类型派给对应 agent                     │
-│  同时最多 3 个 agent 并行                      │
-└──────────────────┬──────────────────────────┘
-                   ▼
-┌─────────────────────────────────────────────┐
-│  5. 等待 + 收集反馈（while 循环）              │
-│  轮询检查 agent 产出文件                       │
-│  有产出 → 收集 → 进入下一步                    │
-│  超时 → 重新派活或换 agent                     │
-└──────────────────┬──────────────────────────┘
-                   ▼
-┌─────────────────────────────────────────────┐
-│  6. 派小pm 验证质量                            │
-│  小pm 检查产出是否达标                         │
-│  不达标 → 反馈给执行 agent → 重做              │
-│  达标 → 汇报给 CEO                            │
-└──────────────────┬──────────────────────────┘
-                   ▼
-┌─────────────────────────────────────────────┐
-│  7. CEO 审核 + 调整                           │
-│  审核质量 → git commit + push                  │
-│  根据实际情况调整下一轮任务                     │
-│  更新状态文件                                  │
-│  汇报到群里                                    │
-└──────────────────┬──────────────────────────┘
-                   ▼
-              ┌────┴────┐
-              │项目完成？ │
-              └────┬────┘
-           No ↙      ↘ Yes
-          ▼            ▼
-     回到步骤4      最终验证
-                   端到端测试
-                   部署上线
-                   汇报完成
-```
+## 项目信息
 
-## 团队调度表
+| 项目 | 值 |
+|------|------|
+| 主仓库 | ~/clawd/geo_agent (GitHub: aAAaqwq/geo_agent, private, main) |
+| 参考仓库 | ~/clawd/Auto_GEO_ref (只读) |
+| PRD | ~/clawd/geo_agent/docs/PRD.md |
+| 产品形态 | OpenClaw Agent/Skill |
+| 测试环境 | 小m (Mac Mini M2) via Tailscale |
 
-| 成员 | sessionKey | 派活场景 |
-|------|-----------|---------|
-| 小pm | agent:pm:telegram:group:YOUR_GROUP_CHAT_ID | 项目拆解、任务验收、质量检查 |
-| 小code | agent:code:telegram:group:YOUR_GROUP_CHAT_ID | 写代码、修Bug、架构设计 |
-| 小ops | agent:ops:telegram:group:YOUR_GROUP_CHAT_ID | 部署、环境、运维 |
-| 小research | agent:research:telegram:group:YOUR_GROUP_CHAT_ID | 技术调研、竞品分析 |
-| 小data | agent:data:telegram:group:YOUR_GROUP_CHAT_ID | 数据采集、爬虫 |
-| 小market | agent:market:telegram:group:YOUR_GROUP_CHAT_ID | SEO、推广策略 |
-| 小content | agent:content:telegram:group:YOUR_GROUP_CHAT_ID | 内容生成、文案 |
-| 小finance | agent:finance:telegram:group:YOUR_GROUP_CHAT_ID | 成本分析 |
-| 小quant | agent:quant:telegram:group:YOUR_GROUP_CHAT_ID | 量化分析 |
+## 小m Gateway
 
-## 派活方式
-```
-sessions_send(sessionKey="agent:<id>:telegram:group:YOUR_GROUP_CHAT_ID", message="【CEO指令】具体任务描述。完成后将结果写入 <指定文件路径>，并用 message 发到群里。")
-```
-- 不带 timeoutSeconds，派完即走
-- 要求 agent 将产出写入指定文件（方便检查）
-- 同时最多派 3 个 agent
+| 项目 | 值 |
+|------|------|
+| 域名 | daniellimac-mini.tail0db0a3.ts.net |
+| 端口 | 18789 |
+| Token | $(pass show api/xiaom-gateway-token) |
 
-## 反馈检查方式
-不用轮询 sessions_list，直接检查文件：
+## CEO 铁律
+
+1. **CEO 只派任务，不亲自执行** — 不写代码、不跑测试、不 git push
+2. **派完立即跳出** — 不等待、不轮询、不监听文件
+3. **Agent 汇报到群里后再审核决策**
+4. **每轮必须有产出，不允许空转**
+
+## 团队
+
+| Agent | SessionKey | 职责 |
+|-------|-----------|------|
+| 小pm | agent:pm:telegram:group:-1003890797239 | 任务拆解、质量验收 |
+| 小code | agent:code:telegram:group:-1003890797239 | 写代码、修bug |
+| 小ops | agent:ops:telegram:group:-1003890797239 | 部署、环境配置 |
+| 小research | agent:research:telegram:group:-1003890797239 | 竞品调研方法 |
+| 小content | agent:content:telegram:group:-1003890797239 | 文章模板优化 |
+| 小market | agent:market:telegram:group:-1003890797239 | SEO策略 |
+
+同时最多派 3 个，sessions_send 不带 timeoutSeconds。
+
+## 完整流程
+
+### Phase 1: 代码开发（当前）
+1. 派小code 加固 6 个核心模块（参考 Auto_GEO_ref 业务逻辑）
+2. 派小content 优化文章模板
+3. 派小pm 写验收标准
+4. CEO 审核产出 → 不达标退回 → 达标进入 Phase 2
+
+### Phase 2: 本地测试
+1. 派小code 写端到端测试脚本
+2. 派小ops 在 Linux 上跑完整流程测试
+3. 修复所有 bug → 全部通过进入 Phase 3
+
+### Phase 3: 小m 部署
+1. 派小ops 通过 SSH (`ssh mac-mini`) 在小m上：
+   - 安装 Python 3.12 + Playwright
+   - clone geo_agent 仓库
+   - 运行 install.sh
+   - 将 skill 注册到小m的 OpenClaw
+2. 验证小m的 OpenClaw 能识别 GEO skill
+
+### Phase 4: 跨实例验收测试
+1. 通过 Tailscale Gateway 给小m发消息：
 ```bash
-# 检查产出文件是否存在且最近更新
-stat <产出文件路径> 2>/dev/null && echo "已完成" || echo "未完成"
-# 检查文件修改时间
-find <目录> -name "*.md" -newer <参考时间文件> -ls
-# 检查 git 最新提交
-git log --oneline -5
+curl -s -X POST "http://daniellimac-mini.tail0db0a3.ts.net:18789/api/message" \
+  -H "Authorization: Bearer $(pass show api/xiaom-gateway-token)" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "帮测试公司做GEO，行业是云计算"}'
+```
+2. 检验小m上的 Agent 是否：
+   - 引导创建项目 ✅
+   - 蒸馏关键词 ✅
+   - 真实竞品调研 ✅
+   - 生成 GEO 文章 ✅
+   - 发布到平台（至少一个）✅
+   - 收录检测 ✅
+   - 项目独立记忆 ✅
+3. 不通过 → 回到 Phase 2 修复 → 重新部署
+
+### Phase 5: 交付
+1. 所有验收通过
+2. 更新 README.md 和文档
+3. git push 最终版本
+4. 向 Daniel 汇报交付
+
+## 每轮执行模板
+
+```
+1. 读取当前状态（git log、文件变化、群里汇报）
+2. 审核已完成的任务产出
+3. 不达标 → sessions_send 退回给对应 agent
+4. 达标 → 确定下一个任务 → sessions_send 派给对应 agent
+5. 用 message 发群里汇报进度
+6. 跳出，等下一轮触发
 ```
 
-## 质量验证流程
-1. CEO 初步检查产出文件内容
-2. 派小pm 做质量验证：
-```
-sessions_send(sessionKey="agent:pm:...", message="【质量验证】检查 <文件路径> 的内容质量，对照验收标准 <标准>，给出通过/不通过及修改建议。结果写入 <验证报告路径>。")
-```
-3. 不通过 → 将修改建议发给原执行 agent → 重做
-4. 通过 → git commit + push → 进入下一个任务
+## 汇报格式
 
-## 状态管理
-状态文件：`~/clawd/scripts/ralph-project-state.json`
-```json
-{
-  "project": "项目名",
-  "workspace": "项目路径",
-  "status": "running|paused|completed",
-  "currentPhase": "阶段名",
-  "tasks": [
-    {"id": "1", "name": "任务名", "agent": "code", "status": "pending|dispatched|reviewing|done|failed", "outputFile": "路径", "attempts": 0}
-  ],
-  "iterations": 0,
-  "history": [{"iteration": 1, "action": "xxx", "result": "xxx", "timestamp": "xxx"}]
-}
 ```
-
-## 关键原则
-1. **每轮必须有产出** — 不允许空转
-2. **失败换方法** — 同一个问题最多重试 3 次，然后换思路
-3. **质量优先** — 宁可多迭代几轮，不要交付垃圾
-4. **小步快跑** — 每次只做一个小功能，做完验证再做下一个
-5. **持续到完成** — 不是跑 N 次就停，是跑到项目真正能用
-6. **可以创建 skill** — 发现通用能力就封装成 skill
-7. **需要决策问 Daniel** — 不确定的事情发群里问
+🔨 Ralph GEO Agent 进度
+📍 Phase X: XXX
+✅ 本轮完成: XXX
+⏳ 下一步: XXX
+🚧 阻塞: XXX（如有）
+```

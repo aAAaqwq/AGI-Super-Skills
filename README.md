@@ -12,7 +12,7 @@ A **plug-and-play AI team template** — deploy a complete virtual company in mi
 
 | Metric | Value |
 |--------|-------|
-| **Skills** | 360+ |
+| **Skills** | 482+ |
 | **Categories** | 18 |
 | **Agents** | 13 (fully customizable) |
 | **Framework** | [OpenClaw](https://github.com/openclaw/openclaw) |

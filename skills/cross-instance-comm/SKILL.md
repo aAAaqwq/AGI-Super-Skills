@@ -11,7 +11,7 @@
 
 | 实例 | 域名 | 端口 | Token |
 |------|------|------|-------|
-| 小m (Mac Mini M2) | daniellimac-mini.tail0db0a3.ts.net | 18789 | YOUR_GATEWAY_TOKEN |
+| 小m (Mac Mini M2) | daniellimac-mini.tail0db0a3.ts.net | 18789 | $(pass show api/xiaom-gateway-token) |
 | 本机 (Linux) | 127.0.0.1 | 18789 | (本地) |
 
 ## 发送消息到远程实例
@@ -44,7 +44,7 @@ def send_to_instance(host, port, token, message, session_key=None):
 # 发到小m
 send_to_instance(
     "daniellimac-mini.tail0db0a3.ts.net", 18789,
-    "YOUR_GATEWAY_TOKEN",
+    "$(pass show api/xiaom-gateway-token)",
     "帮XX公司做GEO，行业是云计算"
 )
 ```
@@ -56,7 +56,7 @@ send_to_instance(
 #!/bin/bash
 MSG="${1:?用法: send-to-m2.sh '消息内容'}"
 curl -s -X POST "http://daniellimac-mini.tail0db0a3.ts.net:18789/api/message" \
-  -H "Authorization: Bearer YOUR_GATEWAY_TOKEN" \
+  -H "Authorization: Bearer $(pass show api/xiaom-gateway-token)" \
   -H "Content-Type: application/json" \
   -d "{\"message\": \"$MSG\"}"
 ```
