@@ -1,0 +1,31 @@
+{
+  "name": "planning-with-files",
+  "version": "2.11.0",
+  "description": "Manus-style persistent markdown files for planning, progress tracking, and knowledge storage. Works with Claude Code, Kiro, Clawd CLI, Gemini CLI, Cursor, Continue, and 11+ AI coding assistants.",
+  "author": {
+    "name": "OthmanAdi",
+    "url": "https://github.com/OthmanAdi"
+  },
+  "repository": "https://github.com/OthmanAdi/planning-with-files",
+  "license": "MIT",
+  "keywords": [
+    "planning",
+    "manus",
+    "workflow",
+    "markdown",
+    "context-engineering",
+    "task-management",
+    "templates",
+    "clawd",
+    "clawdbot",
+    "clawdhub",
+    "kiro",
+    "kiro-steering",
+    "amazon-kiro",
+    "gemini",
+    "cursor",
+    "continue",
+    "multi-ide",
+    "agent-skills"
+  ]
+}

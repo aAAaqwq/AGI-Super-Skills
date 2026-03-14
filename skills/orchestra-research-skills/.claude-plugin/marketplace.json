@@ -1,0 +1,266 @@
+{
+  "name": "ai-research-skills",
+  "owner": {
+    "name": "Orchestra Research",
+    "email": "zechen@orchestra-research.com"
+  },
+  "metadata": {
+    "description": "Comprehensive library of 85 AI research engineering skills enabling autonomous AI research from hypothesis to experimental verification",
+    "version": "1.1.0"
+  },
+  "plugins": [
+    {
+      "name": "model-architecture",
+      "description": "LLM architectures and implementations including LitGPT, Mamba, NanoGPT, RWKV, and TorchTitan. Use when implementing, training, or understanding transformer and alternative architectures.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./01-model-architecture/litgpt",
+        "./01-model-architecture/mamba",
+        "./01-model-architecture/nanogpt",
+        "./01-model-architecture/rwkv",
+        "./01-model-architecture/torchtitan"
+      ]
+    },
+    {
+      "name": "tokenization",
+      "description": "Text tokenization for LLMs including HuggingFace Tokenizers and SentencePiece. Use when training custom tokenizers or handling multilingual text.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./02-tokenization/huggingface-tokenizers",
+        "./02-tokenization/sentencepiece"
+      ]
+    },
+    {
+      "name": "fine-tuning",
+      "description": "LLM fine-tuning frameworks including Axolotl, LLaMA-Factory, PEFT, and Unsloth. Use when fine-tuning models with LoRA, QLoRA, or full fine-tuning.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./03-fine-tuning/axolotl",
+        "./03-fine-tuning/llama-factory",
+        "./03-fine-tuning/peft",
+        "./03-fine-tuning/unsloth"
+      ]
+    },
+    {
+      "name": "mechanistic-interpretability",
+      "description": "Neural network interpretability tools including TransformerLens, SAELens, NNSight, and pyvene. Use when analyzing model internals, finding circuits, or understanding how models compute.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./04-mechanistic-interpretability/nnsight",
+        "./04-mechanistic-interpretability/pyvene",
+        "./04-mechanistic-interpretability/saelens",
+        "./04-mechanistic-interpretability/transformer-lens"
+      ]
+    },
+    {
+      "name": "data-processing",
+      "description": "Data curation and processing at scale including NeMo Curator and Ray Data. Use when preparing training datasets or processing large-scale data.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./05-data-processing/nemo-curator",
+        "./05-data-processing/ray-data"
+      ]
+    },
+    {
+      "name": "post-training",
+      "description": "RLHF and preference alignment including TRL, GRPO, OpenRLHF, SimPO, verl, slime, miles, and torchforge. Use when aligning models with human preferences, training reward models, or large-scale RL training.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./06-post-training/grpo-rl-training",
+        "./06-post-training/miles",
+        "./06-post-training/openrlhf",
+        "./06-post-training/simpo",
+        "./06-post-training/slime",
+        "./06-post-training/torchforge",
+        "./06-post-training/trl-fine-tuning",
+        "./06-post-training/verl"
+      ]
+    },
+    {
+      "name": "safety-alignment",
+      "description": "AI safety and content moderation including Constitutional AI, LlamaGuard, NeMo Guardrails, and Prompt Guard. Use when implementing safety filters, content moderation, or prompt injection detection.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./07-safety-alignment/constitutional-ai",
+        "./07-safety-alignment/llamaguard",
+        "./07-safety-alignment/nemo-guardrails",
+        "./07-safety-alignment/prompt-guard"
+      ]
+    },
+    {
+      "name": "distributed-training",
+      "description": "Multi-GPU and multi-node training including DeepSpeed, PyTorch FSDP, Accelerate, Megatron-Core, PyTorch Lightning, and Ray Train. Use when training large models across GPUs.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./08-distributed-training/accelerate",
+        "./08-distributed-training/deepspeed",
+        "./08-distributed-training/megatron-core",
+        "./08-distributed-training/pytorch-fsdp2",
+        "./08-distributed-training/pytorch-lightning",
+        "./08-distributed-training/ray-train"
+      ]
+    },
+    {
+      "name": "infrastructure",
+      "description": "GPU cloud and compute orchestration including Modal, Lambda Labs, and SkyPilot. Use when deploying training jobs or managing GPU resources.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./09-infrastructure/lambda-labs",
+        "./09-infrastructure/modal",
+        "./09-infrastructure/skypilot"
+      ]
+    },
+    {
+      "name": "optimization",
+      "description": "Model optimization and quantization including Flash Attention, bitsandbytes, GPTQ, AWQ, GGUF, and HQQ. Use when reducing memory, accelerating inference, or quantizing models.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./10-optimization/awq",
+        "./10-optimization/bitsandbytes",
+        "./10-optimization/flash-attention",
+        "./10-optimization/gguf",
+        "./10-optimization/gptq",
+        "./10-optimization/hqq"
+      ]
+    },
+    {
+      "name": "evaluation",
+      "description": "LLM benchmarking and evaluation including lm-evaluation-harness, BigCode Evaluation Harness, and NeMo Evaluator. Use when benchmarking models or measuring performance.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./11-evaluation/bigcode-evaluation-harness",
+        "./11-evaluation/lm-evaluation-harness",
+        "./11-evaluation/nemo-evaluator"
+      ]
+    },
+    {
+      "name": "inference-serving",
+      "description": "Production LLM inference including vLLM, TensorRT-LLM, llama.cpp, and SGLang. Use when deploying models for production inference.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./12-inference-serving/llama-cpp",
+        "./12-inference-serving/sglang",
+        "./12-inference-serving/tensorrt-llm",
+        "./12-inference-serving/vllm"
+      ]
+    },
+    {
+      "name": "mlops",
+      "description": "ML experiment tracking and lifecycle including Weights & Biases, MLflow, and TensorBoard. Use when tracking experiments or managing models.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./13-mlops/mlflow",
+        "./13-mlops/tensorboard",
+        "./13-mlops/weights-and-biases"
+      ]
+    },
+    {
+      "name": "agents",
+      "description": "LLM agent frameworks including LangChain, LlamaIndex, CrewAI, and AutoGPT. Use when building chatbots, autonomous agents, or tool-using systems.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./14-agents/autogpt",
+        "./14-agents/crewai",
+        "./14-agents/langchain",
+        "./14-agents/llamaindex"
+      ]
+    },
+    {
+      "name": "rag",
+      "description": "Retrieval-Augmented Generation including Chroma, FAISS, Pinecone, Qdrant, and Sentence Transformers. Use when building semantic search or document retrieval systems.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./15-rag/chroma",
+        "./15-rag/faiss",
+        "./15-rag/pinecone",
+        "./15-rag/qdrant",
+        "./15-rag/sentence-transformers"
+      ]
+    },
+    {
+      "name": "prompt-engineering",
+      "description": "Structured LLM outputs including DSPy, Instructor, Guidance, and Outlines. Use when extracting structured data or constraining LLM outputs.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./16-prompt-engineering/dspy",
+        "./16-prompt-engineering/guidance",
+        "./16-prompt-engineering/instructor",
+        "./16-prompt-engineering/outlines"
+      ]
+    },
+    {
+      "name": "observability",
+      "description": "LLM application monitoring including LangSmith and Phoenix. Use when debugging LLM apps or monitoring production systems.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./17-observability/langsmith",
+        "./17-observability/phoenix"
+      ]
+    },
+    {
+      "name": "multimodal",
+      "description": "Vision, audio, and multimodal models including CLIP, Whisper, LLaVA, BLIP-2, Segment Anything, Stable Diffusion, and AudioCraft. Use when working with images, audio, or multimodal tasks.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./18-multimodal/audiocraft",
+        "./18-multimodal/blip-2",
+        "./18-multimodal/clip",
+        "./18-multimodal/llava",
+        "./18-multimodal/segment-anything",
+        "./18-multimodal/stable-diffusion",
+        "./18-multimodal/whisper"
+      ]
+    },
+    {
+      "name": "emerging-techniques",
+      "description": "Advanced ML techniques including MoE Training, Model Merging, Long Context, Speculative Decoding, Knowledge Distillation, and Model Pruning. Use when implementing cutting-edge optimization or architecture techniques.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./19-emerging-techniques/knowledge-distillation",
+        "./19-emerging-techniques/long-context",
+        "./19-emerging-techniques/model-merging",
+        "./19-emerging-techniques/model-pruning",
+        "./19-emerging-techniques/moe-training",
+        "./19-emerging-techniques/speculative-decoding"
+      ]
+    },
+    {
+      "name": "ml-paper-writing",
+      "description": "Write publication-ready ML/AI/Systems papers for NeurIPS, ICML, ICLR, ACL, AAAI, COLM, OSDI, NSDI, ASPLOS, SOSP. Includes LaTeX templates, citation verification, reviewer guidelines, and writing best practices.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./20-ml-paper-writing"
+      ]
+    },
+    {
+      "name": "ideation",
+      "description": "Research ideation frameworks including structured brainstorming and creative thinking. Use when exploring new research directions, generating novel ideas, or seeking fresh angles on existing work.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./21-research-ideation/brainstorming-research-ideas",
+        "./21-research-ideation/creative-thinking-for-research"
+      ]
+    }
+  ]
+}

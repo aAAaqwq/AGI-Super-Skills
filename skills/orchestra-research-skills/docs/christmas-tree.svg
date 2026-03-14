@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 450">
+  <defs>
+    <linearGradient id="treeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d5a27"/>
+      <stop offset="100%" style="stop-color:#1a3d1a"/>
+    </linearGradient>
+    <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700"/>
+      <stop offset="100%" style="stop-color:#ffaa00"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background snowflakes -->
+  <text x="30" y="40" font-size="20">❄️</text>
+  <text x="350" y="60" font-size="18">❄️</text>
+  <text x="60" y="120" font-size="16">❄️</text>
+  <text x="330" y="150" font-size="20">❄️</text>
+  <text x="25" y="220" font-size="18">❄️</text>
+  <text x="360" y="250" font-size="16">❄️</text>
+  <text x="40" y="320" font-size="20">❄️</text>
+  <text x="345" y="340" font-size="18">❄️</text>
+  <text x="55" y="400" font-size="16">❄️</text>
+  <text x="335" y="420" font-size="20">❄️</text>
+
+  <!-- Star -->
+  <polygon points="200,15 208,40 235,40 213,55 222,80 200,65 178,80 187,55 165,40 192,40"
+           fill="url(#starGradient)" filter="url(#glow)"/>
+
+  <!-- Tree layers -->
+  <polygon points="200,70 240,130 160,130" fill="url(#treeGradient)"/>
+  <polygon points="200,110 260,180 140,180" fill="url(#treeGradient)"/>
+  <polygon points="200,155 280,235 120,235" fill="url(#treeGradient)"/>
+  <polygon points="200,200 300,290 100,290" fill="url(#treeGradient)"/>
+  <polygon points="200,250 320,350 80,350" fill="url(#treeGradient)"/>
+
+  <!-- Trunk -->
+  <rect x="175" y="350" width="50" height="40" fill="#8B4513"/>
+
+  <!-- Ornaments -->
+  <circle cx="180" cy="115" r="8" fill="#ff4444"/>
+  <circle cx="220" cy="118" r="8" fill="#ff4444"/>
+
+  <circle cx="155" cy="160" r="8" fill="#44ff44"/>
+  <circle cx="245" cy="163" r="8" fill="#44ff44"/>
+
+  <circle cx="135" cy="210" r="8" fill="#4444ff"/>
+  <circle cx="200" cy="200" r="8" fill="#ffff44"/>
+  <circle cx="265" cy="213" r="8" fill="#4444ff"/>
+
+  <circle cx="115" cy="265" r="8" fill="#ff44ff"/>
+  <circle cx="175" cy="255" r="8" fill="#44ffff"/>
+  <circle cx="225" cy="258" r="8" fill="#44ffff"/>
+  <circle cx="285" cy="268" r="8" fill="#ff44ff"/>
+
+  <circle cx="100" cy="320" r="8" fill="#ffa500"/>
+  <circle cx="150" cy="310" r="8" fill="#ff6b6b"/>
+  <circle cx="200" cy="305" r="8" fill="#ffd700"/>
+  <circle cx="250" cy="312" r="8" fill="#ff6b6b"/>
+  <circle cx="300" cy="322" r="8" fill="#ffa500"/>
+
+  <!-- Presents -->
+  <rect x="120" y="400" width="35" height="30" fill="#ff4444"/>
+  <rect x="120" y="400" width="35" height="5" fill="#ffd700"/>
+  <rect x="135" y="400" width="5" height="30" fill="#ffd700"/>
+
+  <rect x="182" y="395" width="40" height="35" fill="#4444ff"/>
+  <rect x="182" y="395" width="40" height="5" fill="#ffd700"/>
+  <rect x="199" y="395" width="5" height="35" fill="#ffd700"/>
+
+  <rect x="248" y="402" width="32" height="28" fill="#44aa44"/>
+  <rect x="248" y="402" width="32" height="5" fill="#ffd700"/>
+  <rect x="261" y="402" width="5" height="28" fill="#ffd700"/>
+</svg>

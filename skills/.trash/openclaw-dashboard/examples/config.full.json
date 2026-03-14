@@ -1,0 +1,30 @@
+{
+  "bot": {
+    "name": "My Bot",
+    "emoji": "🤖"
+  },
+  "theme": {
+    "preset": "midnight"
+  },
+  "timezone": "Asia/Shanghai",
+  "refresh": {
+    "intervalSeconds": 30
+  },
+  "server": {
+    "port": 8080,
+    "host": "127.0.0.1"
+  },
+  "alerts": {
+    "dailyCostHigh": 50,
+    "dailyCostWarn": 20,
+    "contextPct": 80,
+    "memoryMb": 640
+  },
+  "ai": {
+    "enabled": true,
+    "gatewayPort": 18789,
+    "model": "kimi-coding/k2p5",
+    "maxHistory": 6,
+    "dotenvPath": "~/.openclaw/.env"
+  }
+}

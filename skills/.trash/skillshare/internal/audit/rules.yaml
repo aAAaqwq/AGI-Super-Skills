@@ -1,0 +1,329 @@
+rules:
+  # ── CRITICAL: prompt injection ──
+  - id: prompt-injection-0
+    severity: CRITICAL
+    pattern: prompt-injection
+    message: "Prompt injection attempt detected"
+    regex: '(?i)(ignore\s+(all\s+)?previous\s+instructions|disregard\s+(all\s+)?rules|you\s+are\s+now\b|forget\s+everything|override\s+safety)'
+
+  - id: prompt-injection-1
+    severity: CRITICAL
+    pattern: prompt-injection
+    message: "SYSTEM: prompt override detected"
+    regex: '(?im)^\s*(SYSTEM|OVERRIDE|IGNORE|ADMIN|ROOT):'
+
+  - id: prompt-injection-2
+    severity: HIGH
+    pattern: prompt-injection
+    message: "Agent directive tag detected"
+    regex: '(?i)<\/?(system|instructions|override|prompt|rules)\b[^>]*>'
+
+  - id: prompt-injection-3
+    severity: CRITICAL
+    pattern: prompt-injection
+    message: "Directive-style prompt override detected"
+    regex: '(?im)^\s*(DEV(ELOPER)?[\s_]*MODE|JAILBREAK|DAN[\s_.]*MODE)\b'
+
+  # ── CRITICAL: data exfiltration (curl/wget + secrets) ──
+  - id: data-exfiltration-2
+    severity: MEDIUM
+    pattern: data-exfiltration
+    message: "External image with query parameters — potential data exfiltration vector"
+    regex: '!\[[^\]]*\]\(https?://[^)]*\?[^)]+\)'
+
+  - id: data-exfiltration-0
+    severity: CRITICAL
+    pattern: data-exfiltration
+    message: "Command may exfiltrate sensitive data"
+    regex: '(?i)(curl|wget)\s+.*(\$SECRET|\$TOKEN|\$API_KEY|\$OPENAI_API_KEY|\$ANTHROPIC_API_KEY|\$AWS_SECRET)'
+
+  - id: data-exfiltration-1
+    severity: CRITICAL
+    pattern: data-exfiltration
+    message: "Command sends environment variables externally"
+    regex: '(?i)(curl|wget)\s+.*\$\{?(HOME|USER|PATH|SSH|GPG|AWS|GITHUB_TOKEN|OPENAI|ANTHROPIC)'
+
+  # ── CRITICAL/HIGH/MEDIUM/LOW: credential access ──
+  # Credential-access rules are now table-driven (see credentials.go).
+  # To disable a specific credential rule, use its descriptive ID in audit-rules.yaml:
+  #   - id: credential-access-ssh-private-key
+  #     enabled: false
+
+  # ── CRITICAL: invisible payload (Unicode tag characters U+E0001–E007F) ──
+  # Primary vector for Pillar Security "Rules File Backdoor" attack.
+  # Tag characters render 0px wide but are fully processed by LLMs.
+  - id: hidden-unicode-1
+    severity: CRITICAL
+    pattern: invisible-payload
+    message: "Unicode tag characters detected — may contain invisible payload"
+    regex: '[\x{E0001}-\x{E007F}]'
+
+  # ── CRITICAL: output suppression directives ──
+  # A skill that hides its actions from the user is a strong malicious signal.
+  - id: prompt-injection-4
+    severity: CRITICAL
+    pattern: prompt-injection
+    message: "Output suppression directive — attempts to hide actions from user"
+    regex: '(?i)(don''t\s+tell\s+the\s+user|do\s+not\s+tell\s+the\s+user|do\s+not\s+(mention|reveal)\s+this\s+(instruction|change|action|to\s+the\s+user)|never\s+(mention|reveal)\s+this\s+instruction|hide\s+this\s+from\s+the\s+user|remove\s+(this\s+)?from\s+(chat|conversation)\s+history)'
+
+  # ── HIGH: hidden unicode (zero-width characters) ──
+  - id: hidden-unicode-0
+    severity: HIGH
+    pattern: hidden-unicode
+    message: "Hidden zero-width Unicode characters detected"
+    regex: "[\u200B\u200C\u200D\u2060\uFEFF]"
+
+  # ── HIGH: bidirectional text control (Trojan Source CVE-2021-42574) ──
+  - id: hidden-unicode-2
+    severity: HIGH
+    pattern: hidden-unicode
+    message: "Bidirectional text control characters — may reorder visible text (Trojan Source)"
+    regex: "[\u202A-\u202E\u2066-\u2069]"
+
+  # ── HIGH: config/memory file poisoning ──
+  # Skills should not modify agent config files (MEMORY.md, CLAUDE.md, .cursorrules).
+  - id: config-manipulation-0
+    severity: HIGH
+    pattern: config-manipulation
+    message: "Instructions to modify AI agent configuration or memory files"
+    regex: '(?i)\b(write|modify|edit|update|append|add|insert|inject)\b.{0,20}(MEMORY\.md|SOUL\.md|CLAUDE\.md|\.cursorrules|\.windsurfrules|\.clinerules)\b'
+
+  # ── HIGH: prompt injection in markdown reference-link comment ──
+  - id: hidden-comment-injection-1
+    severity: HIGH
+    pattern: hidden-comment-injection
+    message: "Prompt injection hidden in markdown comment"
+    regex: '(?i)\[//\]:\s*#\s*\(.*?(ignore\s+(all\s+)?previous|disregard|you\s+are\s+now|forget\s+everything|override\s+safety|SYSTEM:|ADMIN:)'
+
+  # ── HIGH: DNS data exfiltration ──
+  - id: data-exfiltration-3
+    severity: HIGH
+    pattern: data-exfiltration
+    message: "Potential DNS data exfiltration via encoded subdomain"
+    regex: '(?i)\b(dig|nslookup|host)\b\s+.*(\$[({]|`)'
+
+  # ── HIGH: self-replication / propagation instructions ──
+  - id: self-propagation-0
+    severity: HIGH
+    pattern: self-propagation
+    message: "Self-replication instruction — may spread payload to other files"
+    regex: '(?i)(add|inject|insert|include)\s+(this|these)\s+(instruction|rule|directive|text)\s+(to|into|in)\s+(all|every|each|other)\b'
+
+  # ── MEDIUM: untrusted package execution ──
+  - id: untrusted-install-0
+    severity: MEDIUM
+    pattern: untrusted-install
+    message: "Auto-execute untrusted npm package without confirmation"
+    regex: '(?i)\bnpx\s+(-y\s+|--yes\s+)'
+
+  - id: untrusted-install-1
+    severity: MEDIUM
+    pattern: untrusted-install
+    message: "pip install from URL (not PyPI registry)"
+    regex: '(?i)\bpip3?\s+install\s+https?://'
+
+  # ── MEDIUM: additional invisible Unicode (soft hyphen, math operators, directional marks) ──
+  - id: hidden-unicode-3
+    severity: MEDIUM
+    pattern: hidden-unicode
+    message: "Invisible Unicode characters detected (soft hyphen, directional marks, math operators)"
+    regex: "[\u00AD\u200E\u200F\u2061-\u2064]"
+
+  # ── HIGH: destructive commands ──
+  - id: destructive-commands-0
+    severity: HIGH
+    pattern: destructive-commands
+    message: "Potentially destructive command"
+    regex: '(?i)\brm\s+-rf\s+(/(\s|$|\*)|\*|\./)'
+
+  - id: destructive-commands-1
+    severity: HIGH
+    pattern: destructive-commands
+    message: "Unsafe permission change"
+    regex: '(?i)\bchmod\s+777\b'
+
+  - id: destructive-commands-2
+    severity: HIGH
+    pattern: destructive-commands
+    message: "Sudo escalation"
+    regex: '(?i)\bsudo\s+'
+
+  - id: destructive-commands-3
+    severity: HIGH
+    pattern: destructive-commands
+    message: "Disk overwrite command"
+    regex: '(?i)\bdd\s+if='
+
+  - id: destructive-commands-4
+    severity: HIGH
+    pattern: destructive-commands
+    message: "Filesystem format command"
+    regex: '(?i)\bmkfs\.'
+
+  # ── HIGH: dynamic code execution (JS/Python eval/exec) ──
+  - id: dynamic-code-exec-0
+    severity: HIGH
+    pattern: dynamic-code-exec
+    message: "Dynamic code execution (eval/exec) detected"
+    regex: '(?i)\b(eval|exec)\s*\('
+    exclude: '(?i)\b(eval|exec)\w+\s*\('
+
+  - id: dynamic-code-exec-1
+    severity: HIGH
+    pattern: dynamic-code-exec
+    message: "Dynamic Function constructor detected"
+    regex: '(?i)\bnew\s+Function\s*\('
+
+  # ── HIGH: Python shell execution ──
+  - id: shell-execution-0
+    severity: HIGH
+    pattern: shell-execution
+    message: "Python shell execution detected"
+    regex: '(?i)\b(os\.system|subprocess\.(run|call|Popen|check_output|check_call))\s*\('
+
+  # ── HIGH: hidden injection in HTML comments ──
+  - id: hidden-comment-injection-0
+    severity: HIGH
+    pattern: hidden-comment-injection
+    message: "Prompt injection hidden in HTML comment"
+    regex: '(?i)<!--.*?(ignore\s+(all\s+)?previous|disregard|you\s+are\s+now|forget\s+everything|override\s+safety|SYSTEM:)'
+
+  # ── HIGH: obfuscation ──
+  - id: obfuscation-0
+    severity: HIGH
+    pattern: obfuscation
+    message: "Base64 decode pipe may hide malicious content"
+    regex: '(?i)(base64\s+(-d|--decode)|\bbase64\b.*\|\s*(sh|bash|zsh|eval))'
+
+  # ── MEDIUM: escape sequence obfuscation ──
+  - id: escape-obfuscation-0
+    severity: MEDIUM
+    pattern: escape-obfuscation
+    message: "Consecutive escape sequences may hide content"
+    regex: '(\\x[0-9a-fA-F]{2}){3,}|(\\u[0-9a-fA-F]{4}){3,}'
+
+  # ── MEDIUM: suspicious URL usage ──
+  - id: suspicious-fetch-0
+    severity: MEDIUM
+    pattern: suspicious-fetch
+    message: "URL used in command context"
+    regex: '(?i)(curl|wget|invoke-webrequest|iwr)\s+[''"]?https?://'
+    exclude: '(?i)https?://(localhost|127\.0\.0\.1)'
+
+  # ── LOW: insecure transport hints ──
+  - id: insecure-http-0
+    severity: LOW
+    pattern: insecure-http
+    message: "Non-HTTPS URL in command context"
+    regex: '(?i)(curl|wget|invoke-webrequest|iwr)\s+http://'
+    exclude: '(?i)http://(localhost|127\.0\.0\.1|0\.0\.0\.0)'
+
+  # ── LOW: external links in markdown ──
+  - id: external-link-0
+    severity: LOW
+    pattern: external-link
+    message: "External URL in markdown link"
+    regex: '\]\(https?://[^)]+\)'
+    exclude: '(?i)\]\(https?://(localhost|127\.0\.0\.1|0\.0\.0\.0)[:/)]'
+
+  # ── HIGH: remote code execution (pipe to interpreter) ──
+  - id: fetch-with-pipe-0
+    severity: HIGH
+    pattern: fetch-with-pipe
+    message: "Remote code execution: curl output piped to interpreter"
+    regex: '(?i)\bcurl\b[^|]*\|\s*(sudo\s+)?(ba)?sh\b'
+
+  - id: fetch-with-pipe-1
+    severity: HIGH
+    pattern: fetch-with-pipe
+    message: "Remote code execution: wget output piped to interpreter"
+    regex: '(?i)\bwget\b[^|]*\|\s*(sudo\s+)?(ba)?sh\b'
+
+  - id: fetch-with-pipe-2
+    severity: HIGH
+    pattern: fetch-with-pipe
+    message: "Remote code execution: fetched content piped to script interpreter"
+    regex: '(?i)\b(curl|wget)\b[^|]*\|\s*(sudo\s+)?(python[23]?|node|ruby|perl|zsh|fish)\b'
+
+  # ── MEDIUM: URL with raw IP address ──
+  - id: ip-address-url-0
+    severity: MEDIUM
+    pattern: ip-address-url
+    message: "URL with raw IP address — may bypass DNS-based security controls"
+    regex: 'https?://\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}([:/\s)]|$)'
+    exclude: '(?i)https?://(127\.0\.0\.1|0\.0\.0\.0|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3})([:/\s)]|$)'
+
+  # ── MEDIUM: data URI with embedded executable content ──
+  - id: data-uri-0
+    severity: MEDIUM
+    pattern: data-uri
+    message: "data: URI may embed executable or obfuscated content"
+    regex: '(?i)\]\(data:[^)]+\)'
+
+  # ── HIGH: hardcoded secrets (inline API keys, tokens, passwords) ──
+  - id: hardcoded-secret-0
+    severity: HIGH
+    pattern: hardcoded-secret
+    message: "Google API key detected"
+    regex: 'AIza[0-9A-Za-z\-_]{35}'
+
+  - id: hardcoded-secret-1
+    severity: HIGH
+    pattern: hardcoded-secret
+    message: "AWS access key detected"
+    regex: 'AKIA[0-9A-Z]{16}'
+
+  - id: hardcoded-secret-2
+    severity: HIGH
+    pattern: hardcoded-secret
+    message: "GitHub personal access token (classic) detected"
+    regex: 'gh[ps]_[A-Za-z0-9_]{36,}'
+
+  - id: hardcoded-secret-3
+    severity: HIGH
+    pattern: hardcoded-secret
+    message: "GitHub fine-grained personal access token detected"
+    regex: 'github_pat_[A-Za-z0-9_]{22,}'
+
+  - id: hardcoded-secret-4
+    severity: HIGH
+    pattern: hardcoded-secret
+    message: "Slack token detected"
+    regex: 'xox[bporas]-[A-Za-z0-9\-]{10,}'
+
+  - id: hardcoded-secret-5
+    severity: HIGH
+    pattern: hardcoded-secret
+    message: "OpenAI API key detected"
+    regex: 'sk-[A-Za-z0-9]{20,}T3BlbkFJ[A-Za-z0-9]{20,}'
+
+  - id: hardcoded-secret-6
+    severity: HIGH
+    pattern: hardcoded-secret
+    message: "Anthropic API key detected"
+    regex: 'sk-ant-[A-Za-z0-9\-_]{80,}'
+
+  - id: hardcoded-secret-7
+    severity: HIGH
+    pattern: hardcoded-secret
+    message: "Stripe secret or restricted key detected"
+    regex: '[sr]k_(live|test)_[A-Za-z0-9]{20,}'
+
+  - id: hardcoded-secret-8
+    severity: HIGH
+    pattern: hardcoded-secret
+    message: "Private key block detected"
+    regex: '-----BEGIN (RSA|DSA|EC|OPENSSH) PRIVATE KEY-----'
+
+  - id: hardcoded-secret-9
+    severity: HIGH
+    pattern: hardcoded-secret
+    message: "Hardcoded secret assignment detected"
+    regex: '(?i)(api[_-]?key|secret[_-]?key|access[_-]?token|auth[_-]?token|password)\s*[:=]\s*["\x27][A-Za-z0-9+/\-_]{20,}["\x27]'
+
+  # ── INFO: risky shell chaining patterns (advisory) ──
+  - id: shell-chain-0
+    severity: INFO
+    pattern: shell-chain
+    message: "Command chaining detected; verify intent"
+    regex: '(?m)(\|\||&&|;)\s*(rm|chmod|curl|wget|bash|sh)\b'

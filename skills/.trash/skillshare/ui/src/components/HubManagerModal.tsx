@@ -1,0 +1,229 @@
+import { useState, useEffect } from 'react';
+import { Plus, Trash2, Server } from 'lucide-react';
+import Card from './Card';
+import HandButton from './HandButton';
+import { HandInput } from './HandInput';
+import { wobbly } from '../design';
+
+export interface SavedHub {
+  label: string;
+  url: string;
+  builtIn?: boolean;
+}
+
+interface HubManagerModalProps {
+  open: boolean;
+  hubs: SavedHub[];
+  onSave: (hubs: SavedHub[]) => void;
+  onClose: () => void;
+}
+
+function normalizeURL(url: string): string {
+  return url.trim().replace(/\/+$/, '');
+}
+
+export default function HubManagerModal({
+  open,
+  hubs,
+  onSave,
+  onClose,
+}: HubManagerModalProps) {
+  const [localHubs, setLocalHubs] = useState<SavedHub[]>([]);
+  const [newLabel, setNewLabel] = useState('');
+  const [newURL, setNewURL] = useState('');
+  const [error, setError] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+
+  // Sync local state when modal opens
+  useEffect(() => {
+    if (open) {
+      setLocalHubs([...hubs]);
+      setNewLabel('');
+      setNewURL('');
+      setError('');
+      setConfirmDelete(null);
+    }
+  }, [open, hubs]);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (confirmDelete) {
+          setConfirmDelete(null);
+        } else {
+          onClose();
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [open, confirmDelete, onClose]);
+
+  if (!open) return null;
+
+  const handleAdd = () => {
+    const url = normalizeURL(newURL);
+    if (!url) {
+      setError('URL is required');
+      return;
+    }
+    if (localHubs.some((h) => normalizeURL(h.url) === url)) {
+      setError('This hub URL already exists');
+      return;
+    }
+    const label = newLabel.trim() || url.split('/').pop() || 'Untitled';
+    const updated = [...localHubs, { label, url }];
+    setLocalHubs(updated);
+    onSave(updated);
+    setNewLabel('');
+    setNewURL('');
+    setError('');
+  };
+
+  const handleDelete = (url: string) => {
+    if (confirmDelete !== url) {
+      setConfirmDelete(url);
+      return;
+    }
+    const updated = localHubs.filter((h) => normalizeURL(h.url) !== normalizeURL(url));
+    setLocalHubs(updated);
+    onSave(updated);
+    setConfirmDelete(null);
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-pencil/30" />
+
+      {/* Dialog */}
+      <div
+        className="relative w-full max-w-md animate-sketch-in"
+        style={{ borderRadius: wobbly.md }}
+      >
+        <Card decoration="tape">
+          {/* Header */}
+          <div className="flex items-center gap-2 mb-4">
+            <Server size={18} strokeWidth={2.5} className="text-pencil-light" />
+            <h3
+              className="text-xl font-bold text-pencil"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              Manage Hubs
+            </h3>
+          </div>
+
+          {/* Hub list */}
+          {localHubs.length > 0 ? (
+            <div className="space-y-2 mb-4 max-h-48 overflow-y-auto">
+              {localHubs.map((hub) => (
+                <div
+                  key={hub.url}
+                  className="flex items-center gap-2 py-2 px-3 border-2 border-muted bg-paper-warm"
+                  style={{ borderRadius: wobbly.sm }}
+                >
+                  <div className="flex-1 min-w-0">
+                    <span
+                      className="font-bold text-pencil text-base block"
+                      style={{ fontFamily: 'var(--font-heading)' }}
+                    >
+                      {hub.label}
+                    </span>
+                    <span
+                      className="text-xs text-muted-dark block truncate"
+                      style={{ fontFamily: "'Courier New', monospace" }}
+                    >
+                      {hub.url}
+                    </span>
+                  </div>
+                  {hub.builtIn ? (
+                    <span className="text-xs text-muted-dark shrink-0 px-1.5">Built-in</span>
+                  ) : confirmDelete === hub.url ? (
+                    <div className="flex items-center gap-1 shrink-0">
+                      <HandButton
+                        variant="danger"
+                        size="sm"
+                        onClick={() => handleDelete(hub.url)}
+                      >
+                        Confirm
+                      </HandButton>
+                      <HandButton
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setConfirmDelete(null)}
+                      >
+                        Cancel
+                      </HandButton>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleDelete(hub.url)}
+                      className="text-pencil-light hover:text-danger transition-colors p-1.5 shrink-0"
+                      title="Remove hub"
+                    >
+                      <Trash2 size={16} strokeWidth={2.5} />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-base text-muted-dark mb-4 text-center py-4">
+              No hubs configured yet.
+            </p>
+          )}
+
+          {/* Add hub form */}
+          <div className="border-t-2 border-dashed border-muted pt-3">
+            <p
+              className="text-base font-bold text-pencil mb-2"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              Add Hub
+            </p>
+            <div className="space-y-2 mb-2">
+              <HandInput
+                type="text"
+                placeholder="Label (optional)"
+                value={newLabel}
+                onChange={(e) => setNewLabel(e.target.value)}
+              />
+              <HandInput
+                type="text"
+                placeholder="URL or file path"
+                value={newURL}
+                onChange={(e) => {
+                  setNewURL(e.target.value);
+                  setError('');
+                }}
+                onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+              />
+            </div>
+            {error && (
+              <p className="text-sm text-danger mb-2">{error}</p>
+            )}
+            <p className="text-xs text-muted-dark mb-3">
+              Enter a URL or local path to a skillshare-hub.json file.
+            </p>
+            <div className="flex justify-between">
+              <HandButton variant="primary" size="sm" onClick={handleAdd}>
+                <Plus size={14} strokeWidth={2.5} />
+                Add
+              </HandButton>
+              <HandButton variant="ghost" size="sm" onClick={onClose}>
+                Close
+              </HandButton>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}

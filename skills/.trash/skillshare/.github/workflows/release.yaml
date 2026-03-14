@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yaml
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: ui/pnpm-lock.yaml
+
+      - name: Build UI assets
+        run: cd ui && pnpm install --frozen-lockfile && pnpm run build
+
+      - name: Create UI dist archive
+        run: tar czf skillshare-ui-dist.tar.gz -C ui/dist .
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: latest
+          args: release --clean --skip=validate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+
+      - name: Add contributors to release notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          PREV_TAG=$(git tag --sort=-v:refname | grep -v "^${TAG}$" | head -1)
+
+          if [ -z "$PREV_TAG" ]; then
+            echo "No previous tag found, skipping contributors"
+            exit 0
+          fi
+
+          # Get unique GitHub logins between tags (exclude bots and maintainer)
+          LOGINS=$(gh api "repos/${GITHUB_REPOSITORY}/compare/${PREV_TAG}...${TAG}" \
+            --jq '[.commits[].author.login // empty] | unique | .[]' 2>/dev/null \
+            | grep -v '\[bot\]$' \
+            | grep -v '^runkids$' || true)
+
+          if [ -z "$LOGINS" ]; then
+            echo "No external contributors found, skipping"
+            exit 0
+          fi
+
+          # Format as @mentions and render release notes from template
+          CONTRIBUTORS=$(echo "$LOGINS" | sed 's/^/@/' | paste -sd ', ' -)
+          GORELEASER_BODY=$(gh release view "$TAG" --json body -q .body)
+          export GORELEASER_BODY CONTRIBUTORS
+          envsubst '${GORELEASER_BODY} ${CONTRIBUTORS}' < .github/RELEASE_TEMPLATE.md > release-notes.md
+          gh release edit "$TAG" --notes-file release-notes.md
+          rm -f release-notes.md

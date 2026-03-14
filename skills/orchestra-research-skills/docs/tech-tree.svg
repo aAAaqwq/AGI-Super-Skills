@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <!-- Background -->
+  <rect width="800" height="450" fill="#0f172a"/>
+
+  <!-- Connection lines -->
+  <g stroke="#6366f1" stroke-width="2" opacity="0.5">
+    <!-- Center to Layer 1 -->
+    <line x1="400" y1="200" x2="400" y2="80"/>
+    <line x1="400" y1="200" x2="400" y2="320"/>
+    <line x1="400" y1="200" x2="250" y2="140"/>
+    <line x1="400" y1="200" x2="550" y2="140"/>
+    <line x1="400" y1="200" x2="250" y2="260"/>
+    <line x1="400" y1="200" x2="550" y2="260"/>
+
+    <!-- Layer 1 to Layer 2 -->
+    <line x1="400" y1="80" x2="310" y2="40"/>
+    <line x1="400" y1="80" x2="490" y2="40"/>
+    <line x1="400" y1="320" x2="310" y2="360"/>
+    <line x1="400" y1="320" x2="490" y2="360"/>
+    <line x1="250" y1="140" x2="120" y2="100"/>
+    <line x1="250" y1="140" x2="120" y2="180"/>
+    <line x1="550" y1="140" x2="680" y2="100"/>
+    <line x1="550" y1="140" x2="680" y2="180"/>
+    <line x1="250" y1="260" x2="120" y2="220"/>
+    <line x1="250" y1="260" x2="120" y2="300"/>
+    <line x1="550" y1="260" x2="680" y2="220"/>
+    <line x1="550" y1="260" x2="680" y2="300"/>
+  </g>
+
+  <!-- Center Node - AI Research -->
+  <circle cx="400" cy="200" r="50" fill="#8b5cf6"/>
+  <circle cx="400" cy="200" r="45" fill="#7c3aed"/>
+  <text x="400" y="195" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">AI RESEARCH</text>
+  <text x="400" y="210" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">SKILLS</text>
+
+  <!-- Layer 1 Nodes - Main Categories -->
+  <!-- Top - Architecture -->
+  <circle cx="400" cy="80" r="32" fill="#6366f1"/>
+  <text x="400" y="77" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Architecture</text>
+  <text x="400" y="90" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="9" opacity="0.8">(5)</text>
+
+  <!-- Bottom - Inference -->
+  <circle cx="400" cy="320" r="32" fill="#06b6d4"/>
+  <text x="400" y="317" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Inference</text>
+  <text x="400" y="330" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="9" opacity="0.8">(4)</text>
+
+  <!-- Top Left - Training -->
+  <circle cx="250" cy="140" r="32" fill="#10b981"/>
+  <text x="250" y="137" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Training</text>
+  <text x="250" y="150" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="9" opacity="0.8">(9)</text>
+
+  <!-- Top Right - Optimization -->
+  <circle cx="550" cy="140" r="32" fill="#f59e0b"/>
+  <text x="550" y="137" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Optimization</text>
+  <text x="550" y="150" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="9" opacity="0.8">(6)</text>
+
+  <!-- Bottom Left - Data & Eval -->
+  <circle cx="250" cy="260" r="32" fill="#3b82f6"/>
+  <text x="250" y="257" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Data &amp; Eval</text>
+  <text x="250" y="270" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="9" opacity="0.8">(5)</text>
+
+  <!-- Bottom Right - Applications -->
+  <circle cx="550" cy="260" r="32" fill="#ec4899"/>
+  <text x="550" y="257" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Applications</text>
+  <text x="550" y="270" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="9" opacity="0.8">(16)</text>
+
+  <!-- Layer 2 Nodes - Subcategories -->
+  <!-- Top cluster -->
+  <circle cx="310" cy="40" r="20" fill="#4f46e5"/>
+  <text x="310" y="44" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">Tokenize</text>
+
+  <circle cx="490" cy="40" r="20" fill="#4f46e5"/>
+  <text x="490" y="44" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">Mech Interp</text>
+
+  <!-- Bottom cluster -->
+  <circle cx="310" cy="360" r="20" fill="#0891b2"/>
+  <text x="310" y="364" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">MLOps</text>
+
+  <circle cx="490" cy="360" r="20" fill="#0891b2"/>
+  <text x="490" y="364" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">Infra</text>
+
+  <!-- Left cluster -->
+  <circle cx="120" cy="100" r="20" fill="#059669"/>
+  <text x="120" y="104" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">Fine-tune</text>
+
+  <circle cx="120" cy="180" r="20" fill="#059669"/>
+  <text x="120" y="184" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">RLHF</text>
+
+  <circle cx="120" cy="220" r="20" fill="#2563eb"/>
+  <text x="120" y="224" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">Data</text>
+
+  <circle cx="120" cy="300" r="20" fill="#2563eb"/>
+  <text x="120" y="304" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">Eval</text>
+
+  <!-- Right cluster -->
+  <circle cx="680" cy="100" r="20" fill="#d97706"/>
+  <text x="680" y="104" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">Quantize</text>
+
+  <circle cx="680" cy="180" r="20" fill="#d97706"/>
+  <text x="680" y="184" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">Attention</text>
+
+  <circle cx="680" cy="220" r="20" fill="#db2777"/>
+  <text x="680" y="224" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">Agents</text>
+
+  <circle cx="680" cy="300" r="20" fill="#db2777"/>
+  <text x="680" y="304" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">RAG</text>
+
+  <!-- Stats at bottom -->
+  <text x="400" y="415" text-anchor="middle" fill="#a5b4fc" font-family="Arial, sans-serif" font-size="18" font-weight="bold">75 Skills</text>
+  <text x="400" y="435" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="12">18 Categories | 120K+ Lines of Documentation</text>
+</svg>

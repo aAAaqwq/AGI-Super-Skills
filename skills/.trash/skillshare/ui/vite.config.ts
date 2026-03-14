@@ -1,0 +1,55 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+
+// SSE endpoints need explicit Accept header to prevent Vite proxy from buffering responses.
+const SSE_PROXY = { target: 'http://localhost:19420', headers: { Accept: 'text/event-stream' } }
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+  },
+  server: {
+    host: true,
+    port: 5173,
+    proxy: {
+      '/api/audit/stream': SSE_PROXY,
+      '/api/update/stream': SSE_PROXY,
+      '/api/check/stream': SSE_PROXY,
+      '/api/diff/stream': SSE_PROXY,
+      '/api': 'http://localhost:19420',
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return;
+          // React core — rarely changes, cache separately
+          if (id.includes('/react-dom/') || id.includes('/react/') || id.includes('/scheduler/')) {
+            return 'vendor-react';
+          }
+          // CodeMirror ecosystem — heavy, only used in FileViewerModal + ConfigPage
+          if (id.includes('@codemirror') || id.includes('@uiw/') || id.includes('@lezer/')) {
+            return 'vendor-codemirror';
+          }
+          // Markdown ecosystem — only used in SkillDetailPage + FileViewerModal
+          if (
+            id.includes('react-markdown') || id.includes('remark-') ||
+            id.includes('micromark') || id.includes('mdast-') ||
+            id.includes('unified') || id.includes('unist-') ||
+            id.includes('hast-') || id.includes('vfile') ||
+            id.includes('devlop')
+          ) {
+            return 'vendor-markdown';
+          }
+          // TanStack Query — shared across all pages
+          if (id.includes('@tanstack/react-query')) {
+            return 'vendor-tanstack-query';
+          }
+        },
+      },
+    },
+  },
+})

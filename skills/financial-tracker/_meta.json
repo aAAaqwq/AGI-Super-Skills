@@ -1,0 +1,11 @@
+{
+  "owner": "1kalin",
+  "slug": "financial-tracker",
+  "displayName": "Financial Tracker",
+  "latest": {
+    "version": "1.0.0",
+    "publishedAt": 1770951158648,
+    "commit": "https://github.com/openclaw/skills/commit/1c3609fee1ce6c3e1839f7aead5440bd3bdb2347"
+  },
+  "history": []
+}

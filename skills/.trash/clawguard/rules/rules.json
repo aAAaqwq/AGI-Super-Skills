@@ -1,0 +1,133 @@
+{
+  "version": "2026.03.05",
+  "updatedAt": "2026-03-05T00:00:00Z",
+  "rules": [
+    {
+      "id": "EXEC_SYNC",
+      "severity": "high",
+      "description": "execSync can run arbitrary shell commands",
+      "pattern": "\\bexecSync\\s*\\("
+    },
+    {
+      "id": "EXEC",
+      "severity": "high",
+      "description": "exec can run arbitrary shell commands",
+      "pattern": "\\bexec\\s*\\("
+    },
+    {
+      "id": "EXECFILE",
+      "severity": "high",
+      "description": "execFile can run external commands",
+      "pattern": "\\bexecFile\\s*\\("
+    },
+    {
+      "id": "SPAWN",
+      "severity": "medium",
+      "description": "spawn can start external processes",
+      "pattern": "\\bspawn\\s*\\("
+    },
+    {
+      "id": "SPAWN_SYNC",
+      "severity": "medium",
+      "description": "spawnSync can start external processes",
+      "pattern": "\\bspawnSync\\s*\\("
+    },
+    {
+      "id": "CHILD_PROCESS",
+      "severity": "medium",
+      "description": "child_process usage detected",
+      "pattern": "(require\\(['\"]child_process['\"]\\)|from\\s+['\"]child_process['\"]|\\bchild_process\\b)"
+    },
+    {
+      "id": "EVAL",
+      "severity": "high",
+      "description": "eval executes dynamic code",
+      "pattern": "\\beval\\s*\\("
+    },
+    {
+      "id": "FUNCTION_CTOR",
+      "severity": "high",
+      "description": "Function constructor executes dynamic code",
+      "pattern": "\\bnew\\s+Function\\s*\\("
+    },
+    {
+      "id": "VM_RUN",
+      "severity": "high",
+      "description": "vm.run* can execute untrusted code",
+      "pattern": "\\bvm\\.(runInNewContext|runInContext|runInThisContext)\\b"
+    },
+    {
+      "id": "CURL_PIPE",
+      "severity": "high",
+      "description": "curl piped to shell",
+      "pattern": "\\bcurl\\b[^\\n]*\\|\\s*(sh|bash)\\b"
+    },
+    {
+      "id": "WGET_PIPE",
+      "severity": "high",
+      "description": "wget piped to shell",
+      "pattern": "\\bwget\\b[^\\n]*\\|\\s*(sh|bash)\\b"
+    },
+    {
+      "id": "SUDO",
+      "severity": "medium",
+      "description": "sudo usage detected",
+      "pattern": "\\bsudo\\b"
+    },
+    {
+      "id": "CHMOD_WORLD",
+      "severity": "high",
+      "description": "world-writable chmod detected",
+      "pattern": "\\bchmod\\s+(?:-R\\s+)?(777|a\\+rwx)\\b"
+    },
+    {
+      "id": "RM_RF",
+      "severity": "high",
+      "description": "recursive delete detected",
+      "pattern": "\\brm\\s+-rf\\b"
+    },
+    {
+      "id": "BASH_C",
+      "severity": "medium",
+      "description": "bash -c execution detected",
+      "pattern": "\\bbash\\s+-c\\b"
+    },
+    {
+      "id": "SCRIPT_EXEC",
+      "severity": "medium",
+      "description": "inline script execution detected",
+      "pattern": "\\b(python|node|perl)\\s+-e\\b"
+    },
+    {
+      "id": "SENSITIVE_PATH",
+      "severity": "high",
+      "description": "access to sensitive system paths",
+      "pattern": "\\/etc\\/(passwd|shadow|sudoers)|\\.ssh\\/|id_(rsa|ed25519)|authorized_keys"
+    },
+    {
+      "id": "RAW_SOCKET",
+      "severity": "medium",
+      "description": "raw network/socket usage detected",
+      "pattern": "(require\\(['\"](net|dgram)['\"]\\)|from\\s+['\"](net|dgram)['\"]|\\bnet\\.\\w+\\b|\\bdgram\\.\\w+\\b)"
+    },
+    {
+      "id": "SECRET_ENV",
+      "severity": "medium",
+      "description": "references common secret environment names",
+      "pattern": "\\b(OPENAI_API_KEY|ANTHROPIC_API_KEY|AWS_SECRET_ACCESS_KEY|GITHUB_TOKEN|SLACK_TOKEN|OPENCLAW_TOKEN|OPENCLAW_API_KEY)\\b"
+    },
+    {
+      "id": "BASE64_EVAL",
+      "severity": "high",
+      "description": "base64 decode + eval style patterns",
+      "pattern": "eval\\s*\\(.*(base64|atob|Buffer\\.from).*(\\)|;)",
+      "flags": "s"
+    },
+    {
+      "id": "POWERSHELL",
+      "severity": "high",
+      "description": "PowerShell execution detected",
+      "pattern": "\\bpowershell\\b|\\bInvoke-WebRequest\\b|\\bIEX\\b"
+    }
+  ]
+}

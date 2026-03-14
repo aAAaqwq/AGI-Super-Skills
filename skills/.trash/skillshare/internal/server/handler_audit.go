@@ -1,0 +1,633 @@
+package server
+
+import (
+	"encoding/json"
+	"net/http"
+	"os"
+	"path/filepath"
+	"time"
+
+	"skillshare/internal/audit"
+	"skillshare/internal/sync"
+	"skillshare/internal/utils"
+)
+
+type auditFindingResponse struct {
+	Severity string `json:"severity"`
+	Pattern  string `json:"pattern"`
+	Message  string `json:"message"`
+	File     string `json:"file"`
+	Line     int    `json:"line"`
+	Snippet  string `json:"snippet"`
+
+	// Phase 2 fields — analyzer traceability and deduplication.
+	RuleID      string  `json:"ruleId,omitempty"`
+	Analyzer    string  `json:"analyzer,omitempty"`
+	Category    string  `json:"category,omitempty"`
+	Confidence  float64 `json:"confidence,omitempty"`
+	Fingerprint string  `json:"fingerprint,omitempty"`
+}
+
+type auditResultResponse struct {
+	SkillName      string                 `json:"skillName"`
+	Findings       []auditFindingResponse `json:"findings"`
+	RiskScore      int                    `json:"riskScore"`
+	RiskLabel      string                 `json:"riskLabel"`
+	Threshold      string                 `json:"threshold"`
+	IsBlocked      bool                   `json:"isBlocked"`
+	ScanTarget     string                 `json:"scanTarget,omitempty"`
+	TotalBytes     int64                  `json:"totalBytes"`
+	AuditableBytes int64                  `json:"auditableBytes"`
+	Analyzability  float64                `json:"analyzability"`
+	TierProfile    audit.TierProfile      `json:"tierProfile"`
+}
+
+type auditSummary struct {
+	Total            int            `json:"total"`
+	Passed           int            `json:"passed"`
+	Warning          int            `json:"warning"`
+	Failed           int            `json:"failed"`
+	Critical         int            `json:"critical"`
+	High             int            `json:"high"`
+	Medium           int            `json:"medium"`
+	Low              int            `json:"low"`
+	Info             int            `json:"info"`
+	Threshold        string         `json:"threshold"`
+	RiskScore        int            `json:"riskScore"`
+	RiskLabel        string         `json:"riskLabel"`
+	ScanErrors       int            `json:"scanErrors,omitempty"`
+	AvgAnalyzability float64        `json:"avgAnalyzability"`
+	ByCategory       map[string]int `json:"byCategory,omitempty"`
+	PolicyProfile    string         `json:"policyProfile,omitempty"`
+	PolicyDedupe     string         `json:"policyDedupe,omitempty"`
+}
+
+type skillEntry struct {
+	name string
+	path string
+}
+
+// discoverAuditSkills discovers and deduplicates skills for audit scanning.
+func discoverAuditSkills(source string) ([]skillEntry, error) {
+	discovered, err := sync.DiscoverSourceSkills(source)
+	if err != nil {
+		return nil, err
+	}
+
+	seen := make(map[string]bool)
+	var skills []skillEntry
+
+	for _, d := range discovered {
+		if seen[d.SourcePath] {
+			continue
+		}
+		seen[d.SourcePath] = true
+		skills = append(skills, skillEntry{d.FlatName, d.SourcePath})
+	}
+
+	entries, _ := os.ReadDir(source)
+	for _, e := range entries {
+		if !e.IsDir() || utils.IsHidden(e.Name()) {
+			continue
+		}
+		p := filepath.Join(source, e.Name())
+		if !seen[p] {
+			seen[p] = true
+			skills = append(skills, skillEntry{e.Name(), p})
+		}
+	}
+
+	return skills, nil
+}
+
+// auditAggregation holds the aggregated audit results and summary.
+type auditAggregation struct {
+	Results []auditResultResponse
+	Summary auditSummary
+	LogArgs map[string]any
+	Status  string
+	Message string
+}
+
+// processAuditResults aggregates scan outputs into results, summary, and log args.
+func processAuditResults(skills []skillEntry, scanned []audit.ScanOutput, policy audit.Policy) auditAggregation {
+	threshold := policy.Threshold
+	var results []auditResultResponse
+	var rawResults []*audit.Result
+	summary := auditSummary{
+		Total:     len(skills),
+		Threshold: threshold,
+	}
+	criticalCount := 0
+	highCount := 0
+	mediumCount := 0
+	lowCount := 0
+	infoCount := 0
+	failedSkills := make([]string, 0)
+	warningSkills := make([]string, 0)
+	lowSkills := make([]string, 0)
+	infoSkills := make([]string, 0)
+	scanErrors := 0
+	maxRisk := 0
+	maxSeverity := ""
+	sumAnalyzability := 0.0
+	catCounts := make(map[string]int)
+
+	for i := range skills {
+		se := scanned[i]
+		if se.Err != nil {
+			scanErrors++
+			continue
+		}
+		result := se.Result
+		result.Threshold = threshold
+		result.IsBlocked = result.HasSeverityAtOrAbove(threshold)
+
+		rawResults = append(rawResults, result)
+		resp := toAuditResponse(result)
+		results = append(results, resp)
+
+		if len(result.Findings) == 0 {
+			summary.Passed++
+		} else if result.IsBlocked {
+			summary.Failed++
+			failedSkills = append(failedSkills, result.SkillName)
+		} else {
+			summary.Warning++
+			warningSkills = append(warningSkills, result.SkillName)
+		}
+
+		c, h, m, l, i := result.CountBySeverityAll()
+		criticalCount += c
+		highCount += h
+		mediumCount += m
+		lowCount += l
+		infoCount += i
+		for cat, n := range result.CountByCategory() {
+			catCounts[cat] += n
+		}
+		if l > 0 {
+			lowSkills = append(lowSkills, result.SkillName)
+		}
+		if i > 0 {
+			infoSkills = append(infoSkills, result.SkillName)
+		}
+		if result.RiskScore > maxRisk {
+			maxRisk = result.RiskScore
+		}
+		if ms := result.MaxSeverity(); ms != "" {
+			if maxSeverity == "" || audit.SeverityRank(ms) < audit.SeverityRank(maxSeverity) {
+				maxSeverity = ms
+			}
+		}
+		sumAnalyzability += result.Analyzability
+	}
+
+	status := "ok"
+	msg := ""
+	if summary.Failed > 0 {
+		status = "blocked"
+		msg = "findings at/above threshold detected"
+	}
+	summary.Critical = criticalCount
+	summary.High = highCount
+	summary.Medium = mediumCount
+	summary.Low = lowCount
+	summary.Info = infoCount
+	summary.ScanErrors = scanErrors
+	summary.RiskScore = maxRisk
+	summary.RiskLabel = audit.RiskLabelFromScoreAndMaxSeverity(maxRisk, maxSeverity)
+	if len(results) > 0 {
+		summary.AvgAnalyzability = sumAnalyzability / float64(len(results))
+	}
+	summary.PolicyProfile = string(policy.Profile)
+	summary.PolicyDedupe = string(policy.DedupeMode)
+	if len(catCounts) > 0 {
+		summary.ByCategory = catCounts
+	}
+
+	args := map[string]any{
+		"scope":       "all",
+		"mode":        "ui",
+		"threshold":   threshold,
+		"scanned":     summary.Total,
+		"passed":      summary.Passed,
+		"warning":     summary.Warning,
+		"failed":      summary.Failed,
+		"critical":    criticalCount,
+		"high":        highCount,
+		"medium":      mediumCount,
+		"low":         lowCount,
+		"info":        infoCount,
+		"risk_score":  summary.RiskScore,
+		"risk_label":  summary.RiskLabel,
+		"scan_errors": scanErrors,
+	}
+	if len(failedSkills) > 0 {
+		args["failed_skills"] = failedSkills
+	}
+	if len(warningSkills) > 0 {
+		args["warning_skills"] = warningSkills
+	}
+	if len(lowSkills) > 0 {
+		args["low_skills"] = lowSkills
+	}
+	if len(infoSkills) > 0 {
+		args["info_skills"] = infoSkills
+	}
+	// Cross-skill analysis (after summary so counts are unaffected).
+	if xr := audit.CrossSkillAnalysis(rawResults); xr != nil {
+		results = append(results, toAuditResponse(xr))
+	}
+
+	return auditAggregation{
+		Results: results,
+		Summary: summary,
+		LogArgs: args,
+		Status:  status,
+		Message: msg,
+	}
+}
+
+func (s *Server) handleAuditAll(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
+	policy := s.auditPolicy()
+
+	skills, err := discoverAuditSkills(s.cfg.Source)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	projectRoot := s.projectRoot
+	if !s.IsProjectMode() {
+		projectRoot = ""
+	}
+	scanned := audit.ParallelScan(skillsToAuditInputs(skills), projectRoot, nil, nil)
+
+	agg := processAuditResults(skills, scanned, policy)
+	s.writeAuditLog(agg.Status, start, agg.LogArgs, agg.Message)
+
+	writeJSON(w, map[string]any{
+		"results": agg.Results,
+		"summary": agg.Summary,
+	})
+}
+
+func (s *Server) handleAuditSkill(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
+	name := r.PathValue("name")
+	policy := s.auditPolicy()
+	threshold := policy.Threshold
+	skillPath := filepath.Join(s.cfg.Source, name)
+
+	if _, err := os.Stat(skillPath); os.IsNotExist(err) {
+		writeError(w, http.StatusNotFound, "skill not found: "+name)
+		return
+	}
+
+	var (
+		result *audit.Result
+		err    error
+	)
+	if s.IsProjectMode() {
+		result, err = audit.ScanSkillForProject(skillPath, s.projectRoot)
+	} else {
+		result, err = audit.ScanSkill(skillPath)
+	}
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	result.Threshold = threshold
+	result.IsBlocked = result.HasSeverityAtOrAbove(threshold)
+
+	c, h, m, l, i := result.CountBySeverityAll()
+	warningCount := 0
+	failedCount := 0
+	failedSkills := []string{}
+	warningSkills := []string{}
+	lowSkills := []string{}
+	infoSkills := []string{}
+	if len(result.Findings) == 0 {
+		// no-op
+	} else if result.IsBlocked {
+		failedCount = 1
+		failedSkills = append(failedSkills, result.SkillName)
+	} else {
+		warningCount = 1
+		warningSkills = append(warningSkills, result.SkillName)
+	}
+	if l > 0 {
+		lowSkills = append(lowSkills, result.SkillName)
+	}
+	if i > 0 {
+		infoSkills = append(infoSkills, result.SkillName)
+	}
+
+	status := "ok"
+	msg := ""
+	if result.IsBlocked {
+		status = "blocked"
+		msg = "findings at/above threshold detected"
+	}
+	args := map[string]any{
+		"scope":      "single",
+		"name":       name,
+		"mode":       "ui",
+		"threshold":  threshold,
+		"scanned":    1,
+		"passed":     boolToInt(len(result.Findings) == 0),
+		"warning":    warningCount,
+		"failed":     failedCount,
+		"critical":   c,
+		"high":       h,
+		"medium":     m,
+		"low":        l,
+		"info":       i,
+		"risk_score": result.RiskScore,
+		"risk_label": result.RiskLabel,
+	}
+	if len(failedSkills) > 0 {
+		args["failed_skills"] = failedSkills
+	}
+	if len(warningSkills) > 0 {
+		args["warning_skills"] = warningSkills
+	}
+	if len(lowSkills) > 0 {
+		args["low_skills"] = lowSkills
+	}
+	if len(infoSkills) > 0 {
+		args["info_skills"] = infoSkills
+	}
+	s.writeAuditLog(status, start, args, msg)
+
+	singleCats := result.CountByCategory()
+	var byCat map[string]int
+	if len(singleCats) > 0 {
+		byCat = singleCats
+	}
+	writeJSON(w, map[string]any{
+		"result": toAuditResponse(result),
+		"summary": auditSummary{
+			Total:            1,
+			Passed:           boolToInt(len(result.Findings) == 0),
+			Warning:          warningCount,
+			Failed:           failedCount,
+			Critical:         c,
+			High:             h,
+			Medium:           m,
+			Low:              l,
+			Info:             i,
+			Threshold:        threshold,
+			RiskScore:        result.RiskScore,
+			RiskLabel:        result.RiskLabel,
+			AvgAnalyzability: result.Analyzability,
+			ByCategory:       byCat,
+			PolicyProfile:    string(policy.Profile),
+			PolicyDedupe:     string(policy.DedupeMode),
+		},
+	})
+}
+
+func boolToInt(v bool) int {
+	if v {
+		return 1
+	}
+	return 0
+}
+
+func (s *Server) auditPolicy() audit.Policy {
+	var in audit.PolicyInputs
+	in.ConfigThreshold = s.cfg.Audit.BlockThreshold
+	in.ConfigProfile = s.cfg.Audit.Profile
+	in.ConfigDedupe = s.cfg.Audit.DedupeMode
+	in.ConfigAnalyzers = s.cfg.Audit.EnabledAnalyzers
+	if s.IsProjectMode() && s.projectCfg != nil {
+		if s.projectCfg.Audit.BlockThreshold != "" {
+			in.ConfigThreshold = s.projectCfg.Audit.BlockThreshold
+		}
+		if s.projectCfg.Audit.Profile != "" {
+			in.ConfigProfile = s.projectCfg.Audit.Profile
+		}
+		if s.projectCfg.Audit.DedupeMode != "" {
+			in.ConfigDedupe = s.projectCfg.Audit.DedupeMode
+		}
+		if len(s.projectCfg.Audit.EnabledAnalyzers) > 0 {
+			in.ConfigAnalyzers = s.projectCfg.Audit.EnabledAnalyzers
+		}
+	}
+	return audit.ResolvePolicy(in)
+}
+
+func (s *Server) auditThreshold() string {
+	return s.auditPolicy().Threshold
+}
+
+// auditRulesPath returns the correct audit-rules.yaml path for the current mode.
+func (s *Server) auditRulesPath() string {
+	if s.IsProjectMode() {
+		return audit.ProjectAuditRulesPath(s.projectRoot)
+	}
+	return audit.GlobalAuditRulesPath()
+}
+
+func (s *Server) handleGetAuditRules(w http.ResponseWriter, r *http.Request) {
+	path := s.auditRulesPath()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			writeJSON(w, map[string]any{
+				"exists": false,
+				"raw":    "",
+				"path":   path,
+			})
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to read rules: "+err.Error())
+		return
+	}
+
+	writeJSON(w, map[string]any{
+		"exists": true,
+		"raw":    string(data),
+		"path":   path,
+	})
+}
+
+func (s *Server) handlePutAuditRules(w http.ResponseWriter, r *http.Request) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	var body struct {
+		Raw string `json:"raw"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid JSON body")
+		return
+	}
+
+	if err := audit.ValidateRulesYAML(body.Raw); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid rules: "+err.Error())
+		return
+	}
+
+	path := s.auditRulesPath()
+	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		writeError(w, http.StatusInternalServerError, "create directory: "+err.Error())
+		return
+	}
+	if err := os.WriteFile(path, []byte(body.Raw), 0644); err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to write rules: "+err.Error())
+		return
+	}
+
+	writeJSON(w, map[string]any{"success": true})
+}
+
+func (s *Server) handleInitAuditRules(w http.ResponseWriter, r *http.Request) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	path := s.auditRulesPath()
+	if err := audit.InitRulesFile(path); err != nil {
+		if os.IsNotExist(err) {
+			writeError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		// File already exists → 409 Conflict
+		if _, statErr := os.Stat(path); statErr == nil {
+			writeError(w, http.StatusConflict, "rules file already exists: "+path)
+			return
+		}
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	writeJSON(w, map[string]any{
+		"success": true,
+		"path":    path,
+	})
+}
+
+func (s *Server) handleGetCompiledRules(w http.ResponseWriter, r *http.Request) {
+	var rules []audit.CompiledRule
+	var err error
+
+	if s.IsProjectMode() {
+		rules, err = audit.ListRulesWithProject(s.projectRoot)
+	} else {
+		rules, err = audit.ListRules()
+	}
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "list rules: "+err.Error())
+		return
+	}
+
+	patterns := audit.PatternSummary(rules)
+	writeJSON(w, map[string]any{
+		"rules":    rules,
+		"patterns": patterns,
+	})
+}
+
+func (s *Server) handleToggleRule(w http.ResponseWriter, r *http.Request) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	var req struct {
+		ID       string `json:"id,omitempty"`
+		Pattern  string `json:"pattern,omitempty"`
+		Enabled  bool   `json:"enabled"`
+		Severity string `json:"severity,omitempty"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+
+	path := s.auditRulesPath()
+	var err error
+
+	// Severity override takes precedence when provided
+	if req.Severity != "" {
+		if req.Pattern != "" {
+			err = audit.SetPatternSeverity(path, req.Pattern, req.Severity)
+		} else if req.ID != "" {
+			err = audit.SetSeverity(path, req.ID, req.Severity)
+		} else {
+			writeError(w, http.StatusBadRequest, "id or pattern required")
+			return
+		}
+	} else if req.Pattern != "" {
+		err = audit.TogglePattern(path, req.Pattern, req.Enabled)
+	} else if req.ID != "" {
+		err = audit.ToggleRule(path, req.ID, req.Enabled)
+	} else {
+		writeError(w, http.StatusBadRequest, "id or pattern required")
+		return
+	}
+
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "toggle rule: "+err.Error())
+		return
+	}
+
+	audit.ResetGlobalCache()
+	writeJSON(w, map[string]any{"success": true})
+}
+
+func (s *Server) handleResetRules(w http.ResponseWriter, r *http.Request) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	path := s.auditRulesPath()
+	if err := audit.ResetRules(path); err != nil {
+		writeError(w, http.StatusInternalServerError, "reset rules: "+err.Error())
+		return
+	}
+
+	audit.ResetGlobalCache()
+	writeJSON(w, map[string]any{"success": true})
+}
+
+func skillsToAuditInputs(skills []skillEntry) []audit.SkillInput {
+	inputs := make([]audit.SkillInput, len(skills))
+	for i, s := range skills {
+		inputs[i] = audit.SkillInput{Name: s.name, Path: s.path}
+	}
+	return inputs
+}
+
+func toAuditResponse(result *audit.Result) auditResultResponse {
+	findings := make([]auditFindingResponse, 0, len(result.Findings))
+	for _, f := range result.Findings {
+		findings = append(findings, auditFindingResponse{
+			Severity:    f.Severity,
+			Pattern:     f.Pattern,
+			Message:     f.Message,
+			File:        f.File,
+			Line:        f.Line,
+			Snippet:     f.Snippet,
+			RuleID:      f.RuleID,
+			Analyzer:    f.Analyzer,
+			Category:    f.Category,
+			Confidence:  f.Confidence,
+			Fingerprint: f.Fingerprint,
+		})
+	}
+	return auditResultResponse{
+		SkillName:      result.SkillName,
+		Findings:       findings,
+		RiskScore:      result.RiskScore,
+		RiskLabel:      result.RiskLabel,
+		Threshold:      result.Threshold,
+		IsBlocked:      result.IsBlocked,
+		ScanTarget:     result.ScanTarget,
+		TotalBytes:     result.TotalBytes,
+		AuditableBytes: result.AuditableBytes,
+		Analyzability:  result.Analyzability,
+		TierProfile:    result.TierProfile,
+	}
+}

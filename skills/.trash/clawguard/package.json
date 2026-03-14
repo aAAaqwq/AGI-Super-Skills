@@ -1,0 +1,43 @@
+{
+  "name": "clawguard",
+  "version": "0.1.0",
+  "description": "Scan OpenClaw skills/plugins for risky patterns and block high-risk runs.",
+  "bin": {
+    "clawguard": "bin/clawguard.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jiangmuran/clawguard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jiangmuran/clawguard/issues"
+  },
+  "homepage": "https://clawguard.muran.tech",
+  "type": "commonjs",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "openclaw",
+    "security",
+    "scanner",
+    "skills",
+    "plugins"
+  ],
+  "files": [
+    "bin",
+    "src",
+    "rules",
+    "docs",
+    "install.sh",
+    "install.ps1",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "scan": "node bin/clawguard.js scan",
+    "guard": "node bin/clawguard.js guard --",
+    "test": "node tests/run.js"
+  }
+}

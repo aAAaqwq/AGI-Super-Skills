@@ -1,0 +1,23 @@
+{
+  "name": "ai-research-skills",
+  "version": "1.0.1",
+  "description": "> **The most comprehensive open-source library of AI research engineering skills for AI agents**",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Orchestra-Research/AI-research-SKILLs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Orchestra-Research/AI-research-SKILLs/issues"
+  },
+  "homepage": "https://github.com/Orchestra-Research/AI-research-SKILLs#readme"
+}

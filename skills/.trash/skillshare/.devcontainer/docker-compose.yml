@@ -1,0 +1,34 @@
+# Devcontainer-only service: no profile restriction, stays alive for VS Code attach.
+# Reuses the same Dockerfile and volume setup as sandbox-dev.
+name: skillshare_devcontainer
+
+services:
+  skillshare-devcontainer:
+    build:
+      context: ..
+      dockerfile: docker/sandbox/Dockerfile
+    working_dir: /workspace
+    command: sleep infinity
+    environment:
+      HOME: /home/developer
+      GOCACHE: /go/build-cache
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GITLAB_TOKEN: ${GITLAB_TOKEN:-}
+      BITBUCKET_TOKEN: ${BITBUCKET_TOKEN:-}
+      BITBUCKET_USERNAME: ${BITBUCKET_USERNAME:-}
+      SKILLSHARE_GIT_TOKEN: ${SKILLSHARE_GIT_TOKEN:-}
+    ports:
+      - "5173:5173"
+      - "19420:19420"
+    volumes:
+      - ..:/workspace
+      - go-mod-cache:/go/pkg/mod
+      - go-build-cache:/go/build-cache
+      - dev-home:/home/developer
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  go-mod-cache:
+  go-build-cache:
+  dev-home:

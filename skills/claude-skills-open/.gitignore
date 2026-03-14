@@ -1,0 +1,5 @@
+.DS_Store
+setup/config.yaml
+__pycache__/
+*.pyc
+.env

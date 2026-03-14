@@ -1,0 +1,19 @@
+name: Feature request
+description: Suggest an improvement or new feature
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Idea
+      description: What should Clawguard do?
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: Value
+      description: Why is this valuable?
+    validations:
+      required: true

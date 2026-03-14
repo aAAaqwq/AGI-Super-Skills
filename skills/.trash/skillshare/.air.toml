@@ -1,0 +1,26 @@
+# Air – Go hot-reload for `make ui-dev` / devcontainer `ui` command.
+# Docs: https://github.com/air-verse/air
+
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  entrypoint = "./cmd/skillshare"
+  cmd = "go build -o ./tmp/skillshare ./cmd/skillshare"
+  # SKILLSHARE_UI_EXEC_PREFIX: optional prefix for the run command (e.g., "cd /path && /workspace/"
+  # to change cwd while keeping the binary path absolute). Empty by default.
+  full_bin = "${SKILLSHARE_UI_EXEC_PREFIX}./tmp/skillshare ui --no-open --host ${SKILLSHARE_UI_HOST:-localhost} ${SKILLSHARE_UI_FLAGS}"
+  delay = 1000          # ms – debounce rapid saves
+  kill_delay = 500      # ms – graceful shutdown before SIGKILL
+  send_interrupt = true # SIGINT first (graceful shutdown)
+  include_ext = ["go"]
+  include_dir = ["cmd", "internal"]
+  exclude_dir = ["ui", "website", "tests", "scripts", "docker", "skills", "video", "tmp", ".devcontainer", ".github"]
+  exclude_regex = ["_test\\.go$"]
+  log = "build-errors.log"
+
+[log]
+  main_only = true
+
+[misc]
+  clean_on_exit = true

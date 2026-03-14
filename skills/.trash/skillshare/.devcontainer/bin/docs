@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# Devcontainer: start/stop Docusaurus.
+# Usage: docs         # start → http://localhost:3000
+#        docs stop    # stop
+set -euo pipefail
+
+PORT=3000
+PIDDIR=/tmp/dev-servers
+LOGDIR=/tmp
+mkdir -p "$PIDDIR"
+
+# Resolve pnpm
+PNPM_BIN=""
+if command -v pnpm >/dev/null 2>&1; then
+  PNPM_BIN="$(command -v pnpm)"
+elif [ -x /usr/local/share/pnpm/pnpm ]; then
+  PNPM_BIN="/usr/local/share/pnpm/pnpm"
+elif [ -x /usr/local/bin/pnpm ]; then
+  PNPM_BIN="/usr/local/bin/pnpm"
+elif [ -x /usr/local/share/nvm/current/bin/pnpm ]; then
+  PNPM_BIN="/usr/local/share/nvm/current/bin/pnpm"
+fi
+
+is_port_open() {
+  timeout 1 bash -c "echo > /dev/tcp/127.0.0.1/$1" 2>/dev/null
+}
+
+kill_pid_file() {
+  local pf="$1"
+  [ -f "$pf" ] || return 0
+  local pid; pid=$(cat "$pf")
+  pkill -P "$pid" 2>/dev/null || true
+  kill "$pid" 2>/dev/null || true
+  sleep 0.3
+  kill -9 "$pid" 2>/dev/null || true
+  rm -f "$pf"
+}
+
+case "${1:-start}" in
+  stop)
+    kill_pid_file "$PIDDIR/docusaurus.pid"
+    fuser -k $PORT/tcp 2>/dev/null || true
+    echo "  docusaurus   stopped"
+    ;;
+  *)
+    if is_port_open $PORT; then
+      echo "✓ Docs: http://localhost:$PORT (run 'docs stop' to shut down)"
+      exit 0
+    fi
+    if [ -z "$PNPM_BIN" ]; then
+      echo "  docusaurus   failed: pnpm not found" >&2
+      exit 1
+    fi
+    if [ ! -x /workspace/website/node_modules/.bin/docusaurus ]; then
+      (cd /workspace/website && "$PNPM_BIN" install --frozen-lockfile > "$LOGDIR/docusaurus-deps.log" 2>&1) || true
+    fi
+    (cd /workspace/website && nohup "$PNPM_BIN" exec docusaurus start --host 0.0.0.0 --port $PORT --no-open > "$LOGDIR/docusaurus-dev.log" 2>&1 &
+     echo $! > "$PIDDIR/docusaurus.pid")
+    for _ in $(seq 1 60); do
+      is_port_open $PORT && break
+      sleep 1
+    done
+    if is_port_open $PORT; then
+      echo "✓ Docs: http://localhost:$PORT (run 'docs stop' to shut down)"
+    else
+      echo "  docusaurus   failed to start (see $LOGDIR/docusaurus-dev.log)" >&2
+      tail -n 10 "$LOGDIR/docusaurus-dev.log" 2>/dev/null | sed 's/^/    /' >&2
+      exit 1
+    fi
+    ;;
+esac

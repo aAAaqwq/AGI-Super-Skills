@@ -1,0 +1,24 @@
+{
+  "name": "mr-krabs-crypto",
+  "version": "1.1.0",
+  "type": "module",
+  "description": "Mr. Krabs crypto monitor and greedy persona.",
+  "openclaw": {
+    "extensionType": "plugin",
+    "id": "mr-krabs-crypto",
+    "name": "Mr. Krabs Crypto",
+    "description": "Scans Solana coins and acts like a greedy crab.",
+    "entry": "index.ts"
+  },
+  "author": "tjelz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tjelz/openclaw-moneyclaw.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@sinclair/typebox": "^0.34.14",
+    "@types/node": "^22.10.10",
+    "typescript": "^5.7.3"
+  }
+}

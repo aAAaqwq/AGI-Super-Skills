@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/runkids/skillshare/main/schemas/config.schema.json",
+  "title": "Skillshare Global Configuration",
+  "description": "Configuration file for skillshare — the universal AI skill manager. Location: ~/.config/skillshare/config.yaml",
+  "type": "object",
+  "required": ["source"],
+  "additionalProperties": false,
+  "properties": {
+    "source": {
+      "type": "string",
+      "description": "Path to the skills source directory (single source of truth). Supports ~ for home directory.",
+      "default": "~/.config/skillshare/skills",
+      "examples": ["~/.config/skillshare/skills", "/home/user/my-skills"]
+    },
+    "mode": {
+      "type": "string",
+      "description": "Default sync mode for all targets.",
+      "enum": ["merge", "symlink", "copy"],
+      "default": "merge",
+      "examples": ["merge"]
+    },
+    "targets": {
+      "type": "object",
+      "description": "AI CLI skill directories to sync to. Keys are target names (e.g. claude, cursor, codex).",
+      "additionalProperties": {
+        "$ref": "#/$defs/targetConfig"
+      },
+      "examples": [
+        {
+          "claude": { "path": "~/.claude/skills" },
+          "cursor": { "path": "~/.cursor/skills" }
+        }
+      ]
+    },
+    "ignore": {
+      "type": "array",
+      "description": "Glob patterns for files to skip during sync.",
+      "items": {
+        "type": "string"
+      },
+      "default": ["**/.DS_Store", "**/.git/**"],
+      "examples": [["**/.DS_Store", "**/.git/**", "**/node_modules/**"]]
+    },
+    "audit": {
+      "$ref": "#/$defs/auditConfig"
+    },
+    "hub": {
+      "$ref": "#/$defs/hubConfig"
+    },
+    "tui": {
+      "type": "boolean",
+      "description": "Enable or disable interactive TUI mode globally. When false, all commands use plain text output (equivalent to --no-tui on every command).",
+      "default": true
+    }
+  },
+  "$defs": {
+    "targetConfig": {
+      "type": "object",
+      "description": "Configuration for a single sync target.",
+      "required": ["path"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Absolute path to the target skills directory. Supports ~ for home directory.",
+          "examples": ["~/.claude/skills", "~/.cursor/skills"]
+        },
+        "mode": {
+          "type": "string",
+          "description": "Sync mode override for this target. If omitted, inherits the top-level mode.",
+          "enum": ["merge", "symlink", "copy"]
+        },
+        "include": {
+          "type": "array",
+          "description": "Glob patterns — only matching skills are synced (merge and copy modes).",
+          "items": { "type": "string" },
+          "examples": [["codex-*", "shared-*"]]
+        },
+        "exclude": {
+          "type": "array",
+          "description": "Glob patterns — matching skills are excluded from sync (merge and copy modes).",
+          "items": { "type": "string" },
+          "examples": [["*-experimental", "codex-*"]]
+        }
+      }
+    },
+    "auditConfig": {
+      "type": "object",
+      "description": "Security audit policy settings.",
+      "additionalProperties": false,
+      "properties": {
+        "block_threshold": {
+          "type": "string",
+          "description": "Minimum severity level that blocks 'skillshare install'. Scanning always runs regardless of this setting.",
+          "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"],
+          "default": "CRITICAL"
+        },
+        "profile": {
+          "type": "string",
+          "description": "Audit profile preset. Sets default threshold and dedupe mode. Explicit settings override profile defaults.",
+          "enum": ["default", "strict", "permissive"],
+          "default": "default"
+        },
+        "dedupe_mode": {
+          "type": "string",
+          "description": "Finding deduplication mode. 'legacy' keeps existing behavior; 'global' applies full composite-key deduplication.",
+          "enum": ["legacy", "global"],
+          "default": "legacy"
+        },
+        "enabled_analyzers": {
+          "type": "array",
+          "description": "Analyzer allowlist. Only listed analyzers will run. Empty or omitted means all analyzers are enabled.",
+          "items": {
+            "type": "string",
+            "enum": ["static", "dataflow", "tier", "integrity", "structure", "cross-skill"]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "hubConfig": {
+      "type": "object",
+      "description": "Skill hub persistence settings.",
+      "additionalProperties": false,
+      "properties": {
+        "default": {
+          "type": "string",
+          "description": "Default hub label to use for search/install."
+        },
+        "hubs": {
+          "type": "array",
+          "description": "List of saved hub sources.",
+          "items": {
+            "$ref": "#/$defs/hubEntry"
+          }
+        }
+      }
+    },
+    "hubEntry": {
+      "type": "object",
+      "description": "A single saved hub source.",
+      "required": ["label", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Display name for this hub.",
+          "examples": ["official", "my-org"]
+        },
+        "url": {
+          "type": "string",
+          "description": "Hub URL.",
+          "examples": ["https://skillshare.runkids.cc/api/hub"]
+        },
+        "builtin": {
+          "type": "boolean",
+          "description": "Whether this hub is built-in (auto-added on init).",
+          "default": false
+        }
+      }
+    }
+  }
+}

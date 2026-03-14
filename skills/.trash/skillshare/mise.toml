@@ -1,0 +1,184 @@
+[tools]
+go = "1.25.5"
+pnpm = "10.28.0"
+
+[tasks.help]
+description = "Show common development tasks"
+run = """
+echo "Common tasks:"
+echo "  mise run build          # build binary"
+echo "  mise run run            # run local binary help"
+echo "  mise run test           # unit + integration tests"
+echo "  mise run test:unit      # unit tests only"
+echo "  mise run test:int       # integration tests only"
+echo "  mise run test:docker    # docker offline sandbox (build + unit + integration)"
+echo "  mise run test:docker:online  # docker online install/update tests"
+echo "  mise run test:redteam   # red team supply-chain security tests"
+echo "  mise run playground     # start playground + enter shell (one step)"
+echo "  mise run playground:down  # stop and remove playground"
+echo "  mise run devc           # start devcontainer + enter shell (one step)"
+echo "  mise run devc:up        # start devcontainer (no shell)"
+echo "  mise run devc:down      # stop devcontainer"
+echo "  mise run devc:restart   # restart devcontainer"
+echo "  mise run devc:reset     # full reset (remove volumes)"
+echo "  mise run devc:status    # show devcontainer status"
+echo "  mise run lint           # go vet"
+echo "  mise run fmt            # format Go files"
+echo "  mise run check          # fmt:check + lint + test"
+echo "  mise run ui:dev         # Go API server + Vite dev server (requires local Go)"
+echo "  mise run dev:docker    # Go API in Docker + auto-rebuild (pair with: cd ui && pnpm run dev)"
+echo "  mise run dev:docker:down  # stop dev Docker container"
+echo "  mise run build:all      # ui:build + build"
+echo "  mise run clean          # remove build artifacts"
+echo ""
+echo "Advanced (run scripts directly):"
+echo "  ./scripts/sandbox.sh <up|down|shell|reset|status|logs|bare>"
+echo "  ./scripts/test.sh --cover"
+echo "  ./scripts/test_install.sh"
+echo "  docker compose -f docker-compose.sandbox.yml --profile dev up -d  # start without watch"
+"""
+
+[tasks.build]
+description = "Build the skillshare binary"
+run = "mkdir -p bin && go build -o bin/skillshare ./cmd/skillshare"
+
+[tasks."build:meta"]
+description = "Build with version metadata"
+run = "./scripts/build.sh"
+
+[tasks."build:windows"]
+description = "Cross-compile for Windows ARM64 and copy to shared folder"
+run = "./scripts/build-windows.sh ${1:-}"
+
+[tasks.run]
+description = "Run skillshare help using the local binary"
+depends = ["build"]
+run = "./bin/skillshare --help"
+
+[tasks.test]
+description = "Run unit and integration tests"
+run = "./scripts/test.sh"
+
+[tasks."test:unit"]
+description = "Run unit tests only"
+run = "./scripts/test.sh --unit"
+
+[tasks."test:int"]
+description = "Run integration tests only"
+run = "./scripts/test.sh --int"
+
+[tasks."test:docker"]
+description = "Run tests in offline docker sandbox"
+run = "./scripts/test_docker.sh"
+
+[tasks."test:docker:online"]
+description = "Run optional network-dependent tests in docker sandbox"
+run = "./scripts/test_docker_online.sh"
+
+[tasks."test:redteam"]
+description = "Run red team supply-chain security tests"
+depends = ["build"]
+run = "./scripts/red_team_test.sh"
+
+[tasks.playground]
+description = "Start playground and enter shell (one step)"
+run = """
+./scripts/sandbox_playground_up.sh
+./scripts/sandbox_playground_shell.sh
+"""
+
+[tasks."playground:down"]
+description = "Stop and remove playground container"
+run = "./scripts/sandbox_playground_down.sh"
+
+[tasks.devc]
+description = "Start devcontainer + enter shell (one step)"
+run = """
+./scripts/devc.sh up
+./scripts/devc.sh shell
+"""
+
+[tasks."devc:up"]
+description = "Start devcontainer (no shell)"
+run = "./scripts/devc.sh up"
+
+[tasks."devc:down"]
+description = "Stop devcontainer"
+run = "./scripts/devc.sh down"
+
+[tasks."devc:restart"]
+description = "Restart devcontainer"
+run = "./scripts/devc.sh restart"
+
+[tasks."devc:reset"]
+description = "Full reset (remove volumes)"
+run = "./scripts/devc.sh reset"
+
+[tasks."devc:status"]
+description = "Show devcontainer status"
+run = "./scripts/devc.sh status"
+
+[tasks."dev:docker"]
+description = "Go API in Docker + auto-rebuild (pair with: cd ui && pnpm run dev)"
+run = "docker compose -f docker-compose.sandbox.yml --profile dev watch"
+
+[tasks."dev:docker:down"]
+description = "Stop dev Docker container"
+run = "docker compose -f docker-compose.sandbox.yml --profile dev down"
+
+[tasks."docker:build"]
+description = "Build production Docker image"
+run = "docker build -f docker/production/Dockerfile -t skillshare ."
+
+[tasks."docker:build:multiarch"]
+description = "Build multi-arch production Docker image (amd64 + arm64)"
+run = "docker buildx build --platform linux/amd64,linux/arm64 -f docker/production/Dockerfile -t skillshare ."
+
+[tasks.lint]
+description = "Run go vet"
+run = "go vet ./..."
+
+[tasks.fmt]
+description = "Format Go files"
+run = "gofmt -w ./cmd ./internal ./tests"
+
+[tasks."fmt:check"]
+description = "Check Go formatting (no changes)"
+run = "test -z \"$(gofmt -l ./cmd ./internal ./tests)\""
+
+[tasks.check]
+description = "Run formatting check, lint, and tests"
+depends = ["fmt:check", "lint", "test"]
+
+[tasks.install]
+description = "Install skillshare to GOPATH/bin"
+run = "go install ./cmd/skillshare"
+
+[tasks."ui:install"]
+description = "Install frontend dependencies"
+run = "cd ui && pnpm install"
+
+[tasks."ui:build"]
+description = "Build frontend"
+depends = ["ui:install"]
+run = "cd ui && pnpm run build"
+
+[tasks."ui:dev"]
+description = "Go API server + Vite dev server (air hot-reload)"
+run = """
+trap 'kill 0' EXIT
+air &
+cd ui && pnpm run dev
+"""
+
+[tasks."build:all"]
+description = "Build frontend + Go binary (full build)"
+depends = ["ui:build", "build"]
+
+[tasks.clean]
+description = "Clean build artifacts"
+run = "rm -rf bin coverage.out"
+
+[tasks.default]
+description = "Show task help"
+depends = ["help"]

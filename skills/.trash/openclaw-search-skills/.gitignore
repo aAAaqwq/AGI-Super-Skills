@@ -1,0 +1,15 @@
+# Secrets
+.env
+*.env.local
+
+# Cache
+mineru-cache/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,35 @@
+{
+  "name": "pi-planning-with-files",
+  "version": "1.0.1",
+  "description": "Manus-style file-based planning for Pi Coding Agent",
+  "keywords": [
+    "pi-package",
+    "planning",
+    "manus",
+    "agent",
+    "pi-skill"
+  ],
+  "pi": {
+    "skills": [
+      "SKILL.md"
+    ]
+  },
+  "files": [
+    "README.md",
+    "SKILL.md",
+    "examples.md",
+    "reference.md",
+    "scripts/",
+    "templates/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ttttmr/planning-with-files.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ttttmr/planning-with-files/issues"
+  },
+  "homepage": "https://github.com/ttttmr/planning-with-files#readme"
+}

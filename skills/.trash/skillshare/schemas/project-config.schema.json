@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/runkids/skillshare/main/schemas/project-config.schema.json",
+  "title": "Skillshare Project Configuration",
+  "description": "Project-level configuration for skillshare. Location: .skillshare/config.yaml",
+  "type": "object",
+  "required": ["targets"],
+  "additionalProperties": false,
+  "properties": {
+    "targets": {
+      "type": "array",
+      "description": "AI CLI skill directories to sync to. Supports string (known target name) or object (custom path/mode) forms.",
+      "items": {
+        "$ref": "#/$defs/projectTargetEntry"
+      },
+      "examples": [
+        ["claude", "cursor"],
+        [
+          "claude",
+          { "name": "custom-ide", "path": "./tools/ide/skills", "mode": "symlink" }
+        ]
+      ]
+    },
+    "audit": {
+      "$ref": "#/$defs/auditConfig"
+    },
+    "hub": {
+      "$ref": "#/$defs/hubConfig"
+    }
+  },
+  "$defs": {
+    "projectTargetEntry": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Known target name (e.g. claude, cursor, codex). Uses default path and merge mode.",
+          "examples": ["claude", "cursor", "codex"]
+        },
+        {
+          "type": "object",
+          "description": "Target with custom path, mode, or filters.",
+          "required": ["name"],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Target name (known name or custom identifier).",
+              "examples": ["claude", "custom-ide"]
+            },
+            "path": {
+              "type": "string",
+              "description": "Custom path to the target skills directory. Relative paths resolve from project root.",
+              "examples": [".my-ide/skills/", "./tools/ide/skills"]
+            },
+            "mode": {
+              "type": "string",
+              "description": "Sync mode override for this target (`merge`, `copy`, or `symlink`).",
+              "enum": ["merge", "symlink", "copy"]
+            },
+            "include": {
+              "type": "array",
+              "description": "Glob patterns — only matching skills are synced (merge and copy modes).",
+              "items": { "type": "string" }
+            },
+            "exclude": {
+              "type": "array",
+              "description": "Glob patterns — matching skills are excluded from sync (merge and copy modes).",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "auditConfig": {
+      "type": "object",
+      "description": "Security audit policy settings.",
+      "additionalProperties": false,
+      "properties": {
+        "block_threshold": {
+          "type": "string",
+          "description": "Minimum severity level that blocks 'skillshare install -p'. Scanning always runs regardless of this setting.",
+          "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"],
+          "default": "CRITICAL"
+        },
+        "profile": {
+          "type": "string",
+          "description": "Audit profile preset. Sets default threshold and dedupe mode. Explicit settings override profile defaults.",
+          "enum": ["default", "strict", "permissive"],
+          "default": "default"
+        },
+        "dedupe_mode": {
+          "type": "string",
+          "description": "Finding deduplication mode. 'legacy' keeps existing behavior; 'global' applies full composite-key deduplication.",
+          "enum": ["legacy", "global"],
+          "default": "legacy"
+        },
+        "enabled_analyzers": {
+          "type": "array",
+          "description": "Analyzer allowlist. Only listed analyzers will run. Empty or omitted means all analyzers are enabled.",
+          "items": {
+            "type": "string",
+            "enum": ["static", "dataflow", "tier", "integrity", "structure", "cross-skill"]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "hubConfig": {
+      "type": "object",
+      "description": "Skill hub persistence settings.",
+      "additionalProperties": false,
+      "properties": {
+        "default": {
+          "type": "string",
+          "description": "Default hub label to use for search/install."
+        },
+        "hubs": {
+          "type": "array",
+          "description": "List of saved hub sources.",
+          "items": {
+            "$ref": "#/$defs/hubEntry"
+          }
+        }
+      }
+    },
+    "hubEntry": {
+      "type": "object",
+      "description": "A single saved hub source.",
+      "required": ["label", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Display name for this hub.",
+          "examples": ["official", "my-org"]
+        },
+        "url": {
+          "type": "string",
+          "description": "Hub URL.",
+          "examples": ["https://skillshare.runkids.cc/api/hub"]
+        },
+        "builtin": {
+          "type": "boolean",
+          "description": "Whether this hub is built-in (auto-added on init).",
+          "default": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,112 @@
+x-sandbox-common: &sandbox-common
+  build:
+    context: .
+    dockerfile: docker/sandbox/Dockerfile
+  working_dir: /workspace
+  environment:
+    GOCACHE: /go/build-cache
+  volumes:
+    - .:/workspace
+    - go-mod-cache:/go/pkg/mod
+    - go-build-cache:/go/build-cache
+  security_opt:
+    - no-new-privileges:true
+  deploy:
+    resources:
+      limits:
+        cpus: "2"
+        memory: "2G"
+
+services:
+  sandbox-offline:
+    <<: *sandbox-common
+    profiles:
+      - offline
+    command:
+      - ./scripts/test.sh
+    network_mode: none
+    environment:
+      HOME: /tmp
+      GOCACHE: /go/build-cache
+
+  sandbox-online:
+    <<: *sandbox-common
+    profiles:
+      - online
+    command:
+      - ./scripts/test.sh
+    environment:
+      HOME: /tmp
+      GOCACHE: /go/build-cache
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GITLAB_TOKEN: ${GITLAB_TOKEN:-}
+      BITBUCKET_TOKEN: ${BITBUCKET_TOKEN:-}
+      BITBUCKET_USERNAME: ${BITBUCKET_USERNAME:-}
+      SKILLSHARE_GIT_TOKEN: ${SKILLSHARE_GIT_TOKEN:-}
+
+  sandbox-playground:
+    <<: *sandbox-common
+    profiles:
+      - playground
+    read_only: true
+    cap_drop:
+      - ALL
+    command:
+      - sleep
+      - infinity
+    ports:
+      - "19420:19420"
+    environment:
+      HOME: /sandbox-home
+      GOCACHE: /go/build-cache
+      PATH: /sandbox-home/.local/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      GITHUB_TOKEN: ${SKILLSHARE_PLAYGROUND_GITHUB_TOKEN:-}
+      GITLAB_TOKEN: ${GITLAB_TOKEN:-}
+      BITBUCKET_TOKEN: ${BITBUCKET_TOKEN:-}
+      BITBUCKET_USERNAME: ${BITBUCKET_USERNAME:-}
+      SKILLSHARE_GIT_TOKEN: ${SKILLSHARE_GIT_TOKEN:-}
+    volumes:
+      - .:/workspace:ro
+      - go-mod-cache:/go/pkg/mod
+      - go-build-cache:/go/build-cache
+      - playground-home:/sandbox-home
+    tmpfs:
+      - /tmp:exec,mode=1777,size=256m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:19420/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  sandbox-dev:
+    <<: *sandbox-common
+    profiles:
+      - dev
+    command:
+      - bash
+      - -c
+      - >-
+        cd /workspace &&
+        go run ./cmd/skillshare init -g --no-copy --no-git --skill 2>/dev/null;
+        go run ./cmd/skillshare ui -g --no-open --host 0.0.0.0
+    ports:
+      - "19420:19420"
+    environment:
+      HOME: /tmp
+      GOCACHE: /go/build-cache
+    develop:
+      watch:
+        - action: rebuild
+          path: ./cmd
+        - action: rebuild
+          path: ./internal
+        - action: rebuild
+          path: ./go.mod
+        - action: rebuild
+          path: ./go.sum
+
+volumes:
+  go-mod-cache:
+  go-build-cache:
+  playground-home:

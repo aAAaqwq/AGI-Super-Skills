@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+.DS_Store
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+clawguard.report.json
+clawguard.report.txt

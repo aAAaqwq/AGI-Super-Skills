@@ -1,0 +1,229 @@
+#!/usr/bin/env python3
+"""Bio Orchestrator: routes bioinformatics requests to specialised skills.
+
+Usage:
+    python orchestrator.py --input <file_or_query> [--skill <skill_name>] [--output <dir>]
+
+This is the supporting Python code for the Bio Orchestrator skill.
+It handles file type detection, skill routing, and report assembly.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+import argparse
+import hashlib
+import json
+import sys
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
+
+# ---------------------------------------------------------------------------
+# File-type routing
+# ---------------------------------------------------------------------------
+
+EXTENSION_MAP: dict[str, str] = {
+    ".vcf": "equity-scorer",
+    ".vcf.gz": "equity-scorer",
+    ".fastq": "seq-wrangler",
+    ".fastq.gz": "seq-wrangler",
+    ".fq": "seq-wrangler",
+    ".fq.gz": "seq-wrangler",
+    ".bam": "seq-wrangler",
+    ".cram": "seq-wrangler",
+    ".pdb": "struct-predictor",
+    ".cif": "struct-predictor",
+    ".h5ad": "scrna-orchestrator",
+    ".rds": "scrna-orchestrator",
+    ".csv": "equity-scorer",
+    ".tsv": "equity-scorer",
+}
+
+KEYWORD_MAP: dict[str, str] = {
+    "diversity": "equity-scorer",
+    "equity": "equity-scorer",
+    "heim": "equity-scorer",
+    "heterozygosity": "equity-scorer",
+    "fst": "equity-scorer",
+    "variant": "vcf-annotator",
+    "annotate": "vcf-annotator",
+    "vep": "vcf-annotator",
+    "structure": "struct-predictor",
+    "alphafold": "struct-predictor",
+    "fold": "struct-predictor",
+    "single-cell": "scrna-orchestrator",
+    "scrna": "scrna-orchestrator",
+    "cluster": "scrna-orchestrator",
+    "literature": "lit-synthesizer",
+    "pubmed": "lit-synthesizer",
+    "papers": "lit-synthesizer",
+    "fastq": "seq-wrangler",
+    "alignment": "seq-wrangler",
+    "qc": "seq-wrangler",
+    "reproducible": "repro-enforcer",
+    "nextflow": "repro-enforcer",
+    "singularity": "repro-enforcer",
+    "conda": "repro-enforcer",
+    "compare": "genome-compare",
+    "corpasome": "genome-compare",
+    "ibs": "genome-compare",
+    "dna in common": "genome-compare",
+    "george church": "genome-compare",
+    "genome comparison": "genome-compare",
+}
+
+SKILLS_DIR = Path(__file__).resolve().parent.parent
+
+
+# ---------------------------------------------------------------------------
+# Utility functions
+# ---------------------------------------------------------------------------
+
+def detect_skill_from_file(filepath: Path) -> str | None:
+    """Determine which skill handles a given file based on extension."""
+    suffixes = "".join(filepath.suffixes)  # handles .vcf.gz
+    if suffixes in EXTENSION_MAP:
+        return EXTENSION_MAP[suffixes]
+    suffix = filepath.suffix.lower()
+    return EXTENSION_MAP.get(suffix)
+
+
+def detect_skill_from_query(query: str) -> str | None:
+    """Determine which skill matches a natural language query."""
+    query_lower = query.lower()
+    for keyword, skill in KEYWORD_MAP.items():
+        if keyword in query_lower:
+            return skill
+    return None
+
+
+def sha256_file(filepath: Path) -> str:
+    """Compute SHA-256 checksum of a file."""
+    h = hashlib.sha256()
+    with open(filepath, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def list_available_skills() -> list[str]:
+    """List all skill directories that contain a SKILL.md."""
+    skills = []
+    for d in sorted(SKILLS_DIR.iterdir()):
+        if d.is_dir() and (d / "SKILL.md").exists():
+            skills.append(d.name)
+    return skills
+
+
+def generate_report_header(
+    title: str,
+    skills_used: list[str],
+    input_files: list[Path],
+) -> str:
+    """Generate the standard report header in markdown."""
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    checksums = []
+    for f in input_files:
+        if f.exists():
+            checksums.append(f"- `{f.name}`: `{sha256_file(f)}`")
+        else:
+            checksums.append(f"- `{f.name}`: (file not found)")
+
+    return f"""# Analysis Report: {title}
+
+**Date**: {now}
+**Skills used**: {', '.join(skills_used)}
+**Input files**:
+{chr(10).join(checksums)}
+
+---
+"""
+
+
+def append_audit_log(output_dir: Path, action: str, details: str = "") -> None:
+    """Append an entry to the audit log."""
+    log_file = output_dir / "analysis_log.md"
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    entry = f"- **{now}**: {action}"
+    if details:
+        entry += f" -- {details}"
+    entry += "\n"
+
+    with open(log_file, "a") as f:
+        if not log_file.exists() or log_file.stat().st_size == 0:
+            f.write("# Analysis Audit Log\n\n")
+        f.write(entry)
+
+
+# ---------------------------------------------------------------------------
+# CLI entry point
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Bio Orchestrator: route bioinformatics requests")
+    parser.add_argument("--input", "-i", help="Input file path or natural language query")
+    parser.add_argument("--skill", "-s", help="Force a specific skill (bypasses auto-detection)")
+    parser.add_argument("--output", "-o", default=".", help="Output directory for reports")
+    parser.add_argument("--list-skills", action="store_true", help="List available skills")
+    args = parser.parse_args()
+
+    if args.list_skills:
+        skills = list_available_skills()
+        print("Available skills:")
+        for s in skills:
+            print(f"  - {s}")
+        return
+
+    if not args.input:
+        parser.print_help()
+        sys.exit(1)
+
+    # Determine skill
+    input_path = Path(args.input)
+    if args.skill:
+        # SEC INT-002: reject path traversal in skill name
+        if "/" in args.skill or "\\" in args.skill or ".." in args.skill:
+            print(f"Invalid skill name: {args.skill}")
+            sys.exit(1)
+        skill = args.skill
+        method = "user-specified"
+    elif input_path.exists():
+        skill = detect_skill_from_file(input_path)
+        method = "file-extension"
+    else:
+        skill = detect_skill_from_query(args.input)
+        method = "keyword"
+
+    if not skill:
+        print(f"Could not determine skill for input: {args.input}")
+        print("Available skills:", ", ".join(list_available_skills()))
+        sys.exit(1)
+
+    # Check skill exists
+    skill_dir = (SKILLS_DIR / skill).resolve()
+    # SEC INT-002: ensure resolved path stays within SKILLS_DIR
+    if not str(skill_dir).startswith(str(SKILLS_DIR.resolve())):
+        print(f"Invalid skill name: {skill}")
+        sys.exit(1)
+    if not (skill_dir / "SKILL.md").exists():
+        print(f"Skill '{skill}' not found")
+        sys.exit(1)
+
+    # Output routing decision
+    result = {
+        "input": args.input,
+        "detected_skill": skill,
+        "detection_method": method,
+        "skill_dir": str(skill_dir),
+        "available_skills": list_available_skills(),
+    }
+    print(json.dumps(result, indent=2))
+
+    # Log the routing
+    output_dir = Path(args.output)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    append_audit_log(output_dir, f"Routed to {skill}", f"input={args.input}, method={method}")
+
+
+if __name__ == "__main__":
+    main()

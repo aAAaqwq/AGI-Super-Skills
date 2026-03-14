@@ -1,0 +1,45 @@
+# Claude Skills Configuration
+# Copy this file to config.yaml and edit with your paths
+
+# Path configuration
+# Skills reference these as $CRM_PATH, $PM_PATH, etc.
+paths:
+  # plaintext-crm repo (CRM data)
+  crm: ../plaintext-crm/sales/crm
+
+  # plaintext-pm repo (PM data)
+  pm: ../plaintext-pm/pm
+
+  # Google tools (Gmail, Calendar)
+  google_tools: ~/google-tools
+
+  # Telegram tools
+  tg_tools: ~/tg-tools
+
+  # Agent scripts and logs
+  agents: ~/agents
+
+  # Project root (general data)
+  project_root: ~/my-project
+
+  # Sales data (WhatsApp sessions, etc)
+  sales: ~/sales
+
+  # Website repo (for deploy-website skill)
+  website_repo: ~/my-website
+
+# Owner info (used in invoices, emails, etc)
+owner:
+  name: Your Name
+  email: your@email.com
+  company: Your Company
+
+# Integrations (set to true when configured)
+integrations:
+  telegram: false
+  gmail: false
+  whatsapp: false
+  linkedin: false
+
+# Agent schedule (launchd plist identifiers)
+agent_prefix: com.yourcompany

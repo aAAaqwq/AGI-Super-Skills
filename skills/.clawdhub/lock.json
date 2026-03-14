@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "kanbanflow-skill": {
+      "version": "0.1.0",
+      "installedAt": 1772845150802
+    },
+    "agent-team-orchestration": {
+      "version": "1.0.0",
+      "installedAt": 1772845155575
+    },
+    "clawrouter": {
+      "version": "0.10.5",
+      "installedAt": 1772845160201
+    },
+    "humanize-zh": {
+      "version": "1.0.0",
+      "installedAt": 1772847841238
+    },
+    "xiaohongshu-publish": {
+      "version": "1.0.0",
+      "installedAt": 1772847847905
+    }
+  }
+}

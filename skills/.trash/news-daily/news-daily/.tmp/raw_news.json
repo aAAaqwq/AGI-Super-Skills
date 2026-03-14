@@ -1,0 +1,27 @@
+{
+  "articles": [
+    {
+      "title": "OpenAI 发布 GPT-5：推理能力大幅提升",
+      "source": "机器之心",
+      "url": "https://www.jiqizhixin.com/article/gpt5",
+      "published": "2小时前",
+      "summary": "OpenAI 正式发布 GPT-5，新模型在复杂推理任务上表现显著提升，支持多模态输入，推理成本降低40%。"
+    },
+    {
+      "title": "Google DeepMind 新算法突破蛋白质折叠预测",
+      "source": "MIT Technology Review",
+      "url": "https://www.technologyreview.org/protein",
+      "published": "5小时前",
+      "summary": "DeepMind 的 AlphaFold 3 在蛋白质结构预测准确率达到新高度，将加速药物研发进程。"
+    },
+    {
+      "title": "36氪独家：国产 AI 芯片企业完成 10 亿美元融资",
+      "source": "36氪",
+      "url": "https://36kr.com/p/ai-chip-funding",
+      "published": "3小时前",
+      "summary": "国内领先 AI 芯片企业完成新一轮融资，将用于大模型推理芯片研发。"
+    }
+  ],
+  "total": 127,
+  "timestamp": "2025-01-31 08:00:00"
+}

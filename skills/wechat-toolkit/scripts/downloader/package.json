@@ -1,0 +1,9 @@
+{
+    "name": "wechat-article-downloader-skill",
+    "version": "1.0.0",
+    "description": "微信公众号文章下载器 - OpenClaw Skill",
+    "type": "module",
+    "dependencies": {
+        "puppeteer-core": "^24.0.0"
+    }
+}

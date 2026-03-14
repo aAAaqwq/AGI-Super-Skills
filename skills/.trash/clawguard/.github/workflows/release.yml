@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build release archives
+        run: |
+          tar -czf clawguard.tar.gz bin src rules docs README.md README.zh-CN.md LICENSE package.json
+          zip -r clawguard.zip bin src rules docs README.md README.zh-CN.md LICENSE package.json
+      - name: Publish release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            clawguard.tar.gz
+            clawguard.zip

@@ -1,0 +1,1039 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
+	"skillshare/internal/audit"
+	"skillshare/internal/config"
+	"skillshare/internal/oplog"
+	"skillshare/internal/sync"
+	"skillshare/internal/ui"
+	"skillshare/internal/utils"
+	versionpkg "skillshare/internal/version"
+)
+
+const largeAuditThreshold = 1000
+
+// Output format constants for --format flag.
+const (
+	formatText     = "text"
+	formatJSON     = "json"
+	formatSARIF    = "sarif"
+	formatMarkdown = "markdown"
+)
+
+type auditOptions struct {
+	Targets         []string
+	Groups          []string
+	InitRules       bool
+	JSON            bool   // deprecated: use Format
+	Format          string // formatText, formatJSON, or formatSARIF (default: formatText)
+	Quiet           bool
+	Yes             bool
+	NoTUI           bool
+	Threshold       string
+	Profile         string   // --profile: default/strict/permissive
+	Dedupe          string   // --dedupe: legacy/global
+	Analyzers       []string // --analyzer: repeatable allowlist
+	PolicyLine      string   // computed: compact policy description for display
+	PolicyProfile   string   // resolved profile name (for summary/TUI)
+	PolicyDedupe    string   // resolved dedupe mode (for summary/TUI)
+	PolicyAnalyzers []string // resolved enabled analyzers (for summary/TUI)
+}
+
+// isStructured returns true if the output format is machine-readable (json/sarif/markdown).
+func (o auditOptions) isStructured() bool {
+	return o.Format == formatJSON || o.Format == formatSARIF || o.Format == formatMarkdown
+}
+
+type auditRunSummary struct {
+	Scope            string         `json:"scope,omitempty"`
+	Skill            string         `json:"skill,omitempty"`
+	Path             string         `json:"path,omitempty"`
+	Scanned          int            `json:"scanned"`
+	Passed           int            `json:"passed"`
+	Warning          int            `json:"warning"`
+	Failed           int            `json:"failed"`
+	Critical         int            `json:"critical"`
+	High             int            `json:"high"`
+	Medium           int            `json:"medium"`
+	Low              int            `json:"low"`
+	Info             int            `json:"info"`
+	WarnSkills       []string       `json:"warningSkills,omitempty"`
+	FailSkills       []string       `json:"failedSkills,omitempty"`
+	LowSkills        []string       `json:"lowSkills,omitempty"`
+	InfoSkills       []string       `json:"infoSkills,omitempty"`
+	ScanErrors       int            `json:"scanErrors"`
+	Mode             string         `json:"mode,omitempty"`
+	Threshold        string         `json:"threshold,omitempty"`
+	MaxSeverity      string         `json:"maxSeverity,omitempty"`
+	RiskScore        int            `json:"riskScore"`
+	RiskLabel        string         `json:"riskLabel,omitempty"`
+	AvgAnalyzability float64        `json:"avgAnalyzability"`
+	ByCategory       map[string]int `json:"byCategory,omitempty"`
+	PolicyProfile    string         `json:"policyProfile,omitempty"`
+	PolicyDedupe     string         `json:"policyDedupe,omitempty"`
+	PolicyAnalyzers  []string       `json:"policyAnalyzers,omitempty"`
+}
+
+func (s auditRunSummary) toMarkdownOptions() audit.MarkdownOptions {
+	return audit.MarkdownOptions{
+		Scanned:          s.Scanned,
+		Passed:           s.Passed,
+		Warning:          s.Warning,
+		Failed:           s.Failed,
+		Critical:         s.Critical,
+		High:             s.High,
+		Medium:           s.Medium,
+		Low:              s.Low,
+		Info:             s.Info,
+		ScanErrors:       s.ScanErrors,
+		RiskScore:        s.RiskScore,
+		RiskLabel:        s.RiskLabel,
+		Threshold:        s.Threshold,
+		Mode:             s.Mode,
+		AvgAnalyzability: s.AvgAnalyzability,
+		Profile:          s.PolicyProfile,
+		ByCategory:       s.ByCategory,
+	}
+}
+
+type auditJSONOutput struct {
+	Results []*audit.Result `json:"results"`
+	Summary auditRunSummary `json:"summary"`
+}
+
+func cmdAudit(args []string) error {
+	start := time.Now()
+
+	mode, rest, err := parseModeArgs(args)
+	if err != nil {
+		return err
+	}
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("cannot determine working directory: %w", err)
+	}
+
+	if mode == modeAuto {
+		if projectConfigExists(cwd) {
+			mode = modeProject
+		} else {
+			mode = modeGlobal
+		}
+	}
+	applyModeLabel(mode)
+
+	// Check for "rules" subcommand before standard audit arg parsing.
+	if len(rest) > 0 && rest[0] == "rules" {
+		return cmdAuditRules(mode, rest[1:])
+	}
+
+	opts, showHelp, err := parseAuditArgs(rest)
+	if showHelp {
+		return err
+	}
+	if err != nil {
+		return err
+	}
+
+	// Reconcile legacy --json with --format.
+	if opts.JSON {
+		if opts.Format == "" {
+			opts.Format = formatJSON
+		}
+	}
+	if opts.Format == "" {
+		opts.Format = formatText
+	}
+	if opts.InitRules {
+		if mode == modeProject {
+			return initAuditRules(audit.ProjectAuditRulesPath(cwd))
+		}
+		return initAuditRules(audit.GlobalAuditRulesPath())
+	}
+
+	var (
+		sourcePath       string
+		projectRoot      string
+		defaultThreshold string
+		configProfile    string
+		configDedupe     string
+		configAnalyzers  []string
+		cfgPath          string
+	)
+
+	// Path mode: exactly 1 target that is an existing file/directory — no config needed.
+	isSinglePath := len(opts.Targets) == 1 && len(opts.Groups) == 0 && pathExists(opts.Targets[0])
+	if isSinglePath {
+		if mode == modeProject {
+			projectRoot = cwd
+			cfgPath = config.ProjectConfigPath(cwd)
+		} else {
+			cfgPath = config.ConfigPath()
+		}
+	} else if mode == modeProject {
+		rt, err := loadProjectRuntime(cwd)
+		if err != nil {
+			return err
+		}
+		sourcePath = rt.sourcePath
+		projectRoot = cwd
+		defaultThreshold = rt.config.Audit.BlockThreshold
+		configProfile = rt.config.Audit.Profile
+		configDedupe = rt.config.Audit.DedupeMode
+		configAnalyzers = rt.config.Audit.EnabledAnalyzers
+		cfgPath = config.ProjectConfigPath(cwd)
+	} else {
+		cfg, err := config.Load()
+		if err != nil {
+			return err
+		}
+		sourcePath = cfg.Source
+		defaultThreshold = cfg.Audit.BlockThreshold
+		configProfile = cfg.Audit.Profile
+		configDedupe = cfg.Audit.DedupeMode
+		configAnalyzers = cfg.Audit.EnabledAnalyzers
+		cfgPath = config.ConfigPath()
+	}
+
+	policy := audit.ResolvePolicy(audit.PolicyInputs{
+		Profile:          opts.Profile,
+		Threshold:        opts.Threshold,
+		Dedupe:           opts.Dedupe,
+		EnabledAnalyzers: opts.Analyzers,
+		ConfigProfile:    configProfile,
+		ConfigThreshold:  defaultThreshold,
+		ConfigDedupe:     configDedupe,
+		ConfigAnalyzers:  configAnalyzers,
+	})
+	threshold := policy.Threshold
+	registry := audit.DefaultRegistry().ForPolicy(policy)
+	opts.PolicyLine = formatPolicyLine(string(policy.Profile), string(policy.DedupeMode), policy.EnabledAnalyzers)
+	opts.PolicyProfile = string(policy.Profile)
+	opts.PolicyDedupe = string(policy.DedupeMode)
+	opts.PolicyAnalyzers = policy.EnabledAnalyzers
+
+	var (
+		results []*audit.Result
+		summary auditRunSummary
+	)
+
+	hasTargets := len(opts.Targets) > 0 || len(opts.Groups) > 0
+	isSingleName := len(opts.Targets) == 1 && len(opts.Groups) == 0 && !pathExists(opts.Targets[0])
+
+	switch {
+	case !hasTargets:
+		results, summary, err = auditInstalled(sourcePath, modeString(mode), projectRoot, threshold, opts, registry)
+	case isSinglePath:
+		results, summary, err = auditPath(opts.Targets[0], modeString(mode), projectRoot, threshold, opts.Format, opts.PolicyLine, registry)
+	case isSingleName:
+		results, summary, err = auditSkillByName(sourcePath, opts.Targets[0], modeString(mode), projectRoot, threshold, opts.Format, opts.PolicyLine, registry)
+	default:
+		results, summary, err = auditFiltered(sourcePath, opts.Targets, opts.Groups, modeString(mode), projectRoot, threshold, opts, registry)
+	}
+	if err != nil {
+		logAuditOp(cfgPath, rest, summary, start, err, false)
+		return err
+	}
+
+	// Apply global deduplication if policy requests it.
+	if policy.DedupeMode == audit.DedupeGlobal {
+		for _, r := range results {
+			r.Findings = audit.DeduplicateGlobal(r.Findings)
+			r.RiskScore = audit.CalculateRiskScore(r.Findings)
+			r.RiskLabel = audit.RiskLabelFromScoreAndMaxSeverity(r.RiskScore, r.MaxSeverity())
+			r.IsBlocked = r.HasSeverityAtOrAbove(threshold)
+		}
+		summary = recountSummary(results, threshold, summary)
+	}
+
+	applyPolicyToSummary(&summary, opts)
+
+	blocked := summary.Failed > 0
+	logAuditOp(cfgPath, rest, summary, start, nil, blocked)
+
+	switch opts.Format {
+	case formatSARIF:
+		log := audit.ToSARIF(results, audit.SARIFOptions{ToolVersion: versionpkg.Version})
+		out, _ := json.MarshalIndent(log, "", "  ")
+		fmt.Println(string(out))
+		if blocked {
+			os.Exit(1)
+		}
+		return nil
+	case formatJSON:
+		out, _ := json.MarshalIndent(auditJSONOutput{
+			Results: results,
+			Summary: summary,
+		}, "", "  ")
+		fmt.Println(string(out))
+		if blocked {
+			os.Exit(1)
+		}
+		return nil
+	case formatMarkdown:
+		md := audit.ToMarkdown(results, summary.toMarkdownOptions())
+		fmt.Print(md)
+		if blocked {
+			os.Exit(1)
+		}
+		return nil
+	}
+
+	if blocked {
+		os.Exit(1)
+	}
+	return nil
+}
+
+func parseAuditArgs(args []string) (auditOptions, bool, error) {
+	opts := auditOptions{}
+	for i := 0; i < len(args); i++ {
+		arg := args[i]
+		switch arg {
+		case "--help", "-h":
+			printAuditHelp()
+			return opts, true, nil
+		case "--init-rules":
+			opts.InitRules = true
+		case "--json":
+			opts.JSON = true
+		case "--format":
+			if i+1 >= len(args) {
+				return opts, false, fmt.Errorf("%s requires a value (text, json, sarif, markdown)", arg)
+			}
+			i++
+			switch args[i] {
+			case formatText, formatJSON, formatSARIF, formatMarkdown:
+				opts.Format = args[i]
+			default:
+				return opts, false, fmt.Errorf("unknown format: %s (supported: text, json, sarif, markdown)", args[i])
+			}
+		case "--quiet", "-q":
+			opts.Quiet = true
+		case "--yes", "-y":
+			opts.Yes = true
+		case "--no-tui":
+			opts.NoTUI = true
+		case "--threshold", "-T":
+			if i+1 >= len(args) {
+				return opts, false, fmt.Errorf("%s requires a value", arg)
+			}
+			i++
+			threshold, err := normalizeInstallAuditThreshold(args[i])
+			if err != nil {
+				return opts, false, err
+			}
+			opts.Threshold = threshold
+		case "--group", "-G":
+			if i+1 >= len(args) {
+				return opts, false, fmt.Errorf("--group requires a value")
+			}
+			i++
+			opts.Groups = append(opts.Groups, args[i])
+		case "--profile":
+			if i+1 >= len(args) {
+				return opts, false, fmt.Errorf("%s requires a value (default, strict, permissive)", arg)
+			}
+			i++
+			switch args[i] {
+			case "default", "strict", "permissive":
+				opts.Profile = args[i]
+			default:
+				return opts, false, fmt.Errorf("unknown profile: %s (supported: default, strict, permissive)", args[i])
+			}
+		case "--dedupe":
+			if i+1 >= len(args) {
+				return opts, false, fmt.Errorf("%s requires a value (legacy, global)", arg)
+			}
+			i++
+			switch args[i] {
+			case "legacy", "global":
+				opts.Dedupe = args[i]
+			default:
+				return opts, false, fmt.Errorf("unknown dedupe mode: %s (supported: legacy, global)", args[i])
+			}
+		case "--analyzer":
+			if i+1 >= len(args) {
+				return opts, false, fmt.Errorf("%s requires a value (static, dataflow, tier, integrity, metadata, structure, cross-skill)", arg)
+			}
+			i++
+			switch args[i] {
+			case "static", "dataflow", "tier", "integrity", "metadata", "structure", "cross-skill":
+				opts.Analyzers = append(opts.Analyzers, args[i])
+			default:
+				return opts, false, fmt.Errorf("unknown analyzer: %s (supported: static, dataflow, tier, integrity, metadata, structure, cross-skill)", args[i])
+			}
+		default:
+			if strings.HasPrefix(arg, "-") {
+				return opts, false, fmt.Errorf("unknown option: %s", arg)
+			}
+			opts.Targets = append(opts.Targets, arg)
+		}
+	}
+	return opts, false, nil
+}
+
+func auditHeaderTitle(mode string) string {
+	if mode == "project" {
+		return "skillshare audit (project)"
+	}
+	return "skillshare audit"
+}
+
+func auditHeaderSubtitle(scanLine, mode, sourcePath, threshold, policyLine string) string {
+	displayPath := sourcePath
+	if abs, err := filepath.Abs(sourcePath); err == nil {
+		displayPath = abs
+	}
+	coloredThreshold := ui.Colorize(ui.SeverityColor(threshold), threshold)
+	return fmt.Sprintf("%s\nmode: %s\npath: %s\nblock rule: finding severity >= %s\npolicy: %s",
+		scanLine, mode, displayPath, coloredThreshold, policyLine)
+}
+
+// auditSkillRef is a lightweight name+path pair used during audit discovery.
+type auditSkillRef struct {
+	name string
+	path string
+}
+
+func collectInstalledSkillPaths(sourcePath string) ([]auditSkillRef, error) {
+	// Use Lite variant: audit does not need Targets (frontmatter parsing),
+	// saving ~2-5s on large source directories (skips 100k SKILL.md reads).
+	discovered, _, err := sync.DiscoverSourceSkillsLite(sourcePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to discover skills: %w", err)
+	}
+
+	seen := make(map[string]bool)
+	var skillPaths []auditSkillRef
+	for _, d := range discovered {
+		if seen[d.SourcePath] {
+			continue
+		}
+		seen[d.SourcePath] = true
+		skillPaths = append(skillPaths, auditSkillRef{d.FlatName, d.SourcePath})
+	}
+
+	entries, _ := os.ReadDir(sourcePath)
+	for _, e := range entries {
+		if !e.IsDir() || utils.IsHidden(e.Name()) {
+			continue
+		}
+		p := filepath.Join(sourcePath, e.Name())
+		if !seen[p] {
+			seen[p] = true
+			skillPaths = append(skillPaths, auditSkillRef{e.Name(), p})
+		}
+	}
+
+	return skillPaths, nil
+}
+
+// resolveSkillPath searches installed skills for a match by flat name or basename.
+// Returns the full path if found, empty string otherwise.
+func resolveSkillPath(sourcePath, name string) string {
+	skills, err := collectInstalledSkillPaths(sourcePath)
+	if err != nil {
+		return ""
+	}
+	for _, sp := range skills {
+		if sp.name == name || filepath.Base(sp.path) == name {
+			return sp.path
+		}
+	}
+	return ""
+}
+
+func scanSkillPath(skillPath, projectRoot string, registry *audit.Registry) (*audit.Result, error) {
+	if registry != nil {
+		if projectRoot != "" {
+			return audit.ScanSkillFilteredForProject(skillPath, projectRoot, registry)
+		}
+		return audit.ScanSkillFiltered(skillPath, registry)
+	}
+	if projectRoot != "" {
+		return audit.ScanSkillForProject(skillPath, projectRoot)
+	}
+	return audit.ScanSkill(skillPath)
+}
+
+func toAuditInputs(skills []auditSkillRef) []audit.SkillInput {
+	inputs := make([]audit.SkillInput, len(skills))
+	for i, s := range skills {
+		inputs[i] = audit.SkillInput{Name: s.name, Path: s.path}
+	}
+	return inputs
+}
+
+func scanPathTarget(targetPath, projectRoot string, registry *audit.Registry) (*audit.Result, error) {
+	info, err := os.Stat(targetPath)
+	if err != nil {
+		return nil, err
+	}
+	if info.IsDir() {
+		return scanSkillPath(targetPath, projectRoot, registry)
+	}
+	if projectRoot != "" {
+		return audit.ScanFileForProject(targetPath, projectRoot)
+	}
+	return audit.ScanFile(targetPath)
+}
+
+func auditInstalled(sourcePath, mode, projectRoot, threshold string, opts auditOptions, reg *audit.Registry) ([]*audit.Result, auditRunSummary, error) {
+	jsonOutput := opts.isStructured()
+	base := auditRunSummary{
+		Scope:     "all",
+		Mode:      mode,
+		Threshold: threshold,
+	}
+
+	// Phase 0: discover skills.
+	var spinner *ui.Spinner
+	if !jsonOutput {
+		spinner = ui.StartSpinner("Discovering skills...")
+	}
+	skillPaths, err := collectInstalledSkillPaths(sourcePath)
+	if err != nil {
+		if spinner != nil {
+			spinner.Fail("Discovery failed")
+		}
+		return nil, base, err
+	}
+	if len(skillPaths) == 0 {
+		if spinner != nil {
+			spinner.Success("No skills found")
+		}
+		return []*audit.Result{}, base, nil
+	}
+	if spinner != nil {
+		spinner.Success(fmt.Sprintf("Found %d skill(s)", len(skillPaths)))
+	}
+
+	// Phase 0.5: large audit confirmation prompt.
+	if len(skillPaths) > largeAuditThreshold && !jsonOutput && !opts.Yes && ui.IsTTY() {
+		ui.Warning("Found %d skills. This may take a while.", len(skillPaths))
+		ui.Info("Tip: use 'audit --group <dir>' or 'audit <name>' to scan specific skills")
+		fmt.Print("  Continue? [y/N]: ")
+		var answer string
+		fmt.Scanln(&answer)
+		if answer != "y" && answer != "Y" {
+			return nil, base, fmt.Errorf("aborted by user")
+		}
+	}
+
+	// Print header box before scan so user sees context while waiting.
+	var headerMinWidth int
+	if !jsonOutput {
+		fmt.Println()
+		subtitle := auditHeaderSubtitle(fmt.Sprintf("Scanning %d skills for threats", len(skillPaths)), mode, sourcePath, threshold, opts.PolicyLine)
+		headerMinWidth = auditHeaderMinWidth(subtitle)
+		ui.HeaderBoxWithMinWidth(auditHeaderTitle(mode), subtitle, headerMinWidth)
+	}
+
+	// Phase 1: parallel scan with progress bar.
+	if !jsonOutput {
+		fmt.Println()
+	}
+	var progressBar *ui.ProgressBar
+	if !jsonOutput {
+		progressBar = ui.StartProgress("Scanning skills", len(skillPaths))
+	}
+	onDone := func() {
+		if progressBar != nil {
+			progressBar.Increment()
+		}
+	}
+	scanResults := audit.ParallelScan(toAuditInputs(skillPaths), projectRoot, onDone, reg)
+	if progressBar != nil {
+		progressBar.Stop()
+	}
+	if !jsonOutput {
+		fmt.Println()
+	}
+
+	// Collect results and their elapsed times together.
+	results := make([]*audit.Result, 0, len(skillPaths))
+	elapsed := make([]time.Duration, 0, len(skillPaths))
+	scanErrors := 0
+	for i, sp := range skillPaths {
+		sr := scanResults[i]
+		if sr.Err != nil {
+			scanErrors++
+			if !jsonOutput {
+				ui.ListItem("error", sp.name, fmt.Sprintf("scan error: %v", sr.Err))
+			}
+			continue
+		}
+		sr.Result.Threshold = threshold
+		sr.Result.IsBlocked = sr.Result.HasSeverityAtOrAbove(threshold)
+		// Use relative path so TUI shows group hierarchy (e.g. "frontend/vue/skill").
+		if rel, err := filepath.Rel(sourcePath, sr.Result.ScanTarget); err == nil && rel != sr.Result.SkillName {
+			sr.Result.SkillName = rel
+		}
+		results = append(results, sr.Result)
+		elapsed = append(elapsed, sr.Elapsed)
+	}
+
+	summary := summarizeAuditResults(len(skillPaths), results, threshold)
+	summary.Scope = "all"
+	summary.Mode = mode
+	summary.ScanErrors = scanErrors
+
+	// Cross-skill analysis (after summary so counts are unaffected).
+	if xr := audit.CrossSkillAnalysis(results); xr != nil {
+		results = append(results, xr)
+		elapsed = append(elapsed, 0) // synthetic result has no scan time
+	}
+
+	applyPolicyToSummary(&summary, opts)
+	if err := presentAuditResults(results, elapsed, scanResults, summary, jsonOutput, opts, headerMinWidth); err != nil {
+		return results, summary, err
+	}
+
+	return results, summary, nil
+}
+
+func auditFiltered(sourcePath string, names, groups []string, mode, projectRoot, threshold string, opts auditOptions, reg *audit.Registry) ([]*audit.Result, auditRunSummary, error) {
+	jsonOutput := opts.isStructured()
+	base := auditRunSummary{
+		Scope:     "filtered",
+		Mode:      mode,
+		Threshold: threshold,
+	}
+
+	allSkills, err := collectInstalledSkillPaths(sourcePath)
+	if err != nil {
+		return nil, base, err
+	}
+
+	// Build match sets for O(1) lookup.
+	nameSet := make(map[string]bool, len(names))
+	for _, n := range names {
+		nameSet[n] = true
+	}
+
+	// Filter skills by names and groups.
+	seen := make(map[string]bool)
+	var matched []auditSkillRef
+	resolvedNames := make(map[string]bool)
+
+	for _, sp := range allSkills {
+		// Name match: flat name or basename.
+		if nameSet[sp.name] || nameSet[filepath.Base(sp.path)] {
+			if !seen[sp.path] {
+				seen[sp.path] = true
+				matched = append(matched, sp)
+			}
+			resolvedNames[sp.name] = true
+			resolvedNames[filepath.Base(sp.path)] = true
+			continue
+		}
+
+		// Group match: flat name starts with group+"__".
+		for _, g := range groups {
+			if strings.HasPrefix(sp.name, g+"__") {
+				if !seen[sp.path] {
+					seen[sp.path] = true
+					matched = append(matched, sp)
+				}
+				break
+			}
+		}
+	}
+
+	// Warn about unresolved names.
+	var warnings []string
+	for _, n := range names {
+		if !resolvedNames[n] {
+			warnings = append(warnings, n)
+		}
+	}
+	for _, w := range warnings {
+		if !jsonOutput {
+			ui.Warning("skill not found: %s", w)
+		}
+	}
+
+	if len(matched) == 0 {
+		return nil, base, fmt.Errorf("no skills matched the given names/groups")
+	}
+
+	// Print header box before scan so user sees context while waiting.
+	var headerMinWidth int
+	if !jsonOutput {
+		fmt.Println()
+		subtitle := auditHeaderSubtitle(fmt.Sprintf("Scanning %d skills for threats", len(matched)), mode, sourcePath, threshold, opts.PolicyLine)
+		headerMinWidth = auditHeaderMinWidth(subtitle)
+		ui.HeaderBoxWithMinWidth(auditHeaderTitle(mode), subtitle, headerMinWidth)
+	}
+
+	// Phase 1: parallel scan with progress bar.
+	if !jsonOutput {
+		fmt.Println()
+	}
+	var progressBar *ui.ProgressBar
+	if !jsonOutput {
+		progressBar = ui.StartProgress("Scanning skills", len(matched))
+	}
+	onDone := func() {
+		if progressBar != nil {
+			progressBar.Increment()
+		}
+	}
+	scanResults := audit.ParallelScan(toAuditInputs(matched), projectRoot, onDone, reg)
+	if progressBar != nil {
+		progressBar.Stop()
+	}
+	if !jsonOutput {
+		fmt.Println()
+	}
+
+	// Collect results and their elapsed times together.
+	results := make([]*audit.Result, 0, len(matched))
+	elapsed := make([]time.Duration, 0, len(matched))
+	scanErrors := 0
+	for i, sp := range matched {
+		sr := scanResults[i]
+		if sr.Err != nil {
+			scanErrors++
+			if !jsonOutput {
+				ui.ListItem("error", sp.name, fmt.Sprintf("scan error: %v", sr.Err))
+			}
+			continue
+		}
+		sr.Result.Threshold = threshold
+		sr.Result.IsBlocked = sr.Result.HasSeverityAtOrAbove(threshold)
+		if rel, err := filepath.Rel(sourcePath, sr.Result.ScanTarget); err == nil && rel != sr.Result.SkillName {
+			sr.Result.SkillName = rel
+		}
+		results = append(results, sr.Result)
+		elapsed = append(elapsed, sr.Elapsed)
+	}
+
+	summary := summarizeAuditResults(len(matched), results, threshold)
+	summary.Scope = "filtered"
+	summary.Mode = mode
+	summary.ScanErrors = scanErrors
+
+	// Cross-skill analysis (after summary so counts are unaffected).
+	if xr := audit.CrossSkillAnalysis(results); xr != nil {
+		results = append(results, xr)
+		elapsed = append(elapsed, 0) // synthetic result has no scan time
+	}
+
+	applyPolicyToSummary(&summary, opts)
+	if err := presentAuditResults(results, elapsed, scanResults, summary, jsonOutput, opts, headerMinWidth); err != nil {
+		return results, summary, err
+	}
+
+	return results, summary, nil
+}
+
+func auditSkillByName(sourcePath, name, mode, projectRoot, threshold, format, policyLine string, reg *audit.Registry) ([]*audit.Result, auditRunSummary, error) {
+	summary := auditRunSummary{
+		Scope:     "single",
+		Skill:     name,
+		Mode:      mode,
+		Threshold: threshold,
+	}
+
+	skillPath := filepath.Join(sourcePath, name)
+	if _, err := os.Stat(skillPath); os.IsNotExist(err) {
+		// Short-name fallback: search installed skills by flat name or basename.
+		resolved := resolveSkillPath(sourcePath, name)
+		if resolved == "" {
+			return nil, summary, fmt.Errorf("skill not found: %s", name)
+		}
+		skillPath = resolved
+	}
+
+	start := time.Now()
+	result, err := scanSkillPath(skillPath, projectRoot, reg)
+	if err != nil {
+		return nil, summary, fmt.Errorf("scan error: %w", err)
+	}
+	elapsed := time.Since(start)
+	result.Threshold = threshold
+	result.IsBlocked = result.HasSeverityAtOrAbove(threshold)
+	if rel, err := filepath.Rel(sourcePath, result.ScanTarget); err == nil && rel != result.SkillName {
+		result.SkillName = rel
+	}
+
+	summary = summarizeAuditResults(1, []*audit.Result{result}, threshold)
+	summary.Scope = "single"
+	summary.Skill = name
+	summary.Mode = mode
+	if format == formatText {
+		subtitle := auditHeaderSubtitle(fmt.Sprintf("Scanning skill: %s", name), mode, sourcePath, threshold, policyLine)
+		summaryLines := buildAuditSummaryLines(summary)
+		minWidth := auditHeaderMinWidth(subtitle)
+		ui.HeaderBoxWithMinWidth(auditHeaderTitle(mode), subtitle, minWidth)
+		fmt.Println()
+		printSkillResult(result, elapsed)
+		fmt.Println()
+		printAuditSummary(summary, summaryLines, minWidth)
+	}
+
+	return []*audit.Result{result}, summary, nil
+}
+
+func auditPath(rawPath, mode, projectRoot, threshold, format, policyLine string, reg *audit.Registry) ([]*audit.Result, auditRunSummary, error) {
+	absPath, err := filepath.Abs(rawPath)
+	if err != nil {
+		absPath = rawPath
+	}
+
+	summary := auditRunSummary{
+		Scope:     "path",
+		Path:      absPath,
+		Mode:      mode,
+		Threshold: threshold,
+	}
+
+	start := time.Now()
+	result, err := scanPathTarget(absPath, projectRoot, reg)
+	if err != nil {
+		return nil, summary, fmt.Errorf("scan error: %w", err)
+	}
+	elapsed := time.Since(start)
+	result.ScanTarget = absPath
+	result.Threshold = threshold
+	result.IsBlocked = result.HasSeverityAtOrAbove(threshold)
+
+	summary = summarizeAuditResults(1, []*audit.Result{result}, threshold)
+	summary.Scope = "path"
+	summary.Path = absPath
+	summary.Mode = mode
+	if format == formatText {
+		subtitle := fmt.Sprintf("Scanning path target\nmode: %s\npath: %s\nblock rule: finding severity >= %s\npolicy: %s", mode, absPath, ui.Colorize(ui.SeverityColor(threshold), threshold), policyLine)
+		summaryLines := buildAuditSummaryLines(summary)
+		minWidth := auditHeaderMinWidth(subtitle)
+		ui.HeaderBoxWithMinWidth(auditHeaderTitle(mode), subtitle, minWidth)
+		fmt.Println()
+		printSkillResult(result, elapsed)
+		fmt.Println()
+		printAuditSummary(summary, summaryLines, minWidth)
+	}
+	return []*audit.Result{result}, summary, nil
+}
+
+func logAuditOp(cfgPath string, args []string, summary auditRunSummary, start time.Time, cmdErr error, blocked bool) {
+	status := statusFromErr(cmdErr)
+	if blocked && cmdErr == nil {
+		status = "blocked"
+	}
+
+	e := oplog.NewEntry("audit", status, time.Since(start))
+	fields := map[string]any{}
+
+	if summary.Scope != "" {
+		fields["scope"] = summary.Scope
+	}
+	if summary.Skill != "" {
+		fields["name"] = summary.Skill
+	}
+	if summary.Path != "" {
+		fields["path"] = summary.Path
+	}
+	if summary.Mode != "" {
+		fields["mode"] = summary.Mode
+	}
+	if summary.Threshold != "" {
+		fields["threshold"] = summary.Threshold
+	}
+	if summary.MaxSeverity != "" {
+		fields["max_severity"] = summary.MaxSeverity
+	}
+	if summary.Scanned > 0 {
+		fields["scanned"] = summary.Scanned
+		fields["passed"] = summary.Passed
+		fields["warning"] = summary.Warning
+		fields["failed"] = summary.Failed
+		fields["critical"] = summary.Critical
+		fields["high"] = summary.High
+		fields["medium"] = summary.Medium
+		fields["low"] = summary.Low
+		fields["info"] = summary.Info
+		fields["risk_score"] = summary.RiskScore
+		fields["risk_label"] = summary.RiskLabel
+		if len(summary.WarnSkills) > 0 {
+			fields["warning_skills"] = summary.WarnSkills
+		}
+		if len(summary.FailSkills) > 0 {
+			fields["failed_skills"] = summary.FailSkills
+		}
+		if len(summary.LowSkills) > 0 {
+			fields["low_skills"] = summary.LowSkills
+		}
+		if len(summary.InfoSkills) > 0 {
+			fields["info_skills"] = summary.InfoSkills
+		}
+	}
+	if summary.ScanErrors > 0 {
+		fields["scan_errors"] = summary.ScanErrors
+	}
+	if len(fields) == 0 && len(args) > 0 {
+		fields["name"] = args[0]
+	}
+	if len(fields) > 0 {
+		e.Args = fields
+	}
+	if cmdErr != nil {
+		e.Message = cmdErr.Error()
+	} else if blocked {
+		e.Message = fmt.Sprintf("findings at/above %s detected", summary.Threshold)
+	}
+	oplog.WriteWithLimit(cfgPath, oplog.AuditFile, e, logMaxEntries()) //nolint:errcheck
+}
+
+func summarizeAuditResults(total int, results []*audit.Result, threshold string) auditRunSummary {
+	summary := auditRunSummary{
+		Scanned:   total,
+		Threshold: threshold,
+	}
+
+	maxRisk := 0
+	maxSeverity := ""
+	sumAnalyzability := 0.0
+	catCounts := make(map[string]int)
+	for _, r := range results {
+		c, h, m, l, i := r.CountBySeverityAll()
+		summary.Critical += c
+		summary.High += h
+		summary.Medium += m
+		summary.Low += l
+		summary.Info += i
+
+		for cat, n := range r.CountByCategory() {
+			catCounts[cat] += n
+		}
+
+		if containsSeverity(r.Findings, audit.SeverityLow) {
+			summary.LowSkills = append(summary.LowSkills, r.SkillName)
+		}
+		if containsSeverity(r.Findings, audit.SeverityInfo) {
+			summary.InfoSkills = append(summary.InfoSkills, r.SkillName)
+		}
+
+		if len(r.Findings) == 0 {
+			summary.Passed++
+		} else if r.HasSeverityAtOrAbove(threshold) {
+			summary.Failed++
+			summary.FailSkills = append(summary.FailSkills, r.SkillName)
+		} else {
+			summary.Warning++
+			summary.WarnSkills = append(summary.WarnSkills, r.SkillName)
+		}
+
+		if r.RiskScore > maxRisk {
+			maxRisk = r.RiskScore
+		}
+		if rs := r.MaxSeverity(); rs != "" {
+			if maxSeverity == "" || audit.SeverityRank(rs) < audit.SeverityRank(maxSeverity) {
+				maxSeverity = rs
+			}
+		}
+		sumAnalyzability += r.Analyzability
+	}
+	summary.RiskScore = maxRisk
+	summary.RiskLabel = audit.RiskLabelFromScoreAndMaxSeverity(maxRisk, maxSeverity)
+	summary.MaxSeverity = maxSeverity
+	if len(catCounts) > 0 {
+		summary.ByCategory = catCounts
+	}
+	if len(results) > 0 {
+		summary.AvgAnalyzability = sumAnalyzability / float64(len(results))
+	}
+	return summary
+}
+
+func containsSeverity(findings []audit.Finding, severity string) bool {
+	for _, f := range findings {
+		if f.Severity == severity {
+			return true
+		}
+	}
+	return false
+}
+
+// recountSummary recalculates finding counts after deduplication.
+// It preserves fields not affected by dedupe (Scope, Mode, Path, Skill, ScanErrors, AvgAnalyzability).
+func recountSummary(results []*audit.Result, threshold string, prev auditRunSummary) auditRunSummary {
+	s := auditRunSummary{
+		Scanned:          prev.Scanned,
+		Scope:            prev.Scope,
+		Skill:            prev.Skill,
+		Path:             prev.Path,
+		Mode:             prev.Mode,
+		ScanErrors:       prev.ScanErrors,
+		Threshold:        threshold,
+		AvgAnalyzability: prev.AvgAnalyzability,
+		PolicyProfile:    prev.PolicyProfile,
+		PolicyDedupe:     prev.PolicyDedupe,
+		PolicyAnalyzers:  prev.PolicyAnalyzers,
+	}
+	maxRisk := 0
+	maxSev := ""
+	for _, r := range results {
+		if r.IsBlocked {
+			s.Failed++
+			s.FailSkills = append(s.FailSkills, r.SkillName)
+		} else if len(r.Findings) > 0 {
+			s.Warning++
+			s.WarnSkills = append(s.WarnSkills, r.SkillName)
+		} else {
+			s.Passed++
+		}
+		for _, f := range r.Findings {
+			switch f.Severity {
+			case audit.SeverityCritical:
+				s.Critical++
+			case audit.SeverityHigh:
+				s.High++
+			case audit.SeverityMedium:
+				s.Medium++
+			case audit.SeverityLow:
+				s.Low++
+			case audit.SeverityInfo:
+				s.Info++
+			}
+		}
+		if r.RiskScore > maxRisk {
+			maxRisk = r.RiskScore
+		}
+		ms := r.MaxSeverity()
+		if ms != "" && (maxSev == "" || audit.SeverityRank(ms) < audit.SeverityRank(maxSev)) {
+			maxSev = ms
+		}
+	}
+	s.RiskScore = maxRisk
+	s.MaxSeverity = maxSev
+	s.RiskLabel = audit.RiskLabelFromScoreAndMaxSeverity(maxRisk, maxSev)
+
+	catCounts := make(map[string]int)
+	for _, r := range results {
+		for cat, n := range r.CountByCategory() {
+			catCounts[cat] += n
+		}
+	}
+	if len(catCounts) > 0 {
+		s.ByCategory = catCounts
+	}
+	return s
+}
+
+func initAuditRules(path string) error {
+	if err := audit.InitRulesFile(path); err != nil {
+		return err
+	}
+	ui.Success("Created %s", path)
+	return nil
+}

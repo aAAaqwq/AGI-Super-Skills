@@ -1,0 +1,21 @@
+{
+  "name": "@op0live/openclaw-skill",
+  "version": "1.0.0",
+  "description": "OpenClaw skill for OP0 Altar protocol — create self-rewarding meme coins on Solana via AI agent",
+  "keywords": [
+    "openclaw",
+    "skill",
+    "op0",
+    "altar",
+    "solana",
+    "memecoin",
+    "pump-fun",
+    "crypto",
+    "ai-agent",
+    "clawhub"
+  ],
+  "license": "MIT",
+  "files": [
+    "SKILL.md"
+  ]
+}

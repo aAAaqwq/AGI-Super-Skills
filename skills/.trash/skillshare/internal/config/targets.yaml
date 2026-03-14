@@ -1,0 +1,235 @@
+targets:
+  - global_name: adal
+    project_name: adal
+    global_path: "~/.adal/skills"
+    project_path: ".adal/skills"
+  - global_name: universal
+    project_name: universal
+    global_path: "~/.agents/skills"
+    project_path: ".agents/skills"
+    aliases: [agents]
+  - global_name: amp
+    project_name: amp
+    global_path: "~/.config/agents/skills"
+    project_path: ".agents/skills"
+  - global_name: antigravity
+    project_name: antigravity
+    global_path: "~/.gemini/antigravity/skills"
+    project_path: ".agent/skills"
+  - global_name: astrbot
+    project_name: astrbot
+    global_path: "~/.astrbot/data/skills"
+    project_path: "data/skills"
+  - global_name: augment
+    project_name: augment
+    global_path: "~/.augment/skills"
+    project_path: ".augment/skills"
+  - global_name: bob
+    project_name: bob
+    global_path: "~/.bob/skills"
+    project_path: ".bob/skills"
+  - global_name: claude
+    project_name: claude
+    global_path: "~/.claude/skills"
+    project_path: ".claude/skills"
+    aliases: [claude-code]
+  - global_name: cline
+    project_name: cline
+    global_path: "~/.agents/skills"
+    project_path: ".agents/skills"
+  - global_name: codebuddy
+    project_name: codebuddy
+    global_path: "~/.codebuddy/skills"
+    project_path: ".codebuddy/skills"
+  - global_name: comate
+    project_name: comate
+    global_path: "~/.comate/skills"
+    project_path: ".comate/skills"
+  - global_name: codex
+    project_name: codex
+    global_path: "~/.codex/skills"
+    project_path: ".agents/skills"
+  - global_name: commandcode
+    project_name: commandcode
+    global_path: "~/.commandcode/skills"
+    project_path: ".commandcode/skills"
+    aliases: [command-code]
+  - global_name: continue
+    project_name: continue
+    global_path: "~/.continue/skills"
+    project_path: ".continue/skills"
+  - global_name: cortex
+    project_name: cortex
+    global_path: "~/.snowflake/cortex/skills"
+    project_path: ".cortex/skills"
+  - global_name: copilot
+    project_name: copilot
+    global_path: "~/.copilot/skills"
+    project_path: ".github/skills"
+    aliases: [github-copilot]
+  - global_name: crush
+    project_name: crush
+    global_path: "~/.config/crush/skills"
+    project_path: ".crush/skills"
+  - global_name: cursor
+    project_name: cursor
+    global_path: "~/.cursor/skills"
+    project_path: ".cursor/skills"
+  - global_name: deepagents
+    project_name: deepagents
+    global_path: "~/.deepagents/agent/skills"
+    project_path: ".deepagents/skills"
+    aliases: [deep-agents]
+  - global_name: droid
+    project_name: droid
+    global_path: "~/.factory/skills"
+    project_path: ".factory/skills"
+  - global_name: firebender
+    project_name: firebender
+    global_path: "~/.firebender/skills"
+    project_path: ".firebender/skills"
+  - global_name: gemini
+    project_name: gemini
+    global_path: "~/.gemini/skills"
+    project_path: ".gemini/skills"
+    aliases: [gemini-cli]
+  - global_name: goose
+    project_name: goose
+    global_path: "~/.config/goose/skills"
+    project_path: ".goose/skills"
+  - global_name: iflow
+    project_name: iflow
+    global_path: "~/.iflow/skills"
+    project_path: ".iflow/skills"
+    aliases: [iflow-cli]
+  - global_name: junie
+    project_name: junie
+    global_path: "~/.junie/skills"
+    project_path: ".junie/skills"
+  - global_name: kilocode
+    project_name: kilocode
+    global_path: "~/.kilocode/skills"
+    project_path: ".kilocode/skills"
+    aliases: [kilo]
+  - global_name: kimi
+    project_name: kimi
+    global_path: "~/.config/agents/skills"
+    project_path: ".agents/skills"
+    aliases: [kimi-cli]
+  - global_name: kiro
+    project_name: kiro
+    global_path: "~/.kiro/skills"
+    project_path: ".kiro/skills"
+    aliases: [kiro-cli]
+  - global_name: kode
+    project_name: kode
+    global_path: "~/.kode/skills"
+    project_path: ".kode/skills"
+  - global_name: letta
+    project_name: letta
+    global_path: "~/.letta/skills"
+    project_path: ".skills"
+  - global_name: lingma
+    project_name: lingma
+    global_path: "~/.lingma/skills"
+    project_path: ".lingma/skills"
+  - global_name: mcpjam
+    project_name: mcpjam
+    global_path: "~/.mcpjam/skills"
+    project_path: ".mcpjam/skills"
+  - global_name: mux
+    project_name: mux
+    global_path: "~/.mux/skills"
+    project_path: ".mux/skills"
+  - global_name: neovate
+    project_name: neovate
+    global_path: "~/.neovate/skills"
+    project_path: ".neovate/skills"
+  - global_name: omp
+    project_name: omp
+    global_path: "~/.omp/agent/skills"
+    project_path: ".omp/skills"
+    aliases: [oh-my-pi]
+  - global_name: openclaw
+    project_name: openclaw
+    global_path: "~/.openclaw/skills"
+    project_path: "skills"
+  - global_name: opencode
+    project_name: opencode
+    global_path: "~/.config/opencode/skills"
+    project_path: ".opencode/skills"
+  - global_name: openhands
+    project_name: openhands
+    global_path: "~/.openhands/skills"
+    project_path: ".openhands/skills"
+  - global_name: pi
+    project_name: pi
+    global_path: "~/.pi/agent/skills"
+    project_path: ".pi/skills"
+  - global_name: pochi
+    project_name: pochi
+    global_path: "~/.pochi/skills"
+    project_path: ".pochi/skills"
+  - global_name: purecode
+    project_name: purecode
+    global_path: "~/.purecode/skills"
+    project_path: ".agents/skills"
+    aliases: [purecode-ai]
+  - global_name: qoder
+    project_name: qoder
+    global_path: "~/.qoder/skills"
+    project_path: ".qoder/skills"
+  - global_name: qwen
+    project_name: qwen
+    global_path: "~/.qwen/skills"
+    project_path: ".qwen/skills"
+    aliases: [qwen-code]
+  - global_name: roo
+    project_name: roo
+    global_path: "~/.roo/skills"
+    project_path: ".roo/skills"
+  - global_name: trae
+    project_name: trae
+    global_path: "~/.trae/skills"
+    project_path: ".trae/skills"
+  - global_name: trae-cn
+    project_name: trae-cn
+    global_path: "~/.trae-cn/skills"
+    project_path: ".trae/skills"
+  - global_name: vibe
+    project_name: vibe
+    global_path: "~/.vibe/skills"
+    project_path: ".vibe/skills"
+    aliases: [mistral-vibe]
+  - global_name: verdent
+    project_name: verdent
+    global_path: "~/.verdent/skills"
+    project_path: ".verdent/skills"
+  - global_name: warp
+    project_name: warp
+    global_path: "~/.agents/skills"
+    project_path: ".agents/skills"
+  - global_name: windsurf
+    project_name: windsurf
+    global_path: "~/.codeium/windsurf/skills"
+    project_path: ".windsurf/skills"
+  - global_name: witsy
+    project_name: witsy
+    global_path: "~/.agents/skills"
+    project_path: ".agents/skills"
+  - global_name: xcode-claude
+    project_name: xcode-claude
+    global_path: "~/Library/Developer/Xcode/CodingAssistant/ClaudeAgentConfig/skills"
+    project_path: ".claude/skills"
+  - global_name: xcode-codex
+    project_name: xcode-codex
+    global_path: "~/Library/Developer/Xcode/CodingAssistant/codex/skills"
+    project_path: ".codex/skills"
+  - global_name: zencoder
+    project_name: zencoder
+    global_path: "~/.zencoder/skills"
+    project_path: ".zencoder/skills"
+  - global_name: replit
+    project_name: replit
+    global_path: "~/.config/agents/skills"
+    project_path: ".agents/skills"

@@ -1,0 +1,73 @@
+name: Publish to npm
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/ai-research-skills/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/ai-research-skills
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check if version changed
+        id: version
+        run: |
+          CURRENT=$(node -p "require('./package.json').version")
+          PREVIOUS=$(git show HEAD~1:packages/ai-research-skills/package.json 2>/dev/null | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).version" 2>/dev/null || echo "")
+          echo "current=$CURRENT"
+          echo "previous=$PREVIOUS"
+          if [ "$CURRENT" != "$PREVIOUS" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "version=$CURRENT" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if version already published
+        if: steps.version.outputs.changed == 'true'
+        id: published
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          if npm view @orchestra-research/ai-research-skills@$VERSION version 2>/dev/null; then
+            echo "already_published=true" >> $GITHUB_OUTPUT
+            echo "Version $VERSION already on npm, skipping"
+          else
+            echo "already_published=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        if: steps.version.outputs.changed == 'true' && steps.published.outputs.already_published == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        if: steps.version.outputs.changed == 'true' && steps.published.outputs.already_published == 'false'
+        run: npm ci
+
+      - name: Publish to npm
+        if: steps.version.outputs.changed == 'true' && steps.published.outputs.already_published == 'false'
+        run: |
+          echo "Publishing v${{ steps.version.outputs.version }} to npm..."
+          unset NODE_AUTH_TOKEN
+          npm config delete //registry.npmjs.org/:_authToken || true
+          npm publish --access public --provenance
+
+      - name: Skip reason
+        if: steps.version.outputs.changed != 'true'
+        run: echo "Version unchanged, skipping publish"

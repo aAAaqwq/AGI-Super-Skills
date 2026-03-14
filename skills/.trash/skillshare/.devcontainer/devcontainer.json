@@ -1,0 +1,28 @@
+{
+  "name": "Skillshare Dev",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "skillshare-devcontainer",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [5173, 19420, 3000],
+  "portsAttributes": {
+    "5173": { "label": "Dashboard (ui)" },
+    "19420": { "label": "API Backend" },
+    "3000": { "label": "Docs (docs)" }
+  },
+  "remoteEnv": {
+    "PATH": "/workspace/.devcontainer/bin:/workspace/bin:${containerEnv:PATH}",
+    "SKILLSHARE_UI_HOST": "0.0.0.0"
+  },
+  "postCreateCommand": ".devcontainer/setup.sh",
+  "postStartCommand": ".devcontainer/start-dev.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go",
+        "bradlc.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  }
+}

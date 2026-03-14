@@ -1,0 +1,72 @@
+{
+  "_comment": "deploy.json 模板 — 放在项目根目录，deploy.sh 自动读取注入远程配置",
+  
+  "project_name": "my_agent_project",
+  
+  "providers": {
+    "google": {
+      "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
+      "apiKey": "YOUR_GEMINI_API_KEY",
+      "api": "google-genai",
+      "models": [
+        {"id": "gemini-2.5-pro"},
+        {"id": "gemini-2.5-flash"},
+        {"id": "gemini-3.1-pro-preview"}
+      ]
+    }
+  },
+  
+  "agents": [
+    {
+      "id": "assistant",
+      "model": {
+        "primary": "google/gemini-2.5-pro",
+        "fallbacks": ["moonshot/kimi-k2.5", "zai/glm-5"]
+      }
+    },
+    {
+      "id": "support",
+      "model": {
+        "primary": "google/gemini-2.5-flash",
+        "fallbacks": ["google/gemini-2.5-pro"]
+      }
+    }
+  ],
+  
+  "channels": {
+    "feishu": {
+      "accounts": {
+        "default": {
+          "appId": "cli_xxx",
+          "appSecret": "SECRET",
+          "agent": "assistant"
+        },
+        "support": {
+          "appId": "cli_yyy",
+          "appSecret": "SECRET",
+          "agent": "support"
+        }
+      }
+    },
+    "telegram": {
+      "accounts": {
+        "default": {
+          "token": "BOT_TOKEN",
+          "agent": "assistant"
+        }
+      }
+    }
+  },
+  
+  "tools": {
+    "profile": "full",
+    "exec": {"security": "full", "ask": "off"},
+    "elevated": {"enabled": true}
+  },
+  
+  "workspace": "${HOME}/projects/my_agent_project",
+  
+  "config_patches": {
+    "agents.defaults.thinking": "high"
+  }
+}

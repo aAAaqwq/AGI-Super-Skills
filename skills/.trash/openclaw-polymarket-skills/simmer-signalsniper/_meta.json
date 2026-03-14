@@ -1,0 +1,31 @@
+{
+  "owner": "voidstar-x",
+  "slug": "simmer-signalsniper",
+  "displayName": "Signal Sniper",
+  "description": "RSS news-based trading signals - scans news feeds for high-confidence trading opportunities",
+  "keywords": [
+    "polymarket",
+    "trading",
+    "signals",
+    "news",
+    "rss",
+    "nlp"
+  ],
+  "version": "1.0.0",
+  "authors": [
+    "voidstar-x"
+  ],
+  "repository": "https://github.com/voidstar-x/clawd-skills",
+  "pip_dependencies": [
+    "simmer-sdk>=0.8.32"
+  ],
+  "runtime": {
+    "cron": "45 * * * *",
+    "timeout": 60
+  },
+  "features": {
+    "news_scraping": true,
+    "confidence_scoring": true,
+    "paper_trading": true
+  }
+}

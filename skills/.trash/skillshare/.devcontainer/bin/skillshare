@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+WORKSPACE_ROOT="${SKILLSHARE_DEV_WORKSPACE_ROOT:-/workspace}"
+PROJECT_ROOT="${SKILLSHARE_DEV_PROJECT_ROOT:-${HOME:-/tmp}/demo-project}"
+TMP_BIN="${SKILLSHARE_DEV_TMP_BINARY:-/tmp/skillshare-dev}"
+
+if [ ! -d "$WORKSPACE_ROOT" ] || [ ! -f "$WORKSPACE_ROOT/go.mod" ]; then
+  echo "devcontainer workspace not found: $WORKSPACE_ROOT" >&2
+  exit 1
+fi
+
+GO_BIN="${SKILLSHARE_DEV_GO_BIN:-/usr/local/go/bin/go}"
+if [ ! -x "$GO_BIN" ]; then
+  GO_BIN="$(command -v go || true)"
+fi
+
+if [ -z "$GO_BIN" ]; then
+  echo "go toolchain not found in devcontainer" >&2
+  exit 1
+fi
+
+resolve_mode() {
+  local mode="auto"
+  local arg
+  for arg in "$@"; do
+    case "$arg" in
+      -p|--project) mode="project" ;;
+      -g|--global) mode="global" ;;
+    esac
+  done
+  echo "$mode"
+}
+
+wants_machine_output() {
+  local args=("$@")
+  local next=""
+  for arg in "${args[@]}"; do
+    if [ -n "$next" ]; then
+      if [ "$next" = "format" ]; then
+        case "$arg" in
+          json|sarif|markdown)
+            return 0
+            ;;
+        esac
+      fi
+      next=""
+      continue
+    fi
+
+    case "$arg" in
+      --json|-j|--format=json|--format=sarif|--format=markdown)
+        return 0
+        ;;
+      --format)
+        next="format"
+        ;;
+    esac
+  done
+  return 1
+}
+
+wants_project_mode() {
+  [ "$(resolve_mode "$@")" = "project" ]
+}
+
+canonical_dir() {
+  local path="$1"
+  if [ -d "$path" ]; then
+    (cd "$path" && pwd -P)
+  else
+    echo "$path"
+  fi
+}
+
+CURRENT_DIR="$(pwd -P)"
+WORKSPACE_DIR="$(canonical_dir "$WORKSPACE_ROOT")"
+
+# Redirection logic:
+# If we are in the workspace root and NOT in global mode,
+# default to the demo project in PROJECT_ROOT if it exists.
+if [ "$(resolve_mode "$@")" != "global" ] \
+  && [ "${SKILLSHARE_DEV_ALLOW_WORKSPACE_PROJECT:-0}" != "1" ] \
+  && [ "$CURRENT_DIR" = "$WORKSPACE_DIR" ]; then
+  
+  if [ -d "$PROJECT_ROOT" ]; then
+    if ! wants_machine_output "$@"; then
+      echo "devcontainer: redirecting workspace execution to $PROJECT_ROOT" >&2
+    fi
+    cd "$PROJECT_ROOT"
+  fi
+fi
+
+# Devcontainer default: build from source for instant feedback, then run in caller cwd.
+# Set SKILLSHARE_DEV_USE_BINARY=1 to use the compiled /workspace/bin/skillshare directly.
+if [ "${SKILLSHARE_DEV_USE_BINARY:-0}" = "1" ]; then
+  if [ -x "$WORKSPACE_ROOT/.devcontainer/ensure-skillshare-linux-binary.sh" ]; then
+    "$WORKSPACE_ROOT/.devcontainer/ensure-skillshare-linux-binary.sh"
+  fi
+  exec "$WORKSPACE_ROOT/bin/skillshare" "$@"
+fi
+
+if ! (cd "$WORKSPACE_ROOT" && "$GO_BIN" build -o "$TMP_BIN" ./cmd/skillshare); then
+  echo "failed to build devcontainer skillshare binary" >&2
+  exit 1
+fi
+
+exec "$TMP_BIN" "$@"
