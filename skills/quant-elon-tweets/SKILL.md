@@ -18,12 +18,18 @@ bash scripts/elon_slug_search.sh
 ```
 If `NO_ACTIVE_MARKET`, exit without report.
 
-### 2. Get Tweet Count
+### 3. Prioritize Today's Settlement
+After finding BEST_SLUG, check if it settles today (before midnight ET):
+
+- **Settling today** → highest priority, analyze aggressively, short remaining time = high confidence
+- **Not settling today** → monitor only, log data, do not trade (wait until settlement day)
+
+### 4. Get Tweet Count
 Fetch Polymarket event page to read "TWEET COUNT" display:
 - Primary: `web_fetch` the event URL
 - Fallback: browser navigate + snapshot
 
-### 3. Project Final Count
+### 5. Project Final Count
 ```
 rate = tweet_count / hours_elapsed
 projected = tweet_count + rate × hours_remaining
@@ -31,13 +37,15 @@ projected = tweet_count + rate × hours_remaining
 
 Confidence: <6h remaining = high (±10%), 6-12h = medium (±20%), >12h = low.
 
-### 4. Find Edge & Trade
+### 6. Find Edge & Trade
 - Map projected range to market outcomes
+- **Must be settling today** to trade
 - Only trade when: remaining <12h AND edge >10%
 - Position ≤4% of assets, max $5/trade
 - Hold to settlement, no stop-loss
+- Not settling today → log data only, no trade
 
-### 5. Report
+### 7. Report
 Push: market slug, tweet count, rate, projection, odds comparison, action.
 
 ## Slug Pattern
