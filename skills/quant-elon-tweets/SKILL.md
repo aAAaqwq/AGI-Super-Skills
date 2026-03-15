@@ -18,11 +18,12 @@ bash scripts/elon_slug_search.sh
 ```
 If `NO_ACTIVE_MARKET`, exit without report.
 
-### 3. Prioritize Today's Settlement
-After finding BEST_SLUG, check if it settles today (before midnight ET):
+### 3. Check Remaining Time
+Elon markets typically settle around 3AM ET next day, not midnight.
 
-- **Settling today** → highest priority, analyze aggressively, short remaining time = high confidence
-- **Not settling today** → monitor only, log data, do not trade (wait until settlement day)
+- **<6h remaining** → high confidence window, analyze + trade
+- **6-12h remaining** → observation only, log data, no trade
+- **>12h remaining** → too early, skip
 
 ### 4. Get Tweet Count
 Fetch Polymarket event page to read "TWEET COUNT" display:
@@ -39,11 +40,11 @@ Confidence: <6h remaining = high (±10%), 6-12h = medium (±20%), >12h = low.
 
 ### 6. Find Edge & Trade
 - Map projected range to market outcomes
-- **Must be settling today** to trade
-- Only trade when: remaining <12h AND edge >10%
+- **<6h remaining** required to trade
+- Edge >10% (projected probability vs market price)
 - Position ≤4% of assets, max $5/trade
 - Hold to settlement, no stop-loss
-- Not settling today → log data only, no trade
+- **≥6h remaining** → log data only, no trade
 
 ### 7. Report
 Push: market slug, tweet count, rate, projection, odds comparison, action.
