@@ -1,50 +1,37 @@
-# 📝 Daily P&L Reflection
+---
+name: quant-daily-reflection
+description: Nightly P&L review with trade-by-trade analysis, strategy evaluation, risk audit, and lesson extraction. Use for daily trading performance review and continuous strategy improvement.
+---
 
-Nightly full P&L review with trade-by-trade analysis, strategy evaluation, and lesson extraction.
+# Daily P&L Reflection
 
-## Execution Flow
+Full nightly review of trading performance.
 
-### Step 1: Account Overview
-- Open Polymarket portfolio via browser
-- Record: Portfolio value, Cash, utilization %
-- Fetch BTC/ETH/SOL prices from Binance
-- Calculate daily P&L (compare morning vs now)
-- Calculate cumulative ROI from initial capital
+## Flow
 
-### Step 2: Trade-by-Trade Review
-For each trade executed today:
-- Market | Direction | Entry Price | Current/Settlement Price | Amount | P&L $ | P&L %
-- Was the edge real? What was the information source? Did it hold up in hindsight?
-- Was trend analysis correct? Entry judgment vs actual movement
-- If loss: Root cause? Was it avoidable?
+### 1. Account Overview
+Open portfolio via browser. Record total value, cash, utilization. Fetch prices. Calculate daily P&L and cumulative ROI.
 
-### Step 3: Strategy Layer Statistics
-Group by strategy layer:
-- S1 Sweet Zone: trade count / win rate / total P&L / avg return
-- S2 Trend: trade count / win rate / total P&L
-- S-Elon: tweet market performance
-- S3 Arbitrage: opportunities found?
-- **Which strategy performed best/worst? Why?**
+### 2. Trade-by-Trade Review
+For each trade today:
+- Market, direction, entry, current/settlement price, amount, P&L
+- Was the edge real? Information source? Did it hold?
+- Trend analysis correct? Entry vs actual movement?
+- If loss: root cause, avoidable?
 
-### Step 4: Risk Audit
-- Any rule violations? (bought >85¢? concentration >40%? sports/geopolitical? counter-trend?)
-- Were stop-losses executed? Any missed stops?
+### 3. Strategy Statistics
+Group by layer (S1 sweet zone, S2 trend, S-Elon, S3 arbitrage). For each: count, win rate, total P&L, avg return. Identify best/worst.
+
+### 4. Risk Audit
+- Rule violations? (>85¢, concentration >40%, sports/geo, counter-trend)
+- Stop-losses executed? Missed stops?
 - Position concentration trend
 
-### Step 5: Market Environment Review
-- Overall market sentiment (fear/greed/neutral)
-- Major events impacting markets
-- Which categories performed well/poorly
+### 5. Market Environment
+Overall sentiment, major events, category performance.
 
-### Step 6: Tomorrow's Adjustments
-- Specific parameter changes (price ranges, position sizes, category weights)
-- Key markets/events to watch
-- Execution improvements needed
+### 6. Tomorrow's Adjustments
+Parameter changes, markets to watch, execution improvements.
 
-### Step 7: Output
-1. Write full reflection to daily memory file
-2. Push summary report to channel
-3. If important lesson found, update strategy rules or long-term memory
-
-## Changelog
-- v1.0 (2026-03-15): Initial release
+### 7. Output
+Write reflection to daily memory. Push summary. Update strategy rules if important lesson found.

@@ -1,44 +1,44 @@
-# 📊 Position Monitor — Stop-Loss & Take-Profit Execution
+---
+name: quant-position-monitor
+description: Automated hourly Polymarket position monitoring with ladder stop-loss, take-profit, and settlement claiming. Checks each position against loss/gain thresholds and executes sells via browser. Use for periodic portfolio risk management and automated exit execution.
+---
 
-Automated hourly position monitoring with ladder stop-loss, take-profit rules, and settlement claiming for Polymarket.
+# Position Monitor — Stop-Loss & Take-Profit
 
-## Rules (highest priority, unconditional execution)
+Check all positions hourly. Execute exits when thresholds trigger.
+
+## Exit Rules (unconditional, highest priority)
 
 | Condition | Action |
 |-----------|--------|
-| Loss >40% | **Full exit** — sell everything |
-| Loss >25% | **Cut 40%** — reduce position by 40% |
-| Loss >15% + 4h downtrend (2 consecutive red candles) + buffer <3% | **Cut 50%** — trend-aware stop |
-| Gain >50% | **Full sell** — take all profit |
-| Gain >30% + settlement >24h away | **Sell 50%** — ladder take-profit |
-| Price ≥99¢ + settlement >4h away | **Full sell** — time is cost |
+| Loss >40% | Full exit |
+| Loss >25% | Cut 40% of position |
+| Loss >15% + 4h downtrend + buffer <3% | Cut 50% (trend-aware) |
+| Gain >50% | Full sell |
+| Gain >30% + settlement >24h | Sell 50% |
+| Price ≥99¢ + settlement >4h | Full sell |
 
-## Execution Flow
+## Flow
 
-### Step 1: Get Current Prices
-Fetch real-time prices from Binance (BTC, ETH, SOL) and 4h candle trend data.
+### 1. Get Prices
+```bash
+bash scripts/price_check.sh all
+```
 
-### Step 2: Get Portfolio
-Open Polymarket portfolio page via browser, extract:
-- Portfolio total value
-- Cash balance
-- Each position: market name, direction, avg cost, current price, P&L %
+### 2. Get Portfolio
+Open `https://polymarket.com/portfolio` via browser. Wait 5s, snapshot. Extract:
+- Portfolio total, cash balance
+- Each position: market, direction, avg cost, current price, P&L %
 
-### Step 3: Claim Settlements
-If any "Claim" buttons visible in the portfolio, click to claim settled positions.
+### 3. Claim Settlements
+Click any visible "Claim" buttons. Confirm if dialog appears.
 
-### Step 4: Evaluate Each Position
-Calculate P&L % for each position, check against stop-loss / take-profit rules.
+### 4. Evaluate & Execute
+For each position: calculate P&L %, check against exit rules, sell if triggered.
 
-### Step 5: Execute Sells
-For positions triggering rules, execute sell orders through browser.
-
-### Step 6: Report
-Push monitoring report with portfolio snapshot, price data, trend info, and any actions taken.
+### 5. Report
+Push: portfolio snapshot, prices, actions taken.
 
 ## Failure Handling
-- Browser shows login/auth dialog → Alert: "Polymarket session expired, manual refresh needed"
-- Browser completely fails → Fallback to Gamma API for price data (cannot execute trades)
-
-## Changelog
-- v1.0 (2026-03-15): Initial release — ladder stop-loss + take-profit + claim automation
+- Auth dialog → alert "session expired, manual refresh needed"
+- Browser fails → Gamma API fallback (read-only, no sells)

@@ -1,30 +1,18 @@
-# 📊 Daily Portfolio Snapshot
+---
+name: quant-daily-portfolio
+description: Morning Polymarket portfolio snapshot with Binance prices, settlement claiming, and daily report. Use for daily portfolio review and position tracking.
+---
 
-Morning portfolio review — full position snapshot with Binance prices, settlement claiming, and daily report.
+# Daily Portfolio Snapshot
 
-## Execution Flow
+Morning full-position review.
 
-### Step 1: Fetch Market Prices
-Get real-time prices from Binance API for BTC, ETH, SOL.
+## Flow
 
-### Step 2: Load Context
-Read strategy file and recent memory/logs for context.
-
-### Step 3: Get Polymarket Portfolio
-Open portfolio page via browser, extract:
-- Portfolio total value and cash balance
-- Each position: market, direction, avg cost, current price, P&L %
-- Claim any settled positions
-
-### Step 4: Handle Failures
-- Login expired → push alert for manual refresh
-- Browser fails → fallback to Gamma API for prices
-
-### Step 5: Push Daily Report
-Format: portfolio value, cash, prices, each position with P&L, and action recommendations.
-
-### Step 6: Update Daily Memory
-Append portfolio snapshot to daily memory file.
-
-## Changelog
-- v1.0 (2026-03-15): Initial release
+1. Fetch BTC/ETH/SOL prices from Binance
+2. Read strategy file and recent memory for context
+3. Open `https://polymarket.com/portfolio` via browser, extract portfolio value, cash, positions with P&L
+4. Claim any settled positions (click Claim buttons)
+5. Handle failures: auth expired → alert; browser fails → Gamma API fallback
+6. Push daily report: portfolio, cash, prices, each position with P&L, recommendations
+7. Append to daily memory file

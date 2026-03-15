@@ -1,46 +1,32 @@
-# 📈 Weekly Performance Review
+---
+name: quant-weekly-review
+description: Weekly performance review with aggregate statistics, strategy layer breakdown, risk audit, and next-week adjustments. Use for Monday morning trading performance analysis and strategy tuning.
+---
 
-Monday morning weekly review — aggregate performance stats, strategy evaluation, and adjustments for the coming week.
+# Weekly Performance Review
 
-## Execution Flow
+Aggregate weekly stats and adjust strategy.
 
-### Step 1: Get Current Portfolio
-Fetch current portfolio data from Polymarket.
+## Flow
 
-### Step 2: Read Past 7 Days
-Load daily memory files from the past week, extract all trade records.
+### 1. Get Current Portfolio
+Fetch portfolio data from Polymarket.
 
-### Step 3: Weekly Statistics
-- Total trades
-- Win rate (profitable / total)
-- Total P&L ($)
-- Average P&L per trade ($)
-- Largest single win / largest single loss
+### 2. Read Past 7 Days
+Load daily memory files, extract all trades.
 
-### Step 4: Strategy Layer Breakdown
+### 3. Weekly Statistics
+Total trades, win rate, total P&L, avg P&L/trade, largest win, largest loss.
 
-| Strategy | Trades | Win Rate | Total P&L | Avg Return |
-|----------|--------|----------|-----------|------------|
-| S1 Sweet Zone | | | | |
-| S2 Trend | | | | |
-| S-Elon | | | | |
-| S3 Arbitrage | | | | |
-| S7 Short-term | | | | |
+### 4. Strategy Breakdown
+For each layer (S1 sweet zone, S2 trend, S-Elon, S3 arbitrage, S7 short-term):
+trades, win rate, total P&L, avg return.
 
-### Step 5: Risk Review
-- Rule violations during the week?
-- Stop-loss execution rate
-- Position concentration trends
-- Maximum drawdown
+### 5. Risk Review
+Rule violations, stop-loss execution rate, concentration trends, max drawdown.
 
-### Step 6: Next Week Strategy Adjustments
-- Which strategies to scale up/down?
-- Category allocation changes
-- New assets/markets to monitor or remove
-- Parameter tuning suggestions
+### 6. Next Week Adjustments
+Strategies to scale up/down, category changes, new monitors, parameter tuning.
 
-### Step 7: Report
-Push weekly report to channel and write to daily memory.
-
-## Changelog
-- v1.0 (2026-03-15): Initial release
+### 7. Report
+Push weekly report. Write to daily memory.

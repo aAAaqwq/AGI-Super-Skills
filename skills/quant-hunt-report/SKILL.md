@@ -1,28 +1,16 @@
-# ⚡ Hunt Report — Trade Summary Reporter
+---
+name: quant-hunt-report
+description: Aggregates latest crypto hunt and Elon tweet monitoring results into a structured report. Read-only — does not execute any trades. Use for periodic trade summary reporting.
+---
 
-Aggregates results from the latest crypto hunt and Elon tweet monitoring runs into a structured report. **Does not execute any trades** — read-only reporting.
+# Hunt Report — Trade Summary
 
-## Execution Flow
+Compile results from recent hunt runs into a single report. **No trades executed.**
 
-### Step 1: Read Latest Hunt Results
-Read cached results from recent hunt runs (crypto hunt, Elon tweet monitor).
+## Flow
 
-### Step 2: Read Portfolio Snapshot
-Load latest portfolio snapshot for context.
-
-### Step 3: Generate Report
-Compile a summary report covering:
-- Current prices (BTC, ETH, SOL)
-- Portfolio value and cash
-- Latest hunt results (trades executed or skipped)
-- Position alerts (any needing stop-loss/take-profit)
-- Strategy layer status (S1 sweet zone, S2 trend, S7 Elon tweets)
-
-### Step 4: Push Report
-Send formatted report to configured channel.
-
-## Key Constraint
-This skill is **report-only**. New trades → crypto-hunt skill. Stop-loss → position-monitor skill.
-
-## Changelog
-- v1.0 (2026-03-15): Initial release
+1. Read cached hunt results (crypto hunt, Elon tweet monitor)
+2. Read latest portfolio snapshot
+3. Generate report: prices, portfolio, hunt results, position alerts, strategy status
+4. Push report to channel
+5. Append to daily memory

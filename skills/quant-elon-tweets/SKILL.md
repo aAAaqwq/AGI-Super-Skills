@@ -1,60 +1,46 @@
-# 🐦 Elon Tweet Market — Prediction Market Scanner
+---
+name: quant-elon-tweets
+description: Monitor Elon Musk tweet count prediction markets on Polymarket. Searches for nearest-settling market via slug pattern, fetches real-time tweet count, projects final count, and trades when edge >10% with <12h remaining. Use for automated Elon tweet market monitoring during 21:00-03:00 window.
+---
 
-Monitors Elon Musk tweet count prediction markets on Polymarket. Searches for the nearest-settling market, fetches real-time tweet count, projects final count, and trades when edge is found.
+# Elon Tweet Market Scanner
+
+Find nearest-settling Elon tweet market, get tweet count, project outcome, trade on edge.
 
 ## Core Logic
-Settlement is approaching → tweet count becomes more certain → edge gets larger.
+Closer to settlement → more certain tweet count → larger edge.
 
-## Execution Flow
+## Flow
 
-### Step 1: Find Nearest Settling Elon Market
-Search Polymarket Gamma API for active Elon tweet markets using slug pattern:
-- `elon-musk-of-tweets-{month}-{start}-{month}-{end}`
-- Window sizes: 2-day and 7-day
-- Look back 10 days (7-day markets may have started earlier)
-- Select the market with the earliest `endDate` that's still in the future
-
-### Step 2: Get Market Odds
-Fetch all outcome prices for the target market from Gamma API.
-
-### Step 3: Get Real-Time Tweet Count
-Fetch the Polymarket event page to read the embedded "TWEET COUNT" display.
-- Primary: web_fetch the event URL
-- Fallback: browser navigation + snapshot
-
-### Step 4: Project Final Count
+### 1. Find Active Market
+```bash
+bash scripts/elon_slug_search.sh
 ```
-current_rate = tweet_count / hours_elapsed
-projected_total = tweet_count + current_rate × hours_remaining
+If `NO_ACTIVE_MARKET`, exit without report.
+
+### 2. Get Tweet Count
+Fetch Polymarket event page to read "TWEET COUNT" display:
+- Primary: `web_fetch` the event URL
+- Fallback: browser navigate + snapshot
+
+### 3. Project Final Count
+```
+rate = tweet_count / hours_elapsed
+projected = tweet_count + rate × hours_remaining
 ```
 
-Confidence levels:
-- Remaining <6h: High (±10%)
-- Remaining 6-12h: Medium (±20%)
-- Remaining >12h: Low — be cautious
+Confidence: <6h remaining = high (±10%), 6-12h = medium (±20%), >12h = low.
 
-### Step 5: Find Edge & Trade
-1. Map projected range to market outcomes
-2. Compare projected probability vs market odds
-3. **Only trade when**:
-   - <12h remaining
-   - Edge >10% (projected probability vs market price)
-4. Position ≤4% of available assets, max $5 per trade
-5. Hold to settlement (no stop-loss)
+### 4. Find Edge & Trade
+- Map projected range to market outcomes
+- Only trade when: remaining <12h AND edge >10%
+- Position ≤4% of assets, max $5/trade
+- Hold to settlement, no stop-loss
 
-### Step 6: Report
-Push structured report with tweet count, projection, odds comparison, and action taken.
+### 5. Report
+Push: market slug, tweet count, rate, projection, odds comparison, action.
 
-## Slug Discovery
-- Elon tweet markets are **not findable via Gamma search/events API**
-- Must use direct slug lookup: `GET /events?slug=elon-musk-of-tweets-{period}`
-- Period format examples: `march-5-march-7` (2-day), `march-3-march-10` (7-day)
-
-## Historical Data
-Elon's posting rate is highly unpredictable:
-- Jan 2026: ~80 posts/day → Feb: ~44/day → Mar: ~21/day (declining trend)
-- Short windows (2-day) see high variance
-- Wait until data is sufficient before committing
-
-## Changelog
-- v1.0 (2026-03-15): Initial release
+## Slug Pattern
+`elon-musk-of-tweets-{month}-{start}-{month}-{end}`
+- Windows: 2-day, 7-day
+- Not findable via Gamma search — direct slug lookup only
