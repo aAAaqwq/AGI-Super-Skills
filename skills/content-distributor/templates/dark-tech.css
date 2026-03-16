@@ -1,0 +1,148 @@
+/* 深色科技风模板 - Dark Tech Style */
+/* 适合 AI/深度技术、Hacker News 风格文章 */
+
+.cd-article {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #e0e0e0;
+  line-height: 1.8;
+  font-size: 16px;
+  padding: 24px;
+  max-width: 700px;
+  margin: 0 auto;
+  background: #0d1117;
+}
+
+.cd-article h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #58a6ff;
+  margin: 32px 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #30363d;
+}
+
+.cd-article h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #79c0ff;
+  margin: 28px 0 16px;
+}
+
+.cd-article h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #a5d6ff;
+  margin: 24px 0 12px;
+}
+
+.cd-article p {
+  margin: 12px 0;
+  color: #c9d1d9;
+}
+
+.cd-article a {
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+.cd-article strong {
+  color: #ffa657;
+  font-weight: 600;
+}
+
+.cd-article em {
+  color: #8b949e;
+}
+
+.cd-article blockquote {
+  margin: 16px 0;
+  padding: 12px 20px;
+  background: #161b22;
+  border-left: 4px solid #3fb950;
+  color: #8b949e;
+}
+
+.cd-article blockquote p {
+  margin: 4px 0;
+  color: #8b949e;
+}
+
+.cd-article pre {
+  margin: 16px 0;
+  padding: 16px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.cd-article pre code {
+  font-family: "JetBrains Mono", "Fira Code", Menlo, monospace;
+  color: #c9d1d9;
+  background: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+.cd-article code {
+  font-family: "JetBrains Mono", "Fira Code", Menlo, monospace;
+  background: #1f2937;
+  color: #7ee787;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.cd-article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.cd-article th {
+  background: #161b22;
+  color: #58a6ff;
+  padding: 10px 14px;
+  text-align: left;
+  border: 1px solid #30363d;
+}
+
+.cd-article td {
+  padding: 10px 14px;
+  border: 1px solid #30363d;
+  color: #c9d1d9;
+}
+
+.cd-article img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 16px 0;
+  border: 1px solid #30363d;
+}
+
+.cd-article hr {
+  border: none;
+  height: 1px;
+  background: #30363d;
+  margin: 28px 0;
+}
+
+.cd-article ul, .cd-article ol {
+  margin: 12px 0;
+  padding-left: 28px;
+}
+
+.cd-article li {
+  margin: 6px 0;
+  color: #c9d1d9;
+}
+
+/* GitHub Dark 风格代码高亮 */
+.cd-article .hljs-keyword { color: #ff7b72; }
+.cd-article .hljs-string { color: #a5d6ff; }
+.cd-article .hljs-number { color: #79c0ff; }
+.cd-article .hljs-comment { color: #8b949e; font-style: italic; }
+.cd-article .hljs-function { color: #d2a8ff; }
+.cd-article .hljs-title { color: #d2a8ff; }
+.cd-article .hljs-built_in { color: #ffa657; }
+.cd-article .hljs-type { color: #ff7b72; }

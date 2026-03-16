@@ -38,6 +38,24 @@ A Rust-based browser automation engine that provides a lightweight binary drivin
 
 - **`navigate`** is a one-shot command — it opens the page, completes, then **immediately kills Chrome**. Do NOT use it if the user wants to see/interact with the browser.
 - **`login`** keeps Chrome open and waits for user input (Enter) before saving session and closing. Use this when the user needs to interact manually.
+
+## ⚠️ 资源清理原则（强制）
+
+**所有涉及浏览器的 cron 任务完成后，必须自动关闭 Chrome 进程！**
+
+```bash
+# fbu 的 navigate 命令会自动关闭 Chrome
+# 但如果使用其他命令或异常中断，必须手动清理：
+
+# 任务结束后强制清理残留进程
+pkill -f chrome
+pkill -f chromium
+
+# 或在脚本中使用 timeout 确保清理
+timeout --kill-after=5 300 fbu navigate "https://example.com" && pkill -f chrome
+```
+
+**原因**: 避免内存泄漏和资源占用，防止 Gateway CPU 100% 过载
 - **`--headless false`** shows the Chrome window on the user's desktop (requires X11/Wayland display). Use this when the user wants to watch operations.
 - **`--user-data-dir`** reuses an existing Chrome profile (login state, cookies, extensions). However, it may conflict if Chrome is already running with that profile. Prefer `--load-session` for saved sessions instead.
 

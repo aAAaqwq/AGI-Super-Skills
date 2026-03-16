@@ -25,7 +25,7 @@ if [ ! -f "$MD_FILE" ]; then
 fi
 
 # 从 pass 获取凭证（汉兴企业）
-APP_ID="YOUR_APP_ID"
+APP_ID="REDACTED_FEISHU_HANXING_APP_ID"
 APP_SECRET=$(pass show api/feishu-hanxing 2>/dev/null || echo "")
 
 if [ -z "$APP_SECRET" ]; then

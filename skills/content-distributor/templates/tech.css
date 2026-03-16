@@ -1,0 +1,159 @@
+/* 科技风模板 - Tech Style */
+/* 适合技术博客、AI/编程类文章 */
+
+.cd-article {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #1a1a2e;
+  line-height: 1.8;
+  font-size: 16px;
+  padding: 20px;
+  max-width: 680px;
+  margin: 0 auto;
+  background: #ffffff;
+}
+
+.cd-article h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f0f23;
+  border-bottom: 3px solid #6c5ce7;
+  padding-bottom: 12px;
+  margin: 32px 0 20px;
+}
+
+.cd-article h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2d3436;
+  padding-left: 12px;
+  border-left: 4px solid #6c5ce7;
+  margin: 28px 0 16px;
+}
+
+.cd-article h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3436;
+  margin: 24px 0 12px;
+}
+
+.cd-article p {
+  margin: 12px 0;
+  text-align: justify;
+}
+
+.cd-article a {
+  color: #6c5ce7;
+  text-decoration: none;
+  border-bottom: 1px dashed #6c5ce7;
+}
+
+.cd-article strong {
+  color: #e17055;
+  font-weight: 600;
+}
+
+.cd-article em {
+  color: #636e72;
+  font-style: italic;
+}
+
+.cd-article blockquote {
+  margin: 16px 0;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f0ff 100%);
+  border-left: 4px solid #6c5ce7;
+  border-radius: 0 8px 8px 0;
+  color: #4a4a6a;
+  font-size: 15px;
+}
+
+.cd-article blockquote p {
+  margin: 4px 0;
+}
+
+.cd-article pre {
+  margin: 16px 0;
+  padding: 16px;
+  background: #1e1e2e;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.cd-article pre code {
+  font-family: "JetBrains Mono", "Fira Code", "Source Code Pro", Menlo, monospace;
+  color: #cdd6f4;
+  background: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+.cd-article code {
+  font-family: "JetBrains Mono", "Fira Code", Menlo, monospace;
+  background: #f0f0ff;
+  color: #6c5ce7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.cd-article ul, .cd-article ol {
+  margin: 12px 0;
+  padding-left: 28px;
+}
+
+.cd-article li {
+  margin: 6px 0;
+}
+
+.cd-article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 15px;
+}
+
+.cd-article th {
+  background: #6c5ce7;
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.cd-article td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.cd-article tr:nth-child(even) td {
+  background: #f8f9ff;
+}
+
+.cd-article img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.cd-article hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #6c5ce7, transparent);
+  margin: 28px 0;
+}
+
+/* 代码高亮 - Catppuccin Mocha 风格 */
+.cd-article .hljs-keyword { color: #cba6f7; }
+.cd-article .hljs-string { color: #a6e3a1; }
+.cd-article .hljs-number { color: #fab387; }
+.cd-article .hljs-comment { color: #6c7086; font-style: italic; }
+.cd-article .hljs-function { color: #89b4fa; }
+.cd-article .hljs-title { color: #89b4fa; }
+.cd-article .hljs-built_in { color: #f38ba8; }
+.cd-article .hljs-type { color: #f9e2af; }
+.cd-article .hljs-attr { color: #89dceb; }
+.cd-article .hljs-variable { color: #cdd6f4; }
+.cd-article .hljs-operator { color: #89dceb; }

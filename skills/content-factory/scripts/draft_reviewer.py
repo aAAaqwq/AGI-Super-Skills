@@ -4,7 +4,7 @@
 功能：
 - 读取 drafts/{date}/{topic_id}/{platform}.md
 - 支持指定 date/topic/platform；支持 --all 推送当天所有草稿
-- 推送到 Daniel (chat_id: YOUR_TELEGRAM_ID)
+- 推送到 Daniel (chat_id: REDACTED_TG_USER_ID)
 - --dry-run 仅打印
 
 说明：
@@ -25,7 +25,7 @@ for _k in ("http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY", "all_proxy"
     os.environ.pop(_k, None)
 
 from paths import DRAFTS_DIR, NEWSBOT_SEND
-DANIEL_CHAT_ID = "YOUR_TELEGRAM_ID"
+DANIEL_CHAT_ID = "REDACTED_TG_USER_ID"
 
 PLATFORMS = ["xiaohongshu", "twitter", "wechat"]
 

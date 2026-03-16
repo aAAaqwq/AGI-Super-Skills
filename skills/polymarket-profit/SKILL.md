@@ -7,7 +7,7 @@
 - **模式**: 真实交易（非模拟盘）
 - **本金**: $3 USDC (Polygon)
 - **策略**: 高确定性套利 + CME 套利 + 事件驱动
-- **推送**: DailyNews 群 (@fkkanfnnfbot → YOUR_NEWS_CHAT_ID)
+- **推送**: DailyNews 群 (@fkkanfnnfbot → -1003824568687)
 - **负责 Agent**: quant（量化投资专员）
 - **协作**: finance（资金核算）、research（情报）、news（新闻）
 
@@ -242,7 +242,7 @@ python3 scripts/trader.py instruction --market <slug> --outcome No --amount 0.6 
 python3 ~/clawd/skills/polymarket-profit/scripts/generate_report.py
 
 # 手动推送报告（通过 OpenClaw）
-# 使用 message 工具发送到 chat_id: YOUR_NEWS_CHAT_ID
+# 使用 message 工具发送到 chat_id: -1003824568687
 
 # 查看持仓
 cat ~/clawd/skills/polymarket-profit/data/portfolio.json

@@ -7,7 +7,7 @@
 set -e
 
 TOKEN=$(pass tokens/telegram-newsrobot)
-DEFAULT_CHAT_ID="YOUR_NEWS_CHAT_ID"  # DailyNews
+DEFAULT_CHAT_ID="-1003824568687"  # DailyNews
 
 MESSAGE="$1"
 CHAT_ID="${2:-$DEFAULT_CHAT_ID}"

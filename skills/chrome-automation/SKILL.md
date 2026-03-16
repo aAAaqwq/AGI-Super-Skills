@@ -15,6 +15,28 @@ allowed-tools: Bash, Read, Write, Edit
 - 动态网页数据抓取
 - 性能测试和监控
 
+## ⚠️ 资源清理原则（强制）
+
+**所有涉及浏览器的 cron 任务完成后，必须自动关闭 Chrome 进程！**
+
+```bash
+# 任务结束时必须执行
+pkill -f chrome
+pkill -f chromium
+```
+
+或在 JavaScript/TypeScript 中：
+```typescript
+// 显式关闭浏览器
+await browser.close();
+
+// 脚本结束时强制清理
+const { execSync } = require('child_process');
+execSync('pkill -f chrome');
+```
+
+**原因**: 避免内存泄漏和资源占用，防止 Gateway CPU 100% 过载
+
 ## 使用场景
 - "自动化登录网站并抓取数据"
 - "批量截取网页截图"

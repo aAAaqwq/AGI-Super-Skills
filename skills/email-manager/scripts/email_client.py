@@ -7,6 +7,7 @@ Email Client - IMAP/SMTP 通用邮件客户端
 import imaplib
 import smtplib
 import email
+import socket
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import decode_header
@@ -15,6 +16,11 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Optional, Tuple
+
+# 默认超时设置（秒）
+DEFAULT_SOCKET_TIMEOUT = 30
+DEFAULT_IMAP_TIMEOUT = 60
+MAX_RETRIES = 5
 
 class EmailClient:
     """通用邮件客户端"""
@@ -49,47 +55,81 @@ class EmailClient:
         
         raise ValueError(f"未找到邮箱凭据: {self.email_address}")
     
-    def connect_imap(self, retries: int = 3) -> imaplib.IMAP4_SSL:
-        """连接 IMAP 服务器（带重试）"""
-        import ssl, time
+    def connect_imap(self, retries: int = MAX_RETRIES) -> imaplib.IMAP4_SSL:
+        """连接 IMAP 服务器（带重试 + 超时）
+        
+        QQ 邮箱从香港直连有时不稳定，增加重试和超时设置
+        """
+        import ssl
+        import time
+        
         password = self._get_password()
+        
+        # QQ 邮箱需要更长超时（海外连接）
+        timeout = DEFAULT_IMAP_TIMEOUT if self.provider_name == 'qq' else DEFAULT_SOCKET_TIMEOUT
+        
+        # 设置全局 socket 超时
+        socket.setdefaulttimeout(timeout)
         
         for attempt in range(retries):
             try:
                 ctx = ssl.create_default_context()
+                
+                # 创建带超时的 IMAP 连接
                 mail = imaplib.IMAP4_SSL(
                     self.provider['imap_server'],
                     self.provider['imap_port'],
-                    ssl_context=ctx
+                    ssl_context=ctx,
+                    timeout=timeout
                 )
+                
+                # 登录
                 mail.login(self.email_address, password)
+                print(f"  ✅ {self.email_address} IMAP 连接成功 (attempt {attempt + 1})")
                 return mail
-            except (ssl.SSLEOFError, ConnectionResetError, OSError) as e:
+                
+            except (ssl.SSLEOFError, ConnectionResetError, OSError, socket.timeout, TimeoutError) as e:
+                wait_time = 2 ** (attempt + 1)  # 指数退避: 2s, 4s, 8s, 16s, 32s
+                print(f"  ⚠️ {self.email_address} IMAP 连接失败 (attempt {attempt + 1}/{retries}): {e}")
+                
                 if attempt < retries - 1:
-                    time.sleep(2 * (attempt + 1))
+                    print(f"     等待 {wait_time}s 后重试...")
+                    time.sleep(wait_time)
                     continue
                 raise
     
-    def connect_smtp(self, retries: int = 3):
-        """连接 SMTP 服务器（带重试）"""
-        import ssl, time
+    def connect_smtp(self, retries: int = MAX_RETRIES):
+        """连接 SMTP 服务器（带重试 + 超时）"""
+        import ssl
+        import time
+        
         password = self._get_password()
         port = self.provider['smtp_port']
+        
+        # QQ 邮箱需要更长超时
+        timeout = DEFAULT_IMAP_TIMEOUT if self.provider_name == 'qq' else DEFAULT_SOCKET_TIMEOUT
+        socket.setdefaulttimeout(timeout)
         
         for attempt in range(retries):
             try:
                 ctx = ssl.create_default_context()
                 if port == 465:
-                    smtp = smtplib.SMTP_SSL(self.provider['smtp_server'], port, context=ctx)
+                    smtp = smtplib.SMTP_SSL(self.provider['smtp_server'], port, context=ctx, timeout=timeout)
                 else:
-                    smtp = smtplib.SMTP(self.provider['smtp_server'], port)
+                    smtp = smtplib.SMTP(self.provider['smtp_server'], port, timeout=timeout)
                     smtp.starttls(context=ctx)
                 
                 smtp.login(self.email_address, password)
+                print(f"  ✅ {self.email_address} SMTP 连接成功")
                 return smtp
-            except (ssl.SSLEOFError, ConnectionResetError, OSError) as e:
+                
+            except (ssl.SSLEOFError, ConnectionResetError, OSError, socket.timeout, TimeoutError) as e:
+                wait_time = 2 ** (attempt + 1)
+                print(f"  ⚠️ {self.email_address} SMTP 连接失败 (attempt {attempt + 1}/{retries}): {e}")
+                
                 if attempt < retries - 1:
-                    time.sleep(2 * (attempt + 1))
+                    print(f"     等待 {wait_time}s 后重试...")
+                    time.sleep(wait_time)
                     continue
                 raise
     

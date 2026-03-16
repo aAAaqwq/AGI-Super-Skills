@@ -23,6 +23,42 @@ allowed-tools: Bash, Read, Write, Edit, WebFetch, WebSearch
 - "绕过这个网站的反爬虫限制"
 
 ## 技术栈
+
+### ⚠️ 资源清理原则（强制）
+
+**所有涉及浏览器的爬取任务完成后，必须自动关闭 Chrome/Selenium 进程！**
+
+```python
+# Playwright 示例
+from playwright.sync_api import sync_playwright
+
+def scrape_website():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        # ... 爬取逻辑 ...
+        browser.close()
+
+    # ⚠️ 强制清理残留进程
+    import subprocess
+    subprocess.run(['pkill', '-f', 'chrome'], capture_output=True)
+
+# Selenium 示例
+from selenium import webdriver
+
+driver = webdriver.Chrome()
+try:
+    # ... 爬取逻辑 ...
+    pass
+finally:
+    driver.quit()
+    # ⚠️ 确保清理
+    import subprocess
+    subprocess.run(['pkill', '-f', 'chrome'], capture_output=True)
+```
+
+**原因**: 避免内存泄漏和资源占用，防止 Gateway CPU 100% 过载
+
 ### Python 爬虫
 - **requests**：HTTP 请求库
 - **BeautifulSoup4**：HTML 解析

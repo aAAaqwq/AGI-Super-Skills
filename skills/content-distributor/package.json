@@ -1,0 +1,22 @@
+{
+  "name": "content-distributor",
+  "version": "1.0.0",
+  "description": "Multi-platform content distribution skill for OpenClaw",
+  "type": "module",
+  "scripts": {
+    "convert": "tsx scripts/convert.ts",
+    "publish": "tsx scripts/publish.ts",
+    "demo": "tsx scripts/demo.ts"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0",
+    "markdown-it-highlightjs": "^4.2.0",
+    "juice": "^11.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.0",
+    "@types/node": "^22.0.0"
+  }
+}

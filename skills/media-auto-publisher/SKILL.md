@@ -21,6 +21,32 @@ metadata:
 | 小红书 | xiaohongshu | creator.xiaohongshu.com |
 | 抖音号 | douyin | creator.douyin.com |
 
+## ⚠️ 资源清理原则（强制）
+
+**所有涉及浏览器的发布任务完成后，必须自动关闭 Chrome 进程！**
+
+```python
+from playwright.sync_api import sync_playwright
+
+def publish_article():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context()
+        page = context.new_page()
+
+        # ... 执行发布任务 ...
+
+        # ⚠️ 任务结束后必须显式关闭
+        context.close()
+        browser.close()
+
+    # ⚠️ 强制清理残留进程（推荐）
+    import subprocess
+    subprocess.run(['pkill', '-f', 'chrome'], capture_output=True)
+```
+
+**原因**: 避免内存泄漏和资源占用，防止 Gateway CPU 100% 过载
+
 ## 使用方法
 
 ```bash

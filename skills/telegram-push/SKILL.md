@@ -13,8 +13,8 @@
 
 | 群/对象 | Chat ID | 推送Bot | 说明 |
 |---------|---------|---------|------|
-| DailyNews群 | `YOUR_NEWS_CHAT_ID` | NewsRobot | 新闻、skill收集、学习报告等 |
-| Daniel私聊 | `YOUR_TELEGRAM_ID` | 主Bot (message tool) | 告警、私人通知 |
+| DailyNews群 | `-1003824568687` | NewsRobot | 新闻、skill收集、学习报告等 |
+| Daniel私聊 | `REDACTED_TG_USER_ID` | 主Bot (message tool) | 告警、私人通知 |
 
 ## 推送规则
 
@@ -78,14 +78,14 @@ def push_to_dailynews(text):
 TOKEN=$(pass show tokens/telegram-newsrobot)
 curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
   -H "Content-Type: application/json" \
-  -d '{"chat_id": YOUR_NEWS_CHAT_ID, "text": "消息", "parse_mode": "HTML"}'
+  -d '{"chat_id": -1003824568687, "text": "消息", "parse_mode": "HTML"}'
 ```
 
 ### 发送图片
 ```bash
 curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendPhoto" \
   -H "Content-Type: application/json" \
-  -d '{"chat_id": YOUR_NEWS_CHAT_ID, "photo": "URL", "caption": "说明"}'
+  -d '{"chat_id": -1003824568687, "photo": "URL", "caption": "说明"}'
 ```
 
 ### 发送带按钮的消息
@@ -93,7 +93,7 @@ curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendPhoto" \
 curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
   -H "Content-Type: application/json" \
   -d '{
-    "chat_id": YOUR_NEWS_CHAT_ID,
+    "chat_id": -1003824568687,
     "text": "消息",
     "reply_markup": {"inline_keyboard": [[{"text": "按钮", "url": "https://..."}]]}
   }'

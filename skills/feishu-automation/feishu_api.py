@@ -15,15 +15,15 @@ from typing import Optional, Dict, Any, List
 TENANTS = {
     "personal": {
         "name": "个人应用",
-        "app_id": "YOUR_APP_ID",
-        "app_secret": "YOUR_APP_SECRET",
-        "default_chat": "YOUR_CHAT_ID",  # 知识云文档
+        "app_id": "REDACTED_FEISHU_PERSONAL_APP_ID",
+        "app_secret": "REDACTED_FEISHU_PERSONAL_SECRET",
+        "default_chat": "REDACTED_FEISHU_GROUP_TOKEN_1",  # 知识云文档
     },
     "hanxing": {
         "name": "汉兴企业",
-        "app_id": "YOUR_APP_ID",
-        "app_secret": "YOUR_APP_SECRET",
-        "default_chat": "YOUR_CHAT_ID",  # 技术开发群
+        "app_id": "REDACTED_FEISHU_HANXING_APP_ID",
+        "app_secret": "REDACTED_FEISHU_HANXING_SECRET",
+        "default_chat": "REDACTED_FEISHU_GROUP_TOKEN_4",  # 技术开发群
     }
 }
 
@@ -236,8 +236,8 @@ if __name__ == "__main__":
   python feishu_api.py [--tenant <name>] <command> [args...]
 
 租户:
-  personal  - 个人应用 (YOUR_APP_ID...)
-  hanxing   - 汉兴企业 (YOUR_APP_ID...) [默认]
+  personal  - 个人应用 (REDACTED...)
+  hanxing   - 汉兴企业 (REDACTED...) [默认]
 
 命令:
   test                         # 测试连接

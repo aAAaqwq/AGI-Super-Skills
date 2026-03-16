@@ -17,6 +17,25 @@ Playwright 是一个强大的浏览器自动化工具，可以模拟真实用户
 
 ## 为什么需要 Playwright
 
+### ⚠️ 资源清理原则（强制）
+
+**所有涉及浏览器的 cron 任务完成后，必须自动关闭 Chrome/Chromium 进程！**
+
+```python
+# 任务结束时必须执行
+import subprocess
+
+# 方式1: 显式关闭浏览器
+await browser.close()
+await context.close()
+
+# 方式2: 强制清理残留进程（推荐在脚本结束时调用）
+subprocess.run(['pkill', '-f', 'chrome'], capture_output=True)
+subprocess.run(['pkill', '-f', 'chromium'], capture_output=True)
+```
+
+**原因**: 避免内存泄漏和资源占用，防止 Gateway CPU 100% 过载
+
 ### 与 browser tool 的区别
 
 | 特性 | browser tool | Playwright |

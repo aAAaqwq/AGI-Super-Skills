@@ -25,7 +25,7 @@ def get_telegram_token():
 def send_telegram(text):
     """发送到 Telegram DailyNews 群"""
     token = get_telegram_token()
-    chat_id = YOUR_NEWS_CHAT_ID  # DailyNews 群
+    chat_id = -1003824568687  # DailyNews 群
     
     import urllib.request
     import urllib.parse

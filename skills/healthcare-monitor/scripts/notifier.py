@@ -77,7 +77,7 @@ def send_telegram(message, config):
     
     使用 OpenClaw message 工具
     """
-    chat_id = config.get("chat_id", "YOUR_TELEGRAM_ID")
+    chat_id = config.get("chat_id", "REDACTED_TG_USER_ID")
     
     # 通过 OpenClaw 发送
     # 这里生成命令，实际执行需要通过 OpenClaw

@@ -1,16 +1,7 @@
 {
-  "timestamp": "2026-02-25T08:04:52.136399",
+  "timestamp": "2026-02-28T08:33:55.228784",
   "emails": {
     "QQ邮箱": [
-      {
-        "id": "818",
-        "subject": "阿里云快照服务开通成功提醒",
-        "from": "阿里云 <system@notice.aliyun.com>",
-        "to": "REDACTED_EMAIL",
-        "date": "Fri, 13 Feb 2026 18:25:47 +0800 (CST)",
-        "body": "",
-        "has_attachment": false
-      },
       {
         "id": "839",
         "subject": "【阿里云】云安全中心周报",
@@ -57,15 +48,6 @@
         "has_attachment": false
       },
       {
-        "id": "847",
-        "subject": "[aAAaqwq/AGI-Super-Skills] Possible valid secrets detected",
-        "from": "GitHub <support@github.com>",
-        "to": "Daniel Li <REDACTED_EMAIL>",
-        "date": "Thu, 19 Feb 2026 01:25:53 -0800",
-        "body": "",
-        "has_attachment": false
-      },
-      {
         "id": "863",
         "subject": "QQ邮箱祝你生日快乐",
         "from": "\"QQ邮箱管理员\" <admin@qq.com>",
@@ -84,106 +66,33 @@
         "has_attachment": false
       },
       {
-        "id": "869",
-        "subject": "更安全、更高效、更强大，尽在QQ邮箱APP",
-        "from": "QQ邮箱团队 <10000@qq.com>",
-        "to": "=?utf-8?B?44CA44CA44CA44CA44CA44CA=?= <REDACTED_EMAIL>",
-        "date": "Tue, 24 Feb 2026 20:58:39 +0800",
+        "id": "883",
+        "subject": "Pruna-V is live: the fastest video model in its class",
+        "from": "Replicate <team@replicate.email>",
+        "to": "REDACTED_EMAIL",
+        "date": "Fri, 27 Feb 2026 05:04:03 +0000",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "884",
+        "subject": "AtCoder Beginner Contest 447 Announcement",
+        "from": "AtCoder System Mail <noreply@atcoder.jp>",
+        "to": "REDACTED_EMAIL",
+        "date": "Fri, 27 Feb 2026 13:32:40 +0000",
+        "body": "",
+        "has_attachment": false
+      },
+      {
+        "id": "885",
+        "subject": "Firecrawl Updates: Browser Sandbox, Claude Code Plugin & More",
+        "from": "Eric at Firecrawl <eric@firecrawl.dev>",
+        "to": "REDACTED_EMAIL",
+        "date": "Fri, 27 Feb 2026 17:06:08 +0000",
         "body": "",
         "has_attachment": false
       }
     ],
-    "Gmail": [
-      {
-        "id": "442",
-        "subject": "New login to X from ChromeDesktop on Windows",
-        "from": "X <verify@x.com>",
-        "to": "AA a <aaqwqaa68@gmail.com>",
-        "date": "Sun, 22 Feb 2026 11:45:32 +0000",
-        "body": "",
-        "has_attachment": false
-      },
-      {
-        "id": "443",
-        "subject": "996367 is your Polymarket login code",
-        "from": "Polymarket <noreply@trymagic.com>",
-        "to": "aaqwqaa68@gmail.com",
-        "date": "Sun, 22 Feb 2026 13:17:36 +0000 (UTC)",
-        "body": "",
-        "has_attachment": false
-      },
-      {
-        "id": "444",
-        "subject": "Feb 22 - Breaking News in The Last 24hrs 🚨",
-        "from": "Polymarket <noreply@polymarket.com>",
-        "to": "aaqwqaa68@gmail.com",
-        "date": "Sun, 22 Feb 2026 14:02:09 +0000",
-        "body": "",
-        "has_attachment": false
-      },
-      {
-        "id": "445",
-        "subject": "712934 is your Polymarket login code",
-        "from": "Polymarket <noreply@trymagic.com>",
-        "to": "aaqwqaa68@gmail.com",
-        "date": "Sun, 22 Feb 2026 14:38:49 +0000 (UTC)",
-        "body": "",
-        "has_attachment": false
-      },
-      {
-        "id": "446",
-        "subject": "Breaking news: Man is fatally shot at Mar-a-Lago, Secret Service says",
-        "from": "The New York Times <breakingnews@nytimes.com>",
-        "to": "aaqwqaa68@gmail.com",
-        "date": "Sun, 22 Feb 2026 14:54:29 +0000",
-        "body": "",
-        "has_attachment": false
-      },
-      {
-        "id": "447",
-        "subject": "The World: Knocking on Beijing’s door",
-        "from": "The New York Times <nytdirect@nytimes.com>",
-        "to": "aaqwqaa68@gmail.com",
-        "date": "Sun, 22 Feb 2026 21:04:51 +0000",
-        "body": "",
-        "has_attachment": false
-      },
-      {
-        "id": "448",
-        "subject": "Breaking news: Trump is considering a larger attack on Iran if\r\n diplomacy or a targeted strike fails",
-        "from": "The New York Times <breakingnews@nytimes.com>",
-        "to": "aaqwqaa68@gmail.com",
-        "date": "Sun, 22 Feb 2026 22:03:13 +0000",
-        "body": "",
-        "has_attachment": false
-      },
-      {
-        "id": "449",
-        "subject": "191270 is your Polymarket login code",
-        "from": "Polymarket <noreply@trymagic.com>",
-        "to": "aaqwqaa68@gmail.com",
-        "date": "Mon, 23 Feb 2026 01:47:34 +0000 (UTC)",
-        "body": "",
-        "has_attachment": false
-      },
-      {
-        "id": "464",
-        "subject": "The World: A chokehold on Cuba",
-        "from": "The New York Times <nytdirect@nytimes.com>",
-        "to": "aaqwqaa68@gmail.com",
-        "date": "Tue, 24 Feb 2026 21:02:31 +0000",
-        "body": "",
-        "has_attachment": false
-      },
-      {
-        "id": "465",
-        "subject": "What was said. Covered from all angles.",
-        "from": "The New York Times <nytimes@e.newyorktimes.com>",
-        "to": "aaqwqaa68@gmail.com",
-        "date": "Tue, 24 Feb 2026 23:11:39 +0000",
-        "body": "",
-        "has_attachment": false
-      }
-    ]
+    "Gmail": []
   }
 }

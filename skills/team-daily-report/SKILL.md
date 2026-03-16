@@ -11,8 +11,8 @@
 
 | 目标 | 方式 | Bot |
 |------|------|-----|
-| DailyNews群 (YOUR_NEWS_CHAT_ID) | 脚本内置 sendPhoto + sendText | NewsRobot (@fkkanfnnfbot) |
-| Daniel私聊 (YOUR_TELEGRAM_ID) | cron agent 用 message tool | 主Bot |
+| DailyNews群 (-1003824568687) | 脚本内置 sendPhoto + sendText | NewsRobot (@fkkanfnnfbot) |
+| Daniel私聊 (REDACTED_TG_USER_ID) | cron agent 用 message tool | 主Bot |
 
 ## 执行流程
 

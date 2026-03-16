@@ -1,0 +1,139 @@
+/* 简约风模板 - Minimal Style */
+/* 适合生活随笔、观点文、通用类文章 */
+
+.cd-article {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #333333;
+  line-height: 1.9;
+  font-size: 16px;
+  padding: 20px;
+  max-width: 680px;
+  margin: 0 auto;
+  background: #ffffff;
+}
+
+.cd-article h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111111;
+  text-align: center;
+  margin: 32px 0 24px;
+  letter-spacing: 1px;
+}
+
+.cd-article h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #222222;
+  margin: 28px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.cd-article h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #333333;
+  margin: 24px 0 12px;
+}
+
+.cd-article p {
+  margin: 14px 0;
+  text-align: justify;
+  letter-spacing: 0.5px;
+}
+
+.cd-article a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+.cd-article strong {
+  color: #111111;
+  font-weight: 600;
+}
+
+.cd-article blockquote {
+  margin: 20px 0;
+  padding: 16px 20px;
+  background: #fafafa;
+  border-left: 3px solid #ddd;
+  color: #666666;
+  font-size: 15px;
+}
+
+.cd-article blockquote p {
+  margin: 4px 0;
+}
+
+.cd-article pre {
+  margin: 16px 0;
+  padding: 16px;
+  background: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.cd-article pre code {
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+  color: #24292e;
+  background: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+.cd-article code {
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+  background: #f6f8fa;
+  color: #d73a49;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.cd-article ul, .cd-article ol {
+  margin: 14px 0;
+  padding-left: 28px;
+}
+
+.cd-article li {
+  margin: 6px 0;
+}
+
+.cd-article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 15px;
+}
+
+.cd-article th {
+  background: #f6f8fa;
+  color: #24292e;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  border: 1px solid #e1e4e8;
+}
+
+.cd-article td {
+  padding: 10px 14px;
+  border: 1px solid #e1e4e8;
+}
+
+.cd-article img {
+  max-width: 100%;
+  border-radius: 4px;
+  margin: 16px auto;
+  display: block;
+}
+
+.cd-article hr {
+  border: none;
+  height: 1px;
+  background: #eaeaea;
+  margin: 32px 0;
+}

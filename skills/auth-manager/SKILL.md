@@ -1,196 +1,167 @@
 ---
 name: auth-manager
-description: "网页登录态管理。使用 fast-browser-use (fbu) 管理各平台登录状态，定期检查可用性，新平台授权时自动保存 profile。"
+description: "网页登录态管理。使用 OpenClaw 内置 browser (profile=openclaw) 统一管理各平台登录状态，定期检查可用性。"
 license: MIT
 metadata:
-  version: 3.1.0
-  domains: [auth, fbu, session-management]
+  version: 4.0.0
+  domains: [auth, browser, session-management]
   type: automation
 ---
 
-# Auth Manager v3.1 — 平台登录态管理
+# Auth Manager v4.0 — 平台登录态管理
 
-> 基于 fast-browser-use (fbu)，使用 `--user-data-dir` 保存完整 Chrome profile（cookies + localStorage + IndexedDB）。
+> **统一使用 OpenClaw 内置 browser (profile=openclaw)**，所有平台共享同一个 Chrome profile。
+> ⚠️ **禁止使用 fbu / fast-browser-use**，已废弃。
 
-## 环境配置（必须）
+## 架构 — 单一 Profile 模型
 
-fbu 二进制在 `~/.cargo/bin/`，**每次执行前必须设置**：
-
-```bash
-export PATH="$HOME/.cargo/bin:$PATH"
-export CHROME_PATH=/usr/bin/google-chrome
-export DISPLAY=:1   # 桌面显示，headless false 时必须
 ```
+~/.openclaw/browser/openclaw/user-data/   ← 唯一的 Chrome profile（内置 browser）
+~/.openclaw/auth-platforms.json           ← 平台配置
+~/.openclaw/auth-session-state.json       ← 检查结果状态
+```
+
+**为什么统一？**
+- 所有 agent（quant/ops/main 等）共享同一 browser profile
+- 一次登录，全部可用。不存在"这个 agent 没登录"的问题
+- OAuth 链式登录（如性价比API 依赖 GitHub）自动继承
 
 ## 核心职责
 
-### 职责 1: 检查已保存 profile 可用性
+### 职责 1: 检查登录态（定期 cron）
 
-定期对 `auth-platforms.json` 中所有 `enabled: true` 平台执行 snapshot 检查：
+**优先级：curl/CLI > 内置 browser**
+
+#### 方法 A: curl/CLI 检查（快速、不占资源）
 
 ```bash
-# 必须用 timeout 包裹，防止 Chrome 残留
-timeout --kill-after=5 60 fast-browser-use snapshot \
-  --url "<check_url>" \
-  --user-data-dir ~/.openclaw/chrome-profiles/<platform> || true
-pkill -f "chrome.*--remote-debugging" 2>/dev/null || true
+# GitHub — 最可靠
+gh auth status 2>&1
+
+# AIXN — curl API
+TOKEN=$(python3 -c "import json; print(json.load(open('/home/aa/.openclaw/chrome-profiles/aixn-session.json')).get('token',''))" 2>/dev/null)
+curl -s --max-time 10 'https://ai.9w7.cn/api/user/info' -H "Authorization: Bearer $TOKEN"
+
+# 性价比API — curl
+COOKIE=$(python3 -c "import json; print(json.load(open('/home/aa/.openclaw/chrome-profiles/xingjiabiapi-session.json')).get('cookie',''))" 2>/dev/null)
+curl -s --max-time 10 'https://xingjiabiapi.com/api/user/info' -H "Cookie: $COOKIE"
 ```
+
+#### 方法 B: 内置 browser 检查（需要渲染的站点）
+
+```
+# 导航到目标页面
+browser(action='navigate', targetUrl='<check_url>', profile='openclaw')
+
+# 等待加载后截取快照
+browser(action='snapshot', compact=true, maxChars=2000, profile='openclaw')
+```
+
+适用平台：Polymarket、LinuxDo、X、抖音、小红书
 
 **判定逻辑：**
-- DOM 包含 `logged_in_indicators` 关键词 → ✅ `active`
-- DOM 包含 `login_page_indicators` 关键词 → ❌ `expired`
-- 都不匹配 → ⚠️ `uncertain`
-- 命令失败 → 🔴 `error`
+- 快照包含 `logged_in_indicators` 关键词 → ✅ `active`
+- 快照包含 `login_page_indicators` 关键词 → ❌ `expired`
+- 超时/网络错误 → ⚠️ `error`（不是 expired！区分清楚）
 
-**Cloudflare 站点**（如 linux.do）headless 模式会被拦截，需加 `--headless false`：
-```bash
-timeout --kill-after=5 90 fast-browser-use snapshot \
-  --url "https://linux.do" \
-  --user-data-dir ~/.openclaw/chrome-profiles/linuxdo \
-  --headless false || true
-pkill -f "chrome.*--remote-debugging" 2>/dev/null || true
-```
+### 职责 2: 新平台授权
 
-结果写入 `~/.openclaw/auth-session-state.json`，过期/异常时推送告警。
-
-### 职责 2: 新平台授权 — 自动保存 profile
-
-当用户使用 fbu 授权新平台时，执行以下完整流程：
-
-#### 步骤 1: 创建 profile 目录
-```bash
-mkdir -p ~/.openclaw/chrome-profiles/<platform>
-```
-
-#### 步骤 2: 打开桌面浏览器让用户登录
-```bash
-fast-browser-use login \
-  --url "https://platform.com/login" \
-  --headless false \
-  --user-data-dir ~/.openclaw/chrome-profiles/<platform> \
-  --save-session ~/.openclaw/chrome-profiles/<platform>-session.json
-```
-
-> **关键参数说明：**
-> - `--headless false` — 必须，在桌面打开可视 Chrome 窗口
-> - `--save-session` — 必填参数（fbu login 要求），即使主要靠 user-data-dir 保存状态
-> - `--user-data-dir` — 保存完整 Chrome profile
-> - 浏览器打开后终端显示 "Press Enter after you have logged in..."
-> - 用户登录完成后，agent 向进程写入换行符（Enter）触发保存
-
-#### 步骤 3: 用户确认登录后发送 Enter
-```python
-# 使用 process write 向 fbu 进程发送 Enter
-process.write(sessionId, "\n")
-```
-
-#### 步骤 4: 验证登录态
-```bash
-fast-browser-use snapshot \
-  --url "<check_url>" \
-  --user-data-dir ~/.openclaw/chrome-profiles/<platform>
-```
-检查 DOM 输出是否包含登录态关键词（用户名、余额、dashboard 等）。
-
-#### 步骤 5: 更新配置文件
-将新平台添加到 `auth-platforms.json`，包括 check_url、login_url、indicators 等。
-
-#### 步骤 6: 更新状态文件
-写入 `auth-session-state.json`。
-
-## 文件结构
+当需要为新平台登录时：
 
 ```
-~/.openclaw/chrome-profiles/<platform>/   # fbu Chrome profile（完整状态）
-~/.openclaw/auth-platforms.json           # 平台配置
-~/.openclaw/auth-session-state.json       # 检查结果状态
+# 1. 用内置 browser 打开登录页
+browser(action='navigate', targetUrl='https://platform.com/login', profile='openclaw')
+
+# 2. 截图给用户确认页面
+browser(action='screenshot', profile='openclaw')
+
+# 3. 如果需要用户操作（扫码等），等待用户确认后再 snapshot 验证
+browser(action='snapshot', compact=true, profile='openclaw')
 ```
 
-## 平台配置格式
+登录成功后，cookie/localStorage/IndexedDB 自动保存在 `~/.openclaw/browser/openclaw/user-data/`。
+
+### 职责 3: 其他 agent 使用登录态
+
+**所有 agent 调用内置 browser 时自动继承登录态：**
+
+```
+# quant agent 访问 polymarket — 自动已登录
+browser(action='navigate', targetUrl='https://polymarket.com', profile='openclaw')
+
+# ops agent 检查 github — 自动已登录
+browser(action='navigate', targetUrl='https://github.com', profile='openclaw')
+```
+
+无需任何额外配置。profile=openclaw 是共享的。
+
+## 平台配置
 
 `~/.openclaw/auth-platforms.json`:
+
 ```json
 {
   "platforms": {
     "platform_id": {
       "name": "显示名称",
-      "profile_dir": "~/.openclaw/chrome-profiles/platform_id",
       "check_url": "https://example.com/dashboard",
       "login_url": "https://example.com/login",
+      "check_method": "browser|curl|cli",
       "logged_in_indicators": ["关键词1", "关键词2"],
       "login_page_indicators": ["登录", "Sign in"],
-      "enabled": true,
-      "credentials": {
-        "username": "user@example.com",
-        "password": "xxx"
-      },
-      "login_method": "github_oauth"
+      "enabled": true
     }
   }
 }
 ```
 
-### 可选字段说明
+## 已知平台特性（9个）
 
-- **credentials**：有账密的平台可存储凭据，profile 过期时 agent 可用 fbu navigate 自动填写表单重新登录
-- **login_method**：登录方式说明（如 `github_oauth`、`qrcode`、`password`），帮助 agent 判断是否能自动登录
-
-## 批量检查
-
-遍历所有 enabled 平台，用 grep 匹配关键词快速判定：
-
-```bash
-# 批量检查示例（用 grep 匹配关键词）
-for platform in polymarket aixn xingjiabiapi github douyin xiaohongshu linuxdo; do
-  echo "=== $platform ==="
-  fast-browser-use snapshot \
-    --url "$(jq -r ".platforms.$platform.check_url" ~/.openclaw/auth-platforms.json)" \
-    --user-data-dir ~/.openclaw/chrome-profiles/$platform 2>&1 \
-    | grep -E "关键词" | head -5
-done
-```
-
-## 已知平台特性
-
-| 平台 | 登录方式 | Headless | 备注 |
-|------|----------|----------|------|
-| Polymarket | 钱包/OAuth | ✅ | 检查"资产组合"关键词 |
-| AIXN (XAPI) | 账密 | ✅ | 有 credentials，可自动登录 |
-| 性价比API | GitHub OAuth | ✅ | 需先有 GitHub 登录态 |
-| GitHub | 账密 | ✅ | 检查 Settings 页面 |
-| 抖音创作者 | 扫码 | ✅ | 必须用户手动扫码 |
-| 小红书创作者 | 扫码 | ✅ | 必须用户手动扫码 |
-| Linux Do | 账密/OAuth | ❌ 需 headless false | Cloudflare 拦截 headless |
-| X (Twitter) | 账密 | ✅ | 可能有验证码 |
+| 平台 | 检查方式 | 登录方式 | 账号 | 备注 |
+|------|----------|----------|------|------|
+| GitHub | `gh auth status` (CLI) | 账密/OAuth | aAAaqwq | 最可靠 |
+| AIXN | curl API | 账密 | REDACTED_EMAIL | session.json token |
+| 性价比API | curl API | GitHub OAuth | github_210817 | 依赖 GitHub 登录态 |
+| Polymarket | 内置 browser | 钱包/OAuth | Portfolio $41.62 | 检查"portfolio"关键词 |
+| LinuxDo | 内置 browser | 账密/OAuth | aaqwqaa68 | Cloudflare 站点 |
+| X (Twitter) | 内置 browser | 账密 | @Daniel_Li666 | 可能有验证码 |
+| 小红书 | 内置 browser | App扫码/手机号 | 69464fc5... | check: xiaohongshu.com/user/profile/me |
+| Reddit | 内置 browser | 账密/OAuth | Jealous-Carrot-9574 | reCAPTCHA 需人工通过 |
+| 抖音创作者 | 内置 browser | App扫码 | aa (61747337251) | check: creator.douyin.com/creator-micro/home |
 
 ## 状态文件格式
 
 `~/.openclaw/auth-session-state.json`:
 ```json
 {
+  "checkedAt": "2026-03-07T09:00:00+08:00",
   "platforms": {
-    "polymarket": {
-      "status": "active",
-      "message": "登录正常 ✅ (发现: 资产组合 $6.02)",
-      "checkedAt": 1740000000
-    }
-  },
-  "lastCheck": 1740000000
+    "github": { "status": "active", "account": "aAAaqwq", "method": "cli" },
+    "polymarket": { "status": "active", "detail": "Portfolio $41.56", "method": "browser" }
+  }
 }
 ```
 
-status 值: `active` | `expired` | `uncertain` | `error`
+status 值: `active` | `expired` | `error`
 
 ## Cron 任务
 
-已配置定期自动检查（cron id: `1f2eb5a5-5c2e-4556-b006-e29325f41609`），过期则推送告警。
+- **Auth 检查 cron**: `1f2eb5a5` — 每天 09:00/21:00 执行
+- 过期则推送告警到 DailyNews 群
+- 全部正常则静默
 
-## 注意事项
+## 铁律 ⚠️
 
-1. **fbu login 必填参数**：`--url`、`--headless`、`--user-data-dir`、`--save-session` 四个缺一不可
-2. **Profile 锁**：`--user-data-dir` 会锁定 profile，同一 profile 不能被多个 Chrome 实例同时使用
-3. **Cloudflare 站点**：headless 被拦截时用 `--headless false`，但 snapshot 的 `--headless` 参数需要显式传 `false`
-4. **OAuth 登录**（GitHub OAuth 等）：新 profile 里没有第三方登录态，需要用户在弹出页面登录第三方账号
-5. **扫码登录**（抖音、小红书）：必须用户手动操作，agent 无法自动完成
-6. **snapshot 验证**：新平台授权后务必 snapshot 验证一次，确认 profile 已正确保存
-7. **超时设置**：fbu login 可能需要较长时间（用户操作），exec timeout 建议 ≥ 300s
+1. **禁止使用 fbu / fast-browser-use** — 已废弃
+2. **统一使用 `profile='openclaw'`** — 所有 browser 操作
+3. **旧 profile 目录 `~/.openclaw/chrome-profiles/<platform>/` 已废弃**，仅保留 session.json 供 curl 读取 token/cookie
+4. **超时 ≠ 过期** — 网络问题标记为 error，不标记为 expired
+5. **每个检查最多 15 秒** — 避免阻塞
+
+## 迁移说明（v3 → v4）
+
+- 旧版：每个平台独立 fbu Chrome profile (`~/.openclaw/chrome-profiles/<platform>/`)
+- 新版：所有平台共享内置 browser profile (`~/.openclaw/browser/openclaw/user-data/`)
+- 内置 browser 已有全部平台的 IndexedDB/cookie 数据，无需手动迁移
+- 旧 `chrome-profiles/` 目录已于 2026-03-07 彻底删除（释放 ~1.7GB）
+- 旧 `<platform>-session.json` 文件也已删除（token 已过期）

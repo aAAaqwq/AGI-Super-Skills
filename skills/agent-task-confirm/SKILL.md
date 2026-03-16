@@ -11,7 +11,7 @@
 
 ### Step 1: 派发任务
 ```
-sessions_send(sessionKey="agent:<id>:telegram:group:YOUR_GROUP_CHAT_ID", message="【CEO指令】...")
+sessions_send(sessionKey="agent:<id>:telegram:group:-1003890797239", message="【CEO指令】...")
 ```
 
 ### Step 2: 立即确认送达（30秒内）

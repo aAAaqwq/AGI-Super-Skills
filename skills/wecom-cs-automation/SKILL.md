@@ -120,7 +120,7 @@ WECOM_AES_KEY=your_aes_key
 KB_DB_URL=postgresql://localhost/wecom_kb
 LLM_API_KEY=$(pass show api/kimi)
 LLM_API_BASE=https://api.moonshot.cn/v1
-NOTIFICATION_CHANNEL=telegram:YOUR_TELEGRAM_ID
+NOTIFICATION_CHANNEL=telegram:REDACTED_TG_USER_ID
 EOF
 
 # 2. 启动服务（Python FastAPI）
@@ -292,7 +292,7 @@ KB_TOP_K=3
 
 # 人工介入
 NOTIFICATION_ENABLED=true
-NOTIFICATION_CHANNEL=telegram:YOUR_TELEGRAM_ID
+NOTIFICATION_CHANNEL=telegram:REDACTED_TG_USER_ID
 ```
 
 ## 工作流程详解
@@ -469,7 +469,7 @@ python3 scripts/import_kb.py --rebuild
 ```bash
 # 测试 Telegram 连接
 curl -X POST "https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage" \
-  -d "chat_id=YOUR_TELEGRAM_ID&text=测试"
+  -d "chat_id=REDACTED_TG_USER_ID&text=测试"
 
 # 检查通知配置
 cat .env | grep NOTIFICATION

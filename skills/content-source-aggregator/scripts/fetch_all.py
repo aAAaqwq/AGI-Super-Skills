@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
 统一信息源热点采集器
-从 X/Twitter、YouTube、B站、GitHub、Reddit、LinuxDo 免费采集热门内容
+从 微博/知乎/头条/抖音/B站/GitHub/YouTube/Twitter/Reddit/LinuxDo 等平台采集热门内容
+HTTP请求统一用 subprocess+curl 避免 SSL 问题
 """
 
 import json
+import os
 import re
+import subprocess
 import sys
 import html as htmlmod
-import urllib.request
 import urllib.parse
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -26,35 +28,113 @@ def load_config():
         return json.load(f)
 
 
-def http_get(url, headers=None, timeout=15):
-    hdrs = {"User-Agent": UA}
+
+# 海外源列表（需要代理）
+OVERSEAS_SOURCES = {"twitter", "reddit", "youtube", "github"}
+
+# 代理地址（从环境变量或默认 Clash）
+PROXY_URL = os.environ.get("CONTENT_PROXY", "http://127.0.0.1:7890")
+
+
+def curl_get(url, headers=None, timeout=15, use_proxy=False):
+    """用 subprocess+curl 获取 URL 内容，避免 SSL 问题。海外源自动走代理。"""
+    cmd = ["curl", "-s", "--max-time", str(timeout), "-L",
+           "-H", f"User-Agent: {UA}"]
+    if use_proxy and PROXY_URL:
+        cmd += ["--proxy", PROXY_URL]
     if headers:
-        hdrs.update(headers)
-    req = urllib.request.Request(url, headers=hdrs)
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return resp.read().decode("utf-8", errors="ignore")
+        for k, v in headers.items():
+            cmd += ["-H", f"{k}: {v}"]
+    cmd.append(url)
+    r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout + 5)
+    if r.returncode != 0:
+        raise RuntimeError(f"curl failed ({r.returncode}): {r.stderr[:200]}")
+    return r.stdout
 
 
-def http_get_json(url, headers=None, timeout=15):
-    return json.loads(http_get(url, headers, timeout))
+def curl_get_json(url, headers=None, timeout=15, use_proxy=False):
+    return json.loads(curl_get(url, headers, timeout, use_proxy))
+
+
+# Legacy compat
+http_get = curl_get
+http_get_json = curl_get_json
+
+
+# ── 60s API 通用解析 ──────────────────────────────
+
+def _parse_60s_v2(source_name, api_path, category="热搜"):
+    """通用 60s API v2 解析器 (字段: code/data, 每条: title/link/hot_value)"""
+    items = []
+    try:
+        data = curl_get_json(f"https://60s.viki.moe/v2/{api_path}")
+        if data.get("code") != 200:
+            print(f"  ⚠️ {source_name} 60s API: code={data.get('code')}", file=sys.stderr)
+            return items
+        for entry in data.get("data", []):
+            title = entry.get("title", entry.get("name", entry.get("word", "")))
+            url = entry.get("link", entry.get("url", entry.get("mobileUrl", "")))
+            if not title:
+                continue
+            item = {
+                "source": source_name,
+                "title": title,
+                "url": url,
+                "summary": entry.get("desc", entry.get("excerpt", ""))[:200] if entry.get("desc") or entry.get("excerpt") else "",
+                "category": category,
+                "engagement": {},
+            }
+            hot = entry.get("hot_value", entry.get("hotValue", entry.get("hot", 0)))
+            if hot:
+                item["engagement"]["hot_value"] = hot
+            items.append(item)
+    except Exception as e:
+        print(f"  ⚠️ {source_name}: {e}", file=sys.stderr)
+    return items
+
+
+# ── 微博热搜 (60s API) ────────────────────────────
+
+def fetch_weibo(config):
+    """通过 60s API 获取微博热搜"""
+    return _parse_60s_v2("weibo", "weibo", "微博热搜")
+
+
+# ── 知乎热榜 (60s API) ────────────────────────────
+
+def fetch_zhihu(config):
+    """通过 60s API 获取知乎热榜"""
+    return _parse_60s_v2("zhihu", "zhihu", "知乎热榜")
+
+
+# ── 头条热榜 (60s API) ────────────────────────────
+
+def fetch_toutiao(config):
+    """通过 60s API 获取今日头条热榜"""
+    return _parse_60s_v2("toutiao", "toutiao", "头条热榜")
+
+
+# ── 抖音热搜 (60s API, 替代原生) ──────────────────
+
+def fetch_douyin(config):
+    """通过 60s API 获取抖音热搜"""
+    return _parse_60s_v2("douyin", "douyin", "抖音热搜")
 
 
 # ── Twitter/X ──────────────────────────────────────
 
 def fetch_twitter(config):
-    """通过 syndication API 免费获取推文"""
     items = []
     accounts = config.get("accounts", [])
     for account in accounts:
         try:
             url = f"https://syndication.twitter.com/srv/timeline-profile/screen-name/{account}"
-            html = http_get(url)
-            # 提取推文文本
+            html = curl_get(url, use_proxy=True)
             texts = re.findall(r'"text":"([^"]{20,500})"', html)
-            for i, text in enumerate(texts[:3]):
+            for text in texts[:3]:
                 clean = htmlmod.unescape(text).replace("\\n", " ").strip()
                 if clean.startswith("RT @"):
-                    continue  # 跳过转推
+                    continue
                 items.append({
                     "source": "twitter",
                     "title": clean[:120],
@@ -72,13 +152,12 @@ def fetch_twitter(config):
 # ── YouTube ────────────────────────────────────────
 
 def fetch_youtube(config):
-    """通过 RSS Feed 免费获取频道最新视频"""
     items = []
     channels = config.get("channels", {})
     for name, channel_id in channels.items():
         try:
             url = f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
-            xml = http_get(url)
+            xml = curl_get(url, use_proxy=True)
             entries = re.findall(
                 r"<entry>.*?<title>(.+?)</title>.*?<yt:videoId>(.+?)</yt:videoId>.*?<published>(.+?)</published>.*?</entry>",
                 xml, re.DOTALL
@@ -103,13 +182,11 @@ def fetch_youtube(config):
 # ── B站 ───────────────────────────────────────────
 
 def fetch_bilibili(config):
-    """通过公开 API 获取B站热门排行"""
     items = []
-    headers = {"Referer": "https://www.bilibili.com"}
     try:
-        data = http_get_json(
+        data = curl_get_json(
             "https://api.bilibili.com/x/web-interface/ranking/v2?rid=0&type=all",
-            headers=headers
+            headers={"Referer": "https://www.bilibili.com"}
         )
         if data.get("code") == 0:
             for v in data["data"]["list"][:15]:
@@ -127,13 +204,13 @@ def fetch_bilibili(config):
                     "author": v.get("owner", {}).get("name", ""),
                 })
     except Exception as e:
-        print(f"  ⚠️ Bilibili: {e}", file=sys.stderr)
+        print(f"  ⚠️ Bilibili 原生API: {e}, 回退60s", file=sys.stderr)
+        items.extend(_parse_60s_v2("bilibili", "bili", "B站热门"))
 
-    # 热搜
     try:
-        data = http_get_json(
+        data = curl_get_json(
             "https://api.bilibili.com/x/web-interface/wbi/search/square?limit=10",
-            headers=headers
+            headers={"Referer": "https://www.bilibili.com"}
         )
         if data.get("code") == 0:
             trending = data.get("data", {}).get("trending", {})
@@ -152,57 +229,79 @@ def fetch_bilibili(config):
     return items
 
 
-# ── GitHub ─────────────────────────────────────────
+# ── GitHub Trending ────────────────────────────────
 
 def fetch_github(config):
-    """通过 Search API 获取近期热门仓库"""
+    """GitHub Trending daily（替代原来的全历史star排名）"""
     items = []
-    lookback = config.get("lookback_days", 1)
-    min_stars = config.get("min_stars", 100)
-    date_str = (datetime.now(TZ_CST) - timedelta(days=lookback)).strftime("%Y-%m-%d")
     try:
-        url = f"https://api.github.com/search/repositories?q=stars:>{min_stars}+pushed:>{date_str}&sort=stars&per_page=15"
-        data = http_get_json(url)
-        for r in data.get("items", [])[:15]:
+        html = curl_get("https://github.com/trending?since=daily")
+        repos = re.findall(r'<h2[^>]*>\s*<a[^>]*href="/([^"]+)"[^>]*>', html)
+        for repo_path in repos[:15]:
+            repo_path = repo_path.strip()
+            if not repo_path or repo_path.count('/') != 1:
+                continue
+            desc_match = re.search(
+                rf'href="/{re.escape(repo_path)}".*?<p[^>]*>(.*?)</p>',
+                html, re.DOTALL
+            )
+            desc = re.sub(r'<[^>]+>', '', desc_match.group(1)).strip()[:200] if desc_match else ""
+            stars_match = re.search(
+                rf'{re.escape(repo_path)}.*?(\d[\d,]*)\s*stars today', html, re.DOTALL
+            )
+            stars_today = int(stars_match.group(1).replace(',', '')) if stars_match else 0
             items.append({
                 "source": "github",
-                "title": f"{r['full_name']} ⭐{r['stargazers_count']}",
-                "url": r["html_url"],
-                "summary": (r.get("description") or "")[:200],
-                "category": r.get("language", "Unknown"),
-                "engagement": {
-                    "stars": r["stargazers_count"],
-                    "forks": r.get("forks_count", 0),
-                },
-                "author": r["owner"]["login"],
+                "title": f"{repo_path} 🔥+{stars_today}⭐/today" if stars_today else repo_path,
+                "url": f"https://github.com/{repo_path}",
+                "summary": desc,
+                "category": "GitHub Trending",
+                "engagement": {"stars_today": stars_today},
+                "author": repo_path.split('/')[0],
             })
     except Exception as e:
-        print(f"  ⚠️ GitHub: {e}", file=sys.stderr)
+        print(f"  ⚠️ GitHub Trending: {e}, 回退Search API", file=sys.stderr)
+        lookback = config.get("lookback_days", 1)
+        min_stars = config.get("min_stars", 100)
+        date_str = (datetime.now(TZ_CST) - timedelta(days=lookback)).strftime("%Y-%m-%d")
+        try:
+            url = f"https://api.github.com/search/repositories?q=stars:>{min_stars}+pushed:>{date_str}&sort=stars&per_page=15"
+            data = curl_get_json(url)
+            for r in data.get("items", [])[:15]:
+                items.append({
+                    "source": "github", "title": f"{r['full_name']} ⭐{r['stargazers_count']}",
+                    "url": r["html_url"], "summary": (r.get("description") or "")[:200],
+                    "category": r.get("language", "Unknown"),
+                    "engagement": {"stars": r["stargazers_count"], "forks": r.get("forks_count", 0)},
+                    "author": r["owner"]["login"],
+                })
+        except Exception as e2:
+            print(f"  ⚠️ GitHub Search: {e2}", file=sys.stderr)
     return items
 
 
 # ── Reddit ─────────────────────────────────────────
 
 def fetch_reddit(config):
-    """通过 PullPush API 免费获取热门帖子"""
     items = []
     subreddits = config.get("subreddits", ["technology"])
     for sub in subreddits:
         try:
-            url = f"https://api.pullpush.io/reddit/search/submission/?subreddit={sub}&sort=score&sort_type=desc&size=5"
-            data = http_get_json(url)
-            for p in data.get("data", [])[:5]:
+            # Reddit 官方 JSON API（用 old.reddit.com 避免重定向）
+            url = f"https://old.reddit.com/r/{sub}/hot.json?limit=5"
+            headers = {"Accept": "application/json"}
+            data = curl_get_json(url, headers=headers)
+            for p in data.get("data", {}).get("children", [])[:5]:
+                d = p.get("data", {})
+                if d.get("stickied"):
+                    continue
                 items.append({
-                    "source": "reddit",
-                    "title": p.get("title", ""),
-                    "url": f"https://reddit.com{p.get('permalink', '')}",
-                    "summary": (p.get("selftext") or "")[:200],
+                    "source": "reddit", "title": d.get("title", ""),
+                    "url": f"https://reddit.com{d.get('permalink', '')}",
+                    "summary": (d.get("selftext") or "")[:200],
                     "category": f"r/{sub}",
-                    "engagement": {
-                        "upvotes": p.get("score", 0),
-                        "comments": p.get("num_comments", 0),
-                    },
-                    "author": p.get("author", ""),
+                    "engagement": {"upvotes": d.get("score", 0), "comments": d.get("num_comments", 0)},
+                    "author": d.get("author", ""),
                 })
         except Exception as e:
             print(f"  ⚠️ Reddit r/{sub}: {e}", file=sys.stderr)
@@ -212,106 +311,49 @@ def fetch_reddit(config):
 # ── LinuxDo ────────────────────────────────────────
 
 def fetch_linuxdo(config):
-    """通过 Discourse JSON API 获取热门帖子
-    注意: LinuxDo 有 Cloudflare 防护，直接请求会 403
-    方案1: 使用已保存的 cookie/session
-    方案2: 通过 web_fetch 工具（OpenClaw 内置，自带浏览器指纹）
-    方案3: 通过 Playwright 登录态抓取
-    """
     items = []
-
-    # 尝试用 cookie 文件
     cookie_file = Path.home() / ".playwright-data/linuxdo/cookies.txt"
-    headers = {
-        "Accept": "application/json",
-        "Referer": "https://linux.do/",
-    }
+    headers = {"Accept": "application/json", "Referer": "https://linux.do/"}
     if cookie_file.exists():
-        with open(cookie_file) as f:
-            headers["Cookie"] = f.read().strip()
-
+        headers["Cookie"] = cookie_file.read_text().strip()
     try:
-        data = http_get_json("https://linux.do/latest.json?order=default", headers=headers)
+        data = curl_get_json("https://linux.do/latest.json?order=default", headers=headers)
         topics = data.get("topic_list", {}).get("topics", [])
         for t in topics[:15]:
             items.append({
-                "source": "linuxdo",
-                "title": t.get("title", ""),
+                "source": "linuxdo", "title": t.get("title", ""),
                 "url": f"https://linux.do/t/{t.get('slug', '')}/{t.get('id', '')}",
-                "summary": "",
-                "category": str(t.get("category_id", "")),
-                "engagement": {
-                    "views": t.get("views", 0),
-                    "likes": t.get("like_count", 0),
-                    "comments": t.get("posts_count", 0),
-                },
+                "summary": "", "category": str(t.get("category_id", "")),
+                "engagement": {"views": t.get("views", 0), "likes": t.get("like_count", 0), "comments": t.get("posts_count", 0)},
             })
     except Exception as e:
-        print(f"  ⚠️ LinuxDo: {e} (需要登录态或 Playwright)", file=sys.stderr)
-    return items
-
-
-# ── 抖音 ──────────────────────────────────────────
-
-def fetch_douyin(config):
-    """通过抖音热搜 API 免费获取热门话题"""
-    items = []
-    try:
-        data = http_get_json(
-            "https://www.douyin.com/aweme/v1/web/hot/search/list/",
-            headers={"Referer": "https://www.douyin.com/"}
-        )
-        for w in data.get("data", {}).get("word_list", [])[:20]:
-            word = w.get("word", "")
-            items.append({
-                "source": "douyin",
-                "title": word,
-                "url": f"https://www.douyin.com/search/{urllib.parse.quote(word)}",
-                "summary": w.get("sentence_tag", ""),
-                "category": "热搜",
-                "engagement": {
-                    "hot_value": w.get("hot_value", 0),
-                },
-            })
-    except Exception as e:
-        print(f"  ⚠️ 抖音: {e}", file=sys.stderr)
+        print(f"  ⚠️ LinuxDo: {e}", file=sys.stderr)
     return items
 
 
 # ── 小红书 ────────────────────────────────────────
 
 def fetch_xiaohongshu(config):
-    """通过小红书 web 端获取热门内容（需要登录态 cookie）"""
     items = []
     cookie_file = Path.home() / ".playwright-data/xiaohongshu/cookies.txt"
     if not cookie_file.exists():
-        print("  ⚠️ 小红书: 需要登录态 cookie (~/.playwright-data/xiaohongshu/cookies.txt)", file=sys.stderr)
+        print("  ⚠️ 小红书: 需要登录态 cookie", file=sys.stderr)
         return items
-
-    headers = {
-        "Referer": "https://www.xiaohongshu.com/",
-        "Origin": "https://www.xiaohongshu.com",
-        "Cookie": cookie_file.read_text().strip(),
-    }
+    headers = {"Referer": "https://www.xiaohongshu.com/", "Cookie": cookie_file.read_text().strip()}
     try:
-        html = http_get("https://www.xiaohongshu.com/explore", headers=headers)
+        html = curl_get("https://www.xiaohongshu.com/explore", headers=headers)
         match = re.search(r'window\.__INITIAL_STATE__\s*=\s*({.*?})\s*</script>', html, re.DOTALL)
         if match:
             raw = match.group(1).replace("undefined", "null")
             state = json.loads(raw)
-            feed = state.get("explore", {}).get("feeds", [])
-            for note in feed[:15]:
-                note_data = note.get("noteCard", note)
+            for note in state.get("explore", {}).get("feeds", [])[:15]:
+                nd = note.get("noteCard", note)
                 items.append({
-                    "source": "xiaohongshu",
-                    "title": note_data.get("title", note_data.get("displayTitle", "")),
+                    "source": "xiaohongshu", "title": nd.get("title", nd.get("displayTitle", "")),
                     "url": f"https://www.xiaohongshu.com/explore/{note.get('id', '')}",
-                    "summary": note_data.get("desc", "")[:200],
-                    "category": "小红书",
-                    "engagement": {
-                        "likes": note_data.get("interactInfo", {}).get("likedCount", 0),
-                    },
-                    "author": note_data.get("user", {}).get("nickname", ""),
+                    "summary": nd.get("desc", "")[:200], "category": "小红书",
+                    "engagement": {"likes": nd.get("interactInfo", {}).get("likedCount", 0)},
+                    "author": nd.get("user", {}).get("nickname", ""),
                 })
     except Exception as e:
         print(f"  ⚠️ 小红书: {e}", file=sys.stderr)
@@ -321,57 +363,134 @@ def fetch_xiaohongshu(config):
 # ── 微信公众号 ────────────────────────────────────
 
 def fetch_wechat_mp(config):
-    """通过搜狗微信搜索获取热门公众号文章（需要登录态）"""
     items = []
     cookie_file = Path.home() / ".playwright-data/sogou-weixin/cookies.txt"
     headers = {"Referer": "https://weixin.sogou.com/"}
     if cookie_file.exists():
         headers["Cookie"] = cookie_file.read_text().strip()
-
     keywords = config.get("keywords", ["AI", "科技", "互联网"])
     for kw in keywords[:3]:
         try:
             url = f"https://weixin.sogou.com/weixin?type=2&query={urllib.parse.quote(kw)}&ie=utf8"
-            html = http_get(url, headers=headers)
-            # 提取文章标题和链接
-            articles = re.findall(
-                r'<a[^>]*href="([^"]*)"[^>]*target="_blank"[^>]*>(.*?)</a>',
-                html, re.DOTALL
-            )
+            html = curl_get(url, headers=headers)
+            articles = re.findall(r'<a[^>]*href="([^"]*)"[^>]*target="_blank"[^>]*>(.*?)</a>', html, re.DOTALL)
             for href, title_html in articles[:5]:
                 title = re.sub(r'<[^>]+>', '', title_html).strip()
                 if len(title) > 5 and "sogou" not in title.lower():
                     items.append({
-                        "source": "wechat_mp",
-                        "title": title,
+                        "source": "wechat_mp", "title": title,
                         "url": href if href.startswith("http") else f"https://weixin.sogou.com{href}",
-                        "summary": "",
-                        "category": f"公众号/{kw}",
-                        "engagement": {},
+                        "summary": "", "category": f"公众号/{kw}", "engagement": {},
                     })
         except Exception as e:
             print(f"  ⚠️ 微信公众号 [{kw}]: {e}", file=sys.stderr)
     return items
 
 
-# ── 微信视频号 ────────────────────────────────────
-
 def fetch_wechat_video(config):
-    """微信视频号无公开 API，需要 Playwright 登录态"""
-    print("  ⚠️ 微信视频号: 无公开 API，需要 Playwright 登录态抓取", file=sys.stderr)
+    print("  ⚠️ 微信视频号: 无公开 API", file=sys.stderr)
     return []
+
+
+# ── HackerNews ────────────────────────────────────
+
+def fetch_hackernews(config):
+    """HackerNews Top Stories（官方API，无需认证，可直连）"""
+    items = []
+    try:
+        limit = config.get("limit", 15)
+        ids = curl_get_json("https://hacker-news.firebaseio.com/v0/topstories.json")[:limit]
+        for story_id in ids:
+            try:
+                s = curl_get_json(f"https://hacker-news.firebaseio.com/v0/item/{story_id}.json")
+                if s and s.get("type") == "story":
+                    items.append({
+                        "source": "hackernews",
+                        "title": s.get("title", ""),
+                        "url": s.get("url", f"https://news.ycombinator.com/item?id={story_id}"),
+                        "summary": "",
+                        "category": "Tech/Startup",
+                        "engagement": {"upvotes": s.get("score", 0), "comments": s.get("descendants", 0)},
+                        "author": s.get("by", ""),
+                        "hn_url": f"https://news.ycombinator.com/item?id={story_id}",
+                    })
+            except Exception:
+                continue
+    except Exception as e:
+        print(f"  ⚠️ HackerNews: {e}", file=sys.stderr)
+    return items
+
+
+# ── ProductHunt ───────────────────────────────────
+
+def fetch_producthunt(config):
+    """ProductHunt Today's Posts（web端RSS，可直连）"""
+    items = []
+    try:
+        xml = curl_get("https://www.producthunt.com/feed", use_proxy=True)
+        entries = re.findall(
+            r"<item>.*?<title><!\[CDATA\[(.+?)\]\]></title>.*?<link>(.+?)</link>.*?<description><!\[CDATA\[(.+?)\]\]></description>.*?</item>",
+            xml, re.DOTALL
+        )
+        for title, link, desc in entries[:10]:
+            items.append({
+                "source": "producthunt",
+                "title": htmlmod.unescape(title.strip()),
+                "url": link.strip(),
+                "summary": htmlmod.unescape(re.sub(r"<[^>]+>", "", desc))[:200],
+                "category": "Product/Startup",
+                "engagement": {},
+            })
+    except Exception as e:
+        print(f"  ⚠️ ProductHunt: {e}", file=sys.stderr)
+    return items
+
+
+# ── ArXiv AI ──────────────────────────────────────
+
+def fetch_arxiv(config):
+    """ArXiv AI/ML 最新论文（Atom API，可直连）"""
+    items = []
+    try:
+        categories = config.get("categories", ["cs.AI", "cs.LG", "cs.CL"])
+        cat_query = "+OR+".join([f"cat:{c}" for c in categories])
+        url = f"http://export.arxiv.org/api/query?search_query={cat_query}&sortBy=submittedDate&sortOrder=descending&max_results=10"
+        xml = curl_get(url)
+        entries = re.findall(
+            r"<entry>.*?<title>(.*?)</title>.*?<id>(.*?)</id>.*?<summary>(.*?)</summary>.*?</entry>",
+            xml, re.DOTALL
+        )
+        for title, link, summary in entries:
+            title = re.sub(r"\s+", " ", title.strip())
+            items.append({
+                "source": "arxiv",
+                "title": title,
+                "url": link.strip(),
+                "summary": re.sub(r"\s+", " ", summary.strip())[:300],
+                "category": "Research/AI",
+                "engagement": {},
+            })
+    except Exception as e:
+        print(f"  ⚠️ ArXiv: {e}", file=sys.stderr)
+    return items
 
 
 # ── 主流程 ─────────────────────────────────────────
 
 FETCHERS = {
+    "reddit": fetch_reddit,
+    "github": fetch_github,
+    "hackernews": fetch_hackernews,
+    "arxiv": fetch_arxiv,
     "twitter": fetch_twitter,
     "youtube": fetch_youtube,
+    "producthunt": fetch_producthunt,
     "bilibili": fetch_bilibili,
-    "github": fetch_github,
-    "reddit": fetch_reddit,
-    "linuxdo": fetch_linuxdo,
+    "weibo": fetch_weibo,
+    "zhihu": fetch_zhihu,
+    "toutiao": fetch_toutiao,
     "douyin": fetch_douyin,
+    "linuxdo": fetch_linuxdo,
     "xiaohongshu": fetch_xiaohongshu,
     "wechat_mp": fetch_wechat_mp,
     "wechat_video": fetch_wechat_video,
@@ -389,7 +508,16 @@ def main():
     now = datetime.now(TZ_CST)
     all_items = []
 
-    sources = [args.source] if args.source else list(FETCHERS.keys())
+    # 按 source_priority 排序（优质海外源优先）
+    priority = config.get("source_priority", list(FETCHERS.keys()))
+    if args.source:
+        sources = [args.source]
+    else:
+        # 优先级列表中的先采集，未列出的按原顺序追加
+        sources = [s for s in priority if s in FETCHERS]
+        for s in FETCHERS:
+            if s not in sources:
+                sources.append(s)
 
     for src in sources:
         src_config = config.get(src, {})
@@ -406,7 +534,6 @@ def main():
         except Exception as e:
             print(f"  ❌ {src}: {e}")
 
-    # 输出
     output = {
         "date": now.strftime("%Y-%m-%d"),
         "fetched_at": now.isoformat(),

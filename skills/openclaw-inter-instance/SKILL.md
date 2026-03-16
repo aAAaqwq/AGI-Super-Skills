@@ -152,7 +152,7 @@ EOF
 ### 指令模板
 ```
 sessions_send(
-  sessionKey="agent:<agentId>:telegram:group:YOUR_GROUP_CHAT_ID",
+  sessionKey="agent:<agentId>:telegram:group:-1003890797239",
   message="【小a工作指令】<具体任务>。直接在群里发结果，不要回复我。",
   timeoutSeconds=5  // 最多等5秒，超时也没关系，后台会继续
 )
@@ -198,7 +198,7 @@ GLM-5 有内置 "Kiro" 人设，会覆盖 SOUL.md 身份。解决方案：在 AG
 ```python
 for agent_id in ["ops", "code", "quant", "content", "data", "finance", "research", "market", "pm"]:
     sessions_send(
-        sessionKey=f"agent:{agent_id}:telegram:group:YOUR_GROUP_CHAT_ID",
+        sessionKey=f"agent:{agent_id}:telegram:group:-1003890797239",
         message="你的任务指令"
     )
 ```

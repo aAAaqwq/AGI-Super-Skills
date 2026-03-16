@@ -14,7 +14,7 @@ PORTFOLIO_FILE = DATA_DIR / "portfolio.json"
 TRADE_LOG_FILE = DATA_DIR / "trade_log.json"
 
 # Telegram 推送配置
-DAILYNEWS_CHAT_ID = "YOUR_NEWS_CHAT_ID"
+DAILYNEWS_CHAT_ID = "-1003824568687"
 BOT_TOKEN_CMD = ["pass", "show", "api/telegram-xiaom-bot"]
 
 

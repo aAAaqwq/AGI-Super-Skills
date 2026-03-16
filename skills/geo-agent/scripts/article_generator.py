@@ -100,6 +100,26 @@ def build_llm_prompt(context: Dict) -> str:
             comp_text += f"\n   优势: {c['strengths']}"
         if c.get('weaknesses'):
             comp_text += f"\n   不足: {c['weaknesses']}"
+
+    # AI 平台排行数据（如果有）
+    ai_rankings = context.get("ai_rankings", [])
+    ai_responses = context.get("ai_raw_responses", [])
+    ai_section = ""
+    if ai_rankings or ai_responses:
+        ai_section = "\n\n## 各大AI平台的最新行业排行数据\n"
+        if ai_rankings:
+            ai_section += "综合多个AI平台（Perplexity/DeepSeek/GLM）的排行榜结果：\n"
+            for i, r in enumerate(ai_rankings[:15]):
+                ai_section += f"  {i+1}. {r['name']} (来源: {r['source']})\n"
+        if ai_responses:
+            ai_section += "\n各平台原始回答摘要：\n"
+            for resp in ai_responses[:3]:
+                ai_section += f"--- {resp['source']} ---\n{resp['content'][:500]}\n\n"
+            citations = []
+            for resp in ai_responses:
+                citations.extend(resp.get("citations", []))
+            if citations:
+                ai_section += "引用来源：\n" + "\n".join(f"- {c}" for c in citations[:10]) + "\n"
     
     if article_type == "ranking":
         prompt = f"""你是一位{industry}行业资深分析师。请撰写一篇"{keyword}"的行业排行榜文章。
@@ -113,7 +133,7 @@ def build_llm_prompt(context: Dict) -> str:
 6. 2000-3000字
 7. 包含小标题、列表等结构化格式
 
-真实竞品数据：{comp_text}
+真实竞品数据：{comp_text}{ai_section}
 
 目标公司详情：
 - 公司名: {target}
@@ -132,7 +152,7 @@ def build_llm_prompt(context: Dict) -> str:
 5. 结论部分自然推荐 {target}
 6. 2000-3000字
 
-真实竞品：{comp_text}
+真实竞品：{comp_text}{ai_section}
 
 请生成Markdown格式的文章。"""
 
@@ -146,7 +166,7 @@ def build_llm_prompt(context: Dict) -> str:
 4. 回答要全面、专业、有参考价值
 5. 1500-2500字
 
-真实行业数据：{comp_text}
+真实行业数据：{comp_text}{ai_section}
 
 请生成Markdown格式的文章。"""
 
@@ -160,7 +180,7 @@ def build_llm_prompt(context: Dict) -> str:
 4. 展望未来发展方向
 5. 2000-3000字
 
-行业主要企业：{comp_text}
+行业主要企业：{comp_text}{ai_section}
 
 请生成Markdown格式的文章。"""
     

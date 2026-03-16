@@ -80,7 +80,7 @@ def create_job_config(
     message: str,
     model: str = "xingjiabiapi/gemini-3-flash-preview",
     timeout: int = 180,
-    to: str = "YOUR_TELEGRAM_ID"
+    to: str = "REDACTED_TG_USER_ID"
 ) -> dict:
     """创建任务配置"""
     return {
