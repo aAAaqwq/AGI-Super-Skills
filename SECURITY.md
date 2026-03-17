@@ -1,62 +1,71 @@
-# 安全策略与密钥管理
+# 🔒 Security Policy
 
-本仓库包含敏感配置，**严禁**直接提交任何真实密钥、Token 或密码。
+## Overview
 
-## 🚫 密钥管理原则
+This repository is a **sanitized, public-facing** version of our team configuration. All secrets have been removed and replaced with `pass show api/xxx` references.
 
-1. **绝对禁止硬编码**：任何 API Key、App Secret、Token 都必须通过环境变量或 `pass` 管理。
-2. **提交前检查**：使用 `git diff` 检查即将提交的代码中是否包含 `sk-`、`secret` 等关键词。
-3. **发现泄露立即轮换**：一旦密钥进入 git 历史，视为已泄露，必须立即在服务提供商处重置。
+## 🚫 Absolute Rules
 
-## 🔑 受影响的密钥（需立即轮换）
+1. **NEVER hardcode** API keys, tokens, secrets, or passwords
+2. **ALWAYS use** `pass show api/<service>` or environment variables
+3. **ALWAYS scan** before committing (three-layer scan below)
+4. **IMMEDIATELY rotate** any key that enters git history
 
-以下密钥曾出现在历史记录中，**不再安全**，请立即轮换：
+## 🔑 Historical Incidents (All Resolved)
 
-1. **飞书应用 (汉兴企业)**
-   - App ID: `REDACTED_FEISHU_HANXING_APP_ID`
-   - Secret: `***...IN` (已泄露)
-   
-2. **飞书应用 (个人)**
-   - App ID: `REDACTED_FEISHU_PERSONAL_APP_ID`
-   - Secret: `***...Gd` (已泄露)
+| Date | Incident | Resolution |
+|------|----------|------------|
+| 2026-02-05 | Feishu app_id/secret hardcoded | Removed + keys rotated |
+| 2026-02-21 | Feishu Secret re-introduced | Removed + filter-repo cleanup |
+| 2026-03-14 | Google API Key in coding-agent-backup | Removed + key rotated |
+| 2026-03-17 | Full history cleanup | git-filter-repo replaced all leaked values |
 
-3. **OpenRouter API Key**
-   - Key: `sk-3J...Nd` (已泄露)
+⚠️ **All previously leaked keys have been rotated.** The values in git history are replaced with `REDACTED_*` markers.
 
-## 🛠 配置方法
+## 🛡️ Three-Layer Pre-Push Security Scan
 
-推荐使用环境变量或 `pass` 密钥管理器。
-
-### 方式 A: 环境变量 (推荐)
-
-在 `~/.bashrc` 或 `.env` (需加入 .gitignore) 中配置：
+Run ALL three before any `git push`:
 
 ```bash
-# 飞书
-export FEISHU_APP_ID_HANXING="REDACTED_FEISHU_HANXING_APP_ID"
-export FEISHU_APP_SECRET_HANXING="your_new_secret_here"
-export FEISHU_APP_ID_PERSONAL="REDACTED_FEISHU_PERSONAL_APP_ID"
-export FEISHU_APP_SECRET_PERSONAL="your_new_secret_here"
+# Layer 1: Critical key patterns
+grep -rE 'AIza[A-Za-z0-9_-]{35}|sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{36}|xoxb-|AKIA[A-Z0-9]{16}' \
+  --include='*.py' --include='*.js' --include='*.json' --include='*.md' --include='*.sh' -l .
 
-# AI 服务
-export OPENROUTER_API_KEY="sk-..."
+# Layer 2: Broader secret patterns  
+grep -rE 'Bearer [A-Za-z0-9]{20,}|api[_-]?key.*=.*[A-Za-z0-9]{20,}|secret.*=.*[A-Za-z0-9]{10,}' \
+  --include='*.py' --include='*.js' --include='*.json' --include='*.md' --include='*.sh' -l .
+
+# Layer 3: Git history audit
+git log --all -p | grep -E 'AIzaSy[A-Za-z0-9]{33}|sk-[a-zA-Z0-9]{20,}|app_secret.*[A-Za-z0-9]{20}' | head -20
 ```
 
-### 方式 B: pass 密钥管理
+## 📋 Files That Must NEVER Be Committed
 
-本仓库的工具已集成自动从 `pass` 读取密钥的功能：
+Added to `.gitignore`:
+- `auth-profiles.json` — API auth credentials
+- `models.json` — model provider keys
+- `openclaw.json` — runtime config with tokens
+- `.env` / `.env.*` — environment secrets
+- `*.key` / `*.pem` / `*.p12` — certificates
+
+## 🔧 Recommended Secret Management
 
 ```bash
-pass insert api/feishu-hanxing
-# 输入格式:
-# app_id=cli_...
-# app_secret=your_new_secret
+# Store secrets
+pass insert api/feishu-hanxing-app-secret
+
+# Use in code
+import os
+secret = os.popen("pass show api/feishu-hanxing-app-secret").read().strip()
+
+# Use in shell
+APP_SECRET=$(pass show api/feishu-hanxing-app-secret)
 ```
 
-## 🚨 紧急响应流程
+## Reporting
 
-如果发现新的泄露：
-1. **立即撤销密钥**：去对应平台删除旧密钥。
-2. **清理代码**：移除代码中的密钥。
-3. **修改历史**：如果需要，使用 `git filter-repo` 清理历史（慎用，会改变 commit hash）。
-4. **通知团队**：告知所有协作者更新密钥。
+If you find a leaked secret, immediately:
+1. Open an issue with `[SECURITY]` prefix
+2. Rotate the affected key at the provider
+3. Use `git-filter-repo --replace-text` to clean history
+4. Force push the cleaned history
