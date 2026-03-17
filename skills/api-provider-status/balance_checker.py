@@ -4,7 +4,7 @@
 支持的供应商及查询方式：
 - anapi: https://anapi.9w7.cn/api/apikeys/query?key=<key>
 - openrouter-vip: 待添加
-- xingjiabiapi: 待添加
+- your-provider: 待添加
 - zai: 待添加
 """
 
@@ -19,11 +19,11 @@ AUTH_PROFILES = Path.home() / ".openclaw/agents/telegram-agent/agent/auth-profil
 
 # 供应商查询配置
 PROVIDERS = {
-    "aixn": {
+    "provider-b": {
         "name": "AIXN (Claude Opus 4.6)",
         "query_url": "https://ai.xn--vuq861bvij35ps8cv0uohm.com/console",
         "method": "playwright",
-        "user_data_dir": "~/.playwright-data/aixn",
+        "user_data_dir": "~/.playwright-data/provider-b",
     },
     "github-copilot": {
         "name": "GitHub Copilot Pro",
@@ -36,11 +36,11 @@ PROVIDERS = {
         "query_url": None,
         "method": "skip",  # 暂不查询
     },
-    "xingjiabiapi": {
-        "name": "性价比 API",
-        "query_url": "https://xingjiabiapi.com/console",
+    "your-provider": {
+        "name": "provider-a API",
+        "query_url": "https://your-provider.example.com/console",
         "method": "playwright",
-        "user_data_dir": "~/.playwright-data/xingjiabiapi",
+        "user_data_dir": "~/.playwright-data/your-provider",
     },
     "zai": {
         "name": "ZAI (智谱)",
@@ -107,15 +107,15 @@ def query_github_copilot() -> dict:
         return {"success": False, "provider": "github-copilot", "error": str(e)}
 
 
-def query_aixn() -> dict:
+def query_provider_b() -> dict:
     """查询 AIXN 余额（需要已登录的 Playwright session）"""
     import re
     import time
     
-    user_data_dir = os.path.expanduser('~/.playwright-data/aixn')
+    user_data_dir = os.path.expanduser('~/.playwright-data/provider-b')
     
     if not os.path.exists(user_data_dir):
-        return {"success": False, "provider": "aixn", "error": "未登录，请先运行登录流程"}
+        return {"success": False, "provider": "provider-b", "error": "未登录，请先运行登录流程"}
     
     try:
         from playwright.sync_api import sync_playwright
@@ -138,7 +138,7 @@ def query_aixn() -> dict:
             context.close()
             
             if not text:
-                return {"success": False, "provider": "aixn", "error": "页面内容为空"}
+                return {"success": False, "provider": "provider-b", "error": "页面内容为空"}
             
             # 解析数据 - AIXN 页面格式
             balance_match = re.search(r'余额[：:]\s*¥?([\d.]+)', text)
@@ -147,26 +147,26 @@ def query_aixn() -> dict:
             
             return {
                 "success": True,
-                "provider": "aixn",
+                "provider": "provider-b",
                 "balance": float(balance_match.group(1)) if balance_match else 0,
                 "consumed": float(consumed_match.group(1)) if consumed_match else 0,
                 "requests": int(requests_match.group(1)) if requests_match else 0,
             }
     except ImportError:
-        return {"success": False, "provider": "aixn", "error": "Playwright 未安装"}
+        return {"success": False, "provider": "provider-b", "error": "Playwright 未安装"}
     except Exception as e:
-        return {"success": False, "provider": "aixn", "error": str(e)}
+        return {"success": False, "provider": "provider-b", "error": str(e)}
 
 
-def query_xingjiabiapi() -> dict:
+def query_your-provider() -> dict:
     """查询星价比 API 余额（需要已登录的 Playwright session）"""
     import re
     import time
     
-    user_data_dir = os.path.expanduser('~/.playwright-data/xingjiabiapi')
+    user_data_dir = os.path.expanduser('~/.playwright-data/your-provider')
     
     if not os.path.exists(user_data_dir):
-        return {"success": False, "provider": "xingjiabiapi", "error": "未登录，请先运行登录流程"}
+        return {"success": False, "provider": "your-provider", "error": "未登录，请先运行登录流程"}
     
     try:
         from playwright.sync_api import sync_playwright
@@ -181,7 +181,7 @@ def query_xingjiabiapi() -> dict:
             page = context.pages[0] if context.pages else context.new_page()
             page.set_default_timeout(20000)
             
-            page.goto('https://xingjiabiapi.com/console', wait_until='networkidle')
+            page.goto('https://your-provider.example.com/console', wait_until='networkidle')
             time.sleep(2)  # 等待 JS 渲染
             
             # 获取页面文本
@@ -189,7 +189,7 @@ def query_xingjiabiapi() -> dict:
             context.close()
             
             if not text:
-                return {"success": False, "provider": "xingjiabiapi", "error": "页面内容为空"}
+                return {"success": False, "provider": "your-provider", "error": "页面内容为空"}
             
             # 解析数据
             # 当前余额💰43.08历史消耗💰62.56
@@ -200,16 +200,16 @@ def query_xingjiabiapi() -> dict:
             
             return {
                 "success": True,
-                "provider": "xingjiabiapi",
+                "provider": "your-provider",
                 "balance": float(balance_match.group(1)) if balance_match else 0,
                 "consumed": float(consumed_match.group(1)) if consumed_match else 0,
                 "requests": int(requests_match.group(1)) if requests_match else 0,
                 "tokens": int(tokens_match.group(1)) if tokens_match else 0,
             }
     except ImportError:
-        return {"success": False, "provider": "xingjiabiapi", "error": "Playwright 未安装"}
+        return {"success": False, "provider": "your-provider", "error": "Playwright 未安装"}
     except Exception as e:
-        return {"success": False, "provider": "xingjiabiapi", "error": str(e)}
+        return {"success": False, "provider": "your-provider", "error": str(e)}
 
 
 def query_anapi(key: str) -> dict:
@@ -251,13 +251,13 @@ def query_provider(provider: str) -> dict:
     if config["method"] == "playwright" and provider == "github-copilot":
         return query_github_copilot()
     
-    # 性价比（用 session）
-    if config["method"] == "playwright" and provider == "xingjiabiapi":
-        return query_xingjiabiapi()
+    # provider-a（用 session）
+    if config["method"] == "playwright" and provider == "your-provider":
+        return query_your-provider()
     
     # AIXN（用 session）
-    if config["method"] == "playwright" and provider == "aixn":
-        return query_aixn()
+    if config["method"] == "playwright" and provider == "provider-b":
+        return query_provider_b()
     
     # 跳过的供应商
     if config["method"] == "skip":
@@ -299,8 +299,8 @@ def format_balance_report() -> str:
             
             lines.append(f"✅ **{name}**")
             
-            # aixn 和 性价比特殊处理
-            if provider in ["aixn", "xingjiabiapi"]:
+            # provider-b and provider-a特殊处理
+            if provider in ["provider-b", "your-provider"]:
                 balance = data.get("balance", 0)
                 consumed = data.get("consumed", 0)
                 requests = data.get("requests", 0)

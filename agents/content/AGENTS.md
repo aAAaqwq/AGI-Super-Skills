@@ -102,7 +102,7 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py \
 - 横版用 `-a 16:9`
 - 正方形用 `-a 1:1`
 - Prompt 写英文，效果远好于中文
-- 优先级: boluobao → Google Gemini → xingjiabi
+- 优先级: your-provider → Google Gemini → xingjiabi
 
 ### Step 4: 生成视频片段
 ```bash

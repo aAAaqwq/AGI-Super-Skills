@@ -75,16 +75,16 @@ asyncio.run(main())
 
 ### 使用自定义 LLM（推荐配置）
 
-**⚠️ 重要**：xingsuancode API 是 **Anthropic 格式**，不是 OpenAI 格式！必须使用 `ChatAnthropic`。
+**⚠️ 重要**：your-provider API 是 **Anthropic 格式**，不是 OpenAI 格式！必须使用 `ChatAnthropic`。
 
 ```python
 from browser_use.llm.anthropic.chat import ChatAnthropic
 
-# xingsuancode API（Anthropic 兼容）✅ 推荐
+# your-provider API（Anthropic 兼容）✅ 推荐
 llm = ChatAnthropic(
     model="claude-sonnet-4-6",
-    base_url="https://cn.xingsuancode.com",  # 注意：不加 /v1
-    api_key="your-api-key",  # 或从 pass show api/xingsuancode 获取
+    base_url="https://your-anthropic-proxy.example.com",  # 注意：不加 /v1
+    api_key="your-api-key",  # 或从 pass show api/your-provider 获取
 )
 
 agent = Agent(
@@ -94,12 +94,12 @@ agent = Agent(
 ```
 
 ```python
-# ❌ 错误用法：不要用 ChatOpenAI + xingsuancode
-# from browser_use.llm.openai.chat import ChatOpenAI  # 这个不行！xingsuancode 不支持 OpenAI 格式
+# ❌ 错误用法：不要用 ChatOpenAI + your-provider
+# from browser_use.llm.openai.chat import ChatOpenAI  # 这个不行！your-provider 不支持 OpenAI 格式
 ```
 
 ```python
-# 如果使用 OpenAI 兼容 API（如 aixn），用 ChatOpenAI：
+# 如果使用 OpenAI 兼容 API（如 Provider-B），用 ChatOpenAI：
 from browser_use.llm.openai.chat import ChatOpenAI
 llm = ChatOpenAI(
     model="gpt-4o",
@@ -311,7 +311,7 @@ async def check_polymarket():
     # 使用本地 LLM API
     llm = ChatOpenAI(
         model="claude-3-5-sonnet-20241022",
-        base_url="https://cn.xingsuancode.com",
+        base_url="https://your-anthropic-proxy.example.com",
         api_key=os.environ.get("XSC_API_KEY"),
     )
     

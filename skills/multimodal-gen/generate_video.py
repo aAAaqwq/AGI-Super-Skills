@@ -11,7 +11,7 @@ from datetime import datetime
 from pathlib import Path
 import requests
 
-API_BASE = "https://xingjiabiapi.com/v1"
+API_BASE = "https://your-provider.example.com/v1"
 DEFAULT_MODEL = "veo3.1"
 OUTPUT_DIR = Path.home() / "clawd" / "output" / "videos"
 
@@ -31,7 +31,7 @@ MODELS = {
 }
 
 def get_api_key():
-    result = subprocess.run(["pass", "api/xingjiabiapi"], capture_output=True, text=True)
+    result = subprocess.run(["pass", "api/your-provider"], capture_output=True, text=True)
     return result.stdout.strip()
 
 def submit_video_task(prompt: str, model: str = None) -> dict:

@@ -43,7 +43,7 @@ ERROR_PATTERNS = {
     },
     "model not allowed": {
         "cause": "Agent 配置中未允许该模型",
-        "fix": "使用 agent 允许的模型，推荐: xingjiabiapi/gemini-3-flash-preview",
+        "fix": "使用 agent 允许的模型，推荐: <provider>/model",
         "auto_fix": "change_model"
     },
     "timeout": {
@@ -65,10 +65,10 @@ ERROR_PATTERNS = {
 
 # 推荐模型
 RECOMMENDED_MODELS = [
-    "xingjiabiapi/gemini-3-flash-preview",
-    "xingjiabiapi/gemini-2.5-flash",
+    "<provider>/model",
+    "<provider>/model",
     "anapi/claude-opus-4-5-20250514",
-    "moonshot/kimi-k2.5",
+    "<provider>/model",
 ]
 
 OWNER_CHAT_ID = "REDACTED_TG_USER_ID"
@@ -127,7 +127,7 @@ def diagnose_job(job: dict) -> dict:
         warnings.append({
             "type": "no_model",
             "message": "未指定模型",
-            "fix": "建议明确指定模型: xingjiabiapi/gemini-3-flash-preview"
+            "fix": "建议明确指定模型: <provider>/model"
         })
     
     # 5. 检查超时配置

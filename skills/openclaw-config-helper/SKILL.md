@@ -130,7 +130,7 @@ openclaw status
 **错误**：OpenClaw 不支持 `pass:` 格式的 apiKey 引用
 ```json
 // ❌ 错误
-"apiKey": "pass:api/xingsuancode"  // 会被当作字符串直接发送
+"apiKey": "pass:api/your-provider"  // 会被当作字符串直接发送
 
 // ✅ 正确
 "apiKey": "sk-f873092ea177b75b..."  // 必须硬编码真实 key

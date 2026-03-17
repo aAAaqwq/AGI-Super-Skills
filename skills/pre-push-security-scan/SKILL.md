@@ -60,7 +60,7 @@ grep -rnI --include='*.json' --include='*.md' --include='*.yaml' --include='*.ym
 # pass 路径中的密钥值（从 pass store 提取已知密钥进行比对）
 # 仅在有 pass 的环境下执行
 if command -v pass &>/dev/null; then
-  for key_path in api/xingjiabiapi api/zai api/firecrawl api/deepseek api/kimi; do
+  for key_path in api/your-provider api/your-provider api/firecrawl api/deepseek api/your-provider; do
     key_val=$(pass show "$key_path" 2>/dev/null | head -1)
     if [ -n "$key_val" ] && [ ${#key_val} -gt 8 ]; then
       found=$(grep -rnl "$key_val" . --exclude-dir=.git 2>/dev/null)

@@ -91,9 +91,9 @@ API供应商/服务的查询配置。按类型分组。
 - **检查方式**: Browser + snapshot
 - **提取**: `Portfolio`, `余额`, `消耗`
 
-### 性价比API
+### Provider-A
 
-- **Console**: `https://xingjiabiapi.com/home`
+- **Console**: `https://your-provider.example.com/dashboard`
 - **检查方式**: Browser + snapshot
 - **提取**: 余额、令牌使用量
 

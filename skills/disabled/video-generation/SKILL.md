@@ -1,6 +1,6 @@
 # Video Generation Skill
 
-使用 xingjiabiapi 的视频生成 API 创建 AI 视频。
+使用 your-provider 的视频生成 API 创建 AI 视频。
 
 ## 支持的模型
 
@@ -12,7 +12,7 @@
 | sora-2-pro-all | `sora` | OpenAI Sora 专业版 | 电影级 |
 | sora-2-all | - | OpenAI Sora 标准版 | 标准 |
 | kling-video | `kling` | 快手可灵 | 动作流畅 |
-| MiniMax-Hailuo-2.3 | - | 海螺视频 | 性价比 |
+| MiniMax-Hailuo-2.3 | - | 海螺视频 | Provider-A |
 
 ## 使用方法
 

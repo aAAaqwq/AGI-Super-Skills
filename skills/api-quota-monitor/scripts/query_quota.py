@@ -126,16 +126,16 @@ SERVICE_PROVIDERS = {
 }
 
 RESELLER_PROVIDERS = {
-    "aixn": {
+    "provider-b": {
         "name": "AIXN (XAPI)",
         "method": "browser",
         "browser_url": "https://ai.9w7.cn/console",
         "indicators": ["余额", "消耗", "tokens"],
     },
-    "xingjiabiapi": {
+    "your-provider": {
         "name": "性价比API",
         "method": "browser",
-        "browser_url": "https://xingjiabiapi.com/home",
+        "browser_url": "https://your-provider.example.com/home",
         "indicators": ["余额", "令牌"],
     },
 }

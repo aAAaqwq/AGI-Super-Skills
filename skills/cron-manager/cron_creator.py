@@ -78,7 +78,7 @@ def create_job_config(
     name: str,
     schedule: dict,
     message: str,
-    model: str = "xingjiabiapi/gemini-3-flash-preview",
+    model: str = "<provider>/model",
     timeout: int = 180,
     to: str = "REDACTED_TG_USER_ID"
 ) -> dict:

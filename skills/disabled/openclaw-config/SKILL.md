@@ -276,7 +276,7 @@ openclaw models aliases set opus45 anapi/opus-4.5
 ### 3. 配置模型降级列表
 
 ```bash
-openclaw models fallbacks add zai/glm-4.7
+openclaw models fallbacks add <provider>/glm-4.7
 openclaw models fallbacks add github-copilot/claude-sonnet-4-5
 ```
 

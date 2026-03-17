@@ -59,13 +59,13 @@
 
 | 任务类型 | 推荐模型 | 原因 |
 |---------|---------|------|
-| 简单脚本执行 | `xingjiabiapi/gemini-3-flash-preview` | 快速、低成本、稳定 |
+| 简单脚本执行 | `<provider>/gemini-3-flash` | 快速、低成本、稳定 |
 | 复杂推理/学习 | `anapi/claude-opus-4-5-20250514` | 高质量输出 |
-| 中文内容生成 | `moonshot/kimi-k2.5` | 中文能力强 |
-| 快速响应任务 | `xingjiabiapi/gemini-2.5-flash` | 超快速 |
+| 中文内容生成 | `<provider>/kimi-k2.5` | 中文能力强 |
+| 快速响应任务 | `<provider>/gemini-2.5-flash` | 超快速 |
 
 **⚠️ 避免使用：**
-- `zai/glm-4.7` - 有并发限制，不适合频繁任务
+- `<provider>/glm-4.7` - 有并发限制，不适合频繁任务
 - `github-copilot/*` - 在 isolated session 中可能不可用
 
 ### 推送目标
@@ -94,7 +94,7 @@
   "payload": {
     "kind": "agentTurn",
     "message": "执行任务：\n\n```bash\npython3 ~/clawd/scripts/xxx.py\n```\n\n将结果通过 telegram-push.sh 推送。",
-    "model": "xingjiabiapi/gemini-3-flash-preview",
+    "model": "<provider>/gemini-3-flash",
     "timeoutSeconds": 180,
     "deliver": true,
     "channel": "telegram",
@@ -118,7 +118,7 @@
   "payload": {
     "kind": "agentTurn",
     "message": "执行监控任务：\n\n1. 获取数据\n2. 分析变化\n3. 如有异常立即告警\n4. 推送报告到 Telegram",
-    "model": "xingjiabiapi/gemini-3-flash-preview",
+    "model": "<provider>/gemini-3-flash",
     "timeoutSeconds": 180,
     "deliver": true,
     "channel": "telegram",
@@ -165,7 +165,7 @@
   "payload": {
     "kind": "agentTurn",
     "message": "⏰ 提醒：XXX",
-    "model": "xingjiabiapi/gemini-3-flash-preview",
+    "model": "<provider>/gemini-3-flash",
     "timeoutSeconds": 60,
     "deliver": true,
     "channel": "telegram",
@@ -189,7 +189,7 @@
   "payload": {
     "kind": "agentTurn",
     "message": "生成每日报告：\n\n1. 收集数据\n2. 分析趋势\n3. 生成报告\n4. 使用 telegram-push.sh 推送",
-    "model": "xingjiabiapi/gemini-3-flash-preview",
+    "model": "<provider>/gemini-3-flash",
     "timeoutSeconds": 300,
     "deliver": true,
     "channel": "telegram",
@@ -236,7 +236,7 @@
 
 ### 错误2: "model not allowed"
 **原因**: Agent 不允许使用该模型
-**修复**: 改用 `xingjiabiapi/gemini-3-flash-preview`
+**修复**: 改用 `<provider>/gemini-3-flash`
 
 ### 错误3: 任务从未执行
 **原因**: `enabled` 未设置或 schedule 配置错误

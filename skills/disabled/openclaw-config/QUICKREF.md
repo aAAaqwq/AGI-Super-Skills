@@ -40,7 +40,7 @@ openclaw logs                                 # 查看日志
 | 别名 | 完整名称 | 供应商 |
 |------|---------|--------|
 | opus45 | anapi/opus-4.5 | anapi |
-| zai47 | zai/glm-4.7 | zai |
+| zai47 | <provider>/glm-4.7 | zai |
 | or52 | openrouter-vip/gpt-5.2 | openrouter-vip |
 | codex52 | openrouter-vip/gpt-5.2-codex | openrouter-vip |
 | opus | anthropic/claude-opus-4-5 | anthropic |

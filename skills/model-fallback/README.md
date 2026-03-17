@@ -123,7 +123,7 @@ grep "ERROR" ~/.openclaw/logs/auto-switch.log | \
 {
   "model": "anapi/opus-4.5",
   "modelFallback": [
-    "zai/glm-4.7",
+    "<provider>/glm-4.7",
     "openrouter-vip/gpt-5.2-codex",
     "github-copilot/claude-sonnet-4-5"
   ],
@@ -151,7 +151,7 @@ openclaw status | grep Model
 当前配置的降级顺序：
 
 1. **anapi/opus-4.5** - 最强能力，最高优先级
-2. **zai/glm-4.7** - 中文优化，性价比高
+2. **<provider>/glm-4.7** - 中文优化，Provider-A高
 3. **openrouter-vip/gpt-5.2-codex** - 编码专用
 4. **github-copilot/claude-sonnet-4-5** - 免费备用
 
@@ -257,7 +257,7 @@ cat ~/.openclaw/logs/model-monitor.pid
 ```json
 {
   "modelFallback": [
-    "zai/glm-4.7",                    // 中等成本
+    "<provider>/glm-4.7",                    // 中等成本
     "github-copilot/claude-sonnet-4-5", // 免费
     "anapi/opus-4.5"                  // 高成本，必要时使用
   ]

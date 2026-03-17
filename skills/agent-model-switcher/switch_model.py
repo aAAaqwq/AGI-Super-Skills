@@ -15,14 +15,14 @@ AGENTS_DIR = Path.home() / ".openclaw" / "agents"
 
 # 模型别名
 MODEL_ALIASES = {
-    "glm5": "zai/glm-5",
-    "glm47": "zai/glm-4.7",
-    "glm47-flash": "zai/glm-4.7-flash",
-    "glm47-flashx": "zai/glm-4.7-flashx",
-    "opus46": "xingsuancode/claude-opus-4-6",
-    "opus46-aixn": "aixn/claude-opus-4-6",
-    "sonnet46": "xingsuancode/claude-sonnet-4-6",
-    "kimi": "moonshot/kimi-k2.5",
+    "glm5": "<provider>/glm-model",
+    "glm47": "<provider>/glm-model",
+    "glm47-flash": "<provider>/glm-model",
+    "glm47-flashx": "<provider>/glm-model",
+    "opus46": "<provider>/model",
+    "opus46-provider-b": "<provider>/claude-model",
+    "sonnet46": "<provider>/model",
+    "kimi": "<provider>/model",
     "m25": "minimax/MiniMax-M2.5",
     "m2": "minimax/MiniMax-M2",
 }
@@ -149,7 +149,7 @@ def main():
     
     # set 命令
     set_parser = subparsers.add_parser("set", help="Set agent model")
-    set_parser.add_argument("model", help="Model to set (e.g., zai/glm-5 or alias like glm5)")
+    set_parser.add_argument("model", help="Model to set (e.g., <provider>/glm-model or alias like glm5)")
     set_parser.add_argument("--agents", help="Comma-separated list of agents (default: all except main)")
     set_parser.add_argument("--include-main", action="store_true", help="Include main agent")
     set_parser.add_argument("--dry-run", action="store_true", help="Show what would be done")

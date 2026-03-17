@@ -16,7 +16,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "执行任务：\n\n```bash\n{{脚本命令}}\n```\n\n将结果通过 ~/clawd/skills/telegram-push/telegram-push.sh 推送。",
-        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "model": "<provider>/gemini-3-flash",
         "timeoutSeconds": 180,
         "deliver": true,
         "channel": "telegram",
@@ -54,7 +54,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "执行{{监控对象}}监控任务：\n\n1. 获取最新数据\n2. 与历史数据对比\n3. 如有显著变化或异常，立即告警\n4. 生成监控报告并推送\n\n监控项目：{{监控项目列表}}\n数据来源：{{数据来源}}",
-        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "model": "<provider>/gemini-3-flash",
         "timeoutSeconds": 180,
         "deliver": true,
         "channel": "telegram",
@@ -105,7 +105,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "⏰ 提醒：{{提醒内容}}\n\n{{附加信息}}",
-        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "model": "<provider>/gemini-3-flash",
         "timeoutSeconds": 60,
         "deliver": true,
         "channel": "telegram",
@@ -132,7 +132,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "生成每日{{报告类型}}报告：\n\n1. 收集{{数据来源}}数据\n2. 分析趋势和变化\n3. 生成报告摘要\n4. 使用 telegram-push.sh 推送",
-        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "model": "<provider>/gemini-3-flash",
         "timeoutSeconds": 300,
         "deliver": true,
         "channel": "telegram",
@@ -158,7 +158,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "执行{{新闻类型}}推送任务：\n\n```bash\npython3 ~/clawd/scripts/news_push.py\n```\n\n该脚本会抓取新闻并推送到 Telegram。",
-        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "model": "<provider>/gemini-3-flash",
         "timeoutSeconds": 180,
         "deliver": true,
         "channel": "telegram",
@@ -183,7 +183,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "执行{{服务名}}健康检查：\n\n1. 检查服务状态\n2. 测试关键功能\n3. 如有异常立即告警\n4. 正常则静默（不推送）",
-        "model": "xingjiabiapi/gemini-3-flash-preview",
+        "model": "<provider>/gemini-3-flash",
         "timeoutSeconds": 120,
         "deliver": false
       }

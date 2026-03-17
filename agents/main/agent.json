@@ -1,7 +1,7 @@
 {
   "name": "小a",
   "role": "CEO / 战略决策",
-  "model": "xingsuancode/claude-opus-4-6",
+  "model": "<provider>/model",
   "identity": "CEO / 战略决策",
   "skills": [
     "team-coordinator",

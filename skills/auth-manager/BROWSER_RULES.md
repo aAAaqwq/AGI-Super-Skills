@@ -29,7 +29,7 @@
 |------|------|------|
 | GitHub | CLI | `gh auth status` |
 | AIXN | curl | `curl -H "Authorization: Bearer $TOKEN" https://ai.9w7.cn/api/user/info` |
-| 性价比API | curl | `curl -H "Cookie: $COOKIE" https://xingjiabiapi.com/api/user/info` |
+| Provider-A | curl | `curl -H "Cookie: $COOKIE" https://your-provider.example.com/api/user/info` |
 | Polymarket | browser | `browser(navigate → polymarket.com/portfolio, profile=openclaw)` |
 | LinuxDo | browser | `browser(navigate → linux.do, profile=openclaw)` |
 | X | browser | `browser(navigate → x.com/home, profile=openclaw)` |

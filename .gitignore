@@ -42,6 +42,14 @@ config.json
 secrets.json
 passwords.txt
 auth.json
+auth-profiles.json
+models.json
+openclaw.json
+*.key
+*.pem
+*.p12
+**/chrome-profiles/
+*session*.json
 
 # Logs
 *.log

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 视频生成 API 脚本 - 支持 Veo3.1, Sora, Kling 等
-使用 xingjiabiapi 的视频统一格式接口
+使用 your-provider 的视频统一格式接口
 
 正确的 API 端点（来自官方文档）：
 - 创建视频: POST /v1/video/create
@@ -28,7 +28,7 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List
 
 # API 配置
-API_BASE = "https://xingjiabiapi.com/v1"
+API_BASE = "https://your-provider.example.com/v1"
 API_KEY = None
 
 # 可用模型（来自官方文档）
@@ -63,7 +63,7 @@ def get_api_key() -> str:
     
     try:
         result = subprocess.run(
-            ["pass", "show", "api/xingjiabiapi"],
+            ["pass", "show", "api/your-provider"],
             capture_output=True, text=True, timeout=5
         )
         if result.returncode == 0:
@@ -76,7 +76,7 @@ def get_api_key() -> str:
     if not API_KEY:
         raise ValueError(
             "API Key 未设置！请使用以下方式之一：\n"
-            "1. pass: pass show api/xingjiabiapi\n"
+            "1. pass: pass show api/your-provider\n"
             "2. 环境变量: export XINGJIABIAPI_KEY=sk-xxx"
         )
     return API_KEY
@@ -316,7 +316,7 @@ def list_models():
 def main():
     import argparse
     
-    parser = argparse.ArgumentParser(description="视频生成 API (xingjiabiapi)")
+    parser = argparse.ArgumentParser(description="视频生成 API (your-provider)")
     subparsers = parser.add_subparsers(dest="command", help="命令")
     
     # generate 命令

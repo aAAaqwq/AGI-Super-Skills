@@ -19,13 +19,13 @@ python3 ~/clawd/skills/agent-model-switcher/switch_model.py list
 ### 2. 更换所有子 agent 的 model（不包括 main）
 
 ```bash
-python3 ~/clawd/skills/agent-model-switcher/switch_model.py set zai/glm-5
+python3 ~/clawd/skills/agent-model-switcher/switch_model.py set <provider>/glm-5
 ```
 
 ### 3. 更换指定 agent 的 model
 
 ```bash
-python3 ~/clawd/skills/agent-model-switcher/switch_model.py set zai/glm-5 --agents code,ops,quant
+python3 ~/clawd/skills/agent-model-switcher/switch_model.py set <provider>/glm-5 --agents code,ops,quant
 ```
 
 ### 4. 同步所有 agent 的 models.json（从 main 复制）
@@ -55,11 +55,11 @@ python3 ~/clawd/skills/agent-model-switcher/switch_model.py sync-models --agents
 
 | 别名 | 完整名称 |
 |------|---------|
-| glm5 | zai/glm-5 |
-| glm47 | zai/glm-4.7 |
-| opus46 | xingsuancode/claude-opus-4-6 |
-| sonnet46 | xingsuancode/claude-sonnet-4-6 |
-| kimi | moonshot/kimi-k2.5 |
+| glm5 | <provider>/glm-5 |
+| glm47 | <provider>/glm-4.7 |
+| opus46 | <provider>/claude-opus-4-6 |
+| sonnet46 | <provider>/claude-sonnet-4-6 |
+| kimi | <provider>/kimi-k2.5 |
 
 ## 示例
 

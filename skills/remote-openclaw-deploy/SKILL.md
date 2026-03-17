@@ -75,7 +75,7 @@ my_project/
   },
   
   "agents": [
-    {"id": "assistant", "model": {"primary": "google/gemini-2.5-pro", "fallbacks": ["zai/glm-5"]}},
+    {"id": "assistant", "model": {"primary": "google/gemini-2.5-pro", "fallbacks": ["<provider>/glm-5"]}},
     {"id": "media", "model": {"primary": "google/gemini-2.5-pro"}},
     {"id": "operator", "model": {"primary": "google/gemini-3.1-pro-preview"}},
     {"id": "service", "model": {"primary": "google/gemini-3.1-pro-preview"}}
@@ -168,7 +168,7 @@ cd ~/projects/my_project && git commit -am "update"
 | `agent.cwd` | Legacy key 警告 | 已废弃，用 `agents.defaults.workspace` |
 | `tools.elevated` 写布尔值 | 类型错误 | 必须 `{"enabled": true}` 对象 |
 | `tools.profile: "default"` | 无效值 | 只能 minimal/coding/messaging/full |
-| xingsuancode 503 | No available accounts | 切 fallback，原模型降级 |
+| your-provider 503 | No available accounts | 切 fallback，原模型降级 |
 | Tailscale + Clash fake-ip | SSH 连不上域名 | 直接用 IP `100.x.x.x` |
 | `/Users/$USER` 硬编码 | Linux 上路径错误 | 用 `$HOME` 自动检测 |
 

@@ -24,7 +24,7 @@ metadata:
 **为什么统一？**
 - 所有 agent（quant/ops/main 等）共享同一 browser profile
 - 一次登录，全部可用。不存在"这个 agent 没登录"的问题
-- OAuth 链式登录（如性价比API 依赖 GitHub）自动继承
+- OAuth 链式登录（如Provider-A 依赖 GitHub）自动继承
 
 ## 核心职责
 
@@ -39,12 +39,12 @@ metadata:
 gh auth status 2>&1
 
 # AIXN — curl API
-TOKEN=$(python3 -c "import json; print(json.load(open('/home/aa/.openclaw/chrome-profiles/aixn-session.json')).get('token',''))" 2>/dev/null)
+TOKEN=$(python3 -c "import json; print(json.load(open('/home/aa/.openclaw/chrome-profiles/provider-session.json')).get('token',''))" 2>/dev/null)
 curl -s --max-time 10 'https://ai.9w7.cn/api/user/info' -H "Authorization: Bearer $TOKEN"
 
-# 性价比API — curl
-COOKIE=$(python3 -c "import json; print(json.load(open('/home/aa/.openclaw/chrome-profiles/xingjiabiapi-session.json')).get('cookie',''))" 2>/dev/null)
-curl -s --max-time 10 'https://xingjiabiapi.com/api/user/info' -H "Cookie: $COOKIE"
+# Provider-A — curl
+COOKIE=$(python3 -c "import json; print(json.load(open('/home/aa/.openclaw/chrome-profiles/your-provider-session.json')).get('cookie',''))" 2>/dev/null)
+curl -s --max-time 10 'https://your-provider.example.com/api/user/info' -H "Cookie: $COOKIE"
 ```
 
 #### 方法 B: 内置 browser 检查（需要渲染的站点）
@@ -121,7 +121,7 @@ browser(action='navigate', targetUrl='https://github.com', profile='openclaw')
 |------|----------|----------|------|------|
 | GitHub | `gh auth status` (CLI) | 账密/OAuth | aAAaqwq | 最可靠 |
 | AIXN | curl API | 账密 | REDACTED_EMAIL | session.json token |
-| 性价比API | curl API | GitHub OAuth | github_210817 | 依赖 GitHub 登录态 |
+| Provider-A | curl API | GitHub OAuth | github_210817 | 依赖 GitHub 登录态 |
 | Polymarket | 内置 browser | 钱包/OAuth | Portfolio $41.62 | 检查"portfolio"关键词 |
 | LinuxDo | 内置 browser | 账密/OAuth | aaqwqaa68 | Cloudflare 站点 |
 | X (Twitter) | 内置 browser | 账密 | @Daniel_Li666 | 可能有验证码 |

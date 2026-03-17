@@ -8,11 +8,11 @@ import json
 import subprocess
 import requests
 
-API_BASE = "https://xingjiabiapi.com/v1"
+API_BASE = "https://your-provider.example.com/v1"
 OPTIMIZER_MODEL = "deepseek-v3.2"  # 性价比高，中文理解好
 
 def get_api_key():
-    result = subprocess.run(["pass", "api/xingjiabiapi"], capture_output=True, text=True)
+    result = subprocess.run(["pass", "api/your-provider"], capture_output=True, text=True)
     return result.stdout.strip()
 
 def optimize_prompt(user_prompt: str, media_type: str = "image") -> dict:

@@ -1,6 +1,6 @@
 ---
 name: api-quota-monitor
-description: "查询监控 API 供应商/服务的额度、余额、消耗情况。支持官方供应商(Gemini/xAI/ZAI/Minimax/OpenRouter等)、中转站(AIXN/性价比API等)、订阅服务(Brave/Tavily/Serper)。触发词：查额度、查余额、API用量、供应商额度、quota、balance、usage、billing。"
+description: "查询监控 API 供应商/服务的额度、余额、消耗情况。支持官方供应商(Gemini/xAI/ZAI/Minimax/OpenRouter等)、中转站(AIXN/Provider-A等)、订阅服务(Brave/Tavily/Serper)。触发词：查额度、查余额、API用量、供应商额度、quota、balance、usage、billing。"
 ---
 
 # API Quota Monitor
@@ -59,7 +59,7 @@ python3 scripts/query_quota.py --discover
 | 平台 | 查询方式 | 状态来源 |
 |------|----------|----------|
 | AIXN | 浏览器抓 ai.9w7.cn | auth-session-state.json |
-| 性价比API | 浏览器抓 xingjiabiapi.com | auth-session-state.json |
+| Provider-A | 浏览器抓 your-provider.example.com | auth-session-state.json |
 
 中转站查询流程：
 1. 检查 `~/.openclaw/auth-session-state.json` 获取登录状态
@@ -94,7 +94,7 @@ browser(action='snapshot', profile='openclaw', compact=true, maxChars=2000)
 - Gemini: https://aistudio.google.com/apikey
 - Anthropic: https://console.anthropic.com/settings/billing
 - AIXN: https://ai.9w7.cn/console
-- 性价比API: https://xingjiabiapi.com/home
+- Provider-A: https://your-provider.example.com/dashboard
 
 ## 报告格式
 
@@ -114,7 +114,7 @@ browser(action='snapshot', profile='openclaw', compact=true, maxChars=2000)
 
 ━━ 中转站 ━━
 ✅ AIXN: ¥238.81
-✅ 性价比API: ¥9.35
+✅ Provider-A: ¥9.35
 ```
 
 ## 扩展新供应商

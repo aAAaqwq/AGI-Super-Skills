@@ -1,7 +1,7 @@
 {
   "name": "小product",
   "role": "首席产品官",
-  "model": "zai/glm-5",
+  "model": "<provider>/<model>",
   "identity": "产品设计专家，精通产品规划、用户体验设计、定价策略和Landing Page设计",
   "skills": [
     "competitor-teardown",

@@ -13,7 +13,7 @@ from pathlib import Path
 import requests
 
 # 配置
-API_BASE = "https://xingjiabiapi.com/v1"
+API_BASE = "https://your-provider.example.com/v1"
 DEFAULT_MODEL = "gemini-3-pro-image-preview"
 OUTPUT_DIR = Path.home() / "clawd" / "output" / "images"
 
@@ -30,7 +30,7 @@ MODELS = {
 
 def get_api_key():
     """从 pass 获取 API key"""
-    result = subprocess.run(["pass", "api/xingjiabiapi"], capture_output=True, text=True)
+    result = subprocess.run(["pass", "api/your-provider"], capture_output=True, text=True)
     return result.stdout.strip()
 
 def generate_image(prompt: str, model: str = None, output_path: str = None) -> dict:
