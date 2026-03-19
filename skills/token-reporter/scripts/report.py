@@ -25,7 +25,11 @@ from collections import defaultdict
 MODEL_PATTERNS = {
     "opus4.6": {
         "display": "opus4.6",
-        "match": lambda p, m: "claude-opus-4-6" in m or "opus-4-6" in m,
+        "match": lambda p, m: "claude-opus-4-6" in m or "opus-4-6" in m or "xingsuancode/claude-opus-4-6" in m,
+    },
+    "sonnet4.6": {
+        "display": "sonnet4.6",
+        "match": lambda p, m: "claude-sonnet-4-6" in m or "sonnet-4-6" in m or "xingsuancode/claude-sonnet-4-6" in m,
     },
     "glm-5": {
         "display": "glm-5",
@@ -33,16 +37,57 @@ MODEL_PATTERNS = {
     },
     "glm-5-turbo": {
         "display": "glm-5-turbo",
-        "match": lambda p, m: "glm-5-turbo" in m,
+        "match": lambda p, m: "glm-5-turbo" in m or "zai/glm-5-turbo" in m,
+    },
+    "glm-4.7": {
+        "display": "glm-4.7",
+        "match": lambda p, m: "glm-4.7" in m or "zai/glm-4.7" in m,
     },
     "minimax": {
         "display": "minimax-M2.5",
-        "match": lambda p, m: "MiniMax-M2.5" in m or "minimax" in m.lower(),
+        "match": lambda p, m: "MiniMax-M2.5" in m or "minimax" in m.lower() or "minimax/M2" in m,
+    },
+    "kimi": {
+        "display": "kimi-k2.5",
+        "match": lambda p, m: "kimi" in m.lower() or "moonshot" in m.lower() or "kimi-k2.5" in m,
+    },
+    "ollama": {
+        "display": "ollama-qwen",
+        "match": lambda p, m: "ollama" in m.lower() or "qwen" in m.lower(),
     },
     "gemini": {
         "display": "gemini-3-pro",
         "match": lambda p, m: "gemini" in m.lower() and ("3-pro" in m or "3_pro" in m),
     },
+    "gemini-3-pro-preview": {
+        "display": "gemini-3-pro-preview",
+        "match": lambda p, m: "gemini-3-pro-preview" in m or "xingjiabiapi/gemini" in m,
+    },
+    "gpt5": {
+        "display": "gpt-5.2",
+        "match": lambda p, m: "gpt-5" in m or "gpt5" in m.lower(),
+    },
+}
+
+# Agent ID → 显示名称映射
+AGENT_NAME_MAP = {
+    "main": "小a",
+    "code": "小code",
+    "ops": "小ops",
+    "quant": "小quant",
+    "content": "小content",
+    "research": "小research",
+    "pm": "小pm",
+    "data": "小data",
+    "market": "小market",
+    "finance": "小finance",
+    "law": "小law",
+    "sales": "小sales",
+    "product": "小product",
+    "batch": "小batch",
+    "xiaoresearch": "小research",
+    "xiaotu": "小兔",
+    "telegram-agent": "电报",
 }
 
 
@@ -296,9 +341,12 @@ def collect_output(target_date: str) -> str:
 # ── 格式化输出 ────────────────────────────────────────────────────────────
 
 def format_token_detail(models_data: dict, total: dict) -> str:
-    """格式化 4 模型 token 明细"""
+    """格式化所有模型 token 明细"""
     lines = []
-    for key in ["opus4.6", "glm-5", "glm-5-turbo", "minimax", "gemini"]:
+    # 按优先级排序显示
+    priority_keys = ["opus4.6", "sonnet4.6", "glm-5-turbo", "glm-5", "glm-4.7", "minimax", "kimi", "ollama", "gemini", "gemini-3-pro-preview", "gpt5"]
+    
+    for key in priority_keys:
         data = models_data.get(key)
         display = MODEL_PATTERNS.get(key, {}).get("display", key)
 
@@ -316,10 +364,8 @@ def format_token_detail(models_data: dict, total: dict) -> str:
                 f"{display}: input {format_tokens(inp)} / output {format_tokens(out)} "
                 f"/ cache {cache_pct:.0f}% / {format_cost(cost)}"
             )
-        else:
-            lines.append(f"{display}: — (当日未使用)")
 
-    # Add "other" summary if exists
+    # Add "other" summary if exists (models not matched)
     other = models_data.get("other")
     if other and other["message_count"] > 0:
         lines.append(
@@ -351,11 +397,14 @@ def format_report(data: dict, date: str, output: str) -> str:
     for agent_name, models in data["agents"].items():
         agent_total = sum(m["totalTokens"] for m in models.values())
         if agent_total > 0:
-            agent_totals.append((agent_name, agent_total))
+            # 使用友好名称
+            friendly_name = AGENT_NAME_MAP.get(agent_name, agent_name)
+            agent_totals.append((friendly_name, agent_total, agent_name))  # 保留原始ID用于debug
+    
     agent_totals.sort(key=lambda x: x[1], reverse=True)
 
-    for agent_name, tokens in agent_totals[:5]:
-        report += f"  {agent_name}: {format_tokens(tokens)}\n"
+    for friendly_name, tokens, original_id in agent_totals[:5]:
+        report += f"  {friendly_name}: {format_tokens(tokens)}\n"
     report += "\n"
 
     # Output
