@@ -102,18 +102,26 @@ if(titleInput) {
   ```
   browser(action="act", kind="click", ref="<正文框ref>")
   ```
-- **等待 500ms** 让 Quill 编辑器初始化
-- **使用 Clipboard API 粘贴正文**（不要用 fill/type，会失败）：
+- **等待 500ms** 让 Tiptap/ProseMirror 编辑器初始化
+- **使用 Tiptap/ProseMirror API 填写正文**：
 ```javascript
-const el = document.querySelector('.ql-editor');
-el?.click();
-await new Promise(r => setTimeout(r, 300));
-const text = `要粘贴的完整正文内容（含换行）`;
-const dt = new DataTransfer();
-dt.setData('text/plain', text);
-el?.dispatchEvent(new ClipboardEvent('paste', {
-  clipboardData: dt, bubbles: true, cancelable: true
-}));
+// 将 Markdown 转换为 HTML
+const text = `要粘贴的正文内容`;
+const paragraphs = text.split('\n').filter(p => p.trim());
+const htmlParts = paragraphs.map(p => {
+    // 处理 **粗体**
+    p = p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    return '<p>' + p + '</p>';
+});
+const html = htmlParts.join('');
+
+// 写入编辑器
+const editor = document.querySelector('.tiptap.ProseMirror');
+if (editor) {
+    editor.focus();
+    editor.innerHTML = html;
+    editor.dispatchEvent(new Event('input', {bubbles: true}));
+}
 ```
 - **验证**：正文框字数统计应显示 `X/1000`（X>0），如果仍显示 `0/1000`，尝试方案B/C/D（见"UI问题与解决方案"）
 - ⚠️ 如果使用 browser evaluate，fn 中不能有 await，用 setTimeout 包裹：`new Promise(r=>setTimeout(r,500)).then(()=>{...})`
@@ -235,22 +243,43 @@ python scripts/xhs_publish.py \
 
 ### UI 问题与解决方案
 
-#### ❌ 问题1：正文框 0/1000 写不进去（已确认 2026-03-19）
+#### ❌ 问题1：正文框 0/1000 写不进去（已确认 2026-03-20）
 
 **现象**：标题正确（8字），但正文框显示 0/1000，browser 的 fill/type 均无法写入内容。
 
-**根因**：小红书创作者平台使用 **Quill.js 富文本编辑器**（class=`ql-editor`，`contenteditable="true"`）。普通 DOM 操作（设置 innerText/value）不触发 React 状态更新，导致：
-- 内容虽然视觉上出现，但 Quill 内部 delta 为空
+**根因**：小红书创作者平台已从 Quill.js 迁移到 **Tiptap/ProseMirror**（class=`tiptap.ProseMirror`）。普通 DOM 操作（设置 innerText/value）不触发 React 状态更新，导致：
+- 内容虽然视觉上出现，但 Tiptap 内部状态为空
 - 字数统计不变（0/1000）
 - 保存草稿后正文丢失
 
-**✅ 解决方案（按优先级排序）**：
+**✅ 解决方案（推荐方案）**：
 
-**方案A：Clipboard API 模拟粘贴（推荐）**
+**方案A：Tiptap/ProseMirror API 直接写入（推荐）**
+```javascript
+// 将 Markdown 转换为 HTML 段落
+const text = '要粘贴的正文内容\n第二段内容';
+const paragraphs = text.split('\n').filter(p => p.trim());
+const htmlParts = paragraphs.map(p => {
+    // 处理 **粗体**
+    p = p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    return '<p>' + p + '</p>';
+});
+const html = htmlParts.join('');
+
+// 写入 Tiptap 编辑器
+const editor = document.querySelector('.tiptap.ProseMirror');
+if (editor) {
+    editor.focus();
+    editor.innerHTML = html;
+    editor.dispatchEvent(new Event('input', {bubbles: true}));
+}
+```
+
+**方案B：Clipboard API 模拟粘贴（备选）**
 ```javascript
 // 先点击正文编辑器获取焦点
-document.querySelector('.ql-editor')?.click();
-// 等待 300ms 让 Quill 初始化
+document.querySelector('.tiptap.ProseMirror')?.click();
+// 等待 300ms 让编辑器初始化
 await new Promise(r => setTimeout(r, 300));
 // 使用 Clipboard API 粘贴
 const text = '要粘贴的正文内容';
@@ -261,38 +290,17 @@ const pasteEvent = new ClipboardEvent('paste', {
   bubbles: true,
   cancelable: true
 });
-document.querySelector('.ql-editor')?.dispatchEvent(pasteEvent);
-```
-
-**方案B：Quill API 直接操作**
-```javascript
-// 获取 Quill 实例（通过 __quill 属性）
-const quill = document.querySelector('.ql-editor')?.__quill;
-if (quill) {
-  quill.clipboard.dangerouslyPasteHTML(0, '<p>正文段落1</p><p>正文段落2</p>');
-}
+document.querySelector('.tiptap.ProseMirror')?.dispatchEvent(pasteEvent);
 ```
 
 **方案C：executeCommand（兼容方案）**
 ```javascript
-document.querySelector('.ql-editor')?.focus();
+document.querySelector('.tiptap.ProseMirror')?.focus();
 document.execCommand('selectAll');
 document.execCommand('insertText', false, '正文内容');
 ```
 
-**方案D：使用 Playwright 的 keyboard.type + clipboard**
-```
-# 先复制内容到剪贴板
-browser(action="evaluate", fn="navigator.clipboard.writeText('正文内容')")
-# 点击正文框
-browser(action="act", kind="click", ref="正文框ref")
-# Ctrl+V 粘贴
-browser(action="act", kind="press", key="Control+v")
-```
-
-**⚠️ 注意**：方案D在 Linux 无头浏览器中可能不工作（无 X clipboard），优先用方案A。
-
-**验证标准**：粘贴后正文框字数统计应显示 `X/1000`（X>0）。
+**验证标准**：写入后正文框字数统计应显示 `X/1000`（X>0）。
 
 ---
 

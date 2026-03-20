@@ -17,6 +17,7 @@ import asyncio
 import argparse
 import json
 import os
+import re
 from playwright.async_api import async_playwright
 
 # 小红书创作者平台URL
@@ -52,30 +53,28 @@ async def fill_title_js(page, title: str):
     }''', title)
 
 
-async def fill_content_clipboard(page, content: str):
-    """使用Clipboard API粘贴正文（解决Quill编辑器写入问题）"""
-    await page.evaluate('''(text) => {
-        const editor = document.querySelector('.ql-editor');
-        if (editor) {
-            editor.click();
-        }
-    }''')
-    await asyncio.sleep(0.5)
+async def fill_content_tiptap(page, content: str):
+    """使用 Tiptap/ProseMirror API 填写正文内容"""
+    # 将 markdown 文本转换为 HTML 段落
+    paragraphs = content.strip().split('\n')
+    html_parts = []
+    for p in paragraphs:
+        p = p.strip()
+        if not p:
+            continue
+        # 处理 **粗体**
+        p = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', p)
+        html_parts.append(f'<p>{p}</p>')
+    html_content = ''.join(html_parts)
     
-    await page.evaluate('''(text) => {
-        const editor = document.querySelector('.ql-editor');
-        if (editor) {
-            const clipboardData = new DataTransfer();
-            clipboardData.setData('text/plain', text);
-            const pasteEvent = new ClipboardEvent('paste', {
-                clipboardData: clipboardData,
-                bubbles: true,
-                cancelable: true
-            });
-            editor.dispatchEvent(pasteEvent);
-        }
-    }''', content)
-    await asyncio.sleep(0.5)
+    await page.evaluate('''(html) => {
+        const editor = document.querySelector('.tiptap.ProseMirror');
+        if (!editor) return 'no editor found';
+        editor.focus();
+        editor.innerHTML = html;
+        editor.dispatchEvent(new Event('input', {bubbles: true}));
+        return 'done: ' + editor.textContent.length + ' chars';
+    }''', html_content)
 
 
 async def upload_cover_image(page, image_path: str):
@@ -221,9 +220,9 @@ async def publish_note(title: str, content: str, tags: list[str],
                 await title_div.fill(title)
             await asyncio.sleep(1)
             
-            # Step 5: 填写正文 (使用 Clipboard API 解决 Quill 编辑器问题)
-            print("📌 填写正文 (Clipboard API)...")
-            await fill_content_clipboard(page, content)
+            # Step 5: 填写正文 (使用 Tiptap/ProseMirror API)
+            print("📌 填写正文 (Tiptap/ProseMirror)...")
+            await fill_content_tiptap(page, content)
             
             # Step 6: 添加标签
             print(f"📌 添加标签: {tags_str}")
