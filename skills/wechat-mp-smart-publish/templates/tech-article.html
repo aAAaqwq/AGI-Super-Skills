@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>微信公众号技术文排版模板</title>
+<!--
+  适用场景：技术评测、工具推荐、深度分析
+  特点：专业、简洁、重点突出
+  字色方案：
+    - 正文 #333333
+    - 标题 #1a1a1a
+    - 强调 #1a73e8
+    - 引用边框 #1a73e8
+    - 代码背景 #f5f5f5
+    - 次要文字 #888888
+    - 分割线 #e8e8e8
+-->
+</head>
+<body style="margin:0;padding:0;background:#fff;">
+<div style="max-width:677px;margin:0 auto;padding:20px 15px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;font-size:15px;color:#333333;line-height:1.75;">
+
+  <!-- 大标题区域 -->
+  <div style="margin-bottom:25px;">
+    <h1 style="font-size:22px;font-weight:700;color:#1a1a1a;margin:0 0 8px 0;line-height:1.4;">
+      {{TITLE}}
+    </h1>
+    <div style="font-size:13px;color:#888888;margin-bottom:0;">
+      {{AUTHOR}} · {{DATE}}
+    </div>
+  </div>
+
+  <!-- 分割线 -->
+  <div style="border-top:1px solid #e8e8e8;margin:20px 0;"></div>
+
+  <!-- 导语/摘要 -->
+  <div style="font-size:15px;color:#555555;padding:15px 20px;background:#f7f7f7;border-left:4px solid #1a73e8;margin:20px 0;line-height:1.8;border-radius:0 8px 8px 0;">
+    {{INTRO}}
+  </div>
+
+  <!-- 正文内容区域 -->
+  <div style="margin:20px 0;">
+    <!-- 小标题 -->
+    <h2 style="font-size:18px;font-weight:700;color:#1a1a1a;margin:30px 0 15px 0;padding-left:12px;border-left:4px solid #1a73e8;">
+      {{SECTION_TITLE}}
+    </h2>
+
+    <!-- 正文段落 -->
+    <p style="margin:15px 0;text-indent:0;">
+      {{PARAGRAPH}}
+    </p>
+
+    <!-- 列表 -->
+    <div style="margin:15px 0;padding-left:20px;">
+      <div style="margin:10px 0;">
+        <span style="color:#1a73e8;font-weight:700;margin-right:8px;">●</span>
+        {{LIST_ITEM}}
+      </div>
+    </div>
+
+    <!-- 强调框 -->
+    <div style="padding:15px 20px;background:#f0f7ff;border-radius:8px;margin:20px 0;font-size:14px;color:#1a5276;">
+      <span style="font-weight:700;">💡 关键洞察：</span>{{INSIGHT}}
+    </div>
+
+    <!-- 引用块 -->
+    <div style="padding:15px 20px;background:#f9f9f9;border-left:3px solid #1a73e8;margin:20px 0;font-size:14px;color:#555555;">
+      {{QUOTE_TEXT}}
+    </div>
+
+    <!-- 代码块 -->
+    <div style="background:#f5f5f5;padding:15px 20px;border-radius:8px;margin:20px 0;font-family:Monaco,Consolas,'Courier New',monospace;font-size:13px;line-height:1.6;overflow-x:auto;color:#333;">
+      <pre style="margin:0;white-space:pre-wrap;word-wrap:break-word;">{{CODE}}</pre>
+    </div>
+
+    <!-- 图片 -->
+    <div style="margin:20px 0;text-align:center;">
+      <img src="{{IMAGE_URL}}" style="max-width:100%;border-radius:4px;" alt="{{IMAGE_ALT}}">
+      <div style="font-size:12px;color:#999999;margin-top:8px;">{{IMAGE_CAPTION}}</div>
+    </div>
+
+    <!-- 数据高亮 -->
+    <div style="text-align:center;margin:25px 0;padding:20px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:12px;color:#fff;">
+      <div style="font-size:36px;font-weight:700;">{{BIG_NUMBER}}</div>
+      <div style="font-size:14px;opacity:0.9;margin-top:5px;">{{NUMBER_LABEL}}</div>
+    </div>
+  </div>
+
+  <!-- 分割线 -->
+  <div style="border-top:1px solid #e8e8e8;margin:30px 0;"></div>
+
+  <!-- 文末互动 -->
+  <div style="text-align:center;margin:20px 0;font-size:14px;color:#888888;">
+    <p style="margin:5px 0;">👆 觉得有用？点击<strong style="color:#1a73e8;">在看</strong>让更多人看到</p>
+    <p style="margin:5px 0;">💬 有想法？评论区聊聊</p>
+    <p style="margin:5px 0;">📌 怕忘了？<strong style="color:#1a73e8;">收藏</strong>起来慢慢看</p>
+  </div>
+
+  <!-- 公众号名片 -->
+  <div style="margin-top:30px;padding-top:20px;border-top:1px solid #e8e8e8;text-align:center;">
+    <p style="font-size:14px;color:#888888;margin:0;">关注「{{ACCOUNT_NAME}}」</p>
+    <p style="font-size:12px;color:#aaaaaa;margin:5px 0 0 0;">每周更新 AI/效率/开发干货</p>
+  </div>
+
+</div>
+</body>
+</html>
+
+<!--
+  使用说明：
+  1. 替换所有 {{VARIABLE}} 为实际内容
+  2. 可根据需要增删章节
+  3. 内联样式确保微信渲染一致
+  4. 图片宽度不超过 677px
+  5. 代码块内容用 <pre> 标签包裹
+-->

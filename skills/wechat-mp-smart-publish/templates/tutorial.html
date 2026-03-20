@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>微信公众号教程文排版模板</title>
+<!--
+  适用场景：操作教程、步骤指南、入门指南
+  特点：步骤清晰、结构化强、易跟读
+  字色方案：
+    - 正文 #333333
+    - 标题 #1a1a1a
+    - 强调 #8e44ad (紫色系，教程感)
+    - 步骤序号 #8e44ad
+    - 成功/完成 #27ae60
+    - 警告 #e74c3c
+    - 提示 #3498db
+-->
+</head>
+<body style="margin:0;padding:0;background:#fff;">
+<div style="max-width:677px;margin:0 auto;padding:20px 15px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;font-size:15px;color:#333333;line-height:1.75;">
+
+  <!-- 教程头部 -->
+  <div style="margin-bottom:25px;">
+    <!-- 难度标签 -->
+    <div style="margin-bottom:12px;">
+      <span style="display:inline-block;background:#8e44ad;color:#fff;font-size:12px;padding:3px 12px;border-radius:20px;">
+        {{DIFFICULTY}}
+      </span>
+      <span style="display:inline-block;background:#f0f0f0;color:#666;font-size:12px;padding:3px 12px;border-radius:20px;margin-left:6px;">
+        ⏱ {{ESTIMATED_TIME}}
+      </span>
+    </div>
+
+    <h1 style="font-size:22px;font-weight:700;color:#1a1a1a;margin:0 0 8px 0;line-height:1.4;">
+      {{TITLE}}
+    </h1>
+    <p style="font-size:14px;color:#666;margin:0;">
+      {{DESCRIPTION}}
+    </p>
+  </div>
+
+  <!-- 分割线 -->
+  <div style="border-top:1px solid #e8e8e8;margin:20px 0;"></div>
+
+  <!-- 前置条件 -->
+  <div style="background:#f5f0ff;padding:15px 20px;border-left:4px solid #8e44ad;border-radius:0 8px 8px 0;margin:20px 0;">
+    <div style="font-weight:700;color:#8e44ad;margin-bottom:8px;">📋 前置条件</div>
+    <ul style="margin:0;padding-left:20px;font-size:14px;color:#555;">
+      <li style="margin:5px 0;">{{PREREQUISITE_1}}</li>
+      <li style="margin:5px 0;">{{PREREQUISITE_2}}</li>
+    </ul>
+  </div>
+
+  <!-- 步骤（可重复） -->
+  <div style="margin:25px 0;">
+    <h2 style="font-size:18px;font-weight:700;color:#1a1a1a;margin:0 0 20px 0;">
+      {{SECTION_TITLE}}
+    </h2>
+
+    <!-- 单个步骤 -->
+    <div style="margin:20px 0;">
+      <!-- 步骤标题 -->
+      <div style="display:flex;align-items:center;margin-bottom:12px;">
+        <div style="background:#8e44ad;color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;margin-right:12px;flex-shrink:0;">
+          {{STEP_NUM}}
+        </div>
+        <div style="font-size:16px;font-weight:700;color:#1a1a1a;">{{STEP_TITLE}}</div>
+      </div>
+
+      <!-- 步骤内容 -->
+      <div style="padding-left:42px;">
+        <p style="margin:10px 0;">{{STEP_CONTENT}}</p>
+
+        <!-- 代码块 -->
+        <div style="background:#f5f5f5;padding:15px 20px;border-radius:8px;margin:10px 0;font-family:Monaco,Consolas,'Courier New',monospace;font-size:13px;line-height:1.6;overflow-x:auto;">
+          <pre style="margin:0;white-space:pre-wrap;">{{STEP_CODE}}</pre>
+        </div>
+
+        <!-- 截图 -->
+        <div style="margin:10px 0;text-align:center;">
+          <img src="{{STEP_IMAGE}}" style="max-width:100%;border-radius:8px;border:1px solid #eee;" alt="{{STEP_IMAGE_ALT}}">
+          <div style="font-size:12px;color:#999;margin-top:6px;">👆 {{STEP_IMAGE_CAPTION}}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 重复更多步骤... -->
+  </div>
+
+  <!-- 提示框 -->
+  <div style="background:#e8f4fd;padding:15px 20px;border-left:4px solid #3498db;border-radius:0 8px 8px 0;margin:20px 0;font-size:14px;">
+    <span style="font-weight:700;color:#3498db;">💡 提示：</span>
+    <span style="color:#555;">{{TIP}}</span>
+  </div>
+
+  <!-- 警告框 -->
+  <div style="background:#fef5f5;padding:15px 20px;border-left:4px solid #e74c3c;border-radius:0 8px 8px 0;margin:20px 0;font-size:14px;">
+    <span style="font-weight:700;color:#e74c3c;">⚠️ 注意：</span>
+    <span style="color:#555;">{{WARNING}}</span>
+  </div>
+
+  <!-- 完成标志 -->
+  <div style="background:linear-gradient(135deg,#27ae60,#2ecc71);color:#fff;padding:25px;border-radius:12px;margin:25px 0;text-align:center;">
+    <div style="font-size:36px;margin-bottom:8px;">🎉</div>
+    <div style="font-size:18px;font-weight:700;">恭喜完成！</div>
+    <p style="font-size:14px;opacity:0.9;margin:8px 0 0 0;">{{COMPLETION_MESSAGE}}</p>
+  </div>
+
+  <!-- 相关推荐 -->
+  <div style="margin:25px 0;">
+    <h3 style="font-size:16px;font-weight:700;color:#1a1a1a;margin:0 0 15px 0;">📖 相关教程</h3>
+    <div style="background:#f7f7f7;padding:15px 20px;border-radius:8px;margin:8px 0;font-size:14px;">
+      <span style="color:#8e44ad;font-weight:700;">→</span> {{RELATED_TUTORIAL}}
+    </div>
+  </div>
+
+  <!-- 文末互动 -->
+  <div style="text-align:center;margin:25px 0;font-size:14px;color:#888;">
+    <p style="margin:8px 0;">🙋 还有什么问题？评论区问我</p>
+    <p style="margin:8px 0;">🔄 觉得有用？转发给需要的朋友</p>
+  </div>
+
+</div>
+</body>
+</html>
+
+<!--
+  使用说明：
+  1. 步骤块可复制粘贴多个
+  2. 难度标签：入门/进阶/高级
+  3. 紫色主题突出教程/学习氛围
+  4. 提示框(蓝)、警告框(红) 用于重要信息
+  5. 截图建议标注箭头指引操作位置
+-->

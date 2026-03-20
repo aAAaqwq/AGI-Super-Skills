@@ -12,7 +12,7 @@ A **plug-and-play AI team template** — deploy a complete virtual company in mi
 
 | Metric | Value |
 |--------|-------|
-| **Skills** | 920+ |
+| **Skills** | 930+ |
 | **Categories** | 18 |
 | **Agents** | 13 (fully customizable) |
 | **Framework** | [OpenClaw](https://github.com/openclaw/openclaw) |
@@ -113,6 +113,7 @@ You (CEO / Creator)
 | [`inference-optimizer`](./skills/inference-optimizer/) | Audit token usage, purge stale sessions, optimize speed |
 | [`model-hierarchy-skill`](./skills/model-hierarchy-skill/) | Intelligent model selection hierarchy |
 | [`openclaw-memory-enhancer`](./skills/openclaw-memory-enhancer/) | Edge-optimized RAG memory system (<10MB) |
+| [`mcstatus`](./skills/mcstatus/) | 模型配置状态检查 — 列出所有 agent 的模型配备 |
 
 ### 🤖 AI Agent Patterns
 
@@ -255,6 +256,14 @@ You (CEO / Creator)
 | [`the-antislop`](./skills/the-antislop/) | Anti-AI-slop writing with authentic voice |
 | [`write-xiaohongshu`](./skills/write-xiaohongshu/) | Xiaohongshu content writing coach |
 | [`x-articles`](./skills/x-articles/) | Publish viral X (Twitter) long-form articles |
+| [`douyin-creator`](./skills/douyin-creator/) | 抖音创作发布：视频和图文发布到抖音创作者平台 |
+| [`douyin-smart-publish`](./skills/douyin-smart-publish/) | 抖音智能发布：视频/图文/文章三种模式 Playwright 自动化 |
+| [`douyin-smart-publisher`](./skills/douyin-smart-publisher/) | 抖音智能发布：内容适配→排版→Browser 自动发布 |
+| [`juejin-smart-publish`](./skills/juejin-smart-publish/) | 掘金技术社区智能发布：Markdown + Playwright/API 双通道 |
+| [`wechat-mp-publisher`](./skills/wechat-mp-publisher/) | 微信公众号发布：Markdown→微信 HTML 转换 + API/浏览器发布 |
+| [`wechat-mp-smart-publish`](./skills/wechat-mp-smart-publish/) | 微信公众号智能发布：标题优化、排版、封面图、发布 |
+| [`zsxq-publisher`](./skills/zsxq-publisher/) | 知识星球内容发布和管理 |
+| [`zsxq-smart-publish`](./skills/zsxq-smart-publish/) | 知识星球智能发布：话题/问答/长文章/作业 |
 
 ### 📊 Data & Analytics
 
@@ -489,6 +498,7 @@ You (CEO / Creator)
 | [`senior-devops`](./skills/senior-devops/) | Comprehensive DevOps for CI/CD and cloud |
 | [`observability-designer`](./skills/observability-designer/) | Design observability systems for production |
 | [`runbook-generator`](./skills/runbook-generator/) | Generate operational runbooks for incident response |
+| [`nginx`](./skills/nginx/) | Nginx 配置：反向代理、负载均衡、SSL、高性能静态服务 |
 
 ### 🔒 Security
 

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>微信公众号推荐文排版模板</title>
+<!--
+  适用场景：产品推荐、工具合集、资源分享
+  特点：视觉吸引力强、信息密度高、可扫读
+  字色方案：
+    - 正文 #333333
+    - 标题 #1a1a1a
+    - 强调 #e74c3c (红色系，吸引眼球)
+    - 卡片背景 #ffffff
+    - 页面背景 #f5f5f5
+    - 次要文字 #666666
+-->
+</head>
+<body style="margin:0;padding:0;background:#f5f5f5;">
+<div style="max-width:677px;margin:0 auto;padding:20px 15px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;font-size:15px;color:#333333;line-height:1.75;">
+
+  <!-- 头部横幅 -->
+  <div style="background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;padding:30px 25px;border-radius:12px;margin-bottom:25px;">
+    <h1 style="font-size:24px;font-weight:800;margin:0 0 8px 0;">{{TITLE}}</h1>
+    <p style="font-size:14px;opacity:0.9;margin:0;">{{SUBTITLE}}</p>
+  </div>
+
+  <!-- 推荐总览 -->
+  <div style="display:flex;justify-content:space-around;background:#fff;border-radius:12px;padding:20px;margin:20px 0;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+    <div style="text-align:center;">
+      <div style="font-size:28px;font-weight:800;color:#e74c3c;">{{COUNT}}</div>
+      <div style="font-size:12px;color:#666;margin-top:2px;">款推荐</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:28px;font-weight:800;color:#e74c3c;">{{RATING}}</div>
+      <div style="font-size:12px;color:#666;margin-top:2px;">平均评分</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:28px;font-weight:800;color:#27ae60;">{{FREE_COUNT}}</div>
+      <div style="font-size:12px;color:#666;margin-top:2px;">免费使用</div>
+    </div>
+  </div>
+
+  <!-- 推荐卡片（可重复） -->
+  <div style="background:#fff;border-radius:12px;padding:20px;margin:15px 0;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+    <!-- 序号+名称 -->
+    <div style="display:flex;align-items:center;margin-bottom:12px;">
+      <div style="background:#e74c3c;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;margin-right:12px;">
+        {{INDEX}}
+      </div>
+      <div>
+        <div style="font-size:17px;font-weight:700;color:#1a1a1a;">{{TOOL_NAME}}</div>
+        <div style="font-size:12px;color:#888;">{{TOOL_TAG}}</div>
+      </div>
+    </div>
+
+    <!-- 描述 -->
+    <p style="margin:10px 0;font-size:14px;color:#555;">
+      {{TOOL_DESCRIPTION}}
+    </p>
+
+    <!-- 亮点标签 -->
+    <div style="margin:10px 0;">
+      <span style="display:inline-block;background:#fff3f3;color:#e74c3c;font-size:12px;padding:3px 10px;border-radius:20px;margin-right:6px;margin-bottom:4px;">{{TAG_1}}</span>
+      <span style="display:inline-block;background:#f0fff0;color:#27ae60;font-size:12px;padding:3px 10px;border-radius:20px;margin-right:6px;margin-bottom:4px;">{{TAG_2}}</span>
+      <span style="display:inline-block;background:#f0f0ff;color:#3b5998;font-size:12px;padding:3px 10px;border-radius:20px;margin-right:6px;margin-bottom:4px;">{{TAG_3}}</span>
+    </div>
+
+    <!-- 评分 -->
+    <div style="display:flex;align-items:center;margin-top:10px;">
+      <span style="color:#e74c3c;font-size:16px;">{{STARS}}</span>
+      <span style="font-size:12px;color:#888;margin-left:8px;">{{RATING_TEXT}}</span>
+    </div>
+  </div>
+
+  <!-- 重复更多推荐卡片... -->
+
+  <!-- 总结推荐 -->
+  <div style="background:linear-gradient(135deg,#27ae60,#2ecc71);color:#fff;padding:25px;border-radius:12px;margin:25px 0;">
+    <div style="font-size:18px;font-weight:700;margin-bottom:10px;">🏆 编辑推荐</div>
+    <p style="font-size:15px;opacity:0.95;margin:0;line-height:1.7;">
+      {{EDITOR_PICK}}
+    </p>
+  </div>
+
+  <!-- 文末互动 -->
+  <div style="text-align:center;margin:25px 0;font-size:14px;color:#888;">
+    <p style="margin:8px 0;">👉 你最想试哪个？评论区告诉我</p>
+    <p style="margin:8px 0;">🔄 转发给需要的朋友</p>
+    <p style="margin:8px 0;">❤️ 点个<strong style="color:#e74c3c;">赞</strong>表示朕已阅</p>
+  </div>
+
+  <!-- 公众号名片 -->
+  <div style="margin-top:30px;padding-top:20px;border-top:1px solid #e0e0e0;text-align:center;">
+    <p style="font-size:14px;color:#888;margin:0;">关注「{{ACCOUNT_NAME}}」</p>
+    <p style="font-size:12px;color:#aaa;margin:5px 0 0 0;">发现更多好工具</p>
+  </div>
+
+</div>
+</body>
+</html>
+
+<!--
+  使用说明：
+  1. 推荐卡片可复制粘贴多个
+  2. 替换 {{INDEX}} 为序号（1,2,3...）
+  3. 颜色方案适合推荐/种草类内容
+  4. 标签颜色可自定义：红色=热门，绿色=免费，蓝色=专业
+-->

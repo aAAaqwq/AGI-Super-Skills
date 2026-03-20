@@ -21,14 +21,31 @@
 - Stay silent (`HEARTBEAT_OK`) for casual banter
 - Don't dominate; quality > quantity
 
+### 群聊响应规则（全体 Agent 铁律 — 03-20）
+- ✅ 有人 @ 你或明确求助你的能力范围 → 必须回应
+- ✅ 完成任务后用 `message` 发群里汇报（不发 = 没完成）
+- ✅ 需要其他 agent 帮助时在群里 @ 对方，说明具体需求
+- ❌ 不@你、不属于你职责范围的消息 → `NO_REPLY`
+- ❌ 主动接不属于自己职责的任务 → 严禁
+- ❌ 没有明确需求/指令就插话 → 严禁
+
 ## Heartbeats
 - Use productively: check emails, calendar, weather (rotate 2-4x/day)
 - Track in `memory/heartbeat-state.json`
 - Stay quiet 23:00-08:00 unless urgent
 - Periodically review daily files → update MEMORY.md
 
-## 知识库 / Memory Router（强制）
+## 知识库 / Memory Router（强制 — 03-20 Daniel 强调）
 
+**所有 agent（含 main）每次 compact 前，必须执行 QMD 查询并记录。**
+
+### Compact 前必做
+收到 `Pre-compaction memory flush` 时，在写入 `memory/YYYY-MM-DD.md` 之前：
+1. 用 `qmd query "<本轮对话核心主题>"` 检索知识库，记录相关结果
+2. 如果本轮有新知识/决策/变更，同步更新 QMD 索引（`qmd add <file>` 或让索引自动刷新）
+3. 在 daily memory 末尾附加 `## QMD Compact Record` 段落，记录查询关键词 + 命中数量
+
+### 日常查询规则（强制）
 - 回答配置/流程/历史/怎么做/项目状态类问题前，**必须先检索 QMD**：
   - `qmd query "<问题>"` — 默认混合搜索（BM25 + 向量 + rerank）
   - 精确定位用 `qmd search "<关键词>"` 或 `qmd query -c <collection> "<问题>"`
@@ -39,6 +56,9 @@
 - 涉及待办/决策/人/日期 → 还要查 `~/clawd/memory/YYYY-MM-DD.md` 与 `~/clawd/MEMORY.md`
 - 输出至少引用 1-3 个来源（文件路径或 qmd:// URI）
 - Skill 详情: `~/clawd/skills/memory-router/SKILL.md`
+
+### 追踪
+- QMD 查询记录: `~/clawd/tmp/qmd-query-log.jsonl`（每次查询追加一行）
 
 ## Heartbeat vs Cron
 - **Heartbeat**: batch checks, needs conversation context, timing can drift
