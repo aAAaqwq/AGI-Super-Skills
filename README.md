@@ -62,26 +62,26 @@ You (CEO / Creator)
 
 | Category | Count | Highlights |
 |----------|:-----:|-----------|
-| [⚙️ OpenClaw Tools](#-openclaw-tools) | 25 | Config helpers, auth manager, cron, token guard, model switcher |
-| [🤖 AI Agent Patterns](#-ai-agent-patterns) | 25 | Multi-agent orchestration, parallel execution, first principles thinking |
-| [🔧 Development](#-development) | 35 | Backend/frontend, Docker, Git, TDD, API design, auth systems |
-| [💰 Trading & Finance](#-trading--finance) | 32 | Crypto trading, Polymarket, DeFi, portfolio management, CT monitor |
-| [📝 Content & Writing](#-content--writing) | 30 | SEO writing, social media, viral content, anti-AI-slop, Xiaohongshu |
-| [📊 Data & Analytics](#-data--analytics) | 21 | Web scraping, DuckDB, CSV pipelines, arXiv, multi-engine search |
-| [📈 Marketing & SEO](#-marketing--seo) | 19 | SEO audits, GEO optimization, A/B testing, churn prevention |
-| [🎨 Design & Media](#-design--media) | 15 | Image generation (Gemini 3 Pro), UI/UX, slides, brand identity |
-| [🌐 Browser Automation](#-browser-automation) | 7 | Playwright, Chrome, AI-driven browsing, agent browser |
-| [🏢 Business & Strategy](#-business--strategy) | 15 | SaaS launch, competitor teardown, financial modeling, personal finance |
-| [📋 Project Management](#-project-management) | 18 | PRD writing, roadmaps, Scrum, team coordination, daily reports |
-| [🧠 Knowledge & Research](#-knowledge--research) | 6 | Vector memory, brave search, academic research, semantic search |
-| [💬 Communication](#-communication) | 14 | Email, Feishu/Lark, WeChat, cross-instance messaging |
-| [🔌 SaaS Integrations](#-saas-integrations) | 63 | Notion, Airtable, HubSpot, Stripe, Shopify, 55+ more |
-| [⚙️ DevOps & Infra](#-devops--infra) | 9 | AWS, Docker, Linux troubleshooting, observability, runbooks |
-| [🔒 Security](#-security) | 7 | Code review, GDPR, PCI compliance, security audit |
-| [⚖️ Legal & Compliance](#-legal--compliance) | 6 | Contracts, customs/trade, employment law, legal advisory |
-| [📱 Chinese Platform Publishing](#-chinese-platform-publishing) | 12 | Xiaohongshu, Douyin, WeChat MP, WeChat Channels, Juejin, Zhishixingqiu |
-| [🎬 Video & Digital Human](#-video--digital-human) | 5 | Jimeng AI digital human, video merge, storyboard |
-| [🧩 Other](#-other) | 15 | RSS, calendars, presentations, skill creation, design thinking |
+| [⚙️ OpenClaw Tools](./skills/categories/openclaw-tools.md) | 25 | Config helpers, auth manager, cron, token guard, model switcher |
+| [🤖 AI Agent Patterns](./skills/categories/ai-agent-patterns.md) | 25 | Multi-agent orchestration, parallel execution, first principles thinking |
+| [🔧 Development](./skills/categories/development.md) | 35 | Backend/frontend, Docker, Git, TDD, API design, auth systems |
+| [💰 Trading & Finance](./skills/categories/trading-finance.md) | 32 | Crypto trading, Polymarket, DeFi, portfolio management, CT monitor |
+| [📝 Content & Writing](./skills/categories/content-writing.md) | 30 | SEO writing, social media, viral content, anti-AI-slop, Xiaohongshu |
+| [📊 Data & Analytics](./skills/categories/data-analytics.md) | 21 | Web scraping, DuckDB, CSV pipelines, arXiv, multi-engine search |
+| [📈 Marketing & SEO](./skills/categories/marketing-seo.md) | 19 | SEO audits, GEO optimization, A/B testing, churn prevention |
+| [🎨 Design & Media](./skills/categories/design-media.md) | 15 | Image generation (Gemini 3 Pro), UI/UX, slides, brand identity |
+| [🌐 Browser Automation](./skills/categories/browser-automation.md) | 7 | Playwright, Chrome, AI-driven browsing, agent browser |
+| [🏢 Business & Strategy](./skills/categories/business-strategy.md) | 15 | SaaS launch, competitor teardown, financial modeling, personal finance |
+| [📋 Project Management](./skills/categories/project-management.md) | 18 | PRD writing, roadmaps, Scrum, team coordination, daily reports |
+| [🧠 Knowledge & Research](./skills/categories/knowledge-research.md) | 6 | Vector memory, brave search, academic research, semantic search |
+| [💬 Communication](./skills/categories/communication.md) | 14 | Email, Feishu/Lark, WeChat, cross-instance messaging |
+| [🔌 SaaS Integrations](./skills/categories/saas-integrations.md) | 63 | Notion, Airtable, HubSpot, Stripe, Shopify, 55+ more |
+| [⚙️ DevOps & Infra](./skills/categories/devops-infra.md) | 9 | AWS, Docker, Linux troubleshooting, observability, runbooks |
+| [🔒 Security](./skills/categories/security.md) | 7 | Code review, GDPR, PCI compliance, security audit |
+| [⚖️ Legal & Compliance](./skills/categories/legal-compliance.md) | 6 | Contracts, customs/trade, employment law, legal advisory |
+| [📱 Chinese Platform Publishing](./skills/categories/chinese-platform-publishing.md) | 12 | Xiaohongshu, Douyin, WeChat MP, WeChat Channels, Juejin, Zhishixingqiu |
+| [🎬 Video & Digital Human](./skills/categories/video-digital-human.md) | 5 | Jimeng AI digital human, video merge, storyboard |
+| [🧩 Other](./skills/categories/other.md) | 15 | RSS, calendars, presentations, skill creation, design thinking |
 
 <details>
 <summary>📋 Full Skill List (click to expand)</summary>

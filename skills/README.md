@@ -2,6 +2,34 @@
 
 > **416 skills** with SKILL.md | [← Back to main README](../README.md)
 
+
+## 📂 Browse by Category
+
+> See [categories/](./categories/) for detailed per-category listings.
+
+| Category | File |
+|----------|------|
+| ⚙️ OpenClaw Tools | [openclaw-tools.md](./categories/openclaw-tools.md) |
+| 🤖 AI Agent Patterns | [ai-agent-patterns.md](./categories/ai-agent-patterns.md) |
+| 🔧 Development | [development.md](./categories/development.md) |
+| 💰 Trading & Finance | [trading-finance.md](./categories/trading-finance.md) |
+| 📝 Content & Writing | [content-writing.md](./categories/content-writing.md) |
+| 📊 Data & Analytics | [data-analytics.md](./categories/data-analytics.md) |
+| 📈 Marketing & SEO | [marketing-seo.md](./categories/marketing-seo.md) |
+| 🎨 Design & Media | [design-media.md](./categories/design-media.md) |
+| 🌐 Browser Automation | [browser-automation.md](./categories/browser-automation.md) |
+| 🏢 Business & Strategy | [business-strategy.md](./categories/business-strategy.md) |
+| 📋 Project Management | [project-management.md](./categories/project-management.md) |
+| 🧠 Knowledge & Research | [knowledge-research.md](./categories/knowledge-research.md) |
+| 💬 Communication | [communication.md](./categories/communication.md) |
+| 🔌 SaaS Integrations | [saas-integrations.md](./categories/saas-integrations.md) |
+| ⚙️ DevOps & Infra | [devops-infra.md](./categories/devops-infra.md) |
+| 🔒 Security | [security.md](./categories/security.md) |
+| ⚖️ Legal & Compliance | [legal-compliance.md](./categories/legal-compliance.md) |
+| 📱 Chinese Platform Publishing | [chinese-platform-publishing.md](./categories/chinese-platform-publishing.md) |
+| 🎬 Video & Digital Human | [video-digital-human.md](./categories/video-digital-human.md) |
+| 🧩 Other | [other.md](./categories/other.md) |
+
 ## Alphabetical Index
 
 | # | Skill | Description |
