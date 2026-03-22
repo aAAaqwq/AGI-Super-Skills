@@ -12,7 +12,7 @@ A **plug-and-play AI team template** — deploy a complete virtual company in mi
 
 | Metric | Value |
 |--------|-------|
-| **Skills** | 930+ |
+| **Skills** | 940+ |
 | **Categories** | 18 |
 | **Agents** | 13 (fully customizable) |
 | **Framework** | [OpenClaw](https://github.com/openclaw/openclaw) |
@@ -79,6 +79,8 @@ You (CEO / Creator)
 | [⚙️ DevOps & Infra](#-devops--infra) | 9 | AWS, Docker, Linux troubleshooting, observability, runbooks |
 | [🔒 Security](#-security) | 7 | Code review, GDPR, PCI compliance, security audit |
 | [⚖️ Legal & Compliance](#-legal--compliance) | 6 | Contracts, customs/trade, employment law, legal advisory |
+| [📱 Chinese Platform Publishing](#-chinese-platform-publishing) | 12 | Xiaohongshu, Douyin, WeChat MP, WeChat Channels, Juejin, Zhishixingqiu |
+| [🎬 Video & Digital Human](#-video--digital-human) | 5 | Jimeng AI digital human, video merge, storyboard |
 | [🧩 Other](#-other) | 15 | RSS, calendars, presentations, skill creation, design thinking |
 
 <details>
@@ -522,6 +524,34 @@ You (CEO / Creator)
 | [`legal-advisor`](./skills/legal-advisor/) | Draft privacy policies, terms, and legal notices |
 | [`legal-cog`](./skills/legal-cog/) | Legal reasoning with frontier-level precision |
 | [`employment-contract-templates`](./skills/employment-contract-templates/) | Employment contracts and HR policy documents |
+
+### 📱 Chinese Platform Publishing
+
+| Skill | Description |
+|-------|-------------|
+| [`xhs-smart-publisher`](./skills/xhs-smart-publisher/) | 小红书智能发布：内容适配→排版→Playwright自动发布/存草稿 |
+| [`xiaohongshu-smart-publish`](./skills/xiaohongshu-smart-publish/) | 小红书智能发布（另一版本）：标题公式+CES算法优化 |
+| [`write-xiaohongshu`](./skills/write-xiaohongshu/) | Xiaohongshu content writing coach |
+| [`xiaohongshu-workflow`](./skills/xiaohongshu-workflow/) | Xiaohongshu (RED) full operations workflow |
+| [`douyin-creator`](./skills/douyin-creator/) | 抖音创作发布：视频和图文发布到抖音创作者平台 |
+| [`douyin-smart-publish`](./skills/douyin-smart-publish/) | 抖音智能发布：视频/图文/文章三种模式 Playwright 自动化 |
+| [`douyin-smart-publisher`](./skills/douyin-smart-publisher/) | 抖音智能发布：内容适配→排版→Browser 自动发布 |
+| [`wechat-mp-publisher`](./skills/wechat-mp-publisher/) | 微信公众号发布：Markdown→微信 HTML 转换 + API/浏览器发布 |
+| [`wechat-mp-smart-publish`](./skills/wechat-mp-smart-publish/) | 微信公众号智能发布：标题优化、排版、封面图、发布 |
+| [`weixin-channels-publish`](./skills/weixin-channels-publish/) | 微信视频号助手网页版视频发布全流程 |
+| [`juejin-smart-publish`](./skills/juejin-smart-publish/) | 掘金技术社区智能发布：Markdown + Playwright/API 双通道 |
+| [`zsxq-publisher`](./skills/zsxq-publisher/) | 知识星球内容发布和管理 |
+| [`zsxq-smart-publish`](./skills/zsxq-smart-publish/) | 知识星球智能发布：话题/问答/长文章/作业 |
+
+### 🎬 Video & Digital Human
+
+| Skill | Description |
+|-------|-------------|
+| [`jimeng-login`](./skills/jimeng-login/) | 即梦AI平台登录：协议同意、抖音OAuth扫码、登录态持久化 |
+| [`jimeng-storyboard`](./skills/jimeng-storyboard/) | 口播视频剧本→即梦AI数字人分镜头脚本 |
+| [`jimeng-digital-human`](./skills/jimeng-digital-human/) | 即梦AI数字人视频生成全流程自动化 |
+| [`video-merge-send`](./skills/video-merge-send/) | 合并多个分段视频为完整视频（ffmpeg拼接+转场）并发送到飞书 |
+| [`nano-banana-pro`](./skills/nano-banana-pro/) | Generate/edit images with Gemini 3 Pro Image (1K/2K/4K) |
 
 ### 🧩 Other
 
