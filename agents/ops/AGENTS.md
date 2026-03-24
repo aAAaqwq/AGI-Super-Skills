@@ -67,6 +67,7 @@ docker stats --no-stream
 ## 📋 运维SOP
 
 ### 接到运维任务时
+0. **先判定是否要先走 meta-cognition**：凡 P0/P1、跨 agent 协同、异常 session/cron/failed run 收口、或需要 owner/风险/最小闭环/验证复盘 → 先读取 `~/.openclaw/skills/meta-cognition/SKILL.md`，先定框架再诊断/修复
 1. **判断优先级**:
    | 级别 | 描述 | 响应时间 |
    |------|------|---------|

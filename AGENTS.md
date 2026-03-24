@@ -21,6 +21,19 @@
 - Stay silent (`HEARTBEAT_OK`) for casual banter
 - Don't dominate; quality > quantity
 
+## Meta-Cognition 默认映射（强制）
+
+以下场景默认优先读取 `~/.openclaw/skills/meta-cognition/SKILL.md`，再决定执行：
+- **P0 / P1 任务**
+- **多 agent 协同 / CEO 派发 / 跨职责任务**
+- **异常 session / cron / 失败任务闭环**
+- **需要责任归属、风险分级、最小闭环、验证复盘的任务**
+
+执行要求：
+- 先过 6 段框架：问题本质 → 责任归属 → 风险等级 → 最小闭环 → 执行动作 → 验证与复盘
+- 快速回复可压缩表达，但不能跳过这 6 个维度
+- 若已有更专门的领域 skill，先用 meta-cognition 定框架，再交给领域 skill 执行
+
 ### 群聊响应规则（全体 Agent 铁律 — 03-20）
 - ✅ 有人 @ 你或明确求助你的能力范围 → 必须回应
 - ✅ 完成任务后用 `message` 发群里汇报（不发 = 没完成）
