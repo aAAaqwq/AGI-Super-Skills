@@ -1,6 +1,6 @@
 ---
 name: meta-cognition
-description: Meta-cognitive task framing, ownership routing, risk gating, closure planning, and retrospective extraction for multi-agent work. Use when a request needs analysis before execution, when tasks span multiple agents, when abnormal sessions/cron/jobs need real closure instead of status-only reporting, when the user asks for strategy/PRD/first-principles thinking, or when a task involves dispatch, verification, and memory-worthy lessons.
+description: Meta-cognitive framing for analyze-before-doing, ownership routing, risk gating, minimum-closure planning, and retrospective extraction in multi-agent work. Use when the user says 先分析再做 / 先别动手 / 先判断 / 先定方案, when work spans multiple agents or needs dispatch/orchestration, when CEO-style delegation or group command requires owner+deadline+closure, when abnormal sessions/cron/jobs/runs need real follow-through instead of status-only reporting, or when a task needs strategy, PRD, first-principles thinking, verification, and postmortem/retro.
 ---
 
 # Meta-Cognition
@@ -195,14 +195,33 @@ Do not do these:
 ## Trigger phrases
 
 This skill is a strong match for prompts like:
-- “先分析再做”
-- “帮我判断一下值不值得做”
-- “复盘一下为什么出问题”
-- “这个该派给谁”
-- “为什么监控到了却没解决”
-- “给我一个可执行闭环”
-- “做个军团治理方案”
-- “需要多 agent 协同”
+
+### 中文高频触发
+- “先分析再做” / “先别动手” / “先别急着写代码”
+- “先判断一下” / “先定方案” / “先想清楚再做”
+- “帮我拆一下这事” / “这个事情怎么收口” / “给个最小闭环”
+- “这个该派给谁” / “谁负责” / “你来协调一下” / “拉多 agent 一起做”
+- “CEO 指令” / “CEO 派发” / “军团任务” / “帮我调度一下” / “安排下去并盯闭环”
+- “异常怎么处理” / “为什么又炸了” / “为什么监控到了却没解决” / “把这个事故复盘一下” / “给我复盘”
+- “别只报状态” / “我要结果，不要过程” / “给我一个能验收的版本”
+- “先看风险” / “值不值得做” / “要不要现在做” / “先评估 ROI / 风险”
+- “帮我定 owner / deadline / 验收标准” / “这个事情怎么推进” / “下一步谁来做”
+
+### English triggers
+- “analyze first, then do” / “think first” / “frame this before acting”
+- “who should own this?” / “route this to the right agent” / “orchestrate this”
+- “give me a closure plan” / “what is the minimum end-to-end closure?”
+- “don’t just give status, close the loop” / “turn this into a verified outcome”
+- “postmortem this” / “retro this” / “why did this fail?”
+- “dispatch this across agents” / “multi-agent coordination” / “CEO delegation”
+
+### 群聊/命令式说法
+- “你先别做，先判断”
+- “先出分析框架再执行”
+- “去查清楚再汇报”
+- “先给结论、风险、owner、下一步”
+- “盯到闭环，不要只催办”
+- “这事给我复盘并沉淀 SOP / memory / skill”
 
 ## Resource map
 
