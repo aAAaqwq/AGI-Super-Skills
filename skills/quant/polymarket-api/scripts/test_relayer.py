@@ -2,7 +2,7 @@
 """Test Polymarket Relayer API - gasless on-chain operations"""
 
 import sys
-sys.path.insert(0, '/home/aa/.local/lib/python3.12/site-packages')
+sys.path.insert(0, '${PYTHON_SITE_PACKAGES}')
 
 from dotenv import load_dotenv
 import os

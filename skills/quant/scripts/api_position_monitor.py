@@ -9,7 +9,7 @@ import sys, os, json, math
 from datetime import datetime, timezone
 from pathlib import Path
 
-sys.path.insert(0, '/home/aa/.local/lib/python3.12/site-packages')
+sys.path.insert(0, '${PYTHON_SITE_PACKAGES}')
 
 from dotenv import load_dotenv
 load_dotenv('${QUANT_WORKSPACE}/.env.polymarket')
