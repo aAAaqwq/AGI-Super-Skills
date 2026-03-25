@@ -7,13 +7,13 @@
 **优先使用API脚本**（零token消耗、速度快）：
 ```bash
 unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY all_proxy ALL_PROXY
-python3 ~/workspace-quant/scripts/api_position_monitor.py
+python3 ${WORKSPACE}/scripts/api_position_monitor.py
 ```
 
 实时交易模式（实际执行卖出）：
 ```bash
 unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY all_proxy ALL_PROXY
-python3 ~/workspace-quant/scripts/api_position_monitor.py --live
+python3 ${WORKSPACE}/scripts/api_position_monitor.py --live
 ```
 
 **Browser为fallback**（API失败时）：参照下方Step 3。

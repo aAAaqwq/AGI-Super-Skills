@@ -6,13 +6,13 @@
 
 ```bash
 # 获取所有数据
-bash ~/clawd/workspace-quant/scripts/data_sources_v2.sh all
+bash ${WORKSPACE}/scripts/data_sources_v2.sh all
 
 # 获取单项数据
-bash ~/clawd/workspace-quant/scripts/data_sources_v2.sh btc
-bash ~/clawd/workspace-quant/scripts/data_sources_v2.sh oil
-bash ~/clawd/workspace-quant/scripts/data_sources_v2.sh fed
-bash ~/clawd/workspace-quant/scripts/data_sources_v2.sh gold
+bash ${WORKSPACE}/scripts/data_sources_v2.sh btc
+bash ${WORKSPACE}/scripts/data_sources_v2.sh oil
+bash ${WORKSPACE}/scripts/data_sources_v2.sh fed
+bash ${WORKSPACE}/scripts/data_sources_v2.sh gold
 ```
 
 ## 数据源列表
@@ -94,7 +94,7 @@ ELON POSTS: 需要browser访问xtracker获取
 4. **Elon推文需browser** (xtracker API不提供计数)
 
 ## 脚本位置
-`~/clawd/workspace-quant/scripts/data_sources_v2.sh`
+`${WORKSPACE}/scripts/data_sources_v2.sh`
 
 ---
 *创建: 2026-03-06 | 更新: v2*
