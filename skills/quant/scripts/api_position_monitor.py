@@ -2,24 +2,24 @@
 """
 API-based Polymarket position monitor + exit rules executor.
 Replaces browser-based position monitoring.
-All credentials from env/.env.polymarket — never hardcoded.
+All credentials from env/.env.poly — never hardcoded.
 """
 
 import sys, os, json, math
 from datetime import datetime, timezone
 from pathlib import Path
 
-sys.path.insert(0, '${PYTHON_SITE_PACKAGES}')
+sys.path.insert(0, '/home/aa/.local/lib/python3.12/site-packages')
 
 from dotenv import load_dotenv
-load_dotenv('${QUANT_WORKSPACE}/.env.polymarket')
+load_dotenv('/home/aa/.openclaw/workspace-quant/.env.poly')
 
 from py_clob_client.client import ClobClient
 from py_clob_client.clob_types import OrderArgs, BalanceAllowanceParams
 import requests
 
 # ── Config ──────────────────────────────────────────────
-WORKSPACE = Path(os.environ.get('QUANT_WORKSPACE', '${QUANT_WORKSPACE}'))
+WORKSPACE = Path(os.environ.get('QUANT_WORKSPACE', '/home/aa/.openclaw/workspace-quant'))
 PEAKS_FILE = WORKSPACE / 'data' / 'profit-peaks.json'
 SNAPSHOT_FILE = WORKSPACE / 'data' / 'portfolio-snapshot.json'
 RISK_FILE = WORKSPACE / 'data' / 'news-risk-level.txt'

@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 cutoff = datetime.now(timezone.utc) - timedelta(hours=4)
 entries = []
 try:
-    with open('${QUANT_WORKSPACE}/data/hunt-log.jsonl') as f:
+    with open('$HOME/.openclaw/workspace-quant/data/hunt-log.jsonl') as f:
         for line in f:
             line = line.strip()
             if not line: continue
@@ -38,7 +38,7 @@ if not entries:
     print(f'Cutoff: {cutoff.isoformat()}')
     # Show last 3 entries regardless of time
     try:
-        with open('${QUANT_WORKSPACE}/data/hunt-log.jsonl') as f:
+        with open('$HOME/.openclaw/workspace-quant/data/hunt-log.jsonl') as f:
             all_lines = [l.strip() for l in f if l.strip()]
         print(f'Total entries in log: {len(all_lines)}')
         for l in all_lines[-3:]:
@@ -76,10 +76,10 @@ print(f'交易执行: {len(trades_total)}')
 
 ```bash
 echo "=== Elon猎杀最近结果 ==="
-cat ${WORKSPACE}/data/hunt-elon-latest.json 2>/dev/null || echo "无记录"
+cat ~/.openclaw/workspace-quant/data/hunt-elon-latest.json 2>/dev/null || echo "无记录"
 
 echo "=== 仓位快照 ==="
-cat ${WORKSPACE}/data/portfolio-snapshot.json 2>/dev/null || echo "无记录"
+cat ~/.openclaw/workspace-quant/data/portfolio-snapshot.json 2>/dev/null || echo "无记录"
 ```
 
 ## Step 2: 整合报告
@@ -118,7 +118,7 @@ cat ${WORKSPACE}/data/portfolio-snapshot.json 2>/dev/null || echo "无记录"
 
 **使用message工具推送到Daniel私聊**：
 ```
-message(action='send', channel='telegram', target='${TELEGRAM_TARGET_ID}', message='报告内容')
+message(action='send', channel='telegram', target='8518085684', message='报告内容')
 ```
 
 ## Step 4: 更新memory
@@ -128,7 +128,7 @@ message(action='send', channel='telegram', target='${TELEGRAM_TARGET_ID}', messa
 
 如果 hunt-log.jsonl > 1000行，只保留最近500行：
 ```bash
-LOG=${WORKSPACE}/data/hunt-log.jsonl
+LOG=~/workspace-quant/data/hunt-log.jsonl
 LINES=$(wc -l < "$LOG" 2>/dev/null || echo 0)
 if [ "$LINES" -gt 1000 ]; then
   tail -500 "$LOG" > "${LOG}.tmp" && mv "${LOG}.tmp" "$LOG"
