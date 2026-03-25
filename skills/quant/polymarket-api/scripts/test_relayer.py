@@ -2,13 +2,13 @@
 """Test Polymarket Relayer API - gasless on-chain operations"""
 
 import sys
-sys.path.insert(0, '${PYTHON_SITE_PACKAGES}')
+sys.path.insert(0, '/home/aa/.local/lib/python3.12/site-packages')
 
 from dotenv import load_dotenv
 import os
 import json
 
-load_dotenv('${QUANT_WORKSPACE}/.env.polymarket')
+load_dotenv('/home/aa/.openclaw/workspace-quant/.env.poly')
 
 PK = os.environ['POLY_PRIVATE_KEY']
 PROXY = os.environ.get('POLY_PROXY_WALLET', os.environ.get('POLY_PROXY_ADDRESS'))

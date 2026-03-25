@@ -37,7 +37,7 @@ python3 scripts/api_position_monitor.py
 
 ## Step 5: 推送日报
 ```bash
-message(action='send', channel='telegram', target='${TELEGRAM_TARGET_ID}', message='报告内容')
+message(action='send', channel='telegram', target='REDACTED_TG_USER_ID', message='报告内容')
 ```
 
 格式(纯文本，适配Telegram):

@@ -19,7 +19,7 @@ Examples:
 import os, sys, json
 
 # Load credentials
-DOTENV_PATH = '${QUANT_WORKSPACE}/.env.polymarket'
+DOTENV_PATH = '/home/aa/.openclaw/workspace-quant/.env.poly'
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from dotenv import load_dotenv
