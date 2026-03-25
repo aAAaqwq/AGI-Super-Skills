@@ -1,6 +1,6 @@
 # Quant Skills — Polymarket量化交易
 
-Daniel Li的Polymarket量化交易AI（Quant/量子）使用的全部skill。
+Polymarket量化交易AI使用的完整skill套件。
 
 ## Skills (9个)
 
@@ -26,7 +26,29 @@ Daniel Li的Polymarket量化交易AI（Quant/量子）使用的全部skill。
 | api_position_monitor.py | 仓位止盈止损+峰值追踪 |
 | elon_analyze.py | Elon推文盘独立分析 |
 
+## 环境变量
+
+部署前需创建 `.env.polymarket` 文件：
+
+```env
+POLY_PRIVATE_KEY=<your-private-key>
+POLY_PROXY_WALLET=<your-proxy-wallet>
+POLY_API_KEY=<your-api-key>
+POLY_API_SECRET=<your-api-secret>
+POLY_API_PASSPHRASE=<your-passphrase>
+TELEGRAM_TARGET_ID=<your-telegram-id>
+```
+
 ## 依赖
+
 - Polymarket Gamma API + CLOB API
 - Binance API (data-api.binance.vision)
-- OpenClaw workspace at `~/.openclaw/workspace-quant`
+- OpenClaw agent runtime
+
+## ⚠️ 去敏说明
+
+已移除以下敏感信息，使用环境变量占位符：
+- Telegram用户/群组ID → `${TELEGRAM_TARGET_ID}`
+- 钱包私钥/代理钱包 → 环境变量
+- API Key/Secret → 环境变量
+- 本地路径 → `${QUANT_WORKSPACE}`
