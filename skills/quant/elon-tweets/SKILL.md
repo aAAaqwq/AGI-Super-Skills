@@ -6,7 +6,7 @@
 ## Step 0: 新闻风险检查
 
 ```bash
-cat ~/workspace-quant/data/news-risk-level.json 2>/dev/null || echo "{}"
+cat ${WORKSPACE}/data/news-risk-level.json 2>/dev/null || echo "{}"
 ```
 - **DANGER**: 🔴 停止，不执行任何交易。
 - **CAUTION/NEUTRAL**: 正常执行（Elon盘不直接受加密宏观影响）。
@@ -61,7 +61,7 @@ echo "🎯 目标盘: $BEST_SLUG"
 **用赔率分布计算市场隐含预期，与历史速率对比找edge。零外部依赖。**
 
 ```bash
-python3 ~/workspace-quant/scripts/elon_analyze.py "$BEST_JSON"
+python3 ${WORKSPACE}/scripts/elon_analyze.py "$BEST_JSON"
 ```
 
 ## Step 3: 交易执行（仅<6h且有edge时）
@@ -80,7 +80,7 @@ python3 ~/workspace-quant/scripts/elon_analyze.py "$BEST_JSON"
 距结算<12h或有交易时才推送，否则静默退出。
 
 ```bash
-message(action='send', channel='telegram', target='REDACTED_TG_USER_ID', message='报告内容')
+message(action='send', channel='telegram', target='${TELEGRAM_TARGET_ID}', message='报告内容')
 ```
 
 报告格式：

@@ -30,7 +30,7 @@ python3 scripts/api_position_monitor.py
 在执行任何交易决策之前，先检查当前市场风险等级：
 
 ```bash
-cat ~/workspace-quant/data/news-risk-level.json 2>/dev/null || echo "{}"
+cat ${WORKSPACE}/data/news-risk-level.json 2>/dev/null || echo "{}"
 ```
 
 根据风险等级决定是否继续：
@@ -41,13 +41,13 @@ cat ~/workspace-quant/data/news-risk-level.json 2>/dev/null || echo "{}"
 
 ### Step 1: 趋势分析
 ```bash
-bash ~/workspace-quant/scripts/trend_analysis.sh
+bash ${WORKSPACE}/scripts/trend_analysis.sh
 ```
 输出格式: `BTC|71500|24h:+0.67%|4h:4↑0↓|STRONG_UP|OK_YES_UP|...`
 
 ### Step 2: 市场扫描
 ```bash
-bash ~/workspace-quant/scripts/scan_markets.sh
+bash ${WORKSPACE}/scripts/scan_markets.sh
 ```
 输出格式: `ABOVE|BTC above $74k...|YES:9%|NO:91%|...|SWEET_NO|slug`
 
@@ -56,15 +56,15 @@ bash ~/workspace-quant/scripts/scan_markets.sh
 
 **阈值盘(Above/Below)** — 传buffer+结算时间+threshold模式：
 ```bash
-bash ~/workspace-quant/scripts/entry_timing.sh eth "" 5.48 48 threshold
-bash ~/workspace-quant/scripts/entry_timing.sh btc "" 3.2 24 threshold
+bash ${WORKSPACE}/scripts/entry_timing.sh eth "" 5.48 48 threshold
+bash ${WORKSPACE}/scripts/entry_timing.sh btc "" 3.2 24 threshold
 ```
 参数: `symbol` `token_id` `buffer_pct` `hours_to_settle` `market_type`
 
 **涨跌日盘(Up/Down)** — 不传buffer，走传统技术指标模式：
 ```bash
-bash ~/workspace-quant/scripts/entry_timing.sh btc "" "" "" updown
-bash ~/workspace-quant/scripts/entry_timing.sh eth "" "" "" updown
+bash ${WORKSPACE}/scripts/entry_timing.sh btc "" "" "" updown
+bash ${WORKSPACE}/scripts/entry_timing.sh eth "" "" "" updown
 ```
 
 **⚠️ 必须区分市场类型！**
@@ -115,7 +115,7 @@ python3 skills/polymarket-api/scripts/poly_trade.py buy <YES_TOKEN_ID> NO <price
 每次猎杀完成后，**必须追加一条JSONL到滚动日志**，不管有没有交易：
 
 ```bash
-cat >> ~/workspace-quant/data/hunt-log.jsonl << 'HUNTEOF'
+cat >> ${WORKSPACE}/data/hunt-log.jsonl << 'HUNTEOF'
 {"ts":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","ts_local":"$(date +%H:%M)","prices":{"BTC":BTC价格,"ETH":ETH价格,"SOL":SOL价格,"GOLD":GOLD价格},"sweet_spots":[{"market":"市场名","side":"YES/NO/Up/Down","price_c":价格分,"buffer_pct":buffer百分比,"trend":"OK/BAN/CAUTION","entry":"ENTRY_NOW/WAIT/SKIP","score":评分}],"trades":[{"market":"市场名","side":"YES/NO","amount_usd":金额,"price_c":买入价分}],"skipped_reason":"无甜区/趋势禁令/入场时机不对/...","summary":"一句话总结"}
 HUNTEOF
 ```
@@ -132,7 +132,7 @@ HUNTEOF
 
 **使用message工具推送到Daniel私聊**（不用newsbot_send.py）：
 ```
-message(action='send', channel='telegram', target='REDACTED_TG_USER_ID', message='报告内容')
+message(action='send', channel='telegram', target='${TELEGRAM_TARGET_ID}', message='报告内容')
 ```
 
 报告模板（纯文本，适配Telegram）：

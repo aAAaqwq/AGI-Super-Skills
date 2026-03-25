@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import os
 import json
 
-load_dotenv('/home/aa/.openclaw/workspace-quant/.env.poly')
+load_dotenv('${QUANT_WORKSPACE}/.env.polymarket')
 
 PK = os.environ['POLY_PRIVATE_KEY']
 PROXY = os.environ.get('POLY_PROXY_WALLET', os.environ.get('POLY_PROXY_ADDRESS'))

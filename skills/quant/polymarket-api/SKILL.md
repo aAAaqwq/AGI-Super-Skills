@@ -25,13 +25,13 @@ description: Polymarket交易操作。下单/卖单/撤单/查余额/查订单/C
 
 ## 前置
 
-凭证文件 `.env.poly`（已配置，勿修改）：
+凭证文件 `.env.polymarket`（已配置，勿修改）：
 ```
-POLY_PRIVATE_KEY=0x...
-POLY_PROXY_WALLET=0x...
-POLY_API_KEY=...
-POLY_API_SECRET=...
-POLY_API_PASSPHRASE=...
+POLY_PRIVATE_KEY=<your-private-key>
+POLY_PROXY_WALLET=<your-proxy-wallet>
+POLY_API_KEY=<your-api-key>
+POLY_API_SECRET=<your-api-secret>
+POLY_API_PASSPHRASE=<your-passphrase>
 ```
 
 SDK已安装：
@@ -43,7 +43,7 @@ SDK已安装：
 ## 核心脚本
 
 ```bash
-cd /home/aa/.openclaw/workspace-quant
+cd ${QUANT_WORKSPACE}
 
 # === 读操作 (CLOB API) ===
 
@@ -84,7 +84,7 @@ python3 skills/polymarket-api/scripts/poly_relay.py redeemable
 
 ### 初始化
 ```python
-from dotenv import load_dotenv; load_dotenv('.env.poly')
+from dotenv import load_dotenv; load_dotenv('.env.polymarket')
 from py_builder_relayer_client.client import RelayClient
 from py_builder_signing_sdk.config import BuilderConfig
 from py_builder_signing_sdk.sdk_types import BuilderApiKeyCreds
@@ -116,7 +116,7 @@ client = RelayClient(
 
 ```python
 import json
-from dotenv import load_dotenv; load_dotenv('.env.poly')
+from dotenv import load_dotenv; load_dotenv('.env.polymarket')
 
 # 方法A: 按slug查
 import subprocess
@@ -207,7 +207,7 @@ python3 skills/polymarket-api/scripts/poly_trade.py orders    # 检查挂单状�
 | `Connection timeout` | 加`--noproxy '*'`或检查Tailscale |
 | `403 Trading restricted` | Geo-block，需切换非限制区IP |
 | `SSL EOF / Connection refused` | Relayer geo-block，同上 |
-| `invalid authorization` | 检查.env.poly凭证是否过期 |
+| `invalid authorization` | 检查.env.polymarket凭证是否过期 |
 | `not enough balance` | 余额不足，`poly_trade.py balance`检查 |
 | `matched: 0/N` | 挂单未成交，cancel后提高价格重挂 |
 | `Proxy not deployed` | 首次需调用`client.deploy()`部署Safe |
