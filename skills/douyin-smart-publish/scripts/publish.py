@@ -334,7 +334,7 @@ async def _wait_for_post_submit(page, mode: str) -> bool:
         if any(key in url for key in ["draft", "content/manage", "content"]):
             return True
 
-        success_texts = ["保存成功", "草稿已保存", "发布成功", "处理中"]
+        success_texts = ["保存成功", "草稿已保存", "发布成功", "处理中", "暂存成功"]
         for text in success_texts:
             try:
                 if await page.locator(f":text('{text}')").count() > 0:
@@ -359,7 +359,7 @@ async def _submit(page, mode: str) -> bool:
                 return True
     else:
         log("💾", "保存草稿...")
-        btn = page.locator("button:has-text('存草稿'), button:has-text('草稿')")
+        btn = page.locator("button:has-text('存草稿'), button:has-text('草稿'), button:has-text('暂存离开')")
         if await btn.count() > 0:
             await btn.first.click()
             ok = await _wait_for_post_submit(page, mode)
