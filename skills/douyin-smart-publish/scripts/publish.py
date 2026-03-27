@@ -59,15 +59,35 @@ async def save_auth_state(context):
 
 
 async def load_auth_state(context) -> bool:
-    """加载登录态（优先 storage_state，其次 cookies）"""
+    """加载登录态（context 已创建时可通过 storage_state 自动加载；这里保留 cookies 兜底）"""
     if STORAGE_STATE_FILE.exists():
-        log("🍪", f"检测到 storage_state: {STORAGE_STATE_FILE}（建议复用）")
+        log("🍪", f"检测到 storage_state: {STORAGE_STATE_FILE}")
 
     if COOKIE_FILE.exists():
         cookies = json.loads(COOKIE_FILE.read_text())
         await context.add_cookies(cookies)
         log("🍪", f"Cookies 已加载 ← {COOKIE_FILE}")
         return True
+    return False
+
+
+async def is_login_page(page) -> bool:
+    """更稳的登录页判断：不仅看 URL，也看扫码/验证码登录 UI。"""
+    if ("login" in page.url) or ("passport" in page.url):
+        return True
+
+    markers = [
+        ":text('扫码登录')",
+        ":text('验证码登录')",
+        ":text('我是创作者')",
+        "img[alt*='二维码']",
+    ]
+    for sel in markers:
+        try:
+            if await page.locator(sel).count() > 0:
+                return True
+        except Exception:
+            pass
     return False
 
 
@@ -469,15 +489,17 @@ async def doctor(args):
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=headless)
-        context = await browser.new_context(viewport={"width": 1280, "height": 900})
+        context_kwargs = {"viewport": {"width": 1280, "height": 900}}
+        if STORAGE_STATE_FILE.exists():
+            context_kwargs["storage_state"] = str(STORAGE_STATE_FILE)
+        context = await browser.new_context(**context_kwargs)
         _ = await load_auth_state(context)
         page = await context.new_page()
 
         await page.goto(args.url, wait_until="domcontentloaded", timeout=30000)
         await asyncio.sleep(2)
 
-        # login detection
-        needs_login = ("login" in page.url) or ("passport" in page.url)
+        needs_login = await is_login_page(page)
 
         counts = {
             "file_inputs": await page.locator("input[type='file']").count(),
@@ -504,11 +526,14 @@ async def main(args):
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=headless)
-        context = await browser.new_context(
-            viewport={"width": 1280, "height": 900},
-            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        )
+        context_kwargs = {
+            "viewport": {"width": 1280, "height": 900},
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                         "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        }
+        if STORAGE_STATE_FILE.exists():
+            context_kwargs["storage_state"] = str(STORAGE_STATE_FILE)
+        context = await browser.new_context(**context_kwargs)
 
         # 加载登录态（cookies/状态文件）
         _ = await load_auth_state(context)
@@ -518,10 +543,11 @@ async def main(args):
         await page.goto(CREATOR_HOME, wait_until="domcontentloaded", timeout=30000)
         await asyncio.sleep(3)
 
-        # 如果跳转到登录页，等待手动登录
-        if "login" in page.url or "passport" in page.url:
+        # 如果仍处于登录页，等待手动登录
+        if await is_login_page(page):
             if headless:
-                log("❌", "需要登录！请使用 --no-headless 参数手动登录")
+                await page.screenshot(path="/tmp/douyin_login_required.png", full_page=True)
+                log("❌", "需要登录！已截图 /tmp/douyin_login_required.png；请使用 --no-headless 参数手动登录")
                 await browser.close()
                 return
             if not await wait_for_login(page):
