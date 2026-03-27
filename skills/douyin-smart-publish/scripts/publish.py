@@ -33,7 +33,9 @@ CREATOR_HOME = "https://creator.douyin.com/creator-micro/home"
 VIDEO_UPLOAD = "https://creator.douyin.com/creator-micro/content/upload"
 IMAGE_UPLOAD = "https://creator.douyin.com/creator-micro/content/upload?default-tab=3"
 
+TITLE_MAX = 55
 DESC_MAX = 200
+
 COOKIE_DIR = Path.home() / ".douyin_cookies"
 COOKIE_FILE = COOKIE_DIR / "cookies.json"
 STORAGE_STATE_FILE = COOKIE_DIR / "storage_state.json"  # cookies + localStorage/sessionStorage
@@ -100,10 +102,15 @@ async def retry_upload(page, file_input, file_path: str, max_retries=3):
 
 # ── 核心发布逻辑 ──────────────────────────────────
 
-async def publish_video(page, file_path: str, desc: str, cover: str = None,
+async def publish_video(page, file_path: str, title: str, desc: str, cover: str = None,
                         schedule: str = None, mode: str = "draft"):
     """视频发布流程"""
     log("🎬", f"视频发布: {Path(file_path).name}")
+
+    title = (title or "").strip()
+    if len(title) > TITLE_MAX:
+        log("⚠️", f"标题 {len(title)}字 超过 {TITLE_MAX}字 上限，已截断")
+        title = title[:TITLE_MAX]
 
     # 导航到视频上传页
     await page.goto(VIDEO_UPLOAD, wait_until="domcontentloaded", timeout=30000)
@@ -145,6 +152,10 @@ async def publish_video(page, file_path: str, desc: str, cover: str = None,
         log("❌", "视频上传/转码超时（8分钟）")
         return False
 
+    # 填写标题（如果页面存在独立标题区）
+    if title:
+        await _fill_title(page, title)
+
     # 填写描述
     await _fill_description(page, desc)
 
@@ -168,9 +179,14 @@ async def publish_video(page, file_path: str, desc: str, cover: str = None,
     return await _submit(page, mode)
 
 
-async def publish_image(page, file_paths: list, desc: str, mode: str = "draft"):
+async def publish_image(page, file_paths: list, title: str, desc: str, mode: str = "draft"):
     """图文发布流程"""
     log("🖼️", f"图文发布: {len(file_paths)} 张图片")
+
+    title = (title or "").strip()
+    if len(title) > TITLE_MAX:
+        log("⚠️", f"标题 {len(title)}字 超过 {TITLE_MAX}字 上限，已截断")
+        title = title[:TITLE_MAX]
 
     if len(file_paths) < 2:
         log("❌", "抖音图文至少需要 2 张图片")
@@ -193,11 +209,47 @@ async def publish_image(page, file_paths: list, desc: str, mode: str = "draft"):
     # 等待图片处理
     await asyncio.sleep(5)
 
+    # 填写标题（如果页面存在独立标题区）
+    if title:
+        await _fill_title(page, title)
+
     # 填写描述
     await _fill_description(page, desc)
 
     # 发布/草稿
     return await _submit(page, mode)
+
+
+async def _fill_title(page, title: str):
+    """填写标题（若页面存在独立标题输入区）"""
+    if not title:
+        return
+
+    log("🏷️", f"填写标题 ({len(title)}字)...")
+    title_selectors = [
+        "input[placeholder*='标题']",
+        "textarea[placeholder*='标题']",
+        "[class*='title'] input",
+        "[class*='title'] textarea",
+    ]
+
+    for sel in title_selectors:
+        elem = page.locator(sel)
+        if await elem.count() > 0:
+            try:
+                await elem.first.click()
+                await asyncio.sleep(0.2)
+                await elem.first.press("Control+A")
+                await elem.first.press("Backspace")
+                await asyncio.sleep(0.1)
+                await elem.first.type(title, delay=15)
+                log("✅", "标题已填写")
+                await asyncio.sleep(0.5)
+                return
+            except Exception:
+                pass
+
+    log("ℹ️", "未找到独立标题输入区（可能抖音该模式仅有描述区）")
 
 
 async def _fill_description(page, desc: str):
@@ -357,15 +409,180 @@ async def main(args):
         await browser.close()
 
 
+def _parse_daily_content(path: str, pick: int = 1) -> dict:
+    """解析 daily-content 里的 douyin 产物，抽取第 pick 条。
+
+    兼容格式：
+    - `douyin-content-YYYY-MM-DD.md`（含 `## 1/2/3`）
+    - `douyin-3posts-YYYY-MM-DD.txt`（含 `## 内容 1/2/3`）
+    返回：{title, desc, tags}
+    """
+    text = Path(path).read_text(encoding="utf-8")
+
+    # 支持两种分段锚点
+    anchors = [f"## {pick}\n", f"## 内容 {pick}\n"]
+    start = -1
+    used_anchor = None
+    for a in anchors:
+        start = text.find(a)
+        if start != -1:
+            used_anchor = a
+            break
+    if start == -1:
+        raise ValueError(f"未找到第 {pick} 条内容分段：{anchors}")
+
+    rest = text[start + len(used_anchor):]
+
+    # 截到下一段
+    next_pos = rest.find("## ")
+    block = rest if next_pos == -1 else rest[:next_pos]
+
+    def _extract_after(label: str) -> str:
+        idx = block.find(label)
+        if idx == -1:
+            return ""
+        sub = block[idx + len(label):]
+        # 截到空行双换行（或下一个 emoji label）
+        parts = sub.split("\n\n", 1)
+        return parts[0].strip()
+
+    title = _extract_after("📌 标题：")
+    # 优先取图文描述（更适合抖音描述区），否则取脚本
+    desc = _extract_after("📝 图文描述：") or _extract_after("📝 视频脚本（60秒）：")
+    tags_line = _extract_after("🏷️ 话题：")
+    tags = [t.strip().lstrip("#") for t in tags_line.split() if t.strip()]
+
+    if not title:
+        # 兜底：用第一行
+        title = (desc.split("\n", 1)[0] if desc else "").strip()[:TITLE_MAX]
+
+    # 拼回 hashtags（如果原 desc 里没有）
+    if tags and ("#" not in desc):
+        desc = desc.rstrip() + "\n\n" + " ".join(f"#{t}" for t in tags[:5])
+
+    return {"title": title.strip(), "desc": desc.strip(), "tags": tags}
+
+
+async def doctor(args):
+    """冒烟检查：打开上传页、截图、输出关键信号（不上传）。"""
+    headless = not args.no_headless
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=headless)
+        context = await browser.new_context(viewport={"width": 1280, "height": 900})
+        _ = await load_auth_state(context)
+        page = await context.new_page()
+
+        await page.goto(args.url, wait_until="domcontentloaded", timeout=30000)
+        await asyncio.sleep(2)
+
+        # login detection
+        needs_login = ("login" in page.url) or ("passport" in page.url)
+
+        counts = {
+            "file_inputs": await page.locator("input[type='file']").count(),
+            "desc_editables": await page.locator("[contenteditable='true'], textarea[placeholder*='描述']").count(),
+            "draft_btn": await page.locator("button:has-text('存草稿'), button:has-text('草稿')").count(),
+            "publish_btn": await page.locator("button:has-text('发布')").count(),
+        }
+
+        await page.screenshot(path=args.screenshot, full_page=True)
+        log("📸", f"doctor screenshot: {args.screenshot}")
+        log("🔎", f"url={page.url} needs_login={needs_login} counts={counts}")
+
+        await save_auth_state(context)
+        await browser.close()
+
+
+async def main(args):
+    # doctor 独立执行
+    if args.command == "doctor":
+        await doctor(args)
+        return
+
+    headless = not args.no_headless
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=headless)
+        context = await browser.new_context(
+            viewport={"width": 1280, "height": 900},
+            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        )
+
+        # 加载登录态（cookies/状态文件）
+        _ = await load_auth_state(context)
+        page = await context.new_page()
+
+        # 检查登录态
+        await page.goto(CREATOR_HOME, wait_until="domcontentloaded", timeout=30000)
+        await asyncio.sleep(3)
+
+        # 如果跳转到登录页，等待手动登录
+        if "login" in page.url or "passport" in page.url:
+            if headless:
+                log("❌", "需要登录！请使用 --no-headless 参数手动登录")
+                await browser.close()
+                return
+            if not await wait_for_login(page):
+                await browser.close()
+                return
+            await save_auth_state(context)
+
+        log("✅", "已登录抖音创作者平台")
+
+        # 根据子命令执行
+        success = False
+        if args.command == "video":
+            success = await publish_video(
+                page, args.file, args.title, args.desc,
+                cover=args.cover, schedule=args.schedule, mode=args.mode
+            )
+        elif args.command == "image":
+            files = [f.strip() for f in args.files.split(",")]
+            success = await publish_image(page, files, args.title, args.desc, mode=args.mode)
+        elif args.command == "daily":
+            item = _parse_daily_content(args.source, pick=args.pick)
+            title = item["title"]
+            desc = item["desc"]
+
+            if args.type == "image":
+                files = [f.strip() for f in args.files.split(",")]
+                success = await publish_image(page, files, title, desc, mode=args.mode)
+            else:
+                success = await publish_video(
+                    page, args.file, title, desc,
+                    cover=args.cover, schedule=args.schedule, mode=args.mode
+                )
+
+        # 保存最新登录态
+        await save_auth_state(context)
+
+        if success:
+            await page.screenshot(path="/tmp/douyin_success.png")
+            log("📸", "成功截图: /tmp/douyin_success.png")
+        else:
+            await page.screenshot(path="/tmp/douyin_error.png")
+            log("📸", "错误截图: /tmp/douyin_error.png")
+
+        await browser.close()
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="抖音创作者平台自动发布")
     parser.add_argument("--no-headless", action="store_true", help="显示浏览器（登录/调试）")
 
     sub = parser.add_subparsers(dest="command", required=True)
 
+    # doctor: 不上传，只检查页面/截图
+    d = sub.add_parser("doctor", help="冒烟检查（打开页面+截图+输出关键信号）")
+    d.add_argument("--url", default=VIDEO_UPLOAD, help="检查的页面URL")
+    d.add_argument("--screenshot", default="/tmp/douyin_doctor.png", help="截图输出路径")
+
     # video 子命令
     vid = sub.add_parser("video", help="发布视频")
     vid.add_argument("--file", "-f", required=True, help="视频文件路径")
+    vid.add_argument("--title", "-t", default="", help="标题（可选，≤55字；部分模式仅描述区）")
     vid.add_argument("--desc", "-d", required=True, help="描述（含#话题）")
     vid.add_argument("--cover", help="封面图路径")
     vid.add_argument("--schedule", help="定时发布 (格式: 2026-03-20 20:00)")
@@ -374,8 +591,21 @@ if __name__ == "__main__":
     # image 子命令
     img = sub.add_parser("image", help="发布图文")
     img.add_argument("--files", required=True, help="图片路径，逗号分隔（≥2张）")
+    img.add_argument("--title", "-t", default="", help="标题（可选，≤55字；部分模式仅描述区）")
     img.add_argument("--desc", "-d", required=True, help="描述（含#话题）")
     img.add_argument("--mode", choices=["draft", "publish"], default="draft")
+
+    # daily: 直接吃 daily-content 文件
+    dl = sub.add_parser("daily", help="从 daily-content 产物读取标题/描述并发布")
+    dl.add_argument("--source", required=True, help="daily-content douyin 文件路径（md/txt）")
+    dl.add_argument("--pick", type=int, default=1, help="选择第几条（1/2/3）")
+    dl.add_argument("--type", choices=["video", "image"], default="video", help="发布类型")
+    dl.add_argument("--mode", choices=["draft", "publish"], default="draft")
+    # 资源参数（按 type 使用）
+    dl.add_argument("--file", "-f", help="视频文件路径（type=video 必填）")
+    dl.add_argument("--files", help="图片路径（type=image 必填，逗号分隔）")
+    dl.add_argument("--cover", help="封面图路径（可选）")
+    dl.add_argument("--schedule", help="定时发布 (格式: 2026-03-20 20:00)")
 
     args = parser.parse_args()
     asyncio.run(main(args))

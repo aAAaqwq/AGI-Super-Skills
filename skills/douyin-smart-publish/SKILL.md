@@ -128,24 +128,45 @@ description: "抖音创作者平台智能发布（视频/图文）：内容适�
 ### 脚本用法
 
 ```bash
-# 视频发布（草稿模式）
+# 0) 冒烟检查（不上传，只打开页面+截图+输出关键信号）
+python scripts/publish.py doctor --no-headless \
+  --screenshot /tmp/douyin_doctor.png
+
+# 1) 从 daily-content 产物直接发布到草稿箱（推荐，SOP直连）
+#   - 支持 md/txt 两种格式：
+#     /home/aa/clawd/docs/daily-content/YYYY-MM-DD/douyin/douyin-content-YYYY-MM-DD.md
+#     /home/aa/clawd/docs/daily-content/YYYY-MM-DD/douyin/douyin-3posts-YYYY-MM-DD.txt
+#   - pick=1/2/3 选择第几条
+#   - 默认 mode=draft（只存草稿）
+python scripts/publish.py daily \
+  --source "/home/aa/clawd/docs/daily-content/2026-03-24/douyin/douyin-content-2026-03-24.md" \
+  --pick 1 \
+  --type image \
+  --files "/path/to/img1.jpg,/path/to/img2.jpg" \
+  --mode draft
+
+# 2) 视频发布（草稿模式）
 python scripts/publish.py video \
   --file "/path/to/video.mp4" \
+  --title "可选标题（≤55字）" \
   --desc "描述文字 #话题1 #话题2" \
   --cover "/path/to/cover.jpg" \
   --mode draft
 
-# 图文发布
+# 3) 图文发布
 python scripts/publish.py image \
   --files "/path/to/img1.jpg,/path/to/img2.jpg" \
+  --title "可选标题（≤55字）" \
   --desc "图文描述 #话题1" \
   --mode draft
 
-# 带定时发布
-python scripts/publish.py video \
-  --file video.mp4 \
-  --desc "desc" \
-  --schedule "2026-03-20 20:00" \
+# 4) 定时发布（⚠️仅在 Daniel 明确确认后使用 publish）
+python scripts/publish.py daily \
+  --source "/home/aa/clawd/docs/daily-content/2026-03-25/douyin/douyin-3posts-2026-03-25.txt" \
+  --pick 2 \
+  --type video \
+  --file "/path/to/video.mp4" \
+  --schedule "2026-03-27 21:30" \
   --mode publish
 ```
 
@@ -203,6 +224,8 @@ python scripts/publish.py video \
 - [ ] 无其他平台水印
 - [ ] AI内容已标注（如适用）
 - [ ] 非搬运内容
+- [ ] 已截图回传确认
+- [ ] 若使用 `daily` 模式：已核对 `pick` 对应的是正确那条内容
 
 ## 文件结构
 
