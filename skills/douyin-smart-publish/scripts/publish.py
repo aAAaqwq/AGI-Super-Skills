@@ -36,6 +36,7 @@ IMAGE_UPLOAD = "https://creator.douyin.com/creator-micro/content/upload?default-
 DESC_MAX = 200
 COOKIE_DIR = Path.home() / ".douyin_cookies"
 COOKIE_FILE = COOKIE_DIR / "cookies.json"
+STORAGE_STATE_FILE = COOKIE_DIR / "storage_state.json"  # cookies + localStorage/sessionStorage
 
 RETRY_DELAYS = [10, 30, 90]  # 重试退避秒数
 
@@ -46,16 +47,20 @@ def log(emoji: str, msg: str):
     print(f"[{ts}] {emoji} {msg}")
 
 
-async def save_cookies(context):
-    """保存 cookies 到文件"""
+async def save_auth_state(context):
+    """保存登录态（cookies + localStorage/sessionStorage）"""
     COOKIE_DIR.mkdir(parents=True, exist_ok=True)
     cookies = await context.cookies()
     COOKIE_FILE.write_text(json.dumps(cookies, ensure_ascii=False, indent=2))
-    log("🍪", f"Cookies 已保存 → {COOKIE_FILE}")
+    await context.storage_state(path=str(STORAGE_STATE_FILE))
+    log("🍪", f"Auth state 已保存 → {COOKIE_FILE} + {STORAGE_STATE_FILE}")
 
 
-async def load_cookies(context):
-    """从文件加载 cookies"""
+async def load_auth_state(context) -> bool:
+    """加载登录态（优先 storage_state，其次 cookies）"""
+    if STORAGE_STATE_FILE.exists():
+        log("🍪", f"检测到 storage_state: {STORAGE_STATE_FILE}（建议复用）")
+
     if COOKIE_FILE.exists():
         cookies = json.loads(COOKIE_FILE.read_text())
         await context.add_cookies(cookies)
@@ -113,15 +118,31 @@ async def publish_video(page, file_path: str, desc: str, cover: str = None,
 
     # 等待上传+转码（视频可能需要较长时间）
     log("⏳", "等待视频上传和转码...")
-    for _ in range(60):  # 最多等5分钟
+    # 经验：抖音上传/转码有时会慢；先等到“描述区可编辑”或“草稿/发布按钮出现且可点击”
+    for _ in range(96):  # 最多等8分钟
         await asyncio.sleep(5)
-        # 检查是否出现描述输入区域（表示上传完成）
+
+        # 1) 描述输入区域出现（常见完成信号）
         desc_area = page.locator("[contenteditable='true'], textarea[placeholder*='描述'], textarea[placeholder*='添加']")
         if await desc_area.count() > 0:
-            log("✅", "视频上传完成")
+            log("✅", "检测到描述区，认为上传已完成")
             break
+
+        # 2) 草稿/发布按钮出现（兜底信号）
+        draft_btn = page.locator("button:has-text('存草稿'), button:has-text('草稿')").first
+        pub_btn = page.locator("button:has-text('发布')").first
+        if (await draft_btn.count() > 0) or (await pub_btn.count() > 0):
+            try:
+                if (await draft_btn.count() > 0) and (await draft_btn.is_enabled()):
+                    log("✅", "检测到可用的草稿按钮，认为上传已完成")
+                    break
+                if (await pub_btn.count() > 0) and (await pub_btn.is_enabled()):
+                    log("✅", "检测到可用的发布按钮，认为上传已完成")
+                    break
+            except Exception:
+                pass
     else:
-        log("❌", "视频转码超时（5分钟）")
+        log("❌", "视频上传/转码超时（8分钟）")
         return False
 
     # 填写描述
@@ -199,10 +220,18 @@ async def _fill_description(page, desc: str):
         elem = page.locator(sel)
         if await elem.count() > 0:
             await elem.first.click()
-            await asyncio.sleep(0.5)
-            await elem.first.fill("")
-            await asyncio.sleep(0.3)
-            # 使用 type 而非 fill 以触发话题搜索
+            await asyncio.sleep(0.2)
+            # contenteditable 下 fill 有时不触发事件；用 Ctrl+A + Backspace 清空更稳
+            try:
+                await elem.first.press("Control+A")
+                await elem.first.press("Backspace")
+            except Exception:
+                try:
+                    await elem.first.fill("")
+                except Exception:
+                    pass
+            await asyncio.sleep(0.2)
+            # 使用 type 而非 fill 以触发话题搜索/联想
             await elem.first.type(desc, delay=20)
             log("✅", "描述已填写")
             await asyncio.sleep(1)
@@ -225,6 +254,24 @@ async def _set_schedule(page, schedule_str: str):
         log("⚠️", "未找到定时发布开关")
 
 
+async def _wait_for_post_submit(page, mode: str) -> bool:
+    """等待提交后的成功信号或跳转。"""
+    for _ in range(18):  # ~18s
+        await asyncio.sleep(1)
+        url = page.url
+        if any(key in url for key in ["draft", "content/manage", "content"]):
+            return True
+
+        success_texts = ["保存成功", "草稿已保存", "发布成功", "处理中"]
+        for text in success_texts:
+            try:
+                if await page.locator(f":text('{text}')").count() > 0:
+                    return True
+            except Exception:
+                pass
+    return False
+
+
 async def _submit(page, mode: str) -> bool:
     """提交：发布或存草稿"""
     await asyncio.sleep(2)
@@ -234,19 +281,21 @@ async def _submit(page, mode: str) -> bool:
         btn = page.locator("button:has-text('发布')")
         if await btn.count() > 0:
             await btn.first.click()
-            await asyncio.sleep(5)
-            log("✅", "发布成功！")
-            return True
+            ok = await _wait_for_post_submit(page, mode)
+            if ok:
+                log("✅", "发布流程已触发")
+                return True
     else:
         log("💾", "保存草稿...")
         btn = page.locator("button:has-text('存草稿'), button:has-text('草稿')")
         if await btn.count() > 0:
             await btn.first.click()
-            await asyncio.sleep(3)
-            log("✅", "草稿已保存")
-            return True
+            ok = await _wait_for_post_submit(page, mode)
+            if ok:
+                log("✅", "草稿已保存/已进入后续页面")
+                return True
 
-    log("❌", f"未找到{'发布' if mode == 'publish' else '草稿'}按钮")
+    log("❌", f"未找到{'发布' if mode == 'publish' else '草稿'}按钮，或提交后无成功信号")
     return False
 
 
@@ -263,8 +312,8 @@ async def main(args):
                        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         )
 
-        # 加载 cookies
-        has_cookies = await load_cookies(context)
+        # 加载登录态（cookies/状态文件）
+        _ = await load_auth_state(context)
         page = await context.new_page()
 
         # 检查登录态
@@ -280,7 +329,7 @@ async def main(args):
             if not await wait_for_login(page):
                 await browser.close()
                 return
-            await save_cookies(context)
+            await save_auth_state(context)
 
         log("✅", "已登录抖音创作者平台")
 
@@ -295,8 +344,8 @@ async def main(args):
             files = [f.strip() for f in args.files.split(",")]
             success = await publish_image(page, files, args.desc, mode=args.mode)
 
-        # 保存最新 cookies
-        await save_cookies(context)
+        # 保存最新登录态
+        await save_auth_state(context)
 
         if success:
             await page.screenshot(path="/tmp/douyin_success.png")
