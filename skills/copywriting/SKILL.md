@@ -1,10 +1,6 @@
 ---
 name: copywriting
-description: ">"
-  Use this skill when writing, rewriting, or improving marketing copy
-  for any page (homepage, landing page, pricing, feature, product, or about page).
-  This skill produces clear, compelling, and testable copy while enforcing
-  alignment, honesty, and conversion best practices.
+description: "Write, rewrite, or improve marketing copy for homepages, landing pages, pricing pages, feature pages, and about pages. Use when the user needs conversion-focused copy with clear CTAs, benefit-driven messaging, and A/B testable headlines. Enforces alignment, honesty, and conversion best practices."
 risk: unknown
 source: community
 ---
@@ -205,26 +201,3 @@ This skill is complete ONLY when:
 - Assumptions are documented
 - Copy is ready for review, editing, or testing
 
----
-
-## Key Principles (Summary)
-
-- Understand before writing
-- Make assumptions explicit
-- One page, one goal
-- One section, one idea
-- Benefits before features
-- Honest claims only
-
----
-
-## Final Reminder
-
-Good copy does not persuade everyone.
-It persuades **the right person** to take **the right action**.
-
-If the copy feels clever but unclear,  
-rewrite it until it feels obvious.
-
-## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
