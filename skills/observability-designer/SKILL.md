@@ -1,8 +1,7 @@
 ---
 name: observability-designer
-description: 'Category: Engineering Tier: POWERFUL Description: Design comprehensive
-  observability strategies for production systems including SLI/SLO frameworks, alerting
-  optimization, and dashboard generation.'
+description: Design production observability strategies covering SLI/SLOs, metrics,
+  logs, traces, dashboards, and alert quality.
 ---
 
 # Observability Designer (POWERFUL)
