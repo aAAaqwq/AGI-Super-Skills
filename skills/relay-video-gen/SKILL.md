@@ -6,6 +6,7 @@ description: >
   Async task-based: submit → poll → download. 4-8 second clips.
   Use when: creating video clips, marketing videos, animated content from text.
   Extensible: add providers by editing RELAY_PRIORITY in the script.
+author: Daniel Li
 ---
 
 # Relay Video Generation
