@@ -29,6 +29,22 @@ This list is intentionally conservative: it only includes skills that are clearl
 - [`jimeng-storyboard`](../jimeng-storyboard/)
 - [`video-merge-send`](../video-merge-send/)
 
+
+### Platform / Agent Operations
+- [`auth-manager`](../auth-manager/)
+- [`api-quota-monitor`](../api-quota-monitor/)
+- [`agent-task-confirm`](../agent-task-confirm/)
+- [`agent-team-orchestration`](../agent-team-orchestration/)
+- [`browser-use`](../browser-use/)
+- [`cross-instance-comm`](../cross-instance-comm/)
+- [`daily-rhythm`](../daily-rhythm/)
+- [`email-manager`](../email-manager/)
+- [`chrome-automation`](../chrome-automation/)
+- [`api-provider-setup`](../api-provider-setup/)
+- [`wechat-mp-publisher`](../wechat-mp-publisher/)
+- [`juejin-smart-publish`](../juejin-smart-publish/)
+- [`zsxq-smart-publish`](../zsxq-smart-publish/)
+
 ## Notes
 
 - `author: Daniel Li` is used here as an authorship / ownership marker for clearly original skills.
