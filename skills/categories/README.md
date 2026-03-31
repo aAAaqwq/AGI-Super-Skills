@@ -2,6 +2,8 @@
 
 > [← Back to Skills Index](../README.md) | [← Back to Main](../../README.md)
 
+> Also see [Original Skills Index](../docs/original-skills.md) for first-party skills authored and maintained by Daniel Li.
+
 | Category | Count | File |
 |----------|:-----:|------|
 | ⚙️ OpenClaw Tools | 26 | [`openclaw-tools.md`](./openclaw-tools.md) |
