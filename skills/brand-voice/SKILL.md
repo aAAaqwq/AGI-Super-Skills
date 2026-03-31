@@ -85,6 +85,16 @@ These skills support `--voice` option:
 4. **Validate** — check that no forbidden expressions appear and tone matches the target profile
 5. **Flag mismatches** — warn if content drifts from the selected voice before finalizing
 
+## Integration Notes
+
+Keep the integration contract lightweight but explicit:
+
+- **Pre-check** — before a writing skill runs, confirm the selected profile (or default) is known
+- **Post-check** — after drafting, validate forbidden/preferred expressions and overall tone fit
+- **Usage logging (optional)** — if the workspace tracks writing activity, record the selected voice/profile for later review
+
+This skill does not require a specific hook engine or event bus implementation, but any automation around it should preserve the same pre-check → write → validate flow.
+
 ## Adding New Profiles
 
 To create a new brand profile, add a `.md` file to `workspace/brand/profiles/` following the same structure (Tone, Style, Format, Forbidden Expressions, Preferred Expressions, Examples).
