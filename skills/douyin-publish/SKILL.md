@@ -1,3 +1,8 @@
+---
+name: douyin-publish
+description: 自动登录抖音创作者平台并上传发布视频，适用于抖音内容发布流程自动化。
+---
+
 # douyin-publish
 
 抖音视频发布 skill。使用 MCP 技术自动登录、上传并发布视频到抖音创作者平台。

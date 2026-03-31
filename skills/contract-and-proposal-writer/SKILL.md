@@ -1,3 +1,9 @@
+---
+name: contract-and-proposal-writer
+description: Draft business proposals, SOWs, NDAs, MSAs, and freelance contracts with
+  jurisdiction-aware structure and reusable clauses.
+---
+
 # Contract & Proposal Writer
 
 **Tier:** POWERFUL  

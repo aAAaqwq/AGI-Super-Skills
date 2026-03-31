@@ -1,3 +1,8 @@
+---
+name: agent-model-switcher
+description: 批量查看和切换子 agent 的模型配置，用于统一调整多 agent 的 provider/model 设置。
+---
+
 # Agent Model Switcher
 
 批量切换所有子 agent 的模型配置。

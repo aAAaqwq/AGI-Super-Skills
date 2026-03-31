@@ -1,12 +1,13 @@
 ---
 name: wechat-mp-publisher
-description: "微信公众号智能发布全流程：Markdown→微信HTML转换、UEditor排版(15px/#3f3f3f/1.75倍行距)、封面图(900×500头条/200×200次条)、摘要(≤120字)、草稿/群发两种模式。支持API发布和Playwright浏览器发布。触发：'公众号发布'、'微信推文'、'公众号文章'、'wechat mp publish'、'群发'。"
+description: "微信公众号智能发布全流程：Markdown→微信HTML转换、UEditor排版(15px/#3f3f3f/1.75倍行距)、封面图(900×500头条/200×200次条)、摘要(≤120字)、草稿/群发两种模式。支持API发布和Playwright浏览器发布。触发：公众号发布、微信推文、公众号文章、wechat mp publish、群发。"
 trigger: 
   - "公众号发布"
   - "微信推文"
   - "公众号文章"
   - "wechat mp publish"
   - "群发"
+author: Daniel Li
 ---
 
 # 微信公众号智能发布

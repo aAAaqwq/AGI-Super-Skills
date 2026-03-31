@@ -6,6 +6,7 @@ description: >
   Supports 1K/2K/4K, multiple aspect ratios, auto model fallback.
   Use when: creating images, generating pictures/illustrations from text, poster art.
   Extensible: add providers by editing RELAY_PRIORITY in the script.
+author: Daniel Li
 ---
 
 # Relay Image Generation

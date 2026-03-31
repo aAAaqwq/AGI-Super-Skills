@@ -6,6 +6,7 @@ metadata:
   version: 4.0.0
   domains: [auth, browser, session-management]
   type: automation
+author: Daniel Li
 ---
 
 # Auth Manager v4.0 — 平台登录态管理

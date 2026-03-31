@@ -1,3 +1,8 @@
+---
+name: team-memory-sync
+description: 同步团队记忆与认知结论，减少多 agent 协作中的上下文漂移和信息断层。
+---
+
 # team-memory-sync
 
 团队记忆同步与认知审计工具。
