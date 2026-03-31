@@ -1,6 +1,6 @@
 ---
 name: brand-voice
-description: Manage brand tone/style for all writing skills
+description: "Enforce brand tone and style consistency across all content creation skills. Load brand profiles from workspace/brand/profiles/, apply tone rules (preferred and forbidden expressions), and validate written content against the selected voice. Use when the user mentions brand voice, tone consistency, style guide compliance, or needs to switch writing profiles via --voice."
 author: 무펭이 🐧
 ---
 
@@ -36,46 +36,7 @@ Manage writing profiles to maintain consistent tone and style per brand. Selecta
 
 **Location**: `workspace/brand/profiles/`
 
-```
-brand/
-  profiles/
-    mupengyi.md         # 무펭이 profile
-    mufi-official.md    # MUFI official profile
-    hyungnim.md         # Hyungnim personal profile
-```
-
-### Profile File Structure
-
-```markdown
-# 무펭이 🐧
-
-## Tone
-Friendly and casual
-
-## Style
-- Use informal language
-- Actively use emojis 🐧🎉✨
-- Abbreviations OK
-
-## Format
-- Core points only
-- Remove unnecessary modifiers
-- Mix in humor
-
-## Forbidden Expressions
-- Formal expressions like "we will provide", "we shall"
-- Verbose greetings
-- Excessive formality
-
-## Preferred Expressions
-- "This is real", "insane", "jackpot"
-- "Yo", "you", "your"
-- Lots of exclamation marks OK!!!
-
-## Examples
-- ❌ "Hello, today..."
-- ✅ "Yo check this out 🐧"
-```
+Each profile `.md` file defines: Tone, Style, Format, Forbidden Expressions, Preferred Expressions, and Examples. See existing profiles (`mupengyi.md`, `mufi-official.md`, `hyungnim.md`) for the expected structure.
 
 ## Writing Skill Integration
 
@@ -116,69 +77,27 @@ These skills support `--voice` option:
 - **Customer service** → `mufi-official`
 - **Community engagement** → `mupengyi`
 
-## Tone Consistency Check
+## Workflow
 
-Auto-verify after writing:
+1. **Determine profile** — resolve from `--voice` flag, or use platform defaults (see Profile Switching Guide above)
+2. **Load profile** — read the matching `.md` from `workspace/brand/profiles/`
+3. **Write content** — apply the profile's tone, style, format, and preferred expressions
+4. **Validate** — check that no forbidden expressions appear and tone matches the target profile
+5. **Flag mismatches** — warn if content drifts from the selected voice before finalizing
 
-- ✅ Used preferred expressions?
-- ❌ Included forbidden expressions?
-- 🎯 Matches target tone?
+## Integration Notes
 
-**pre-hook integration**:
-```
-Before writing skill execution → brand-voice-check
-→ Warn if doesn't match selected profile
-```
+Keep the integration contract lightweight but explicit:
 
-## Add/Edit Profiles
+- **Pre-check** — before a writing skill runs, confirm the selected profile (or default) is known
+- **Post-check** — after drafting, validate forbidden/preferred expressions and overall tone fit
+- **Usage logging (optional)** — if the workspace tracks writing activity, record the selected voice/profile for later review
 
-Add new brand profile:
+This skill does not require a specific hook engine or event bus implementation, but any automation around it should preserve the same pre-check → write → validate flow.
 
-```
-"Create new brand profile: MUFI recruiting"
-→ Create brand/profiles/mufi-recruit.md
+## Adding New Profiles
 
-- Tone: Friendly but professional
-- Style: Formal language
-- Format: Emphasize company culture
-```
-
-## Trigger Keywords
-
-- "brand tone"
-- "brand voice"
-- "speaking style"
-- "writing style"
-- "profile switch"
-- "tone and manner"
-
-## hook-engine Integration
-
-- **pre-hook**: Before writing → confirm profile selection
-- **post-hook**: After writing → check tone consistency
-- **learning-engine**: Learn tone patterns with good engagement
-
-## Event Bus Integration
-
-Record used voice profile when writing:
-
-**Location**: `events/voice-used-YYYY-MM-DD.json`
-
-```json
-{
-  "timestamp": "2026-02-14T14:30:00Z",
-  "skill": "copywriting",
-  "voice": "mupengyi",
-  "platform": "instagram",
-  "result": "Caption writing complete"
-}
-```
-
-## Learned Lessons
-
-- 무펭이 tone +40% engagement on Instagram (performance-tracker data)
-- MUFI official tone higher B2B email response rate
-- Hyungnim tone increased blog dwell time
+To create a new brand profile, add a `.md` file to `workspace/brand/profiles/` following the same structure (Tone, Style, Format, Forbidden Expressions, Preferred Expressions, Examples).
 
 ---
 
