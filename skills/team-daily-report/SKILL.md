@@ -1,3 +1,8 @@
+---
+name: team-daily-report
+description: 每日自动生成并推送团队日报，汇总当天所有agent工作、cron执行、skill进度、关键事件。
+---
+
 # 小a团队日报 Skill
 
 每日自动生成并推送团队日报，汇总当天所有agent工作、cron执行、skill进度、关键事件。

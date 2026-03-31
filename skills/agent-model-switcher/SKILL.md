@@ -1,3 +1,8 @@
+---
+name: agent-model-switcher
+description: 批量切换所有子 agent 的模型配置。
+---
+
 # Agent Model Switcher
 
 批量切换所有子 agent 的模型配置。

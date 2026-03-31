@@ -1,3 +1,8 @@
+---
+name: team-supervisor
+description: 监控所有 agent 的任务执行状态，发现未响应/未完成的 agent 自动催促。
+---
+
 # Team Supervisor Skill — 团队监工
 
 监控所有 agent 的任务执行状态，发现未响应/未完成的 agent 自动催促。

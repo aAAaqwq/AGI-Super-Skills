@@ -1,3 +1,9 @@
+---
+name: dependency-auditor
+description: '> Skill Type: POWERFUL > Category: Engineering > Domain: Dependency
+  Management & Security'
+---
+
 # Dependency Auditor
 
 > **Skill Type:** POWERFUL  

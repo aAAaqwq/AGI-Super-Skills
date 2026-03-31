@@ -1,3 +1,8 @@
+---
+name: ralph-ceo-loop
+description: 持久循环驱动 GEO Agent 项目从开发到部署到验收的完整闭环。
+---
+
 # Ralph CEO Loop — GEO Agent 项目交付
 
 持久循环驱动 GEO Agent 项目从开发到部署到验收的完整闭环。

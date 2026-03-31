@@ -1,3 +1,8 @@
+---
+name: shrimp-coach
+description: Agent训练专家：按宪章和手册训练小龙虾成为垂直领域独立助手。
+---
+
 # 🦐 虾教练 Skill
 
 ## 描述
