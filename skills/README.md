@@ -46,7 +46,7 @@
 | 5 | [`afrexai-personal-finance`](./afrexai-personal-finance/) | Complete personal finance system — budgeting, debt payoff, investing, tax optimization, net worth... |
 | 6 | [`agent-model-switcher`](./agent-model-switcher/) | Agent Model Switcher |
 | 7 | [`agent-patterns`](./agent-patterns/) | | |
-| 8 | [`agent-task-confirm`](./agent-task-confirm/) | Agent 任务派发与确认机制 |
+| 8 | [`agent-task-confirm`](./agent-task-confirm/) | Confirm whether a dispatched agent task was actually received, activated, and progressing after handoff. |
 | 9 | [`agent-team-orchestration`](./agent-team-orchestration/) | Orchestrate multi-agent teams with defined roles, task lifecycles, handoff protocols, and review ... |
 | 10 | [`ai-image-generation`](./ai-image-generation/) | Generate images using ModelScope Z-Image-Turbo API. Use when user asks to generate, create, or ma... |
 | 11 | [`airtable-automation`](./airtable-automation/) | Automate Airtable tasks via Rube MCP (Composio): records, bases, tables, fields, views. Always se... |
@@ -120,7 +120,7 @@
 | 79 | [`cost-optimization`](./cost-optimization/) | Optimize cloud costs through resource rightsizing, tagging strategies, reserved instances, and sp... |
 | 80 | [`create-viral-content`](./create-viral-content/) | | |
 | 81 | [`cron-manager`](./cron-manager/) | Cron Manager Skill |
-| 82 | [`cross-instance-comm`](./cross-instance-comm/) | 跨 OpenClaw 实例通信 (Tailscale Gateway) |
+| 82 | [`cross-instance-comm`](./cross-instance-comm/) | Send messages or tasks between multiple OpenClaw instances over Tailscale Gateway. |
 | 83 | [`cross-platform-poster`](./cross-platform-poster/) | Cross-Platform Poster — Post Everywhere at Once |
 | 84 | [`cross-team-comm`](./cross-team-comm/) | Cross-Team Communication Skill |
 | 85 | [`crypto-bd-agent`](./crypto-bd-agent/) | > |
