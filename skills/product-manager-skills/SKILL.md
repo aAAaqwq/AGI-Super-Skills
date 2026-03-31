@@ -1,6 +1,6 @@
 ---
 name: product-manager
-description: Senior product manager agent with 6 knowledge domains, 12 templates, and 30+ frameworks. Covers the full PM lifecycle — discovery interviews (JTBD, Mom Test, opportunity mapping), strategy (Geoffrey Moore positioning, PESTEL, TAM/SAM/SOM), artifacts (PRD, user stories, epics, press release/PRFAQ), 32 SaaS metrics with formulas (MRR/ARR/NRR/CAC/LTV/Rule of 40), career coaching (PM to Director to VP to CPO), and AI product craft (context engineering, agent orchestration). Opinionated — pushes back on bad framing, labels assumptions, detects anti-patterns. Three interaction modes: guided, context dump, best guess.
+description: "Senior product manager agent with broad coverage across discovery, strategy, artifacts, metrics, career coaching, and AI product craft. Use when the user needs PM thinking, structured product artifacts, strategy framing, metrics analysis, or product leadership guidance."
 type: workflow
 ---
 
