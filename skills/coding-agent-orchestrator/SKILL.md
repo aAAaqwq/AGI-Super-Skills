@@ -1,10 +1,22 @@
 ---
 name: coding-router
-description: "Compatibility entry skill for plan-first coding work in OpenClaw."
-metadata: {"openclaw":{"emoji":"💻","requires":{"bins":["gh"],"anyBins":["codex","claude"],"env":[]}}}
+description: Compatibility entry skill for plan-first coding work in OpenClaw.
+metadata:
+  openclaw:
+    emoji: 💻
+    requires:
+      bins:
+      - gh
+      anyBins:
+      - codex
+      - claude
+      env: []
+author: Daniel Li
 ---
-
 # Coding Router Skill 💻
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 This file exists for backward compatibility with single-entry skill setups (for example `/coding`).
 Canonical sibling skills live at:

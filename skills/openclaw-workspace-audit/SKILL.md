@@ -1,9 +1,19 @@
 ---
 name: openclaw-workspace-audit
-description: Audit and optimize OpenClaw workspace documents (AGENTS.md, SOUL.md, USER.md, TOOLS.md, IDENTITY.md, HEARTBEAT.md, BOOT.md, MEMORY.md, memory/) for redundancy, dead content, format compliance, cross-file conflicts, and token efficiency. Use when user asks to audit workspace files, check document health, reduce token usage, clean up memory, or optimize agent configuration. Triggers on "audit workspace", "check my docs", "optimize tokens", "clean up memory", "workspace health", "文档审计", "精简文档", "token优化".
+description: Audit and optimize OpenClaw workspace documents (AGENTS.md, SOUL.md,
+  USER.md, TOOLS.md, IDENTITY.md, HEARTBEAT.md, BOOT.md, MEMORY.md, memory/) for redundancy,
+  dead content, format compliance, cross-file conflicts, and token efficiency. Use
+  when user asks to audit workspace files, check document health, reduce token usage,
+  clean up memory, or optimize agent configuration. Triggers on "audit workspace",
+  "check my docs", "optimize tokens", "clean up memory", "workspace health", "文档审计",
+  "精简文档", "token优化".
+author: Daniel Li
 ---
 
 # Workspace Audit
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 Audit OpenClaw workspace documents for redundancy, compliance, conflicts, and token efficiency. Propose targeted fixes without losing meaning or breaking agent behavior.
 

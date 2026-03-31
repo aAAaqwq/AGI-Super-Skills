@@ -1,9 +1,16 @@
 ---
 name: xhs-content-creator
-description: "Generate Xiaohongshu (小红书/RED) content optimized for the platform's CES algorithm. Use when: (1) creating xiaohongshu/小红书 posts, (2) writing Chinese social media content for RED, (3) generating content with xiaohongshu SEO optimization, (4) planning xiaohongshu content calendars. Supports diary-style, tutorial, review, and list formats with proper AI content labeling."
+description: 'Generate Xiaohongshu (小红书/RED) content optimized for the platform''s
+  CES algorithm. Use when: (1) creating xiaohongshu/小红书 posts, (2) writing Chinese
+  social media content for RED, (3) generating content with xiaohongshu SEO optimization,
+  (4) planning xiaohongshu content calendars. Supports diary-style, tutorial, review,
+  and list formats with proper AI content labeling.'
+author: Daniel Li
 ---
-
 # 小红书内容创作 Skill
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## 核心算法规则（CES评分）
 - 关注(8分) > 转发/评论(4分) > 点赞/收藏(1分)

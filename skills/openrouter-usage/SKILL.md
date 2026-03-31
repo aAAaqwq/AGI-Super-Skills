@@ -1,10 +1,19 @@
 ---
 name: openrouter-usage
-description: "Track OpenRouter API spending — credit balance, per-model cost breakdown, and spending projections from OpenClaw session logs."
-metadata: { "openclaw": { "emoji": "💰", "requires": { "bins": ["openrouter-usage"] } } }
+description: Track OpenRouter API spending — credit balance, per-model cost breakdown,
+  and spending projections from OpenClaw session logs.
+metadata:
+  openclaw:
+    emoji: 💰
+    requires:
+      bins:
+      - openrouter-usage
+author: Daniel Li
 ---
-
 # openrouter-usage
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 Track your OpenRouter spending directly from your OpenClaw agent. Shows credit balance, per-model cost/token breakdown, and spending projections.
 
