@@ -1,7 +1,6 @@
 ---
 name: cross-team-comm
-description: OpenClaw 跨团队/跨实例通信技能。通过 Tailscale + SSH + Gateway API + sessions_send
-  实现不同 OpenClaw 实例之间的 Agent 协作。
+description: 通过 Tailscale、SSH、Gateway API 与 sessions_send 实现跨团队、跨实例的 OpenClaw 协作通信。
 ---
 
 # Cross-Team Communication Skill

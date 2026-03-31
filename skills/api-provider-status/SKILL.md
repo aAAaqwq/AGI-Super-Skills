@@ -1,6 +1,6 @@
 ---
 name: api-provider-status
-description: API 供应商状态查询与余额监控。
+description: 查询 API 供应商的余额、用量与可用状态，支持多供应商监控与定时汇报。
 ---
 
 # API Provider Status Skill

@@ -1,6 +1,6 @@
 ---
 name: content-factory-pipeline
-description: CEO 确认选题 + 目标平台 + 调性要求
+description: 内容工厂流水线：从选题确认、实时调研、写作、审核到分发，形成数据驱动的内容生产闭环。
 ---
 
 # 内容工厂流水线 v2 — 数据驱动 + 去AI味

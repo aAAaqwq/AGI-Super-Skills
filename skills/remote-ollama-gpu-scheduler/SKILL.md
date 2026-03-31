@@ -1,6 +1,6 @@
 ---
 name: remote-ollama-gpu-scheduler
-description: 高效调度远程 Ollama GPU 算力进行批量 embedding 的技能。
+description: 调度远程 Ollama GPU 资源执行批量 embedding 或推理任务，提升多机环境下的算力利用率。
 ---
 
 # Remote Ollama GPU Scheduler
