@@ -1,3 +1,8 @@
+---
+name: task-supervisor
+description: 每 15 分钟自动巡检所有 agent 的工作状态，发现偷懒/卡死/abort 立即告警。
+---
+
 # Task Supervisor Skill — 任务监工
 
 ## 概述

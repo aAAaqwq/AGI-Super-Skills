@@ -1,3 +1,8 @@
+---
+name: model-health-check
+description: 检查所有配置的模型供应商连通性和延迟。
+---
+
 # Model Health Check
 
 检查所有配置的模型供应商连通性和延迟。

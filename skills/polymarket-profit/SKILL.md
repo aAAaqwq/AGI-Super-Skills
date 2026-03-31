@@ -1,3 +1,8 @@
+---
+name: polymarket-profit
+description: 真实交易系统，$3 本金在 Polymarket 预测市场上执行量化策略。
+---
+
 # Polymarket 量化投资系统
 
 真实交易系统，$3 本金在 Polymarket 预测市场上执行量化策略。

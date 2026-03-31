@@ -1,3 +1,8 @@
+---
+name: content-distributor
+description: 多平台内容分发 Skill - Markdown 一篇文章，自动转换为各平台适配格式并发布。
+---
+
 # content-distributor
 
 多平台内容分发 Skill — Markdown 一篇文章，自动转换为各平台适配格式并发布。

@@ -1,3 +1,8 @@
+---
+name: email-automation
+description: 邮箱自动化：读取、搜索、草拟、发送邮件。
+---
+
 # Email Automation Skill
 
 邮箱自动化：读取、搜索、草拟、发送邮件。

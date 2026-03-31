@@ -1,3 +1,9 @@
+---
+name: cross-platform-poster
+description: Publish content across MoltX, Twitter/X, Discord, and Telegram from a
+  single command. Format-optimized per platform.
+---
+
 # Cross-Platform Poster — Post Everywhere at Once
 
 Publish content across MoltX, Twitter/X, Discord, and Telegram from a single command. Format-optimized per platform.
