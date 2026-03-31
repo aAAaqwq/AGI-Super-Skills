@@ -1,3 +1,8 @@
+---
+name: cron-manager
+description: 定时任务管理专家。负责创建、监控、诊断和修复 OpenClaw cron 任务。
+---
+
 # Cron Manager Skill
 
 定时任务管理专家。负责创建、监控、诊断和修复 OpenClaw cron 任务。

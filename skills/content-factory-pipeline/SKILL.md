@@ -1,3 +1,8 @@
+---
+name: content-factory-pipeline
+description: CEO 确认选题 + 目标平台 + 调性要求
+---
+
 # 内容工厂流水线 v2 — 数据驱动 + 去AI味
 
 ## 流程（5步闭环）

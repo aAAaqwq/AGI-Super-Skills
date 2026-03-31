@@ -1,3 +1,9 @@
+---
+name: contract-and-proposal-writer
+description: 'Tier: POWERFUL Category: Business Growth Domain: Legal Documents, Business
+  Development, Client Relations'
+---
+
 # Contract & Proposal Writer
 
 **Tier:** POWERFUL  

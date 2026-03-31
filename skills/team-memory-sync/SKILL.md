@@ -1,3 +1,8 @@
+---
+name: team-memory-sync
+description: 团队记忆同步与认知审计工具。
+---
+
 # team-memory-sync
 
 团队记忆同步与认知审计工具。

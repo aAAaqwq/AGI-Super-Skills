@@ -1,3 +1,9 @@
+---
+name: pm-competitive-teardown
+description: 'Tier: POWERFUL Category: Product Team Domain: Competitive Intelligence,
+  Product Strategy, Market Analysis'
+---
+
 # Competitive Teardown
 
 **Tier:** POWERFUL  
