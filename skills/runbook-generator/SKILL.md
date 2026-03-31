@@ -1,3 +1,9 @@
+---
+name: runbook-generator
+description: Analyze a codebase and generate production-grade operational runbooks
+  with verification steps, rollback paths, escalation guidance, and staleness checks.
+---
+
 # Runbook Generator
 
 **Tier:** POWERFUL  

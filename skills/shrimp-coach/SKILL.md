@@ -1,3 +1,8 @@
+---
+name: shrimp-coach
+description: 训练垂直领域 agent 的教练型 skill，用于按宪章、手册和复盘机制持续提升 agent 能力。
+---
+
 # 🦐 虾教练 Skill
 
 ## 描述

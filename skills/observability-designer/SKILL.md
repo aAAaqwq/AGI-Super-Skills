@@ -1,3 +1,9 @@
+---
+name: observability-designer
+description: Design production observability strategies covering SLI/SLOs, metrics,
+  logs, traces, dashboards, and alert quality.
+---
+
 # Observability Designer (POWERFUL)
 
 **Category:** Engineering  

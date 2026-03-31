@@ -6,6 +6,7 @@ metadata:
   version: 1.0.0
   domains: [email, automation, productivity]
   type: automation
+author: Daniel Li
 ---
 
 # Email Manager - 邮箱智能管家

@@ -1,3 +1,9 @@
+---
+name: dependency-auditor
+description: Audit project dependencies for vulnerabilities, license risks, upgrade
+  planning, and ecosystem health across multiple languages.
+---
+
 # Dependency Auditor
 
 > **Skill Type:** POWERFUL  

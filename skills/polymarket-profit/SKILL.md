@@ -1,3 +1,8 @@
+---
+name: polymarket-profit
+description: 围绕 Polymarket 预测市场执行小资金量化交易与收益跟踪策略。
+---
+
 # Polymarket 量化投资系统
 
 真实交易系统，$3 本金在 Polymarket 预测市场上执行量化策略。
