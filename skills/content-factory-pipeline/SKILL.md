@@ -1,9 +1,14 @@
 ---
 name: content-factory-pipeline
 description: 内容工厂流水线：从选题确认、实时调研、写作、审核到分发，形成数据驱动的内容生产闭环。
+author: Daniel Li
 ---
 
 # 内容工厂流水线 v2 — 数据驱动 + 去AI味
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 ## 流程（5步闭环）
 

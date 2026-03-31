@@ -1,10 +1,20 @@
 ---
 name: meta-cognition
-description: Meta-cognitive framing for analyze-before-doing, ownership routing, risk gating, minimum-closure planning, and retrospective extraction in multi-agent work. Use when the user says 先分析再做 / 先别动手 / 先判断 / 先定方案, when work spans multiple agents or needs dispatch/orchestration, when CEO-style delegation or group command requires owner+deadline+closure, when abnormal sessions/cron/jobs/runs need real follow-through instead of status-only reporting, or when a task needs strategy, PRD, first-principles thinking, verification, and postmortem/retro.
+description: Meta-cognitive framing for analyze-before-doing, ownership routing, risk
+  gating, minimum-closure planning, and retrospective extraction in multi-agent work.
+  Use when the user says 先分析再做 / 先别动手 / 先判断 / 先定方案, when work spans multiple agents
+  or needs dispatch/orchestration, when CEO-style delegation or group command requires
+  owner+deadline+closure, when abnormal sessions/cron/jobs/runs need real follow-through
+  instead of status-only reporting, or when a task needs strategy, PRD, first-principles
+  thinking, verification, and postmortem/retro.
 author: Daniel Li
 ---
 
 # Meta-Cognition
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 Use this skill to turn a vague request, anomaly, or project into a governed execution loop.
 

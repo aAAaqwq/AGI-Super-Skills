@@ -1,9 +1,14 @@
 ---
 name: team-daily-report
 description: 自动汇总团队内 agent、cron、skill 进展与关键事件，生成并推送结构化日报。
+author: Daniel Li
 ---
 
 # 小a团队日报 Skill
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 每日自动生成并推送团队日报，汇总当天所有agent工作、cron执行、skill进度、关键事件。
 

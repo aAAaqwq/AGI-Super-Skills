@@ -6,6 +6,10 @@ author: Daniel Li
 
 # 即梦登录
 
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
+
 ## 前置条件
 
 - OpenClaw 浏览器已启动（profile=openclaw）

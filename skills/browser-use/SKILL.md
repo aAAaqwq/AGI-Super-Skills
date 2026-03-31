@@ -1,11 +1,15 @@
 ---
 name: browser-use
-description: "AI驱动的智能浏览器自动化工具。使用LLM理解页面并自动执行任务，比传统Playwright更智能、更省token。适用于复杂交互、动态页面、需要智能决策的浏览器操作。Chrome浏览器优先。"
+description: AI驱动的智能浏览器自动化工具。使用LLM理解页面并自动执行任务，比传统Playwright更智能、更省token。适用于复杂交互、动态页面、需要智能决策的浏览器操作。Chrome浏览器优先。
 allowed-tools: Bash, Exec, Read, Write
 author: Daniel Li
 ---
 
 # browser-use 智能浏览器自动化
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 ## 概述
 

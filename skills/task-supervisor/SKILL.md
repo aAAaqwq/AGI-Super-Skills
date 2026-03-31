@@ -1,9 +1,14 @@
 ---
 name: task-supervisor
 description: 定时巡检 agent 任务执行状态，识别卡住、abort、无产出等异常并触发催促或告警。
+author: Daniel Li
 ---
 
 # Task Supervisor Skill — 任务监工
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 ## 概述
 每 15 分钟自动巡检所有 agent 的工作状态，发现偷懒/卡死/abort 立即告警。

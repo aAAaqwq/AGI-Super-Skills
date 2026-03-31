@@ -1,10 +1,15 @@
 ---
 name: juejin-smart-publish
-description: "掘金技术社区智能发布：Markdown编辑器全功能支持。覆盖标题(15-35字)、分类(必选)、标签(1-5个)、封面上传、摘要填写、GFM排版。Playwright自动化+API双通道发布。触发：发掘金、掘金发布、juejin publish、掘金文章、技术博客发布。"
+description: 掘金技术社区智能发布：Markdown编辑器全功能支持。覆盖标题(15-35字)、分类(必选)、标签(1-5个)、封面上传、摘要填写、GFM排版。Playwright自动化+API双通道发布。触发：发掘金、掘金发布、juejin
+  publish、掘金文章、技术博客发布。
 author: Daniel Li
 ---
 
 # 掘金智能发布
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 ## 平台入口
 

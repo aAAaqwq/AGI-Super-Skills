@@ -1,10 +1,16 @@
 ---
 name: daily-douyin-content
-description: Use when running the daily Douyin content production cron or generating 3 ready-to-publish Douyin content drafts with scripts, captions, and covers for Daniel Li.
+description: Use when running the daily Douyin content production cron or generating
+  3 ready-to-publish Douyin content drafts with scripts, captions, and covers for
+  Daniel Li.
 author: Daniel Li
 ---
 
 # daily-douyin-content — 抖音每日内容生产
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 > Cron: `daily-douyin-content` | 每日 22:00 | agentId: content
 

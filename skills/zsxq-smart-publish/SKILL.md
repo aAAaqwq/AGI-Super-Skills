@@ -1,10 +1,17 @@
 ---
 name: zsxq-smart-publish
-description: "Publish and manage content on 知识星球 (zsxq.com). Supports talk posts, Q&A, long articles, file sharing, digest/bookmark, homework tasks, and tag management. Use when publishing content to 知识星球, creating/editing posts, uploading files/images/audio, managing digests, batch publishing, or formatting content for 知识星球."
+description: Publish and manage content on 知识星球 (zsxq.com). Supports talk posts, Q&A,
+  long articles, file sharing, digest/bookmark, homework tasks, and tag management.
+  Use when publishing content to 知识星球, creating/editing posts, uploading files/images/audio,
+  managing digests, batch publishing, or formatting content for 知识星球.
 author: Daniel Li
 ---
 
 # 知识星球智能发布
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 Publish content to 知识星球 via API or browser automation.
 

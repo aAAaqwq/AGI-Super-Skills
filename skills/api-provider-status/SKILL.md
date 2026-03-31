@@ -1,9 +1,14 @@
 ---
 name: api-provider-status
 description: 查询 API 供应商的余额、用量与可用状态，支持多供应商监控与定时汇报。
+author: Daniel Li
 ---
 
 # API Provider Status Skill
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 API 供应商状态查询与余额监控。
 

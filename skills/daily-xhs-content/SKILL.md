@@ -1,10 +1,15 @@
 ---
 name: daily-xhs-content
-description: Use when running the daily Xiaohongshu content production cron or generating 3 小红书 content drafts with正文 and cover direction for Daniel Li.
+description: Use when running the daily Xiaohongshu content production cron or generating
+  3 小红书 content drafts with正文 and cover direction for Daniel Li.
 author: Daniel Li
 ---
 
 # daily-xhs-content — 小红书每日内容生产
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 > Cron: `daily-xhs-content` | 每日 21:00 | agentId: content
 

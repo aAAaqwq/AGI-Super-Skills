@@ -1,10 +1,19 @@
 ---
 name: agent-team-orchestration
-description: "Orchestrate multi-agent teams with defined roles, task lifecycles, handoff protocols, and review workflows. Use when: (1) Setting up a team of 2+ agents with different specializations, (2) Defining task routing and lifecycle (inbox → spec → build → review → done), (3) Creating handoff protocols between agents, (4) Establishing review and quality gates, (5) Managing async communication and artifact sharing between agents."
+description: 'Orchestrate multi-agent teams with defined roles, task lifecycles, handoff
+  protocols, and review workflows. Use when: (1) Setting up a team of 2+ agents with
+  different specializations, (2) Defining task routing and lifecycle (inbox → spec
+  → build → review → done), (3) Creating handoff protocols between agents, (4) Establishing
+  review and quality gates, (5) Managing async communication and artifact sharing
+  between agents.'
 author: Daniel Li
 ---
 
 # Agent Team Orchestration
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 Production playbook for running multi-agent teams with clear roles, structured task flow, and quality gates.
 

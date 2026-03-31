@@ -1,15 +1,20 @@
 ---
 name: relay-video-gen
-description: >
-  Generate short videos via relay with provider priority fallback.
-  Google Gemini Veo 3.1 (primary, direct API) → Xingjiabi (kling-video fallback).
-  Async task-based: submit → poll → download. 4-8 second clips.
-  Use when: creating video clips, marketing videos, animated content from text.
-  Extensible: add providers by editing RELAY_PRIORITY in the script.
+description: 'Generate short videos via relay with provider priority fallback. Google
+  Gemini Veo 3.1 (primary, direct API) → Xingjiabi (kling-video fallback). Async task-based:
+  submit → poll → download. 4-8 second clips. Use when: creating video clips, marketing
+  videos, animated content from text. Extensible: add providers by editing RELAY_PRIORITY
+  in the script.
+
+  '
 author: Daniel Li
 ---
 
 # Relay Video Generation
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 Multi-provider video generation with async polling and automatic model fallback.
 

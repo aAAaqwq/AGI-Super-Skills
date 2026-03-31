@@ -1,10 +1,16 @@
 ---
 name: daily-gzh-content
-description: Use when running the daily WeChat Official Account content production cron or generating 3 long-form微信公众号 drafts for Daniel Li based on current AI topics and reference docs.
+description: Use when running the daily WeChat Official Account content production
+  cron or generating 3 long-form微信公众号 drafts for Daniel Li based on current AI topics
+  and reference docs.
 author: Daniel Li
 ---
 
 # daily-gzh-content — 公众号每日内容生产
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 > Cron: `daily-gzh-content` | 每日 21:30 | agentId: content
 

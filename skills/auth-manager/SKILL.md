@@ -1,15 +1,22 @@
 ---
 name: auth-manager
-description: "网页登录态管理。使用 OpenClaw 内置 browser (profile=openclaw) 统一管理各平台登录状态，定期检查可用性。"
+description: 网页登录态管理。使用 OpenClaw 内置 browser (profile=openclaw) 统一管理各平台登录状态，定期检查可用性。
 license: MIT
 metadata:
   version: 4.0.0
-  domains: [auth, browser, session-management]
+  domains:
+  - auth
+  - browser
+  - session-management
   type: automation
 author: Daniel Li
 ---
 
 # Auth Manager v4.0 — 平台登录态管理
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 > **统一使用 OpenClaw 内置 browser (profile=openclaw)**，所有平台共享同一个 Chrome profile。
 > ⚠️ **禁止使用 fbu / fast-browser-use**，已废弃。

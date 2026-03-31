@@ -1,15 +1,20 @@
 ---
 name: relay-image-gen
-description: >
-  Generate images via relay with provider priority fallback.
-  Boluobao → Google Gemini direct → Xingjiabi (dall-e-3/gpt-image-1/imagen-4).
-  Supports 1K/2K/4K, multiple aspect ratios, auto model fallback.
-  Use when: creating images, generating pictures/illustrations from text, poster art.
-  Extensible: add providers by editing RELAY_PRIORITY in the script.
+description: 'Generate images via relay with provider priority fallback. Boluobao
+  → Google Gemini direct → Xingjiabi (dall-e-3/gpt-image-1/imagen-4). Supports 1K/2K/4K,
+  multiple aspect ratios, auto model fallback. Use when: creating images, generating
+  pictures/illustrations from text, poster art. Extensible: add providers by editing
+  RELAY_PRIORITY in the script.
+
+  '
 author: Daniel Li
 ---
 
 # Relay Image Generation
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 Multi-provider image generation with automatic fallback.
 

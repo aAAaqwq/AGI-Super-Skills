@@ -1,11 +1,15 @@
 ---
 name: chrome-automation
-description: "Chrome 浏览器自动化操作。当用户需要自动化浏览器操作、网页测试、数据抓取或 UI 自动化时使用此技能。"
+description: Chrome 浏览器自动化操作。当用户需要自动化浏览器操作、网页测试、数据抓取或 UI 自动化时使用此技能。
 allowed-tools: Bash, Read, Write, Edit
 author: Daniel Li
 ---
 
 # Chrome 浏览器自动化
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 ## 功能说明
 此技能专门用于 Chrome 浏览器自动化,包括:

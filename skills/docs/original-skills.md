@@ -45,6 +45,25 @@ This list is intentionally conservative: it only includes skills that are clearl
 - [`juejin-smart-publish`](../juejin-smart-publish/)
 - [`zsxq-smart-publish`](../zsxq-smart-publish/)
 
+### Polymarket & Quant Workflow
+- [`polymarket-profit`](../polymarket-profit/)
+
+### Management / Operations
+- [`cron-manager`](../cron-manager/)
+- [`task-supervisor`](../task-supervisor/)
+- [`team-supervisor`](../team-supervisor/)
+- [`team-memory-sync`](../team-memory-sync/)
+- [`team-daily-report`](../team-daily-report/)
+- [`agent-model-switcher`](../agent-model-switcher/)
+- [`mcstatus`](../mcstatus/)
+- [`api-provider-status`](../api-provider-status/)
+- [`content-factory-pipeline`](../content-factory-pipeline/)
+
+### Recently Synced First-Party Skills
+- [`tailscale-operator`](../tailscale-operator/)
+- [`cron-model-migration`](../cron-model-migration/)
+- [`openclaw-browser-chain-debug`](../openclaw-browser-chain-debug/)
+
 ## Notes
 
 - `author: Daniel Li` is used here as an authorship / ownership marker for clearly original skills.

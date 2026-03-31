@@ -1,10 +1,15 @@
 ---
 name: api-provider-setup
-description: "添加和配置第三方 API 中转站供应商到 OpenClaw。当用户需要添加新的 API 供应商、配置中转站、设置自定义模型端点时使用此技能。支持 Anthropic 兼容和 OpenAI 兼容的 API 格式。"
+description: 添加和配置第三方 API 中转站供应商到 OpenClaw。当用户需要添加新的 API 供应商、配置中转站、设置自定义模型端点时使用此技能。支持
+  Anthropic 兼容和 OpenAI 兼容的 API 格式。
 author: Daniel Li
 ---
 
 # API Provider Setup
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 为 OpenClaw 添加和配置第三方 API 中转站供应商。
 

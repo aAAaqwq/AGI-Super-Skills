@@ -6,6 +6,10 @@ author: Daniel Li
 
 # 微信视频号助手 — 视频发布
 
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
+
 ## 概述
 
 通过浏览器自动化（profile=openclaw）操控视频号助手网页版（channels.weixin.qq.com），完成从登录到视频发布的全流程闭环。

@@ -1,9 +1,14 @@
 ---
 name: cron-manager
 description: 创建、监控、诊断和修复 OpenClaw cron 任务，支持自然语言时间与常见故障排查。
+author: Daniel Li
 ---
 
 # Cron Manager Skill
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 定时任务管理专家。负责创建、监控、诊断和修复 OpenClaw cron 任务。
 

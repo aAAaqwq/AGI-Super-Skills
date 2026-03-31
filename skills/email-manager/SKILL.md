@@ -1,15 +1,22 @@
 ---
 name: email-manager
-description: "多邮箱统一管理与智能助手。支持 Gmail、QQ邮箱等 IMAP 邮箱，定时查看邮件，AI 生成摘要和回复草稿，发送前需用户确认。"
+description: 多邮箱统一管理与智能助手。支持 Gmail、QQ邮箱等 IMAP 邮箱，定时查看邮件，AI 生成摘要和回复草稿，发送前需用户确认。
 license: MIT
 metadata:
   version: 1.0.0
-  domains: [email, automation, productivity]
+  domains:
+  - email
+  - automation
+  - productivity
   type: automation
 author: Daniel Li
 ---
 
 # Email Manager - 邮箱智能管家
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 ## 当使用此技能
 

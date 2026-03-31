@@ -1,10 +1,15 @@
 ---
 name: cross-instance-comm
-description: "Use when sending messages or tasks between multiple OpenClaw instances over Tailscale Gateway, such as asking another machine to execute work or sync context."
+description: Use when sending messages or tasks between multiple OpenClaw instances
+  over Tailscale Gateway, such as asking another machine to execute work or sync context.
 author: Daniel Li
 ---
 
 # 跨 OpenClaw 实例通信 (Tailscale Gateway)
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
+
 
 通过 Tailscale 网络向其他 OpenClaw 实例发送消息，实现跨机器 Agent 通信。
 

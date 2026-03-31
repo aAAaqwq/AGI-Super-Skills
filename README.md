@@ -6,6 +6,9 @@
 
 ## 💡 What Is This?
 
+- [Original Skills Index](./skills/docs/original-skills.md) — first-party skills authored and maintained by Daniel Li
+
+
 A **plug-and-play AI team template** — deploy a complete virtual company in minutes using OpenClaw. Each agent has its own role, personality, and skill stack. Fully customizable: swap models, rename agents, add your own skills.
 
 ## 📊 Overview
