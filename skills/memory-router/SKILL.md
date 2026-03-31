@@ -1,9 +1,16 @@
 ---
 name: memory-router
-description: Team-wide memory routing skill — routes agent queries to the optimal knowledge source (QMD hybrid search, daily memory, MEMORY.md) and enforces citation. Use when any agent needs to retrieve prior work, system config, skill docs, project status, or decisions. Triggers on "查知识库", "memory router", "qmd query", "find in docs", "what was decided", "how does X work", "项目状态", "之前的决策".
+description: Team-wide memory routing skill — routes agent queries to the optimal
+  knowledge source (QMD hybrid search, daily memory, MEMORY.md) and enforces citation.
+  Use when any agent needs to retrieve prior work, system config, skill docs, project
+  status, or decisions. Triggers on "查知识库", "memory router", "qmd query", "find in
+  docs", "what was decided", "how does X work", "项目状态", "之前的决策".
+author: Daniel Li
 ---
-
 # Memory Router — Team Unified Knowledge Retrieval Skill
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## Purpose
 

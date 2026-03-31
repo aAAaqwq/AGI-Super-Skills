@@ -60,6 +60,11 @@ You (CEO / Creator)
 
 ## 🛠️ Skill Categories
 
+### Skill Indexes
+- [All Skills](./skills/README.md)
+- [Categories](./skills/categories/README.md)
+- [Original Skills Index](./skills/docs/original-skills.md) — first-party skills authored and maintained by Daniel Li, including Polymarket and management/operations workflows
+
 | Category | Count | Highlights |
 |----------|:-----:|-----------|
 | [⚙️ OpenClaw Tools](./skills/categories/openclaw-tools.md) | 25 | Config helpers, auth manager, cron, token guard, model switcher |
@@ -95,6 +100,7 @@ You (CEO / Creator)
 | [`auth-manager`](./skills/auth-manager/) | Web login session management with browser automation |
 | [`context-manager`](./skills/context-manager/) | AI-powered context management for sessions |
 | [`cron-manager`](./skills/cron-manager/) | Cron job management — create, monitor, diagnose, and fix scheduled tasks |
+| [`cron-model-migration`](./skills/cron-model-migration/) | Safely change cron job models without session/model mismatch errors |
 | [`evomap`](./skills/evomap/) | EvoMap collaborative evolution marketplace integration |
 | [`feishu-channel`](./skills/feishu-channel/) | Feishu/Lark ↔ OpenClaw bidirectional messaging channel |
 | [`mcp-installer`](./skills/mcp-installer/) | Search and auto-install MCP servers from GitHub |
@@ -109,6 +115,7 @@ You (CEO / Creator)
 | [`skillforge`](./skills/skillforge/) | Intelligent skill router — recommend, improve, or create skills |
 | [`telegram-push`](./skills/telegram-push/) | Push messages to Telegram via standalone bot |
 | [`token-guard`](./skills/token-guard/) | Token usage monitoring with budgets and auto-downgrade |
+| [`tailscale-operator`](./skills/tailscale-operator/) | Manage and troubleshoot devices on a Tailscale tailnet |
 | [`wechat-channel`](./skills/wechat-channel/) | WeChat ↔ OpenClaw bidirectional messaging channel |
 | [`xiaomo-assistant-template`](./skills/xiaomo-assistant-template/) | Quick-start assistant configuration template |
 | [`agent-model-switcher`](./skills/agent-model-switcher/) | Batch switch models across all sub-agents |
@@ -343,6 +350,7 @@ You (CEO / Creator)
 | [`browser-use`](./skills/browser-use/) | AI-driven intelligent browser automation |
 | [`chrome-automation`](./skills/chrome-automation/) | Chrome browser automation |
 | [`fast-browser-use`](./skills/fast-browser-use/) | Fast Rust-based headless browser CLI |
+| [`openclaw-browser-chain-debug`](./skills/openclaw-browser-chain-debug/) | Debug OpenClaw browser startup, CDP, DISPLAY, and mode-selection failures |
 | [`media-auto-publisher`](./skills/media-auto-publisher/) | Auto-publish to 6 Chinese content platforms |
 | [`playwright-automation`](./skills/playwright-automation/) | Playwright browser automation for scraping/testing |
 | [`webapp-testing`](./skills/webapp-testing/) | Web application testing with Playwright |

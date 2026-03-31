@@ -1,9 +1,14 @@
 ---
 name: douyin-smart-publisher
-description: "抖音智能发布：内容适配→排版→Browser自动发布/存草稿。覆盖标题公式(≤55字+悬念+emoji)、正文排版(分段+emoji点缀)、话题标签策略、封面规格(9:16竖版1080×1920)、视频时长限制。支持图文和视频发布。触发：'发抖音'、'抖音发布'、'douyin publish'、'抖音视频'。"
+description: 抖音智能发布：内容适配→排版→Browser自动发布/存草稿。覆盖标题公式(≤55字+悬念+emoji)、正文排版(分段+emoji点缀)、话题标签策略、封面规格(9:16竖版1080×1920)、视频时长限制。支持图文和视频发布。触发：'发抖音'、'抖音发布'、'douyin
+  publish'、'抖音视频'。
+author: Daniel Li
 ---
 
 # 抖音智能发布
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## 排版规则
 

@@ -1,14 +1,22 @@
 ---
 name: openclaw-inter-instance
-description: "OpenClaw 实例间通信。当需要在多个 OpenClaw 实例之间传递消息、同步数据、远程执行命令时使用此技能。覆盖 agent-to-agent 消息、nodes.run 远程执行、文件级通信等多种方式。"
+description: OpenClaw 实例间通信。当需要在多个 OpenClaw 实例之间传递消息、同步数据、远程执行命令时使用此技能。覆盖 agent-to-agent
+  消息、nodes.run 远程执行、文件级通信等多种方式。
 license: MIT
 metadata:
   version: 1.0.0
-  domains: [openclaw, multi-agent, communication]
+  domains:
+  - openclaw
+  - multi-agent
+  - communication
   type: automation
+author: Daniel Li
 ---
 
 # OpenClaw 实例间通信
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## 当使用此技能
 
