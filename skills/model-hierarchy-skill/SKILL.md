@@ -1,14 +1,18 @@
 ---
 name: model-hierarchy
-description: >
-  Cost-optimize AI agent operations by routing tasks to appropriate models based on complexity.
-  Use this skill when: (1) deciding which model to use for a task, (2) spawning sub-agents,
-  (3) considering cost efficiency, (4) the current model feels like overkill for the task.
-  Triggers: "model routing", "cost optimization", "which model", "too expensive", "spawn agent".
+description: 'Cost-optimize AI agent operations by routing tasks to appropriate models
+  based on complexity. Use this skill when: (1) deciding which model to use for a
+  task, (2) spawning sub-agents, (3) considering cost efficiency, (4) the current
+  model feels like overkill for the task. Triggers: "model routing", "cost optimization",
+  "which model", "too expensive", "spawn agent".
 
+  '
+author: Daniel Li
 ---
-
 # Model Hierarchy
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 Route tasks to the cheapest model that can handle them. Most agent work is routine.
 

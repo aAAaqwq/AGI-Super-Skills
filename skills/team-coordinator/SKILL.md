@@ -1,14 +1,21 @@
 ---
 name: team-coordinator
-description: "团队协调与智能任务分配。作为高管，将用户任务拆解并分配给最合适的员工 agent 执行，协调多 agent 并行协作，汇总审核产出。"
+description: 团队协调与智能任务分配。作为高管，将用户任务拆解并分配给最合适的员工 agent 执行，协调多 agent 并行协作，汇总审核产出。
 license: MIT
 metadata:
   version: 1.0.0
-  domains: [team-management, task-routing, agent-coordination]
+  domains:
+  - team-management
+  - task-routing
+  - agent-coordination
   type: specialist
+author: Daniel Li
 ---
 
 # 团队协调 - Team Coordinator
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## 当使用此技能
 
