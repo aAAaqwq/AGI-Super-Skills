@@ -1,10 +1,14 @@
 ---
 name: content-source-aggregator
-description: "实时数据采集中心。从 Reddit/GitHub/HackerNews/ArXiv/YouTube/B站/微博/知乎等 16+ 平台免费获取实时热点、技术趋势、AI前沿论文，输出标准化热点池。小data 专属管理。"
+description: 实时数据采集中心。从 Reddit/GitHub/HackerNews/ArXiv/YouTube/B站/微博/知乎等 16+ 平台免费获取实时热点、技术趋势、AI前沿论文，输出标准化热点池。小data
+  专属管理。
 allowed-tools: Read, Write, Edit, Bash, WebFetch
+author: Daniel Li
 ---
-
 # 📡 实时数据采集中心（小data 专属）
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 **角色定位**：你是团队的数据调控大师。所有团队成员需要的实时数据、热点趋势、市场信号，都由你通过此 skill 统一采集和管理。
 

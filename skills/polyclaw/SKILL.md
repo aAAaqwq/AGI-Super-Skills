@@ -1,10 +1,49 @@
 ---
 name: polyclaw
-description: "Trade on Polymarket via split + CLOB execution. Browse markets, track positions with P&L, discover hedges via LLM. Polygon/Web3."
-metadata: {"openclaw":{"emoji":"🦞","homepage":"https://polymarket.com","primaryEnv":"POLYCLAW_PRIVATE_KEY","requires":{"bins":["uv"],"env":["CHAINSTACK_NODE","POLYCLAW_PRIVATE_KEY"]},"install":[{"id":"uv-brew","kind":"brew","formula":"uv","bins":["uv"],"label":"Install uv (brew)"}]},"clawdbot":{"emoji":"🦞","homepage":"https://polymarket.com","primaryEnv":"POLYCLAW_PRIVATE_KEY","requires":{"bins":["uv"],"env":["CHAINSTACK_NODE","POLYCLAW_PRIVATE_KEY"]},"install":[{"id":"uv-brew","kind":"brew","formula":"uv","bins":["uv"],"label":"Install uv (brew)"}]}}
+description: Trade on Polymarket via split + CLOB execution. Browse markets, track
+  positions with P&L, discover hedges via LLM. Polygon/Web3.
+metadata:
+  openclaw:
+    emoji: 🦞
+    homepage: https://polymarket.com
+    primaryEnv: POLYCLAW_PRIVATE_KEY
+    requires:
+      bins:
+      - uv
+      env:
+      - CHAINSTACK_NODE
+      - POLYCLAW_PRIVATE_KEY
+    install:
+    - id: uv-brew
+      kind: brew
+      formula: uv
+      bins:
+      - uv
+      label: Install uv (brew)
+  clawdbot:
+    emoji: 🦞
+    homepage: https://polymarket.com
+    primaryEnv: POLYCLAW_PRIVATE_KEY
+    requires:
+      bins:
+      - uv
+      env:
+      - CHAINSTACK_NODE
+      - POLYCLAW_PRIVATE_KEY
+    install:
+    - id: uv-brew
+      kind: brew
+      formula: uv
+      bins:
+      - uv
+      label: Install uv (brew)
+author: Daniel Li
 ---
 
 # PolyClaw
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 Trading-enabled Polymarket skill for OpenClaw. Browse markets, manage wallets, execute trades, and track positions.
 

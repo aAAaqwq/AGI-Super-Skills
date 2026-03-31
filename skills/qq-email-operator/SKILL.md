@@ -1,14 +1,21 @@
 ---
 name: qq-email-operator
-description: "QQ邮箱操作技能。支持通过 IMAP/SMTP 读取邮件、搜索邮件、回复邮件、发送邮件。凭据通过 pass 安全存储。"
+description: QQ邮箱操作技能。支持通过 IMAP/SMTP 读取邮件、搜索邮件、回复邮件、发送邮件。凭据通过 pass 安全存储。
 license: MIT
 metadata:
   version: 1.0.0
-  domains: [email, automation, communication]
+  domains:
+  - email
+  - automation
+  - communication
   type: automation
+author: Daniel Li
 ---
 
 # QQ 邮箱操作技能
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## 当使用此技能
 

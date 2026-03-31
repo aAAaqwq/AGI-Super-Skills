@@ -1,14 +1,23 @@
 ---
 name: remote-openclaw-deploy
-description: "通用远程部署 OpenClaw Agent 项目。支持任意定制化 agent 团队、跨 macOS/Linux、多渠道（飞书/Telegram/Discord）、deploy.json 声明式配置注入。一个脚本完成从零到可用的全流程。"
+description: 通用远程部署 OpenClaw Agent 项目。支持任意定制化 agent 团队、跨 macOS/Linux、多渠道（飞书/Telegram/Discord）、deploy.json
+  声明式配置注入。一个脚本完成从零到可用的全流程。
 license: MIT
 metadata:
   version: 2.0.0
-  domains: [deployment, openclaw, remote-ops, devops]
+  domains:
+  - deployment
+  - openclaw
+  - remote-ops
+  - devops
   type: automation
+author: Daniel Li
 ---
 
 # 远程 OpenClaw 通用部署 Skill
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## 定位
 

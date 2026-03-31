@@ -1,9 +1,13 @@
 ---
 name: content-distributor
 description: 将一篇 Markdown 内容自动转换为多平台适配格式并执行分发。
+author: Daniel Li
 ---
 
 # content-distributor
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 多平台内容分发 Skill — Markdown 一篇文章，自动转换为各平台适配格式并发布。
 
