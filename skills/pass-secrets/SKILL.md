@@ -1,6 +1,6 @@
 ---
 name: pass-secrets
-description: 使用 Pass (Password Store) 统一管理所有 API 密钥和敏感凭证。Pass 基于 GPG 加密，支持 Git 同步，安全可靠。
+description: 使用 Pass（Password Store）统一管理 API 密钥和敏感凭证，支持加密存储与 Git 同步。
 ---
 
 # Pass 密钥管理 Skill

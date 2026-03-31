@@ -1,7 +1,7 @@
 ---
 name: runbook-generator
-description: 'Tier: POWERFUL Category: Engineering Domain: DevOps / Site Reliability
-  Engineering'
+description: Analyze a codebase and generate production-grade operational runbooks
+  with verification steps, rollback paths, escalation guidance, and staleness checks.
 ---
 
 # Runbook Generator

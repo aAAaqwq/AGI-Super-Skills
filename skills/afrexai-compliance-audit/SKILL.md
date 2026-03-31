@@ -1,7 +1,7 @@
 ---
 name: afrexai-compliance-audit
-description: Run internal compliance audits against major frameworks without hiring
-  a consultant.
+description: Run internal compliance audits against major governance and security
+  frameworks, highlighting gaps, risks, and remediation priorities.
 ---
 
 # Compliance Audit Generator

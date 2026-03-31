@@ -1,7 +1,7 @@
 ---
 name: pm-competitive-teardown
-description: 'Tier: POWERFUL Category: Product Team Domain: Competitive Intelligence,
-  Product Strategy, Market Analysis'
+description: Run structured competitive teardowns using pricing, reviews, positioning,
+  UX, and go-to-market signals to produce actionable product strategy insights.
 ---
 
 # Competitive Teardown

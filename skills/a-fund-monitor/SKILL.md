@@ -1,6 +1,6 @@
 ---
 name: a-fund-monitor
-description: A股基金净值监控，支持实时估值和盘后净值，自动判断交易日/节假日。
+description: 监控 A 股基金实时估值与盘后净值，自动判断交易日并生成提醒或分析。
 ---
 
 # A股基金监控 Skill

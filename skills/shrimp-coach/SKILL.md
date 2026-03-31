@@ -1,6 +1,6 @@
 ---
 name: shrimp-coach
-description: Agent训练专家：按宪章和手册训练小龙虾成为垂直领域独立助手。
+description: 训练垂直领域 agent 的教练型 skill，用于按宪章、手册和复盘机制持续提升 agent 能力。
 ---
 
 # 🦐 虾教练 Skill

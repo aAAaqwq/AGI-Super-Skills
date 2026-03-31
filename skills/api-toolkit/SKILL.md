@@ -1,6 +1,6 @@
 ---
 name: api-toolkit
-description: 通用 API 调用工具包，用于快速接入任何 RESTful API。
+description: 通用 REST API 工具包，用于快速接入第三方服务、调试端点和构建自动化流程。
 ---
 
 # API Toolkit Skill

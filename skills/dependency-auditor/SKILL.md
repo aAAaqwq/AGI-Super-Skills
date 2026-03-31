@@ -1,7 +1,7 @@
 ---
 name: dependency-auditor
-description: '> Skill Type: POWERFUL > Category: Engineering > Domain: Dependency
-  Management & Security'
+description: Audit project dependencies for vulnerabilities, license risks, upgrade
+  planning, and ecosystem health across multiple languages.
 ---
 
 # Dependency Auditor

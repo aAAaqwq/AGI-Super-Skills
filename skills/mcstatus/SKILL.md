@@ -1,6 +1,6 @@
 ---
 name: mcstatus
-description: 实时生成 Agent + Cron 的模型配置报告，展示当前所有 agent 的主模型/fallback链和所有 cron 任务的模型分配。
+description: 生成 Agent 与 Cron 的模型配置状态报告，展示主模型、fallback 链和任务分配情况。
 ---
 
 # SKILL.md - Model Configuration Status (mcstatus)
