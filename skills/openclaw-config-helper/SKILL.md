@@ -1,15 +1,23 @@
 ---
 name: openclaw-config-helper
-description: "OpenClaw 配置修改助手。修改任何 OpenClaw 配置前必须先查阅官方文档，确保格式正确，避免系统崩溃或功能异常。强制执行：查 schema → 查文档 → 确认 → 修改的流程。"
+description: OpenClaw 配置修改助手。修改任何 OpenClaw 配置前必须先查阅官方文档，确保格式正确，避免系统崩溃或功能异常。强制执行：查
+  schema → 查文档 → 确认 → 修改的流程。
 license: MIT
 metadata:
   version: 1.0.0
-  domains: [openclaw, config, safety]
+  domains:
+  - openclaw
+  - config
+  - safety
   type: automation
   priority: critical
+author: Daniel Li
 ---
 
 # OpenClaw Config Helper - 配置修改安全助手
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## ⚠️ 强制规则
 

@@ -2,9 +2,13 @@
 name: context-manager
 description: AI-powered context management for OpenClaw sessions
 user-invocable: true
+author: Daniel Li
 ---
 
 # Context Manager Skill
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 AI-powered context management for OpenClaw sessions. Uses the agent itself to generate intelligent summaries, then resets the session with compressed context.
 

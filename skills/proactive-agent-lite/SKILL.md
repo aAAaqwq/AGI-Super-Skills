@@ -1,17 +1,18 @@
 ---
 name: proactive-agent-lite
-description: Transform AI agents from task-followers into proactive partners with memory architecture, reverse prompting, and self-healing patterns. Lightweight version focused on core proactive capabilities.
+description: Transform AI agents from task-followers into proactive partners with
+  memory architecture, reverse prompting, and self-healing patterns. Lightweight version
+  focused on core proactive capabilities.
 metadata:
-  {
-    "openclaw":
-      {
-        "requires": {},
-        "install": []
-      }
-  }
+  openclaw:
+    requires: {}
+    install: []
+author: Daniel Li
 ---
-
 # Proactive Agent Lite
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 Transform your AI agents from passive task-followers into proactive partners that anticipate needs and continuously improve.
 

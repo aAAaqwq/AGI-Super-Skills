@@ -1,9 +1,16 @@
 ---
 name: content-extract
-description: Robust URL-to-Markdown extraction for OpenClaw workflows. Use when the user wants to "extract/summarize/convert a webpage to markdown" (especially WeChat mp.weixin.qq.com) and web_fetch/browser is blocked or messy. Uses a cheap probe via web_fetch first, then falls back to the official MinerU API (via the local mineru-extract skill) and returns a traceable result contract with source links.
+description: Robust URL-to-Markdown extraction for OpenClaw workflows. Use when the
+  user wants to "extract/summarize/convert a webpage to markdown" (especially WeChat
+  mp.weixin.qq.com) and web_fetch/browser is blocked or messy. Uses a cheap probe
+  via web_fetch first, then falls back to the official MinerU API (via the local mineru-extract
+  skill) and returns a traceable result contract with source links.
+author: Daniel Li
 ---
-
 # content-extract — 上层内容解析入口（MCP 语义对齐，但不跑 MCP Server）
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 目标：把“给我一个 URL → 产出可读 Markdown + 可追溯入口”变成一个**统一入口**，供后续所有业务 skill（github-explorer、写作类 skills、日报等）复用。
 

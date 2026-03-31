@@ -1,9 +1,14 @@
 ---
 name: rss-automation
-description: "RSS feed aggregation and monitoring. Parse RSS/Atom feeds, filter entries, track new items, and integrate with notification channels for automated content monitoring."
+description: RSS feed aggregation and monitoring. Parse RSS/Atom feeds, filter entries,
+  track new items, and integrate with notification channels for automated content
+  monitoring.
+author: Daniel Li
 ---
-
 # RSS Automation
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 Monitor and aggregate RSS/Atom feeds for automated content tracking and notification.
 

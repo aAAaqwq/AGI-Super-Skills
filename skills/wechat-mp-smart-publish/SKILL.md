@@ -1,14 +1,21 @@
 ---
 name: wechat-mp-smart-publish
-description: "微信公众号智能发布全流程：标题优化、排版、封面图、发布。触发：'公众号发布'、'微信推文'、'公众号排版'、'wechat publish'"
+description: 微信公众号智能发布全流程：标题优化、排版、封面图、发布。触发：'公众号发布'、'微信推文'、'公众号排版'、'wechat publish'
 license: MIT
 metadata:
   version: 1.0.0
-  domains: [wechat, publishing, content-creation]
+  domains:
+  - wechat
+  - publishing
+  - content-creation
   type: automation
+author: Daniel Li
 ---
 
 # 微信公众号智能发布 Skill
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## 当使用此技能
 

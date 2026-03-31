@@ -1,10 +1,15 @@
 ---
 name: wechat-channel
-description: 微信 (WeChat) 与 OpenClaw 的双向集成通道。基于 Wechaty + PadLocal 实现微信消息的接收和发送，支持私聊、群聊、@提及检测、图片/文件传输。当需要通过微信与 AI 助手交互、接收微信消息触发 AI 响应、或从 OpenClaw 发送消息到微信时使用此技能。
+description: 微信 (WeChat) 与 OpenClaw 的双向集成通道。基于 Wechaty + PadLocal 实现微信消息的接收和发送，支持私聊、群聊、@提及检测、图片/文件传输。当需要通过微信与
+  AI 助手交互、接收微信消息触发 AI 响应、或从 OpenClaw 发送消息到微信时使用此技能。
 allowed-tools: Bash, Read, Write, Edit
+author: Daniel Li
 ---
 
 # 微信 Channel 集成
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 将微信接入 OpenClaw，实现双向消息通道。
 

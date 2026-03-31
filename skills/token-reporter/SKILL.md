@@ -1,9 +1,13 @@
 ---
 name: token-reporter
-description: "每日自动统计 OpenClaw 实例 Token 消耗和工作产出，上报到飞书多维表格。扫描 JSONL 日志按模型聚合 token，收集各 agent 当日工作摘要，写入飞书 Bitable。触发：'token报告'、'token report'、'日报'、'每日汇报'、'飞书上报'。"
+description: 每日自动统计 OpenClaw 实例 Token 消耗和工作产出，上报到飞书多维表格。扫描 JSONL 日志按模型聚合 token，收集各
+  agent 当日工作摘要，写入飞书 Bitable。触发：'token报告'、'token report'、'日报'、'每日汇报'、'飞书上报'。
+author: Daniel Li
 ---
-
 # Token Reporter — 每日 Token 消耗 + 产出上报
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## 功能概述
 
