@@ -3,6 +3,11 @@
 > **416 skills** with SKILL.md | [← Back to main README](../README.md)
 
 
+## 🌟 Maintainer-Curated Indexes
+
+- [Original Skills Index](./docs/original-skills.md) — first-party skills authored and maintained by Daniel Li
+
+
 ## 📂 Browse by Category
 
 > See [categories/](./categories/) for detailed per-category listings.
