@@ -1,11 +1,27 @@
 ---
 name: content-factory
-description: "Automated content production pipeline: hot topic aggregation from 10+ platforms (Bilibili, GitHub, Reddit, YouTube, Weibo, Zhihu, etc.), AI-powered topic scoring, multi-platform content generation (Xiaohongshu, WeChat, Twitter), draft review, and auto-publishing. Use when: user wants daily content pipeline, hot topic collection, content generation, article publishing, or content factory automation."
+description: 'Automated content production pipeline: hot topic aggregation from 10+
+  platforms (Bilibili, GitHub, Reddit, YouTube, Weibo, Zhihu, etc.), AI-powered topic
+  scoring, multi-platform content generation (Xiaohongshu, WeChat, Twitter), draft
+  review, and auto-publishing. Use when: user wants daily content pipeline, hot topic
+  collection, content generation, article publishing, or content factory automation.'
 homepage: https://github.com/aAAaqwq/AGI-Super-Skills
-metadata: { "openclaw": { "emoji": "📰", "requires": { "bins": ["python3", "curl"], "python": ["httpx", "beautifulsoup4"] } } }
+metadata:
+  openclaw:
+    emoji: 📰
+    requires:
+      bins:
+      - python3
+      - curl
+      python:
+      - httpx
+      - beautifulsoup4
+author: Daniel Li
 ---
-
 # Content Factory — 内容自动生产分发工厂
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 从热点采集到内容生成到多平台发布的全流程自动化。Daniel 每天只需 2 分钟挑选主题。
 

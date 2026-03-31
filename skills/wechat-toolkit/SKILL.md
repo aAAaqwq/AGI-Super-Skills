@@ -1,28 +1,29 @@
 ---
 name: wechat-toolkit
-description: "微信公众号一站式工具包 — 集成文章搜索、文章下载、AI洗稿改写、公众号发布四大功能。当用户需要搜索/下载/改写/发布微信公众号文章时使用。"
+description: 微信公众号一站式工具包 — 集成文章搜索、文章下载、AI洗稿改写、公众号发布四大功能。当用户需要搜索/下载/改写/发布微信公众号文章时使用。
 metadata:
-  {
-    "openclaw":
-      {
-        "emoji": "📦",
-        "requires": { "bins": ["node"] },
-        "platforms": ["macos", "linux", "windows"],
-        "install":
-          [
-            {
-              "id": "node-brew",
-              "kind": "brew",
-              "formula": "node",
-              "bins": ["node"],
-              "label": "Install Node.js (brew)",
-            },
-          ],
-      },
-  }
+  openclaw:
+    emoji: 📦
+    requires:
+      bins:
+      - node
+    platforms:
+    - macos
+    - linux
+    - windows
+    install:
+    - id: node-brew
+      kind: brew
+      formula: node
+      bins:
+      - node
+      label: Install Node.js (brew)
+author: Daniel Li
 ---
-
 # 📦 微信公众号工具包 (wechat-toolkit)
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 集成四大功能模块：**搜索 → 下载 → 洗稿 → 发布**，覆盖公众号内容创作全流程。
 

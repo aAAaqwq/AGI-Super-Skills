@@ -1,10 +1,17 @@
 ---
 name: context-recovery
-description: Automatically recover working context after session compaction or when continuation is implied but context is missing. Works across Discord, Slack, Telegram, Signal, and other supported channels.
-metadata: {"clawdbot":{"emoji":"🔄"}}
+description: Automatically recover working context after session compaction or when
+  continuation is implied but context is missing. Works across Discord, Slack, Telegram,
+  Signal, and other supported channels.
+metadata:
+  clawdbot:
+    emoji: 🔄
+author: Daniel Li
 ---
-
 # Context Recovery
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 Automatically recover working context after session compaction or when continuation is implied but context is missing. Works across Discord, Slack, Telegram, Signal, and other supported channels.
 

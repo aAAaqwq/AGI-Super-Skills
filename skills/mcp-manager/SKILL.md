@@ -1,9 +1,13 @@
 ---
 name: mcp-manager
 description: MCP 服务器智能管理助手。自动检测 MCP 可用性、智能开关、功能问答，提供人性化的 MCP 管理体验。
+author: Daniel Li
 ---
 
 # MCP 管理助手
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 智能管理 MCP (Model Context Protocol) 服务器，提供自动检测、智能开关和功能问答。
 

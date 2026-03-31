@@ -1,9 +1,16 @@
 ---
 name: xhs-writing-coach
-description: "Coach and generate Xiaohongshu (小红书/RedNote/XHS) note writing. Use when the user wants help writing XHS notes (标题/正文/标签/评论引导/封面文案), improving engagement, or turning raw points into a publish-ready note. Includes: viral 5-paragraph storytelling template, CES-style engagement optimization, title/tag formulas, and AI内容合规标注提醒. Triggers: 小红书怎么写, 小红书笔记, xhs note, rednote writing, 爆款笔记, 标题公式, 标签怎么选."
+description: 'Coach and generate Xiaohongshu (小红书/RedNote/XHS) note writing. Use when
+  the user wants help writing XHS notes (标题/正文/标签/评论引导/封面文案), improving engagement,
+  or turning raw points into a publish-ready note. Includes: viral 5-paragraph storytelling
+  template, CES-style engagement optimization, title/tag formulas, and AI内容合规标注提醒.
+  Triggers: 小红书怎么写, 小红书笔记, xhs note, rednote writing, 爆款笔记, 标题公式, 标签怎么选.'
+author: Daniel Li
 ---
-
 # XHS Writing Coach（小红书写作教练）
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## What this skill does (workflow)
 

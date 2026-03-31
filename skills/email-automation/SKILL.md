@@ -1,9 +1,13 @@
 ---
 name: email-automation
 description: 邮箱自动化：读取、搜索、草拟和发送邮件，支持 Gmail API 以及通用 IMAP/SMTP 流程。
+author: Daniel Li
 ---
 
 # Email Automation Skill
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 邮箱自动化：读取、搜索、草拟、发送邮件。
 

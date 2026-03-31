@@ -1,14 +1,21 @@
 ---
 name: media-auto-publisher
-description: "通用自媒体文章自动发布工具。支持百家号、搜狐号、知乎、微信公众号、小红书、抖音号六个平台的自动化发布流程。使用Playwright自动化实现平台导航和发布，支持通过storageState管理Cookie实现账号切换。"
+description: 通用自媒体文章自动发布工具。支持百家号、搜狐号、知乎、微信公众号、小红书、抖音号六个平台的自动化发布流程。使用Playwright自动化实现平台导航和发布，支持通过storageState管理Cookie实现账号切换。
 license: MIT
 metadata:
   version: 2.0.0
-  domains: [automation, publishing, media, playwright]
+  domains:
+  - automation
+  - publishing
+  - media
+  - playwright
   type: automation
+author: Daniel Li
 ---
-
 # 自媒体自动发布
+
+- Author: Daniel Li
+- Copyright © Daniel Li. All rights reserved.
 
 ## 支持平台
 
