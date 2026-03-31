@@ -1,5 +1,6 @@
 ---
 name: ralph
+description: "Use when the user explicitly asks to use Ralph mode for persistent plan-execute-check-retry loops that keep going until the target outcome is achieved."
 displayName: Ralph - 不达目标不罢休
 emoji: "🔨"
 summary: 持续循环执行任务直到目标完成。当用户说"使用Ralph完成XX"时触发，自动规划→执行→检查→重试，不达目标不停止。
