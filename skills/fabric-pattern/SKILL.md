@@ -1,3 +1,9 @@
+---
+name: fabric-pattern
+description: Integrate Daniel Miessler's Fabric patterns into local workflows for
+  structured prompting, text transformation, and retrieval-assisted processing.
+---
+
 ## Description
 Integration for the Fabric AI framework (https://github.com/danielmiessler/Fabric). This skill manages text processing by reading local pattern files directly, while utilizing the Fabric CLI for specific web, YouTube, and search retrieval tasks.
 

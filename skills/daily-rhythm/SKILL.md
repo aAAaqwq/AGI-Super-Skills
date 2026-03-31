@@ -1,6 +1,7 @@
 ---
 name: daily-rhythm
-description: Automated daily planning and reflection system with morning briefs, wind-down prompts, sleep nudges, and weekly reviews. Use when the user wants to set up a structured daily routine, morning briefings, evening reflection prompts, or weekly planning sessions. Triggers include requests for daily schedules, morning briefs, wind-down routines, sleep reminders, weekly reviews, productivity systems, or daily planning automation.
+description: "Automated daily planning and reflection system with morning briefs, wind-down prompts, sleep nudges, and weekly reviews. Use when the user wants to set up a structured daily routine, morning briefings, evening reflection prompts, or weekly planning sessions. Triggers include requests for daily schedules, morning briefs, wind-down routines, sleep reminders, weekly reviews, productivity systems, or daily planning automation."
+author: Daniel Li
 ---
 
 # Daily Rhythm

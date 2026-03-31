@@ -1,9 +1,6 @@
 ---
 name: market-sizing-analysis
-description: "This skill should be used when the user asks to \\\"calculate TAM\\\","
-  "determine SAM", "estimate SOM", "size the market", "calculate market
-  opportunity", "what's the total addressable market", or requests market sizing
-  analysis for a startup or business opportunity.
+description: "Use when the user asks to calculate TAM, determine SAM, estimate SOM, size a market, calculate market opportunity, ask for total addressable market, or do market sizing for a startup or business opportunity."
 metadata:
   version: 1.0.0
 risk: unknown

@@ -1,3 +1,9 @@
+---
+name: agent-task-confirm
+description: "Use when confirming whether a dispatched agent task was actually received, activated, and progressing after sessions_send or other task handoff actions."
+author: Daniel Li
+---
+
 # Agent 任务派发与确认机制
 
 确保每次派发任务后，agent 确实收到并在执行。

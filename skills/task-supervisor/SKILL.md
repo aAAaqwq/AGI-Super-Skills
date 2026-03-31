@@ -1,3 +1,8 @@
+---
+name: task-supervisor
+description: 定时巡检 agent 任务执行状态，识别卡住、abort、无产出等异常并触发催促或告警。
+---
+
 # Task Supervisor Skill — 任务监工
 
 ## 概述

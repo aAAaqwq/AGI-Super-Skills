@@ -1,3 +1,8 @@
+---
+name: model-health-check
+description: 检查已配置模型供应商的连通性、延迟和可用性，用于快速诊断模型侧故障。
+---
+
 # Model Health Check
 
 检查所有配置的模型供应商连通性和延迟。

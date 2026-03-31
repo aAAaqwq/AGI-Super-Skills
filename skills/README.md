@@ -3,6 +3,11 @@
 > **416 skills** with SKILL.md | [← Back to main README](../README.md)
 
 
+## 🌟 Maintainer-Curated Indexes
+
+- [Original Skills Index](./docs/original-skills.md) — first-party skills authored and maintained by Daniel Li
+
+
 ## 📂 Browse by Category
 
 > See [categories/](./categories/) for detailed per-category listings.
@@ -34,23 +39,23 @@
 
 | # | Skill | Description |
 |--:|-------|-------------|
-| 1 | [`a-fund-monitor`](./a-fund-monitor/) | A股基金监控 Skill |
+| 1 | [`a-fund-monitor`](./a-fund-monitor/) | 监控 A 股基金实时估值与盘后净值，自动判断交易日并生成提醒或分析。 |
 | 2 | [`accessibility-compliance-accessibility-audit`](./accessibility-compliance-accessibility-audit/) | You are an accessibility expert specializing in WCAG compliance, inclusive design, and assistive ... |
 | 3 | [`activecampaign-automation`](./activecampaign-automation/) | Automate ActiveCampaign tasks via Rube MCP (Composio): manage contacts, tags, list subscriptions,... |
-| 4 | [`afrexai-compliance-audit`](./afrexai-compliance-audit/) | Compliance Audit Generator |
+| 4 | [`afrexai-compliance-audit`](./afrexai-compliance-audit/) | Run internal compliance audits against major governance and security frameworks, highlighting gaps, risks, and remediation priorities. |
 | 5 | [`afrexai-personal-finance`](./afrexai-personal-finance/) | Complete personal finance system — budgeting, debt payoff, investing, tax optimization, net worth... |
-| 6 | [`agent-model-switcher`](./agent-model-switcher/) | Agent Model Switcher |
+| 6 | [`agent-model-switcher`](./agent-model-switcher/) | 批量查看和切换子 agent 的模型配置，用于统一调整多 agent 的 provider/model 设置。 |
 | 7 | [`agent-patterns`](./agent-patterns/) | | |
-| 8 | [`agent-task-confirm`](./agent-task-confirm/) | Agent 任务派发与确认机制 |
+| 8 | [`agent-task-confirm`](./agent-task-confirm/) | Confirm whether a dispatched agent task was actually received, activated, and progressing after handoff. |
 | 9 | [`agent-team-orchestration`](./agent-team-orchestration/) | Orchestrate multi-agent teams with defined roles, task lifecycles, handoff protocols, and review ... |
 | 10 | [`ai-image-generation`](./ai-image-generation/) | Generate images using ModelScope Z-Image-Turbo API. Use when user asks to generate, create, or ma... |
 | 11 | [`airtable-automation`](./airtable-automation/) | Automate Airtable tasks via Rube MCP (Composio): records, bases, tables, fields, views. Always se... |
 | 12 | [`amplitude-automation`](./amplitude-automation/) | Automate Amplitude tasks via Rube MCP (Composio): events, user activity, cohorts, user identifica... |
 | 13 | [`analytics-tracking`](./analytics-tracking/) | > |
 | 14 | [`api-provider-setup`](./api-provider-setup/) | 添加和配置第三方 API 中转站供应商到 OpenClaw。当用户需要添加新的 API 供应商、配置中转站、设置自定义模型端点时使用此技能。支持 Anthropic 兼容和 OpenAI 兼容的... |
-| 15 | [`api-provider-status`](./api-provider-status/) | API Provider Status Skill |
+| 15 | [`api-provider-status`](./api-provider-status/) | 查询 API 供应商的余额、用量与可用状态，支持多供应商监控与定时汇报。 |
 | 16 | [`api-quota-monitor`](./api-quota-monitor/) | 查询监控 API 供应商/服务的额度、余额、消耗情况。支持官方供应商(Gemini/xAI/ZAI/Minimax/OpenRouter等)、中转站(AIXN/Provider-A等)、订阅服务... |
-| 17 | [`api-toolkit`](./api-toolkit/) | API Toolkit Skill |
+| 17 | [`api-toolkit`](./api-toolkit/) | 通用 REST API 工具包，用于快速接入第三方服务、调试端点和构建自动化流程。 |
 | 18 | [`arbitrage-opportunity-finder`](./arbitrage-opportunity-finder/) | | |
 | 19 | [`architecture-decision-records`](./architecture-decision-records/) | Write and maintain Architecture Decision Records (ADRs) following best practices for technical de... |
 | 20 | [`arxiv-automation`](./arxiv-automation/) | Search and monitor arXiv papers. Query by topic, author, or category. Track new papers, download ... |
@@ -87,18 +92,18 @@
 | 51 | [`code-moment-codex-switch`](./code-moment-codex-switch/) | 代码时刻切模型：当用户要改代码/写项目/重构/修 bug/新增功能/写 Dockerfile 或 docker-compose/nginx/caddy/systemd/部署运行时，自动切入 co... |
 | 52 | [`coding-agent-orchestrator`](./coding-agent-orchestrator/) | Compatibility entry skill for plan-first coding work in OpenClaw. |
 | 53 | [`collaboration`](./collaboration/) | Guide for collaborating on GitHub projects. This skill should be used when contributing to projec... |
-| 54 | [`commit-analyzer`](./commit-analyzer/) | Commit Analyzer Skill |
+| 54 | [`commit-analyzer`](./commit-analyzer/) | Analyze git commit frequency, categories, and timing patterns to diagnose autonomous agent activity and operational health. |
 | 55 | [`company-analyzer`](./company-analyzer/) | Investment research and company analysis using 8 specialized frameworks. Use when the user wants ... |
 | 56 | [`competitive-ads-extractor`](./competitive-ads-extractor/) | Extracts and analyzes competitors' ads from ad libraries (Facebook, LinkedIn, etc.) to understand... |
 | 57 | [`competitor-alternatives`](./competitor-alternatives/) | When the user wants to create competitor comparison or alternative pages for SEO and sales enable... |
 | 58 | [`competitor-teardown`](./competitor-teardown/) | Structured competitive analysis with feature matrices, SWOT, positioning maps, and UX review. Cov... |
 | 59 | [`confluence-automation`](./confluence-automation/) | Automate Confluence page creation, content search, space management, labels, and hierarchy naviga... |
 | 60 | [`content-creator`](./content-creator/) | Create SEO-optimized marketing content with consistent brand voice. Includes brand voice analyzer... |
-| 61 | [`content-distributor`](./content-distributor/) | content-distributor |
+| 61 | [`content-distributor`](./content-distributor/) | 将一篇 Markdown 内容自动转换为多平台适配格式并执行分发。 |
 | 62 | [`content-extract`](./content-extract/) | Robust URL-to-Markdown extraction for OpenClaw workflows. Use when the user wants to "extract/sum... |
 | 63 | [`content-factory`](./content-factory/) | Automated content production pipeline: hot topic aggregation from 10+ platforms (Bilibili, GitHub... |
 | 64 | [`content-factory-dispatcher`](./content-factory-dispatcher/) | 内容工厂调度中心 - 使用 Ralph CEO 循环调度内容团队完成端到端内容生产。触发词：内容工厂流水线、跑内容、调度内容团队、content pipeline |
-| 65 | [`content-factory-pipeline`](./content-factory-pipeline/) | 内容工厂流水线 v2 — 数据驱动 + 去AI味 |
+| 65 | [`content-factory-pipeline`](./content-factory-pipeline/) | 内容工厂流水线：从选题确认、实时调研、写作、审核到分发，形成数据驱动的内容生产闭环。 |
 | 66 | [`content-marketer`](./content-marketer/) | | |
 | 67 | [`content-repurposing`](./content-repurposing/) | Content atomization — turn one piece of content into many formats. Covers blog-to-thread, blog-to... |
 | 68 | [`content-research-writer`](./content-research-writer/) | Assists in writing high-quality content by conducting research, adding citations, improving hooks... |
@@ -106,7 +111,7 @@
 | 70 | [`content-source-aggregator`](./content-source-aggregator/) | 实时数据采集中心。从 Reddit/GitHub/HackerNews/ArXiv/YouTube/B站/微博/知乎等 16+ 平台免费获取实时热点、技术趋势、AI前沿论文，输出标准化热点池。小... |
 | 71 | [`context-manager`](./context-manager/) | AI-powered context management for OpenClaw sessions |
 | 72 | [`context-recovery`](./context-recovery/) | Automatically recover working context after session compaction or when continuation is implied bu... |
-| 73 | [`contract-and-proposal-writer`](./contract-and-proposal-writer/) | Contract & Proposal Writer |
+| 73 | [`contract-and-proposal-writer`](./contract-and-proposal-writer/) | Draft business proposals, SOWs, NDAs, MSAs, and freelance contracts with jurisdiction-aware structure and reusable clauses. |
 | 74 | [`contract-reviewer`](./contract-reviewer/) | > |
 | 75 | [`conventional-commits`](./conventional-commits/) | Format commit messages using the Conventional Commits specification. Use when creating commits, w... |
 | 76 | [`convertkit-automation`](./convertkit-automation/) | Automate ConvertKit (Kit) tasks via Rube MCP (Composio): manage subscribers, tags, broadcasts, an... |
@@ -114,10 +119,10 @@
 | 78 | [`copywriting`](./copywriting/) | > |
 | 79 | [`cost-optimization`](./cost-optimization/) | Optimize cloud costs through resource rightsizing, tagging strategies, reserved instances, and sp... |
 | 80 | [`create-viral-content`](./create-viral-content/) | | |
-| 81 | [`cron-manager`](./cron-manager/) | Cron Manager Skill |
-| 82 | [`cross-instance-comm`](./cross-instance-comm/) | 跨 OpenClaw 实例通信 (Tailscale Gateway) |
-| 83 | [`cross-platform-poster`](./cross-platform-poster/) | Cross-Platform Poster — Post Everywhere at Once |
-| 84 | [`cross-team-comm`](./cross-team-comm/) | Cross-Team Communication Skill |
+| 81 | [`cron-manager`](./cron-manager/) | 创建、监控、诊断和修复 OpenClaw cron 任务，支持自然语言时间与常见故障排查。 |
+| 82 | [`cross-instance-comm`](./cross-instance-comm/) | Send messages or tasks between multiple OpenClaw instances over Tailscale Gateway. |
+| 83 | [`cross-platform-poster`](./cross-platform-poster/) | Publish one piece of content across MoltX, Twitter/X, Discord, and Telegram with platform-specific formatting. |
+| 84 | [`cross-team-comm`](./cross-team-comm/) | 通过 Tailscale、SSH、Gateway API 与 sessions_send 实现跨团队、跨实例的 OpenClaw 协作通信。 |
 | 85 | [`crypto-bd-agent`](./crypto-bd-agent/) | > |
 | 86 | [`crypto-derivatives-tracker`](./crypto-derivatives-tracker/) | | |
 | 87 | [`crypto-portfolio-management`](./crypto-portfolio-management/) | Guide to cryptocurrency portfolio management — asset allocation, rebalancing strategies, risk-adj... |
@@ -136,7 +141,7 @@
 | 100 | [`deep-research`](./deep-research/) | Execute autonomous multi-step research using Google Gemini Deep Research Agent. Use for: market a... |
 | 101 | [`deepwork-tracker`](./deepwork-tracker/) | Track deep work sessions locally (start/stop/status) and generate a GitHub-contribution-graph sty... |
 | 102 | [`defi-risk-assessment`](./defi-risk-assessment/) | Framework for evaluating DeFi protocol risk — smart contract audits, TVL analysis, governance str... |
-| 103 | [`dependency-auditor`](./dependency-auditor/) | Dependency Auditor |
+| 103 | [`dependency-auditor`](./dependency-auditor/) | Audit project dependencies for vulnerabilities, license risks, upgrade planning, and ecosystem health across multiple languages. |
 | 104 | [`developer-growth-analysis`](./developer-growth-analysis/) | Analyzes your recent Claude Code chat history to identify coding patterns, development gaps, and ... |
 | 105 | [`discord-automation`](./discord-automation/) | Automate Discord tasks via Rube MCP (Composio): messages, channels, roles, webhooks, reactions. A... |
 | 106 | [`doc-coauthoring`](./doc-coauthoring/) | Guide users through a structured workflow for co-authoring documentation. Use when user wants to ... |
@@ -148,19 +153,19 @@
 | 112 | [`domain-name-brainstormer`](./domain-name-brainstormer/) | Generates creative domain name ideas for your project and checks availability across multiple TLD... |
 | 113 | [`douyin-creator`](./douyin-creator/) | 抖音创作发布：视频和图文发布到抖音创作者平台。覆盖视频规格(1080×1920竖屏/MP4 H.264)、图文轮播(2-35张)、描述(≤200字)、话题标签(3-5个)、AIGC标注、定时发布... |
 | 114 | [`douyin-hot-trend`](./douyin-hot-trend/) | 获取抖音热榜/热搜榜数据，包含热门视频、挑战赛、音乐等多领域热门内容，并输出标题、热度值、跳转链接及封面图（如有）。 |
-| 115 | [`douyin-publish`](./douyin-publish/) | douyin-publish |
+| 115 | [`douyin-publish`](./douyin-publish/) | 自动登录抖音创作者平台并上传发布视频，适用于抖音内容发布流程自动化。 |
 | 116 | [`douyin-smart-publish`](./douyin-smart-publish/) | 抖音创作者平台智能发布：视频/图文/文章三种模式。覆盖标题(≤55字)、描述规则、#话题标签(3-5个)、封面设置、定时发布、可见性、合拍/下载开关。Playwright自动化发布到草稿或直接发... |
 | 117 | [`douyin-smart-publisher`](./douyin-smart-publisher/) | 抖音智能发布：内容适配→排版→Browser自动发布/存草稿。覆盖标题公式(≤55字+悬念+emoji)、正文排版(分段+emoji点缀)、话题标签策略、封面规格(9:16竖版1080×1920... |
 | 118 | [`dropbox-automation`](./dropbox-automation/) | Automate Dropbox file management, sharing, search, uploads, downloads, and folder operations via ... |
 | 119 | [`duckdb-cli-ai-skills`](./duckdb-cli-ai-skills/) | DuckDB CLI specialist for SQL analysis, data processing and file conversion. Use for SQL queries,... |
 | 120 | [`electron-app-dev`](./electron-app-dev/) | | |
-| 121 | [`email-automation`](./email-automation/) | Email Automation Skill |
+| 121 | [`email-automation`](./email-automation/) | 邮箱自动化：读取、搜索、草拟和发送邮件，支持 Gmail API 以及通用 IMAP/SMTP 流程。 |
 | 122 | [`email-manager`](./email-manager/) | 多邮箱统一管理与智能助手。支持 Gmail、QQ邮箱等 IMAP 邮箱，定时查看邮件，AI 生成摘要和回复草稿，发送前需用户确认。 |
 | 123 | [`employment-contract-templates`](./employment-contract-templates/) | Create employment contracts, offer letters, and HR policy documents following legal best practice... |
 | 124 | [`env-setup`](./env-setup/) | Claude Code 环境一键同步工具。从 GitHub 仓库同步所有配置到本地：output-styles 风格、CLAUDE.md 全局提示词、MCP 服务器配置、Agent 配置、Plu... |
 | 125 | [`erc-8004`](./erc-8004/) | Register AI agents on Ethereum mainnet using ERC-8004 (Trustless Agents). Use when the user wants... |
 | 126 | [`evomap`](./evomap/) | Connect to the EvoMap collaborative evolution marketplace. Publish Gene+Capsule bundles, fetch pr... |
-| 127 | [`fabric-pattern`](./fabric-pattern/) | Description |
+| 127 | [`fabric-pattern`](./fabric-pattern/) | Integrate Daniel Miessler's Fabric patterns into local workflows for structured prompting, text transformation, and retrieval-assisted processing. |
 | 128 | [`facebook-automation`](./facebook-automation/) | Automate Facebook tasks via Rube MCP (Composio): pages, posts, insights, comments, and ad account... |
 | 129 | [`fast-browser-use`](./fast-browser-use/) | Standard headless setup |
 | 130 | [`feishu-automation`](./feishu-automation/) | 飞书（Lark）全通道自动化。使用 lark-mcp 工具操作飞书多维表格（Bitable）、发送消息、管理文档、创建群组、自动化工作流等。当用户需要操作飞书平台、同步数据到飞书表格、发送飞书通... |
@@ -207,7 +212,7 @@
 | 171 | [`jimeng-storyboard`](./jimeng-storyboard/) | 将口播视频剧本拆解为即梦AI数字人平台的分镜头脚本。输出格式为每个镜头的角色说（台词）和动作描述（镜头语言/数字人动作），适配即梦 jimeng.jianying.com 数字人视频生成界面。触... |
 | 172 | [`jira-automation`](./jira-automation/) | Automate Jira tasks via Rube MCP (Composio): issues, projects, sprints, boards, comments, users. ... |
 | 173 | [`juejin-smart-publish`](./juejin-smart-publish/) | 掘金技术社区智能发布：Markdown编辑器全功能支持。覆盖标题(15-35字)、分类(必选)、标签(1-5个)、封面上传、摘要填写、GFM排版。Playwright自动化+API双通道发布。触... |
-| 174 | [`kanbanflow-skill`](./kanbanflow-skill/) |  |
+| 174 | [`kanbanflow-skill`](./kanbanflow-skill/) | Manage KanbanFlow boards, columns, and tasks for lightweight workflow tracking and task organization. |
 | 175 | [`klaviyo-automation`](./klaviyo-automation/) | Automate Klaviyo tasks via Rube MCP (Composio): manage email/SMS campaigns, inspect campaign mess... |
 | 176 | [`kpi-dashboard-design`](./kpi-dashboard-design/) | Design effective KPI dashboards with metrics selection, visualization best practices, and real-ti... |
 | 177 | [`kubernetes-deployment`](./kubernetes-deployment/) | Kubernetes deployment workflow for container orchestration, Helm charts, service mesh, and produc... |
@@ -233,7 +238,7 @@
 | 197 | [`mcp-builder`](./mcp-builder/) | Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact... |
 | 198 | [`mcp-installer`](./mcp-installer/) | 从GitHub搜索并自动安装配置MCP(Model Context Protocol)服务器工具到Claude配置文件。当用户需要安装MCP工具时触发此技能。工作流程：搜索GitHub上的MCP... |
 | 199 | [`mcp-manager`](./mcp-manager/) | MCP 服务器智能管理助手。自动检测 MCP 可用性、智能开关、功能问答，提供人性化的 MCP 管理体验。 |
-| 200 | [`mcstatus`](./mcstatus/) | SKILL.md - Model Configuration Status (mcstatus) |
+| 200 | [`mcstatus`](./mcstatus/) | 生成 Agent 与 Cron 的模型配置状态报告，展示主模型、fallback 链和任务分配情况。 |
 | 201 | [`media-auto-publisher`](./media-auto-publisher/) | 通用自媒体文章自动发布工具。支持百家号、搜狐号、知乎、微信公众号、小红书、抖音号六个平台的自动化发布流程。使用Playwright自动化实现平台导航和发布，支持通过storageState管理C... |
 | 202 | [`meeting-insights-analyzer`](./meeting-insights-analyzer/) | Analyzes meeting transcripts and recordings to uncover behavioral patterns, communication insight... |
 | 203 | [`memory-hygiene`](./memory-hygiene/) | Audit, clean, and optimize Clawdbot's vector memory (LanceDB). Use when memory is bloated with ju... |
@@ -245,7 +250,7 @@
 | 209 | [`mixpanel-automation`](./mixpanel-automation/) | Automate Mixpanel tasks via Rube MCP (Composio): events, segmentation, funnels, cohorts, user pro... |
 | 210 | [`ml-engineer`](./ml-engineer/) | Build production ML systems with PyTorch 2.x, TensorFlow, and |
 | 211 | [`model-fallback`](./model-fallback/) | 模型自动降级与故障切换。当主模型请求失败、超时、达到速率限制或配额耗尽时，自动切换到备用模型，确保服务连续性。支持多供应商、多优先级的智能模型选择，提供健康监控、自动重试和错误恢复机制。 |
-| 212 | [`model-health-check`](./model-health-check/) | Model Health Check |
+| 212 | [`model-health-check`](./model-health-check/) | 检查已配置模型供应商的连通性、延迟和可用性，用于快速诊断模型侧故障。 |
 | 213 | [`model-hierarchy-skill`](./model-hierarchy-skill/) | > |
 | 214 | [`model-usage`](./model-usage/) | Use CodexBar CLI local cost usage to summarize per-model usage for Codex or Claude, including the... |
 | 215 | [`model-usage-linux`](./model-usage-linux/) | Track OpenClaw AI token usage and cost per model on Linux by parsing session JSONL files. Use whe... |
@@ -256,7 +261,7 @@
 | 220 | [`nginx`](./nginx/) | Configure Nginx for reverse proxy, load balancing, SSL termination, and high-performance static s... |
 | 221 | [`notion-automation`](./notion-automation/) | 自动化 Notion 操作。当用户需要管理 Notion 页面、数据库、块内容、项目跟踪或进行内容组织和搜索时使用此技能。 |
 | 222 | [`notion-template-business`](./notion-template-business/) | Expert in building and selling Notion templates as a business - not just making templates, but bu... |
-| 223 | [`observability-designer`](./observability-designer/) | Observability Designer (POWERFUL) |
+| 223 | [`observability-designer`](./observability-designer/) | Design production observability strategies covering SLI/SLOs, metrics, logs, traces, dashboards, and alert quality. |
 | 224 | [`one-drive-automation`](./one-drive-automation/) | Automate OneDrive file management, search, uploads, downloads, sharing, permissions, and folder o... |
 | 225 | [`op0-altar`](./op0-altar/) | Create and manage self-rewarding meme coins on Solana via the OP0 Altar protocol. Deploy pump.fun... |
 | 226 | [`openclaw-config-helper`](./openclaw-config-helper/) | OpenClaw 配置修改助手。修改任何 OpenClaw 配置前必须先查阅官方文档，确保格式正确，避免系统崩溃或功能异常。强制执行：查 schema → 查文档 → 确认 → 修改的流程。 |
@@ -270,7 +275,7 @@
 | 234 | [`pagerduty-automation`](./pagerduty-automation/) | Automate PagerDuty tasks via Rube MCP (Composio): manage incidents, services, schedules, escalati... |
 | 235 | [`paid-ads`](./paid-ads/) | When the user wants help with paid advertising campaigns on Google Ads, Meta (Facebook/Instagram)... |
 | 236 | [`parallel-agents`](./parallel-agents/) | Multi-agent orchestration patterns. Use when multiple independent tasks can run with different do... |
-| 237 | [`pass-secrets`](./pass-secrets/) | Pass 密钥管理 Skill |
+| 237 | [`pass-secrets`](./pass-secrets/) | 使用 Pass（Password Store）统一管理 API 密钥和敏感凭证，支持加密存储与 Git 同步。 |
 | 238 | [`payment-integration`](./payment-integration/) | Integrate Stripe, PayPal, and payment processors. Handles checkout |
 | 239 | [`pci-compliance`](./pci-compliance/) | Implement PCI DSS compliance requirements for secure handling of payment card data and payment sy... |
 | 240 | [`pdf`](./pdf/) | Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging... |
@@ -278,11 +283,11 @@
 | 242 | [`permission-manager`](./permission-manager/) | 管理Claude Code的全局工具权限配置，自动将MCP命令或其他工具添加到allowedTools中，避免每次使用时都需要手动批准。工作流程：确认用户需要添加的命令 -> 确认添加级别(默认... |
 | 243 | [`pipedrive-automation`](./pipedrive-automation/) | Automate Pipedrive CRM operations including deals, contacts, organizations, activities, notes, an... |
 | 244 | [`playwright-automation`](./playwright-automation/) | Playwright 浏览器自动化。用于自动化爬虫、数据采集、表单填写、UI 测试等需要浏览器自动化的场景。无需人工干预，适合 cron 定时任务。 |
-| 245 | [`pm-competitive-teardown`](./pm-competitive-teardown/) | Competitive Teardown |
+| 245 | [`pm-competitive-teardown`](./pm-competitive-teardown/) | Run structured competitive teardowns using pricing, reviews, positioning, UX, and go-to-market signals to produce actionable product strategy insights. |
 | 246 | [`podcast-generation`](./podcast-generation/) | Generate AI-powered podcast-style audio narratives using Azure OpenAI's GPT Realtime Mini model v... |
 | 247 | [`polyclaw`](./polyclaw/) | Trade on Polymarket via split + CLOB execution. Browse markets, track positions with P&L, discove... |
 | 248 | [`polymarket-data`](./polymarket-data/) | | |
-| 249 | [`polymarket-profit`](./polymarket-profit/) | Polymarket 量化投资系统 |
+| 249 | [`polymarket-profit`](./polymarket-profit/) | 围绕 Polymarket 预测市场执行小资金量化交易与收益跟踪策略。 |
 | 250 | [`polymarket-skill`](./polymarket-skill/) | Query and trade on Polymarket prediction markets - check odds, trending markets, search events, v... |
 | 251 | [`portfolio-manager`](./portfolio-manager/) | Comprehensive portfolio analysis using Alpaca MCP Server integration to fetch holdings and positi... |
 | 252 | [`posthog-automation`](./posthog-automation/) | Automate PostHog tasks via Rube MCP (Composio): events, feature flags, projects, user profiles, a... |
@@ -303,18 +308,18 @@
 | 267 | [`qq-email-operator`](./qq-email-operator/) | QQ邮箱操作技能。支持通过 IMAP/SMTP 读取邮件、搜索邮件、回复邮件、发送邮件。凭据通过 pass 安全存储。 |
 | 268 | [`quant-analyst`](./quant-analyst/) | Build financial models, backtest trading strategies, and analyze |
 | 269 | [`ralph`](./ralph/) | Ralph 🔨 — 不达目标不罢休 |
-| 270 | [`ralph-ceo-loop`](./ralph-ceo-loop/) | Ralph CEO Loop — GEO Agent 项目交付 |
+| 270 | [`ralph-ceo-loop`](./ralph-ceo-loop/) | 以持续计划-执行-检查-重试循环驱动项目推进，直到开发、部署与验收目标完成。 |
 | 271 | [`react-best-practices`](./react-best-practices/) | React and Next.js performance optimization guidelines from Vercel Engineering. This skill should ... |
 | 272 | [`react-component-generator`](./react-component-generator/) | | |
 | 273 | [`reddit-automation`](./reddit-automation/) | Automate Reddit tasks via Rube MCP (Composio): search subreddits, create posts, manage comments, ... |
-| 274 | [`remote-ollama-gpu-scheduler`](./remote-ollama-gpu-scheduler/) | Remote Ollama GPU Scheduler |
+| 274 | [`remote-ollama-gpu-scheduler`](./remote-ollama-gpu-scheduler/) | 调度远程 Ollama GPU 资源执行批量 embedding 或推理任务，提升多机环境下的算力利用率。 |
 | 275 | [`remote-openclaw-deploy`](./remote-openclaw-deploy/) | 通用远程部署 OpenClaw Agent 项目。支持任意定制化 agent 团队、跨 macOS/Linux、多渠道（飞书/Telegram/Discord）、deploy.json 声明式配... |
 | 276 | [`render-automation`](./render-automation/) | Automate Render tasks via Rube MCP (Composio): services, deployments, projects. Always search too... |
 | 277 | [`requesting-code-review`](./requesting-code-review/) | Use when completing tasks, implementing major features, or before merging to verify work meets re... |
 | 278 | [`research-engineer`](./research-engineer/) | An uncompromising Academic Research Engineer. Operates with absolute scientific rigor, objective ... |
 | 279 | [`risk-metrics-calculation`](./risk-metrics-calculation/) | Calculate portfolio risk metrics including VaR, CVaR, Sharpe, Sortino, and drawdown analysis. Use... |
 | 280 | [`rss-automation`](./rss-automation/) | RSS feed aggregation and monitoring. Parse RSS/Atom feeds, filter entries, track new items, and i... |
-| 281 | [`runbook-generator`](./runbook-generator/) | Runbook Generator |
+| 281 | [`runbook-generator`](./runbook-generator/) | Analyze a codebase and generate production-grade operational runbooks with verification steps, rollback paths, escalation guidance, and staleness checks. |
 | 282 | [`salesforce-automation`](./salesforce-automation/) | Automate Salesforce tasks via Rube MCP (Composio): leads, contacts, accounts, opportunities, SOQL... |
 | 283 | [`scrum-master`](./scrum-master/) | Advanced Scrum Master with data-driven team health analysis, velocity forecasting, retrospective ... |
 | 284 | [`search-layer`](./search-layer/) | > |
@@ -339,7 +344,7 @@
 | 303 | [`serp-analysis`](./serp-analysis/) | Analyze Google SERP (Search Engine Results Pages) — featured snippets, PAA (People Also Ask), AI ... |
 | 304 | [`session-logs`](./session-logs/) | Search and analyze your own session logs (older/parent conversations) using jq. |
 | 305 | [`shopify-automation`](./shopify-automation/) | Automate Shopify tasks via Rube MCP (Composio): products, orders, customers, inventory, collectio... |
-| 306 | [`shrimp-coach`](./shrimp-coach/) | 🦐 虾教练 Skill |
+| 306 | [`shrimp-coach`](./shrimp-coach/) | 训练垂直领域 agent 的教练型 skill，用于按宪章、手册和复盘机制持续提升 agent 能力。 |
 | 307 | [`skill-config-checker`](./skill-config-checker/) | 扫描本地所有 skills，检测需要配置的 API keys、tokens、secrets 等，生成配置需求清单和操作指南。 |
 | 308 | [`skill-creator`](./skill-creator/) | Guide for creating effective skills. This skill should be used when users want to create a new sk... |
 | 309 | [`skill-finder-cn`](./skill-finder-cn/) | Skill 查找器 | Skill Finder. 帮助发现和安装 ClawHub Skills | Discover and install ClawHub Skills. 回答'有什么技能可... |
@@ -381,16 +386,16 @@
 | 345 | [`sysadmin-toolbox`](./sysadmin-toolbox/) | Tool discovery and shell one-liner reference for sysadmin, DevOps, and security tasks. AUTO-CONSU... |
 | 346 | [`systematic-debugging`](./systematic-debugging/) | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes |
 | 347 | [`task-status`](./task-status/) | Send short status descriptions in chat for long-running tasks. Use when you need to provide perio... |
-| 348 | [`task-supervisor`](./task-supervisor/) | Task Supervisor Skill — 任务监工 |
+| 348 | [`task-supervisor`](./task-supervisor/) | 定时巡检 agent 任务执行状态，识别卡住、abort、无产出等异常并触发催促或告警。 |
 | 349 | [`tavily`](./tavily/) | AI 优化的网络搜索。使用 Tavily API 进行智能搜索，获取实时信息。当用户需要搜索互联网、获取实时数据、查找最新信息时使用此技能。 |
 | 350 | [`tdd-guide`](./tdd-guide/) | Test-driven development workflow with test generation, coverage analysis, and multi-framework sup... |
 | 351 | [`team-coordinator`](./team-coordinator/) | 团队协调与智能任务分配。作为高管，将用户任务拆解并分配给最合适的员工 agent 执行，协调多 agent 并行协作，汇总审核产出。 |
-| 352 | [`team-daily-report`](./team-daily-report/) | 小a团队日报 Skill |
-| 353 | [`team-memory-sync`](./team-memory-sync/) | team-memory-sync |
-| 354 | [`team-supervisor`](./team-supervisor/) | Team Supervisor Skill — 团队监工 |
+| 352 | [`team-daily-report`](./team-daily-report/) | 自动汇总团队内 agent、cron、skill 进展与关键事件，生成并推送结构化日报。 |
+| 353 | [`team-memory-sync`](./team-memory-sync/) | 同步团队记忆与认知结论，减少多 agent 协作中的上下文漂移和信息断层。 |
+| 354 | [`team-supervisor`](./team-supervisor/) | 监控多 agent 团队的任务执行状态，自动识别未响应、卡住或未完成任务并催促。 |
 | 355 | [`tech-decision`](./tech-decision/) | This skill should be used when the user asks to "기술 의사결정", "뭐 쓸지 고민", "A vs B", "비교 분석", "라이브러리 선... |
 | 356 | [`telegram-automation`](./telegram-automation/) | Automate Telegram tasks via Rube MCP (Composio): send messages, manage chats, share photos/docume... |
-| 357 | [`telegram-push`](./telegram-push/) | Telegram Push Skill |
+| 357 | [`telegram-push`](./telegram-push/) | 通过独立 Telegram Bot 向群聊或私聊推送消息，适合不依赖 OpenClaw channel 配置的通知场景。 |
 | 358 | [`test-automator`](./test-automator/) | Master AI-powered test automation with modern frameworks, |
 | 359 | [`tg-channel-reader`](./tg-channel-reader/) | Read posts and comments from Telegram channels via MTProto (Pyrogram or Telethon). Fetch recent m... |
 | 360 | [`the-antislop`](./the-antislop/) | Detect and fix AI-generated writing patterns (slop). Comprehensive detection with 45+ patterns, t... |

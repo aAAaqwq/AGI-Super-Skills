@@ -1,6 +1,6 @@
 ---
 name: orchestration-workflow
-description: Orchestration Protocol v4.2 for coding tasks. Non-blocking event-driven architecture with persistent tmux sessions. Use when: implementing features, fixing bugs, refactoring code, building components, creating PRs, or any development work. Trigger phrases: "按协议跑", "task-card", "编排", "orchestration", "走流程", "开发", "实现", "implement", "build", "refactor", "修bug", "bugfix", "coding task". NOT for: reading code, quick questions, config changes under 15 minutes.
+description: "Orchestration Protocol v4.2 for coding tasks. Non-blocking event-driven architecture with persistent tmux sessions. Use when implementing features, fixing bugs, refactoring code, building components, creating PRs, or other development work. Trigger phrases include 按协议跑, task-card, 编排, orchestration, 走流程, 开发, 实现, implement, build, refactor, 修bug, and bugfix. Not for reading code, quick questions, or config changes under 15 minutes."
 ---
 
 

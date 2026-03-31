@@ -1,3 +1,9 @@
+---
+name: pm-competitive-teardown
+description: Run structured competitive teardowns using pricing, reviews, positioning,
+  UX, and go-to-market signals to produce actionable product strategy insights.
+---
+
 # Competitive Teardown
 
 **Tier:** POWERFUL  

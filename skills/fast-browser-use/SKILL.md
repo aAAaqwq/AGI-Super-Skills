@@ -1,5 +1,6 @@
 ---
 name: fast-browser-use
+description: "Use when the user wants extremely fast browser automation via fast-browser-use / fbu, especially for DOM-heavy pages, fast extraction, or browser tasks on macOS/Linux with Chrome installed."
 displayName: Fastest Browser Use
 emoji: "⚡"
 summary: Rust-powered browser automation that rips through DOMs 10x faster than Puppeteer.

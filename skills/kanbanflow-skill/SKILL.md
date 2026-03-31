@@ -1,3 +1,9 @@
+---
+name: kanbanflow-skill
+description: Manage KanbanFlow boards, columns, and tasks for lightweight workflow
+  tracking and task organization.
+---
+
 <skill>
   <name>kanbanflow</name>
   <description>Manage KanbanFlow board tasks (board, columns, tasks, add, move, color, delete). Use this to organize work and track progress.</description>
