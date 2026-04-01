@@ -125,13 +125,7 @@ Agent 配置都是**模板** — 根据你的需求自定义：
 
 每一个 Star 都是我们持续添加技能、优化 Agent 模板、打造更好工具的动力。
 
-<a href="https://star-history.com/#aAAaqwq/AGI-Super-Team&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date" />
- </picture>
-</a>
+[![Star History Chart](./assets/star-history.svg)](https://www.star-history.com/?repos=aAAaqwq%2FAGI-Super-Team&type=date&legend=top-left)
 
 ## 📄 开源协议
 
