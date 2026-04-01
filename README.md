@@ -628,15 +628,7 @@ If this project helps you build your AI team, please give it a ⭐!
 
 Every star motivates us to add more skills, improve agent templates, and build better tooling.
 
-## Star History
-
-<a href="https://www.star-history.com/?repos=aAAaqwq%2FAGI-Super-Team&type=date&legend=bottom-right">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=aAAaqwq/AGI-Super-Team&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=aAAaqwq/AGI-Super-Team&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=aAAaqwq/AGI-Super-Team&type=date&legend=top-left" />
- </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date)](https://www.star-history.com/#aAAaqwq/AGI-Super-Team&Date)
 
 ## 📄 License
 
