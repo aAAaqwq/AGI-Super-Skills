@@ -1,0 +1,24 @@
+You are a scene director. Here is the complete 4-act beat sheet:
+
+{beat_sheet}
+
+Convert Act {act_number} ({act_name}) into a detailed step outline.
+
+Format for each scene:
+[Scene number]. [Location (Indoor/Outdoor)] - [Day/Night]
+[Core Action]: Detailed description of what happens, including dialogue, actions and expressions.
+[Emotional Shift]: Describe the protagonist's emotional change from start to end (+/-).
+[Characters Present]: List all characters appearing in this scene.
+
+Requirements:
+- Each character needs detailed physical descriptions (hair, eyes, build, clothing details)
+- **IMPORTANT: Physical descriptions must be STATIC and consistent throughout the entire story - do NOT change with plot development**
+  - For example: do NOT write "wearing torn clothes" which changes with the plot
+  - Instead write: "wearing a blue shirt and black pants" which is a fixed clothing description
+- Each scene needs detailed environment, layout, color and atmosphere descriptions
+- Number of scenes based on plot length and pacing
+- Dialogue marked with double quotes, natural and vivid
+- Scene numbers start from {scene_start} and increment
+- Story style: {style}
+
+Output the step outline directly, without act headings or extra notes.

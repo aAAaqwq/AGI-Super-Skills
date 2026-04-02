@@ -1,0 +1,24 @@
+# 视频生成提示词优化模板
+# 在基础提示词前后添加这些内容来提升生成质量
+# 使用方法：从 prompts/loader import load_prompt('video', 'enhance', 'zh')
+
+[prefix]
+high quality, 4K, detailed, cinematic footage, film style, smooth motion, natural movement, professional camera work,
+
+[suffix]
+, realistic, high definition, no blur, no distortion, no artifacts, perfect composition, professional lighting, film grain, masterpiece
+
+# 风格关键词（会自动从会话中读取项目风格并添加对应关键词）
+[style_keywords]
+anime: anime style, animated, cel-shaded, vibrant colors, manga aesthetic,
+cartoon: cartoon style, animated, colorful, fun, children's book illustration,
+realistic: photorealistic, realistic, natural lighting, detailed textures, cinema photography,
+photorealistic: photorealistic, realistic, natural lighting, detailed textures, cinema photography,
+3d-disney: 3D animation, Disney style, pixar, CGI, smooth textures, computer generated,
+3d: 3D animation, CGI, computer generated, smooth textures, digital cinema,
+oil-painting: oil painting style, impasto, classical art, painterly, rich brushstrokes,
+watercolor: watercolor style, delicate, soft colors, artistic, flowing,
+comic-book: comic book style, vibrant, bold outlines, pop art, graphic novel,
+cyberpunk: cyberpunk, neon lights, futuristic, dark atmosphere, sci-fi,
+chinese-ink: Chinese ink painting style, traditional, minimalist, brush strokes, oriental art,
+ink: Chinese ink painting style, traditional, minimalist, brush strokes, oriental art,
