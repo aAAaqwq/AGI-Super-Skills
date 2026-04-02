@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "员工名称": "Daniel",
+    "Token明细": "opus4.6: input 5.9M / output 94.1K / cache 64% / $0\nglm-5: input 926.5K / output 37.3K / cache 87% / $0\nglm-5-turbo: input 10.9M / output 208.4K / cache 74% / $0\nminimax-M2.5: input 142.5K / output 7.9K / cache 79% / $0\ngemini-3-pro: — (当日未使用)\n其他: 440次调用, input 6.3M / output 46.1K",
+    "产出": "小code: 状态**: 小code已接收任务，等待完成汇报 | 小ops: 小ops: 处理图片/巡检中 | 小quant: 小quant: 猎杀完成",
+    "时间": "2026-03-19",
+    "个人总结": "",
+    "评分": ""
+  }
+}
