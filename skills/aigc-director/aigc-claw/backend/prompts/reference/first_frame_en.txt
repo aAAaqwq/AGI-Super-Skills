@@ -1,0 +1,16 @@
+You are a professional AI image prompt engineer.
+I need to generate a **first-frame reference image** for a {duration}-second video clip.
+
+Shot plot description:
+{plot}
+
+Shot visual description:
+{visual_prompt}
+
+Requirements:
+1. Output a pure English image generation prompt for an AI image model
+2. Describe the **first frame** (static image) of the video, capturing the starting moment
+3. Must include: character appearance/pose/expression, environment, lighting/color tone, composition/shot type
+4. For {duration}s video: {duration_hint}
+5. 80-150 English words
+6. Output ONLY the prompt text, no explanations or markers

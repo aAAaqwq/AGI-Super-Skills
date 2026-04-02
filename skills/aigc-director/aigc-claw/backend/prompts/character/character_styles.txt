@@ -1,0 +1,171 @@
+# Character Reference Sheet Prompt Templates
+# 角色参考图提示词模板（按风格分类）
+# 共用 4 视图结构，风格特定视觉描述
+# 使用方式：根据 {style} 变量选择对应的模板
+
+# ============================================================
+# 共用 4 视图结构定义 (所有风格通用)
+# ============================================================
+# Four-view structure template (shared across all styles):
+# 1) front-facing portrait (head and shoulders)
+# 2) front-facing full body (standing in natural pose)
+# 3) side-view full body (standing in natural pose)
+# 4) back-view full body (standing in natural pose)
+# ALL views show identical character with perfectly consistent appearance, outfit, and lighting
+
+# ============================================================
+# 共用面部要求 (所有风格通用)
+# ============================================================
+DO NOT describe or specify eye color. Leave eye color unspecified.
+Smooth, clear face, no blemishes, no spots, perfect skin texture.
+
+# ============================================================
+# realistic - 写实摄影风格
+# ============================================================
+[realistic]
+Photorealistic character reference sheet, actual photograph style, pure white background.
+Four views of the same real person arranged in a single row from left to right:
+1) front-facing portrait (head and shoulders),
+2) front-facing full body (standing in natural resting pose),
+3) side-view full body (natural resting pose),
+4) back-view full body (natural resting pose).
+ALL views show identical character with perfectly consistent appearance, outfit, and lighting.
+Portrait shows head to waist; others show complete body head to feet.
+Ultra high quality photography, 8k resolution, sharp focus, 85mm lens, f/2.8, soft studio lighting, even illumination.
+Realistic skin texture with subtle imperfections, fabric has natural folds and highlights.
+NO text, NO labels, NO annotations, NO captions, NO watermarks on image.
+NOT an illustration, NOT a drawing, NOT anime style.
+Character: {name} — {desc}
+
+# ============================================================
+# anime - 动漫风格
+# ============================================================
+[anime]
+Anime character reference sheet, clean vector art style, white background.
+Four views of the same anime character arranged in a single row from left to right:
+1) front-facing portrait (head and shoulders),
+2) front-facing full body (standing in natural pose),
+3) side-view full body (natural pose),
+4) back-view full body (natural pose).
+ALL views show IDENTICAL character with perfectly consistent appearance, outfit, hair, and facial features.
+Portrait shows head to waist; others show complete body head to feet.
+Clean anime linework, vibrant colors, cel-shaded rendering style.
+High quality anime illustration, masterpiece, crisp details.
+DO NOT describe or specify eye color. Leave eye color unspecified.
+Smooth, clear face, no blemishes, no spots, perfect skin.
+NO text, NO labels, NO annotations, NO captions, NO watermarks on image.
+Character: {name} — {desc}
+
+# ============================================================
+# comic-book - 漫画风格
+# ============================================================
+[comic-book]
+Comic book character reference sheet, comic panel art style, white background.
+Four views of the same comic character arranged in a single row from left to right:
+1) front-facing portrait (head and shoulders),
+2) front-facing full body (heroic pose),
+3) side-view full body (action pose),
+4) back-view full body (standing pose).
+ALL views show IDENTICAL character with perfectly consistent appearance, costume, and signature features.
+Portrait shows head to waist; others show complete body head to feet.
+Bold ink lines, comic shading (hatching/cross-hatching), dynamic comic book art style.
+High quality comic illustration, vibrant ink colors, dramatic lighting.
+DO NOT describe or specify eye color. Leave eye color unspecified.
+Smooth, clear face, no blemishes, no spots, perfect skin.
+NO text, NO labels, NO annotations, NO captions, NO speech bubbles on image.
+Character: {name} — {desc}
+
+# ============================================================
+# 3d-disney - 迪士尼3D风格
+# ============================================================
+[3d-disney]
+3D Disney-style character reference sheet, CGI animated movie style, pure white background.
+Four views of the same 3D animated character arranged in a single row from left to right:
+1) front-facing portrait (head and shoulders),
+2) front-facing full body (friendly pose),
+3) side-view full body (character profile),
+4) back-view full body (standing pose).
+ALL views show IDENTICAL character with perfectly consistent appearance, costume, and features.
+Portrait shows head to waist; others show complete body head to feet.
+Disney Pixar CGI quality, toon shader rendering, smooth 3D geometry, clean textures.
+High quality 3D render, soft shadows, cinematic lighting, feature film quality.
+DO NOT describe or specify eye color. Leave eye color unspecified.
+Smooth, clear face, no blemishes, no spots, perfect skin.
+NO text, NO labels, NO annotations, NO captions, NO watermarks on image.
+Character: {name} — {desc}
+
+# ============================================================
+# watercolor - 水彩风格
+# ============================================================
+[watercolor]
+Watercolor character reference sheet, painterly art style, white background.
+Four views of the same character arranged in a single row from left to right:
+1) front-facing portrait (head and shoulders),
+2) front-facing full body (elegant pose),
+3) side-view full body (graceful pose),
+4) back-view full body (standing pose).
+ALL views show IDENTICAL character with perfectly consistent appearance, outfit, and features.
+Portrait shows head to waist; others show complete body head to feet.
+Soft watercolor painting texture, flowing color washes, delicate brush strokes, translucent layers.
+High quality watercolor illustration, artistic masterpiece, organic color blending.
+DO NOT describe or specify eye color. Leave eye color unspecified.
+Smooth, clear face, no blemishes, no spots, perfect skin.
+NO text, NO labels, NO annotations, NO captions, NO watermarks on image.
+Character: {name} — {desc}
+
+# ============================================================
+# oil-painting - 油画风格
+# ============================================================
+[oil-painting]
+Oil painting character reference sheet, classical fine art style, white background.
+Four views of the same character arranged in a single row from left to right:
+1) front-facing portrait (head and shoulders),
+2) front-facing full body (noble pose),
+3) side-view full body (aristocratic pose),
+4) back-view full body (standing pose).
+ALL views show IDENTICAL character with perfectly consistent appearance, attire, and features.
+Portrait shows head to waist; others show complete body head to feet.
+Rich oil paint texture, impasto brushwork, classical portraiture technique, deep colors.
+High quality oil painting, museum-quality masterpiece, dramatic chiaroscuro lighting.
+DO NOT describe or specify eye color. Leave eye color unspecified.
+Smooth, clear face, no blemishes, no spots, perfect skin.
+NO text, NO labels, NO annotations, NO captions, NO watermarks on image.
+Character: {name} — {desc}
+
+# ============================================================
+# cyberpunk - 赛博朋克风格
+# ============================================================
+[cyberpunk]
+Cyberpunk character reference sheet, futuristic sci-fi style, white background.
+Four views of the same cybernetic character arranged in a single row from left to right:
+1) front-facing portrait (head and shoulders, showing cybernetics),
+2) front-facing full body (tech-enhanced pose),
+3) side-view full body (cyberpunk stance),
+4) back-view full body (with tech gear visible).
+ALL views show IDENTICAL character with perfectly consistent appearance, cybernetic augmentations, and outfit.
+Portrait shows head to waist; others show complete body head to feet.
+Neon lighting, chrome/metallic surfaces, holographic elements, RGB accents.
+High quality cyberpunk illustration, sci-fi concept art, futuristic tech aesthetic.
+DO NOT describe or specify eye color. Leave eye color unspecified.
+Smooth, clear face, no blemishes, no spots, perfect skin.
+NO text, NO labels, NO annotations, NO captions, NO HUD elements on image.
+Character: {name} — {desc}
+
+# ============================================================
+# chinese-ink - 中国水墨风格
+# ============================================================
+[chinese-ink]
+Chinese ink painting (水墨画) character reference sheet, traditional East Asian art style, white background.
+Four views of the same character arranged in a single row from left to right:
+1) front-facing portrait (head and shoulders),
+2) front-facing full body (classical pose),
+3) side-view full body (traditional stance),
+4) back-view full body (standing pose).
+ALL views show IDENTICAL character with perfectly consistent appearance, clothing, and features.
+Portrait shows head to waist; others show complete body head to feet.
+Ink wash (墨色) rendering, Gongbi/Boneless brush technique, subtle ink gradients, rice paper texture.
+High quality Chinese ink painting, traditional scroll art aesthetics, elegant brushwork.
+DO NOT describe or specify eye color. Leave eye color unspecified.
+Smooth, clear face, no blemishes, no spots, perfect skin.
+NO text, NO labels, NO annotations, NO captions, NO seals/stamps on image.
+Character: {name} — {desc}

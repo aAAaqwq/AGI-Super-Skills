@@ -1,0 +1,27 @@
+# MovieAssistant Backend Dependencies
+# Python 3.9+
+
+# Web Framework
+fastapi>=0.100.0
+uvicorn>=0.23.0
+
+# Data Validation
+pydantic>=2.0.0
+
+# Environment Variables
+python-dotenv>=1.0.0
+
+# HTTP Clients
+requests>=2.28.0
+httpx>=0.24.0
+
+# Image Processing
+Pillow>=10.0.0
+numpy>=1.24.0
+
+# AI/ML Clients
+openai>=1.0.0
+dashscope>=1.10.0
+
+# Video Generation
+PyJWT>=2.8.0

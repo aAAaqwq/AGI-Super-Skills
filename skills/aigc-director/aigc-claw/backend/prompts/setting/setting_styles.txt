@@ -1,0 +1,109 @@
+# Setting Scene Prompt Templates
+# 场景背景图提示词模板（按风格分类）
+# 使用方式：根据 {style} 变量选择对应的模板
+
+# ============================================================
+# realistic - 写实摄影风格
+# ============================================================
+[realistic]
+Photorealistic landscape photography, actual photograph style.
+Wide establishing shot, eye-level view, panoramic perspective.
+Natural lighting, golden hour or blue hour atmosphere, realistic textures.
+No characters, no people, no animals in frame.
+Cinematic composition, movie scene quality, 8K resolution.
+High quality photography, sharp focus, wide angle lens, f/8, professional camera.
+True-to-life environment, detailed textures, atmospheric depth.
+NO text, NO labels, NO watermarks on image.
+NOT an illustration, NOT a drawing, NOT anime style.
+Scene: {name} — {desc}
+
+# ============================================================
+# anime - 动漫风格
+# ============================================================
+[anime]
+Anime style landscape illustration, clean vector art aesthetic.
+Wide establishing shot, eye-level view, panoramic perspective.
+Vibrant colors, cel-shaded rendering, anime background art style.
+No characters, no people, no animals in frame.
+Cinematic composition, high quality anime illustration, masterpiece.
+Crisp details, atmospheric background, anime movie quality.
+NO text, NO labels, NO watermarks on image.
+Scene: {name} — {desc}
+
+# ============================================================
+# comic-book - 漫画风格
+# ============================================================
+[comic-book]
+Comic book style landscape, comic panel art aesthetic.
+Wide establishing shot, eye-level view, dynamic perspective.
+Bold ink lines, comic shading (hatching/cross-hatching), vibrant colors.
+No characters, no people, no animals in frame.
+Comic book art style, dramatic lighting, comic panel composition.
+High quality comic illustration, vibrant ink colors, graphic novel aesthetic.
+NO text, NO speech bubbles, NO watermarks on image.
+Scene: {name} — {desc}
+
+# ============================================================
+# 3d-disney - 迪士尼3D风格
+# ============================================================
+[3d-disney]
+3D CGI animated movie style landscape, Disney Pixar aesthetic.
+Wide establishing shot, eye-level view, smooth 3D geometry.
+Toon shader rendering, soft shadows, cinematic lighting, feature film quality.
+No characters, no people, no animals in frame.
+Disney Pixar CGI quality, clean 3D environment, volumetric lighting.
+High quality 3D render, animated movie background, toon shading.
+NO text, NO labels, NO watermarks on image.
+Scene: {name} — {desc}
+
+# ============================================================
+# watercolor - 水彩风格
+# ============================================================
+[watercolor]
+Watercolor painting style landscape, painterly art aesthetic.
+Wide establishing shot, eye-level view, soft perspective.
+Flowing color washes, delicate brush strokes, translucent layers.
+No characters, no people, no animals in frame.
+Watercolor art style, organic color blending, artistic masterpiece.
+Soft texture, artistic render, traditional painting aesthetic.
+NO text, NO labels, NO watermarks on image.
+Scene: {name} — {desc}
+
+# ============================================================
+# oil-painting - 油画风格
+# ============================================================
+[oil-painting]
+Oil painting style landscape, classical fine art aesthetic.
+Wide establishing shot, eye-level view, classical composition.
+Rich oil paint texture, impasto brushwork, classical portraiture technique.
+No characters, no people, no animals in frame.
+Oil painting art style, dramatic chiaroscuro lighting, museum-quality masterpiece.
+Deep colors, detailed brushwork, traditional canvas texture.
+NO text, NO labels, NO watermarks on image.
+Scene: {name} — {desc}
+
+# ============================================================
+# cyberpunk - 赛博朋克风格
+# ============================================================
+[cyberpunk]
+Cyberpunk style landscape, futuristic sci-fi aesthetic.
+Wide establishing shot, eye-level view, dystopian perspective.
+Neon lighting, chrome/metallic surfaces, holographic elements, RGB accents.
+No characters, no people, no animals in frame.
+Cyberpunk cityscape, high-tech environment, volumetric fog.
+High quality cyberpunk illustration, sci-fi concept art, futuristic aesthetic.
+NO text, NO HUD elements, NO watermarks on image.
+Scene: {name} — {desc}
+
+# ============================================================
+# chinese-ink - 中国水墨风格
+# ============================================================
+[chinese-ink]
+Chinese ink painting (水墨画) style landscape, traditional East Asian art aesthetic.
+Wide establishing shot, eye-level view, traditional Chinese composition.
+Ink wash (墨色) rendering, Gongbi/Boneless brush technique, subtle ink gradients.
+No characters, no people, no animals in frame.
+Chinese landscape painting style, rice paper texture, traditional scroll art.
+High quality ink painting, elegant brushwork, classical Chinese aesthetics.
+NO text, NO seals/stamps, NO watermarks on image.
+Scene: {name} — {desc}

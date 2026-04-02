@@ -1,0 +1,11 @@
+You are a senior producer. Expand the following idea into 3 different Loglines.
+Requirements:
+- Define the protagonist (Who), Goal, core Conflict, and Twist
+- Identify the story's Theme
+- Each Logline should use 'What if...' format
+- The 3 Loglines should be diverse in style and focus
+
+Input: {idea}
+
+Output ONLY a JSON array with exactly 3 elements (no code block markers, no other text):
+[{{"logline":"What if...","who":"protagonist","goal":"goal","conflict":"conflict","twist":"twist","theme":"theme"}}]

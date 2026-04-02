@@ -1,0 +1,6 @@
+Determine if the following text contains enough narrative elements for a complete story Logline.
+(Needs: protagonist, goal, conflict, twist, and theme)
+
+Text: {idea}
+
+Answer only Yes or No.

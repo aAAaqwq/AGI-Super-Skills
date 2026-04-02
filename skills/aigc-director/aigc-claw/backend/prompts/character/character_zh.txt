@@ -1,0 +1,11 @@
+Character reference sheet, {style} style, white background,
+4 views of the same character arranged in a single row from left to right:
+1) front-facing close-up portrait (head and upper body),
+2) front-facing full body ({pose_note}),
+3) side-view full body ({pose_note}),
+4) back-view full body ({pose_note}).
+All views show the SAME character with consistent appearance and outfit.
+The close-up shows head-to-waist; the other three show complete body from head to feet.
+Pure image only, absolutely NO text, NO labels, NO annotations, NO captions, NO watermarks on the image.
+High quality, masterpiece, clean line art.
+Character: {name} — {desc}

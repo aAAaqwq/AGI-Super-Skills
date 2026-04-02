@@ -1,0 +1,14 @@
+# 忽略 macOS 系统文件
+.DS_Store
+# 忽略 VSCode 编辑器配置文件夹
+.vscode/
+# 忽略 Claude 编辑器配置文件夹 (如果存在)
+.claude/
+# 可选：忽略 macOS 索引文件
+.Spotlight-V100
+.Trashes
+# 可选：忽略 Python 编译文件
+__pycache__/
+*.pyc
+# 忽略zip文件
+*.zip
