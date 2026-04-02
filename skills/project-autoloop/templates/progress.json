@@ -1,0 +1,20 @@
+{
+  "project": {
+    "name": "",
+    "path": "",
+    "startedAt": "",
+    "startedBy": "Daniel",
+    "cronJobId": ""
+  },
+  "config": {
+    "intervalMs": 900000,
+    "maxRounds": 20,
+    "maxRetriesPerCriterion": 3,
+    "acceptanceFile": "acceptance-criteria.md"
+  },
+  "status": "running",
+  "currentRound": 0,
+  "criteria": [],
+  "blockers": [],
+  "history": []
+}
