@@ -12,7 +12,7 @@ A **plug-and-play AI team template** — deploy a complete virtual company in mi
 
 | Metric | Value |
 |--------|-------|
-| **Skills** | 940+ |
+| **Skills** | 382 listed / ~438 with SKILL.md |
 | **Categories** | 18 |
 | **Agents** | 13 (fully customizable) |
 | **Framework** | [OpenClaw](https://github.com/openclaw/openclaw) |
@@ -67,26 +67,26 @@ You (CEO / Creator)
 
 | Category | Count | Highlights |
 |----------|:-----:|-----------|
-| [⚙️ OpenClaw Tools](./skills/categories/openclaw-tools.md) | 25 | Config helpers, auth manager, cron, token guard, model switcher |
+| [⚙️ OpenClaw Tools](./skills/categories/openclaw-tools.md) | 28 | Config helpers, auth manager, cron, token guard, model switcher |
 | [🤖 AI Agent Patterns](./skills/categories/ai-agent-patterns.md) | 25 | Multi-agent orchestration, parallel execution, first principles thinking |
 | [🔧 Development](./skills/categories/development.md) | 35 | Backend/frontend, Docker, Git, TDD, API design, auth systems |
 | [💰 Trading & Finance](./skills/categories/trading-finance.md) | 32 | Crypto trading, Polymarket, DeFi, portfolio management, CT monitor |
-| [📝 Content & Writing](./skills/categories/content-writing.md) | 30 | SEO writing, social media, viral content, anti-AI-slop, Xiaohongshu |
+| [📝 Content & Writing](./skills/categories/content-writing.md) | 38 | SEO writing, social media, viral content, anti-AI-slop, Xiaohongshu |
 | [📊 Data & Analytics](./skills/categories/data-analytics.md) | 21 | Web scraping, DuckDB, CSV pipelines, arXiv, multi-engine search |
 | [📈 Marketing & SEO](./skills/categories/marketing-seo.md) | 19 | SEO audits, GEO optimization, A/B testing, churn prevention |
 | [🎨 Design & Media](./skills/categories/design-media.md) | 15 | Image generation (Gemini 3 Pro), UI/UX, slides, brand identity |
-| [🌐 Browser Automation](./skills/categories/browser-automation.md) | 7 | Playwright, Chrome, AI-driven browsing, agent browser |
+| [🌐 Browser Automation](./skills/categories/browser-automation.md) | 8 | Playwright, Chrome, AI-driven browsing, agent browser |
 | [🏢 Business & Strategy](./skills/categories/business-strategy.md) | 15 | SaaS launch, competitor teardown, financial modeling, personal finance |
 | [📋 Project Management](./skills/categories/project-management.md) | 18 | PRD writing, roadmaps, Scrum, team coordination, daily reports |
 | [🧠 Knowledge & Research](./skills/categories/knowledge-research.md) | 6 | Vector memory, brave search, academic research, semantic search |
-| [💬 Communication](./skills/categories/communication.md) | 14 | Email, Feishu/Lark, WeChat, cross-instance messaging |
-| [🔌 SaaS Integrations](./skills/categories/saas-integrations.md) | 63 | Notion, Airtable, HubSpot, Stripe, Shopify, 55+ more |
-| [⚙️ DevOps & Infra](./skills/categories/devops-infra.md) | 9 | AWS, Docker, Linux troubleshooting, observability, runbooks |
+| [💬 Communication](./skills/categories/communication.md) | 13 | Email, Feishu/Lark, WeChat, cross-instance messaging |
+| [🔌 SaaS Integrations](./skills/categories/saas-integrations.md) | 62 | Notion, Airtable, HubSpot, Stripe, Shopify, 55+ more |
+| [⚙️ DevOps & Infra](./skills/categories/devops-infra.md) | 10 | AWS, Docker, Linux troubleshooting, observability, runbooks |
 | [🔒 Security](./skills/categories/security.md) | 7 | Code review, GDPR, PCI compliance, security audit |
 | [⚖️ Legal & Compliance](./skills/categories/legal-compliance.md) | 6 | Contracts, customs/trade, employment law, legal advisory |
-| [📱 Chinese Platform Publishing](./skills/categories/chinese-platform-publishing.md) | 12 | Xiaohongshu, Douyin, WeChat MP, WeChat Channels, Juejin, Zhishixingqiu |
+| [📱 Chinese Platform Publishing](./skills/categories/chinese-platform-publishing.md) | 13 | Xiaohongshu, Douyin, WeChat MP, WeChat Channels, Juejin, Zhishixingqiu |
 | [🎬 Video & Digital Human](./skills/categories/video-digital-human.md) | 5 | Jimeng AI digital human, video merge, storyboard |
-| [🧩 Other](./skills/categories/other.md) | 15 | RSS, calendars, presentations, skill creation, design thinking |
+| [🧩 Other](./skills/categories/other.md) | 18 | RSS, calendars, presentations, skill creation, design thinking |
 
 <details>
 <summary>📋 Full Skill List (click to expand)</summary>
@@ -118,17 +118,17 @@ You (CEO / Creator)
 | | [`tailscale-operator`](./skills/tailscale-operator/) | Manage and troubleshoot devices on a Tailscale tailnet |
 | ⭐⭐⭐⭐ | [`wechat-channel`](./skills/wechat-channel/) | WeChat ↔ OpenClaw bidirectional messaging channel |
 | | [`xiaomo-assistant-template`](./skills/xiaomo-assistant-template/) | Quick-start assistant configuration template |
-| | [`agent-model-switcher`](./skills/agent-model-switcher/) | Batch switch models across all sub-agents |
+| ⭐⭐⭐ | [`agent-model-switcher`](./skills/agent-model-switcher/) | Batch switch models across all sub-agents |
 | | [`inference-optimizer`](./skills/inference-optimizer/) | Audit token usage, purge stale sessions, optimize speed |
 | | [`model-hierarchy-skill`](./skills/model-hierarchy-skill/) | Intelligent model selection hierarchy |
-| | [`openclaw-memory-enhancer`](./skills/openclaw-memory-enhancer/) | Edge-optimized RAG memory system (<10MB) |
+| ⭐ | [`openclaw-memory-enhancer`](./skills/openclaw-memory-enhancer/) | Edge-optimized RAG memory system (<10MB) |
 | | [`mcstatus`](./skills/mcstatus/) | 模型配置状态检查 — 列出所有 agent 的模型配备 |
 
 ### 🤖 AI Agent Patterns
 
 | Rating | Skill | Description |
 |-------|------------|------------|
-| | [`agent-patterns`](./skills/agent-patterns/) | Agent coordination, spawn requests, and report formats |
+| ⭐⭐⭐ | [`agent-patterns`](./skills/agent-patterns/) | Agent coordination, spawn requests, and report formats |
 | ⭐⭐⭐⭐ | [`env-setup`](./skills/env-setup/) | One-click environment sync from GitHub repo |
 | ⭐⭐⭐⭐ | [`erc-8004`](./skills/erc-8004/) | Register AI agents on Ethereum via ERC-8004 |
 | | [`fabric-pattern`](./skills/fabric-pattern/) | Fabric AI framework integration for text processing |
@@ -149,7 +149,7 @@ You (CEO / Creator)
 | | [`sp-when-stuck`](./skills/sp-when-stuck/) | Dispatch to the right problem-solving technique |
 | | [`subagent-driven-development`](./skills/subagent-driven-development/) | Execute implementation plans with independent sub-tasks |
 | ⭐⭐⭐⭐ | [`agent-team-orchestration`](./skills/agent-team-orchestration/) | Orchestrate multi-agent teams with roles and handoff protocols |
-| | [`agent-task-confirm`](./skills/agent-task-confirm/) | Verify agent task receipt and execution status |
+| ⭐⭐⭐ | [`agent-task-confirm`](./skills/agent-task-confirm/) | Verify agent task receipt and execution status |
 | | [`coding-agent-backup`](./skills/coding-agent-backup/) | Delegate coding to Codex, Claude Code, or Pi agents |
 | | [`coding-agent-orchestrator`](./skills/coding-agent-orchestrator/) | Plan-first coding workflow orchestration |
 | ⭐⭐⭐⭐ | [`first-principles-thinking`](./skills/first-principles-thinking/) | Socratic coach for breaking problems to fundamental truths |
@@ -160,14 +160,14 @@ You (CEO / Creator)
 |-------|------------|------------|
 | ⭐⭐⭐⭐ | [`architecture-decision-records`](./skills/architecture-decision-records/) | Write and maintain ADRs for technical decisions |
 | ⭐⭐⭐⭐ | [`backend-development`](./skills/backend-development/) | Backend expert — Python, Node.js, Go, Java |
-| | [`bat-cat`](./skills/bat-cat/) | Modern cat replacement with syntax highlighting |
-| | [`billing-automation`](./skills/billing-automation/) | Automated billing, invoicing, and subscription management |
+| ⭐⭐ | [`bat-cat`](./skills/bat-cat/) | Modern cat replacement with syntax highlighting |
+| ⭐⭐ | [`billing-automation`](./skills/billing-automation/) | Automated billing, invoicing, and subscription management |
 | ⭐⭐⭐⭐ | [`changelog-generator`](./skills/changelog-generator/) | Auto-generate changelogs from git commits |
-| | [`commit-analyzer`](./skills/commit-analyzer/) | Analyze git commit patterns for operation health |
+| ⭐⭐⭐ | [`commit-analyzer`](./skills/commit-analyzer/) | Analyze git commit patterns for operation health |
 | ⭐⭐⭐⭐ | [`docker-essentials`](./skills/docker-essentials/) | Essential Docker commands and workflows |
 | ⭐⭐⭐⭐ | [`electron-app-dev`](./skills/electron-app-dev/) | Electron desktop app development with electron-vite |
-| | [`frontend-design`](./skills/frontend-design/) | Production-grade frontend with high design quality |
-| | [`frontend-development`](./skills/frontend-development/) | Web app development, UI components, interactions |
+| ⭐⭐⭐ | [`frontend-design`](./skills/frontend-design/) | Production-grade frontend with high design quality |
+| ⭐⭐ | [`frontend-development`](./skills/frontend-development/) | Web app development, UI components, interactions |
 | ⭐⭐⭐⭐ | [`github-automation`](./skills/github-automation/) | GitHub ops — push, PRs, issues, CI/CD |
 | ⭐⭐⭐⭐ | [`langsmith-fetch`](./skills/langsmith-fetch/) | Debug LangChain agents via LangSmith traces |
 | ⭐⭐⭐⭐ | [`mcp-builder`](./skills/mcp-builder/) | Create high-quality MCP servers |
@@ -184,15 +184,15 @@ You (CEO / Creator)
 | | [`test-automator`](./skills/test-automator/) | Automated test generation |
 | | [`vibe-code-auditor`](./skills/vibe-code-auditor/) | Audit AI-generated code for production risks |
 | | [`web-artifacts-builder`](./skills/web-artifacts-builder/) | Multi-component HTML artifacts with modern frontend |
-| | [`api-designer`](./skills/api-designer/) | Design RESTful/GraphQL APIs with best practices |
-| | [`auth-system`](./skills/auth-system/) | Implement JWT, OAuth2, Session auth systems |
+| ⭐ | [`api-designer`](./skills/api-designer/) | Design RESTful/GraphQL APIs with best practices |
+| ⭐ | [`auth-system`](./skills/auth-system/) | Implement JWT, OAuth2, Session auth systems |
 | | [`cli-developer`](./skills/cli-developer/) | Build CLI tools with argument parsing and completions |
 | | [`css-ninja`](./skills/css-ninja/) | Master CSS with Tailwind, animations, responsive layouts |
 | | [`db-migrator`](./skills/db-migrator/) | Database schema migration and rollback management |
-| | [`frontend-design-ultimate`](./skills/frontend-design-ultimate/) | Production-grade static sites with React + Tailwind + shadcn/ui |
+| ⭐ | [`frontend-design-ultimate`](./skills/frontend-design-ultimate/) | Production-grade static sites with React + Tailwind + shadcn/ui |
 | | [`collaboration`](./skills/collaboration/) | Guide for collaborating on GitHub projects |
-| | [`dependency-auditor`](./skills/dependency-auditor/) | Audit dependencies for vulnerabilities |
-| | [`full-cycle-skill`](./skills/full-cycle-skill/) | Full-cycle development from ideation to deployment |
+| ⭐⭐⭐ | [`dependency-auditor`](./skills/dependency-auditor/) | Audit dependencies for vulnerabilities |
+| ⭐⭐⭐ | [`full-cycle-skill`](./skills/full-cycle-skill/) | Full-cycle development from ideation to deployment |
 
 ### 💰 Trading & Finance
 
@@ -211,9 +211,9 @@ You (CEO / Creator)
 | | [`defi-risk-assessment`](./skills/defi-risk-assessment/) | Evaluate DeFi protocol risks |
 | | [`invoice-organizer`](./skills/invoice-organizer/) | Auto-organize invoices for tax prep |
 | ⭐⭐⭐⭐ | [`market-movers-scanner`](./skills/market-movers-scanner/) | Detect significant price movements and volume |
-| | [`market-price-tracker`](./skills/market-price-tracker/) | Real-time crypto prices across exchanges |
+| ⭐⭐⭐ | [`market-price-tracker`](./skills/market-price-tracker/) | Real-time crypto prices across exchanges |
 | ⭐⭐⭐⭐ | [`market-sentiment-analyzer`](./skills/market-sentiment-analyzer/) | Fear & Greed Index, news sentiment analysis |
-| | [`options-flow-analyzer`](./skills/options-flow-analyzer/) | Track institutional options positioning |
+| ⭐⭐ | [`options-flow-analyzer`](./skills/options-flow-analyzer/) | Track institutional options positioning |
 | ⭐⭐⭐⭐ | [`polyclaw`](./skills/polyclaw/) | Trade on Polymarket via CLOB execution |
 | ⭐⭐⭐⭐ | [`polymarket-data`](./skills/polymarket-data/) | Polymarket live odds, order books, leaderboards |
 | ⭐⭐⭐⭐ | [`polymarket-profit`](./skills/polymarket-profit/) | Quantitative trading system for Polymarket |
@@ -236,20 +236,20 @@ You (CEO / Creator)
 | Rating | Skill | Description |
 |-------|------------|------------|
 | ⭐⭐⭐⭐ | [`content-creator`](./skills/content-creator/) | SEO-optimized marketing content with brand voice |
-| | [`content-marketer`](./skills/content-marketer/) | Content marketing strategy and distribution |
-| | [`content-research-writer`](./skills/content-research-writer/) | Research-backed content with citations |
+| ⭐⭐⭐ | [`content-marketer`](./skills/content-marketer/) | Content marketing strategy and distribution |
+| ⭐⭐⭐⭐ | [`content-research-writer`](./skills/content-research-writer/) | Research-backed content with citations |
 | ⭐⭐⭐⭐ | [`content-source-aggregator`](./skills/content-source-aggregator/) | Aggregate trending content from 6 platforms |
-| | [`conventional-commits`](./skills/conventional-commits/) | Conventional Commits formatting |
+| ⭐⭐⭐ | [`conventional-commits`](./skills/conventional-commits/) | Conventional Commits formatting |
 | ⭐⭐⭐⭐ | [`copy-editing`](./skills/copy-editing/) | Edit and improve marketing copy |
-| | [`copywriting`](./skills/copywriting/) | Persuasive copy for landing pages, emails, ads |
+| ⭐⭐⭐ | [`copywriting`](./skills/copywriting/) | Persuasive copy for landing pages, emails, ads |
 | ⭐⭐⭐⭐ | [`docx`](./skills/docx/) | Word document creation, editing, and analysis |
-| | [`docx-perfect`](./skills/docx-perfect/) | Professional Word document formatting |
-| | [`internal-comms`](./skills/internal-comms/) | Internal communications templates |
+| ⭐⭐⭐ | [`docx-perfect`](./skills/docx-perfect/) | Professional Word document formatting |
+| ⭐⭐ | [`internal-comms`](./skills/internal-comms/) | Internal communications templates |
 | | [`podcast-generation`](./skills/podcast-generation/) | AI podcast-style audio narratives |
 | ⭐⭐⭐⭐ | [`react-best-practices`](./skills/react-best-practices/) | React/Next.js performance guidelines |
-| | [`reddit-automation`](./skills/reddit-automation/) | Reddit posts, comments, and subreddit management |
+| ⭐⭐⭐ | [`reddit-automation`](./skills/reddit-automation/) | Reddit posts, comments, and subreddit management |
 | | [`seo-content-writer`](./skills/seo-content-writer/) | SEO-optimized content from keyword briefs |
-| | [`seo-content-writing`](./skills/seo-content-writing/) | SEO article writing |
+| ⭐⭐⭐ | [`seo-content-writing`](./skills/seo-content-writing/) | SEO article writing |
 | ⭐⭐⭐⭐ | [`skill-search-optimizer`](./skills/skill-search-optimizer/) | Optimize skills for ClawHub discoverability |
 | ⭐⭐⭐⭐ | [`social-content`](./skills/social-content/) | Social media content for all platforms |
 | ⭐⭐⭐⭐ | [`sp-using-skills`](./skills/sp-using-skills/) | Skills wiki and search workflows |
@@ -258,13 +258,13 @@ You (CEO / Creator)
 | | [`wiki-qa`](./skills/wiki-qa/) | Answer questions about a code repository |
 | ⭐⭐⭐⭐⭐ | [`xiaohongshu-workflow`](./skills/xiaohongshu-workflow/) | Xiaohongshu (RED) full operations workflow |
 | ⭐⭐⭐⭐ | [`create-viral-content`](./skills/create-viral-content/) | Create viral content with proven engagement patterns |
-| | [`content-repurposing`](./skills/content-repurposing/) | Atomize one piece of content into many formats |
+| ⭐⭐⭐ | [`content-repurposing`](./skills/content-repurposing/) | Atomize one piece of content into many formats |
 | ⭐⭐⭐⭐⭐ | [`content-factory`](./skills/content-factory/) | Automated content pipeline from 10+ platforms |
 | ⭐⭐⭐⭐ | [`humanize`](./skills/humanize/) | Remove AI writing patterns from text |
-| | [`humanize-zh`](./skills/humanize-zh/) | 将AI文本转换为自然人类写作风格 |
+| ⭐⭐⭐ | [`humanize-zh`](./skills/humanize-zh/) | 将AI文本转换为自然人类写作风格 |
 | ⭐⭐⭐⭐ | [`the-antislop`](./skills/the-antislop/) | Anti-AI-slop writing with authentic voice |
 | ⭐⭐⭐⭐⭐ | [`write-xiaohongshu`](./skills/write-xiaohongshu/) | Xiaohongshu content writing coach |
-| | [`x-articles`](./skills/x-articles/) | Publish viral X (Twitter) long-form articles |
+| ⭐ | [`x-articles`](./skills/x-articles/) | Publish viral X (Twitter) long-form articles |
 | ⭐⭐⭐⭐ | [`douyin-creator`](./skills/douyin-creator/) | 抖音创作发布：视频和图文发布到抖音创作者平台 |
 | ⭐⭐⭐⭐⭐ | [`douyin-smart-publish`](./skills/douyin-smart-publish/) | 抖音智能发布：视频/图文/文章三种模式 Playwright 自动化 |
 | ⭐⭐⭐⭐⭐ | [`douyin-smart-publisher`](./skills/douyin-smart-publisher/) | 抖音智能发布：内容适配→排版→Browser 自动发布 |
@@ -278,27 +278,27 @@ You (CEO / Creator)
 
 | Rating | Skill | Description |
 |-------|------------|------------|
-| | [`analytics-tracking`](./skills/analytics-tracking/) | Analytics tracking setup |
-| | [`arxiv-automation`](./skills/arxiv-automation/) | Search and monitor arXiv papers |
+| ⭐⭐⭐⭐ | [`analytics-tracking`](./skills/analytics-tracking/) | Analytics tracking setup |
+| ⭐⭐⭐ | [`arxiv-automation`](./skills/arxiv-automation/) | Search and monitor arXiv papers |
 | | [`data-engineering-data-pipeline`](./skills/data-engineering-data-pipeline/) | Scalable data pipeline architecture |
 | | [`data-storytelling`](./skills/data-storytelling/) | Transform data into compelling narratives |
 | | [`firecrawl`](./skills/firecrawl/) | Professional web scraping via Firecrawl API |
-| | [`football-data`](./skills/football-data/) | Football data across 13 leagues |
+| ⭐⭐⭐⭐ | [`football-data`](./skills/football-data/) | Football data across 13 leagues |
 | | [`google-analytics-automation`](./skills/google-analytics-automation/) | Google Analytics reports and funnels |
-| | [`googlesheets-automation`](./skills/googlesheets-automation/) | Google Sheets read, write, format, filter |
-| | [`pdf`](./skills/pdf/) | PDF manipulation — extract, create, merge, split |
+| ⭐⭐⭐⭐ | [`googlesheets-automation`](./skills/googlesheets-automation/) | Google Sheets read, write, format, filter |
+| ⭐⭐⭐⭐ | [`pdf`](./skills/pdf/) | PDF manipulation — extract, create, merge, split |
 | | [`programmatic-seo`](./skills/programmatic-seo/) | Programmatic SEO at scale |
 | | [`sendgrid-automation`](./skills/sendgrid-automation/) | SendGrid email delivery automation |
 | | [`tavily`](./skills/tavily/) | AI-optimized web search via Tavily API |
-| | [`web-scraping-automation`](./skills/web-scraping-automation/) | Automated web scraping and API data extraction |
-| | [`web-search`](./skills/web-search/) | Multi-tool web search and content fetching |
-| | [`xlsx`](./skills/xlsx/) | Spreadsheet creation, editing, and analysis |
+| ⭐⭐⭐ | [`web-scraping-automation`](./skills/web-scraping-automation/) | Automated web scraping and API data extraction |
+| ⭐⭐⭐⭐ | [`web-search`](./skills/web-search/) | Multi-tool web search and content fetching |
+| ⭐⭐⭐⭐ | [`xlsx`](./skills/xlsx/) | Spreadsheet creation, editing, and analysis |
 | | [`data-analyst`](./skills/data-analyst/) | Data visualization, reports, SQL, and spreadsheet automation |
-| | [`csv-pipeline`](./skills/csv-pipeline/) | Process, transform, and analyze CSV/JSON data files |
-| | [`duckdb-cli-ai-skills`](./skills/duckdb-cli-ai-skills/) | DuckDB CLI for SQL analysis and data processing |
-| | [`last30days-skill`](./skills/last30days-skill/) | Research any topic from the last 30 days |
+| ⭐⭐⭐⭐ | [`csv-pipeline`](./skills/csv-pipeline/) | Process, transform, and analyze CSV/JSON data files |
+| ⭐⭐⭐⭐ | [`duckdb-cli-ai-skills`](./skills/duckdb-cli-ai-skills/) | DuckDB CLI for SQL analysis and data processing |
+| ⭐⭐⭐⭐ | [`last30days-skill`](./skills/last30days-skill/) | Research any topic from the last 30 days |
 | | [`multi-search-engine`](./skills/multi-search-engine/) | 17 search engines (8 CN + 9 Global) integration |
-| | [`mineru-extract`](./skills/mineru-extract/) | Convert URLs/PDFs to markdown via MinerU API |
+| ⭐⭐⭐ | [`mineru-extract`](./skills/mineru-extract/) | Convert URLs/PDFs to markdown via MinerU API |
 
 ### 📈 Marketing & SEO
 
@@ -307,22 +307,22 @@ You (CEO / Creator)
 | | [`brand-guidelines`](./skills/brand-guidelines/) | Brand color and typography application |
 | | [`competitive-ads-extractor`](./skills/competitive-ads-extractor/) | Extract competitor ads from ad libraries |
 | | [`competitor-alternatives`](./skills/competitor-alternatives/) | Competitor comparison pages for SEO/sales |
-| | [`deep-research`](./skills/deep-research/) | Multi-step research via Gemini Deep Research |
-| | [`geo-agent`](./skills/geo-agent/) | Generative Engine Optimization for AI search |
-| | [`lead-research-assistant`](./skills/lead-research-assistant/) | High-quality lead identification |
-| | [`linkedin-automation`](./skills/linkedin-automation/) | LinkedIn posts, profile, and company management |
+| ⭐⭐⭐⭐ | [`deep-research`](./skills/deep-research/) | Multi-step research via Gemini Deep Research |
+| ⭐⭐⭐⭐ | [`geo-agent`](./skills/geo-agent/) | Generative Engine Optimization for AI search |
+| ⭐⭐⭐⭐ | [`lead-research-assistant`](./skills/lead-research-assistant/) | High-quality lead identification |
+| ⭐⭐⭐⭐ | [`linkedin-automation`](./skills/linkedin-automation/) | LinkedIn posts, profile, and company management |
 | | [`marketing-ideas`](./skills/marketing-ideas/) | Proven marketing strategies for SaaS |
 | | [`marketing-psychology`](./skills/marketing-psychology/) | Behavioral science applied to marketing |
 | | [`one-drive-automation`](./skills/one-drive-automation/) | OneDrive file management automation |
-| | [`paid-ads`](./skills/paid-ads/) | Paid advertising on Google, Meta, LinkedIn, X |
-| | [`seo-audit`](./skills/seo-audit/) | SEO audit workflows |
+| ⭐⭐⭐⭐⭐ | [`paid-ads`](./skills/paid-ads/) | Paid advertising on Google, Meta, LinkedIn, X |
+| ⭐⭐⭐⭐ | [`seo-audit`](./skills/seo-audit/) | SEO audit workflows |
 | | [`seo-meta-optimizer`](./skills/seo-meta-optimizer/) | SEO meta tag optimization |
-| | [`twitter-algorithm-optimizer`](./skills/twitter-algorithm-optimizer/) | Optimize tweets for Twitter's algorithm |
-| | [`geo-content-optimizer`](./skills/geo-content-optimizer/) | Optimize content for AI search engines (ChatGPT, Perplexity) |
-| | [`seo-geo`](./skills/seo-geo/) | Generative Engine Optimization strategies |
-| | [`market-ab-test-setup`](./skills/market-ab-test-setup/) | Plan and implement A/B tests and experiments |
-| | [`market-churn-prevention`](./skills/market-churn-prevention/) | Reduce churn with cancel flows and save offers |
-| | [`content-extract`](./skills/content-extract/) | Robust URL-to-Markdown extraction |
+| ⭐⭐⭐⭐ | [`twitter-algorithm-optimizer`](./skills/twitter-algorithm-optimizer/) | Optimize tweets for Twitter's algorithm |
+| ⭐⭐⭐⭐ | [`geo-content-optimizer`](./skills/geo-content-optimizer/) | Optimize content for AI search engines (ChatGPT, Perplexity) |
+| ⭐⭐⭐⭐ | [`seo-geo`](./skills/seo-geo/) | Generative Engine Optimization strategies |
+| ⭐⭐⭐⭐ | [`market-ab-test-setup`](./skills/market-ab-test-setup/) | Plan and implement A/B tests and experiments |
+| ⭐⭐⭐⭐ | [`market-churn-prevention`](./skills/market-churn-prevention/) | Reduce churn with cancel flows and save offers |
+| ⭐⭐⭐ | [`content-extract`](./skills/content-extract/) | Robust URL-to-Markdown extraction |
 
 ### 🎨 Design & Media
 
@@ -330,7 +330,7 @@ You (CEO / Creator)
 |-------|------------|------------|
 | ⭐⭐⭐⭐ | [`ai-image-generation`](./skills/ai-image-generation/) | Image generation via ModelScope Z-Image-Turbo |
 | ⭐⭐⭐⭐ | [`figma-automation`](./skills/figma-automation/) | Figma files, components, design tokens |
-| | [`image-enhancer`](./skills/image-enhancer/) | Enhance image quality and resolution |
+| ⭐⭐ | [`image-enhancer`](./skills/image-enhancer/) | Enhance image quality and resolution |
 | ⭐⭐⭐⭐ | [`kpi-dashboard-design`](./skills/kpi-dashboard-design/) | KPI dashboard design and visualization |
 | ⭐⭐⭐⭐ | [`pricing-strategy`](./skills/pricing-strategy/) | Pricing, packaging, and monetization strategies |
 | ⭐⭐⭐⭐⭐ | [`senior-architect`](./skills/senior-architect/) | System architecture design and evaluation |
@@ -338,9 +338,9 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐ | [`sp-brainstorming`](./skills/sp-brainstorming/) | Interactive idea refinement via Socratic method |
 | | [`theme-factory`](./skills/theme-factory/) | Styling toolkit for slides, docs, landing pages |
 | ⭐⭐⭐⭐⭐ | [`ui-ux-pro-max`](./skills/ui-ux-pro-max/) | UI/UX design — 50 styles, 21 palettes, 9 stacks |
-| | [`uml-diagram-design`](./skills/uml-diagram-design/) | UML diagrams — class, sequence, use case |
+| ⭐⭐⭐ | [`uml-diagram-design`](./skills/uml-diagram-design/) | UML diagrams — class, sequence, use case |
 | ⭐⭐⭐⭐ | [`video-downloader`](./skills/video-downloader/) | Download YouTube videos |
-| | [`nano-banana-pro`](./skills/nano-banana-pro/) | Generate/edit images with Gemini 3 Pro Image (1K/2K/4K) |
+| ⭐ | [`nano-banana-pro`](./skills/nano-banana-pro/) | Generate/edit images with Gemini 3 Pro Image (1K/2K/4K) |
 | | [`brand-identity`](./skills/brand-identity/) | Build complete brand identity for solopreneurs |
 
 ### 🌐 Browser Automation
@@ -349,12 +349,12 @@ You (CEO / Creator)
 |-------|------------|------------|
 | ⭐⭐⭐⭐ | [`browser-use`](./skills/browser-use/) | AI-driven intelligent browser automation |
 | ⭐⭐⭐⭐ | [`chrome-automation`](./skills/chrome-automation/) | Chrome browser automation |
-| | [`fast-browser-use`](./skills/fast-browser-use/) | Fast Rust-based headless browser CLI |
-| | [`openclaw-browser-chain-debug`](./skills/openclaw-browser-chain-debug/) | Debug OpenClaw browser startup, CDP, DISPLAY, and mode-selection failures |
-| | [`media-auto-publisher`](./skills/media-auto-publisher/) | Auto-publish to 6 Chinese content platforms |
+| ⭐⭐⭐ | [`fast-browser-use`](./skills/fast-browser-use/) | Fast Rust-based headless browser CLI |
+| ⭐ | [`openclaw-browser-chain-debug`](./skills/openclaw-browser-chain-debug/) | Debug OpenClaw browser startup, CDP, DISPLAY, and mode-selection failures |
+| ⭐⭐⭐ | [`media-auto-publisher`](./skills/media-auto-publisher/) | Auto-publish to 6 Chinese content platforms |
 | ⭐⭐⭐⭐ | [`playwright-automation`](./skills/playwright-automation/) | Playwright browser automation for scraping/testing |
-| | [`webapp-testing`](./skills/webapp-testing/) | Web application testing with Playwright |
-| | [`agent-browser`](./skills/agent-browser/) | Fast Rust-based headless browser automation CLI |
+| ⭐⭐⭐ | [`webapp-testing`](./skills/webapp-testing/) | Web application testing with Playwright |
+| ⭐ | [`agent-browser`](./skills/agent-browser/) | Fast Rust-based headless browser automation CLI |
 
 ### 🏢 Business & Strategy
 
@@ -364,34 +364,34 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐ | [`market-sizing-analysis`](./skills/market-sizing-analysis/) | Market sizing and TAM/SAM/SOM analysis |
 | ⭐⭐⭐⭐ | [`meeting-insights-analyzer`](./skills/meeting-insights-analyzer/) | Analyze meeting transcripts for behavioral patterns |
 | ⭐⭐⭐⭐ | [`micro-saas-launcher`](./skills/micro-saas-launcher/) | Launch micro-SaaS products fast |
-| | [`notion-template-business`](./skills/notion-template-business/) | Build and sell Notion templates |
+| ⭐⭐ | [`notion-template-business`](./skills/notion-template-business/) | Build and sell Notion templates |
 | ⭐⭐⭐⭐ | [`startup-analyst`](./skills/startup-analyst/) | Startup analysis frameworks |
 | ⭐⭐⭐⭐ | [`startup-business-analyst-business-case`](./skills/startup-business-analyst-business-case/) | Investor-ready business case documents |
 | ⭐⭐⭐⭐ | [`startup-business-analyst-financial-projections`](./skills/startup-business-analyst-financial-projections/) | Financial projections for startups |
 | ⭐⭐⭐⭐ | [`startup-financial-modeling`](./skills/startup-financial-modeling/) | Startup financial modeling |
 | ⭐⭐⭐⭐ | [`startup-metrics-framework`](./skills/startup-metrics-framework/) | SaaS metrics — CAC, LTV, unit economics |
-| | [`company-analyzer`](./skills/company-analyzer/) | Investment research with 8 specialized frameworks |
-| | [`competitor-teardown`](./skills/competitor-teardown/) | Structured competitive analysis with SWOT and positioning |
+| ⭐⭐⭐ | [`company-analyzer`](./skills/company-analyzer/) | Investment research with 8 specialized frameworks |
+| ⭐⭐⭐ | [`competitor-teardown`](./skills/competitor-teardown/) | Structured competitive analysis with SWOT and positioning |
 | ⭐⭐⭐⭐ | [`customer-success-manager`](./skills/customer-success-manager/) | Monitor customer health and predict churn |
 | ⭐⭐⭐⭐ | [`contract-and-proposal-writer`](./skills/contract-and-proposal-writer/) | Write professional contracts and proposals |
-| | [`afrexai-personal-finance`](./skills/afrexai-personal-finance/) | Complete personal finance — budgeting, investing, tax optimization |
+| ⭐⭐⭐⭐⭐ | [`afrexai-personal-finance`](./skills/afrexai-personal-finance/) | Complete personal finance — budgeting, investing, tax optimization |
 
 ### 📋 Project Management
 
 | Rating | Skill | Description |
 |-------|------------|------------|
 | | [`daily-rhythm`](./skills/daily-rhythm/) | Automated daily planning and reflection |
-| | [`domain-name-brainstormer`](./skills/domain-name-brainstormer/) | Creative domain name generation + availability check |
+| ⭐⭐⭐ | [`domain-name-brainstormer`](./skills/domain-name-brainstormer/) | Creative domain name generation + availability check |
 | ⭐⭐⭐⭐ | [`gitlab-automation`](./skills/gitlab-automation/) | GitLab issues, MRs, pipelines, branches |
-| | [`posthog-automation`](./skills/posthog-automation/) | PostHog events, feature flags, annotations |
+| ⭐⭐⭐ | [`posthog-automation`](./skills/posthog-automation/) | PostHog events, feature flags, annotations |
 | ⭐⭐⭐⭐ | [`project-management`](./skills/project-management/) | Project planning and PRD writing |
 | ⭐⭐⭐⭐ | [`project-planner`](./skills/project-planner/) | Project path planning and execution |
 | ⭐⭐⭐⭐ | [`ralph`](./skills/ralph/) | Autonomous project delivery agent |
-| | [`ralph-ceo-loop`](./skills/ralph-ceo-loop/) | CEO dispatch loop — continuous team orchestration |
-| | [`render-automation`](./skills/render-automation/) | Render.com services and deployments |
-| | [`sentry-automation`](./skills/sentry-automation/) | Sentry issues, alerts, releases |
-| | [`task-status`](./skills/task-status/) | Status updates for long-running tasks |
-| | [`team-coordinator`](./skills/team-coordinator/) | Intelligent task dispatch across team agents |
+| ⭐⭐ | [`ralph-ceo-loop`](./skills/ralph-ceo-loop/) | CEO dispatch loop — continuous team orchestration |
+| ⭐⭐⭐ | [`render-automation`](./skills/render-automation/) | Render.com services and deployments |
+| ⭐⭐ | [`sentry-automation`](./skills/sentry-automation/) | Sentry issues, alerts, releases |
+| ⭐⭐⭐ | [`task-status`](./skills/task-status/) | Status updates for long-running tasks |
+| ⭐⭐⭐⭐ | [`team-coordinator`](./skills/team-coordinator/) | Intelligent task dispatch across team agents |
 | ⭐⭐⭐⭐ | [`team-daily-report`](./skills/team-daily-report/) | Auto-generate team daily reports |
 | | [`prd-development`](./skills/prd-development/) | Structured PRD creation with problem framing and success criteria |
 | | [`roadmap-planning`](./skills/roadmap-planning/) | Strategic roadmap with prioritization and release sequencing |
@@ -404,8 +404,8 @@ You (CEO / Creator)
 | Rating | Skill | Description |
 |-------|------------|------------|
 | | [`memory-hygiene`](./skills/memory-hygiene/) | Audit and optimize vector memory |
-| | [`research-engineer`](./skills/research-engineer/) | Academic research with scientific rigor |
-| | [`search-specialist`](./skills/search-specialist/) | Advanced web research and synthesis |
+| ⭐⭐⭐⭐ | [`research-engineer`](./skills/research-engineer/) | Academic research with scientific rigor |
+| ⭐⭐⭐ | [`search-specialist`](./skills/search-specialist/) | Advanced web research and synthesis |
 | | [`elite-longterm-memory`](./skills/elite-longterm-memory/) | WAL-protected AI agent memory system |
 | | [`brave-search`](./skills/brave-search/) | Web search via Brave Search API |
 | ⭐⭐⭐⭐⭐ | [`search-layer`](./skills/search-layer/) | Multi-source semantic search layer |
@@ -432,14 +432,14 @@ You (CEO / Creator)
 
 | Rating | Skill | Description |
 |-------|------------|------------|
-| | [`activecampaign-automation`](./skills/activecampaign-automation/) | ActiveCampaign contacts, tags, automations |
-| | [`airtable-automation`](./skills/airtable-automation/) | Airtable records, bases, tables, views |
-| | [`amplitude-automation`](./skills/amplitude-automation/) | Amplitude events, cohorts, user activity |
-| | [`asana-automation`](./skills/asana-automation/) | Asana tasks, projects, sections, teams |
-| | [`basecamp-automation`](./skills/basecamp-automation/) | Basecamp projects, to-dos, messages |
-| | [`bitbucket-automation`](./skills/bitbucket-automation/) | Bitbucket repos, PRs, branches, issues |
-| | [`box-automation`](./skills/box-automation/) | Box file management and sharing |
-| | [`brevo-automation`](./skills/brevo-automation/) | Brevo email campaigns and templates |
+| ⭐⭐⭐⭐ | [`activecampaign-automation`](./skills/activecampaign-automation/) | ActiveCampaign contacts, tags, automations |
+| ⭐⭐⭐⭐ | [`airtable-automation`](./skills/airtable-automation/) | Airtable records, bases, tables, views |
+| ⭐⭐⭐⭐ | [`amplitude-automation`](./skills/amplitude-automation/) | Amplitude events, cohorts, user activity |
+| ⭐⭐⭐⭐ | [`asana-automation`](./skills/asana-automation/) | Asana tasks, projects, sections, teams |
+| ⭐⭐⭐⭐ | [`basecamp-automation`](./skills/basecamp-automation/) | Basecamp projects, to-dos, messages |
+| ⭐⭐⭐⭐ | [`bitbucket-automation`](./skills/bitbucket-automation/) | Bitbucket repos, PRs, branches, issues |
+| ⭐⭐⭐⭐ | [`box-automation`](./skills/box-automation/) | Box file management and sharing |
+| ⭐⭐⭐⭐ | [`brevo-automation`](./skills/brevo-automation/) | Brevo email campaigns and templates |
 | | [`cal-com-automation`](./skills/cal-com-automation/) | Cal.com bookings and availability |
 | | [`calendly-automation`](./skills/calendly-automation/) | Calendly scheduling and event management |
 | | [`canva-automation`](./skills/canva-automation/) | Canva designs, exports, brand templates |
@@ -447,7 +447,7 @@ You (CEO / Creator)
 | | [`circleci-automation`](./skills/circleci-automation/) | CircleCI pipelines, workflows, artifacts |
 | | [`clickup-automation`](./skills/clickup-automation/) | ClickUp tasks, spaces, folders, lists |
 | | [`close-automation`](./skills/close-automation/) | Close CRM leads, calls, SMS, tasks |
-| | [`coda-automation`](./skills/coda-automation/) | Coda docs, pages, tables, formulas |
+| ⭐⭐⭐⭐ | [`coda-automation`](./skills/coda-automation/) | Coda docs, pages, tables, formulas |
 | | [`confluence-automation`](./skills/confluence-automation/) | Confluence pages, spaces, search |
 | | [`convertkit-automation`](./skills/convertkit-automation/) | ConvertKit subscribers, tags, broadcasts |
 | | [`datadog-automation`](./skills/datadog-automation/) | Datadog metrics, logs, monitors |
@@ -456,44 +456,44 @@ You (CEO / Creator)
 | | [`dropbox-automation`](./skills/dropbox-automation/) | Dropbox file management and sharing |
 | | [`facebook-automation`](./skills/facebook-automation/) | Facebook pages, posts, insights |
 | | [`freshdesk-automation`](./skills/freshdesk-automation/) | Freshdesk tickets, contacts, companies |
-| | [`gmail-automation`](./skills/gmail-automation/) | Gmail send, search, labels, drafts |
+| ⭐⭐⭐⭐ | [`gmail-automation`](./skills/gmail-automation/) | Gmail send, search, labels, drafts |
 | ⭐⭐⭐⭐⭐ | [`grafana-dashboards`](./skills/grafana-dashboards/) | Grafana dashboard creation and management |
-| | [`helpdesk-automation`](./skills/helpdesk-automation/) | HelpDesk tickets, views, canned responses |
-| | [`hubspot-automation`](./skills/hubspot-automation/) | HubSpot CRM — contacts, deals, tickets |
+| ⭐⭐⭐⭐ | [`helpdesk-automation`](./skills/helpdesk-automation/) | HelpDesk tickets, views, canned responses |
+| ⭐⭐⭐⭐ | [`hubspot-automation`](./skills/hubspot-automation/) | HubSpot CRM — contacts, deals, tickets |
 | | [`instagram-automation`](./skills/instagram-automation/) | Instagram posts, carousels, insights |
 | | [`intercom-automation`](./skills/intercom-automation/) | Intercom conversations, contacts, segments |
-| | [`jira-automation`](./skills/jira-automation/) | Jira issues, sprints, boards |
-| | [`linear-automation`](./skills/linear-automation/) | Linear issues, projects, cycles |
-| | [`mailchimp-automation`](./skills/mailchimp-automation/) | Mailchimp campaigns, audiences, segments |
+| ⭐⭐⭐⭐ | [`jira-automation`](./skills/jira-automation/) | Jira issues, sprints, boards |
+| ⭐⭐⭐⭐ | [`linear-automation`](./skills/linear-automation/) | Linear issues, projects, cycles |
+| ⭐⭐⭐⭐ | [`mailchimp-automation`](./skills/mailchimp-automation/) | Mailchimp campaigns, audiences, segments |
 | | [`make-automation`](./skills/make-automation/) | Make (Integromat) automation operations |
 | | [`microsoft-teams-automation`](./skills/microsoft-teams-automation/) | Teams messages, channels, meetings |
 | | [`miro-automation`](./skills/miro-automation/) | Miro boards, sticky notes, frames |
-| | [`mixpanel-automation`](./skills/mixpanel-automation/) | Mixpanel events, funnels, cohorts |
-| | [`monday-automation`](./skills/monday-automation/) | Monday.com boards, items, columns |
+| ⭐⭐⭐⭐ | [`mixpanel-automation`](./skills/mixpanel-automation/) | Mixpanel events, funnels, cohorts |
+| ⭐⭐⭐⭐ | [`monday-automation`](./skills/monday-automation/) | Monday.com boards, items, columns |
 | ⭐⭐⭐⭐⭐ | [`notion-automation`](./skills/notion-automation/) | Notion pages, databases, blocks |
 | | [`pagerduty-automation`](./skills/pagerduty-automation/) | PagerDuty incidents, services, schedules |
-| | [`pipedrive-automation`](./skills/pipedrive-automation/) | Pipedrive deals, contacts, activities |
-| | [`salesforce-automation`](./skills/salesforce-automation/) | Salesforce leads, contacts, SOQL |
-| | [`segment-automation`](./skills/segment-automation/) | Segment events, users, groups |
-| | [`shopify-automation`](./skills/shopify-automation/) | Shopify products, orders, customers |
-| | [`slack-automation`](./skills/slack-automation/) | Slack messages, channels, search |
-| | [`square-automation`](./skills/square-automation/) | Square payments, orders, invoices |
-| | [`stripe-automation`](./skills/stripe-automation/) | Stripe customers, subscriptions, invoices |
-| | [`supabase-automation`](./skills/supabase-automation/) | Supabase DB, storage, edge functions |
+| ⭐⭐⭐⭐ | [`pipedrive-automation`](./skills/pipedrive-automation/) | Pipedrive deals, contacts, activities |
+| ⭐⭐⭐⭐ | [`salesforce-automation`](./skills/salesforce-automation/) | Salesforce leads, contacts, SOQL |
+| ⭐⭐⭐⭐ | [`segment-automation`](./skills/segment-automation/) | Segment events, users, groups |
+| ⭐⭐⭐⭐ | [`shopify-automation`](./skills/shopify-automation/) | Shopify products, orders, customers |
+| ⭐⭐⭐⭐ | [`slack-automation`](./skills/slack-automation/) | Slack messages, channels, search |
+| ⭐⭐⭐⭐ | [`square-automation`](./skills/square-automation/) | Square payments, orders, invoices |
+| ⭐⭐⭐⭐ | [`stripe-automation`](./skills/stripe-automation/) | Stripe customers, subscriptions, invoices |
+| ⭐⭐⭐⭐ | [`supabase-automation`](./skills/supabase-automation/) | Supabase DB, storage, edge functions |
 | ⭐⭐⭐⭐ | [`sysadmin-toolbox`](./skills/sysadmin-toolbox/) | Sysadmin tool discovery and shell one-liners |
 | | [`telegram-automation`](./skills/telegram-automation/) | Telegram messages, chats, bots |
-| | [`tiktok-automation`](./skills/tiktok-automation/) | TikTok video upload and content management |
+| ⭐⭐⭐⭐ | [`tiktok-automation`](./skills/tiktok-automation/) | TikTok video upload and content management |
 | | [`todoist-automation`](./skills/todoist-automation/) | Todoist tasks, projects, filtering |
-| | [`trello-automation`](./skills/trello-automation/) | Trello boards, cards, workflows |
-| | [`vercel-automation`](./skills/vercel-automation/) | Vercel deployments, domains, env vars |
-| | [`webflow-automation`](./skills/webflow-automation/) | Webflow CMS, publishing, ecommerce |
+| ⭐⭐⭐⭐ | [`trello-automation`](./skills/trello-automation/) | Trello boards, cards, workflows |
+| ⭐⭐⭐⭐ | [`vercel-automation`](./skills/vercel-automation/) | Vercel deployments, domains, env vars |
+| ⭐⭐⭐⭐ | [`webflow-automation`](./skills/webflow-automation/) | Webflow CMS, publishing, ecommerce |
 | ⭐⭐⭐⭐⭐ | [`wecom-automation`](./skills/wecom-automation/) | WeCom personal account automation |
 | | [`whatsapp-automation`](./skills/whatsapp-automation/) | WhatsApp Business messages, templates |
-| | [`youtube-automation`](./skills/youtube-automation/) | YouTube videos, playlists, analytics |
-| | [`zendesk-automation`](./skills/zendesk-automation/) | Zendesk tickets, users, organizations |
+| ⭐⭐⭐⭐ | [`youtube-automation`](./skills/youtube-automation/) | YouTube videos, playlists, analytics |
+| ⭐⭐⭐⭐ | [`zendesk-automation`](./skills/zendesk-automation/) | Zendesk tickets, users, organizations |
 | | [`zoho-crm-automation`](./skills/zoho-crm-automation/) | Zoho CRM records, leads, contacts |
-| | [`zoom-automation`](./skills/zoom-automation/) | Zoom meetings, recordings, webinars |
-| | [`api-gateway`](./skills/api-gateway/) | Connect to 100+ APIs with managed OAuth via Maton.ai |
+| ⭐⭐⭐⭐ | [`zoom-automation`](./skills/zoom-automation/) | Zoom meetings, recordings, webinars |
+| ⭐ | [`api-gateway`](./skills/api-gateway/) | Connect to 100+ APIs with managed OAuth via Maton.ai |
 
 ### ⚙️ DevOps & Infra
 
@@ -502,8 +502,8 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐⭐ | [`aws-cost-cleanup`](./skills/aws-cost-cleanup/) | Clean up unused AWS resources |
 | ⭐⭐⭐⭐⭐ | [`cost-optimization`](./skills/cost-optimization/) | Cloud cost optimization strategies |
 | | [`docker-deployment`](./skills/docker-deployment/) | Docker + Nginx HTTPS + Cloudflare Tunnel |
-| | [`file-cleaner`](./skills/file-cleaner/) | System file cleanup and disk space recovery |
-| | [`linux-service-triage`](./skills/linux-service-triage/) | Diagnose Linux service issues |
+| ⭐⭐⭐⭐ | [`file-cleaner`](./skills/file-cleaner/) | System file cleanup and disk space recovery |
+| ⭐⭐⭐ | [`linux-service-triage`](./skills/linux-service-triage/) | Diagnose Linux service issues |
 | ⭐⭐⭐⭐ | [`linux-troubleshooting`](./skills/linux-troubleshooting/) | Linux system troubleshooting workflow |
 | ⭐⭐⭐⭐ | [`senior-devops`](./skills/senior-devops/) | Comprehensive DevOps for CI/CD and cloud |
 | ⭐⭐⭐⭐⭐ | [`observability-designer`](./skills/observability-designer/) | Design observability systems for production |
@@ -520,7 +520,7 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐ | [`security-monitor`](./skills/security-monitor/) | Real-time security monitoring |
 | ⭐⭐⭐⭐⭐ | [`gdpr-dsgvo-expert`](./skills/gdpr-dsgvo-expert/) | GDPR/DSGVO compliance automation |
 | ⭐⭐⭐⭐⭐ | [`pci-compliance`](./skills/pci-compliance/) | PCI DSS compliance auditing |
-| | [`afrexai-compliance-audit`](./skills/afrexai-compliance-audit/) | Internal compliance audits against major frameworks |
+| ⭐⭐⭐ | [`afrexai-compliance-audit`](./skills/afrexai-compliance-audit/) | Internal compliance audits against major frameworks |
 
 ### ⚖️ Legal & Compliance
 
@@ -559,7 +559,7 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐ | [`jimeng-storyboard`](./skills/jimeng-storyboard/) | 口播视频剧本→即梦AI数字人分镜头脚本 |
 | ⭐⭐⭐⭐⭐ | [`jimeng-digital-human`](./skills/jimeng-digital-human/) | 即梦AI数字人视频生成全流程自动化 |
 | ⭐⭐⭐⭐ | [`video-merge-send`](./skills/video-merge-send/) | 合并多个分段视频为完整视频（ffmpeg拼接+转场）并发送到飞书 |
-| | [`nano-banana-pro`](./skills/nano-banana-pro/) | Generate/edit images with Gemini 3 Pro Image (1K/2K/4K) |
+| ⭐ | [`nano-banana-pro`](./skills/nano-banana-pro/) | Generate/edit images with Gemini 3 Pro Image (1K/2K/4K) |
 
 ### 🧩 Other
 
@@ -572,7 +572,7 @@ You (CEO / Creator)
 | | [`doc-coauthoring`](./skills/doc-coauthoring/) | Structured documentation co-authoring |
 | ⭐⭐⭐⭐ | [`google-calendar-automation`](./skills/google-calendar-automation/) | Google Calendar events and scheduling |
 | ⭐⭐⭐⭐ | [`google-drive-automation`](./skills/google-drive-automation/) | Google Drive file operations |
-| | [`pptx`](./skills/pptx/) | PowerPoint creation, editing, and analysis |
+| ⭐⭐ | [`pptx`](./skills/pptx/) | PowerPoint creation, editing, and analysis |
 | ⭐⭐⭐⭐ | [`rss-automation`](./skills/rss-automation/) | RSS feed aggregation and monitoring |
 | | [`skill-creator`](./skills/skill-creator/) | Guide for creating new skills |
 | | [`skill-search`](./skills/skill-search/) | Search and install skills from GitHub/SkillsMP |
