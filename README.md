@@ -100,7 +100,7 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐ | [`auth-manager`](./skills/auth-manager/) | Web login session management with browser automation |
 | ⭐⭐⭐⭐ | [`context-manager`](./skills/context-manager/) | AI-powered context management for sessions |
 | ⭐⭐⭐⭐ | [`cron-manager`](./skills/cron-manager/) | Cron job management — create, monitor, diagnose, and fix scheduled tasks |
-| ⭐ | [`cron-model-migration`](./skills/cron-model-migration/) | Safely change cron job models without session/model mismatch errors |
+| ⭐⭐⭐ | [`cron-model-migration`](./skills/cron-model-migration/) | Safely change cron job models without session/model mismatch errors |
 | ⭐⭐⭐⭐⭐ | [`evomap`](./skills/evomap/) | EvoMap collaborative evolution marketplace integration |
 | ⭐⭐⭐⭐ | [`feishu-channel`](./skills/feishu-channel/) | Feishu/Lark ↔ OpenClaw bidirectional messaging channel |
 | ⭐⭐⭐ | [`mcp-installer`](./skills/mcp-installer/) | Search and auto-install MCP servers from GitHub |
@@ -115,13 +115,13 @@ You (CEO / Creator)
 | ⭐⭐ | [`skillforge`](./skills/skillforge/) | Intelligent skill router — recommend, improve, or create skills |
 | ⭐⭐⭐⭐ | [`telegram-push`](./skills/telegram-push/) | Push messages to Telegram via standalone bot |
 | ⭐⭐⭐⭐ | [`token-guard`](./skills/token-guard/) | Token usage monitoring with budgets and auto-downgrade |
-| ⭐ | [`tailscale-operator`](./skills/tailscale-operator/) | Manage and troubleshoot devices on a Tailscale tailnet |
+| ⭐⭐⭐⭐ | [`tailscale-operator`](./skills/tailscale-operator/) | Manage and troubleshoot devices on a Tailscale tailnet |
 | ⭐⭐⭐⭐ | [`wechat-channel`](./skills/wechat-channel/) | WeChat ↔ OpenClaw bidirectional messaging channel |
 | ⭐⭐⭐ | [`xiaomo-assistant-template`](./skills/xiaomo-assistant-template/) | Quick-start assistant configuration template |
 | ⭐⭐⭐ | [`agent-model-switcher`](./skills/agent-model-switcher/) | Batch switch models across all sub-agents |
 | ⭐⭐ | [`inference-optimizer`](./skills/inference-optimizer/) | Audit token usage, purge stale sessions, optimize speed |
 | ⭐⭐⭐⭐ | [`model-hierarchy-skill`](./skills/model-hierarchy-skill/) | Intelligent model selection hierarchy |
-| ⭐ | [`openclaw-memory-enhancer`](./skills/openclaw-memory-enhancer/) | Edge-optimized RAG memory system (<10MB) |
+| ⭐⭐ | [`openclaw-memory-enhancer`](./skills/openclaw-memory-enhancer/) | Edge-optimized RAG memory system (<10MB) |
 | ⭐⭐⭐ | [`mcstatus`](./skills/mcstatus/) | 模型配置状态检查 — 列出所有 agent 的模型配备 |
 
 ### 🤖 AI Agent Patterns
@@ -150,7 +150,7 @@ You (CEO / Creator)
 | ⭐⭐ | [`subagent-driven-development`](./skills/subagent-driven-development/) | Execute implementation plans with independent sub-tasks |
 | ⭐⭐⭐⭐ | [`agent-team-orchestration`](./skills/agent-team-orchestration/) | Orchestrate multi-agent teams with roles and handoff protocols |
 | ⭐⭐⭐ | [`agent-task-confirm`](./skills/agent-task-confirm/) | Verify agent task receipt and execution status |
-| ⭐ | [`coding-agent-backup`](./skills/coding-agent-backup/) | Delegate coding to Codex, Claude Code, or Pi agents |
+| ⭐⭐ | [`coding-agent-backup`](./skills/coding-agent-backup/) | Delegate coding to Codex, Claude Code, or Pi agents |
 | ⭐⭐ | [`coding-agent-orchestrator`](./skills/coding-agent-orchestrator/) | Plan-first coding workflow orchestration |
 | ⭐⭐⭐⭐ | [`first-principles-thinking`](./skills/first-principles-thinking/) | Socratic coach for breaking problems to fundamental truths |
 
@@ -184,12 +184,12 @@ You (CEO / Creator)
 | ⭐⭐⭐ | [`test-automator`](./skills/test-automator/) | Automated test generation |
 | ⭐⭐⭐ | [`vibe-code-auditor`](./skills/vibe-code-auditor/) | Audit AI-generated code for production risks |
 | ⭐⭐ | [`web-artifacts-builder`](./skills/web-artifacts-builder/) | Multi-component HTML artifacts with modern frontend |
-| ⭐ | [`api-designer`](./skills/api-designer/) | Design RESTful/GraphQL APIs with best practices |
-| ⭐ | [`auth-system`](./skills/auth-system/) | Implement JWT, OAuth2, Session auth systems |
-| ⭐ | [`cli-developer`](./skills/cli-developer/) | Build CLI tools with argument parsing and completions |
-| ⭐ | [`css-ninja`](./skills/css-ninja/) | Master CSS with Tailwind, animations, responsive layouts |
-| ⭐ | [`db-migrator`](./skills/db-migrator/) | Database schema migration and rollback management |
-| ⭐ | [`frontend-design-ultimate`](./skills/frontend-design-ultimate/) | Production-grade static sites with React + Tailwind + shadcn/ui |
+| ⭐⭐⭐ | [`api-designer`](./skills/api-designer/) | Design RESTful/GraphQL APIs with best practices |
+| ⭐⭐⭐ | [`auth-system`](./skills/auth-system/) | Implement JWT, OAuth2, Session auth systems |
+| ⭐⭐⭐⭐ | [`cli-developer`](./skills/cli-developer/) | Build CLI tools with argument parsing and completions |
+| ⭐⭐⭐ | [`css-ninja`](./skills/css-ninja/) | Master CSS with Tailwind, animations, responsive layouts |
+| ⭐⭐⭐ | [`db-migrator`](./skills/db-migrator/) | Database schema migration and rollback management |
+| ⭐⭐⭐⭐ | [`frontend-design-ultimate`](./skills/frontend-design-ultimate/) | Production-grade static sites with React + Tailwind + shadcn/ui |
 | ⭐⭐ | [`collaboration`](./skills/collaboration/) | Guide for collaborating on GitHub projects |
 | ⭐⭐⭐ | [`dependency-auditor`](./skills/dependency-auditor/) | Audit dependencies for vulnerabilities |
 | ⭐⭐⭐ | [`full-cycle-skill`](./skills/full-cycle-skill/) | Full-cycle development from ideation to deployment |
@@ -200,7 +200,7 @@ You (CEO / Creator)
 |-------|------------|------------|
 | ⭐⭐⭐⭐ | [`arbitrage-opportunity-finder`](./skills/arbitrage-opportunity-finder/) | Detect arbitrage across CEX, DEX, and cross-chain |
 | ⭐⭐⭐⭐ | [`backtesting-frameworks`](./skills/backtesting-frameworks/) | Robust backtesting with bias handling |
-| ⭐ | [`bankr`](./skills/bankr/) | AI crypto trading agent via natural language |
+| ⭐⭐⭐⭐⭐ | [`bankr`](./skills/bankr/) | AI crypto trading agent via natural language |
 | ⭐⭐⭐⭐⭐ | [`bankr-signals`](./skills/bankr-signals/) | Transaction-verified trading signals on Base |
 | ⭐⭐⭐⭐ | [`clanker`](./skills/clanker/) | Deploy ERC20 tokens on EVM chains |
 | ⭐⭐⭐ | [`crypto-bd-agent`](./skills/crypto-bd-agent/) | Crypto business development with wallet forensics |
@@ -218,7 +218,7 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐ | [`polymarket-data`](./skills/polymarket-data/) | Polymarket live odds, order books, leaderboards |
 | ⭐⭐⭐⭐ | [`polymarket-profit`](./skills/polymarket-profit/) | Quantitative trading system for Polymarket |
 | ⭐⭐⭐ | [`polymarket-skill`](./skills/polymarket-skill/) | Query and trade Polymarket prediction markets |
-| ⭐ | [`polymarket-trading`](./skills/polymarket-trading/) | Systematic Polymarket quant trading |
+| ⭐⭐ | [`polymarket-trading`](./skills/polymarket-trading/) | Systematic Polymarket quant trading |
 | ⭐⭐ | [`quant-analyst`](./skills/quant-analyst/) | Quantitative analysis workflows |
 | ⭐⭐ | [`risk-metrics-calculation`](./skills/risk-metrics-calculation/) | VaR, CVaR, Sharpe, Sortino, drawdown analysis |
 | ⭐⭐⭐ | [`sperax-defi-guide`](./skills/sperax-defi-guide/) | DeFi yield farming strategies guide |
@@ -264,15 +264,7 @@ You (CEO / Creator)
 | ⭐⭐⭐ | [`humanize-zh`](./skills/humanize-zh/) | 将AI文本转换为自然人类写作风格 |
 | ⭐⭐⭐⭐ | [`the-antislop`](./skills/the-antislop/) | Anti-AI-slop writing with authentic voice |
 | ⭐⭐⭐⭐⭐ | [`write-xiaohongshu`](./skills/write-xiaohongshu/) | Xiaohongshu content writing coach |
-| ⭐ | [`x-articles`](./skills/x-articles/) | Publish viral X (Twitter) long-form articles |
-| ⭐⭐⭐⭐ | [`douyin-creator`](./skills/douyin-creator/) | 抖音创作发布：视频和图文发布到抖音创作者平台 |
-| ⭐⭐⭐⭐⭐ | [`douyin-smart-publish`](./skills/douyin-smart-publish/) | 抖音智能发布：视频/图文/文章三种模式 Playwright 自动化 |
-| ⭐⭐⭐⭐⭐ | [`douyin-smart-publisher`](./skills/douyin-smart-publisher/) | 抖音智能发布：内容适配→排版→Browser 自动发布 |
-| ⭐⭐⭐⭐ | [`juejin-smart-publish`](./skills/juejin-smart-publish/) | 掘金技术社区智能发布：Markdown + Playwright/API 双通道 |
-| ⭐⭐⭐⭐ | [`wechat-mp-publisher`](./skills/wechat-mp-publisher/) | 微信公众号发布：Markdown→微信 HTML 转换 + API/浏览器发布 |
-| ⭐⭐⭐⭐ | [`wechat-mp-smart-publish`](./skills/wechat-mp-smart-publish/) | 微信公众号智能发布：标题优化、排版、封面图、发布 |
-| ⭐⭐⭐⭐ | [`zsxq-publisher`](./skills/zsxq-publisher/) | 知识星球内容发布和管理 |
-| ⭐⭐⭐⭐ | [`zsxq-smart-publish`](./skills/zsxq-smart-publish/) | 知识星球智能发布：话题/问答/长文章/作业 |
+| ⭐⭐⭐ | [`x-articles`](./skills/x-articles/) | Publish viral X (Twitter) long-form articles |
 
 ### 📊 Data & Analytics
 
@@ -340,8 +332,8 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐⭐ | [`ui-ux-pro-max`](./skills/ui-ux-pro-max/) | UI/UX design — 50 styles, 21 palettes, 9 stacks |
 | ⭐⭐⭐ | [`uml-diagram-design`](./skills/uml-diagram-design/) | UML diagrams — class, sequence, use case |
 | ⭐⭐⭐⭐ | [`video-downloader`](./skills/video-downloader/) | Download YouTube videos |
-| ⭐ | [`nano-banana-pro`](./skills/nano-banana-pro/) | Generate/edit images with Gemini 3 Pro Image (1K/2K/4K) |
-| ⭐ | [`brand-identity`](./skills/brand-identity/) | Build complete brand identity for solopreneurs |
+| ⭐⭐⭐⭐ | [`nano-banana-pro`](./skills/nano-banana-pro/) | Generate/edit images with Gemini 3 Pro Image (1K/2K/4K) |
+| ⭐⭐⭐ | [`brand-identity`](./skills/brand-identity/) | Build complete brand identity for solopreneurs |
 
 ### 🌐 Browser Automation
 
@@ -350,11 +342,11 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐ | [`browser-use`](./skills/browser-use/) | AI-driven intelligent browser automation |
 | ⭐⭐⭐⭐ | [`chrome-automation`](./skills/chrome-automation/) | Chrome browser automation |
 | ⭐⭐⭐ | [`fast-browser-use`](./skills/fast-browser-use/) | Fast Rust-based headless browser CLI |
-| ⭐ | [`openclaw-browser-chain-debug`](./skills/openclaw-browser-chain-debug/) | Debug OpenClaw browser startup, CDP, DISPLAY, and mode-selection failures |
+| ⭐⭐ | [`openclaw-browser-chain-debug`](./skills/openclaw-browser-chain-debug/) | Debug OpenClaw browser startup, CDP, DISPLAY, and mode-selection failures |
 | ⭐⭐⭐ | [`media-auto-publisher`](./skills/media-auto-publisher/) | Auto-publish to 6 Chinese content platforms |
 | ⭐⭐⭐⭐ | [`playwright-automation`](./skills/playwright-automation/) | Playwright browser automation for scraping/testing |
 | ⭐⭐⭐ | [`webapp-testing`](./skills/webapp-testing/) | Web application testing with Playwright |
-| ⭐ | [`agent-browser`](./skills/agent-browser/) | Fast Rust-based headless browser automation CLI |
+| ⭐⭐⭐⭐ | [`agent-browser`](./skills/agent-browser/) | Fast Rust-based headless browser automation CLI |
 
 ### 🏢 Business & Strategy
 
@@ -393,11 +385,11 @@ You (CEO / Creator)
 | ⭐⭐⭐ | [`task-status`](./skills/task-status/) | Status updates for long-running tasks |
 | ⭐⭐⭐⭐ | [`team-coordinator`](./skills/team-coordinator/) | Intelligent task dispatch across team agents |
 | ⭐⭐⭐⭐ | [`team-daily-report`](./skills/team-daily-report/) | Auto-generate team daily reports |
-| ⭐ | [`prd-development`](./skills/prd-development/) | Structured PRD creation with problem framing and success criteria |
-| ⭐ | [`roadmap-planning`](./skills/roadmap-planning/) | Strategic roadmap with prioritization and release sequencing |
+| ⭐⭐⭐⭐ | [`prd-development`](./skills/prd-development/) | Structured PRD creation with problem framing and success criteria |
+| ⭐⭐⭐⭐ | [`roadmap-planning`](./skills/roadmap-planning/) | Strategic roadmap with prioritization and release sequencing |
 | ⭐⭐⭐⭐ | [`scrum-master`](./skills/scrum-master/) | Scrum methodology with sprint planning and retrospectives |
 | ⭐⭐⭐⭐⭐ | [`senior-pm`](./skills/senior-pm/) | Senior PM workflows for complex project delivery |
-| ⭐ | [`user-story`](./skills/user-story/) | User stories with Gherkin acceptance criteria |
+| ⭐⭐⭐ | [`user-story`](./skills/user-story/) | User stories with Gherkin acceptance criteria |
 
 ### 🧠 Knowledge & Research
 
@@ -406,8 +398,8 @@ You (CEO / Creator)
 | ⭐⭐⭐ | [`memory-hygiene`](./skills/memory-hygiene/) | Audit and optimize vector memory |
 | ⭐⭐⭐⭐ | [`research-engineer`](./skills/research-engineer/) | Academic research with scientific rigor |
 | ⭐⭐⭐ | [`search-specialist`](./skills/search-specialist/) | Advanced web research and synthesis |
-| ⭐ | [`elite-longterm-memory`](./skills/elite-longterm-memory/) | WAL-protected AI agent memory system |
-| ⭐ | [`brave-search`](./skills/brave-search/) | Web search via Brave Search API |
+| ⭐⭐ | [`elite-longterm-memory`](./skills/elite-longterm-memory/) | WAL-protected AI agent memory system |
+| ⭐⭐ | [`brave-search`](./skills/brave-search/) | Web search via Brave Search API |
 | ⭐⭐⭐⭐⭐ | [`search-layer`](./skills/search-layer/) | Multi-source semantic search layer |
 
 ### 💬 Communication
@@ -493,7 +485,7 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐ | [`zendesk-automation`](./skills/zendesk-automation/) | Zendesk tickets, users, organizations |
 | ⭐⭐⭐⭐ | [`zoho-crm-automation`](./skills/zoho-crm-automation/) | Zoho CRM records, leads, contacts |
 | ⭐⭐⭐⭐ | [`zoom-automation`](./skills/zoom-automation/) | Zoom meetings, recordings, webinars |
-| ⭐ | [`api-gateway`](./skills/api-gateway/) | Connect to 100+ APIs with managed OAuth via Maton.ai |
+| ⭐⭐⭐⭐ | [`api-gateway`](./skills/api-gateway/) | Connect to 100+ APIs with managed OAuth via Maton.ai |
 
 ### ⚙️ DevOps & Infra
 
@@ -541,15 +533,7 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐ | [`xiaohongshu-smart-publish`](./skills/xiaohongshu-smart-publish/) | 小红书智能发布（另一版本）：标题公式+CES算法优化 |
 | ⭐⭐⭐⭐⭐ | [`write-xiaohongshu`](./skills/write-xiaohongshu/) | Xiaohongshu content writing coach |
 | ⭐⭐⭐⭐⭐ | [`xiaohongshu-workflow`](./skills/xiaohongshu-workflow/) | Xiaohongshu (RED) full operations workflow |
-| ⭐⭐⭐⭐ | [`douyin-creator`](./skills/douyin-creator/) | 抖音创作发布：视频和图文发布到抖音创作者平台 |
-| ⭐⭐⭐⭐⭐ | [`douyin-smart-publish`](./skills/douyin-smart-publish/) | 抖音智能发布：视频/图文/文章三种模式 Playwright 自动化 |
-| ⭐⭐⭐⭐⭐ | [`douyin-smart-publisher`](./skills/douyin-smart-publisher/) | 抖音智能发布：内容适配→排版→Browser 自动发布 |
-| ⭐⭐⭐⭐ | [`wechat-mp-publisher`](./skills/wechat-mp-publisher/) | 微信公众号发布：Markdown→微信 HTML 转换 + API/浏览器发布 |
-| ⭐⭐⭐⭐ | [`wechat-mp-smart-publish`](./skills/wechat-mp-smart-publish/) | 微信公众号智能发布：标题优化、排版、封面图、发布 |
 | ⭐⭐⭐⭐⭐ | [`weixin-channels-publish`](./skills/weixin-channels-publish/) | 微信视频号助手网页版视频发布全流程 |
-| ⭐⭐⭐⭐ | [`juejin-smart-publish`](./skills/juejin-smart-publish/) | 掘金技术社区智能发布：Markdown + Playwright/API 双通道 |
-| ⭐⭐⭐⭐ | [`zsxq-publisher`](./skills/zsxq-publisher/) | 知识星球内容发布和管理 |
-| ⭐⭐⭐⭐ | [`zsxq-smart-publish`](./skills/zsxq-smart-publish/) | 知识星球智能发布：话题/问答/长文章/作业 |
 
 ### 🎬 Video & Digital Human
 
@@ -559,7 +543,6 @@ You (CEO / Creator)
 | ⭐⭐⭐⭐ | [`jimeng-storyboard`](./skills/jimeng-storyboard/) | 口播视频剧本→即梦AI数字人分镜头脚本 |
 | ⭐⭐⭐⭐⭐ | [`jimeng-digital-human`](./skills/jimeng-digital-human/) | 即梦AI数字人视频生成全流程自动化 |
 | ⭐⭐⭐⭐ | [`video-merge-send`](./skills/video-merge-send/) | 合并多个分段视频为完整视频（ffmpeg拼接+转场）并发送到飞书 |
-| ⭐ | [`nano-banana-pro`](./skills/nano-banana-pro/) | Generate/edit images with Gemini 3 Pro Image (1K/2K/4K) |
 
 ### 🧩 Other
 
@@ -575,14 +558,14 @@ You (CEO / Creator)
 | ⭐⭐ | [`pptx`](./skills/pptx/) | PowerPoint creation, editing, and analysis |
 | ⭐⭐⭐⭐ | [`rss-automation`](./skills/rss-automation/) | RSS feed aggregation and monitoring |
 | ⭐⭐ | [`skill-creator`](./skills/skill-creator/) | Guide for creating new skills |
-| ⭐ | [`skill-search`](./skills/skill-search/) | Search and install skills from GitHub/SkillsMP |
+| ⭐⭐ | [`skill-search`](./skills/skill-search/) | Search and install skills from GitHub/SkillsMP |
 | ⭐⭐⭐⭐ | [`tech-decision`](./skills/tech-decision/) | Technical decision making — A vs B analysis |
 | ⭐⭐⭐⭐ | [`twitter-automation`](./skills/twitter-automation/) | Twitter/X posts, search, bookmarks, media |
-| ⭐ | [`design-thinking`](./skills/design-thinking/) | Design Thinking 5-phase methodology (IDEO/Stanford) |
-| ⭐ | [`find-skills`](./skills/find-skills/) | Discover and install agent skills |
+| ⭐⭐⭐ | [`design-thinking`](./skills/design-thinking/) | Design Thinking 5-phase methodology (IDEO/Stanford) |
+| ⭐⭐⭐ | [`find-skills`](./skills/find-skills/) | Discover and install agent skills |
 | ⭐ | [`gog`](./skills/gog/) | Google Workspace CLI — Gmail, Calendar, Drive, Sheets |
-| ⭐ | [`notion`](./skills/notion/) | Notion API for pages, databases, and blocks |
-| ⭐ | [`prototype-prompt-generator`](./skills/prototype-prompt-generator/) | Generate detailed UI/UX prototype prompts |
+| ⭐⭐⭐ | [`notion`](./skills/notion/) | Notion API for pages, databases, and blocks |
+| ⭐⭐⭐⭐ | [`prototype-prompt-generator`](./skills/prototype-prompt-generator/) | Generate detailed UI/UX prototype prompts |
 
 </details>
 
