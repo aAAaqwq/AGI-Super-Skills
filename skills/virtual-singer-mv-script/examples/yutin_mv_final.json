@@ -1,0 +1,191 @@
+{
+  "title": "《雨停我还在等》MV",
+  "audio_file": "/home/aa/.openclaw/workspace-content/雨停我还在等_v2.mp3",
+  "total_duration_s": 215.0,
+  "bpm": 88,
+  "frame_dir": "/home/aa/.openclaw/workspace-content/chloe_mv_frames/v4",
+  "scenes": [
+    {
+      "scene_id": 1,
+      "section": "Intro",
+      "time_range": "00:00-00:21",
+      "start_s": 0.0,
+      "end_s": 21.5,
+      "duration_s": 21.5,
+      "emotion_score": 3.0,
+      "scene_type": "黎明樱花林",
+      "location": "晨雾笼罩的樱花林",
+      "camera_move": "slow push-in",
+      "video_model": "kling-1.6",
+      "lyrics": "（纯音乐前奏）",
+      "first_frame": "v4/01_first.png",
+      "last_frame": "v4/01_last.png"
+    },
+    {
+      "scene_id": 2,
+      "section": "Verse1",
+      "time_range": "00:21-00:53",
+      "start_s": 21.5,
+      "end_s": 53.75,
+      "duration_s": 32.2,
+      "emotion_score": 4.5,
+      "scene_type": "晨雾溪畔",
+      "location": "小溪边，樱花纷飞，倒影清澈",
+      "camera_move": "slow push-in",
+      "video_model": "kling-1.6",
+      "lyrics": "晨曦洒落在溪畔 / 樱花瓣随风轻轻飘散",
+      "first_frame": "v4/02_first.png",
+      "last_frame": "v4/02_last.png"
+    },
+    {
+      "scene_id": 3,
+      "section": "Pre-Chorus",
+      "time_range": "00:53-01:26",
+      "start_s": 53.75,
+      "end_s": 86.0,
+      "duration_s": 32.2,
+      "emotion_score": 6.0,
+      "scene_type": "古老樱花隧道",
+      "location": "樱花隧道，花瓣在风中旋转",
+      "camera_move": "tracking shot",
+      "video_model": "kling-1.6",
+      "lyrics": "风吹过古老的樱树林 / 记忆像落叶般飘零",
+      "first_frame": "v4/03_first.png",
+      "last_frame": "v4/03_last.png"
+    },
+    {
+      "scene_id": 4,
+      "section": "Chorus1",
+      "time_range": "01:26-01:51",
+      "start_s": 86.0,
+      "end_s": 111.08,
+      "duration_s": 25.1,
+      "emotion_score": 8.0,
+      "scene_type": "光芒穿透樱花林",
+      "location": "金色光芒穿透樱花枝叶",
+      "camera_move": "crane shot rise",
+      "video_model": "kling-2",
+      "lyrics": "樱花落尽时 歌声未曾休 / 撼动这世间所有的阴霾",
+      "first_frame": "v4/04_first.png",
+      "last_frame": "v4/04_last.png"
+    },
+    {
+      "scene_id": 5,
+      "section": "Chorus2",
+      "time_range": "01:51-02:16",
+      "start_s": 111.08,
+      "end_s": 136.17,
+      "duration_s": 25.1,
+      "emotion_score": 8.5,
+      "scene_type": "月下池塘",
+      "location": "月光水面，浪漫夜色",
+      "camera_move": "slow pull-out",
+      "video_model": "kling-1.6",
+      "lyrics": "月光倒映在水面 / 那不是告别 是重逢",
+      "first_frame": "v4/05_first.png",
+      "last_frame": "v4/05_last.png"
+    },
+    {
+      "scene_id": 6,
+      "section": "Climax",
+      "time_range": "02:16-02:41",
+      "start_s": 136.17,
+      "end_s": 161.25,
+      "duration_s": 25.1,
+      "emotion_score": 9.0,
+      "scene_type": "烈火蓄力",
+      "location": "闭眼蓄力，樱花环绕",
+      "camera_move": "dolly in fast",
+      "video_model": "kling-2",
+      "lyrics": "她用铁肺的声音 / 唱出生命最炽热的火焰",
+      "first_frame": "v4/06_first.png",
+      "last_frame": "v4/06_last.png"
+    },
+    {
+      "scene_id": 7,
+      "section": "Bridge",
+      "time_range": "02:41-03:09",
+      "start_s": 161.25,
+      "end_s": 189.2,
+      "duration_s": 27.9,
+      "emotion_score": 8.5,
+      "scene_type": "凤凰涅槃",
+      "location": "晨曦暖光环绕，樱花自然飘落",
+      "camera_move": "360° orbit",
+      "video_model": "veo-3.1",
+      "lyrics": "她是烈火中重生的凤 / 都化作绽放的力量",
+      "first_frame": "v4/07_first.png",
+      "last_frame": "v4/07_last.png"
+    },
+    {
+      "scene_id": 8,
+      "section": "Final Chorus",
+      "time_range": "03:09-03:26",
+      "start_s": 189.2,
+      "end_s": 206.4,
+      "duration_s": 17.2,
+      "emotion_score": 10.0,
+      "scene_type": "黎明光芒",
+      "location": "从黑暗中升起，光芒万丈",
+      "camera_move": "aerial rising",
+      "video_model": "kling-2",
+      "lyrics": "光芒照亮黑暗 / 是落樱之后 最耀眼的光",
+      "first_frame": "v4/08_first.png",
+      "last_frame": "v4/08_last.png"
+    },
+    {
+      "scene_id": 9,
+      "section": "Outro",
+      "time_range": "03:26-03:35",
+      "start_s": 206.4,
+      "end_s": 215.0,
+      "duration_s": 8.6,
+      "emotion_score": 2.0,
+      "scene_type": "晨曦渐白",
+      "location": "身影渐透明，化为樱花",
+      "camera_move": "slow fade out",
+      "video_model": "kling-1.6",
+      "lyrics": "晨曦... 落樱... / 她的歌声... 未曾休...",
+      "first_frame": "v4/09_first.png",
+      "last_frame": "v4/09_last.png"
+    }
+  ],
+  "emotion_curve": [
+    {
+      "t": 0.0,
+      "score": 3.0
+    },
+    {
+      "t": 21.5,
+      "score": 4.5
+    },
+    {
+      "t": 53.75,
+      "score": 6.0
+    },
+    {
+      "t": 86.0,
+      "score": 8.0
+    },
+    {
+      "t": 111.08,
+      "score": 8.5
+    },
+    {
+      "t": 136.17,
+      "score": 9.0
+    },
+    {
+      "t": 161.25,
+      "score": 8.5
+    },
+    {
+      "t": 189.2,
+      "score": 10.0
+    },
+    {
+      "t": 206.4,
+      "score": 2.0
+    }
+  ]
+}

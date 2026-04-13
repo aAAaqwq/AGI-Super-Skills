@@ -1,0 +1,367 @@
+{
+  "metadata": {
+    "title": "《樱花落尽时》MV 分镜剧本",
+    "generated_at": "2026-04-09T19:30:00",
+    "character": "Chloe",
+    "style": "ethereal",
+    "total_scenes": 11,
+    "total_duration": 210.0,
+    "total_estimated_cost": 45.5,
+    "bpm": 95,
+    "budget_mode": "balanced"
+  },
+  "emotion_curve": [
+    {"time": 0.0, "emotion_score": 3.0, "section": "Intro", "lyrics": "（纯音乐）"},
+    {"time": 15.0, "emotion_score": 4.0, "section": "Verse 1", "lyrics": "晨曦洒落在溪畔"},
+    {"time": 22.0, "emotion_score": 4.0, "section": "Verse 1", "lyrics": "樱花瓣随风飘散"},
+    {"time": 30.0, "emotion_score": 5.0, "section": "Verse 1", "lyrics": "你说的永远太短暂"},
+    {"time": 37.0, "emotion_score": 5.0, "section": "Verse 1", "lyrics": "像花开一瞬就凋零"},
+    {"time": 45.0, "emotion_score": 6.0, "section": "Pre-Chorus", "lyrics": "我不哭不代表不痛"},
+    {"time": 52.0, "emotion_score": 7.0, "section": "Pre-Chorus", "lyrics": "只是笑着看你远走"},
+    {"time": 60.0, "emotion_score": 8.0, "section": "Chorus 1", "lyrics": "樱花落尽时我在等你"},
+    {"time": 68.0, "emotion_score": 8.0, "section": "Chorus 1", "lyrics": "哪怕世界都凋零"},
+    {"time": 75.0, "emotion_score": 9.0, "section": "Chorus 1", "lyrics": "铁了心要站在这里"},
+    {"time": 82.0, "emotion_score": 8.0, "section": "Chorus 1", "lyrics": "等你回头看我一眼"},
+    {"time": 90.0, "emotion_score": 5.0, "section": "Verse 2", "lyrics": "月色洒满了庭院"},
+    {"time": 98.0, "emotion_score": 5.5, "section": "Verse 2", "lyrics": "石灯笼映着你侧脸"},
+    {"time": 105.0, "emotion_score": 6.0, "section": "Verse 2", "lyrics": "那些说好的永远"},
+    {"time": 112.0, "emotion_score": 6.5, "section": "Verse 2", "lyrics": "碎在风里看不见"},
+    {"time": 120.0, "emotion_score": 7.0, "section": "Pre-Chorus 2", "lyrics": "我不哭不代表不痛"},
+    {"time": 128.0, "emotion_score": 8.0, "section": "Pre-Chorus 2", "lyrics": "只是笑着看你远走"},
+    {"time": 135.0, "emotion_score": 9.0, "section": "Chorus 2", "lyrics": "樱花落尽时我在等你"},
+    {"time": 143.0, "emotion_score": 9.0, "section": "Chorus 2", "lyrics": "哪怕世界都凋零"},
+    {"time": 150.0, "emotion_score": 9.5, "section": "Chorus 2", "lyrics": "铁了心要站在这里"},
+    {"time": 158.0, "emotion_score": 8.5, "section": "Chorus 2", "lyrics": "就算花瓣化成泥"},
+    {"time": 166.0, "emotion_score": 4.0, "section": "Bridge", "lyrics": "当最后一片花瓣落下"},
+    {"time": 174.0, "emotion_score": 4.5, "section": "Bridge", "lyrics": "我会用双手接住它"},
+    {"time": 182.0, "emotion_score": 5.0, "section": "Bridge", "lyrics": "那些碎掉的梦啊"},
+    {"time": 190.0, "emotion_score": 5.5, "section": "Bridge", "lyrics": "我来一片片拼回去"},
+    {"time": 198.0, "emotion_score": 9.5, "section": "Final Chorus", "lyrics": "樱花落尽时我在等你"},
+    {"time": 206.0, "emotion_score": 10.0, "section": "Final Chorus", "lyrics": "燃烧自己也要照亮你"},
+    {"time": 214.0, "emotion_score": 8.0, "section": "Final Chorus", "lyrics": "来年春天我还在这里"},
+    {"time": 222.0, "emotion_score": 5.0, "section": "Outro", "lyrics": "（音乐渐弱，樱花飘落）"},
+    {"time": 230.0, "emotion_score": 3.0, "section": "Outro", "lyrics": "（余韵消散）"}
+  ],
+  "scenes": [
+    {
+      "scene_id": 1,
+      "time_range": "00:00-00:15",
+      "section": "Intro",
+      "lyrics": "（纯音乐前奏，古筝与电子合成器交织）",
+      "emotion_score": 3.0,
+      "emotion_label": "平静/期待",
+      "scene_type": "晨雾溪畔",
+      "location": "薄雾笼罩的溪水，若隐若现，樱花树在晨雾中若隐若现",
+      "camera_move": "slow push-in",
+      "camera_description": "从航拍远景缓缓推近，穿透晨雾",
+      "visual_prompt": "wide shot, ethereal morning mist over stream bank with cherry blossom trees barely visible, soft golden hour light breaking through fog, morning white + pale pink color palette, cinematic establishing shot, dreamlike atmosphere",
+      "first_frame": {
+        "description": "远景：晨雾中的溪畔全景，樱花树在薄雾中若隐若现，天边泛着金色微光",
+        "gemini_composite": true,
+        "composition": "三分法，天际线占画面上1/3，雾气占据中下2/3"
+      },
+      "last_frame": {
+        "description": "中景：雾气中显现一个白色身影的轮廓，Chloe手持折伞静立溪边，花瓣开始飘落",
+        "gemini_composite": true,
+        "composition": "中心构图，白色轮廓作为视觉焦点，引导视线"
+      },
+      "video_model": "kling-2",
+      "model_params": {"cfg_scale": 7.0, "motion_strength": 0.4, "duration": 15, "seed": null},
+      "duration_seconds": 15,
+      "beat_sync": "前奏起点，节奏舒缓，古筝第一声拨弦",
+      "transition": "slow dissolve",
+      "continuity_note": "尾帧的樱花飘落元素在下一分镜首帧中继续"
+    },
+    {
+      "scene_id": 2,
+      "time_range": "00:15-00:45",
+      "section": "Verse 1",
+      "lyrics": "晨曦洒落在溪畔 / 樱花瓣随风飘散 / 你说的永远太短暂 / 像花开一瞬就凋零",
+      "emotion_score": 4.0,
+      "emotion_label": "平静/温柔",
+      "scene_type": "溪畔樱花林",
+      "location": "溪水潺潺，两岸樱花树繁花似锦，花瓣随风轻轻飘落",
+      "camera_move": "slow pan left",
+      "camera_description": "从右向左缓慢横移，樱花做前景虚化",
+      "visual_prompt": "medium shot, ethereal young woman in white lace embroidery dress with cherry blossom hairpin, standing by crystal stream surrounded by cherry blossom trees, morning golden hour light casting soft glow, petals drifting in gentle breeze, cherry blossom pink + morning white + soft sage green palette, cinematic composition",
+      "first_frame": {
+        "description": "中景：Chloe在溪畔樱花树下，手持蕾丝折伞，微微仰头看花瓣飘落，面带淡淡微笑",
+        "gemini_composite": true,
+        "composition": "三分法，Chloe占右1/3，左侧樱花枝做前景"
+      },
+      "last_frame": {
+        "description": "特写：Chloe低头看着落在掌心的花瓣，眼神中有一丝忧伤，但嘴角仍带笑意",
+        "gemini_composite": true,
+        "composition": "中心构图，花瓣占据前景虚化，焦点在Chloe眼部"
+      },
+      "video_model": "kling-1.6",
+      "model_params": {"cfg_scale": 6.5, "motion_strength": 0.3, "duration": 30, "seed": null},
+      "duration_seconds": 30,
+      "beat_sync": "主歌进入，平稳叙事，配合歌词意境轻柔运镜",
+      "transition": "crossfade",
+      "continuity_note": "尾帧掌心的花瓣特写，呼应下一句'你说的永远太短暂'"
+    },
+    {
+      "scene_id": 3,
+      "time_range": "00:45-01:00",
+      "section": "Pre-Chorus",
+      "lyrics": "我不哭不代表不痛 / 只是笑着看你远走 / 风中的承诺太轻 / 我用手心握紧",
+      "emotion_score": 6.5,
+      "emotion_label": "铺垫/渐强",
+      "scene_type": "雨巷",
+      "location": "细雨绵绵的青石板小巷，雨丝如帘，两侧是斑驳的白墙",
+      "camera_move": "tracking follow",
+      "camera_description": "跟拍Chloe在雨巷中行走，雨水溅起水花",
+      "visual_prompt": "medium shot, ethereal young woman in white lace dress holding vintage lace parasol, walking slowly through rainy stone alley with moss-covered walls, soft diffused light from distant window, rain drops creating bokeh effect, melancholy yet hopeful mood, gray blue + warm orange + white palette",
+      "first_frame": {
+        "description": "中景：Chloe在雨巷中撑伞行走，回头望向身后，眼神中有不舍但坚定",
+        "gemini_composite": true,
+        "composition": "偏侧构图，视线方向留白，表达'看远走'"
+      },
+      "last_frame": {
+        "description": "中景：Chloe停下脚步，低头看着手中紧握的什么东西（象征承诺），雨滴从伞边滑落",
+        "gemini_composite": true,
+        "composition": "低角度仰拍，强调雨中孤独感"
+      },
+      "video_model": "kling-2",
+      "model_params": {"cfg_scale": 7.5, "motion_strength": 0.6, "duration": 15, "seed": null},
+      "duration_seconds": 15,
+      "beat_sync": "预副歌起点，节奏渐强，为副歌爆发做铺垫",
+      "transition": "match cut with raindrop",
+      "continuity_note": "雨滴从伞边滑落的动态，为副歌爆发蓄力"
+    },
+    {
+      "scene_id": 4,
+      "time_range": "01:00-01:30",
+      "section": "Chorus 1",
+      "lyrics": "樱花落尽时我在等你 / 哪怕世界都凋零 / 铁了心要站在这里 / 等你回头看我一眼",
+      "emotion_score": 8.5,
+      "emotion_label": "爆发/力量",
+      "scene_type": "月下庭院",
+      "location": "日式庭院，月光洒落，石灯笼发出暖光，樱花树在月色下显得格外清冷",
+      "camera_move": "orbiting shot",
+      "camera_description": "环绕Chloe旋转拍摄，月光做逆光勾勒轮廓",
+      "visual_prompt": "full body shot, ethereal young woman in white lace dress standing in moonlit Japanese garden with stone lanterns, cherry blossom petals falling around her, moonlight backlighting creating ethereal glow outline, powerful stance with vintage parasol held firmly, emotional intensity, moon white + warm lantern yellow + ink blue palette, cinematic 8k",
+      "first_frame": {
+        "description": "全景：Chloe站在庭院中央，月光从身后照射，白裙被风吹起，手持折伞指向天空",
+        "gemini_composite": true,
+        "composition": "中心构图，Chloe居中，月光形成逆光轮廓"
+      },
+      "last_frame": {
+        "description": "中景：Chloe直视镜头，眼神坚定，花瓣在周围高速旋转飞舞，裙摆飘扬",
+        "gemini_composite": true,
+        "composition": "中心构图，高速花瓣做动态模糊前景"
+      },
+      "video_model": "kling-2",
+      "model_params": {"cfg_scale": 8.5, "motion_strength": 0.85, "duration": 30, "seed": null},
+      "duration_seconds": 30,
+      "beat_sync": "★ 副歌起点，卡点爆发，鼓组第一拍",
+      "transition": "flash white + hard cut",
+      "continuity_note": "花瓣高速旋转的动势，承接下一分镜Verse 2"
+    },
+    {
+      "scene_id": 5,
+      "time_range": "01:30-02:00",
+      "section": "Verse 2",
+      "lyrics": "月色洒满了庭院 / 石灯笼映着你侧脸 / 那些说好的永远 / 碎在风里看不见",
+      "emotion_score": 5.5,
+      "emotion_label": "微伤/怀念",
+      "scene_type": "窗前光影",
+      "location": "传统和室，木质窗框，斜射月光，花瓣贴在窗纸上",
+      "camera_move": "static with light movement",
+      "camera_description": "固定机位，月光光斑在地板上缓慢移动",
+      "visual_prompt": "medium shot, ethereal young woman in white lace dress sitting by wooden shoji screen window, moonlight casting geometric shadows through lattice, cherry blossom petals stuck on rice paper window, contemplative expression, half face illuminated, soft and melancholic, warm white + wood brown + shadow gray palette",
+      "first_frame": {
+        "description": "中景：Chloe坐在窗前，侧脸被月光照亮，石灯笼的光映在另一侧，花瓣贴在窗纸上",
+        "gemini_composite": true,
+        "composition": "三分法，面部在光影交界处"
+      },
+      "last_frame": {
+        "description": "中景：Chloe伸手触碰窗纸上的花瓣，眼神中闪过一丝回忆的痛楚",
+        "gemini_composite": true,
+        "composition": "浅景深，焦点在指尖与花瓣的接触点"
+      },
+      "video_model": "kling-1.6",
+      "model_params": {"cfg_scale": 6.5, "motion_strength": 0.25, "duration": 30, "seed": null},
+      "duration_seconds": 30,
+      "beat_sync": "主歌延续，情绪回落，叙事性运镜",
+      "transition": "crossfade",
+      "continuity_note": "指尖触碰花瓣的动作，承接副歌2的'我用心跳去追'"
+    },
+    {
+      "scene_id": 6,
+      "time_range": "02:00-02:15",
+      "section": "Pre-Chorus 2",
+      "lyrics": "我不哭不代表不痛 / 只是笑着看你远走 / 雨中的背影太远 / 我用心跳去追",
+      "emotion_score": 7.5,
+      "emotion_label": "铺垫/渐强",
+      "scene_type": "雨巷",
+      "location": "雨势变大的青石板巷，水洼倒影中映出模糊的樱花树影",
+      "camera_move": "dolly backward",
+      "camera_description": "向后拉镜头，Chloe在雨中奔跑追赶",
+      "visual_prompt": "full body shot, ethereal young woman in white lace dress running through heavy rain in stone alley, vintage lace parasol forgotten and held loosely, water splashing beneath feet, warm light from distant windows casting reflections in puddles, determined yet vulnerable expression, cinematic tracking shot, gray blue + warm orange + white palette",
+      "first_frame": {
+        "description": "全景跟拍：Chloe在雨中奔跑，回头望向远方，眼神中充满渴望",
+        "gemini_composite": true,
+        "composition": "中线构图，Chloe在画面中央偏左"
+      },
+      "last_frame": {
+        "description": "中景：Chloe停下脚步，大雨倾盆，水洼中倒影破碎，她抬头让雨水打在脸上",
+        "gemini_composite": true,
+        "composition": "低角度仰拍，雨水从上方落下形成动感模糊"
+      },
+      "video_model": "kling-2",
+      "model_params": {"cfg_scale": 8.0, "motion_strength": 0.75, "duration": 15, "seed": null},
+      "duration_seconds": 15,
+      "beat_sync": "预副歌2，情绪再次攀升，节奏更强烈",
+      "transition": "match cut with raindrop",
+      "continuity_note": "雨水落在脸上的动态，承接Chorus 2的爆发"
+    },
+    {
+      "scene_id": 7,
+      "time_range": "02:15-02:30",
+      "section": "Chorus 2",
+      "lyrics": "樱花落尽时我在等你 / 哪怕世界都凋零 / 铁了心要站在这里 / 等你回头看我一眼",
+      "emotion_score": 9.5,
+      "emotion_label": "极致/巅峰",
+      "scene_type": "星空下",
+      "location": "开阔草地，仰望银河，萤火虫环绕，星光与花灯交相辉映",
+      "camera_move": "crane up reveal",
+      "camera_description": "从地面缓慢升起，揭示银河全景",
+      "visual_prompt": "wide shot, ethereal young woman in white lace dress standing in open meadow looking up at Milky Way galaxy, fireflies glowing around her, cherry blossom petals floating in slow motion, combination of starlight and warm lantern glow, epic and breathtaking, deep blue + silver white + warm yellow palette, cinematic crane shot, 8k quality",
+      "first_frame": {
+        "description": "低角度：Chloe站在草地中央，仰望星空，萤火虫环绕，裙摆被夜风轻轻吹起",
+        "gemini_composite": true,
+        "composition": "中心构图，星空为背景，Chloe剪影",
+        "height": "ground level"
+      },
+      "last_frame": {
+        "description": "升高揭示全景：镜头升起，银河完整呈现，Chloe在星辰下如仙子降临",
+        "gemini_composite": true,
+        "composition": "俯拍视角，Chloe在画面中心，银河环绕"
+      },
+      "video_model": "veo-3.1",
+      "model_params": {"cfg_scale": 9.0, "motion_strength": 0.6, "duration": 15, "seed": null},
+      "duration_seconds": 15,
+      "beat_sync": "★ 副歌2爆发，卡点，弦乐+合成器高潮",
+      "transition": "slow dissolve",
+      "continuity_note": "银河星空的宏大视野，承接Bridge的情绪转折"
+    },
+    {
+      "scene_id": 8,
+      "time_range": "02:30-02:45",
+      "section": "Bridge",
+      "lyrics": "当最后一片花瓣落下 / 我会用双手接住它 / 那些碎掉的梦啊 / 我来一片片拼回去",
+      "emotion_score": 4.5,
+      "emotion_label": "平静/治愈",
+      "scene_type": "溪畔樱花林",
+      "location": "暮色中的溪畔，最后一缕夕阳，天边泛着温柔的粉色",
+      "camera_move": "slow push-in",
+      "camera_description": "缓慢推近Chloe，她蹲下接住最后飘落的花瓣",
+      "visual_prompt": "medium shot, ethereal young woman in white lace dress kneeling by stream bank catching the last falling cherry blossom petal in cupped hands, golden hour sunset glow, gentle and tender moment, peaceful resolution, warm pink + soft gold + sage green palette, shallow depth of field, emotional healing atmosphere",
+      "first_frame": {
+        "description": "中景：暮色溪畔，Chloe蹲在河边，双手捧着一片最后的花瓣，神情温柔释然",
+        "gemini_composite": true,
+        "composition": "三分法，Chloe占右下方，光线从左侧照入"
+      },
+      "last_frame": {
+        "description": "特写：Chloe将花瓣贴在心口，闭眼微笑，眼角有泪光但表情平静",
+        "gemini_composite": true,
+        "composition": "中心构图，花瓣做前景虚化，心口为焦点"
+      },
+      "video_model": "kling-1.6",
+      "model_params": {"cfg_scale": 6.0, "motion_strength": 0.3, "duration": 15, "seed": null},
+      "duration_seconds": 15,
+      "beat_sync": "桥段，情绪转折，从爆发到平静治愈",
+      "transition": "slow dissolve",
+      "continuity_note": "花瓣贴在心口的动作，为Final Chorus的爆发做情感铺垫"
+    },
+    {
+      "scene_id": 9,
+      "time_range": "02:45-03:15",
+      "section": "Final Chorus",
+      "lyrics": "樱花落尽时我在等你 / 燃烧自己也要照亮你 / 来年春天我还在这里",
+      "emotion_score": 10.0,
+      "emotion_label": "极致/巅峰",
+      "scene_type": "山顶远眺",
+      "location": "悬崖边，远景山脉云海，日出金光冲破云层",
+      "camera_move": "multi-axis move",
+      "camera_description": "环绕+升降组合，从Chloe旋转拉远到全景",
+      "visual_prompt": "epic wide shot, ethereal young woman in white lace dress standing on mountain cliff edge at sunrise, golden light breaking through clouds creating god rays, cherry blossom petals swirling around her in wind, majestic mountain range and cloud sea in background, powerful and transcendent, warm gold + deep blue + white palette, cinematic 360 orbit + crane up reveal, 8k quality",
+      "first_frame": {
+        "description": "中景：Chloe站在悬崖边，日出金光从身后喷薄而出，白裙被狂风吹起如翅膀",
+        "gemini_composite": true,
+        "composition": "逆光剪影，Chloe居中偏下，金光从头顶洒下"
+      },
+      "last_frame": {
+        "description": "远景拉远：镜头旋转上升，Chloe变成金色光芒中的一个小小身影，但依然挺立",
+        "gemini_composite": true,
+        "composition": "俯拍远景，Chloe仅占画面5%，但金色光芒覆盖全画面"
+      },
+      "video_model": "veo-3.1",
+      "model_params": {"cfg_scale": 9.5, "motion_strength": 0.9, "duration": 30, "seed": null},
+      "duration_seconds": 30,
+      "beat_sync": "★ 最终爆发，卡点，电吉他+鼓组全开",
+      "transition": "slow fade",
+      "continuity_note": "金色光芒覆盖全画面，延续到Outro"
+    },
+    {
+      "scene_id": 10,
+      "time_range": "03:15-03:22",
+      "section": "Outro",
+      "lyrics": "（音乐渐弱，樱花瓣缓缓飘落）",
+      "emotion_score": 3.5,
+      "emotion_label": "平静/余韵",
+      "scene_type": "晨雾溪畔",
+      "location": "回到最初的溪畔，晨雾再次笼罩，一切归于宁静",
+      "camera_move": "slow pull-out",
+      "camera_description": "缓缓拉远，从Chloe拉回到溪畔全景",
+      "visual_prompt": "wide shot, ethereal young woman in white lace dress standing by misty stream bank at dawn, cherry blossom petals gently falling, returning to peaceful beginning, soft golden sunrise light, circular narrative closure, morning white + pale pink + soft sage green palette, nostalgic and serene",
+      "first_frame": {
+        "description": "中景：Chloe在溪边转身回望镜头，微微一笑，晨雾开始升腾",
+        "gemini_composite": true,
+        "composition": "中心构图，Chloe居中，晨雾开始升腾环绕"
+      },
+      "last_frame": {
+        "description": "远景：Chloe的身影渐渐被晨雾吞没，只剩溪水和飘落的花瓣，呼应开头",
+        "gemini_composite": true,
+        "composition": "三分法，地平线居中，雾气占据画面下半部分"
+      },
+      "video_model": "kling-1.6",
+      "model_params": {"cfg_scale": 6.0, "motion_strength": 0.2, "duration": 7, "seed": null},
+      "duration_seconds": 7,
+      "beat_sync": "余韵收束，音乐渐弱，画面归于宁静",
+      "transition": "fade to white",
+      "continuity_note": "与Intro首帧形成呼应，完成叙事闭环"
+    },
+    {
+      "scene_id": 11,
+      "time_range": "03:22-03:30",
+      "section": "End Card",
+      "lyrics": "（纯音乐淡出）",
+      "emotion_score": 1.0,
+      "emotion_label": "极静/空灵",
+      "scene_type": "纯色/留白",
+      "location": "白色渐变背景",
+      "camera_move": "static",
+      "camera_description": "固定镜头，白色背景",
+      "visual_prompt": "minimal white background with single cherry blossom petal slowly falling, clean elegant end card typography area, pure white #FFFFF0 palette",
+      "first_frame": {
+        "description": "纯白背景，一片花瓣从上方缓缓飘落",
+        "gemini_composite": true,
+        "composition": "中心构图，花瓣落点正好在视觉中心"
+      },
+      "last_frame": {
+        "description": "纯白背景，花瓣落在画面底部中心",
+        "gemini_composite": true,
+        "composition": "中心构图，完成落点"
+      },
+      "video_model": "kling-1.6",
+      "model_params": {"cfg_scale": 5.0, "motion_strength": 0.1, "duration": 8, "seed": null},
+      "duration_seconds": 8,
+      "beat_sync": "音乐完全淡出",
+      "transition": "fade out",
+      "continuity_note": "最后一个花瓣落下，象征'樱花落尽时'的主题"
+    }
+  ]
+}

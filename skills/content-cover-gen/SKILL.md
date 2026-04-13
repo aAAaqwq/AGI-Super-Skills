@@ -5,7 +5,6 @@ description: >
   每张封面3秒内传达文章核心观点，杜绝通用背景。
   支持小红书(3:4)、抖音(9:16)、公众号(16:9)、知识星球(1:1)、掘金(16:9)。
   触发：'生成封面'、'封面生成'、'cover'、'thumbnail'、'封面图'、'缩略图'。
-author: Daniel Li
 ---
 
 # 内容驱动封面生成
@@ -97,9 +96,94 @@ Step 4: 输出封面文件路径 + 提示词（可追溯）
 **文章：大学生用AI月入过万的5个副业**
 > A student sitting at a desk with holographic money floating around, a laptop showing multiple income streams, warm golden and green color scheme, motivational illustration style, 3:4 vertical format, no text
 
+## 小红书首图专用规则（2026-04-06 夜间补充）
+
+如果目标平台是 **小红书**，封面默认遵循下面规则：
+
+### 1) 先判断封面类型
+不要直接让模型自由发挥，先选一种：
+- **大标题卡片型**：观点 / 趋势 / 避坑
+- **对比评测型**：工具 PK / 方案选择
+- **清单总结型**：3个工具 / 5个步骤 / 合集
+- **截图解释型**：界面拆解 / 工作流演示 / 案例分析
+
+### 2) 图里必须有字
+- 主标题优先 8-16 字
+- 可补 1 行副标题或 2-4 个结果标签
+- 不要只靠笔记标题承载信息
+- 缩略图状态下必须还能读到重点
+
+### 3) 主体必须具体
+优先出现：
+- 人物 + 工位 / 设备
+- 工具 UI / 产品界面 / 截图
+- 对比关系 / 清单卡片 / 流程图
+- 真实任务场景
+
+默认禁止：
+- 发光机器人
+- 抽象几何图形
+- hologram 漂浮 UI
+- 为了“高级感”牺牲信息量的极简科技图
+
+### 4) 封面目标不是艺术感，是点击率
+一张合格的小红书首图，应该满足：
+- 0.5-3 秒知道内容主题
+- 像经验总结 / 教程 / 观点卡，而不是品牌海报
+- 单看首图就知道：这篇在讲结论 / 对比 / 清单 / 步骤
+
+### 5) 新提示词结构
+如果是小红书首图，提示词建议写成：
+
+```text
+[封面版式] + [主体场景] + [主标题文案] + [副标题/标签] + [具体工具/对象] + [视觉隐喻] + [配色] + [风格] + [比例]
+```
+
+示例：
+```text
+清单总结型小红书封面，一个21岁创业者坐在电脑前，画面中有3个AI工具卡片并排展示，主标题“我只留这3个AI工具”，副标题“删掉47个后效率反而翻倍”，红白黑高对比配色，中文信息卡片风格，真实工作台场景，3:4 竖版
+```
+
+### 6) 不再默认走“纯背景图”路线
+以前常见但效果差的做法：
+- 先生成一张很美的 AI 图
+- 留大片空白
+- 后面再想办法补字
+
+现在改成：
+- 先定信息结构
+- 再定版式
+- 再让图服务内容
+
+**一句话：封面是视觉摘要，不是氛围壁纸。**
+
 ## Step 3: 调用出图
 
+### 默认出图链路（2026-04-06 起）
+
+如果任务是**内容封面**而不是普通插画，默认顺序改为：
+
+1. 先按本 skill 的方法论提炼核心观点与视觉隐喻
+2. **优先调用本地 `qingyun-api` 的 Gemini 图片模型：`gemini-3-pro-image-preview`**
+3. 仅当青云链路不可用或用户明确指定其它 provider 时，再退回 `relay-image-gen`
+
+**原因**：这条链路已经在小红书封面实战里验证过，出图更直接、比例控制明确、和本地 skill 维护边界更清晰。
+
+### 小红书封面特别规则（新增）
+- 默认比例：`3:4`
+- 不要把整段提示词直接当站内“文字配图”素材丢给平台生成；很容易产出**英文文字卡片/海报**而不是封面
+- 封面必须先在本地生成，再上传到发布页
+- 目标不是“好看”而已，而是**3 秒看懂这篇内容在讲什么**
+
 ```bash
+# 默认推荐：直接走 qingyun Gemini
+export QINGYUN_API_KEY=$(pass show api/qingyun | head -n 1)
+bash ~/clawd/skills/qingyun-api/scripts/qingyun-image-gemini.sh \
+  "你的内容型封面提示词" \
+  --ratio 3:4 \
+  -o "/path/to/cover"
+
+# 备用：relay-image-gen
 uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py \
   -p "你的提示词" \
   -f "输出路径/cover.jpg" \
@@ -121,6 +205,19 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py \
 
 ## Step 4: 输出格式
 
+### 与 `xhs-smart-publisher` 的协作约定（新增 SOP）
+
+如果目标平台是**小红书**，本 skill 产出后要满足下面 4 点，方便发布 skill 直接接手：
+
+1. **输出真实文件路径**
+   - 例如：`/home/aa/clawd/docs/daily-content/2026-04-04/xhs/cover-3-qingyun.jpg`
+2. **优先 3:4 竖版**
+3. **文件名可被文章元数据直接引用**
+   - 文章里的 `🖼️ 封面：待生成` 要及时回填成真实路径
+4. **不要把站内“文字配图”当作封面生成步骤的一部分**
+   - 本 skill 负责的是：**先在本地把正确封面生成出来**
+   - 然后交给 `xhs-smart-publisher` 上传
+
 ```markdown
 🖼️ 封面提示词：[完整提示词，可追溯]
 🖼️ 封面文件：[文件路径]
@@ -135,8 +232,21 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py \
 - [ ] 色彩跟文章情绪匹配？
 - [ ] 没有文字覆盖（后期叠加更可控）？
 - [ ] 比例正确？
+- [ ] **没有误生成“文字海报 / 提示词卡片 / 英文大段字”这种伪封面？**
 
 ## 高级技巧
+
+### 小红书首图推荐套路（2026-04-06 验证）
+
+对于“观点反差 / AI 反思 / 批判式内容”，优先用：
+- **分屏对比**
+- **左边主动思考 / 右边被工具反向削弱**
+- **暖色 = 主动思考，冷色 = 被动依赖**
+
+这类图在小红书封面上非常直接，用户 1-3 秒就能看懂。
+
+示例：
+> A split-scene editorial illustration: left side active thinking with warm golden brain glow, right side passive AI overuse with dim blue brain, emotionally sharp, no text overlay, 3:4 vertical cover.
 
 ### 多封面生成（A/B测试）
 同一篇文章生成2-3张不同隐喻的封面，选最好的：

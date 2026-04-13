@@ -1,0 +1,118 @@
+{
+  "version": "0.2.0",
+  "source": "docs/六条经络辩证.xlsx + acceptance-criteria.md",
+  "description": "Critical cross-meridian combination rules required by acceptance criteria.",
+  "rules": [
+    {
+      "id": "liver_gallbladder_left_low_transaminase",
+      "when": {
+        "allStatuses": [
+          {"meridian": "liver", "status": "left_low"},
+          {"meridian": "gallbladder", "status": "left_low"}
+        ]
+      },
+      "name": "转氨酶偏高",
+      "tags": ["transaminase", "liver_combo"],
+      "summary": "肝左低 + 胆左低：提示转氨酶偏高/肝胆联动风险",
+      "advice": ["建议减少熬夜与饮酒，高油饮食近期尽量收敛"]
+    },
+    {
+      "id": "kidney_bladder_opposite_low_cervical",
+      "when": {
+        "anyOf": [
+          {
+            "allStatuses": [
+              {"meridian": "kidney", "status": "left_low"},
+              {"meridian": "bladder", "status": "right_low"}
+            ]
+          },
+          {
+            "allStatuses": [
+              {"meridian": "kidney", "status": "right_low"},
+              {"meridian": "bladder", "status": "left_low"}
+            ]
+          }
+        ]
+      },
+      "name": "颈椎风险提示",
+      "tags": ["cervical"],
+      "summary": "肾与膀胱相反低：提示颈椎相关问题倾向",
+      "advice": ["关注长期低头、久坐与肩颈僵硬情况"]
+    },
+    {
+      "id": "kidney_bladder_same_side_low_lumbar",
+      "when": {
+        "anyOf": [
+          {
+            "allStatuses": [
+              {"meridian": "kidney", "status": "left_low"},
+              {"meridian": "bladder", "status": "left_low"}
+            ]
+          },
+          {
+            "allStatuses": [
+              {"meridian": "kidney", "status": "right_low"},
+              {"meridian": "bladder", "status": "right_low"}
+            ]
+          }
+        ]
+      },
+      "name": "腰椎风险提示",
+      "tags": ["lumbar"],
+      "summary": "肾与膀胱同向低：提示腰椎相关问题倾向",
+      "advice": ["关注久坐久站后的腰部负担与保暖情况"]
+    },
+    {
+      "id": "right_side_four_plus_heart_supply",
+      "when": {
+        "minStatusCount": {
+          "status": "right_low",
+          "count": 4
+        }
+      },
+      "name": "心脏供血注意",
+      "tags": ["heart_supply"],
+      "summary": "六经中 4 条及以上偏右低：提示心脏供血侧需关注",
+      "advice": ["如伴胸闷气短或疲劳感，建议优先休息并观察复测结果"]
+    },
+    {
+      "id": "left_side_four_plus_head_supply",
+      "when": {
+        "minStatusCount": {
+          "status": "left_low",
+          "count": 4
+        }
+      },
+      "name": "头部供血注意",
+      "tags": ["head_supply"],
+      "summary": "六经中 4 条及以上偏左低：提示头部供血侧需关注",
+      "advice": ["如伴头晕、眼干、注意力差，建议结合近期睡眠情况观察"]
+    },
+    {
+      "id": "kidney_bladder_spleen_cervical_plus",
+      "when": {
+        "allStatuses": [
+          {"meridian": "spleen", "status": "left_low"}
+        ],
+        "anyOf": [
+          {
+            "allStatuses": [
+              {"meridian": "kidney", "status": "left_low"},
+              {"meridian": "bladder", "status": "right_low"}
+            ]
+          },
+          {
+            "allStatuses": [
+              {"meridian": "kidney", "status": "right_low"},
+              {"meridian": "bladder", "status": "left_low"}
+            ]
+          }
+        ]
+      },
+      "name": "颈椎加重提示",
+      "tags": ["cervical_plus"],
+      "summary": "肾+膀胱相反低且脾偏弱：提示颈椎/肌肉支持侧更需关注",
+      "advice": ["除肩颈姿势外，也建议同步关注脾侧疲劳和四肢问题"]
+    }
+  ]
+}
