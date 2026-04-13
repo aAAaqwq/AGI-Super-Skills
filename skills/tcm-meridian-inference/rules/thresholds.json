@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "notes": "Thresholds aligned to the Excel-derived six-meridian MVP rule library. Values are still calibration-friendly and may be tuned per device/store.",
+  "temperature": {
+    "normalMin": 35.6,
+    "normalMax": 36.6,
+    "lowMin": 35.3,
+    "highMax": 36.9,
+    "leftRightDiffWarn": 0.6,
+    "trendDeltaWarnAbs": 0.4,
+    "sideCountWarn": 4
+  },
+  "scoring": {
+    "base": 100,
+    "penalty": {
+      "left_low": 16,
+      "right_low": 16,
+      "cross": 20,
+      "high": 10,
+      "trend": 8,
+      "combo": 6
+    },
+    "floor": 0,
+    "ceiling": 100
+  }
+}

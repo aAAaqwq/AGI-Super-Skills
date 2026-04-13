@@ -1,0 +1,210 @@
+{
+  "version": "0.2.0",
+  "source": "docs/六条经络辩证.xlsx + acceptance-criteria.md",
+  "description": "Six-meridian Excel-derived rule library. Each meridian contains left_low / right_low / cross rules.",
+  "rules": [
+    {
+      "id": "liver_left_low",
+      "meridian": "liver",
+      "status": "left_low",
+      "tag": "left_low",
+      "penaltyKey": "left_low",
+      "conditions": [{"field": "left", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "肝左低：代谢侧偏弱",
+      "symptoms": ["代谢差", "气虚", "乳房结节", "小叶增生", "三高", "血稠", "难入睡"],
+      "advice": ["关注代谢与睡眠节律", "近期少油酒并观察眼干口苦是否持续"]
+    },
+    {
+      "id": "liver_right_low",
+      "meridian": "liver",
+      "status": "right_low",
+      "tag": "right_low",
+      "penaltyKey": "right_low",
+      "conditions": [{"field": "right", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "肝右低：藏血侧偏弱",
+      "symptoms": ["血虚", "易掉发", "体内有风", "心脏供血不足", "睡眠浅", "乏力", "胸闷气短"],
+      "advice": ["关注贫血样疲劳表现", "结合作息与经期/心供血情况复测"]
+    },
+    {
+      "id": "liver_cross",
+      "meridian": "liver",
+      "status": "cross",
+      "tag": "cross",
+      "penaltyKey": "cross",
+      "conditions": [{"field": "diffAbs", "op": ">", "valueFrom": "thresholds.temperature.leftRightDiffWarn"}],
+      "summary": "肝交叉：左右差异明显",
+      "symptoms": ["气血两虚", "脂肪肝风险提示", "肝囊肿风险提示"],
+      "advice": ["左右差异明显时优先复测", "避免把单次结果当成诊断结论"]
+    },
+
+    {
+      "id": "spleen_left_low",
+      "meridian": "spleen",
+      "status": "left_low",
+      "tag": "left_low",
+      "penaltyKey": "left_low",
+      "conditions": [{"field": "left", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "脾左低：运化/思虑侧偏弱",
+      "symptoms": ["四肢问题", "思虑过重", "血糖偏高"],
+      "advice": ["关注饮食节律与久坐后疲劳感", "必要时配合血糖相关生活方式管理"]
+    },
+    {
+      "id": "spleen_right_low",
+      "meridian": "spleen",
+      "status": "right_low",
+      "tag": "right_low",
+      "penaltyKey": "right_low",
+      "conditions": [{"field": "right", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "脾右低：湿气/下注侧偏弱",
+      "symptoms": ["湿气重", "易下注大肠", "大便黏滞", "例假延长量多"],
+      "advice": ["关注湿气与消化道表现", "近期减少生冷与过甜摄入"]
+    },
+    {
+      "id": "spleen_cross",
+      "meridian": "spleen",
+      "status": "cross",
+      "tag": "cross",
+      "penaltyKey": "cross",
+      "conditions": [{"field": "diffAbs", "op": ">", "valueFrom": "thresholds.temperature.leftRightDiffWarn"}],
+      "summary": "脾交叉：左右差异明显",
+      "symptoms": ["血糖波动提示"],
+      "advice": ["脾交叉优先关注饮食和复测前状态一致性"]
+    },
+
+    {
+      "id": "kidney_left_low",
+      "meridian": "kidney",
+      "status": "left_low",
+      "tag": "left_low",
+      "penaltyKey": "left_low",
+      "conditions": [{"field": "left", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "肾左低：肾阴/过滤侧偏弱",
+      "symptoms": ["尿酸偏高", "耳鸣", "耳背", "肾阴虚", "夜尿", "尿频", "骨质疏松"],
+      "advice": ["关注肾小球过滤相关风险提示", "留意夜尿、耳鸣与怕冷是否并存"]
+    },
+    {
+      "id": "kidney_right_low",
+      "meridian": "kidney",
+      "status": "right_low",
+      "tag": "right_low",
+      "penaltyKey": "right_low",
+      "conditions": [{"field": "right", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "肾右低：肾阳/保暖侧偏弱",
+      "symptoms": ["肾阳虚", "怕冷", "四肢需保暖"],
+      "advice": ["优先关注保暖与睡眠", "连续多次右低再强化建议"]
+    },
+    {
+      "id": "kidney_cross",
+      "meridian": "kidney",
+      "status": "cross",
+      "tag": "cross",
+      "penaltyKey": "cross",
+      "conditions": [{"field": "diffAbs", "op": ">", "valueFrom": "thresholds.temperature.leftRightDiffWarn"}],
+      "summary": "肾交叉：左右差异明显",
+      "symptoms": ["结石风险提示", "囊肿风险提示", "女性子宫受过伤提示"],
+      "advice": ["肾交叉时建议复测并结合泌尿/结石史观察"]
+    },
+
+    {
+      "id": "stomach_left_low",
+      "meridian": "stomach",
+      "status": "left_low",
+      "tag": "left_low",
+      "penaltyKey": "left_low",
+      "conditions": [{"field": "left", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "胃左低：津液侧偏少",
+      "symptoms": ["慢性胃炎", "胃痛", "津液偏少"],
+      "advice": ["注意早餐规律与胃部保暖", "近期减少刺激性饮食"]
+    },
+    {
+      "id": "stomach_right_low",
+      "meridian": "stomach",
+      "status": "right_low",
+      "tag": "right_low",
+      "penaltyKey": "right_low",
+      "conditions": [{"field": "right", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "胃右低：胃阳侧偏弱",
+      "symptoms": ["消化不良", "胃胀", "食欲减退"],
+      "advice": ["关注消化不良和晨间空腹习惯", "可结合饮食记录复盘"]
+    },
+    {
+      "id": "stomach_cross",
+      "meridian": "stomach",
+      "status": "cross",
+      "tag": "cross",
+      "penaltyKey": "cross",
+      "conditions": [{"field": "diffAbs", "op": ">", "valueFrom": "thresholds.temperature.leftRightDiffWarn"}],
+      "summary": "胃交叉：左右差异明显",
+      "symptoms": ["反酸", "饮食不规律", "胃胀", "幽门螺旋杆菌相关风险提示"],
+      "advice": ["胃交叉建议优先核查饮食规律和反酸表现"]
+    },
+
+    {
+      "id": "gallbladder_left_low",
+      "meridian": "gallbladder",
+      "status": "left_low",
+      "tag": "left_low",
+      "penaltyKey": "left_low",
+      "conditions": [{"field": "left", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "胆左低：胆红素/头侧表现偏弱",
+      "symptoms": ["晨起口干", "口苦", "头皮下结节", "偏头痛", "胆红素偏高"],
+      "advice": ["关注晨起口干口苦和偏头痛", "减少熬夜与高油饮食"]
+    },
+    {
+      "id": "gallbladder_right_low",
+      "meridian": "gallbladder",
+      "status": "right_low",
+      "tag": "right_low",
+      "penaltyKey": "right_low",
+      "conditions": [{"field": "right", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "胆右低：胆固醇/脂代谢侧偏弱",
+      "symptoms": ["胆固醇偏高", "甘油三酯偏高", "脂肪瘤"],
+      "advice": ["近期关注血脂和饮食结构", "避免长期高油高糖"]
+    },
+    {
+      "id": "gallbladder_cross",
+      "meridian": "gallbladder",
+      "status": "cross",
+      "tag": "cross",
+      "penaltyKey": "cross",
+      "conditions": [{"field": "diffAbs", "op": ">", "valueFrom": "thresholds.temperature.leftRightDiffWarn"}],
+      "summary": "胆交叉：左右差异明显",
+      "symptoms": ["结石风险提示", "囊肿风险提示", "息肉风险提示", "表面粗糙提示"],
+      "advice": ["胆交叉时建议结合胆囊既往史与作息观察"]
+    },
+
+    {
+      "id": "bladder_left_low",
+      "meridian": "bladder",
+      "status": "left_low",
+      "tag": "left_low",
+      "penaltyKey": "left_low",
+      "conditions": [{"field": "left", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "膀胱左低：肩颈腰侧偏弱",
+      "symptoms": ["肩颈腰问题", "泌尿系统提示"],
+      "advice": ["优先关注久坐后的肩颈腰不适和饮水规律"]
+    },
+    {
+      "id": "bladder_right_low",
+      "meridian": "bladder",
+      "status": "right_low",
+      "tag": "right_low",
+      "penaltyKey": "right_low",
+      "conditions": [{"field": "right", "op": "<", "valueFrom": "thresholds.temperature.lowMin"}],
+      "summary": "膀胱右低：肩颈腰/肺侧偏弱",
+      "symptoms": ["肩颈腰问题", "肺部提示"],
+      "advice": ["注意久坐/久站后的腰背负担，必要时配合呼吸状态观察"]
+    },
+    {
+      "id": "bladder_cross",
+      "meridian": "bladder",
+      "status": "cross",
+      "tag": "cross",
+      "penaltyKey": "cross",
+      "conditions": [{"field": "diffAbs", "op": ">", "valueFrom": "thresholds.temperature.leftRightDiffWarn"}],
+      "summary": "膀胱交叉：左右差异明显",
+      "symptoms": ["肠道息肉提示", "女性子宫受过伤提示"],
+      "advice": ["膀胱交叉时建议结合肠道/妇科既往史观察"]
+    }
+  ]
+}

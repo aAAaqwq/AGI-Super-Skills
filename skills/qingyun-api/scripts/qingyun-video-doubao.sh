@@ -104,13 +104,21 @@ main() {
         shift
         [[ $# -gt 0 ]] || die "--first-frame requires a value"
         first_frame="$1"
-        is_url "$first_frame" || die "--first-frame must be a URL (http(s)://)"
+        if ! is_url "$first_frame"; then
+          # 本地文件：转base64 data URI
+          [[ -f "$first_frame" ]] || die "--first-frame file not found: $first_frame"
+          first_frame="data:image/png;base64,$(base64 -w0 "$first_frame")"
+        fi
         ;;
       --last-frame)
         shift
         [[ $# -gt 0 ]] || die "--last-frame requires a value"
         last_frame="$1"
-        is_url "$last_frame" || die "--last-frame must be a URL (http(s)://)"
+        if ! is_url "$last_frame"; then
+          # 本地文件：转base64 data URI
+          [[ -f "$last_frame" ]] || die "--last-frame file not found: $last_frame"
+          last_frame="data:image/png;base64,$(base64 -w0 "$last_frame")"
+        fi
         ;;
       -o|--output)
         shift
