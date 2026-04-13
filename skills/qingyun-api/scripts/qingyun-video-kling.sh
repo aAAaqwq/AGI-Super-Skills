@@ -17,8 +17,8 @@ Description:
 
 Options:
   --image URL_OR_BASE64   Required. Image URL or base64-encoded image data
-  --model MODEL           Model name (default: kling-avatar-image2video)
-                          Examples: kling-v2-5-turbo, kling-avatar-image2video
+  --model MODEL           Model name (default: kling-v2-5-turbo)
+                          Example: kling-v2-5-turbo
   --duration SECONDS      Duration in seconds (default: 5)
   --aspect-ratio RATIO    Aspect ratio, e.g. 16:9, 9:16, 1:1
   --mode MODE             Mode: std | pro (default: std)
@@ -90,7 +90,7 @@ main() {
 
   local prompt=""
   local image=""
-  local model="kling-avatar-image2video"
+  local model="kling-v2-5-turbo"
   local duration="5"
   local aspect_ratio=""
   local mode="std"

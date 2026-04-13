@@ -123,8 +123,13 @@ Models: veo2, veo2-fast, veo2-pro, veo3, veo3-fast, veo3-pro, veo3.1, veo3.1-fas
 Roles: first_frame, last_frame, reference
 **Query**: `GET /volc/v1/contents/generations/tasks/{task_id}`
 
-## 9. Video — kling-avatar-image2video
+## 9. Video — Kling image2video
 **Endpoint**: `POST /kling/v1/videos/image2video`
+
+**⚠️ 注意**: `kling-avatar-image2video` 不是有效模型名，会返回500错误。
+
+**可用模型**: `kling-v2-5-turbo` (实测可用)
+
 ```json
 {
   "model_name": "kling-v2-5-turbo",

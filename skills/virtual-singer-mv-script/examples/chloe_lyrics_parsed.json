@@ -1,0 +1,143 @@
+{
+  "metadata": {
+    "total_duration": 210.0,
+    "bpm": 82,
+    "bpm_suggestion": "mid_tempo",
+    "total_sections": 1,
+    "total_lines": 9
+  },
+  "sections": [
+    {
+      "section_type": "intro",
+      "section_label": "Intro",
+      "time_range": "00:00-03:30",
+      "time_start": 0.0,
+      "time_end": 210.0,
+      "duration_seconds": 210.0,
+      "emotion_score": 2.7,
+      "emotion_label": "平静/温柔",
+      "bpm_suggestion": 82,
+      "lines": [
+        {
+          "text": "<intro>（纯音乐前奏，钢琴+弦乐，渐强）",
+          "time_start": 0.0,
+          "time_end": 15.0,
+          "emotion_score": 9.0,
+          "emotion_label": "极致/巅峰"
+        },
+        {
+          "text": "<verse1>",
+          "time_start": 15.0,
+          "time_end": 45.0,
+          "emotion_score": 3.0,
+          "emotion_label": "平静/温柔"
+        },
+        {
+          "text": "<pre_chorus>",
+          "time_start": 45.0,
+          "time_end": 60.0,
+          "emotion_score": 3.0,
+          "emotion_label": "平静/温柔"
+        },
+        {
+          "text": "<chorus>",
+          "time_start": 60.0,
+          "time_end": 90.0,
+          "emotion_score": 3.0,
+          "emotion_label": "平静/温柔"
+        },
+        {
+          "text": "<verse2>",
+          "time_start": 90.0,
+          "time_end": 120.0,
+          "emotion_score": 3.0,
+          "emotion_label": "平静/温柔"
+        },
+        {
+          "text": "<chorus2>",
+          "time_start": 120.0,
+          "time_end": 150.0,
+          "emotion_score": 3.0,
+          "emotion_label": "平静/温柔"
+        },
+        {
+          "text": "<bridge>",
+          "time_start": 150.0,
+          "time_end": 180.0,
+          "emotion_score": 3.0,
+          "emotion_label": "平静/温柔"
+        },
+        {
+          "text": "<final_chorus>",
+          "time_start": 180.0,
+          "time_end": 210.0,
+          "emotion_score": 3.0,
+          "emotion_label": "平静/温柔"
+        },
+        {
+          "text": "<outro>",
+          "time_start": 210.0,
+          "time_end": 210.0,
+          "emotion_score": 3.0,
+          "emotion_label": "平静/温柔"
+        }
+      ]
+    }
+  ],
+  "emotion_curve": [
+    {
+      "time": 0.0,
+      "emotion_score": 9.0,
+      "section": "Intro",
+      "lyrics": "<intro>（纯音乐前奏，钢琴+弦乐，渐强）"
+    },
+    {
+      "time": 15.0,
+      "emotion_score": 3.0,
+      "section": "Intro",
+      "lyrics": "<verse1>"
+    },
+    {
+      "time": 45.0,
+      "emotion_score": 3.0,
+      "section": "Intro",
+      "lyrics": "<pre_chorus>"
+    },
+    {
+      "time": 60.0,
+      "emotion_score": 3.0,
+      "section": "Intro",
+      "lyrics": "<chorus>"
+    },
+    {
+      "time": 90.0,
+      "emotion_score": 3.0,
+      "section": "Intro",
+      "lyrics": "<verse2>"
+    },
+    {
+      "time": 120.0,
+      "emotion_score": 3.0,
+      "section": "Intro",
+      "lyrics": "<chorus2>"
+    },
+    {
+      "time": 150.0,
+      "emotion_score": 3.0,
+      "section": "Intro",
+      "lyrics": "<bridge>"
+    },
+    {
+      "time": 180.0,
+      "emotion_score": 3.0,
+      "section": "Intro",
+      "lyrics": "<final_chorus>"
+    },
+    {
+      "time": 210.0,
+      "emotion_score": 3.0,
+      "section": "Intro",
+      "lyrics": "<outro>"
+    }
+  ]
+}

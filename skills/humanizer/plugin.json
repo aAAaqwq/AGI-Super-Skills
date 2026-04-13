@@ -1,0 +1,12 @@
+{
+  "name": "humanizer",
+  "version": "1.0.0",
+  "description": "Identifies and removes AI writing patterns to make text sound more natural and human",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

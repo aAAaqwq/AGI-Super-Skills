@@ -1,0 +1,395 @@
+{
+  "metadata": {
+    "generated_at": "2026-04-09T19:33:55.787296",
+    "total_scenes": 9,
+    "total_duration_seconds": 135,
+    "character": "Chloe",
+    "song": "《樱花落尽时》"
+  },
+  "scenes": [
+    {
+      "scene_id": 1,
+      "section": "intro",
+      "time_range": "00:00-00:15",
+      "lyrics_lines": [
+        {
+          "text": "（纯音乐前奏，钢琴+弦乐，渐强）"
+        }
+      ],
+      "emotion_score": 3.0,
+      "scene_type": "黎明樱花林",
+      "camera_move": "slow push-in",
+      "shot_type": "wide",
+      "first_frame": {
+        "description": "黎明薄雾中的樱花林全景，镜头缓缓推进",
+        "gemini_composite": true
+      },
+      "last_frame": {
+        "description": "镜头穿过樱花枝条，Chloe身影若隐若现",
+        "gemini_composite": true
+      },
+      "transition": "dissolve",
+      "beat_sync": "前奏渐强，镜头加速推进",
+      "duration_seconds": 15,
+      "visual_prompt": "ethereal young East Asian woman, long wavy black hair with cherry blossom accessories, white lace embroidered dress, vintage lace parasol, misty cherry blossom forest at dawn, soft golden light through mist, wide establishing shot, ethereal atmosphere, gentle diffused light, 8K, ultra detailed, professional cinematography",
+      "video_model": "seedance-3.0",
+      "provider": "bytedance",
+      "model_reason": "国风场景 → seedance-3.0亚洲面孔优化",
+      "model_parameters": {
+        "duration": 15,
+        "aspect_ratio": "16:9",
+        "fps": 30,
+        "motion_level": "medium"
+      }
+    },
+    {
+      "scene_id": 2,
+      "section": "verse1",
+      "time_range": "00:15-00:45",
+      "lyrics_lines": [
+        {
+          "text": "晨曦洒落在溪畔"
+        },
+        {
+          "text": "樱花瓣随风轻轻飘散"
+        },
+        {
+          "text": "她在花雨中轻声吟唱"
+        },
+        {
+          "text": "歌声穿透晨雾的边缘"
+        }
+      ],
+      "emotion_score": 4.5,
+      "scene_type": "晨雾溪畔樱花林",
+      "camera_move": "slow push-in",
+      "shot_type": "medium",
+      "first_frame": {
+        "description": "Chloe站在小溪边，晨雾轻绕，樱花纷飞",
+        "gemini_composite": true
+      },
+      "last_frame": {
+        "description": "Chloe抬头望向树梢，樱花瓣落在发间",
+        "gemini_composite": true
+      },
+      "transition": "cross dissolve",
+      "beat_sync": "歌词'飘散'时樱花飞起",
+      "duration_seconds": 15,
+      "visual_prompt": "ethereal young East Asian woman, long wavy black hair with cherry blossom accessories, white lace embroidered dress, vintage lace parasol, standing by crystal stream in morning mist, cherry petals floating on water, soft sunrise light, medium shot, ethereal reflections, gentle diffused light, 8K, ultra detailed, professional cinematography",
+      "video_model": "seedance-3.0",
+      "provider": "bytedance",
+      "model_reason": "国风场景 → seedance-3.0亚洲面孔优化",
+      "model_parameters": {
+        "duration": 15,
+        "aspect_ratio": "16:9",
+        "fps": 30,
+        "motion_level": "medium"
+      }
+    },
+    {
+      "scene_id": 3,
+      "section": "pre_chorus",
+      "time_range": "00:45-01:00",
+      "lyrics_lines": [
+        {
+          "text": "风吹过古老的樱树林"
+        },
+        {
+          "text": "记忆像落叶般飘零"
+        },
+        {
+          "text": "她在等待一个回音"
+        },
+        {
+          "text": "在时间尽头不肯清醒"
+        }
+      ],
+      "emotion_score": 6.0,
+      "scene_type": "古老樱花隧道",
+      "camera_move": "tracking shot",
+      "shot_type": "medium",
+      "first_frame": {
+        "description": "Chloe走在樱花隧道中，花瓣在风中旋转",
+        "gemini_composite": true
+      },
+      "last_frame": {
+        "description": "Chloe停下脚步，镜头缓缓推向她的侧脸",
+        "gemini_composite": true
+      },
+      "transition": "whip pan",
+      "beat_sync": "'飘零'时快速转场",
+      "duration_seconds": 15,
+      "visual_prompt": "ethereal young East Asian woman, long wavy black hair with cherry blossom accessories, white lace embroidered dress, vintage lace parasol, walking through ancient cherry tree tunnel, petals forming canopy overhead, warm golden light rays, romantic tracking shot, warm soft lighting, 8K, ultra detailed, professional cinematography",
+      "video_model": "seedance-3.0",
+      "provider": "bytedance",
+      "model_reason": "国风场景 → seedance-3.0亚洲面孔优化",
+      "model_parameters": {
+        "duration": 15,
+        "aspect_ratio": "16:9",
+        "fps": 30,
+        "motion_level": "medium"
+      }
+    },
+    {
+      "scene_id": 4,
+      "section": "chorus",
+      "time_range": "01:00-01:30",
+      "lyrics_lines": [
+        {
+          "text": "樱花落尽时 歌声未曾休"
+        },
+        {
+          "text": "哪怕春去秋来 哪怕星辰不再"
+        },
+        {
+          "text": "她用温柔的力量"
+        },
+        {
+          "text": "撼动这世间所有的阴霾"
+        }
+      ],
+      "emotion_score": 9.0,
+      "scene_type": "光芒穿透樱花林",
+      "camera_move": "crane shot rise",
+      "shot_type": "wide",
+      "first_frame": {
+        "description": "Chloe张开双臂，金色光芒穿透樱花枝叶",
+        "gemini_composite": true
+      },
+      "last_frame": {
+        "description": "镜头拉远，Chloe站在光柱中央，樱花环绕",
+        "gemini_composite": true
+      },
+      "transition": "speed ramp",
+      "beat_sync": "'撼动'时镜头急速上升",
+      "duration_seconds": 15,
+      "visual_prompt": "ethereal young East Asian woman, long wavy black hair with cherry blossom accessories, white lace embroidered dress, vintage lace parasol, bathed in golden divine light rays breaking through cherry branches, volumetric lighting, crane rising shot, cinematic, dramatic golden hour, volumetric light, 8K, ultra detailed, professional cinematography",
+      "video_model": "kling-2",
+      "provider": "kling",
+      "model_reason": "高情绪9.0+复杂运镜 → kling-2动态最强",
+      "model_parameters": {
+        "duration": 15,
+        "aspect_ratio": "16:9",
+        "fps": 30,
+        "motion_level": "high"
+      }
+    },
+    {
+      "scene_id": 5,
+      "section": "verse2",
+      "time_range": "01:30-02:00",
+      "lyrics_lines": [
+        {
+          "text": "月光倒映在水面"
+        },
+        {
+          "text": "她的影子拉得很远"
+        },
+        {
+          "text": "那不是告别 是重逢"
+        },
+        {
+          "text": "在另一个春天再见"
+        }
+      ],
+      "emotion_score": 5.5,
+      "scene_type": "月下池塘倒影",
+      "camera_move": "slow pull-out",
+      "shot_type": "medium",
+      "first_frame": {
+        "description": "月光下池塘，Chloe倒影随波纹荡漾",
+        "gemini_composite": true
+      },
+      "last_frame": {
+        "description": "镜头拉远，池塘全貌，月光洒满水面",
+        "gemini_composite": true
+      },
+      "transition": "dissolve",
+      "beat_sync": "'重逢'时倒影泛起涟漪",
+      "duration_seconds": 15,
+      "visual_prompt": "ethereal young East Asian woman, long wavy black hair with cherry blossom accessories, white lace embroidered dress, vintage lace parasol, under soft moonlight by still pond, silver-blue tones, cherry petals floating on water, mirror reflections, slow pull-out, warm soft lighting, 8K, ultra detailed, professional cinematography",
+      "video_model": "kling-1.6",
+      "provider": "kling",
+      "model_reason": "日常场景 → kling-1.6性价比最优",
+      "model_parameters": {
+        "duration": 15,
+        "aspect_ratio": "16:9",
+        "fps": 30,
+        "motion_level": "medium"
+      }
+    },
+    {
+      "scene_id": 6,
+      "section": "chorus2",
+      "time_range": "02:00-02:30",
+      "lyrics_lines": [
+        {
+          "text": "樱花落尽时 思念未曾断"
+        },
+        {
+          "text": "哪怕万水千山 哪怕岁月变迁"
+        },
+        {
+          "text": "她用铁肺的声音"
+        },
+        {
+          "text": "唱出生命最炽热的火焰"
+        }
+      ],
+      "emotion_score": 9.5,
+      "scene_type": "烈火樱花爆发",
+      "camera_move": "dolly in fast",
+      "shot_type": "close-up",
+      "first_frame": {
+        "description": "Chloe闭眼深呼气，下一秒将爆发",
+        "gemini_composite": true
+      },
+      "last_frame": {
+        "description": "Chloe张嘴歌唱，光芒从口中喷涌而出",
+        "gemini_composite": true
+      },
+      "transition": "explosion cut",
+      "beat_sync": "'火焰'时硬切到爆发镜头",
+      "duration_seconds": 15,
+      "visual_prompt": "ethereal young East Asian woman, long wavy black hair with cherry blossom accessories, white lace embroidered dress, vintage lace parasol, surrounded by swirling cherry blossoms with golden fire particles, dramatic backlight halo, dolly in fast, lens flare, powerful, dramatic golden hour, volumetric light, 8K, ultra detailed, professional cinematography",
+      "video_model": "kling-2",
+      "provider": "kling",
+      "model_reason": "高情绪9.5+复杂运镜 → kling-2动态最强",
+      "model_parameters": {
+        "duration": 15,
+        "aspect_ratio": "16:9",
+        "fps": 30,
+        "motion_level": "high"
+      }
+    },
+    {
+      "scene_id": 7,
+      "section": "bridge",
+      "time_range": "02:30-02:45",
+      "lyrics_lines": [
+        {
+          "text": "她不是脆弱的花瓣"
+        },
+        {
+          "text": "她是烈火中重生的凤"
+        },
+        {
+          "text": "让所有的悲伤"
+        },
+        {
+          "text": "都化作绽放的力量"
+        }
+      ],
+      "emotion_score": 8.5,
+      "scene_type": "凤凰涅槃火焰",
+      "camera_move": "360 degree orbit",
+      "shot_type": "full",
+      "first_frame": {
+        "description": "Chloe在火焰旋涡中心，凤凰展翅光影",
+        "gemini_composite": true
+      },
+      "last_frame": {
+        "description": "镜头绕Chloe旋转360度，火焰化作樱花飘散",
+        "gemini_composite": true
+      },
+      "transition": "fire to petals morph",
+      "beat_sync": "'力量'时完成360度旋转",
+      "duration_seconds": 15,
+      "visual_prompt": "ethereal young East Asian woman, long wavy black hair with cherry blossom accessories, white lace embroidered dress, vintage lace parasol, surrounded by phoenix-like golden fire vortex, 360 degree orbit camera, cherry blossoms morphing into flames, epic, dramatic golden hour, volumetric light, 8K, ultra detailed, professional cinematography",
+      "video_model": "veo-3.1",
+      "provider": "google",
+      "model_reason": "高情绪8.5+情感场景 → veo-3.1一致性最佳",
+      "model_parameters": {
+        "duration": 15,
+        "aspect_ratio": "16:9",
+        "fps": 30,
+        "motion_level": "high"
+      }
+    },
+    {
+      "scene_id": 8,
+      "section": "final_chorus",
+      "time_range": "02:45-03:15",
+      "lyrics_lines": [
+        {
+          "text": "樱花落尽时 光芒照亮黑暗"
+        },
+        {
+          "text": "哪怕跌倒千次 哪怕泪水风干"
+        },
+        {
+          "text": "她是温柔的力量"
+        },
+        {
+          "text": "是落樱之后 最耀眼的光"
+        }
+      ],
+      "emotion_score": 10.0,
+      "scene_type": "黎明光芒",
+      "camera_move": "aerial rising",
+      "shot_type": "extreme wide",
+      "first_frame": {
+        "description": "从黑暗中缓缓升起，Chloe被金色光芒包围",
+        "gemini_composite": true
+      },
+      "last_frame": {
+        "description": "镜头不断上升拉远，Chloe站在光芒中心，黎明到来",
+        "gemini_composite": true
+      },
+      "transition": "light burst",
+      "beat_sync": "高潮音轨峰值，卡点在'光'字",
+      "duration_seconds": 15,
+      "visual_prompt": "ethereal young East Asian woman, long wavy black hair with cherry blossom accessories, white lace embroidered dress, vintage lace parasol, bathed in golden divine light, aerial rising shot, cherry petals glowing, epic scale, cinematic atmosphere, dramatic golden hour, volumetric light, 8K, ultra detailed, professional cinematography",
+      "video_model": "kling-2",
+      "provider": "kling",
+      "model_reason": "高情绪10.0+复杂运镜 → kling-2动态最强",
+      "model_parameters": {
+        "duration": 15,
+        "aspect_ratio": "16:9",
+        "fps": 30,
+        "motion_level": "high"
+      }
+    },
+    {
+      "scene_id": 9,
+      "section": "outro",
+      "time_range": "03:15-03:30",
+      "lyrics_lines": [
+        {
+          "text": "晨曦... 落樱..."
+        },
+        {
+          "text": "她的歌声..."
+        },
+        {
+          "text": "未曾休..."
+        }
+      ],
+      "emotion_score": 2.0,
+      "scene_type": "晨曦樱花",
+      "camera_move": "slow fade out",
+      "shot_type": "wide",
+      "first_frame": {
+        "description": "晨曦中Chloe身影渐渐透明化为樱花",
+        "gemini_composite": true
+      },
+      "last_frame": {
+        "description": "只剩樱花在晨光中飘落，画面渐白",
+        "gemini_composite": true
+      },
+      "transition": "fade to white",
+      "beat_sync": "'未曾休'尾音渐弱时缓缓淡出",
+      "duration_seconds": 15,
+      "visual_prompt": "ethereal young East Asian woman, long wavy black hair with cherry blossom accessories, white lace embroidered dress, vintage lace parasol, fading into morning light, cherry petals drifting in soft dawn, ethereal dissolve, serene ending, gentle diffused light, 8K, ultra detailed, professional cinematography",
+      "video_model": "seedance-3.0",
+      "provider": "bytedance",
+      "model_reason": "国风场景 → seedance-3.0亚洲面孔优化",
+      "model_parameters": {
+        "duration": 15,
+        "aspect_ratio": "16:9",
+        "fps": 30,
+        "motion_level": "medium"
+      }
+    }
+  ]
+}
