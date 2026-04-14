@@ -1,6 +1,6 @@
 # 🛠️ Skills Index
 
-> **494 skills** with SKILL.md | [← Back to main README](../README.md)
+> **523 skills** with SKILL.md (incl. 29 thinking frameworks) | [← Back to main README](../README.md)
 
 
 ## 🌟 Maintainer-Curated Indexes
@@ -35,7 +35,41 @@
 | 🎬 Video & Digital Human | [video-digital-human.md](./categories/video-digital-human.md) |
 | 🧩 Other | [other.md](./categories/other.md) |
 
-## Alphabetical Index
+## 🧠 Thinking Frameworks
+
+Distilled from real-world mentors — mental models, decision frameworks, classic quotes, and actionable templates for each C-Suite agent.
+
+| Skill | Mentor | Agent | Core Models |
+|-------|--------|-------|-------------|
+| [`thinking-elon-musk`](./thinking-elon-musk/) | Elon Musk | CEO | First Principles, Vertical Integration, Extreme Iteration |
+| [`thinking-jensen-huang`](./thinking-jensen-huang/) | Jensen Huang | CTO | Accelerated Computing, Ecosystem Flywheel, Decade Bets |
+| [`thinking-steve-jobs`](./thinking-steve-jobs/) | Steve Jobs | CPO (co) | Radical Simplicity, Reality Distortion Field, Say No |
+| [`thinking-karpathy`](./thinking-karpathy/) | Andrej Karpathy | CRO (co) | Build to Understand, Software 2.0, Minimal Implementation |
+| [`thinking-linus-torvalds`](./thinking-linus-torvalds/) | Linus Torvalds | PE (co) | Code Talks, Bazaar Model, Ruthless Review |
+| [`thinking-ray-dalio`](./thinking-ray-dalio/) | Ray Dalio | CFO (co) | Principles System, Economic Machine, Radical Transparency |
+| [`thinking-jeff-bezos`](./thinking-jeff-bezos/) | Jeff Bezos | COO | Day 1, Customer Backward, Two-Pizza Team, Flywheel |
+| [`thinking-andy-grove`](./thinking-andy-grove/) | Andy Grove | COO (co) | High Output Management, OKR, Strategic Inflection |
+| [`thinking-marty-cagan`](./thinking-marty-cagan/) | Marty Cagan | CPO | Product Discovery vs Delivery, Inspired Teams |
+| [`thinking-warren-buffett`](./thinking-warren-buffett/) | Warren Buffett | CFO (co) | Value Investing, Circle of Competence, Moats |
+| [`thinking-simon`](./thinking-simon/) | Jim Simons | CQO | Quantitative Thinking, Small Bets, Math Advantage |
+| [`thinking-munger`](./thinking-munger/) | Charlie Munger | CFO (co) | Mental Models, Inversion, Lollapalooza Effect |
+| [`thinking-liangwenfeng`](./thinking-liangwenfeng/) | 梁文峰 | CQO (co) | AI-Native Quant, Efficiency First, Iteration Speed |
+| [`thinking-seth-godin`](./thinking-seth-godin/) | Seth Godin | CMO | Purple Cow, Permission Marketing, Smallest Viable Audience |
+| [`thinking-ogilvy`](./thinking-ogilvy/) | David Ogilvy | CMO (co) | Research-Driven, Big Idea, Brand Image |
+| [`thinking-jony-ive`](./thinking-jony-ive/) | Jony Ive | CCO | Minimal Design, Story-Driven, Material Language |
+| [`thinking-mrbeast`](./thinking-mrbeast/) | MrBeast | CCO (co) | Extreme Experimentation, Data-Driven, Viral Formula |
+| [`thinking-yingshi-juufeng`](./thinking-yingshi-juufeng/) | 影视飓风Tim | CCO (co) | Visual Storytelling, Tech Pop-Science, Bilibili Viral |
+| [`thinking-feynman`](./thinking-feynman/) | Richard Feynman | CRO (co) | Feynman Technique, First Principles, Skepticism |
+| [`thinking-nate-silver`](./thinking-nate-silver/) | Nate Silver | CDO | Bayesian Thinking, Signal vs Noise, Probabilistic Forecasting |
+| [`thinking-dj-patil`](./thinking-dj-patil/) | DJ Patil | CDO (co) | Data-Driven Decisions, Data Science Methodology |
+| [`thinking-kelsey-hightower`](./thinking-kelsey-hightower/) | Kelsey Hightower | CTO (co) | Cloud Native, Pragmatic, Developer Experience |
+| [`thinking-dhh`](./thinking-dhh/) | DHH | PE (co) | Good Enough, Rails Philosophy, Remote Work Pioneer |
+| [`thinking-jeb-blount`](./thinking-jeb-blount/) | Jeb Blount | CSO | Pipeline Religion, Fanatical Prospecting, 7 Pipeline Rules |
+| [`thinking-michael-dell`](./thinking-michael-dell/) | Michael Dell | CSO (co) | Direct Model, Build-to-Order, Supply Chain Efficiency |
+| [`thinking-aaron-ross`](./thinking-aaron-ross/) | Aaron Ross | CSO (co) | Predictable Revenue, Sales Specialization Model |
+| [`thinking-dershowitz`](./thinking-dershowitz/) | Alan Dershowitz | CLO | Legal Reasoning, Evidence Chain, Reasonable Doubt |
+| [`thinking-lessig`](./thinking-lessig/) | Lawrence Lessig | CLO (co) | Creative Commons, Internet Freedom, Code is Law |
+| [`thinking-antirez`](./thinking-antirez/) | antirez (Redis) | PE (co) | Minimal Code Philosophy, Less is More |
 
 | # | Skill | Description |
 |--:|-------|-------------|
@@ -449,7 +483,7 @@
 | 408 | [`task-status`](./task-status/) |  |
 | 409 | [`task-supervisor`](./task-supervisor/) | - abort 的 session: 自动用 sessions_send 重发最近的任务 |
 | 410 | [`tavily`](./tavily/) |  |
-| 411 | [`tcm-meridian-inference`](./tcm-meridian-inference/) | 中医经络推理引擎 — 输入6经络（肝/脾/肾/胃/胆/膀胱）左右测量值，输出：健康评分、经� |
+| 411 | [`tcm-meridian-inference`](./tcm-meridian-inference/) | 中医经络推理引擎 — 输入6经络（肝/脾/肾/胃/胆/膀胱）左右测量值，输出：健康评分、经� |
 | 412 | [`tdd-guide`](./tdd-guide/) |  |
 | 413 | [`team-coordinator`](./team-coordinator/) |  |
 | 414 | [`team-daily-report`](./team-daily-report/) |  |

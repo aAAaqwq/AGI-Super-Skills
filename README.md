@@ -2,7 +2,7 @@
 
 [中文](./README_CN.md) | English
 
-> **510 curated AI skills + 13 ready-to-deploy C-Suite agents** for [OpenClaw](https://github.com/openclaw/openclaw) — build your own AI-native company with a full C-suite of digital executives.
+> **523 curated AI skills + 13 ready-to-deploy C-Suite agents** for [OpenClaw](https://github.com/openclaw/openclaw) — build your own AI-native company with a full C-suite of digital executives. Includes 29 distilled thinking frameworks from real-world mentors.
 
 ## 💡 What Is This?
 
@@ -12,9 +12,9 @@ A **plug-and-play AI team template** — deploy a complete virtual C-Suite in mi
 
 | Metric | Value |
 |--------|-------|
-| **Skills** | 510 |
+| **Skills** | 523 (incl. 29 thinking frameworks) |
 | **Categories** | 18+ |
-| **Agents** | 13 C-Suite + 1 Specialized |
+| **Agents** | 12 C-Suite + 1 Specialized |
 | **Framework** | [OpenClaw](https://github.com/openclaw/openclaw) |
 
 ## 🏛️ Architecture
@@ -40,24 +40,40 @@ You (Founder / Chairman)
 
 ## 👥 C-Suite Agents
 
-| ID | C-Suite Role | Spirit Mentor | Default Model | Customizable |
-|-----|------|------|------|:---:|
-| `main` | 👑 CEO — 首席执行官 | Elon Musk | `claude-opus-4-6` | ✅ |
-| `code` | ⚡ CTO — 首席技术官 | Jensen Huang | `glm-5` | ✅ |
-| `product` | 🎨 CPO — 首席产品官 | Steve Jobs | `glm-5` | ✅ |
-| `quant` | 📈 CQO — 首席质量官 | Jim Simons | `glm-5` | ✅ |
-| `market` | 📣 CMO — 首席营销官 | David Ogilvy | `glm-5` | ✅ |
-| `finance` | 💰 CFO — 首席财务官 | Warren Buffett | `glm-5` | ✅ |
-| `data` | 📊 CDO — 首席数据官 | Nate Silver | `glm-5` | ✅ |
-| `content` | ✍️ CCO — 首席内容官 | Jony Ive + MrBeast | `glm-5` | ✅ |
-| `law` | ⚖️ CLO — 首席法务官 | Alan Dershowitz | `MiniMax-M2.5` | ✅ |
-| `research` | 🔬 CRO — 首席研究官 | Richard Feynman | `glm-5` | ✅ |
-| `sales` | 🤝 CSO — 首席战略官 | Michael Dell | `glm-5` | ✅ |
-| `ops` | ⚙️ COO — 首席运营官 | Andy Grove | `glm-5` | ✅ |
-| `pm` | 📋 CQO — 首席项目官 | — | `glm-5` | ✅ |
-| `shrimp-coach` | 🦐 Shrimp Coach | — | `glm-5` | ✅ |
+| ID | C-Suite Role | Spirit Mentor | Thinking Skill | Default Model |
+|-----|------|------|------|------|
+| [`c-ceo`](./agents/c-ceo/) | 👑 CEO | Elon Musk | [thinking-elon-musk](./skills/thinking-elon-musk/) | `claude-opus-4-6` |
+| [`c-cto`](./agents/c-cto/) | ⚡ CTO | Jensen Huang + Kelsey Hightower | [thinking-jensen-huang](./skills/thinking-jensen-huang/) | `glm-5` |
+| [`c-cpo`](./agents/c-cpo/) | 🎨 CPO | Marty Cagan + Steve Jobs | [thinking-marty-cagan](./skills/thinking-marty-cagan/) | `glm-5` |
+| [`c-cqo`](./agents/c-cqo/) | 📈 CQO | Jim Simons + 梁文峰 | [thinking-simon](./skills/thinking-simon/) | `glm-5` |
+| [`c-cmo`](./agents/c-cmo/) | 📣 CMO | Seth Godin + David Ogilvy | [thinking-seth-godin](./skills/thinking-seth-godin/) | `glm-5` |
+| [`c-cfo`](./agents/c-cfo/) | 💰 CFO | Ray Dalio + Buffett + Munger | [thinking-ray-dalio](./skills/thinking-ray-dalio/) | `glm-5` |
+| [`c-cdo`](./agents/c-cdo/) | 📊 CDO | Nate Silver + DJ Patil | [thinking-nate-silver](./skills/thinking-nate-silver/) | `glm-5` |
+| [`c-cco`](./agents/c-cco/) | ✍️ CCO | Jony Ive + MrBeast + 影视飓风Tim | [thinking-jony-ive](./skills/thinking-jony-ive/) | `glm-5` |
+| [`c-clo`](./agents/c-clo/) | ⚖️ CLO | Dershowitz + Lessig | [thinking-dershowitz](./skills/thinking-dershowitz/) | `MiniMax-M2.5` |
+| [`c-cro`](./agents/c-cro/) | 🔬 CRO | Karpathy + Feynman | [thinking-karpathy](./skills/thinking-karpathy/) | `glm-5` |
+| [`c-cso`](./agents/c-cso/) | 🤝 CSO | Jeb Blount + Dell + Ross | [thinking-jeb-blount](./skills/thinking-jeb-blount/) | `glm-5` |
+| [`c-coo`](./agents/c-coo/) | ⚙️ COO | Bezos + Andy Grove | [thinking-jeff-bezos](./skills/thinking-jeff-bezos/) | `glm-5` |
+| [`shrimp-coach`](./agents/shrimp-coach/) | 🦐 Shrimp Coach | — | — | `glm-5` |
 
-> Each agent config is in [`agents/<id>/agent.json`](./agents/) — sanitized templates, ready to customize with your own API keys, names, and personalities.
+> Each agent config is in [`agents/<id>/agent.json`](./agents/) — sanitized templates, ready to customize. 29 [thinking framework skills](./skills/#thinking-frameworks) capture mentor decision patterns.
+
+## 🧠 Thinking Framework Skills
+
+Each C-Suite agent has **distilled thinking skills** based on real-world mentors — mental models, decision frameworks, classic quotes with sources, and actionable templates.
+
+**Quick inject:**
+```bash
+# Give CEO the Elon Musk thinking framework
+cp -r skills/thinking-elon-musk ~/.openclaw/workspace-main/skills/
+
+# Or inject all 29 to all workspaces
+for a in main CTO CPO CQO CMO CFO CDO CCO CLO CRO CSO COO PE; do
+  mkdir -p ~/.openclaw/workspace-${a}/skills && cp -r skills/thinking-* ~/.openclaw/workspace-${a}/skills/
+done
+```
+
+See [agents/README.md](./agents/README.md#injecting-thinking-skills) for the full injection mapping.
 
 ## 🛠️ Skill Categories
 

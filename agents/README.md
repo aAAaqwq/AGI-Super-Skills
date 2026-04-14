@@ -5,30 +5,30 @@
 Ready-to-deploy agent configurations for building your own AI-native company.
 Each agent is embodied with a **spirit mentor** — a real-world archetype that shapes their personality, decision-making, and communication style.
 
-## 🏛️ Team Roster (C-Suite)
+## 🏛️ Team Roster (C-Suite + Specialized)
 
-| ID | Role | Avatar | Spirit Mentor | Files | Description |
-|----|------|--------|---------------|-------|-------------|
-| [`main`](./main/) | 👑 CEO | 小a | **Elon Musk** | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 战略决策中枢 — 任务调度、质量终审、跨部门协调 |
-| [`code`](./code/) | ⚡ CTO | Jensen | **Jensen Huang**, Kelsey Hightower | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 技术架构决策 — 后端/前端/运维/全栈开发 |
-| [`product`](./product/) | 🎨 CPO | 小product | **Steve Jobs** | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 产品设计 — 竞品分析、UX策略、品牌DNA |
-| [`quant`](./quant/) | 📈 CQO | Simons | **Jim Simons** | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 量化交易 — 市场分析、策略回测、套利 |
-| [`market`](./market/) | 📣 CMO | Ogilvy | **David Ogilvy** | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 市场营销 — SEO、广告投放、增长策略 |
-| [`finance`](./finance/) | 💰 CFO | Buffett | **Warren Buffett** | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 财务管理 — 核算、盈亏分析、成本优化 |
-| [`data`](./data/) | 📊 CDO | Silver | **Nate Silver** | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 数据工程 — 爬虫、ETL、数据分析 |
-| [`content`](./content/) | ✍️ CCO | Ives | **Jony Ive**, MrBeast | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 创意内容 — 极简设计+病毒传播 |
-| [`law`](./law/) | ⚖️ CLO | Dershowitz | **Alan Dershowitz** | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 法务合规 — 合同审核、法律文书 |
-| [`research`](./research/) | 🔬 CRO | Feynman | **Richard Feynman** | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 深度调研 — 学术论文、情报收集、技术选型 |
-| [`sales`](./sales/) | 🤝 CSO | Dell | **Michael Dell** | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 销售拓客 — 商业分析、客户开发 |
-| [`ops`](./ops/) | ⚙️ COO | Grove | **Andy Grove** | agent.json, SOUL.md, AGENTS.md, TOOLS.md | 运维管理 — 系统监控、部署、效率优化 |
-| [`shrimp-coach`](./shrimp-coach/) | 🦐 Shrimp Coach | — | — | agent.json, SOUL.md, AGENTS.md | Specialized coaching agent |
+| ID | Role | Spirit Mentor | Distilled Skill | Files |
+|----|------|---------------|-----------------|-------|
+| [`c-ceo`](./c-ceo/) | 👑 CEO | **Elon Musk** | [thinking-elon-musk](../skills/thinking-elon-musk/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`c-cto`](./c-cto/) | ⚡ CTO | **Jensen Huang**, Kelsey Hightower | [thinking-jensen-huang](../skills/thinking-jensen-huang/SKILL.md), [thinking-kelsey-hightower](../skills/thinking-kelsey-hightower/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`c-cpo`](./c-cpo/) | 🎨 CPO | **Marty Cagan**, Steve Jobs | [thinking-marty-cagan](../skills/thinking-marty-cagan/SKILL.md), [thinking-steve-jobs](../skills/thinking-steve-jobs/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`c-cqo`](./c-cqo/) | 📈 CQO | **Jim Simons**, 梁文峰, Ray Dalio | [thinking-simon](../skills/thinking-simon/SKILL.md), [thinking-liangwenfeng](../skills/thinking-liangwenfeng/SKILL.md), [thinking-ray-dalio](../skills/thinking-ray-dalio/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`c-cmo`](./c-cmo/) | 📣 CMO | **Seth Godin**, David Ogilvy | [thinking-seth-godin](../skills/thinking-seth-godin/SKILL.md), [thinking-ogilvy](../skills/thinking-ogilvy/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`c-cfo`](./c-cfo/) | 💰 CFO | **Ray Dalio**, Warren Buffett, Charlie Munger | [thinking-ray-dalio](../skills/thinking-ray-dalio/SKILL.md), [thinking-warren-buffett](../skills/thinking-warren-buffett/SKILL.md), [thinking-munger](../skills/thinking-munger/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`c-cdo`](./c-cdo/) | 📊 CDO | **Nate Silver**, DJ Patil | [thinking-nate-silver](../skills/thinking-nate-silver/SKILL.md), [thinking-dj-patil](../skills/thinking-dj-patil/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`c-cco`](./c-cco/) | ✍️ CCO | **Jony Ive**, MrBeast, 影视飓风Tim | [thinking-jony-ive](../skills/thinking-jony-ive/SKILL.md), [thinking-mrbeast](../skills/thinking-mrbeast/SKILL.md), [thinking-yingshi-juufeng](../skills/thinking-yingshi-juufeng/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`c-clo`](./c-clo/) | ⚖️ CLO | **Alan Dershowitz**, Lawrence Lessig | [thinking-dershowitz](../skills/thinking-dershowitz/SKILL.md), [thinking-lessig](../skills/thinking-lessig/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`c-cro`](./c-cro/) | 🔬 CRO | **Andrej Karpathy**, Richard Feynman | [thinking-karpathy](../skills/thinking-karpathy/SKILL.md), [thinking-feynman](../skills/thinking-feynman/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`c-cso`](./c-cso/) | 🤝 CSO | **Jeb Blount**, Michael Dell, Aaron Ross | [thinking-jeb-blount](../skills/thinking-jeb-blount/SKILL.md), [thinking-michael-dell](../skills/thinking-michael-dell/SKILL.md), [thinking-aaron-ross](../skills/thinking-aaron-ross/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`c-coo`](./c-coo/) | ⚙️ COO | **Jeff Bezos**, Andy Grove | [thinking-jeff-bezos](../skills/thinking-jeff-bezos/SKILL.md), [thinking-andy-grove](../skills/thinking-andy-grove/SKILL.md) | agent.json, SOUL.md, AGENTS.md, TOOLS.md |
+| [`shrimp-coach`](./shrimp-coach/) | 🦐 Shrimp Coach | — | — | agent.json, SOUL.md, AGENTS.md |
 
 ## 📁 File Structure
 
 Each agent folder contains:
 
 ```
-agents/<id>/
+agents/c-{role}/
 ├── agent.json    # Core config: model, skills, telegram bot, system prompt
 ├── SOUL.md       # 灵魂配置 — 人格、价值观、沟通风格、决策框架、精神导师
 ├── AGENTS.md     # 团队认知 — 角色定义、核心职责、协作网络、工作规范
@@ -36,33 +36,80 @@ agents/<id>/
 └── USER.md       # 用户画像 — 服务对象背景 (optional)
 ```
 
-### SOUL.md 设计哲学
+## 🧠 Thinking Skills Index
 
-每个 SOUL.md 基于 **精神导师** 构建：
+Each C-Suite agent has **distilled thinking framework skills** based on their spirit mentors. These skills capture the mentor's decision-making patterns, mental models, and practical frameworks.
 
-1. **身份** — Agent 的名字、角色、精神导师
-2. **人格特质** — 从导师身上提炼的 3-5 个核心性格维度
-3. **沟通风格** — 如何说话、如何汇报、如何反馈
-4. **决策框架** — 面对选择时的思维模型和优先级
-5. **核心能力** — 该角色的专业技能栈
-6. **反模式** — 明确列出不该做的事
-7. **协作偏好** — 和谁协作、怎么协作
-8. **工作哲学** — 一句信条 + 3-5 条工作原则
+| Category | Skills |
+|----------|--------|
+| **Tech Leaders** | [Elon Musk](../skills/thinking-elon-musk/SKILL.md), [Jensen Huang](../skills/thinking-jensen-huang/SKILL.md), [Steve Jobs](../skills/thinking-steve-jobs/SKILL.md), [Karpathy](../skills/thinking-karpathy/SKILL.md), [Linus Torvalds](../skills/thinking-linus-torvalds/SKILL.md) |
+| **Business & Management** | [Ray Dalio](../skills/thinking-ray-dalio/SKILL.md), [Jeff Bezos](../skills/thinking-jeff-bezos/SKILL.md), [Andy Grove](../skills/thinking-andy-grove/SKILL.md), [Marty Cagan](../skills/thinking-marty-cagan/SKILL.md), [Warren Buffett](../skills/thinking-warren-buffett/SKILL.md) |
+| **Investment & Quant** | [Jim Simons](../skills/thinking-simon/SKILL.md), [Charlie Munger](../skills/thinking-munger/SKILL.md), [梁文峰](../skills/thinking-liangwenfeng/SKILL.md) |
+| **Marketing & Content** | [Seth Godin](../skills/thinking-seth-godin/SKILL.md), [David Ogilvy](../skills/thinking-ogilvy/SKILL.md), [Jony Ive](../skills/thinking-jony-ive/SKILL.md), [MrBeast](../skills/thinking-mrbeast/SKILL.md), [影视飓风Tim](../skills/thinking-yingshi-juufeng/SKILL.md) |
+| **Science & Tech Pioneers** | [Richard Feynman](../skills/thinking-feynman/SKILL.md), [Nate Silver](../skills/thinking-nate-silver/SKILL.md), [DJ Patil](../skills/thinking-dj-patil/SKILL.md), [Kelsey Hightower](../skills/thinking-kelsey-hightower/SKILL.md), [DHH](../skills/thinking-dhh/SKILL.md) |
+| **Sales, Legal & Open Source** | [Jeb Blount](../skills/thinking-jeb-blount/SKILL.md), [Michael Dell](../skills/thinking-michael-dell/SKILL.md), [Aaron Ross](../skills/thinking-aaron-ross/SKILL.md), [Dershowitz](../skills/thinking-dershowitz/SKILL.md), [Lessig](../skills/thinking-lessig/SKILL.md), [antirez](../skills/thinking-antirez/SKILL.md) |
 
-## 🚀 How to Use
+## 🚀 How to Deploy an Agent
+
+### Quick Start (Copy & Customize)
 
 ```bash
-# 1. Copy an agent template
-cp -r agents/code ~/.openclaw/agents/mycode
+# 1. Copy the CTO agent template
+cp -r agents/c-cto ~/.openclaw/agents/my-cto
 
 # 2. Edit agent.json — set your API keys, model, bot token
-vim ~/.openclaw/agents/mycode/agent.json
+vim ~/.openclaw/agents/my-cto/agent.json
 
-# 3. Customize SOUL.md for personality (or keep the spirit mentor!)
-vim ~/.openclaw/agents/mycode/SOUL.md
+# 3. Customize SOUL.md for personality
+vim ~/.openclaw/agents/my-cto/SOUL.md
 
 # 4. Restart OpenClaw
 openclaw gateway restart
+```
+
+### Injecting Thinking Skills
+
+To give an agent access to its mentor's thinking frameworks:
+
+```bash
+# Copy the thinking skill to the agent's workspace
+cp -r skills/thinking-elon-musk ~/.openclaw/workspace-main/skills/
+# Or for CTO:
+cp -r skills/thinking-jensen-huang ~/.openclaw/workspace-CTO/skills/
+cp -r skills/thinking-kelsey-hightower ~/.openclaw/workspace-CTO/skills/
+
+# The agent can now read and follow the skill when triggered
+# Example trigger: "用第一性原理分析这个问题" → loads thinking-elon-musk
+```
+
+### Full Injection Path Reference
+
+| Agent | Workspace Path | Inject These Skills |
+|-------|---------------|-------------------|
+| CEO (main) | `~/.openclaw/workspace-main/skills/` | `thinking-elon-musk` |
+| CTO | `~/.openclaw/workspace-CTO/skills/` | `thinking-jensen-huang`, `thinking-kelsey-hightower` |
+| CPO | `~/.openclaw/workspace-CPO/skills/` | `thinking-marty-cagan`, `thinking-steve-jobs` |
+| CQO | `~/.openclaw/workspace-CQO/skills/` | `thinking-simon`, `thinking-liangwenfeng`, `thinking-ray-dalio` |
+| CMO | `~/.openclaw/workspace-CMO/skills/` | `thinking-seth-godin`, `thinking-ogilvy` |
+| CFO | `~/.openclaw/workspace-CFO/skills/` | `thinking-ray-dalio`, `thinking-warren-buffett`, `thinking-munger` |
+| CDO | `~/.openclaw/workspace-CDO/skills/` | `thinking-nate-silver`, `thinking-dj-patil` |
+| CCO | `~/.openclaw/workspace-CCO/skills/` | `thinking-jony-ive`, `thinking-mrbeast`, `thinking-yingshi-juufeng` |
+| CLO | `~/.openclaw/workspace-CLO/skills/` | `thinking-dershowitz`, `thinking-lessig` |
+| CRO | `~/.openclaw/workspace-CRO/skills/` | `thinking-karpathy`, `thinking-feynman` |
+| CSO | `~/.openclaw/workspace-CSO/skills/` | `thinking-jeb-blount`, `thinking-michael-dell`, `thinking-aaron-ross` |
+| COO | `~/.openclaw/workspace-COO/skills/` | `thinking-jeff-bezos`, `thinking-andy-grove` |
+| PE | `~/.openclaw/workspace-PE/skills/` | `thinking-linus-torvalds`, `thinking-antirez`, `thinking-dhh` |
+
+### One-Command Bulk Injection
+
+```bash
+# Inject all thinking skills to all agent workspaces
+for agent in main CTO CPO CQO CMO CFO CDO CCO CLO CRO CSO COO PE; do
+  dest="$HOME/.openclaw/workspace-${agent}/skills"
+  mkdir -p "$dest"
+  cp -r skills/thinking-* "$dest/" 2>/dev/null
+done
+echo "All 29 thinking skills injected to all workspaces"
 ```
 
 ## 🎨 Customization Tips
@@ -72,9 +119,11 @@ openclaw gateway restart
 - **Personality**: Edit `SOUL.md` to define tone, expertise, communication style
 - **Team Awareness**: Edit `AGENTS.md` so agents know who to collaborate with
 - **Spirit Mentor**: Replace the mentor name to shift the agent's entire personality
+- **Thinking Framework**: Copy `skills/thinking-*` to agent workspace for mentor-driven reasoning
 
 ## 🔄 Last Sync
 
 - **Date**: 2026-04-14
-- **Source**: `~/.openclaw/workspace-{ROLE}/` → `agents/{id}/`
+- **Source**: `~/.openclaw/workspace-{ROLE}/` → `agents/c-{id}/`
 - **Files synced**: SOUL.md, AGENTS.md, TOOLS.md (12 agents)
+- **New**: 29 distilled thinking framework skills added
