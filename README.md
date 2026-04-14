@@ -2,59 +2,60 @@
 
 [中文](./README_CN.md) | English
 
-> **285+ curated AI skills + 13 ready-to-deploy agents** for [OpenClaw](https://github.com/openclaw/openclaw) — build your own AI-native company with a full C-suite of digital employees.
+> **510 curated AI skills + 13 ready-to-deploy C-Suite agents** for [OpenClaw](https://github.com/openclaw/openclaw) — build your own AI-native company with a full C-suite of digital executives.
 
 ## 💡 What Is This?
 
-A **plug-and-play AI team template** — deploy a complete virtual company in minutes using OpenClaw. Each agent has its own role, personality, and skill stack. Fully customizable: swap models, rename agents, add your own skills.
+A **plug-and-play AI team template** — deploy a complete virtual C-Suite in minutes using OpenClaw. Each agent embodies a real-world **spirit mentor** that shapes their personality, decision-making, and communication style. Fully customizable: swap models, rename agents, add your own skills.
 
 ## 📊 Overview
 
 | Metric | Value |
 |--------|-------|
-| **Skills** | 382 listed / ~438 with SKILL.md |
-| **Categories** | 18 |
-| **Agents** | 13 (fully customizable) |
+| **Skills** | 510 |
+| **Categories** | 18+ |
+| **Agents** | 13 C-Suite + 1 Specialized |
 | **Framework** | [OpenClaw](https://github.com/openclaw/openclaw) |
 
-## 🏗️ Architecture
+## 🏛️ Architecture
 
 ```
-You (CEO / Creator)
-  └── AI Coordinator (Main Agent)
-        ├── Engineer — code, architecture, debugging
-        ├── Quant — trading, market analysis, backtesting
-        ├── Data Officer — scraping, ETL, data analysis
-        ├── DevOps — monitoring, deployment, infra
-        ├── Content — writing, copywriting, publishing
-        ├── Researcher — deep research, papers, intelligence
-        ├── Finance — accounting, P&L, financial modeling
-        ├── Marketing — SEO, ads, growth strategy
-        ├── PM — project planning, task tracking, QA
-        ├── Legal — compliance, contracts, regulations
-        ├── Product — design, competitor analysis, UX
-        └── Sales — lead gen, BD, customer analysis
+You (Founder / Chairman)
+  └── 👑 CEO — Elon Musk — strategy, coordination, quality
+        ├── ⚡ CTO — Jensen Huang — code, architecture, debugging
+        ├── 🎨 CPO — Steve Jobs — product design, UX, brand DNA
+        ├── 📈 CQO — Jim Simons — quant trading, market analysis
+        ├── 📣 CMO — David Ogilvy — marketing, SEO, growth
+        ├── 💰 CFO — Warren Buffett — finance, P&L, cost optimization
+        ├── 📊 CDO — Nate Silver — data scraping, ETL, analytics
+        ├── ✍️ CCO — Jony Ive + MrBeast — content, viral creation
+        ├── ⚖️ CLO — Alan Dershowitz — legal, compliance, contracts
+        ├── 🔬 CRO — Richard Feynman — deep research, intelligence
+        ├── 🤝 CSO — Michael Dell — sales, BD, customer analysis
+        ├── ⚙️ COO — Andy Grove — ops, monitoring, efficiency
+        └── 🦐 Shrimp Coach — specialized coaching agent
 ```
 
 > **Extensible**: Add more agents (HR, Support, etc.) by creating a new `agents/<id>/` folder.
 
-## 👥 Agents
+## 👥 C-Suite Agents
 
-| ID | Role | Default Model | Customizable |
-|-----|------|------|:---:|
-| `main` | Coordinator / CEO | `claude-opus-4-6` | ✅ |
-| `code` | Chief Engineer | `glm-5` | ✅ |
-| `quant` | Chief Trading Officer | `glm-5` | ✅ |
-| `data` | Chief Data Officer | `glm-5` | ✅ |
-| `ops` | Chief DevOps | `glm-5` | ✅ |
-| `content` | Chief Content Officer | `glm-5` | ✅ |
-| `research` | Chief Research Officer | `glm-5` | ✅ |
-| `finance` | Chief Financial Officer | `glm-5` | ✅ |
-| `market` | Chief Marketing Officer | `glm-5` | ✅ |
-| `pm` | Chief Project Officer | `glm-5` | ✅ |
-| `law` | Chief Legal Officer | `MiniMax-M2.5` | ✅ |
-| `product` | Chief Product Officer | `glm-5` | ✅ |
-| `sales` | Chief Sales Officer | `glm-5` | ✅ |
+| ID | C-Suite Role | Spirit Mentor | Default Model | Customizable |
+|-----|------|------|------|:---:|
+| `main` | 👑 CEO — 首席执行官 | Elon Musk | `claude-opus-4-6` | ✅ |
+| `code` | ⚡ CTO — 首席技术官 | Jensen Huang | `glm-5` | ✅ |
+| `product` | 🎨 CPO — 首席产品官 | Steve Jobs | `glm-5` | ✅ |
+| `quant` | 📈 CQO — 首席质量官 | Jim Simons | `glm-5` | ✅ |
+| `market` | 📣 CMO — 首席营销官 | David Ogilvy | `glm-5` | ✅ |
+| `finance` | 💰 CFO — 首席财务官 | Warren Buffett | `glm-5` | ✅ |
+| `data` | 📊 CDO — 首席数据官 | Nate Silver | `glm-5` | ✅ |
+| `content` | ✍️ CCO — 首席内容官 | Jony Ive + MrBeast | `glm-5` | ✅ |
+| `law` | ⚖️ CLO — 首席法务官 | Alan Dershowitz | `MiniMax-M2.5` | ✅ |
+| `research` | 🔬 CRO — 首席研究官 | Richard Feynman | `glm-5` | ✅ |
+| `sales` | 🤝 CSO — 首席战略官 | Michael Dell | `glm-5` | ✅ |
+| `ops` | ⚙️ COO — 首席运营官 | Andy Grove | `glm-5` | ✅ |
+| `pm` | 📋 CQO — 首席项目官 | — | `glm-5` | ✅ |
+| `shrimp-coach` | 🦐 Shrimp Coach | — | `glm-5` | ✅ |
 
 > Each agent config is in [`agents/<id>/agent.json`](./agents/) — sanitized templates, ready to customize with your own API keys, names, and personalities.
 
@@ -584,6 +585,7 @@ ln -s $(pwd)/skills/<skill-name> ~/.openclaw/skills/
 
 # 4. Deploy an agent template
 cp -r agents/<agent-id> ~/.openclaw/agents/
+
 # Then edit agent.json with your API keys and preferences
 ```
 
