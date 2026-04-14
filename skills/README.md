@@ -1,6 +1,6 @@
 # 🛠️ Skills Index
 
-> **493 skills** with SKILL.md | [← Back to main README](../README.md)
+> **494 skills** with SKILL.md | [← Back to main README](../README.md)
 
 
 ## 🌟 Maintainer-Curated Indexes
@@ -453,7 +453,7 @@
 | 412 | [`tdd-guide`](./tdd-guide/) |  |
 | 413 | [`team-coordinator`](./team-coordinator/) |  |
 | 414 | [`team-daily-report`](./team-daily-report/) |  |
-| 415 | [`team-foreman`](./team-foreman/) | CEO 的监工助手，定期检查团队健康 + 主动推进卡住的任务。由 cron 每 15 分钟调用一次。 |
+| 415 | [`team-foreman`](./team-foreman/) | | agentId | 名字 | accountId | 群聊 sessionKey 后缀 | |
 | 416 | [`team-memory-sync`](./team-memory-sync/) |  |
 | 417 | [`team-supervisor`](./team-supervisor/) |  |
 | 418 | [`tech-decision`](./tech-decision/) | | 기준 | Option A | Option B | Option C | |
@@ -512,23 +512,24 @@
 | 471 | [`write-xiaohongshu`](./write-xiaohongshu/) | 标题规律分析 |
 | 472 | [`x-articles`](./x-articles/) |  |
 | 473 | [`xhs-content-creator`](./xhs-content-creator/) |  |
-| 474 | [`xhs-smart-publisher`](./xhs-smart-publisher/) |  |
-| 475 | [`xhs-writing-coach`](./xhs-writing-coach/) |  |
-| 476 | [`xiaohongshu-publish`](./xiaohongshu-publish/) |  |
-| 477 | [`xiaohongshu-smart-publish`](./xiaohongshu-smart-publish/) |  |
-| 478 | [`xiaohongshu-viral-copy`](./xiaohongshu-viral-copy/) |  |
-| 479 | [`xiaohongshu-workflow`](./xiaohongshu-workflow/) |  |
-| 480 | [`xiaomo-assistant-template`](./xiaomo-assistant-template/) |  |
-| 481 | [`xlsx`](./xlsx/) |  |
-| 482 | [`x-tweet-fetcher`](./x-tweet-fetcher/) |  |
-| 483 | [`youtube-automation`](./youtube-automation/) |  |
-| 484 | [`youtube-factory`](./youtube-factory/) |  |
-| 485 | [`youtube-knowledge-extractor`](./youtube-knowledge-extractor/) | For each extracted frame: |
-| 486 | [`youtube-video-analyzer`](./youtube-video-analyzer/) | For each extracted frame: |
-| 487 | [`zendesk-automation`](./zendesk-automation/) |  |
-| 488 | [`zhihu-post-skill`](./zhihu-post-skill/) |  |
-| 489 | [`ziliu-publisher`](./ziliu-publisher/) |  |
-| 490 | [`zoho-crm-automation`](./zoho-crm-automation/) |  |
-| 491 | [`zoom-automation`](./zoom-automation/) |  |
-| 492 | [`zsxq-publisher`](./zsxq-publisher/) |  |
-| 493 | [`zsxq-smart-publish`](./zsxq-smart-publish/) |  |
+| 474 | [`xhs-publisher`](./xhs-publisher/) |  |
+| 475 | [`xhs-smart-publisher`](./xhs-smart-publisher/) |  |
+| 476 | [`xhs-writing-coach`](./xhs-writing-coach/) |  |
+| 477 | [`xiaohongshu-publish`](./xiaohongshu-publish/) |  |
+| 478 | [`xiaohongshu-smart-publish`](./xiaohongshu-smart-publish/) |  |
+| 479 | [`xiaohongshu-viral-copy`](./xiaohongshu-viral-copy/) |  |
+| 480 | [`xiaohongshu-workflow`](./xiaohongshu-workflow/) |  |
+| 481 | [`xiaomo-assistant-template`](./xiaomo-assistant-template/) |  |
+| 482 | [`xlsx`](./xlsx/) |  |
+| 483 | [`x-tweet-fetcher`](./x-tweet-fetcher/) |  |
+| 484 | [`youtube-automation`](./youtube-automation/) |  |
+| 485 | [`youtube-factory`](./youtube-factory/) |  |
+| 486 | [`youtube-knowledge-extractor`](./youtube-knowledge-extractor/) | For each extracted frame: |
+| 487 | [`youtube-video-analyzer`](./youtube-video-analyzer/) | For each extracted frame: |
+| 488 | [`zendesk-automation`](./zendesk-automation/) |  |
+| 489 | [`zhihu-post-skill`](./zhihu-post-skill/) |  |
+| 490 | [`ziliu-publisher`](./ziliu-publisher/) |  |
+| 491 | [`zoho-crm-automation`](./zoho-crm-automation/) |  |
+| 492 | [`zoom-automation`](./zoom-automation/) |  |
+| 493 | [`zsxq-publisher`](./zsxq-publisher/) |  |
+| 494 | [`zsxq-smart-publish`](./zsxq-smart-publish/) |  |
