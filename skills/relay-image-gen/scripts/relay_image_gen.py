@@ -208,7 +208,8 @@ def main():
     p.add_argument("-p", "--prompt", required=True)
     p.add_argument("-f", "--filename", required=True)
     p.add_argument("-r", "--resolution", default="1k", choices=["1k", "2k", "4k"])
-    p.add_argument("-a", "--aspect-ratio", default="1:1")
+    p.add_argument("-a", "--aspect-ratio", required=True, dest="aspect_ratio",
+                        help="Aspect ratio, e.g. 3:4 / 16:9 / 9:16 / 1:1 (REQUIRED — no default)")
     p.add_argument("-m", "--model", help="Override model")
     p.add_argument("-P", "--provider", choices=list(PROVIDER_CONFIG.keys()))
     args = p.parse_args()
