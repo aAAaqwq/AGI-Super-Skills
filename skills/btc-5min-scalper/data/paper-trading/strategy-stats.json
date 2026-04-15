@@ -1,0 +1,55 @@
+{
+  "startDate": "2026-03-11",
+  "lastUpdate": "2026-03-11T18:13:17+08:00",
+  "virtualCapital": 100,
+  "tradeSize": 2,
+  "trades": [],
+  "strategyStats": {
+    "S1_momentum": {
+      "signals": 1,
+      "wins": 0,
+      "losses": 0,
+      "winRate": null
+    },
+    "S2_meanReversion": {
+      "signals": 0,
+      "wins": 0,
+      "losses": 0,
+      "winRate": null
+    },
+    "S3_volumeBreakout": {
+      "signals": 0,
+      "wins": 0,
+      "losses": 0,
+      "winRate": null
+    },
+    "S4_rsi": {
+      "signals": 0,
+      "wins": 0,
+      "losses": 0,
+      "winRate": null
+    },
+    "S5_oddsBias": {
+      "signals": 0,
+      "wins": 0,
+      "losses": 0,
+      "winRate": null
+    }
+  },
+  "combinationStats": {
+    "2_signals": {
+      "trades": 0,
+      "wins": 0,
+      "winRate": null
+    },
+    "3_signals": {
+      "trades": 0,
+      "wins": 0,
+      "winRate": null
+    }
+  },
+  "totalPnL": 0,
+  "totalTrades": 0,
+  "skipCount": 4,
+  "winRate": null
+}

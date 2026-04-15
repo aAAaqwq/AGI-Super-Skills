@@ -6,6 +6,8 @@ author: Daniel Li
 
 # 抖音智能发布
 
+> 📋 **发布前请确认内容合规**：`~/clawd/projects/MediaClaw/references/platforms/douyin.md`（社区公约11大类违规、AIGC标识、账号健康分）
+
 ## ⚠️ 默认发布策略
 
 - **默认目标是存草稿，不是直接发布。**
