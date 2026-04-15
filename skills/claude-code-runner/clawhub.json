@@ -1,0 +1,18 @@
+{
+  "name": "claude-code-runner-en",
+  "version": "1.0.0",
+  "description": "Execute programming tasks via Claude Code using PTY-based invocation (English version)",
+  "author": "lhl09120",
+  "entry": {
+    "python": "scripts/run_claude.py"
+  },
+  "scripts": [
+    "scripts/run_claude.py"
+  ],
+  "dependencies": {
+    "python": ">=3.8",
+    "tools": ["claude"]
+  },
+  "tags": ["claude-code", "automation", "programming", "pty", "english"],
+  "license": "MIT"
+}

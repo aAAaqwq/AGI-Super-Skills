@@ -1,0 +1,37 @@
+{
+  "name": "claude-code-control",
+  "version": "1.1.0",
+  "description": "Programmatic control of Claude Code via visible Terminal.app windows. Launch, send commands, capture screenshots, and record sessions from Node.js.",
+  "main": "index.js",
+  "keywords": [
+    "claude-code",
+    "automation",
+    "agent",
+    "testing",
+    "ci-cd",
+    "development",
+    "workflow"
+  ],
+  "author": "Efficacy Labs",
+  "license": "MIT",
+  "bin": {
+    "claude-code-control": "cli.js"
+  },
+  "os": ["darwin"],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "scripts": {
+    "test": "node test.js",
+    "example": "node examples/run-tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/efficacy-labs/claude-code-control"
+  },
+  "bugs": {
+    "url": "https://github.com/efficacy-labs/claude-code-control/issues"
+  },
+  "homepage": "https://clawhub.com/efficacy-labs/claude-code-control"
+}
