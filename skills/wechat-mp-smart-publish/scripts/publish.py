@@ -1,347 +1,439 @@
 #!/usr/bin/env python3
 """
-微信公众号 Playwright 自动发布脚本
+WeChat MP Smart Publish — 微信公众号自动发布到草稿箱
 
-使用方法:
-1. 首次运行会打开登录页面，需要微信扫码
-2. 登录成功后 cookies 会被保存
-3. 后续运行自动加载 cookies，无需重复扫码
+Usage:
+    python3 publish.py --article article.md --cover cover.jpg [--decision draft]
 
-依赖: pip install playwright beautifulsoup4
+Requires:
+    - OpenClaw browser running (CDP at 127.0.0.1:18800)
+    - Playwright Python library (pip install playwright)
+    - Valid WeChat MP cookies at ~/.playwright-data/wechat/state-default.json
+
+Author: ives-cco
+Version: 1.0.0
 """
 
-import os
-import sys
-import json
-import time
+from __future__ import annotations
+
 import argparse
-from pathlib import Path
+import asyncio
+import json
+import re
+import sys
 from datetime import datetime
+from pathlib import Path
+from typing import Optional
 
-try:
-    from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
-except ImportError:
-    print("请先安装 playwright: pip install playwright && playwright install chromium")
-    sys.exit(1)
+# ─── Constants ──────────────────────────────────────────────────────
+TITLE_MAX = 64
+CDP_URL = "http://127.0.0.1:18800"
+COOKIE_PATH = Path.home() / ".playwright-data/wechat/state-default.json"
+PUBLISH_URL = "https://mp.weixin.qq.com"
 
-
-# 配置
-WECHAT_MP_URL = "https://mp.weixin.qq.com/"
-COOKIES_FILE = os.path.expanduser("~/.openclaw/skills/wechat-mp-smart-publish/cookies.json")
-DRAFT_EDITOR_URL = "https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit&action=edit&type=77&lang=zh_CN&token={token}"
-
-# 编辑器选择器
-SELECTORS = {
-    "title": "#js_title",           # 标题输入框
-    "author": "#js_author",         # 作者输入框
-    "digest": "#js_digest",         # 摘要输入框
-    "content": "#js_editor",        # 正文编辑区 (iframe)
-    "publish_btn": "#js_send",      # 发布按钮
-    "preview_btn": "#js_preview",   # 预览按钮
-    "save_btn": "#js_save",         # 保存草稿
-    "cover_upload": ".js_cover_upload",  # 封面上传
-    "cover_area": ".cover-area",    # 封面区域
-}
-
-
-def save_cookies(cookies, filepath=COOKIES_FILE):
-    """保存 cookies 到文件"""
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    with open(filepath, 'w', encoding='utf-8') as f:
-        json.dump(cookies, f, ensure_ascii=False, indent=2)
-    print(f"✅ Cookies 已保存到 {filepath}")
-
-
-def load_cookies(filepath=COOKIES_FILE):
-    """从文件加载 cookies"""
-    if not os.path.exists(filepath):
-        return None
-    with open(filepath, 'r', encoding='utf-8') as f:
-        cookies = json.load(f)
-    print(f"✅ 已加载 cookies ({len(cookies)} 个)")
-    return cookies
-
-
-def wait_for_login(page, timeout=120):
-    """等待用户扫码登录"""
-    print("📱 请用微信扫描二维码登录...")
-    print(f"⏰ 等待登录中（最长 {timeout} 秒）...")
-
-    try:
-        # 等待页面跳转到管理后台
-        page.wait_for_url("**/cgi-bin/home**", timeout=timeout * 1000)
-        print("✅ 登录成功！")
-        return True
-    except PlaywrightTimeout:
-        print("❌ 登录超时，请重试")
-        return False
-
-
-def get_token(page):
-    """从页面 URL 提取 token"""
-    url = page.url
-    if "token=" in url:
-        return url.split("token=")[1].split("&")[0]
-    return None
-
-
-def upload_cover(page, cover_path):
-    """上传封面图"""
-    if not cover_path or not os.path.exists(cover_path):
-        print("⚠️  未提供封面图路径，跳过上传")
-        return
-
-    # 检查封面图尺寸
-    try:
-        from PIL import Image
-        img = Image.open(cover_path)
-        w, h = img.size
-        print(f"📐 封面图尺寸: {w}×{h}px")
-        if w < 900 or h < 500:
-            print("⚠️  封面图尺寸不足，建议 900×500px")
-    except ImportError:
-        print("⚠️  未安装 Pillow，跳过封面图尺寸检查（pip install Pillow）")
-
-    # 点击封面上传区域
-    try:
-        upload_input = page.query_selector('input[type="file"]')
-        if upload_input:
-            upload_input.set_input_files(cover_path)
-            print("✅ 封面图已上传")
-            time.sleep(2)
-        else:
-            print("⚠️  未找到上传按钮")
-    except Exception as e:
-        print(f"❌ 封面上传失败: {e}")
+# ─── Markdown → HTML Converter ──────────────────────────────────────
+def markdown_to_html(text: str) -> str:
+    """Convert basic Markdown to HTML for WeChat UEditor."""
+    lines = text.splitlines()
+    html_parts = []
+    
+    in_code_block = False
+    code_lines = []
+    
+    for line in lines:
+        stripped = line.strip()
+        
+        # Code block
+        if stripped.startswith("```"):
+            if in_code_block:
+                code_content = "\n".join(code_lines)
+                html_parts.append(f'<pre style="background:#f6f8fa;border-left:3px solid #fe6;padding:12px;overflow-x:auto"><code>{code_content}</code></pre>')
+                code_lines = []
+            else:
+                # Close previous paragraph before code block
+                pass
+            in_code_block = not in_code_block
+            continue
+        
+        if in_code_block:
+            code_lines.append(line)
+            continue
+        
+        # H1
+        if stripped.startswith("# "):
+            content = stripped[2:].strip()
+            html_parts.append(f'<h1 style="font-size:22px;font-weight:bold;margin:16px 0">{content}</h1>')
+            continue
+        
+        # H2
+        if stripped.startswith("## "):
+            content = stripped[3:].strip()
+            html_parts.append(f'<h2 style="font-size:18px;font-weight:bold;margin:14px 0">{content}</h2>')
+            continue
+        
+        # H3
+        if stripped.startswith("### "):
+            content = stripped[4:].strip()
+            html_parts.append(f'<h3 style="font-size:16px;font-weight:bold;margin:12px 0">{content}</h3>')
+            continue
+        
+        # HR
+        if stripped == "---":
+            html_parts.append('<hr style="border:none;border-top:1px solid #eee;margin:16px 0">')
+            continue
+        
+        # Empty line → paragraph break
+        if not stripped:
+            html_parts.append('<br>')
+            continue
+        
+        # Process inline formatting
+        processed = stripped
+        
+        # Bold **text**
+        processed = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', processed)
+        
+        # Italic *text*
+        processed = re.sub(r'\*(.+?)\*', r'<em>\1</em>', processed)
+        
+        # Inline code `text`
+        processed = re.sub(r'`(.+?)`', r'<code style="background:#f6f8fa;padding:2px 6px;border-radius:3px">\1</code>', processed)
+        
+        # Wrap in paragraph
+        html_parts.append(f'<p style="margin:8px 0">{processed}</p>')
+    
+    return "\n".join(html_parts)
 
 
-def fill_content(page, content_html):
-    """填写正文内容（富文本）"""
-    try:
-        # 微信编辑器使用 iframe
-        editor_frame = page.frame_locator("#ueditor_0")
-        editor_frame.locator("body").fill("")  # 清空
-        # 注入 HTML 内容
-        editor_frame.locator("body").evaluate(f"el => el.innerHTML = {json.dumps(content_html)}")
-        print("✅ 正文已填写")
-    except Exception:
-        # 备用方案：直接操作 body
-        try:
-            frame = page.frame_locator("iframe").first
-            frame.locator("body").click()
-            page.keyboard.type(content_html, delay=0)  # 不推荐，可能丢失格式
-            print("✅ 正文已填写（备用方式）")
-        except Exception as e:
-            print(f"❌ 正文填写失败: {e}")
-
-
-def publish_article(config):
-    """
-    发布公众号文章
-
-    config = {
-        "title": "文章标题",          # 必需，≤64字符
-        "author": "作者名",           # 可选
-        "digest": "文章摘要",         # 可选，≤120字符
-        "content_html": "<p>正文HTML</p>",  # 必需
-        "cover_path": "/path/to/cover.jpg",  # 可选，900×500px
-        "is_draft": True,            # True=保存草稿, False=直接发布
-        "publish_time": "2026-03-18 20:00:00",  # 可选，定时发布
-        "screenshot_dir": "/path/to/screenshots",  # 可选，截图保存目录
-    }
-    """
-    title = config.get("title", "")
-    content_html = config.get("content_html", "")
-
-    # 前置检查
+# ─── Markdown Parser ───────────────────────────────────────────────
+def parse_article(path: str) -> dict:
+    """Parse article from markdown file."""
+    raw = Path(path).read_text(encoding="utf-8")
+    lines = raw.splitlines()
+    
+    title = ""
+    body_lines = []
+    in_body = False
+    
+    for line in lines:
+        stripped = line.strip()
+        
+        # Skip metadata lines
+        if stripped.startswith("📌") or stripped.startswith("🏷️") or stripped.startswith("🖼️"):
+            continue
+        
+        # Title: first # heading or first non-empty line
+        if not title:
+            if stripped.startswith("# "):
+                title = stripped[2:].strip()
+                continue
+            elif stripped and not in_body:
+                title = stripped
+                continue
+        
+        # Cover hint — stop reading body
+        if stripped.startswith("📝 正文"):
+            in_body = True
+            continue
+        
+        if stripped.startswith("正文") or in_body:
+            in_body = True
+            body_lines.append(line)
+    
+    body = "\n".join(body_lines).strip()
+    
+    # Fallback: first non-empty line as title
     if not title:
-        print("❌ 标题不能为空")
-        return False
-    if len(title) > 64:
-        print(f"⚠️  标题超长（{len(title)}字符），将截断为64字符")
-        title = title[:64]
+        for line in lines:
+            if line.strip():
+                title = line.strip().lstrip("#").strip()
+                break
+    
+    # Truncate title
+    if len(title) > TITLE_MAX:
+        title = title[:TITLE_MAX]
+    
+    return {
+        "title": title,
+        "body": body,
+        "body_html": markdown_to_html(body),
+    }
 
-    screenshot_dir = config.get("screenshot_dir")
-    if screenshot_dir:
-        os.makedirs(screenshot_dir, exist_ok=True)
 
-    with sync_playwright() as p:
-        # 启动浏览器
-        browser = p.chromium.launch(headless=False)  # 设为 True 可无头运行
-        context = browser.new_context(
-            viewport={"width": 1280, "height": 900},
-            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
-        )
+# ─── Browser Helpers ───────────────────────────────────────────────
+async def get_browser_context():
+    """Connect to OpenClaw browser via CDP."""
+    import playwright
+    from playwright._impl._driver import compute_driver_checksum
+    
+    browser = await playwright.chromium.connect_over_cdp(CDP_URL)
+    context = await browser.new_context()
+    return browser, context
 
-        # 加载 cookies
-        cookies = load_cookies()
-        page = context.new_page()
 
-        if cookies:
-            context.add_cookies(cookies)
-            page.goto(WECHAT_MP_URL)
-            time.sleep(3)
+async def load_cookies(context, cookie_path: Path):
+    """Load cookies from Playwright state file."""
+    if not cookie_path.exists():
+        raise FileNotFoundError(f"Cookie file not found: {cookie_path}")
+    
+    state = json.loads(cookie_path.read_text())
+    cookies = state.get("cookies", [])
+    
+    if not cookies:
+        raise ValueError(f"No cookies in state file: {cookie_path}")
+    
+    # WeChat specific cookie names
+    required = ["qname", "uin"]
+    found = {c["name"] for c in cookies}
+    missing = [r for r in required if r not in found]
+    if missing:
+        print(f"⚠️  Warning: Missing cookies: {missing}")
+    
+    await context.add_cookies(cookies)
+    print(f"✅ Loaded {len(cookies)} cookies")
 
-            # 检查是否仍然登录
-            if "cgi-bin/home" not in page.url and "token=" not in page.url:
-                print("⚠️  Cookies 已过期，需要重新登录")
-                if not wait_for_login(page):
-                    return False
-                cookies = context.cookies()
-                save_cookies(cookies)
-        else:
-            # 首次登录
-            page.goto(WECHAT_MP_URL)
-            if not wait_for_login(page):
-                return False
-            cookies = context.cookies()
-            save_cookies(cookies)
 
-        # 获取 token
-        token = get_token(page)
-        if not token:
-            print("❌ 无法获取 token")
-            return False
-        print(f"🔑 Token: {token[:8]}...")
+async def click_by_text(page, text: str, timeout: float = 5000):
+    """Click element by text content."""
+    import re
+    await page.wait_for_selector(f"text={text}", timeout=timeout)
+    await page.click(f"text={text}")
 
-        # 截图：登录后首页
-        if screenshot_dir:
-            page.screenshot(path=f"{screenshot_dir}/01-home.png")
-            print(f"📸 截图已保存: 01-home.png")
 
-        # 进入草稿编辑器
-        editor_url = f"https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit&action=edit&type=77&lang=zh_CN&token={token}"
-        page.goto(editor_url)
-        page.wait_for_load_state("networkidle")
-        time.sleep(2)
-
-        if screenshot_dir:
-            page.screenshot(path=f"{screenshot_dir}/02-editor.png")
-            print(f"📸 截图已保存: 02-editor.png")
-
-        # 填写标题
+# ─── Main Publish Function ────────────────────────────────────────
+async def publish_to_wechat(
+    article_path: str,
+    cover_path: str,
+    decision: str = "draft",
+) -> dict:
+    """
+    Publish article to WeChat MP draft box.
+    
+    Returns:
+        dict with status, draft_saved, screenshot_path, etc.
+    """
+    import playwright
+    
+    # Parse article
+    article = parse_article(article_path)
+    title = article["title"]
+    body_html = article["body_html"]
+    
+    print(f"📝 Article: {title} ({len(body_html)} chars HTML)")
+    
+    # Prepare cover image
+    cover = Path(cover_path)
+    if not cover.exists():
+        raise FileNotFoundError(f"Cover image not found: {cover_path}")
+    
+    # Connect to browser
+    print("🔗 Connecting to OpenClaw browser...")
+    browser, context = await get_browser_context()
+    page = await context.new_page()
+    
+    screenshot_path = f"/tmp/wechat_publish_{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
+    
+    try:
+        # Load cookies
+        print("🔐 Loading cookies...")
+        load_cookies(context, COOKIE_PATH)
+        
+        # Navigate to WeChat MP
+        print(f"🌐 Opening {PUBLISH_URL}...")
+        await page.goto(PUBLISH_URL, wait_until="networkidle", timeout=30000)
+        await page.wait_for_load_state("networkidle")
+        
+        # Check login
         try:
-            page.fill(SELECTORS["title"], title)
-            print(f"✅ 标题已填写: {title}")
-        except Exception as e:
-            print(f"❌ 标题填写失败: {e}")
-
-        if screenshot_dir:
-            page.screenshot(path=f"{screenshot_dir}/03-title-filled.png")
-            print(f"📸 截图已保存: 03-title-filled.png")
-
-        # 填写作者
-        author = config.get("author", "")
-        if author:
+            await page.wait_for_selector('text="新的创作"', timeout=8000)
+            print("✅ Login verified")
+        except Exception:
+            print("❌ Not logged in. Please login via browser.")
+            await page.screenshot(path=screenshot_path)
+            return {
+                "status": "error",
+                "error": "Not logged in. Cookie may be expired.",
+                "screenshot_path": screenshot_path,
+            }
+        
+        # Click "新的创作"
+        print('📝 Clicking "新的创作"...')
+        await click_by_text(page, "新的创作")
+        await page.wait_for_timeout(2000)
+        
+        # Handle iframe/new window
+        # WeChat MP often opens in a new window/tab
+        print("🔍 Looking for editor...")
+        
+        # Try to find the editor frame
+        try:
+            # Wait for editor to be available
+            await page.wait_for_timeout(3000)
+            
+            # Try to find UEditor iframe
+            editor_frame = None
+            for frame in page.frames:
+                if "message" in frame.url or "ueditor" in frame.url.lower():
+                    editor_frame = frame
+                    break
+            
+            # Upload cover image
+            print("🖼️ Uploading cover...")
+            file_input = page.locator('input[type="file"]').first
+            await file_input.set_input_files(str(cover.absolute()))
+            await page.wait_for_timeout(3000)
+            
+            # Fill title
+            print(f"✏️ Filling title: {title[:30]}...")
             try:
-                page.fill(SELECTORS["author"], author)
-                print(f"✅ 作者已填写: {author}")
+                title_input = page.locator('input[name="title"]')
+                await title_input.wait_for(timeout=5000)
+                await title_input.fill(title)
             except Exception:
-                print("⚠️  作者填写失败（可能当前账号类型不支持）")
-
-        # 填写摘要
-        digest = config.get("digest", "")
-        if digest:
-            if len(digest) > 120:
-                print(f"⚠️  摘要超长（{len(digest)}字符），将截断为120字符")
-                digest = digest[:120]
-            try:
-                page.fill(SELECTORS["digest"], digest)
-                print(f"✅ 摘要已填写: {digest[:50]}...")
-            except Exception:
-                print("⚠️  摘要填写失败")
-
-        # 填写正文
-        if content_html:
-            fill_content(page, content_html)
-
-        if screenshot_dir:
-            page.screenshot(path=f"{screenshot_dir}/04-content-filled.png")
-            print(f"📸 截图已保存: 04-content-filled.png")
-
-        # 上传封面
-        cover_path = config.get("cover_path")
-        if cover_path:
-            upload_cover(page, cover_path)
-
-        if screenshot_dir:
-            page.screenshot(path=f"{screenshot_dir}/05-before-publish.png")
-            print(f"📸 截图已保存: 05-before-publish.png")
-
-        # 保存草稿或发布
-        is_draft = config.get("is_draft", True)
-        if is_draft:
-            try:
-                page.click(SELECTORS["save_btn"])
-                time.sleep(2)
-                print("✅ 文章已保存为草稿")
-            except Exception as e:
-                print(f"❌ 保存草稿失败: {e}")
-                # 尝试发布按钮
+                # Try alternative selector
                 try:
-                    page.click(SELECTORS["publish_btn"])
-                    time.sleep(2)
-                    print("✅ 文章已直接发布")
-                except Exception as e2:
-                    print(f"❌ 发布也失败: {e2}")
-        else:
+                    title_input = page.locator('input[placeholder*="标题"]')
+                    await title_input.fill(title)
+                except Exception:
+                    print("⚠️  Title input not found, trying JS...")
+                    await page.evaluate(f'''
+                        () => {{
+                            const inputs = document.querySelectorAll("input");
+                            for (const inp of inputs) {{
+                                if (inp.type === "text" || inp.placeholder.includes("标题")) {{
+                                    inp.value = "{title}";
+                                    inp.dispatchEvent(new Event("input", {{ bubbles: true }}));
+                                    break;
+                                }}
+                            }}
+                        }}
+                    ''')
+            
+            # Switch to rich text mode if needed
             try:
-                page.click(SELECTORS["publish_btn"])
-                time.sleep(2)
-                print("✅ 文章已发布！")
-            except Exception as e:
-                print(f"❌ 发布失败: {e}")
+                await click_by_text(page, "图文", timeout=3000)
+                await page.wait_for_timeout(1500)
+            except Exception:
+                print("⚠️  Could not switch to 图文 mode")
+            
+            # Inject content into UEditor
+            print("📝 Injecting content...")
+            
+            # Try UEditor approach
+            for frame in page.frames:
+                try:
+                    # Check if this is the UEditor frame
+                    if "ueditor" in frame.url.lower() or frame.url.endswith(".js") is False:
+                        await frame.wait_for_timeout(2000)
+                        # Try to set content
+                        await frame.evaluate(f'''
+                            () => {{
+                                if (typeof UE !== 'undefined') {{
+                                    const editor = UE.getEditor('ueditor_0');
+                                    if (editor) editor.setContent(`{body_html.replace('`', '\\`').replace('$', '\\$')}`);
+                                }}
+                            }}
+                        ''')
+                        break
+                except Exception:
+                    continue
+            
+            # Fallback: try page-level content injection
+            await page.evaluate(f'''
+                () => {{
+                    // Try multiple UEditor instances
+                    const editors = document.querySelectorAll('iframe');
+                    for (const frame of editors) {{
+                        try {{
+                            const doc = frame.contentDocument || frame.contentWindow.document;
+                            if (doc && doc.querySelector('body')) {{
+                                doc.body.innerHTML = `{body_html.replace('`', '\\`').replace('$', '\\$')}`;
+                                doc.body.dispatchEvent(new Event('input', {{ bubbles: true }}));
+                            }}
+                        }} catch(e) {{ /* cross-origin, skip */ }}
+                    }}
+                }}
+            ''')
+            
+            await page.wait_for_timeout(2000)
+            
+            # Take screenshot before saving
+            await page.screenshot(path=screenshot_path)
+            print(f"📸 Screenshot saved: {screenshot_path}")
+            
+            # Save as draft
+            if decision == "draft":
+                print('💾 Saving as draft...')
+                try:
+                    await click_by_text(page, "保存")
+                    await page.wait_for_timeout(3000)
+                    print("✅ Draft saved!")
+                except Exception as e:
+                    print(f"⚠️  Save failed: {e}")
+                    # Try alternative save button
+                    try:
+                        save_btn = page.locator('button:has-text("保存")').first
+                        await save_btn.click()
+                        await page.wait_for_timeout(3000)
+                    except Exception:
+                        pass
+            
+            # Final screenshot
+            await page.screenshot(path=screenshot_path)
+            
+            return {
+                "status": "ok",
+                "draft_saved": decision == "draft",
+                "screenshot_path": screenshot_path,
+                "title": title,
+                "title_truncated": len(article.get("title", "")) > TITLE_MAX,
+                "content_length": len(body_html),
+            }
+            
+        except Exception as e:
+            await page.screenshot(path=screenshot_path)
+            return {
+                "status": "error",
+                "error": str(e),
+                "screenshot_path": screenshot_path,
+            }
+    
+    finally:
+        await page.close()
+        await context.close()
+        await browser.disconnect()
 
-        if screenshot_dir:
-            page.screenshot(path=f"{screenshot_dir}/06-result.png")
-            print(f"📸 截图已保存: 06-result.png")
 
-        # 关闭浏览器
-        time.sleep(3)
-        browser.close()
-        return True
-
-
+# ─── CLI Entry Point ────────────────────────────────────────────────
 def main():
-    parser = argparse.ArgumentParser(description="微信公众号自动发布")
-    parser.add_argument("--title", help="文章标题（≤64字符）")
-    parser.add_argument("--content", help="正文 HTML 文件路径")
-    parser.add_argument("--cover", help="封面图路径（900×500px）")
-    parser.add_argument("--author", help="作者名")
-    parser.add_argument("--digest", help="摘要（≤120字符）")
-    parser.add_argument("--config", help="JSON 配置文件路径")
-    parser.add_argument("--screenshots", help="截图保存目录")
-    parser.add_argument("--publish", action="store_true", help="直接发布（默认保存草稿）")
-
+    parser = argparse.ArgumentParser(description="WeChat MP Smart Publish")
+    parser.add_argument("--article", required=True, help="Markdown article path")
+    parser.add_argument("--cover", required=True, help="Cover image path (jpg/png)")
+    parser.add_argument("--decision", default="draft", choices=["draft", "publish"],
+                        help="Publish decision (default: draft)")
+    
     args = parser.parse_args()
-
-    if args.config:
-        with open(args.config, 'r', encoding='utf-8') as f:
-            config = json.load(f)
-    else:
-        config = {}
-        if args.title:
-            config["title"] = args.title
-        if args.content:
-            with open(args.content, 'r', encoding='utf-8') as f:
-                config["content_html"] = f.read()
-        if args.cover:
-            config["cover_path"] = args.cover
-        if args.author:
-            config["author"] = args.author
-        if args.digest:
-            config["digest"] = args.digest
-        if args.screenshots:
-            config["screenshot_dir"] = args.screenshots
-        if args.publish:
-            config["is_draft"] = False
-
-    if not config.get("title"):
-        print("❌ 请提供文章标题（--title 或 --config）")
-        sys.exit(1)
-
-    success = publish_article(config)
-    sys.exit(0 if success else 1)
+    
+    print(f"""
+╔══════════════════════════════════════════════╗
+║     WeChat MP Smart Publish v1.0.0           ║
+╠══════════════════════════════════════════════╣
+║  Article : {args.article}
+║  Cover   : {args.cover}
+║  Decision: {args.decision}
+╚══════════════════════════════════════════════╝
+    """)
+    
+    result = asyncio.run(publish_to_wechat(
+        article_path=args.article,
+        cover_path=args.cover,
+        decision=args.decision,
+    ))
+    
+    print("\n📊 Result:")
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    
+    sys.exit(0 if result.get("status") == "ok" else 1)
 
 
 if __name__ == "__main__":

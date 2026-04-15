@@ -1,9 +1,3 @@
----
-name: daily-xhs-content
-description: Use when running the daily Xiaohongshu content production cron or generating 3 小红书 content drafts with正文 and cover direction for Daniel Li.
-author: Daniel Li
----
-
 # daily-xhs-content — 小红书每日内容生产
 
 > Cron: `daily-xhs-content` | 每日 21:00 | agentId: content
@@ -44,7 +38,7 @@ author: Daniel Li
    - 结尾：💬互动引导 + ⭐收藏引导 + 👋关注引导
 2. 标签：5-8 个 `#话题名`
 
-### Step 3: 封面生成（⚠️ 内容驱动，严禁纯风格）
+❌ **注意：`-a` 参数现在为必需参数（2026-04-14 修复）。省略 `-a` 将导致脚本报错。任何调用必须显式指定比例。**
 
 **核心原则：每张封面必须是一个视觉故事，3 秒内传达文章核心观点。**
 
@@ -101,11 +95,87 @@ mkdir -p ~/clawd/docs/daily-content/$(date +%Y-%m-%d)/xhs
 
 ## 调用的 Skills
 
-| Skill | 用途 |
-|-------|------|
-| brave-search | 搜索 AI 热点 |
-| humanizer | 去 AI 痕迹，让文案更像人写的 |
-| relay-image-gen | 生成封面图（3:4） |
-| content-typography | 中文封面排版规范 |
-| content-illustration-strategy | 配图策略（内容驱动） |
-| content-ops-toolkit | 选题分析、标题优化方法论 |
+| Skill | 用途 | 调用时机 |
+|-------|------|---------|
+| brave-search | 搜索 AI 热点 | Step 1 选题 |
+| **humanizer** | **去 AI 痕迹（必须跑）** | **Step 2 之后，Step 4 之前** |
+| xhs-writing-coach | 标题公式/正文结构参考 | Step 2 创作 |
+| relay-image-gen | 生成封面图（3:4） | Step 3 封面 |
+| content-typography | 中文封面排版规范 | Step 3 封面 |
+| content-illustration-strategy | 配图策略（内容驱动，可选） | Step 3 之前 |
+| content-ops-toolkit | 选题分析、标题优化方法论 | Step 1 选题 |
+
+---
+
+## ✍️ XHS 专属润色要点（humanizer 之后检查）
+
+润色后的文案必须满足：
+
+- [ ] **开头决定生死**：第一句必须是 emoji + 悬念/冲突/数字开头
+  - ❌ "今天给大家分享..."
+  - ✅ "🔥 21岁，我用AI赚了第一个100万"
+- [ ] **短句为主**：每句话≤20字，拒绝长段落
+  - ❌ "我觉得这个东西非常好用，因为它可以帮助我们提高效率"
+  - ✅ "效率拉满。早上用它2小时干完一天的活。"
+- [ ] **有"我"的视角**：真实经历、真实吐槽、真实数据
+  - ❌ "AI Agent 可以提高效率"
+  - ✅ "我用它替代了3个外包，上周省了2000块"
+- [ ] **有吐槽/情绪**：不说正确的废话
+- [ ] **标签到位**：正文内 `#话题` XHS 自动识别（不用手动选话题按钮）
+- [ ] **结尾三件套**：💬互动 + ⭐收藏 + 👋关注
+- [ ] **AI痕迹 < 5%**：不得出现：
+  - "赋能/闭环/底层逻辑/打法"
+  - 三个一组排比（"不仅...而且...而且..."）
+  - "让我们一起..."、"相信..."
+  - 每句话都是四字格（"高效便捷、简单易用"）
+
+---
+
+## 🖼️ 封面生成
+
+⚠️ **`-a` 参数为必需参数。省略 `-a` 将报错。XHS 必须用 `-a "3:4"`。**
+
+提示词结构：`[主体场景] + [视觉隐喻/故事] + [色彩情绪] + [风格] + [格式]`
+
+设计流程：
+1. 提炼文章核心观点（一句话）
+2. 把观点变成视觉隐喻（问：这个观点像什么画面？）
+3. 选择色彩情绪（警告=红黑，科技=蓝白，批判=红金，教程=蓝绿，创业=金黑）
+4. 补全风格和格式
+
+❌ 严禁："深色底+强调色+抽象几何" 这种通用提示词
+✅ 要求：提示词中必须包含文章主题相关的具体物体、场景和隐喻
+
+参数：`-a "3:4" -r "1k"`
+
+命令：
+```bash
+uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示词" -f "输出路径" -a "3:4" -r "1k"
+```
+
+---
+
+## ✅ 质量检查清单（Step 4）
+
+- [ ] 标题 ≤ 20 字（含emoji和数字）
+- [ ] 正文 ≥ 100 字，≤ 1000 字
+- [ ] AI 痕迹 < 5%（逐项对照上方检查）
+- [ ] 开头有 emoji + 悬念/数字/冲突
+- [ ] 短句为主，有"我"的视角
+- [ ] 标签 5-8 个（在正文中用 # 格式）
+- [ ] 封面跟文章内容强关联（非通用背景）
+- [ ] 结尾有互动引导
+- [ ] 无违禁词
+
+---
+
+## 📤 发布
+
+```bash
+python3 ~/clawd/skills/xhs-publisher/scripts/publish.py \
+  --article ~/clawd/docs/daily-content/{YYYY-MM-DD}/xhs/article.md \
+  --cover ~/clawd/docs/daily-content/{YYYY-MM-DD}/xhs/cover.jpg \
+  --decision draft
+```
+
+依赖：openclaw browser + xhs cookie（`~/.playwright-data/xiaohongshu/state-default.json`）
