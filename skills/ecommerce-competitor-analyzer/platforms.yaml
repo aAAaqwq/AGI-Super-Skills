@@ -1,0 +1,95 @@
+# 电商平台配置
+# 参考：n8n 工作流配置 (v81)
+
+# 支持的平台
+platforms:
+  amazon:
+    name: "Amazon"
+    version: "1.0.0"
+    status: "active"
+    enabled: true
+
+    # URL 匹配模式
+    url_patterns:
+      - "amazon.com"
+      - "amazon.co.uk"
+      - "amazon.de"
+      - "amazon.es"
+      - "amazon.fr"
+      - "amazon.it"
+      - "amazon.ca"
+      - "amazon.co.jp"
+
+    # ASIN 提取正则表达式
+    asin_regex:
+      standard: "/dp/([A-Z0-9]{10})"
+      product_page: "/([A-Z0-9]{10})/ref="
+      direct: "^[A-Z0-9]{10}$"
+
+    # 爬虫配置
+    scraper:
+      provider: "olostep"
+      api_endpoint: "https://api.olostep.com/v2/agent/web-agent"
+      comments_to_scrape: 100  # 匹配 n8n 配置
+      wait_time: 10
+      timeout: 120000
+
+    # 数据提取模式（来自 n8n "Code - 提取结构化数据" 节点）
+    extraction_patterns:
+      title:
+        - regex: "产品标题[：:]+([^\\n]+)"
+        - regex: "Title[：:]+([^\\n]+)"
+        - default: "未知"
+      price:
+        - regex: "价格[：:]+[^0-9]*([0-9]+\\.?[0-9]*)"
+        - regex: "Price[：:]+[^0-9]*([0-9]+\\.?[0-9]*)"
+        - default: "未知"
+      rating:
+        - regex: "评分[：:]+[^0-9]*([0-9]+\\.?[0-9]*)"
+        - regex: "Rating[：:]+[^0-9]*([0-9]+\\.?[0-9]*)"
+        - default: "未知"
+
+    # 输出格式（匹配 Google Sheets 结构）
+    output_format:
+      - "ASIN"
+      - "产品标题"
+      - "价格"
+      - "评分"
+      - "文案分析摘要"
+      - "视觉分析摘要"
+      - "评论分析摘要"
+      - "市场分析摘要"
+
+  # 未来平台（尚未实现）
+  temu:
+    name: "Temu"
+    version: "0.0.1"
+    status: "planned"
+    enabled: false
+    notes: "需要基于 Playwright 的爬虫"
+
+  shopee:
+    name: "Shopee"
+    version: "0.0.1"
+    status: "planned"
+    enabled: false
+    notes: "需要基于 Playwright 的爬虫"
+
+# 全局设置
+settings:
+  # 批处理限制
+  max_batch_size: 20
+  concurrency_limit: 5
+  retry_attempts: 3
+
+  # API 超时设置
+  scraping_timeout: 120000  # 2分钟
+  analysis_timeout: 60000   # 1分钟
+
+  # 错误处理
+  continue_on_error: true
+  require_all_success: false
+
+  # 输出设置
+  google_sheets_id: "YOUR_GOOGLE_SHEETS_ID_HERE"
+  markdown_output_dir: "./output"
