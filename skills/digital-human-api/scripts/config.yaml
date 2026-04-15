@@ -1,0 +1,43 @@
+# digital-human-api v3 配置
+
+api_provider: qingyun
+qingyun_base_url: https://api.qingyuntop.top
+
+# TTS
+tts_model: gemini-2.5-flash-preview-tts
+tts_voice: Kore
+
+# 视频生成
+video_model: kling-v2-5-turbo
+video_mode: std
+video_cfg_scale: 0.3
+
+# 负向提示词
+negative_prompt: >
+  animation, cartoon, illustration, painting, 3d render, unrealistic,
+  distorted face, deformed, blurry, low quality, oversaturated,
+  artistic filter, dramatic cinematic lighting, stiff pose, robotic,
+  claymation, anime, comic book
+
+# 人脸参考图（用于scene image生成时保持一致性）
+# 优先使用高清原图
+avatar_image: /tmp/openclaw/daniel-headshot.jpg
+
+# 画面
+aspect_ratio: "9:16"
+
+# 并发
+max_concurrent: 1
+poll_interval: 15
+max_poll_wait: 360
+
+# 输出
+output_dir: /tmp/openclaw/digital-human-output-v3
+
+# BGM
+bgm_volume: 0.25
+voice_volume: 1.0
+
+# 对口型
+lip_sync_sound_volume: 1
+lip_sync_orig_volume: 0
