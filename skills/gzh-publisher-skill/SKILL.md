@@ -3,7 +3,7 @@ name: gzh-publisher-skill
 description: "微信公众号统一发布技能：通过 OpenClaw Browser 自动化完成登录、写文章、一键排版、封面、存草稿。唯一官方公众号发布方式。"
 license: MIT
 metadata:
-  version: 2.2.0
+  version: 2.4.0
   author: Daniel Li / 小a CEO
   domains: [content, publishing, automation, wechat]
   type: automation
@@ -19,6 +19,8 @@ metadata:
 - 有 Markdown 文章需要发布到微信公众号草稿箱
 - Agent 需要"发布公众号"、"公众号草稿"、"发微信"时
 - MediaClaw content pipeline 的公众号发布环节
+
+> 📋 **发布前请确认内容合规**：`~/clawd/projects/MediaClaw/references/platforms/weixin-mp.md`（内容规范、违规类型、AIGC标识要求）
 
 ## 不适用
 
@@ -46,15 +48,13 @@ metadata:
 │  Step 4: 填入作者                                     │
 │  JS fill input[placeholder*="作者"]                    │
 ├─────────────────────────────────────────────────────┤
-│  Step 5: 注入正文内容                                  │
-│  JS → .ProseMirror div.innerHTML = HTML               │
-│  （含素材图片: 先上传到正文 → 记录URL → 嵌入HTML）       │
+│  Step 5a: 上传素材图片 → 获取微信CDN URL              │
+│  Step 5b: 注入正文HTML（含图片URL，推荐CDP注入）        │
 ├─────────────────────────────────────────────────────┤
 │  Step 6: 一键排版                                     │
 │  click "一键排版" → 等待排版完成 → 截图确认             │
 ├─────────────────────────────────────────────────────┤
-│  Step 7: 上传封面图                                   │
-│  JS set input[type="file"] → 选择封面图文件             │
+│  Step 7: 设置封面（默认从正文第一张图片选择）            │
 ├─────────────────────────────────────────────────────┤
 │  Step 8: 保存到草稿箱                                  │
 │  click "保存为草稿" → 截图确认                         │
@@ -171,50 +171,109 @@ browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
 | `\| table \|` | `<table>` | border-collapse, zebra stripe |
 | `![img](url)` | `<img>` | max-width 100% |
 
-**Step 5a：上传素材图片到正文**
+**Step 5a：上传素材图片并获取微信CDN URL**
 
-如果有素材图片（`image_paths`），需要先通过工具栏上传到微信服务器获取图片URL，再嵌入HTML：
+⚠️ **关键**：微信编辑器**不支持外部链接图片**（如GitHub、Reddit截图URL），必须先上传到微信服务器获取 `mmbiz.qpic.cn` 域名的URL。
+
+**推荐流程**（逐张上传 → 记录CDN URL → 后续嵌入HTML）：
 
 ```
-// 对每张素材图片，上传并获取URL
+// 1. 复制素材图片到 OpenClaw uploads 目录
+exec(command="cp /path/to/image1.jpg /tmp/openclaw/uploads/")
+
+// 2. 通过工具栏 file input 上传单张图片
 browser(action="upload", profile="openclaw", targetId=编辑器targetId,
-  selector="input[type='file']", paths=["/path/to/image1.jpg"])
-// 上传后微信会在编辑器中插入图片，获取其src URL
+  selector="input[type='file']", paths=["/tmp/openclaw/uploads/image1.jpg"])
+
+// 3. 等待上传完成（图片会插入到编辑器光标位置）
+browser(action="act", kind="wait", timeMs=3000, targetId=编辑器targetId)
+
+// 4. 获取所有已上传图片的微信CDN URL
 browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
   () => {
     const imgs = document.querySelectorAll('.ProseMirror img');
-    return Array.from(imgs).map(img => img.src);
+    return Array.from(imgs).map(img => ({
+      src: img.src,
+      isWx: img.src.includes('mmbiz')
+    }));
   }
 """)
+// 5. 记录每张图片的 CDN URL，用于 Step 5b 嵌入HTML
+//    格式：https://mmbiz.qpic.cn/...
 ```
 
-或者使用"从图片库选择"上传素材图片到微信图片库，再获取URL。
+**重复步骤2-4**，直到所有素材图片上传完毕。
 
-**Step 5b：注入正文（含图片）**
+**重要**：上传后图片会插到编辑器光标位置（通常在末尾），这不影响后续操作——Step 5b 会用完整的 innerHTML 覆盖整个编辑器内容。
+
+**上传前准备**：
+```bash
+# 批量复制素材图片到 uploads 目录
+mkdir -p /tmp/openclaw/uploads
+cp ~/clawd/projects/MediaClaw/output/articles/{DATE}/{slug}/*.png /tmp/openclaw/uploads/
+cp ~/clawd/projects/MediaClaw/output/articles/{DATE}/{slug}/*.jpg /tmp/openclaw/uploads/
+```
+
+**Step 5b：注入正文（含图片URL）**
+
+⚠️ **注意**：HTML内容太长时，直接写在 `fn` 字符串里会被截断。**必须用CDP直接注入**：
 
 ```
+// 方法A（推荐）：通过CDP直接注入长HTML
+// 1. 先将完整HTML写入临时文件
+write(path="/tmp/wechat-article.html", content=生成的HTML)
+
+// 2. 通过CDP WebSocket注入（避免OpenClaw fn字符串长度限制）
+exec(command="""
+  unset ALL_PROXY all_proxy https_proxy
+  python3 -c "
+  import json, base64, websockets, httpx, asyncio
+  async def inject():
+      async with httpx.AsyncClient() as c:
+          r = await c.get('http://127.0.0.1:18800/json/list')
+          ws_url = next(t['webSocketDebuggerUrl'] for t in r.json() if 'TARGET_ID' in t['id'])
+      with open('/tmp/wechat-article.html') as f:
+          html = f.read()
+      async with websockets.connect(ws_url) as ws:
+          await ws.send(json.dumps({'id':1,'method':'Runtime.evaluate','params':{
+              'expression': '(() => { const e = document.querySelector(\\".ProseMirror\\"); e.innerHTML = ' + json.dumps(html) + '; e.dispatchEvent(new Event(\\"input\\", {bubbles:true})); return \"injected: \" + html.length; })()',
+              'returnByValue': True
+          }}))
+          resp = json.loads(await ws.recv())
+          print(resp['result']['result']['value'])
+  asyncio.run(inject())
+  """
+)
+
+// 方法B（短文章可用）：直接通过OpenClaw evaluate
 browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
   () => {
     const editor = document.querySelector('.ProseMirror');
     if (!editor) return 'ProseMirror not found';
-    
-    const html = `<section>
-      <h1 style="...">标题</h1>
-      <p style="...">正文段落...</p>
-      <!-- 素材图片嵌入 -->
-      <p style="text-align:center;margin:16px 0">
-        <img src="上传后获取的图片URL" style="max-width:100%;border-radius:4px" />
-      </p>
-      <p style="...">图片说明文字...</p>
-      <h2 style="...">子标题</h2>
-      ...
-    </section>`;
-    
+    const html = `... (2000字以内) ...`;
     editor.innerHTML = html;
     editor.dispatchEvent(new Event('input', { bubbles: true }));
-    return 'injected, length: ' + html.length;
+    return 'injected: ' + html.length;
   }
 """)
+```
+
+**HTML中嵌入图片的标准格式**（使用 Step 5a 获取的微信CDN URL）：
+```html
+<!-- 图片：居中 + 说明文字 -->
+<p style="text-align:center;margin:16px 0">
+  <img src="https://mmbiz.qpic.cn/..." style="max-width:100%;border-radius:4px" />
+</p>
+<p style="text-align:center;color:#888;font-size:13px;margin:4px 0 16px">图片说明文字</p>
+```
+
+**图片映射表**（在注入HTML前准备好）：
+```javascript
+const imageMap = {
+  'github-repo.png': 'https://mmbiz.qpic.cn/.../0?wx_fmt=png',
+  'reddit-claudeai.png': 'https://mmbiz.qpic.cn/.../0?wx_fmt=png',
+  // ...
+};
 ```
 
 **图片嵌入规范**：
@@ -296,25 +355,66 @@ browser(action="act", kind="click", profile="openclaw", ref="使用此排版ref"
 browser(action="screenshot", profile="openclaw", targetId=编辑器targetId)
 ```
 
-### Step 7: 上传封面图
+### Step 7: 设置封面图
 
 ⚠️ **重要**：封面区域**没有** `input[type="file"]`！工具栏里的 file input 是正文图片上传。
 
-封面上传通过点击封面区域触发，有4种方式：
-- **从图片库选择**（推荐自动化）
-- 从正文选择
-- 微信扫码上传
-- AI 配图
+**默认策略：从正文第一张图片选封面**（最简单可靠）
 
-**Step 7a**：点击封面区域的"从图片库选择"链接：
+前提：Step 5 已将素材图片嵌入正文，编辑器中有图片。
+
+**Step 7a（默认）**：点击封面区域的"从正文选择"链接：
 ```
 browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
   () => {
     const items = document.querySelectorAll('#js_cover_description_area a');
     for (const el of items) {
-      if (el.textContent.trim() === '从图片库选择' && el.offsetParent !== null) {
+      if (el.textContent.includes('从正文选择') && el.offsetParent !== null) {
         el.click();
-        return 'clicked 从图片库选择';
+        return 'clicked 从正文选择';
+      }
+    }
+    return 'not found';
+  }
+""")
+browser(action="act", kind="wait", timeMs=2000, targetId=编辑器targetId)
+```
+
+此时弹出正文图片列表（class: `appmsg_content_img_item`），**默认选中第一张**：
+```
+browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
+  () => {
+    const items = document.querySelectorAll('.appmsg_content_img_item');
+    if (items.length > 0) { items[0].click(); return 'selected: ' + items.length; }
+    return 'not found';
+  }
+""")
+```
+
+点击"**下一步**"进入裁剪确认页：
+```
+browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
+  () => {
+    const btns = document.querySelectorAll('.weui-desktop-dialog__ft button');
+    for (const btn of btns) {
+      if (btn.textContent.trim() === '下一步' && btn.offsetParent !== null) {
+        btn.click(); return 'clicked 下一步';
+      }
+    }
+    return 'not found';
+  }
+""")
+browser(action="act", kind="wait", timeMs=2000, targetId=编辑器targetId)
+```
+
+在裁剪确认页点击"**确认**"完成封面设置：
+```
+browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
+  () => {
+    const btns = document.querySelectorAll('.weui-desktop-dialog__ft button');
+    for (const btn of btns) {
+      if (btn.textContent.trim() === '确认' && btn.offsetParent !== null) {
+        btn.click(); return 'clicked 确认';
       }
     }
     return 'not found';
@@ -322,14 +422,40 @@ browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
 """)
 ```
 
-**Step 7b**：等待图片库弹窗打开，找到目标图片（如 cover.jpg）并**点击选中**（需要高亮/checkmark）：
+**Step 7b（备选）**：如果需要从图片库选特定封面（如专门的cover.png）：
 ```
-browser(action="snapshot", profile="openclaw", targetId=编辑器targetId)
-// 找到图片名对应的 strong 或 link 元素，点击选中
-```
+// 1. 点击"从图片库选择"
+browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
+  () => {
+    const items = document.querySelectorAll('#js_cover_description_area a');
+    for (const el of items) {
+      if (el.textContent.includes('从图片库选择') && el.offsetParent !== null) {
+        el.click();
+        return 'clicked 从图片库选择';
+      }
+    }
+    return 'not found';
+  }
+""")
+browser(action="act", kind="wait", timeMs=2000, targetId=编辑器targetId)
 
-**Step 7c**：点击"**下一步**"按钮确认选择：
-```
+// 2. 点击目标图片（通过图片名匹配）
+browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
+  () => {
+    const items = document.querySelectorAll('.weui-desktop-img-picker__item');
+    for (const item of items) {
+      const name = item.querySelector('strong');
+      if (name && name.textContent.includes('cover')) {
+        item.click();
+        return 'selected: ' + name.textContent;
+      }
+    }
+    return 'not found';
+  }
+""")
+browser(action="act", kind="wait", timeMs=1000, targetId=编辑器targetId)
+
+// 3. 点击"下一步"确认
 browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
   () => {
     const btns = document.querySelectorAll('button');
@@ -350,7 +476,13 @@ browser(action="act", kind="evaluate", targetId=编辑器targetId, fn="""
 - 格式：JPG / PNG
 - 大小：≤ 2MB
 
-**备选方案**：如果图片库没有合适图片，先通过工具栏 `input[type="file"]` 上传到正文，然后用"从正文选择"
+**封面选择决策树**：
+```
+正文有图片？
+├─ 是 → Step 7a「从正文选择」（默认第一张）
+└─ 否 → Step 7b「从图片库选择」→ 选 cover.png
+    └─ 图片库也没有？ → 先上传封面到图片库，再选
+```
 
 ### Step 8: 保存到草稿箱
 
@@ -453,18 +585,57 @@ function mdToWechatHtml(md) {
 - 封面通过"从图片库选择" → 选图 → "下一步"流程
 - 封面区域关键 CSS：`#js_cover_description_area`，按钮类名：`.js_cover_btn_area`
 
+#### 4.6.1 「从正文选择」封面是3步流程，不是1步
+- **Step 1**：点击正文图片列表中的目标图（class: `appmsg_content_img_item`）
+- **Step 2**：点击"下一步"进入裁剪确认页
+- **Step 3**：点击"确认"完成封面设置
+- ❌ 错误：点击"从正文选择"后直接找"确定"按钮 → 找不到
+- ✅ 正确：选图 → 下一步 → 确认
+
 ### 4.7 可能有多个干扰弹窗
 - "未授权使用切换账号能力" → 点击"我知道了"
 - "公众号尚未实名" → 点击"取消"或"前往实名"
 - 多个弹窗叠加时需逐个关闭
 
-### 5. Cookie 不会自动持久化到文件
+### 5. OpenClaw `upload` 工具对微信编辑器无效
+- `browser(action="upload")` 触发了 file chooser 但文件未真正传入编辑器
+- ❌ OpenClaw upload: `browser(action="upload", selector="input[type='file']", paths=[...])`
+- ✅ **必须用 CDP `DOM.setFileInputFiles`**:
+```python
+import json, websockets, httpx, asyncio
+
+async def cdp_upload(ws_url, file_path):
+    async with httpx.AsyncClient() as c:
+        r = await c.get(f"http://127.0.0.1:18800/json/list")
+        ws_url = next(t['webSocketDebuggerUrl'] for t in r.json() if TARGET in t['id'])
+    async with websockets.connect(ws_url) as ws:
+        # 获取 input 的 CDP objectId
+        await ws.send(json.dumps({"id":1,"method":"Runtime.evaluate",
+            "params":{"expression":"document.querySelector('input[type=\"file\"]')",
+            "returnByValue":False}}))
+        obj_id = json.loads(await ws.recv())['result']['result']['objectId']
+        # 通过 CDP 设置文件
+        await ws.send(json.dumps({"id":2,"method":"DOM.setFileInputFiles",
+            "params":{"objectId":obj_id,"files":[file_path]}}))
+        await ws.recv()
+
+asyncio.run(cdp_upload(ws_url, "/tmp/openclaw/uploads/image.png"))
+```
+- 上传后等3-5秒，然后用 `.ProseMirror img` 获取 `mmbiz.qpic.cn` CDN URL
+- 图片会插到编辑器光标位置，不影响后续 innerHTML 覆盖
+
+### 6. 长HTML注入会被截断
+- OpenClaw `evaluate` 的 `fn` 字段有字符长度限制
+- ❌ 文章>2000字的HTML直接写在 fn 字符串里 → 截断报错 `Unexpected end of input`
+- ✅ **必须用CDP直接注入**（见 Step 5b 方法A），将HTML先写入文件再通过CDP WebSocket传入
+
+### 7. Cookie 不会自动持久化到文件
 - OpenClaw Browser 使用自己的 Chromium profile
 - 不像 Playwright 那样有 state.json
 - 每次重启 OpenClaw Browser 可能需要重新扫码
 - **解决方案**：保持 OpenClaw Browser 长期运行，避免频繁重启
 
-### 6. URL 导航需要 token
+### 8. URL 导航需要 token
 - 直接访问 `mp.weixin.qq.com/cgi-bin/appmsg?...` 会跳转到登录页
 - 必须从首页（带 token 的 URL）进入，或通过点击导航
 - **不要直接 navigate 到需要 token 的 URL**
@@ -511,7 +682,18 @@ function mdToWechatHtml(md) {
 
 ## 更新日志
 
-- **v2.2.0** (2026-04-15): 素材图片嵌入 + 移除摘要
+- **v2.4.0** (2026-04-15): 实战踩坑补全
+  - 新增陷阱5: OpenClaw `upload` 对微信无效，必须用 CDP `DOM.setFileInputFiles`
+  - 新增陷阱6: 长HTML注入截断问题，必须用CDP WebSocket
+  - 修正陷阱4.6.1: 「从正文选择」封面是3步（选图→下一步→确认），不是1步
+  - Step 7a: 补全完整3步代码（`appmsg_content_img_item` 选择器）
+
+- **v2.3.0** (2026-04-15): Step 5/7 重构
+  - Step 5a: 完整素材图片上传流程（逐张上传 → 记录CDN URL）
+  - Step 5b: 新增CDP直接注入方法（解决长HTML截断问题）
+  - Step 7: 封面默认从正文第一张图片选择（简化流程）
+  - 新增封面选择决策树
+  - 新增图片嵌入标准格式（居中 + 说明文字）
   - 新增素材图片上传+嵌入正文流程（Step 5a/5b）
   - 移除摘要填写（留空，微信自动抓取）
   - 图片必须使用微信服务器URL（不支持外部链接）
