@@ -2,33 +2,100 @@
 
 > 每 15 分钟由 cron 调用。核心目标：**真实推进任务，不是写报告。**
 
+## ⚡ 进度同步机制（核心改进）
+
+**问题**：每次巡检信息不同步，重复催促已完成的任务。
+**方案**：以 **git log + progress 文件** 为进度真相源。
+
+### Step 0.5: 加载进度快照（新增，必须执行）
+
+```bash
+# 1. 读取上一轮快照
+PREV=$(cat ~/clawd/tmp/foreman-snapshot.json 2>/dev/null)
+
+# 2. 从 git 获取各项目真实进度（最近24h commits）
+for repo in ~/clawd/projects/MediaClaw ~/clawd/projects/super-quant-claw ~/clawd/projects/content-automation-bot; do
+  name=$(basename $repo)
+  if [ -d "$repo/.git" ]; then
+    echo "=== $name (git) ==="
+    git -C "$repo" log --oneline --since="24 hours ago" --format="%h %s (%cr)" 2>/dev/null | head -5
+  else
+    echo "=== $name (no git) ==="
+    # 非 git 项目：用 progress.json 或最近修改文件
+    [ -f "$repo/progress.json" ] && cat "$repo/progress.json" | head -10
+    ls -lt "$repo/" --time=ctime 2>/dev/null | head -3
+  fi
+done
+
+# 3. 检查各 agent 今日工作产出（workspace 日志）
+today=$(date +%Y-%m-%d)
+for ws in ~/clawd/workspace-*/; do
+  agent=$(basename $ws)
+  if [ -f "$ws/memory/$today.md" ]; then
+    echo "=== $agent 今日记录 ==="
+    tail -5 "$ws/memory/$today.md"
+  fi
+done
+
+# 4. 读取 CEO main session 当日记忆（进度真相源）
+tail -20 ~/.openclaw/workspace-main/memory/$today.md 2>/dev/null
+```
+
+**进度判断规则**：
+- 项目有新 git commit → 已推进，**不催促**
+- agent workspace 有今日记忆且含"完成/启动/修复" → 已推进
+- CEO main memory 已记录任务完成 → **绝不重复催促**
+- 仅当以上三项都无更新时，才判断为"停滞"
+
+### 推进后必须写回进度
+
+每次执行推进动作后，必须更新快照：
+```bash
+cat > ~/clawd/tmp/foreman-snapshot.json << EOF
+{
+  "timestamp": "$(date -Iseconds)",
+  "git_progress": {
+    "MediaClaw": "$(git -C ~/clawd/projects/MediaClaw log --oneline -1 --format='%h %s' 2>/dev/null)",
+    "super-quant-claw": "$(ls -lt ~/clawd/projects/super-quant-claw/ --time=ctime 2>/dev/null | head -2)"
+  },
+  "actions_taken": [],
+  "resolved_items": [],
+  "pending_followup": []
+}
+EOF
+```
+
+---
+
 ## Agent 清单
 
 | agentId | 名字 | accountId | 群聊 sessionKey 后缀 |
 |---------|------|-----------|---------------------|
 | main | 小a | default | agent:main:telegram:group:-1003890797239 |
-| ops | 小ops | xiaoops | agent:ops:telegram:group:-1003890797239 |
-| code | 小code | xiaocode | agent:code:telegram:group:-1003890797239 |
-| quant | 小quant | xiaoq | agent:quant:telegram:group:-1003890797239 |
-| research | 小research | xiaoresearch | agent:research:telegram:group:-1003890797239 |
-| finance | 小finance | xiaofinance | agent:finance:telegram:group:-1003890797239 |
-| data | 小data | xiaodata | agent:data:telegram:group:-1003890797239 |
-| market | 小market | xiaomarket | agent:market:telegram:group:-1003890797239 |
-| pm | 小pm | xiaopm | agent:pm:telegram:group:-1003890797239 |
-| content | 小content | xiaocontent | agent:content:telegram:group:-1003890797239 |
-| law | 小law | xiaolaw | agent:law:telegram:group:-1003890797239 |
-| product | 小product | xiaoproduct | agent:product:telegram:group:-1003890797239 |
-| sales | 小sales | xiaosales | agent:sales:telegram:group:-1003890797239 |
+| cto | 小ops/CTO | xiaoops | agent:cto:telegram:group:-1003890797239 |
+| pe | 小code/PE | xiaocode | agent:pe:telegram:group:-1003890797239 |
+| cqo | 小quant/CQO | xiaoq | agent:cqo:telegram:group:-1003890797239 |
+| cro | 小research/CRO | xiaoresearch | agent:cro:telegram:group:-1003890797239 |
+| cfo | 小finance/CFO | xiaofinance | agent:cfo:telegram:group:-1003890797239 |
+| cdo | 小data/CDO | xiaodata | agent:cdo:telegram:group:-1003890797239 |
+| cmo | 小market/CMO | xiaomarket | agent:cmo:telegram:group:-1003890797239 |
+| cco | 小content/CCO | xiaocontent | agent:cco:telegram:group:-1003890797239 |
+| clo | 小law/CLO | xiaolaw | agent:clo:telegram:group:-1003890797239 |
+| cpo | 小product/CPO | xiaoproduct | agent:cpo:telegram:group:-1003890797239 |
+| cso | 小sales/CSO | xiaosales | agent:cso:telegram:group:-1003890797239 |
+| coo | Grove/COO | xiaoops | agent:coo:telegram:group:-1003890797239 |
+
+> **PM agent 已删除**（2026-04-13），不再存在。部分旧名称仍可用于 session 寻址。
 
 群聊 ID: `-1003890797239`
 
 ## 活跃项目注册表
 
-| 项目 | 负责 agent | 关键文件 | 优先级 |
-|------|-----------|----------|--------|
-| MediaClaw | 小code | `~/clawd/projects/MediaClaw/progress.json` | P1 |
-| Super-Quant-Claw | 小pm(待PRD审核)→小quant | `~/clawd/projects/super-quant-claw/PRD.md` | P1 |
-| 内容自动化 | 小content | `~/clawd/projects/content-automation-bot/PRD.md` | P2 |
+| 项目 | 负责 agent | 进度追踪方式 | 优先级 | 当前进度 |
+|------|-----------|------------|--------|----------|
+| MediaClaw | PE(CTO) | git repo | P1 | 查看 git log |
+| Super-Quant-Claw | CQO | 非 git → 最近文件 + progress.json | P1 | Paper Trading RUNNING |
+| 内容自动化 | CCO | **已停止** — Daniel"别再推了" | ❌ | 永久暂停 |
 
 ---
 
@@ -146,19 +213,40 @@ sessions_send(
 # 读取上一轮快照（用于对比催促效果）
 cat ~/clawd/tmp/foreman-snapshot.json 2>/dev/null
 
-# 写入本轮快照
+# 写入本轮快照（包含 git 进度指纹）
 mkdir -p ~/clawd/tmp
-cat > ~/clawd/tmp/foreman-snapshot.json << 'EOF'
+cat > ~/clawd/tmp/foreman-snapshot.json << EOF
 {
   "timestamp": "$(date -Iseconds)",
-  "actions_taken": ["催促了小xxx做yyy", "修复了zzz cron"],
-  "pending_followup": ["等待小xxx回应", "等待小yyy完成zzz"],
-  "cron_alerts": []
+  "git_progress": {
+    "MediaClaw": "$(git -C ~/clawd/projects/MediaClaw log --oneline -1 --format='%h' 2>/dev/null)",
+    "super-quant-claw": "NOT_A_GIT_REPO"
+  },
+  "resolved_items": [],
+  "actions_taken": [],
+  "pending_followup": []
 }
 EOF
 ```
 
 下一轮优先检查 `pending_followup` 中的事项是否已解决。
+
+## 非 Git 项目进度追踪
+
+对 `super-quant-claw` 等非 git 项目，使用以下方式追踪进度：
+
+```bash
+# 1. 最近修改的关键文件
+find ~/clawd/projects/super-quant-claw/strategies/ -name "*.py" -newer ~/clawd/tmp/foreman-snapshot.json 2>/dev/null
+
+# 2. Paper Trading 状态
+curl -s -u freqtrade:freqtrade http://127.0.0.1:8082/api/v1/status 2>/dev/null
+
+# 3. 主 workspace CEO memory（进度真相源）
+tail -30 ~/.openclaw/workspace-main/memory/$(date +%Y-%m-%d).md 2>/dev/null | grep -E "完成|启动|修复|RUNNING|已确认"
+```
+
+**关键规则**：CEO main session 的 `memory/YYYY-MM-DD.md` 是最终进度真相源。如果 CEO memory 记录了"Paper Trading 已启动 RUNNING"，则**不再催促**。
 
 ---
 

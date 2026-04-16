@@ -11,6 +11,7 @@
 - SOP: `~/clawd/docs/content-engineering-sop.md`
 - 人设: `~/.openclaw/workspace-content/USER.md`
 - 飞书方法论: `~/clawd/memory/feishu-wiki-prompt-templates-v1-full.txt`
+- **📋 抖音平台规范**: `~/clawd/projects/MediaClaw/references/platforms/douyin.md` — 社区公约(11大类违规)、推荐算法(三级火箭)、AIGC标识、账号健康分、处罚机制
 
 ## 任务
 
@@ -33,7 +34,14 @@ mkdir -p ~/clawd/docs/daily-content/$(date +%Y-%m-%d)/douyin
 2. 7 角度竞争分析，选 3 个适合短视频的选题
 3. 5 维评分法选标题（≤ 30 字）
 
-### Step 2: 内容创作
+### Step 2: 素材采集 + 内容创作
+
+**素材采集**：
+- 调用 `web-content-capture` skill 截取相关截图
+- 抖音重点：竖屏截图（9:16），截图需裁剪为手机视图
+- 素材保存到 `~/clawd/projects/MediaClaw/output/articles/{YYYY-MM-DD}/{topic-slug}/`
+
+**内容创作**：
 
 1. 60 秒短视频脚本（220-260 字）
 2. 同时准备图文版本描述（≤ 200 字）
@@ -63,7 +71,10 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示�
 - [ ] 有 Hook + CTA
 - [ ] 封面跟视频内容强关联
 - [ ] AIGC 已标注
-- [ ] 无违禁词
+- [ ] 无违禁词（对照 `platforms/douyin.md` 11大类违规清单）
+- [ ] 无危险行为/低俗擦边/虚假宣传
+- [ ] 素材（音乐/图片）有合法授权
+- [ ] AIGC 已标注（使用抖音AI标识功能）
 
 ### Step 5: 输出格式
 
@@ -93,6 +104,7 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示�
 | content-typography | 中文封面排版规范 | Step 3 |
 | content-illustration-strategy | 配图策略（可选） | Step 3 之前 |
 | content-ops-toolkit | 选题分析、标题优化 | Step 1 选题 |
+| **web-content-capture** | **网页截图、素材采集** | **Step 2 素材采集** |
 
 ---
 

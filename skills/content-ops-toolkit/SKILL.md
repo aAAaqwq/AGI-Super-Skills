@@ -165,7 +165,7 @@ description: |
 | **X/Twitter** | 无独立skill（参考本方法三） | ≤280字、观点钩子 |
 | **知乎** | 无独立skill（参考本方法三） | 专业论证、数据引用 |
 
-**素材采集**：所有平台的素材阶段应调用 `web-content-capture` skill。
+**素材采集**：所有平台的素材阶段应调用 `article-material-collect` skill（编排层，自动调用 `web-content-capture` 完成截图）。
 
 ### 执行要求
 - 每个平台只输出最终内容，不解释过程

@@ -11,6 +11,7 @@
 - SOP: `~/clawd/docs/content-engineering-sop.md`
 - 人设: `~/.openclaw/workspace-content/USER.md`
 - 飞书方法论: `~/clawd/memory/feishu-wiki-prompt-templates-v1-full.txt`
+- **📋 小红书平台规范**: `~/clawd/projects/MediaClaw/references/platforms/xiaohongshu.md` — 社区规范、CES评分算法、AIGC标注要求、违规处罚、笔记发布规则
 
 ## 任务
 
@@ -28,7 +29,14 @@
 2. 用 7 角度竞争分析法，选出 3 个差异化选题
 3. 按 5 维评分法（点击欲望/信息密度/清晰度/差异化/正文匹配度），每个选题生成 12 个标题选 Top1
 
-### Step 2: 内容创作
+### Step 2: 素材采集 + 内容创作
+
+**素材采集**（调研时同步进行）：
+- 调用 `web-content-capture` skill，用 OpenClaw browser 截取相关页面截图
+- 素材保存到 `~/clawd/projects/MediaClaw/output/articles/{YYYY-MM-DD}/{topic-slug}/`
+- 小红书重点：截图裁剪为 3:4 或 1:1，适配笔记配图
+
+**内容创作**：
 
 1. 小红书正文结构（400-800字，≤1000字）：
    - emoji 开头钩子（第一句决定生死）
@@ -68,7 +76,11 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示�
 - [ ] 正文 ≥ 100 字
 - [ ] 标签 5-8 个
 - [ ] 封面跟文章内容强关联（非通用背景）
-- [ ] 无违禁词
+- [ ] 无违禁词（对照 `platforms/xiaohongshu.md` 违规清单）
+- [ ] 无导流到微信/其他平台
+- [ ] 无虚假体验/低质搬运（对照社区规范第三章）
+- [ ] AIGC 内容已标注（发布时勾选AI生成标签）
+- [ ] 图文相符，非标题党
 
 ### Step 5: 输出格式
 
@@ -104,6 +116,7 @@ mkdir -p ~/clawd/docs/daily-content/$(date +%Y-%m-%d)/xhs
 | content-typography | 中文封面排版规范 | Step 3 封面 |
 | content-illustration-strategy | 配图策略（内容驱动，可选） | Step 3 之前 |
 | content-ops-toolkit | 选题分析、标题优化方法论 | Step 1 选题 |
+| **web-content-capture** | **网页截图、素材采集** | **Step 2 素材采集** |
 
 ---
 
@@ -165,7 +178,9 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示�
 - [ ] 标签 5-8 个（在正文中用 # 格式）
 - [ ] 封面跟文章内容强关联（非通用背景）
 - [ ] 结尾有互动引导
-- [ ] 无违禁词
+- [ ] 无违禁词（对照 `platforms/xiaohongshu.md` 违规清单）
+- [ ] AIGC 已标注（对照 `platforms/xiaohongshu.md` 第五章）
+- [ ] 无导流/虚假体验（对照 `platforms/xiaohongshu.md` 第三、四章）
 
 ---
 

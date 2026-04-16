@@ -11,6 +11,7 @@
 - SOP: `~/clawd/docs/content-engineering-sop.md`
 - 人设: `~/.openclaw/workspace-content/USER.md`
 - 飞书方法论: `~/clawd/memory/feishu-wiki-prompt-templates-v1-full.txt`
+- **📋 微信公众号平台规范**: `~/clawd/projects/MediaClaw/references/platforms/weixin-mp.md` — 内容规范、违规类型、原创声明、算法推荐、AIGC标识、处罚机制
 
 ## 任务
 
@@ -28,8 +29,15 @@
 2. 7 角度竞争分析，选 3 个差异化选题（适合深度长文方向）
 3. 5 维评分法，每个选题生成 12 标题选 Top1
 
-### Step 2: 内容创作
+### Step 2: 素材采集 + 内容创作
 
+**素材采集**（调研时同步进行）：
+- 调用 `web-content-capture` skill，用 OpenClaw browser 截取相关页面截图
+- 素材保存到 `~/clawd/projects/MediaClaw/output/articles/{YYYY-MM-DD}/{topic-slug}/`
+- 截图类型：GitHub仓库/Reddit讨论/X评论/数据来源页面
+- 如有 Daniel 手动提供的素材（截图/图片），一并放入同目录
+
+**内容创作**：
 1. 公众号结构（1500-3000 字）：
    - 写在前面：为什么写这篇，读者能获得什么（100-200 字）
    - 一、背景/痛点（300-500 字）
@@ -72,7 +80,11 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示�
 - [ ] 正文 1500-3000 字
 - [ ] 有数据/案例支撑
 - [ ] 封面跟文章内容强关联
-- [ ] 无违禁词
+- [ ] 无违禁词（对照 `platforms/weixin-mp.md` 违规清单）
+- [ ] 原创声明合规（非整合引用、非公共内容、非营销宣传）
+- [ ] 标题无标题党（无夸大/混淆官方/信息来源机密）
+- [ ] AIGC 内容已标注
+- [ ] 无诱导分享/关注/导流
 
 ### Step 5: 输出格式
 
@@ -103,6 +115,7 @@ mkdir -p ~/clawd/docs/daily-content/$(date +%Y-%m-%d)/gzh
 | content-typography | 中文排版规范 | Step 4 质量检查 |
 | content-illustration-strategy | 配图策略（可选） | Step 3 之前 |
 | content-ops-toolkit | 选题分析、标题优化 | Step 1 选题 |
+| **web-content-capture** | **网页截图、素材采集** | **Step 2 素材采集** |
 
 ---
 
@@ -156,7 +169,10 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示�
 - [ ] 人设匹配（理性专业但不死板，有观点）
 - [ ] 有数据/案例支撑
 - [ ] 封面跟文章内容强关联
-- [ ] 无违禁词
+- [ ] 无违禁词（对照 `platforms/weixin-mp.md` 违规清单）
+- [ ] 原创声明合规（对照 `platforms/weixin-mp.md` 第四章）
+- [ ] AIGC 内容已标注（对照 `platforms/weixin-mp.md` 第七章）
+- [ ] 无诱导分享/关注/导流（对照 `platforms/weixin-mp.md` 第三章）
 
 ---
 
