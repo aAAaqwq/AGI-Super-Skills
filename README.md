@@ -12,7 +12,7 @@ A **plug-and-play AI team template** — deploy a complete virtual C-Suite in mi
 
 | Metric | Value |
 |--------|-------|
-| **Skills** | 523 (incl. 29 thinking frameworks) |
+| **Skills** | 593 (incl. 29 thinking frameworks) |
 | **Categories** | 18+ |
 | **Agents** | 12 C-Suite + 1 Specialized |
 | **Framework** | [OpenClaw](https://github.com/openclaw/openclaw) |
@@ -80,7 +80,7 @@ See [agents/README.md](./agents/README.md#injecting-thinking-skills) for the ful
 ### Skill Indexes
 - [All Skills](./skills/README.md)
 - [Categories](./skills/categories/README.md)
-- [Original Skills Index](./skills/docs/original-skills.md) — first-party skills authored and maintained by Daniel Li, including Polymarket and management/operations workflows
+- [Original Skills Index](./skills/docs/original-skills.md) — first-party skills authored and maintained by the team, including Polymarket and management/operations workflows
 
 | Category | Count | Highlights |
 |----------|:-----:|-----------|
