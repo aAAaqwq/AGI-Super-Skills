@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-XHS Publisher — 小红书自动发布到草稿箱
+XHS Publisher — 小红书自动发布到草稿箱 v1.2
 
 Usage:
     python3 publish.py --article article.md --cover cover.jpg [--decision draft]
@@ -9,15 +9,23 @@ Requires:
     - OpenClaw browser running (CDP at 127.0.0.1:18800)
     - Playwright Python library (pip install playwright)
     - Valid XHS cookies at ~/.playwright-data/xiaohongshu/state-default.json
+
+v1.2 Changes:
+    - Pre-flight health check (browser, cookies, files)
+    - Safety screenshots at 6 key checkpoints
+    - Retry logic with exponential backoff
+    - Improved error handling with screenshots
 """
 
 from __future__ import annotations
 
 import argparse
 import asyncio
+import functools
 import json
 import re
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -27,6 +35,7 @@ CONTENT_MAX = 1000
 CDP_URL = "http://127.0.0.1:18800"
 COOKIE_PATH = Path.home() / ".playwright-data/xiaohongshu/state-default.json"
 PUBLISH_URL = "https://creator.xiaohongshu.com/publish/publish"
+SAFETY_DIR = Path("/tmp/xhs_safety")
 
 # Verified selectors (2026-04-14)
 SEL_TAB = "div.creator-tab"
@@ -35,6 +44,97 @@ SEL_TITLE = "input.d-text[type='text']"
 SEL_EDITOR = "div.tiptap.ProseMirror[contenteditable='true']"
 SEL_TOPIC_BTN = "button.contentBtn.topic-btn"
 SEL_TAG_INPUT = "input.d-text.--color-text-title"
+
+# Retry config: (retries, base_delay_s)
+RETRY_CONFIG = {
+    "upload": (3, 10),
+    "selector": (2, 5),
+    "network": (3, 10),
+}
+
+
+# ─── Utilities ────────────────────────────────────────────────────────
+def log(emoji: str, msg: str):
+    ts = datetime.now().strftime("%H:%M:%S")
+    print(f"[{ts}] {emoji} {msg}")
+
+
+def retry(max_retries: int, base_delay: float = 5):
+    """Decorator: retry with exponential backoff."""
+    def decorator(func):
+        @functools.wraps(func)
+        async def wrapper(*args, **kwargs):
+            last_err = None
+            for attempt in range(max_retries):
+                try:
+                    return await func(*args, **kwargs)
+                except Exception as e:
+                    last_err = e
+                    if attempt < max_retries - 1:
+                        delay = base_delay * (2 ** attempt)
+                        log("⚠️", f"{func.__name__} failed (attempt {attempt+1}/{max_retries}): {e}. Retrying in {delay}s...")
+                        await asyncio.sleep(delay)
+                    else:
+                        log("❌", f"{func.__name__} failed after {max_retries} attempts: {e}")
+            raise last_err
+        return wrapper
+    return decorator
+
+
+async def safety_screenshot(page, step_name: str, step_num: int):
+    """Save a safety screenshot with step name and number."""
+    SAFETY_DIR.mkdir(exist_ok=True)
+    ts = datetime.now().strftime("%H%M%S")
+    path = SAFETY_DIR / f"xhs_safety_{step_num:02d}_{step_name}_{ts}.png"
+    try:
+        await page.screenshot(path=path)
+        size = path.stat().st_size
+        log("📸", f"Safety [{step_num}] {step_name}: {path.name} ({size//1024}KB)")
+        return path
+    except Exception as e:
+        log("⚠️", f"Safety screenshot failed: {e}")
+        return None
+
+
+async def preflight_check() -> dict:
+    """Run pre-flight health checks. Returns dict with check results."""
+    from playwright.async_api import async_playwright
+
+    checks = {"browser": False, "cookies": False, "article_file": False, "cover_file": False}
+
+    # 1. Browser connection
+    try:
+        async with async_playwright() as p:
+            browser = await p.chromium.connect_over_cdp(CDP_URL)
+            if browser:
+                checks["browser"] = True
+                await browser.close()
+                log("✅", "Browser: connected")
+            else:
+                log("❌", "Browser: failed to connect")
+    except Exception as e:
+        log("❌", f"Browser: {e}")
+
+    # 2. Cookie validity
+    try:
+        if COOKIE_PATH.exists():
+            state = json.loads(COOKIE_PATH.read_text())
+            cookies = state.get("cookies", [])
+            now = time.time()
+            expired = [c for c in cookies if c.get("expires", -1) > 0 and c["expires"] < now]
+            if expired:
+                log("❌", f"Cookies: {len(expired)} expired (e.g., {expired[0].get('name','?')})")
+            elif cookies:
+                checks["cookies"] = True
+                log("✅", f"Cookies: {len(cookies)} valid, none expired")
+            else:
+                log("❌", "Cookies: file exists but empty")
+        else:
+            log("❌", f"Cookies: file not found at {COOKIE_PATH}")
+    except Exception as e:
+        log("❌", f"Cookies: {e}")
+
+    return checks
 
 
 # ─── Markdown Parser ───────────────────────────────────────────────
@@ -185,20 +285,33 @@ async def publish_to_xhs(
     cover_path: str,
     decision: str = "draft",
 ) -> dict:
-    """Publish article to XHS drafts. Returns result dict."""
+    """Publish article to XHS drafts. Returns result dict.
+    v1.2: adds pre-flight check, safety screenshots, retry logic."""
 
     from playwright.async_api import async_playwright
 
-    # Parse article
+    # ── Pre-flight health check ─────────────────────────────────────
+    log("🔍", "Running pre-flight health checks...")
+    checks = await preflight_check()
+    if not all([checks["browser"], checks["cookies"]]):
+        return {
+            "status": "error",
+            "error": f"Pre-flight failed: browser={checks['browser']}, cookies={checks['cookies']}",
+            "checks": checks,
+        }
+
+    # ── Parse article ───────────────────────────────────────────────
     article = parse_article(article_path)
     print(f"📄 Article parsed: title='{article['title']}' ({article['content_length']} chars, {len(article['tags'])} tags)")
     if article["title_truncated"]:
         print(f"⚠️  Title truncated to {TITLE_MAX} chars")
 
-    # Validate cover
+    # ── Validate cover ──────────────────────────────────────────────
     cover = Path(cover_path)
     if not cover.exists():
-        raise FileNotFoundError(f"Cover not found: {cover_path}")
+        return {"status": "error", "error": f"Cover not found: {cover_path}"}
+
+    SAFETY_DIR.mkdir(exist_ok=True)
 
     result = {
         "status": "ok",
@@ -207,6 +320,7 @@ async def publish_to_xhs(
         "content_length": article["content_length"],
         "tags_planned": article["tags"],
         "draft_saved": False,
+        "safety_screenshots": [],
     }
 
     async with async_playwright() as p:
@@ -223,17 +337,19 @@ async def publish_to_xhs(
         print(f"🍪 Loaded {n_cookies} cookies")
 
         page = await ctx.new_page()
-        page.set_default_timeout(10000)  # 10s default timeout per action
+        page.set_default_timeout(15000)  # 15s default timeout
 
         try:
-            # 1. Navigate
-            await page.goto(PUBLISH_URL, timeout=15000)
+            # 1. Navigate → Safety #1
+            await page.goto(PUBLISH_URL, timeout=20000)
             await page.wait_for_load_state("networkidle")
             await asyncio.sleep(2)
+            await safety_screenshot(page, "page_loaded", 1)
 
             # Verify login
             body_text = await page.evaluate("() => document.body.innerText.substring(0, 100)")
             if "创作服务平台" not in body_text:
+                await safety_screenshot(page, "login_failed", 1)
                 raise RuntimeError("Not logged in to XHS! Cookie may have expired.")
             print("✅ Login verified")
 
@@ -242,35 +358,67 @@ async def publish_to_xhs(
             await asyncio.sleep(1)
             print("✅ Tab switched to 上传图文")
 
-            # 3. Upload cover
-            file_input = await page.query_selector(SEL_FILE_INPUT)
-            if not file_input:
-                raise RuntimeError("File input not found")
-            await file_input.set_input_files(str(cover))
-            print(f"✅ Cover uploaded: {cover.name}")
-            await asyncio.sleep(6)
+            # 3. Upload cover → Safety #2
+            for attempt in range(RETRY_CONFIG["upload"][0]):
+                try:
+                    file_input = await page.query_selector(SEL_FILE_INPUT)
+                    if not file_input:
+                        raise RuntimeError("File input not found")
+                    await file_input.set_input_files(str(cover))
+                    print(f"✅ Cover uploaded: {cover.name}")
+                    await asyncio.sleep(6)
+                    await safety_screenshot(page, "cover_uploaded", 2)
+                    break
+                except Exception as e:
+                    if attempt < RETRY_CONFIG["upload"][0] - 1:
+                        delay = RETRY_CONFIG["upload"][1] * (2 ** attempt)
+                        log("⚠️", f"Cover upload failed (attempt {attempt+1}): {e}. Retrying in {delay}s...")
+                        await asyncio.sleep(delay)
+                    else:
+                        raise
 
-            # 4. Fill title
-            title_input = await page.query_selector(SEL_TITLE)
-            if not title_input:
-                raise RuntimeError("Title input not found — cover upload may have failed")
-            box = await title_input.bounding_box()
-            if not box or box["width"] < 10:
-                raise RuntimeError("Title input not visible — editor did not load")
-            await title_input.click()
-            await title_input.fill(article["title"])
-            print(f"✅ Title: {article['title']} ({len(article['title'])} chars)")
+            # 4. Fill title → Safety #3
+            for attempt in range(RETRY_CONFIG["selector"][0]):
+                try:
+                    title_input = await page.query_selector(SEL_TITLE)
+                    if not title_input:
+                        raise RuntimeError("Title input not found — cover upload may have failed")
+                    box = await title_input.bounding_box()
+                    if not box or box["width"] < 10:
+                        raise RuntimeError("Title input not visible — editor did not load")
+                    await title_input.click()
+                    await title_input.fill(article["title"])
+                    print(f"✅ Title: {article['title']} ({len(article['title'])} chars)")
+                    await asyncio.sleep(0.5)
+                    await safety_screenshot(page, "title_filled", 3)
+                    break
+                except Exception as e:
+                    if attempt < RETRY_CONFIG["selector"][0] - 1:
+                        log("⚠️", f"Title fill failed (attempt {attempt+1}): {e}. Retrying...")
+                        await asyncio.sleep(RETRY_CONFIG["selector"][1])
+                    else:
+                        raise
 
-            # 5. Fill content
-            editor = await page.query_selector(SEL_EDITOR)
-            if not editor:
-                raise RuntimeError("Content editor not found")
-            await editor.click()
-            await fill_prosemirror(page, editor, article["body_html"])
-            print(f"✅ Content: {article['content_length']} chars")
+            # 5. Fill content → Safety #4
+            for attempt in range(RETRY_CONFIG["selector"][0]):
+                try:
+                    editor = await page.query_selector(SEL_EDITOR)
+                    if not editor:
+                        raise RuntimeError("Content editor not found")
+                    await editor.click()
+                    await fill_prosemirror(page, editor, article["body_html"])
+                    print(f"✅ Content: {article['content_length']} chars")
+                    await asyncio.sleep(0.5)
+                    await safety_screenshot(page, "content_filled", 4)
+                    break
+                except Exception as e:
+                    if attempt < RETTRY_CONFIG["selector"][0] - 1:
+                        log("⚠️", f"Content fill failed (attempt {attempt+1}): {e}. Retrying...")
+                        await asyncio.sleep(RETRY_CONFIG["selector"][1])
+                    else:
+                        raise
 
             # 6. Add tags via content (embed hashtags in body text)
-            # XHS auto-recognizes #话题 in content — more reliable than topic panel
             added_tags = article["tags"][:8]
             tag_text = " ".join(f"#{t}" for t in added_tags)
             try:
@@ -287,42 +435,50 @@ async def publish_to_xhs(
 
             result["tags_added"] = added_tags
 
-            # 7. Screenshot
-            ts = datetime.now().strftime("%Y%m%d%H%M%S")
-            ss_path = f"/tmp/xhs_publish_{ts}.png"
-            await page.screenshot(path=ss_path)
-            result["screenshot_path"] = ss_path
-            print(f"✅ Screenshot: {ss_path}")
+            # 7. Screenshot before draft → Safety #5
+            await safety_screenshot(page, "before_draft", 5)
 
             # 8. Save draft
             if decision == "draft":
                 await asyncio.sleep(1)
-                saved = await save_draft(page)
-                if saved:
-                    await asyncio.sleep(3)
-                    draft_info = await get_draft_count(page)
-                    result["draft_saved"] = True
-                    result["draft_count"] = draft_info
-                    print(f"✅ Draft saved → {draft_info}")
-                else:
-                    raise RuntimeError("Draft button '暂存离开' not found")
+
+                # Retry: find and click draft button
+                for attempt in range(RETRY_CONFIG["selector"][0]):
+                    try:
+                        saved = await save_draft(page)
+                        if saved:
+                            await asyncio.sleep(3)
+                            await safety_screenshot(page, "draft_confirm", 6)
+                            draft_info = await get_draft_count(page)
+                            result["draft_saved"] = True
+                            result["draft_count"] = draft_info
+                            print(f"✅ Draft saved → {draft_info}")
+                            break
+                        else:
+                            raise RuntimeError("Draft button '暂存离开' not found")
+                    except Exception as e:
+                        if attempt < RETRY_CONFIG["selector"][0] - 1:
+                            log("⚠️", f"Draft save failed (attempt {attempt+1}): {e}. Retrying...")
+                            await asyncio.sleep(RETRY_CONFIG["selector"][1])
+                        else:
+                            raise
             else:
                 print("⚠️  Only 'draft' decision is supported. Skipping save.")
 
         except Exception as e:
             result["status"] = "error"
             result["error"] = str(e)
-            print(f"❌ Error: {e}")
+            log("❌", f"Error: {e}")
             # Take error screenshot
             try:
-                err_ss = f"/tmp/xhs_error_{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
-                await page.screenshot(path=err_ss)
-                result["error_screenshot"] = err_ss
+                err_ss = SAFETY_DIR / f"xhs_error_{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
+                await page.screenshot(path=str(err_ss))
+                result["error_screenshot"] = str(err_ss)
+                log("📸", f"Error screenshot: {err_ss}")
             except Exception:
                 pass
 
         finally:
-            # Close XHS page
             try:
                 await page.close()
             except Exception:

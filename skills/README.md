@@ -1,6 +1,6 @@
 # 🛠️ Skills Index
 
-> **524 skills** with SKILL.md (incl. 29 thinking frameworks) | [← Back to main README](../README.md)
+> **593 skills** with SKILL.md (incl. 29 thinking frameworks) | [← Back to main README](../README.md)
 
 
 ## 🌟 Maintainer-Curated Indexes

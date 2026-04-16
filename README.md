@@ -2,7 +2,7 @@
 
 [中文](./README_CN.md) | English
 
-> **524 curated AI skills + 13 ready-to-deploy C-Suite agents** for [OpenClaw](https://github.com/openclaw/openclaw) — build your own AI-native company with a full C-suite of digital executives. Includes 29 distilled thinking frameworks from real-world mentors.
+> **593 curated AI skills + 13 ready-to-deploy C-Suite agents** for [OpenClaw](https://github.com/openclaw/openclaw) — build your own AI-native company with a full C-suite of digital executives. Includes 29 distilled thinking frameworks from real-world mentors.
 
 ## 💡 What Is This?
 

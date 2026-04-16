@@ -2,9 +2,10 @@
 name: douyin-smart-publish
 description: "抖音创作者平台智能发布（视频/图文）：内容适配→上传→填描述/#话题→封面→存草稿→截图回传确认。默认只存草稿；只有在 Daniel 明确确认后才允许点击发布。覆盖标题(≤55字)、描述(建议≤200字)、#话题标签(3-5个)、封面设置、定时发布、可见性、合拍/下载开关。Playwright 自动化。触发：'发抖音'、'抖音发布'、'douyin publish'、'抖音图文'、'抖音视频'、'发布短视频'。"
 author: Daniel Li
+version: 1.1.0
 ---
 
-# 抖音智能发布
+# 抖音智能发布 v1.1
 
 > 📋 **发布前请确认内容合规**：`~/clawd/projects/MediaClaw/references/platforms/douyin.md`（社区公约11大类违规、AIGC标识、账号健康分）
 
@@ -14,6 +15,86 @@ author: Daniel Li
 - **只有 Daniel 明确确认后，才允许点“发布”。**
 - 在自动化填完内容后，优先截图回传当前页面，确认标题/描述/封面/话题都正确。
 - 如果遇到登录验证、滑块、频率限制、上传卡住，不要死磕；保留截图和当前状态，转为“待 Daniel 接管”。
+
+## ⚡ v1.1 安全增强
+
+### Pre-flight Checklist（飞行前检查）
+
+**每次发布前必须验证以下所有项目，缺一不可**：
+
+```bash
+# 1. 浏览器连接测试
+curl -s http://127.0.0.1:18800/json/version | grep -q webkit && echo "✅ Browser OK" || echo "❌ Browser Down"
+
+# 2. 登录态验证
+python3 scripts/publish.py doctor --no-headless \
+  --url "https://creator.douyin.com/creator-micro/content/upload?default-tab=3" \
+  --screenshot /tmp/douyin_preflight.png
+
+# 3. 文件验证
+ls -lh "$VIDEO_OR_IMAGE_FILE"
+```
+
+**检查清单**：
+- [ ] 浏览器运行中
+- [ ] 登录态有效（未过期）
+- [ ] 文件存在且格式正确
+- [ ] doctor 冒烟测试通过（selector 都能找到）
+
+### Safety Screenshots（安全截图）
+
+**在每个按钮点击前必须截图当前状态**：
+
+```
+打开上传页 → [截图#1: 页面加载] → 上传文件 → [截图#2: 文件上传完成]
+→ 填描述 → [截图#3: 描述已填] → 设置封面 → [截图#4: 封面已选]
+→ 填话题 → [截图#5: 话题已填] → 点击存草稿 → [截图#6: 草稿确认]
+```
+
+**截图命名**：`/tmp/douyin_safety_{N}_{step_name}_{timestamp}.png`
+
+### Error Escalation（错误升级规则）
+
+**3次失败即停止**：
+
+| 失败点 | 失败次数 | 行为 |
+|--------|---------|------|
+| 文件上传 | ≥3次失败 | 停止，截图，报告 |
+| 描述填充 | ≥3次失败 | 停止，截图，报告 |
+| 按钮点击 | ≥2次失败 | 停止，截图，报告 |
+| 登录验证 | 失败 | 停止，提示重新登录 |
+
+**停止后操作**：
+1. 截图当前页面
+2. 保存所有安全截图到 `/tmp/douyin_safety/`
+3. 报告具体失败步骤和错误信息
+4. **转为"待 Daniel 接管"**
+
+### 恢复模式（Recovery）
+
+如果发布流程中断：
+
+1. 检查草稿箱：`https://creator.douyin.com/creator-micro/content/manage`
+2. 查看安全截图：`ls /tmp/douyin_safety/*.png`
+3. 判断是否需要重跑：
+   - 截图#5已存在 → 草稿按钮前失败了，需要重跑
+   - 截图#4已存在 → 话题填写后失败了，需要重跑
+   - 截图#2已存在 → 文件已上传，可跳过上传步骤
+4. 重新运行时使用 `--mode draft`，绝不自动切换到 `--mode publish`
+
+### 草稿按钮文案变体
+
+**已知变体**（抖音 UI 经常变化）：
+
+| 文案 | 出现场景 | 对应 selector |
+|------|---------|---------------|
+| `存草稿` | 视频上传页 | `button:has-text('存草稿')` |
+| `暂存离开` | 图文上传页 | `button:has-text('暂存离开')` |
+| `草稿` | 部分版本 | `button:has-text('草稿')` |
+
+**脚本已覆盖所有变体**：`button:has-text('存草稿'), button:has-text('草稿'), button:has-text('暂存离开')`
+
+---
 
 ## 平台入口
 
@@ -265,3 +346,13 @@ douyin-smart-publish/
 └── templates/
     └── desc-template.md    # 描述/话题排版模板
 ```
+
+## 更新日志
+
+- **v1.1.0** (2026-04-16): 安全增强
+  - Pre-flight checklist（浏览器、登录态、文件、doctor 冒烟测试）
+  - Safety screenshots（6个关键节点截图）
+  - Error escalation（3次失败即停止）
+  - Recovery mode 文档
+  - 草稿按钮文案变体文档（存草稿/暂存离开/草稿）
+- **v1.0.0** (2026-03-27): 初始版本，实战验证通过

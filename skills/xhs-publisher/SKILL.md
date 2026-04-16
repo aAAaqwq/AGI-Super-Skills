@@ -1,16 +1,16 @@
 ---
 name: xhs-publisher
-description: "将 Markdown 文章自动发布到小红书（XHS）草稿箱。支持封面图上传、标题/正文填充、标签匹配。基于 Playwright CDP 直连浏览器操作。"
+description: "将 Markdown 文章自动发布到小红书（XHS）草稿箱。支持封面图上传、标题/正文填充、标签匹配、排版优化检查。基于 OpenClaw Browser（优先）+ Playwright CDP 操作。"
 license: MIT
 metadata:
-  version: 1.0.0
-  author: xiaocode
+  version: 1.2.0
+  author: xiaocode + CCO Ives
   domains: [content, publishing, automation, xiaohongshu]
   type: automation
-  requires: [playwright, browser-access]
+  requires: [playwright, openclaw-browser]
 ---
 
-# XHS Publisher — 小红书自动发布
+# XHS Publisher — 小红书自动发布 v1.2
 
 > **将 Markdown 文章一键发布到小红书创作者平台草稿箱。**
 
@@ -20,6 +20,8 @@ metadata:
 - 批量发布内容到 XHS
 - 自动化内容分发 pipeline 中的一环
 - 其他 agent（小content等）需要发布 XHS 内容时
+
+> 📋 **发布前请确认内容合规**：`~/clawd/projects/MediaClaw/references/platforms/xiaohongshu.md`（社区规范、AIGC标注要求、导流禁止）
 
 ## 不适用
 
@@ -189,6 +191,98 @@ await page.evaluate('''() => {
 - 加载方式：`await context.add_cookies(cookies_from_state)`
 - 检查登录：页面出现"创作服务平台"文字即为已登录
 
+## ⚡ v1.2 安全增强（新增）
+
+### Pre-flight Health Check（飞行前检查）
+
+**每次发布前必须执行以下检查项**：
+
+```bash
+# 1. 浏览器健康检查
+browser(action="status", profile="openclaw")
+# 必须 running=true，否则 start 并等待
+
+# 2. Cookie 有效性检查
+python3 -c "
+import json
+from pathlib import Path
+state = json.loads(Path.home().joinpath('.playwright-data/xiaohongshu/state-default.json').read_text())
+cookies = state.get('cookies', [])
+now = __import__('time').time()
+for c in cookies:
+    exp = c.get('expires', -1)
+    if exp > 0 and exp < now:
+        print(f'EXPIRED: {c[\"name\"]} (expired {exp})')
+        exit(1)
+print(f'OK: {len(cookies)} cookies, all valid')
+"
+
+# 3. 文件存在性检查
+ls -lh "$ARTICLE_PATH" "$COVER_PATH"
+
+# 4. 封面尺寸检查（推荐 ≥720x960）
+python3 -c "
+from PIL import Image
+img = Image.open('$COVER_PATH')
+w, h = img.size
+print(f'Cover: {w}x{h}', '✅' if w>=720 and h>=960 else '⚠️ 建议≥720x960')
+"
+```
+
+### 安全截图机制（Safety Screenshots）
+
+**在每个关键操作后截图，作为安全备份**：
+
+```
+流程: 打开页面 → [安全截图#1] → 上传封面 → [安全截图#2] 
+→ 填标题 → [安全截图#3] → 填正文 → [安全截图#4] 
+→ 存草稿 → [安全截图#5]
+```
+
+**截图文件命名规范**：
+```bash
+/tmp/xhs_safety_01_page_loaded.png
+/tmp/xhs_safety_02_cover_uploaded.png
+/tmp/xhs_safety_03_title_filled.png
+/tmp/xhs_safety_04_content_filled.png
+/tmp/xhs_safety_05_before_draft.png
+/tmp/xhs_safety_06_draft_confirm.png
+```
+
+**原则**：任何操作前都截图当前状态，即使失败也有证可查。
+
+### 重试机制
+
+| 失败场景 | 重试次数 | 退避策略 |
+|---------|---------|---------|
+| 网络超时 | 3次 | 10s → 30s → 60s |
+| Selector 未找到 | 2次 | 5s → 10s |
+| 文件上传失败 | 3次 | 10s → 30s → 60s |
+| 页面加载失败 | 2次 | 15s → 30s |
+
+**超过最大重试**：停止，截图当前状态，报告错误，转交 Daniel 接管。
+
+### 恢复模式（Recovery）
+
+如果浏览器在发布过程中意外关闭：
+
+1. **重启浏览器**：`openclaw browser start --profile openclaw`
+2. **检查草稿箱**：手动访问 `https://creator.xiaohongshu.com/publish/publish`
+3. **查看安全截图**：`ls /tmp/xhs_safety_*.png`
+4. **判断是否需要重试**：如果安全截图#5已存在，说明存草稿前失败了，需要重跑
+
+### 错误处理策略
+
+| 错误类型 | 行为 |
+|---------|------|
+| Cookie 过期 | 停止 → 提示 Daniel 重新扫码登录 |
+| Selector 找不到 | 重试2次 → 失败则截图+停止 |
+| 网络超时 | 重试3次 → 失败则截图+停止 |
+| 封面上传失败 | 重试3次 → 失败则截图+停止 |
+| 存草稿按钮找不到 | 截图+停止，提示 Daniel 手动存 |
+
+---
+
 ## 常见问题
 
 ### Q: 图片上传后编辑器没出现？
@@ -251,7 +345,13 @@ Pillow (用于图片尺寸验证，可选)
 
 ## 更新日志
 
-- **v1.0.0** (2026-04-14): 初始版本，基于 MediaClaw XHS 发布实战验证
+- **v1.2.0** (2026-04-16): 安全增强
+  - Pre-flight health check（浏览器、Cookie、文件、封面尺寸）
+  - 安全截图机制（6个关键节点截图）
+  - 重试机制（3次/2次，指数退避）
+  - 恢复模式文档
+  - 错误处理策略细化
+- **v1.1.0** (2026-04-14): 初始版本，基于 MediaClaw XHS 发布实战验证
   - 完整 selector 验证（7个关键元素）
   - ProseMirror 填充方案
   - 标题/正文限制处理
