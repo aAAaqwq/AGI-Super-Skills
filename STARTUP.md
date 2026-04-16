@@ -82,9 +82,13 @@ AGI-Super-Team/
 │   ├── categories/      # Skills organized by category
 │   ├── docs/            # Skill documentation
 │   └── README.md        # Skill index
-├── docs/                # Documentation
-│   ├── books/           # Recommended reading
-│   └── repos/           # Recommended repositories
+├── cookbook/             # Knowledge cookbooks (complete chapter books)
+│   ├── celebrity-mindset/    # 27 chapters on top entrepreneurs
+│   ├── knowledge-book/       # 10-chapter knowledge system
+│   ├── quant-learning/       # 20-round quantitative trading curriculum
+│   ├── self-media-operations-handbook/  # 11-chapter operations guide
+│   ├── crypto-learning/      # Complete crypto trading guide
+│   └── prompt-engineering-learning/     # 6-round prompt engineering course
 ├── CHARTER.md           # Team charter
 ├── COLLABORATION.md     # Collaboration guidelines
 ├── SECURITY.md          # Security policy
@@ -143,8 +147,7 @@ openclaw gateway start
 - [OpenClaw Documentation](https://github.com/openclaw/openclaw)
 - [Agent Configuration Guide](./agents/README.md)
 - [Skill Categories](./skills/categories/README.md)
-- [Recommended Books](./docs/books/recommended-reading.md)
-- [Useful Repos](./docs/repos/repos-guide.md)
+- [Knowledge Cookbooks](./cookbook/) — Multi-chapter learning resources
 
 ## 🤝 Support
 
