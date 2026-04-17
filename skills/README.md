@@ -1,6 +1,6 @@
 # 🛠️ Skills Index
 
-> **593 skills** with SKILL.md (incl. 29 thinking frameworks) · 171 with scripts · 197 with Chinese content  
+> **603 skills** with SKILL.md (incl. 29 thinking frameworks) · 171 with scripts · 197 with Chinese content  
 > [← Back to main README](../README.md)
 
 ---

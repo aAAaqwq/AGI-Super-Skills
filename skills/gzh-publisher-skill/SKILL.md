@@ -3,7 +3,7 @@ name: gzh-publisher-skill
 description: "微信公众号统一发布技能：通过 OpenClaw Browser 自动化完成登录、写文章、一键排版、封面、存草稿。唯一官方公众号发布方式。"
 license: MIT
 metadata:
-  version: 2.4.0
+  version: 2.5.0
   author: Daniel Li / 小a CEO
   domains: [content, publishing, automation, wechat]
   type: automation
@@ -13,6 +13,29 @@ metadata:
 # GZH Publisher Skill — 公众号统一发布
 
 > **唯一官方微信公众号发布方式。基于 OpenClaw Browser 自动化。**
+
+## 🚀 快速使用（脚本模式）
+
+```bash
+# 基础用法
+python3 scripts/publish.py \
+  --article output/articles/2026-04-17/claude-opus-4-7/gzh/article-v3.md \
+  --cover output/articles/2026-04-17/claude-opus-4-7/gzh/cover-16x9.jpg \
+  --author Daniel
+
+# 带素材图片
+python3 scripts/publish.py \
+  --article article.md \
+  --cover cover.jpg \
+  --author Daniel \
+  --images img1.png img2.jpg
+```
+
+脚本自动完成：登录验证 → 新建文章 → 填标题作者 → 上传图片 → 注入正文 → 一键排版 → 设置封面 → 存草稿。
+
+> 需要 OpenClaw Browser 运行中（`openclaw browser start`）。
+
+---
 
 ## 什么时候用
 
@@ -681,6 +704,13 @@ asyncio.run(cdp_upload(ws_url, "/tmp/openclaw/uploads/image.png"))
 ---
 
 ## 更新日志
+
+- **v2.5.0** (2026-04-17): 新增 publish.py 脚本
+  - 新增 `scripts/publish.py`，一行命令完成完整发布流程
+  - CDP-based 图片上传（DOM.setFileInputFiles）
+  - Markdown → WeChat HTML 转换内置
+  - 一键排版 + 封面设置自动化
+  - 快速使用文档加到 SKILL.md 顶部
 
 - **v2.4.0** (2026-04-15): 实战踩坑补全
   - 新增陷阱5: OpenClaw `upload` 对微信无效，必须用 CDP `DOM.setFileInputFiles`

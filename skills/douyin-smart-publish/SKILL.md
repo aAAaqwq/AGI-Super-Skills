@@ -199,7 +199,7 @@ ls -lh "$VIDEO_OR_IMAGE_FILE"
 - **先授权，再发布**：未登录时页面里可能根本没有上传控件，不能把“上传失败”误判成 selector 问题。
 - **登录判断不能只看 URL**：即使 URL 已在 `creator-micro/*` 下，页面仍可能是扫码登录态；要同时检查页面文案/二维码区。
 - **当前抖音图文页的草稿按钮文案可能不是 `存草稿`，而是 `暂存离开`**。
-- **图文页存在真实 `input[type=file]`**，在授权成功后可直接上传；之前 `count=0` 的根因是登录页，不是上传能力缺失。
+- **图文页存在真实 `inp 6ut[type=file]`**，在授权成功后可直接上传；之前 `count=0` 的根因是登录页，不是上传能力缺失。
 
 推荐排查顺序：
 1. 先确认是否真的登录成功
@@ -216,9 +216,10 @@ ls -lh "$VIDEO_OR_IMAGE_FILE"
 3. 等待上传+转码完成
 4. 选择/上传封面
 5. 填写描述 + #话题 + @提及
-6. 设置：可见性(公开/好友/私密)、合拍、下载
-7. 可选：定时发布(最远10天)、POI定位
-8. 点击 [发布] 或 [存草稿]
+6. 🎵 选择BGM（从推荐/热门中选取适合作品氛围的音乐）
+7. 设置：可见性(公开/好友/私密)、合拍、下载
+8. 可选：定时发布(最远10天)、POI定位
+9. 点击 [发布] 或 [存草稿]
 ```
 
 ### 图文发布
@@ -285,6 +286,7 @@ python scripts/publish.py daily \
 | 描述输入 | `[class*="desc"] [contenteditable]` / `textarea` / `[placeholder*="添加作品描述"]` | 描述编辑区 |
 | 话题输入 | 描述区中输入 `#` 触发话题搜索 | 话题弹窗选择 |
 | 封面选择 | `[class*="cover"]` / 封面编辑弹窗 | 视频帧或自定义 |
+| 音乐选择 | `添加音乐` 按钮 / 音乐搜索面板 | 从推荐/热门中选择BGM |
 | 发布按钮 | `button:has-text("发布")` | 发布确认 |
 | 草稿按钮 | `button:has-text("存草稿")` / `button:has-text("暂存离开")` | **当前实测图文页常见为 `暂存离开`** |
 | 定时开关 | `[class*="schedule"]` / 时间选择器 | 定时发布 |
@@ -347,8 +349,111 @@ douyin-smart-publish/
     └── desc-template.md    # 描述/话题排版模板
 ```
 
+## 🎵 选择BGM（音乐选择步骤）
+
+**在填写完描述后、存草稿前执行。**
+
+#### 操作流程
+
+```
+1. 在发布页面找到"添加音乐"按钮（通常在描述区下方）
+2. 点击打开音乐选择面板
+3. 切换到"推荐"或"热门"标签页
+4. 搜索与作品内容匹配的音乐（搜索关键词参考下方匹配表）
+5. 试听前10秒，判断节奏和氛围是否贴合
+6. 选择合适音乐 → 点击"使用"
+```
+
+#### 浏览器操作（OpenClaw Browser）
+
+```
+# 找到并点击"添加音乐"按钮
+browser(action="act", kind="evaluate", targetId=编辑页targetId, fn="""
+  () => {
+    const btns = document.querySelectorAll('button, div, span');
+    for (const btn of btns) {
+      const text = btn.textContent.trim();
+      if (text === '添加音乐' || text === '选择音乐' || text.includes('音乐')) {
+        if (btn.offsetParent !== null) {
+          btn.click();
+          return 'clicked: ' + text;
+        }
+      }
+    }
+    return 'not found';
+  }
+""")
+
+# 等待音乐面板加载
+browser(action="act", kind="wait", timeMs=2000)
+
+# 切换到"推荐"或"热门"标签
+browser(action="act", kind="evaluate", targetId=编辑页targetId, fn="""
+  () => {
+    const tabs = document.querySelectorAll('div, span, button');
+    for (const tab of tabs) {
+      const text = tab.textContent.trim();
+      if ((text === '推荐' || text === '热门') && tab.offsetParent !== null) {
+        tab.click();
+        return 'switched to: ' + text;
+      }
+    }
+    return 'not found';
+  }
+""")
+
+# 搜索匹配音乐（根据内容主题）
+browser(action="act", kind="evaluate", targetId=编辑页targetId, fn="""
+  () => {
+    const input = document.querySelector('input[placeholder*="搜索音乐"]');
+    if (input) {
+      input.value = '{搜索关键词}';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      return 'searched';
+    }
+    return 'search input not found';
+  }
+""")
+```
+
+#### 内容×BGM 搜索关键词匹配
+
+| 内容类型 | 推荐搜索关键词 | 风格方向 |
+|---------|------------|---------|
+| AI/科技 | "科技感" "电子" "赛博朋克" | 节奏感强、未来感 |
+| 编程/技术 | "轻音乐" "lofi" "学习" | 舒适、不干扰 |
+| 行业分析 | "商务" "沉稳" "大气" | 专业、可信 |
+| 对比评测 | "节奏" "悬念" "动感" | 起伏感、吸引注意力 |
+| 工具推荐 | "轻快" "活力" "阳光" | 积极、轻快 |
+| 深度解读 | "史诗" "电影感" "沉浸" | 大气、有层次 |
+
+#### 选择策略
+
+```
+优先级：
+1. 推荐列表前5首中找风格匹配的 → 直接使用
+2. 热门榜前10首中找风格匹配的 → 直接使用
+3. 搜索关键词后选播放量最高的 → 使用
+4. 都不合适 → 跳过音乐选择（不强制）
+```
+
+#### 注意事项
+
+- **只从抖音音乐库选择**（自动获授权，无版权风险）
+- **不要上传本地音频**（可能侵权）
+- **优先选推荐的**（算法推荐 = 当前热门 = 更高曝光）
+- **试听前10秒**（判断节奏是否贴合内容节奏）
+- **不合适就跳过**（宁可没有BGM也不用不搭的音乐）
+
+---
+
 ## 更新日志
 
+- **v1.2.0** (2026-04-16): 新增BGM选择步骤
+  - 发布流程Step 6: 选择BGM（从推荐/热门中选取）
+ - 6种内容类型×BGM搜索关键词匹配
+  - OpenClaw Browser音乐面板操作代码
+  - UI选择器新增"音乐选择"条目
 - **v1.1.0** (2026-04-16): 安全增强
   - Pre-flight checklist（浏览器、登录态、文件、doctor 冒烟测试）
   - Safety screenshots（6个关键节点截图）
