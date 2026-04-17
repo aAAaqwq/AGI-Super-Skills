@@ -165,12 +165,27 @@ description: |
 | **X/Twitter** | 无独立skill（参考本方法三） | ≤280字、观点钩子 |
 | **知乎** | 无独立skill（参考本方法三） | 专业论证、数据引用 |
 
-**素材采集**：所有平台的素材阶段应调用 `article-material-collect` skill（编排层，自动调用 `web-content-capture` 完成截图）。
+**素材生成优先级**（所有平台统一）：
+
+| 优先级 | 方案 | 适用场景 |
+|--------|------|--------|
+| 1 | `longform-visual-notes` | 知识转视觉笔记（首选） |
+| 2 | `baoyu-xhs-images` | 信息图（10风格8布局） |
+| 3 | `content-cover-gen` | 封面生成 |
+| 4 | `relay-image-gen` | 兜底AI生图 |
+| 5 | `web-content-capture` | 网页截图（**最低优先级**） |
+
+素材保存路径：`~/clawd/projects/MediaClaw/output/articles/{YYYY-MM-DD}/{topic-slug}/素材/`
 
 ### 执行要求
 - 每个平台只输出最终内容，不解释过程
 - 不要把平台格式写错（小红书不要用公众号格式）
 - 保留核心观点，调整表达方式而非重写
+- **适配完成后，主动调用对应平台的发布 skill 存草稿：**
+  - 小红书 → 调用 `xhs-publisher` skill（Step 6 of `daily-xhs-content`）
+  - 公众号 → 调用 `gzh-publisher-skill` skill（Step 6 of `daily-gzh-content`）
+  - 抖音 → 调用 `douyin-smart-publish` skill（Step 6 of `daily-douyin-content`）
+  - 调用前确保内容已通过该平台的 quality check（参考各 daily-content skill 的 Step 4）
 
 ---
 
@@ -215,6 +230,15 @@ description: |
   输入: [选定选题 + 调研助理的素材]
   输出: 正文初稿 + 3个备选标题 + 配图建议
   作者: 由调用方指定，未指定时留空
+
+> **⚡ 素材生成策略（优先级）**：
+> 1. `longform-visual-notes` — 长文核心知识转图（首选，gemini-3-pro-image，中文文字图）
+> 2. `baoyu-xhs-images` — 小红书信息图系列（10种风格）
+> 3. `content-cover-gen` — 封面图生成
+> 4. `relay-image-gen` — 兜底AI生图
+> 5. `web-content-capture` — 网页截图（最低优先级）
+>
+> 素材路径：`~/clawd/projects/MediaClaw/output/articles/{YYYY-MM-DD}/{topic-slug}/素材/`
 
 📱 适配助理 (content/ops)
   输入: [正文初稿]

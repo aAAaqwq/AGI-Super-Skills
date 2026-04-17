@@ -214,14 +214,49 @@ async def publish_image(page, file_paths: list, title: str, desc: str, mode: str
 
     # 导航到图文上传页
     await page.goto(IMAGE_UPLOAD, wait_until="domcontentloaded", timeout=30000)
-    await asyncio.sleep(3)
+    # 等待页面加载完成（抖音是重度SPA，需要等待file input出现）
+    try:
+        await page.wait_for_selector("input[type='file']", timeout=30000)
+    except Exception:
+        log("❌", "页面加载超时，file input未出现")
+        await page.screenshot(path="/tmp/douyin_load_timeout.png")
+        return False
+    await asyncio.sleep(2)
+
+    # 处理"上次未发布图文"弹窗（如果有）
+    # 抖音弹窗的"继续编辑"和"放弃"是文本链接，不是button
+    for _ in range(3):
+        dismissed = await page.evaluate("""() => {
+            const els = document.querySelectorAll('*');
+            for (const el of els) {
+                const t = el.textContent.trim();
+                if ((t === '放弃' || t === '不再提醒' || t === '新建图文')
+                    && el.offsetParent !== null && el.children.length === 0) {
+                    el.click();
+                    return t;
+                }
+            }
+            return null;
+        }""")
+        if dismissed:
+            log("ℹ️", f"检测到未发布图文弹窗，点击 [{dismissed}]")
+            await asyncio.sleep(2)
+        else:
+            break
 
     # 上传图片（支持多选）
     file_input = page.locator("input[type='file']").first
     try:
         await file_input.set_input_files(file_paths)
         log("📤", f"已上传 {len(file_paths)} 张图片")
-        await asyncio.sleep(3)
+        # 等待图片上传处理完成（检查是否有草稿/发布按钮出现）
+        try:
+            await page.wait_for_selector("button:has-text('存草稿'), button:has-text('发布'), button:has-text('暂存离开')", timeout=60000)
+            log("✅", "图片上传完成，编辑器已就绪")
+        except Exception:
+            log("❌", "图片上传超时，编辑器未就绪")
+            await page.screenshot(path="/tmp/douyin_upload_timeout.png")
+            return False
     except Exception as e:
         log("❌", f"图片上传失败: {e}")
         return False
@@ -328,10 +363,22 @@ async def _set_schedule(page, schedule_str: str):
 
 async def _wait_for_post_submit(page, mode: str) -> bool:
     """等待提交后的成功信号或跳转。"""
-    for _ in range(18):  # ~18s
+    upload_url = page.url  # 记录提交前的URL
+    for i in range(24):  # ~24s
         await asyncio.sleep(1)
+        # 关闭可能的弹窗（共创中心推广等）
+        await page.evaluate("""() => {
+            const els = document.querySelectorAll('*');
+            for (const el of els) {
+                if (el.textContent.trim() === '我知道了'
+                    && el.offsetParent !== null && el.children.length === 0) {
+                    el.click();
+                }
+            }
+        }""")
         url = page.url
-        if any(key in url for key in ["draft", "content/manage", "content"]):
+        # 严格匹配：URL必须变化且跳转到管理页/草稿确认页
+        if url != upload_url and any(key in url for key in ["draft", "content/manage", "publish/success"]):
             return True
 
         success_texts = ["保存成功", "草稿已保存", "发布成功", "处理中", "暂存成功"]
@@ -359,9 +406,43 @@ async def _submit(page, mode: str) -> bool:
                 return True
     else:
         log("💾", "保存草稿...")
+        # Debug: list all buttons
+        all_btns = await page.evaluate("""() => {
+            return Array.from(document.querySelectorAll('button, [role="button"]'))
+                .filter(b => b.offsetParent !== null)
+                .map(b => b.textContent.trim().substring(0, 30))
+                .filter(t => t.length > 0);
+        }""")
+        log("🔍", f"Visible buttons: {all_btns}")
+        # 先关闭遮挡弹窗（共创中心推广等）
+        await page.evaluate("""() => {
+            const els = document.querySelectorAll('*');
+            for (const el of els) {
+                const t = el.textContent.trim();
+                if ((t === '我知道了' || t === '确认' || t === '关闭')
+                    && el.offsetParent !== null && el.children.length === 0) {
+                    el.click();
+                }
+            }
+        }""")
+        await asyncio.sleep(1)
+        # 再点击草稿按钮
         btn = page.locator("button:has-text('存草稿'), button:has-text('草稿'), button:has-text('暂存离开')")
         if await btn.count() > 0:
             await btn.first.click()
+            await asyncio.sleep(3)
+            # 点击后可能还有确认弹窗
+            await page.evaluate("""() => {
+                const els = document.querySelectorAll('*');
+                for (const el of els) {
+                    const t = el.textContent.trim();
+                    if ((t === '我知道了' || t === '确认' || t === '暂存')
+                        && el.offsetParent !== null && el.children.length === 0) {
+                        el.click();
+                    }
+                }
+            }""")
+            await asyncio.sleep(1)
             ok = await _wait_for_post_submit(page, mode)
             if ok:
                 log("✅", "草稿已保存/已进入后续页面")

@@ -1,17 +1,18 @@
 # Team Foreman — 团队监工巡查 Skill
 
 > 每 15 分钟由 cron 调用。核心目标：**真实推进任务，不是写报告。**
+> 版本: 2026-04-17 | Wave 2 架构统一
 
 ## ⚡ 进度同步机制（核心改进）
 
 **问题**：每次巡检信息不同步，重复催促已完成的任务。
-**方案**：以 **git log + progress 文件** 为进度真相源。
+**方案**：以 **git log + progress 文件 + CEO memory** 为进度真相源。
 
-### Step 0.5: 加载进度快照（新增，必须执行）
+### Step 0.5: 加载进度快照（必须执行）
 
 ```bash
 # 1. 读取上一轮快照
-PREV=$(cat ~/clawd/tmp/foreman-snapshot.json 2>/dev/null)
+PREV=$(cat ~/.openclaw/tmp/foreman-snapshot.json 2>/dev/null)
 
 # 2. 从 git 获取各项目真实进度（最近24h commits）
 for repo in ~/clawd/projects/MediaClaw ~/clawd/projects/super-quant-claw ~/clawd/projects/content-automation-bot; do
@@ -21,7 +22,6 @@ for repo in ~/clawd/projects/MediaClaw ~/clawd/projects/super-quant-claw ~/clawd
     git -C "$repo" log --oneline --since="24 hours ago" --format="%h %s (%cr)" 2>/dev/null | head -5
   else
     echo "=== $name (no git) ==="
-    # 非 git 项目：用 progress.json 或最近修改文件
     [ -f "$repo/progress.json" ] && cat "$repo/progress.json" | head -10
     ls -lt "$repo/" --time=ctime 2>/dev/null | head -3
   fi
@@ -29,7 +29,7 @@ done
 
 # 3. 检查各 agent 今日工作产出（workspace 日志）
 today=$(date +%Y-%m-%d)
-for ws in ~/clawd/workspace-*/; do
+for ws in ~/.openclaw/workspace-*/; do
   agent=$(basename $ws)
   if [ -f "$ws/memory/$today.md" ]; then
     echo "=== $agent 今日记录 ==="
@@ -51,7 +51,8 @@ tail -20 ~/.openclaw/workspace-main/memory/$today.md 2>/dev/null
 
 每次执行推进动作后，必须更新快照：
 ```bash
-cat > ~/clawd/tmp/foreman-snapshot.json << EOF
+mkdir -p ~/.openclaw/tmp
+cat > ~/.openclaw/tmp/foreman-snapshot.json << EOF
 {
   "timestamp": "$(date -Iseconds)",
   "git_progress": {
@@ -69,23 +70,24 @@ EOF
 
 ## Agent 清单
 
-| agentId | 名字 | accountId | 群聊 sessionKey 后缀 |
+| agentId | 角色 | accountId | 群聊 sessionKey 后缀 |
 |---------|------|-----------|---------------------|
-| main | 小a | default | agent:main:telegram:group:-1003890797239 |
-| cto | 小ops/CTO | xiaoops | agent:cto:telegram:group:-1003890797239 |
-| pe | 小code/PE | xiaocode | agent:pe:telegram:group:-1003890797239 |
-| cqo | 小quant/CQO | xiaoq | agent:cqo:telegram:group:-1003890797239 |
-| cro | 小research/CRO | xiaoresearch | agent:cro:telegram:group:-1003890797239 |
-| cfo | 小finance/CFO | xiaofinance | agent:cfo:telegram:group:-1003890797239 |
-| cdo | 小data/CDO | xiaodata | agent:cdo:telegram:group:-1003890797239 |
-| cmo | 小market/CMO | xiaomarket | agent:cmo:telegram:group:-1003890797239 |
-| cco | 小content/CCO | xiaocontent | agent:cco:telegram:group:-1003890797239 |
-| clo | 小law/CLO | xiaolaw | agent:clo:telegram:group:-1003890797239 |
-| cpo | 小product/CPO | xiaoproduct | agent:cpo:telegram:group:-1003890797239 |
-| cso | 小sales/CSO | xiaosales | agent:cso:telegram:group:-1003890797239 |
-| coo | Grove/COO | xiaoops | agent:coo:telegram:group:-1003890797239 |
+| main | Musk CEO | default | agent:main:telegram:group:-1003890797239 |
+| cto | Jensen CTO | xiaoops | agent:cto:telegram:group:-1003890797239 |
+| pe | 小code PE | xiaocode | agent:pe:telegram:group:-1003890797239 |
+| cqo | 小quant CQO | xiaoq | agent:cqo:telegram:group:-1003890797239 |
+| cro | 小research CRO | xiaoresearch | agent:cro:telegram:group:-1003890797239 |
+| cfo | 小finance CFO | xiaofinance | agent:cfo:telegram:group:-1003890797239 |
+| cdo | 小data CDO | xiaodata | agent:cdo:telegram:group:-1003890797239 |
+| cmo | 小market CMO | xiaomarket | agent:cmo:telegram:group:-1003890797239 |
+| cco | 小content CCO | xiaocontent | agent:cco:telegram:group:-1003890797239 |
+| clo | 小law CLO | xiaolaw | agent:clo:telegram:group:-1003890797239 |
+| cpo | 小product CPO | xiaoproduct | agent:cpo:telegram:group:-1003890797239 |
+| cso | 小sales CSO | xiaosales | agent:cso:telegram:group:-1003890797239 |
+| coo | Grove COO | xiaoops | agent:coo:telegram:group:-1003890797239 |
+| batch | Batch | — | agent:batch:telegram:group:-1003890797239 |
 
-> **PM agent 已删除**（2026-04-13），不再存在。部分旧名称仍可用于 session 寻址。
+> **注意**：PM agent 已于 2026-04-13 彻底删除，产品职责由 CPO (cpo) 承担。禁止在任何场景引用 "pm" 作为 agent ID。
 
 群聊 ID: `-1003890797239`
 
@@ -93,9 +95,9 @@ EOF
 
 | 项目 | 负责 agent | 进度追踪方式 | 优先级 | 当前进度 |
 |------|-----------|------------|--------|----------|
-| MediaClaw | PE(CTO) | git repo | P1 | 查看 git log |
-| Super-Quant-Claw | CQO | 非 git → 最近文件 + progress.json | P1 | Paper Trading RUNNING |
-| 内容自动化 | CCO | **已停止** — Daniel"别再推了" | ❌ | 永久暂停 |
+| MediaClaw | PE (code) | git repo | P1 | 查看 git log |
+| Super-Quant-Claw | CQO (quant) | 非 git → 最近文件 + progress.json | P1 | Paper Trading RUNNING |
+| 内容自动化 | CCO (content) | **已停止** — Daniel 指示暂停 | ❌ | 永久暂停 |
 
 ---
 
@@ -161,7 +163,7 @@ sessions_send(
 ```
 sessions_send(
   sessionKey="agent:<targetAgentId>:telegram:group:-1003890797239",
-  message="【CEO协调】小{source} 已完成 {工作}，需要你接手 {具体任务}。\n输入文件: {路径}\n期望产出: {格式}\n完成后群里汇报。"
+  message="【CEO协调】{source角色} 已完成 {工作}，需要你接手 {具体任务}。\n输入文件: {路径}\n期望产出: {格式}\n完成后群里汇报。"
 )
 ```
 
@@ -177,7 +179,7 @@ sessions_send(
 
 #### 4e. Agent 无响应
 - 催促后 15min 无群聊活动 → 群里再次@
-- 连续 2 次催促无响应 → 群里@小a
+- 连续 2 次催促无响应 → 群里@Musk CEO
 - 连续 3 次 → 群里@Daniel
 
 ### Step 5: 汇报到本群（仅在有实质内容时）
@@ -193,8 +195,8 @@ sessions_send(
 ━━━━━━━━━━━━━━
 
 🚀 推进动作
-- 已催促@小{agent}做{具体事}
-- 已协调 小{A} → 小{B} 交接 {具体任务}
+- 已催促@{角色}做{具体事}
+- 已协调 {A角色} → {B角色} 交接 {具体任务}
 
 🔧 修复
 - {任务名}: {修复内容} ✅
@@ -211,11 +213,11 @@ sessions_send(
 
 ```bash
 # 读取上一轮快照（用于对比催促效果）
-cat ~/clawd/tmp/foreman-snapshot.json 2>/dev/null
+cat ~/.openclaw/tmp/foreman-snapshot.json 2>/dev/null
 
 # 写入本轮快照（包含 git 进度指纹）
-mkdir -p ~/clawd/tmp
-cat > ~/clawd/tmp/foreman-snapshot.json << EOF
+mkdir -p ~/.openclaw/tmp
+cat > ~/.openclaw/tmp/foreman-snapshot.json << EOF
 {
   "timestamp": "$(date -Iseconds)",
   "git_progress": {
@@ -237,7 +239,7 @@ EOF
 
 ```bash
 # 1. 最近修改的关键文件
-find ~/clawd/projects/super-quant-claw/strategies/ -name "*.py" -newer ~/clawd/tmp/foreman-snapshot.json 2>/dev/null
+find ~/clawd/projects/super-quant-claw/strategies/ -name "*.py" -newer ~/.openclaw/tmp/foreman-snapshot.json 2>/dev/null
 
 # 2. Paper Trading 状态
 curl -s -u freqtrade:freqtrade http://127.0.0.1:8082/api/v1/status 2>/dev/null
@@ -247,6 +249,23 @@ tail -30 ~/.openclaw/workspace-main/memory/$(date +%Y-%m-%d).md 2>/dev/null | gr
 ```
 
 **关键规则**：CEO main session 的 `memory/YYYY-MM-DD.md` 是最终进度真相源。如果 CEO memory 记录了"Paper Trading 已启动 RUNNING"，则**不再催促**。
+
+---
+
+## 核心文档引用
+
+执行巡查前应知晓的团队文档：
+
+| 文档 | 路径 |
+|------|------|
+| 团队宪章 | `~/.openclaw/agents/CHARTER.md` |
+| 协作网络 | `~/.openclaw/agents/COLLABORATION.md` |
+| 知识库索引 | `~/.openclaw/agents/CLAWDBOOK.md` |
+| 安全策略 | `~/.openclaw/agents/SECURITY.md` |
+| 标准流程 | `~/.openclaw/agents/SOP.md` |
+| 自动化手册 | `~/.openclaw/agents/WORKFLOW_AUTO.md` |
+| 主配置 | `~/.openclaw/openclaw.json` |
+| 密钥 | `~/.openclaw/.env` |
 
 ---
 
@@ -261,3 +280,8 @@ tail -30 ~/.openclaw/workspace-main/memory/$(date +%Y-%m-%d).md 2>/dev/null | gr
 7. **具体 > 泛泛** — 催促消息必须包含具体状态和具体期望
 8. **token 预算** — 每个 session 只读最近 10 条，最多检查 5 个 session
 9. **推送只到本群** — 汇报只发到 -1003890797239，不推私聊
+10. **禁止引用 pm** — PM 已删除，产品职责归 CPO (cpo)，绝不使用 "pm" 作为 agent ID
+
+---
+
+*v2.0 — 2026-04-17 | Wave 2 架构统一 — 全小写 ID、Musk CEO、路径迁移至 ~/.openclaw/、清除 PM 引用*
