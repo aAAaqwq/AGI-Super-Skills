@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 """
-Douyin Publisher — 抖音自动发布图文到草稿箱
+Douyin Publisher — 抖音自动发布图文
 
 Usage:
-    python3 publish.py --article article.md --cover cover.jpg [--decision draft]
+    python3 publish.py --article article.md --cover cover.jpg [--decision draft|publish]
 
 Requires:
     - OpenClaw browser running (CDP at 127.0.0.1:18800)
     - Playwright Python library (pip install playwright)
-    - Valid Douyin cookies at ~/.playwright-data/douyin/state-default.json
+    - Valid Douyin cookies at ~/.douyin_cookies/storage_state.json
+
+Bugfix (2026-04-17):
+    - Fixed: confirmation dialog buttons never found (children.length===0 filter)
+    - Fixed: draft recovery always discarded existing drafts
+    - Added: full publish flow (draft + publish modes)
 """
 
 from __future__ import annotations
@@ -25,17 +30,16 @@ from pathlib import Path
 TITLE_MAX = 20
 CONTENT_MAX = 1000
 CDP_URL = "http://127.0.0.1:18800"
-COOKIE_PATH = Path.home() / ".playwright-data/douyin/state-default.json"
+COOKIE_PATH = Path.home() / ".douyin_cookies" / "storage_state.json"
 PUBLISH_URL = "https://creator.douyin.com/creator-micro/content/upload"
 
-# Verified selectors (2026-04-14, post-login)
+# Verified selectors (2026-04-17, post-fix)
 SEL_TAB_ITEM = "div[class*='tab-item']"  # text: 发布视频/发布图文/发布全景视频/发布文章
 SEL_IMAGE_INPUT = 'input[type="file"][accept*="image"]'
 SEL_VIDEO_INPUT = 'input[type="file"][accept*="video"]'
 SEL_TITLE = 'input[placeholder="添加作品标题"]'
 SEL_EDITOR = 'div.editor-comp-publish[contenteditable="true"]'
-SEL_PUBLISH = "button[class*='primary']"  # text: 发布
-SEL_DRAFT = "button[class*='cancel-btn']"  # text: 暂存离开
+SEL_PUBLISH_BTN = "button[class*='primary']"  # text: 发布
 
 
 # ─── Markdown Parser ───────────────────────────────────────────────
@@ -136,17 +140,163 @@ async def fill_contenteditable(page, editor, html: str):
     }""", [editor, html])
 
 
-async def save_draft(page) -> bool:
-    return await page.evaluate("""() => {
-        const btns = document.querySelectorAll('button');
-        for (const btn of btns) {
-            if (btn.textContent.trim() === '暂存离开') {
-                const r = btn.getBoundingClientRect();
-                if (r.x > 0 && r.width > 0) { btn.click(); return true; }
+# ─── UI Interaction Helpers ────────────────────────────────────────
+
+async def _dismiss_blocking_popups(page) -> None:
+    """Dismiss non-critical popups (共创中心, etc.) that block interaction."""
+    await page.evaluate("""() => {
+        const els = document.querySelectorAll('*');
+        for (const el of els) {
+            const t = el.textContent.trim();
+            // Only close harmless popups — NOT confirmation dialogs
+            if ((t === '我知道了' || t === '关闭')
+                && el.offsetParent !== null) {
+                el.click();
             }
         }
-        return false;
     }""")
+
+
+async def _click_button_by_text(page, texts: list[str]) -> bool:
+    """Click a visible button matching any of the given text values.
+
+    Fixed: removed ``children.length === 0`` filter — modern Douyin buttons
+    wrap text in <span>, so the old filter silently skipped every button.
+    """
+    clicked = await page.evaluate("""(texts) => {
+        const btns = document.querySelectorAll('button');
+        for (const btn of btns) {
+            if (btn.offsetParent === null) continue;
+            const t = btn.textContent.trim();
+            if (texts.includes(t)) { btn.click(); return t; }
+        }
+        // Fallback: partial match for text-containing elements
+        for (const btn of btns) {
+            if (btn.offsetParent === null) continue;
+            const t = btn.textContent.trim();
+            for (const want of texts) {
+                if (t.includes(want) && t.length < want.length + 10) {
+                    btn.click();
+                    return t;
+                }
+            }
+        }
+        return null;
+    }""", texts)
+    if clicked:
+        return True
+
+    # Playwright fallback
+    try:
+        for text in texts:
+            loc = page.locator(f"button:has-text('{text}')").first
+            if await loc.count() > 0 and await loc.is_visible():
+                await loc.click(force=True)
+                return True
+    except Exception:
+        pass
+    return False
+
+
+async def _wait_for_navigation_or_text(page, texts: list[str], timeout_s: int = 12) -> bool:
+    """Wait for URL change or success message within timeout."""
+    current_url = page.url
+    for _ in range(timeout_s):
+        await asyncio.sleep(1)
+        if page.url != current_url:
+            return True
+        found = await page.evaluate("""(texts) => {
+            const body = document.body.innerText;
+            for (const t of texts) {
+                if (body.includes(t)) return true;
+            }
+            return false;
+        }""", texts)
+        if found:
+            return True
+    return False
+
+
+# ─── Draft & Publish Actions ───────────────────────────────────────
+
+async def save_draft(page) -> bool:
+    """Click 暂存离开 and wait for confirmation.
+
+    Fixed bugs (2026-04-17):
+    1. Popup dismissal used ``children.length === 0`` which skips modern buttons
+    2. Confirmation dialog buttons were never found → draft never confirmed
+    3. No fallback when both JS and Playwright locators fail
+    """
+    await _dismiss_blocking_popups(page)
+    await asyncio.sleep(1)
+
+    # Click 暂存离开
+    clicked = await _click_button_by_text(page, ['暂存离开', '存草稿'])
+    if not clicked:
+        # Last resort: try cancel-btn class
+        try:
+            btn = page.locator("button[class*='cancel-btn']")
+            if await btn.count() > 0:
+                await btn.first.click(force=True)
+                clicked = True
+        except Exception:
+            pass
+
+    if not clicked:
+        return False
+
+    # Wait for confirmation dialog (Douyin may ask "确认暂存？")
+    await asyncio.sleep(2)
+    await _click_button_by_text(page, ['确定', '确认', '暂存', '我知道了'])
+    await asyncio.sleep(2)
+
+    # Verify: URL changed or success message
+    success = await _wait_for_navigation_or_text(
+        page, ['保存成功', '草稿已保存', '暂存成功', '已存入草稿箱'],
+        timeout_s=12,
+    )
+
+    # Final check: are we still on the editor?
+    still_editor = await page.evaluate("""() => {
+        return !!document.querySelector('div.editor-comp-publish[contenteditable="true"]');
+    }""")
+    return (success or not still_editor)
+
+
+async def do_publish(page) -> bool:
+    """Click 发布 and handle confirmation dialog.
+
+    Completes the full publish flow: 选品 → 发布 → 确认.
+    """
+    await _dismiss_blocking_popups(page)
+    await asyncio.sleep(1)
+
+    # Click 发布 button
+    clicked = await _click_button_by_text(page, ['发布', '立即发布'])
+    if not clicked:
+        # Fallback: primary button class
+        try:
+            btn = page.locator(SEL_PUBLISH_BTN)
+            if await btn.count() > 0:
+                await btn.first.click(force=True)
+                clicked = True
+        except Exception:
+            pass
+
+    if not clicked:
+        return False
+
+    # Handle confirmation dialog
+    await asyncio.sleep(3)
+    await _click_button_by_text(page, ['确定', '确认发布', '确认', '发布', '我知道了'])
+    await asyncio.sleep(3)
+
+    # Verify success
+    success = await _wait_for_navigation_or_text(
+        page, ['发布成功', '已发布', '作品发布成功', '审核中'],
+        timeout_s=15,
+    )
+    return success
 
 
 # ─── Main Publish Flow ─────────────────────────────────────────────
@@ -168,11 +318,13 @@ async def publish_to_douyin(
 
     result = {
         "status": "ok",
+        "decision": decision,
         "title": article["title"],
         "title_truncated": article["title_truncated"],
         "content_length": article["content_length"],
         "tags_planned": article["tags"],
         "draft_saved": False,
+        "published": False,
     }
 
     async with async_playwright() as p:
@@ -208,7 +360,9 @@ async def publish_to_douyin(
             await asyncio.sleep(1)
             print("✅ Switched to 发布图文 tab")
 
-            # 3. Check for draft recovery dialog
+            # 3. Handle draft recovery dialog (继续编辑 / 放弃)
+            #    Bug: previously always clicked '放弃' losing saved drafts.
+            #    Fix: draft mode continues editing; publish mode starts fresh.
             draft_dialog = await page.evaluate("""() => {
                 const els = document.querySelectorAll('*');
                 for (const el of els) {
@@ -219,19 +373,16 @@ async def publish_to_douyin(
                 }
                 return false;
             }""")
-            if draft_dialog:
-                # Click 放弃 to start fresh
-                await page.evaluate("""() => {
-                    const els = document.querySelectorAll('*');
-                    for (const el of els) {
-                        if (el.textContent.trim() === '放弃') {
-                            const r = el.getBoundingClientRect();
-                            if (r.x > 0 && r.width > 0) { el.click(); return; }
-                        }
-                    }
-                }""")
+            if draft_dialog and decision == "draft":
+                # In draft mode, continue editing existing draft
+                await _click_button_by_text(page, ['继续编辑'])
                 await asyncio.sleep(1)
-                print("✅ Dismissed draft recovery dialog")
+                print("✅ Resuming existing draft")
+            elif draft_dialog:
+                # In publish mode, start fresh
+                await _click_button_by_text(page, ['放弃', '新建作品'])
+                await asyncio.sleep(1)
+                print("✅ Dismissed draft recovery dialog, starting fresh")
 
             # 4. Upload image
             image_input = await page.query_selector(SEL_IMAGE_INPUT)
@@ -244,7 +395,6 @@ async def publish_to_douyin(
             # 5. Check if we're now on the editor page
             editor_url = page.url
             if "post/image" not in editor_url and "draft" not in editor_url:
-                # May need to wait for redirect
                 await asyncio.sleep(3)
 
             # 6. Fill title
@@ -283,18 +433,29 @@ async def publish_to_douyin(
             result["screenshot_path"] = ss_path
             print(f"✅ Screenshot: {ss_path}")
 
-            # 9. Save draft
+            # 9. Save draft or publish
+            await asyncio.sleep(1)
             if decision == "draft":
-                await asyncio.sleep(1)
                 saved = await save_draft(page)
                 if saved:
                     await asyncio.sleep(3)
                     print("✅ Draft saved!")
                     result["draft_saved"] = True
                 else:
-                    raise RuntimeError("Draft button '暂存离开' not found")
+                    raise RuntimeError("Draft save failed — '暂存离开' button not found or confirmation dialog not handled")
+            elif decision == "publish":
+                published = await do_publish(page)
+                if published:
+                    await asyncio.sleep(3)
+                    print("✅ Published!")
+                    result["published"] = True
+                else:
+                    raise RuntimeError("Publish failed — '发布' button not found or confirmation dialog not handled")
             else:
-                print("⚠️  Only 'draft' decision is supported. Skipping save.")
+                print(f"⚠️  Unknown decision '{decision}', saving as draft")
+                saved = await save_draft(page)
+                if saved:
+                    result["draft_saved"] = True
 
         except Exception as e:
             result["status"] = "error"
@@ -317,10 +478,11 @@ async def publish_to_douyin(
 
 # ─── CLI ────────────────────────────────────────────────────────────
 def main():
-    parser = argparse.ArgumentParser(description="Publish article to Douyin drafts")
+    parser = argparse.ArgumentParser(description="Publish article to Douyin")
     parser.add_argument("--article", required=True, help="Path to markdown article")
     parser.add_argument("--cover", required=True, help="Path to cover image")
-    parser.add_argument("--decision", default="draft", choices=["draft"], help="Publish decision")
+    parser.add_argument("--decision", default="draft", choices=["draft", "publish"],
+                        help="'draft' to save as draft, 'publish' to go live")
     args = parser.parse_args()
 
     result = asyncio.run(publish_to_douyin(

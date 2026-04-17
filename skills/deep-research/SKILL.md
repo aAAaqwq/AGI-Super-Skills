@@ -1,114 +1,155 @@
 ---
 name: deep-research
-description: "Execute autonomous multi-step research using Google Gemini Deep Research Agent. Use for: market analysis, competitive landscaping, literature reviews, technical research, due diligence. Takes 2-10 ..."
-source: "https://github.com/sanjay3290/ai-skills/tree/main/skills/deep-research"
-risk: safe
+description: Multi-source deep research using firecrawl and exa MCPs. Searches the web, synthesizes findings, and delivers cited reports with source attribution. Use when the user wants thorough research on any topic with evidence and citations.
+origin: ECC
 ---
 
-# Gemini Deep Research Skill
+# Deep Research
 
-Run autonomous research tasks that plan, search, read, and synthesize information into comprehensive reports.
+Produce thorough, cited research reports from multiple web sources using firecrawl and exa MCP tools.
 
-## When to Use This Skill
+## When to Activate
 
-Use this skill when:
-- Performing market analysis
-- Conducting competitive landscaping
-- Creating literature reviews
-- Doing technical research
-- Performing due diligence
-- Need detailed, cited research reports
+- User asks to research any topic in depth
+- Competitive analysis, technology evaluation, or market sizing
+- Due diligence on companies, investors, or technologies
+- Any question requiring synthesis from multiple sources
+- User says "research", "deep dive", "investigate", or "what's the current state of"
 
-## Requirements
+## MCP Requirements
 
-- Python 3.8+
-- httpx: `pip install -r requirements.txt`
-- GEMINI_API_KEY environment variable
+At least one of:
+- **firecrawl** — `firecrawl_search`, `firecrawl_scrape`, `firecrawl_crawl`
+- **exa** — `web_search_exa`, `web_search_advanced_exa`, `crawling_exa`
 
-## Setup
-
-1. Get a Gemini API key from [Google AI Studio](https://aistudio.google.com/)
-2. Set the environment variable:
-   ```bash
-   export GEMINI_API_KEY=your-api-key-here
-   ```
-   Or create a `.env` file in the skill directory.
-
-## Usage
-
-### Start a research task
-```bash
-python3 scripts/research.py --query "Research the history of Kubernetes"
-```
-
-### With structured output format
-```bash
-python3 scripts/research.py --query "Compare Python web frameworks" \
-  --format "1. Executive Summary\n2. Comparison Table\n3. Recommendations"
-```
-
-### Stream progress in real-time
-```bash
-python3 scripts/research.py --query "Analyze EV battery market" --stream
-```
-
-### Start without waiting
-```bash
-python3 scripts/research.py --query "Research topic" --no-wait
-```
-
-### Check status of running research
-```bash
-python3 scripts/research.py --status <interaction_id>
-```
-
-### Wait for completion
-```bash
-python3 scripts/research.py --wait <interaction_id>
-```
-
-### Continue from previous research
-```bash
-python3 scripts/research.py --query "Elaborate on point 2" --continue <interaction_id>
-```
-
-### List recent research
-```bash
-python3 scripts/research.py --list
-```
-
-## Output Formats
-
-- **Default**: Human-readable markdown report
-- **JSON** (`--json`): Structured data for programmatic use
-- **Raw** (`--raw`): Unprocessed API response
-
-## Cost & Time
-
-| Metric | Value |
-|--------|-------|
-| Time | 2-10 minutes per task |
-| Cost | $2-5 per task (varies by complexity) |
-| Token usage | ~250k-900k input, ~60k-80k output |
-
-## Best Use Cases
-
-- Market analysis and competitive landscaping
-- Technical literature reviews
-- Due diligence research
-- Historical research and timelines
-- Comparative analysis (frameworks, products, technologies)
+Both together give the best coverage. Configure in `~/.claude.json` or `~/.codex/config.toml`.
 
 ## Workflow
 
-1. User requests research → Run `--query "..."`
-2. Inform user of estimated time (2-10 minutes)
-3. Monitor with `--stream` or poll with `--status`
-4. Return formatted results
-5. Use `--continue` for follow-up questions
+### Step 1: Understand the Goal
 
-## Exit Codes
+Ask 1-2 quick clarifying questions:
+- "What's your goal — learning, making a decision, or writing something?"
+- "Any specific angle or depth you want?"
 
-- **0**: Success
-- **1**: Error (API error, config issue, timeout)
-- **130**: Cancelled by user (Ctrl+C)
+If the user says "just research it" — skip ahead with reasonable defaults.
+
+### Step 2: Plan the Research
+
+Break the topic into 3-5 research sub-questions. Example:
+- Topic: "Impact of AI on healthcare"
+  - What are the main AI applications in healthcare today?
+  - What clinical outcomes have been measured?
+  - What are the regulatory challenges?
+  - What companies are leading this space?
+  - What's the market size and growth trajectory?
+
+### Step 3: Execute Multi-Source Search
+
+For EACH sub-question, search using available MCP tools:
+
+**With firecrawl:**
+```
+firecrawl_search(query: "<sub-question keywords>", limit: 8)
+```
+
+**With exa:**
+```
+web_search_exa(query: "<sub-question keywords>", numResults: 8)
+web_search_advanced_exa(query: "<keywords>", numResults: 5, startPublishedDate: "2025-01-01")
+```
+
+**Search strategy:**
+- Use 2-3 different keyword variations per sub-question
+- Mix general and news-focused queries
+- Aim for 15-30 unique sources total
+- Prioritize: academic, official, reputable news > blogs > forums
+
+### Step 4: Deep-Read Key Sources
+
+For the most promising URLs, fetch full content:
+
+**With firecrawl:**
+```
+firecrawl_scrape(url: "<url>")
+```
+
+**With exa:**
+```
+crawling_exa(url: "<url>", tokensNum: 5000)
+```
+
+Read 3-5 key sources in full for depth. Do not rely only on search snippets.
+
+### Step 5: Synthesize and Write Report
+
+Structure the report:
+
+```markdown
+# [Topic]: Research Report
+*Generated: [date] | Sources: [N] | Confidence: [High/Medium/Low]*
+
+## Executive Summary
+[3-5 sentence overview of key findings]
+
+## 1. [First Major Theme]
+[Findings with inline citations]
+- Key point ([Source Name](url))
+- Supporting data ([Source Name](url))
+
+## 2. [Second Major Theme]
+...
+
+## 3. [Third Major Theme]
+...
+
+## Key Takeaways
+- [Actionable insight 1]
+- [Actionable insight 2]
+- [Actionable insight 3]
+
+## Sources
+1. [Title](url) — [one-line summary]
+2. ...
+
+## Methodology
+Searched [N] queries across web and news. Analyzed [M] sources.
+Sub-questions investigated: [list]
+```
+
+### Step 6: Deliver
+
+- **Short topics**: Post the full report in chat
+- **Long reports**: Post the executive summary + key takeaways, save full report to a file
+
+## Parallel Research with Subagents
+
+For broad topics, use Claude Code's Task tool to parallelize:
+
+```
+Launch 3 research agents in parallel:
+1. Agent 1: Research sub-questions 1-2
+2. Agent 2: Research sub-questions 3-4
+3. Agent 3: Research sub-question 5 + cross-cutting themes
+```
+
+Each agent searches, reads sources, and returns findings. The main session synthesizes into the final report.
+
+## Quality Rules
+
+1. **Every claim needs a source.** No unsourced assertions.
+2. **Cross-reference.** If only one source says it, flag it as unverified.
+3. **Recency matters.** Prefer sources from the last 12 months.
+4. **Acknowledge gaps.** If you couldn't find good info on a sub-question, say so.
+5. **No hallucination.** If you don't know, say "insufficient data found."
+6. **Separate fact from inference.** Label estimates, projections, and opinions clearly.
+
+## Examples
+
+```
+"Research the current state of nuclear fusion energy"
+"Deep dive into Rust vs Go for backend services in 2026"
+"Research the best strategies for bootstrapping a SaaS business"
+"What's happening with the US housing market right now?"
+"Investigate the competitive landscape for AI code editors"
+```
