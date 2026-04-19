@@ -63,8 +63,25 @@ feishu_tokens.json
 user_access_token.json
 tenant_access_token.json
 app_token.json
-skills/openssf-security
+# Trash & disabled skills
+skills/.trash/
+skills/disabled/
+
+# Virtual environments (anywhere)
+**/.venv/
+**/venv/
+skills/*/venv/
 skills/polymarket-profit/venv/
+
+# Heavy media (>1MB, keep in external storage)
+skills/*/assets/*.wav
+skills/*/assets/*.mp3
+skills/*/assets/*.mp4
+skills/*/banner.png
+skills/*/promo.gif
+skills/openssf-security
+
+# Python
 **/__pycache__/
 **/node_modules/
 *.pyc

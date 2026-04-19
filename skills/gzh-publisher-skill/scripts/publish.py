@@ -1,50 +1,73 @@
 #!/usr/bin/env python3
 """
-GZH Publisher — 微信公众号自动发布到草稿箱 v1.0
+GZH Publisher — 微信公众号自动发布到草稿箱 v3.2
 
 Usage:
-    # Basic: article + cover + author + images
-    python3 publish.py \
-      --article article.md \
-      --cover cover.jpg \
-      --author "Daniel" \
-      --images img1.png img2.jpg
+    # Auto-scan gzh/ dir for images (recommended)
+    python3 publish.py --article gzh/article.md --author "Daniel"
 
-    # Minimal: article only (no cover, no images)
-    python3 publish.py --article article.md --author "Daniel"
+    # Explicit images
+    python3 publish.py --article article.md --author "Daniel" --images img1.png img2.jpg
+
+    # Skip 一键排版
+    python3 publish.py --article gzh/article.md --author "Daniel" --no-format
 
 Requires:
     - OpenClaw browser running (CDP at 127.0.0.1:18800 or OPENCLAW_CDP_URL)
     - Playwright Python library (pip install playwright)
+    - Pillow (pip install Pillow) — for JPG→PNG conversion
     - Valid WeChat MP login session (browser cookies)
 
 Flow:
-    1. Navigate to mp.weixin.qq.com → verify login
-    2. Click "新的创作" → "文章" → new editor tab (appmsg_edit_v2)
-    3. Fill title + author
-    4. Upload images via CDP DOM.setFileInputFiles → collect CDN URLs
-    5. Convert markdown → WeChat HTML → inject via CDP Runtime.evaluate
-    6. Click 一键排版 → confirm in articlestruct tab → return
-    7. Set cover from first body image (从正文选择)
-    8. Save draft
+    1. Find/navigate editor tab → verify login
+    2. New article → fill title + author
+    3. Scan gzh/ dir for images (if --images not provided, auto-discover)
+    4. Inject text-only HTML with image placeholders (innerHTML)
+    5. Paste images at placeholder positions (clipboard + Ctrl+V, replaces placeholder)
+    6. Set cover from pasted images
+    7. 一键排版 (format via articlestruct tab → 使用此排版)
+    8. Verify images → save draft
 
-v1.0 (2026-04-17):
-    - Initial script based on gzh-publisher-skill SKILL.md v2.4
-    - CDP-based image upload (DOM.setFileInputFiles)
-    - ProseMirror innerHTML injection (not UEditor iframe)
-    - 一键排版 with articlestruct tab handling
-    - Cover from body image (3-step: select → 下一步 → 确认)
+v3.0 (2026-04-18):
+    + Auto-scan gzh/ directory for images when --images is empty
+    + 一键排版 support (articlestruct tab → 使用此排版)
+    + Cover image selection (从正文选择 → first image → confirm)
+    + Dedup: skip images already in editor by checking existing src
+    + --no-format flag to skip 一键排版
+    + --no-cover flag to skip cover selection
+    + Better CDN URL collection (check all imgs, not just last)
+
+v3.1.0 (2026-04-18):
+    + Verified: 一键排版 preserves images (no re-inject needed)
+    + Cover must be set BEFORE innerHTML injection
+    + Removed redundant re-injection after formatting
+
+v3.0.0 (2026-04-18):
+    + Auto-scan gzh/ directory for images
+    + 一键排版 support (articlestruct tab → 使用此排版)
+    + Cover image selection (从正文选择)
+    + Dedup, --no-format, --no-cover flags
+    + JPG→PNG auto-conversion
+
+KEY INSIGHT (2026-04-18 实战验证):
+    - ✅ Image paste: clipboard.write(PNG) + keyboard Ctrl+V
+    - ✅ Only paste-registered images persist on save (innerHTML img tags don't)
+    - ✅ Cover must use paste-registered images (从正文选择)
+    - ✅ Placeholder mode: inject text HTML → paste images at placeholder positions
+    - ✅ 一键排版 preserves paste-registered images
 """
 
 from __future__ import annotations
 
 import argparse
 import asyncio
+import base64
 import json
 import os
 import re
+import shutil
 import sys
-import time
+import tempfile
 from datetime import datetime
 from pathlib import Path
 
@@ -52,8 +75,11 @@ from pathlib import Path
 TITLE_MAX = 64
 CDP_URL = os.getenv("OPENCLAW_CDP_URL", "http://127.0.0.1:18800")
 MP_HOME = "https://mp.weixin.qq.com"
+UPLOAD_DIR = Path("/tmp/openclaw/uploads")
 SAFETY_DIR = Path(os.getenv("GZH_SAFETY_DIR", "/tmp/gzh_safety"))
-IMAGE_MAX = 20  # reasonable limit for GZH
+IMAGE_PASTE_WAIT = 8  # seconds to wait after Ctrl+V for CDN conversion
+IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
+COVER_EXCLUDE_NAMES = {"cover-16x9.jpg", "cover-16x9.png", "cover.jpg", "cover.png"}
 
 
 # ─── Utilities ────────────────────────────────────────────────────────
@@ -65,31 +91,73 @@ def log(emoji: str, msg: str):
 def screenshot_path(stage: str) -> str:
     SAFETY_DIR.mkdir(parents=True, exist_ok=True)
     ts = datetime.now().strftime("%H%M%S")
-    name = f"gzh_safety_{stage}_{ts}.png"
-    return str(SAFETY_DIR / name)
+    return str(SAFETY_DIR / f"gzh_safety_{stage}_{ts}.png")
+
+
+def ensure_png(path: str) -> str:
+    """Convert JPG/JPEG to PNG if needed. Returns PNG path."""
+    p = Path(path)
+    if p.suffix.lower() in (".png",):
+        return str(p)
+    try:
+        from PIL import Image
+        img = Image.open(p)
+        png_path = str(p.with_suffix(".png"))
+        img.save(png_path, "PNG")
+        log("🔄", f"Converted {p.name} → PNG ({img.size[0]}x{img.size[1]})")
+        return png_path
+    except ImportError:
+        log("⚠️ ", f"Pillow not installed, skipping {p.name} (only PNG supported)")
+        return str(p)
+
+
+def copy_to_uploads(paths: list[str]) -> list[str]:
+    """Copy images to uploads dir, convert to PNG. Returns local paths."""
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    result = []
+    for p in paths:
+        src = Path(p)
+        if not src.exists():
+            log("⚠️ ", f"Not found: {p}")
+            continue
+        dst = UPLOAD_DIR / src.name
+        shutil.copy2(src, dst)
+        png_path = ensure_png(str(dst))
+        result.append(png_path)
+    return result
+
+
+def discover_images(article_path: str) -> list[str]:
+    """Auto-discover images from the same directory as the article.
+    Scans for image files, excluding cover images and article.md.
+    """
+    article_dir = Path(article_path).parent
+    if not article_dir.exists():
+        return []
+
+    images = []
+    for f in sorted(article_dir.iterdir()):
+        if not f.is_file():
+            continue
+        if f.suffix.lower() not in IMAGE_EXTENSIONS:
+            continue
+        if f.name.lower() in COVER_EXCLUDE_NAMES:
+            continue
+        if f.name.lower() == "article.md":
+            continue
+        images.append(str(f))
+
+    return images
 
 
 # ─── Markdown Parser ───────────────────────────────────────────────
 def parse_article(path: str) -> dict:
-    """Parse GZH article from markdown.
-
-    Supports frontmatter (--- title/author ---) or plain markdown.
-    Body = everything after frontmatter or from first ## heading.
-    """
     raw = Path(path).read_text(encoding="utf-8")
     lines = raw.splitlines()
+    title, author, body_start = "", "", 0
 
-    title = ""
-    author = ""
-    body_start = 0
-
-    # Try frontmatter
     if lines and lines[0].strip() == "---":
-        fm_end = None
-        for i in range(1, len(lines)):
-            if lines[i].strip() == "---":
-                fm_end = i
-                break
+        fm_end = next((i for i in range(1, len(lines)) if lines[i].strip() == "---"), None)
         if fm_end:
             for line in lines[1:fm_end]:
                 if line.strip().startswith("title:"):
@@ -98,7 +166,6 @@ def parse_article(path: str) -> dict:
                     author = line.split(":", 1)[1].strip().strip('"').strip("'")
             body_start = fm_end + 1
 
-    # Fallback: first # heading as title
     if not title:
         for i, line in enumerate(lines):
             if line.strip().startswith("# "):
@@ -106,274 +173,431 @@ def parse_article(path: str) -> dict:
                 body_start = i + 1
                 break
 
-    body = "\n".join(lines[body_start:]).strip()
-    return {"title": title, "author": author, "body": body}
+    return {"title": title, "author": author, "body": "\n".join(lines[body_start:]).strip()}
 
 
 # ─── Markdown → WeChat HTML ────────────────────────────────────────
-def md_to_wechat_html(md: str, image_map: dict[str, str] | None = None) -> str:
-    """Convert markdown to WeChat-styled HTML.
+def auto_insert_images(md_body: str, image_paths: list[str]) -> tuple[str, list[str]]:
+    """Insert ![keyword](path) into markdown at positions matching filename keywords."""
+    inserted = []
+    for img_path in image_paths:
+        fname = Path(img_path).stem
+        parts = fname.split("-", 1)
+        keyword = parts[1] if len(parts) > 1 else fname
+        img_ref = f"\n![{keyword}]({img_path})\n"
+        body_lines = md_body.split("\n")
+        best_pos, best_score = -1, 0
+        for i, line in enumerate(body_lines):
+            lt = line.strip()
+            score = sum(len(w) for w in keyword if len(w) > 1 and w in lt)
+            if i > 0 and (body_lines[i-1].strip().startswith("#")):
+                score += 5
+            if "![" in lt:
+                score = 0
+            if score > best_score:
+                best_score, best_pos = score, i
+        if best_pos >= 0 and best_score > 2:
+            body_lines.insert(best_pos, img_ref)
+            inserted.append(fname)
+            md_body = "\n".join(body_lines)
+    return md_body, inserted
 
-    image_map: {filename.png: https://mmbiz.qpic.cn/...}
+
+def md_to_wechat_html(md: str, image_map: dict[str, str] | None = None, placeholders: bool = False) -> tuple[str, int]:
+    """Convert markdown to WeChat-styled HTML.
+    
+    Args:
+        md: Markdown text
+        image_map: {filename: cdn_url} mapping (ignored when placeholders=True)
+        placeholders: If True, replace images with text placeholders (for paste-mode)
+    
+    Returns:
+        (html_string, image_count)
     """
     image_map = image_map or {}
     html = md
+    image_count = [0]
 
-    # Replace image references with CDN URLs
-    for fname, cdn_url in image_map.items():
-        html = html.replace(f"]({fname})", f"]({cdn_url})")
-        html = html.replace(f'src="{fname}"', f'src="{cdn_url}"')
+    if not placeholders:
+        for fname, cdn_url in image_map.items():
+            html = html.replace(f"]({fname})", f"]({cdn_url})")
 
-    # Code blocks
-    html = re.sub(
-        r"```(\w*)\n([\s\S]*?)```",
-        r'<pre style="background:#f6f8fa;border-left:3px solid #fe6;padding:12px;overflow-x:auto;font-size:13px"><code>\2</code></pre>',
-        html,
-    )
-    # H1
-    html = re.sub(
-        r"^# (.+)$",
-        r'<h1 style="font-size:22px;font-weight:bold;text-align:center;margin:20px 0">\1</h1>',
-        html,
-        flags=re.M,
-    )
-    # H2
-    html = re.sub(
-        r"^## (.+)$",
-        r'<h2 style="font-size:18px;font-weight:bold;border-left:4px solid #1a73e8;padding-left:10px;margin:24px 0 12px">\1</h2>',
-        html,
-        flags=re.M,
-    )
-    # H3
-    html = re.sub(
-        r"^### (.+)$",
-        r'<h3 style="font-size:16px;font-weight:bold;margin:16px 0 8px">\1</h3>',
-        html,
-        flags=re.M,
-    )
-    # Bold
+    html = re.sub(r"```(\w*)\n([\s\S]*?)```", r'<pre style="background:#f6f8fa;border-left:3px solid #fe6;padding:12px;overflow-x:auto;font-size:13px"><code>\2</code></pre>', html)
+    html = re.sub(r"^# (.+)$", r'<h1 style="font-size:22px;font-weight:bold;text-align:center;margin:20px 0">\1</h1>', html, flags=re.M)
+    html = re.sub(r"^## (.+)$", r'<h2 style="font-size:18px;font-weight:bold;border-left:4px solid #1a73e8;padding-left:10px;margin:24px 0 12px">\1</h2>', html, flags=re.M)
+    html = re.sub(r"^### (.+)$", r'<h3 style="font-size:16px;font-weight:bold;margin:16px 0 8px">\1</h3>', html, flags=re.M)
     html = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", html)
-    # Italic
     html = re.sub(r"\*(.+?)\*", r"<em>\1</em>", html)
-    # Inline code
-    html = re.sub(
-        r"`(.+?)`",
-        r'<code style="background:#f6f8fa;padding:2px 6px;border-radius:3px">\1</code>',
-        html,
-    )
-    # Blockquote
-    html = re.sub(
-        r"^> (.+)$",
-        r'<blockquote style="border-left:3px solid #ddd;color:#666;padding:8px 12px;margin:12px 0;background:#f9f9f9">\1</blockquote>',
-        html,
-        flags=re.M,
-    )
-    # Images (standalone line)
-    html = re.sub(
-        r"!\[([^\]]*)\]\(([^)]+)\)",
-        r'<p style="text-align:center;margin:16px 0"><img src="\2" style="max-width:100%;border-radius:4px" /></p>',
-        html,
-    )
-    # Tables (basic)
+    html = re.sub(r"`(.+?)`", r'<code style="background:#f6f8fa;padding:2px 6px;border-radius:3px">\1</code>', html)
+    html = re.sub(r"^> (.+)$", r'<blockquote style="border-left:3px solid #ddd;color:#666;padding:8px 12px;margin:12px 0;background:#f9f9f9">\1</blockquote>', html, flags=re.M)
+
+    # Image handling
+    if placeholders:
+        def _placeholder(match):
+            caption = match.group(1) or "图片"
+            idx = image_count[0]
+            image_count[0] += 1
+            # Use text placeholder that ProseMirror will keep as text nodes
+            return f'<p style="text-align:center;color:#999;font-size:13px;margin:16px 0">【{idx}】{caption}</p>'
+        html = re.sub(r"!\[([^\]]*)\]\([^)]+\)", _placeholder, html)
+    else:
+        html = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", r'<p style="text-align:center;margin:16px 0"><img src="\2" style="max-width:100%;border-radius:4px" /></p>', html)
+
     if "|" in html:
         html = _convert_tables(html)
-    # Unordered list
+
     html = re.sub(r"^- (.+)$", r'<li style="margin:4px 0">\1</li>', html, flags=re.M)
-    # Horizontal rule
-    html = re.sub(
-        r"^---$",
-        '<hr style="border:none;border-top:1px solid #eee;margin:16px 0">',
-        html,
-        flags=re.M,
-    )
-    # Paragraphs (double newline)
-    html = html.replace(
-        "\n\n",
-        '</p><p style="font-size:15px;color:#3f3f3f;line-height:1.75;margin:8px 0">',
-    )
-    # Single newline
+    html = re.sub(r"^---$", '<hr style="border:none;border-top:1px solid #eee;margin:16px 0">', html, flags=re.M)
+    html = html.replace("\n\n", '</p><p style="font-size:15px;color:#3f3f3f;line-height:1.75;margin:8px 0">')
     html = html.replace("\n", "<br>")
-    # Wrap in paragraph
-    if not html.startswith("<"):
+    if html and not html.startswith("<"):
         html = f'<p style="font-size:15px;color:#3f3f3f;line-height:1.75;margin:8px 0">{html}</p>'
-    return html
+    return html, image_count[0]
 
 
 def _convert_tables(html: str) -> str:
-    """Basic markdown table → HTML table."""
-    lines = html.split("\n")
-    result = []
-    in_table = False
-
+    lines, result, in_table = html.split("\n"), [], False
     for line in lines:
         stripped = line.strip()
         if "|" in stripped and stripped.startswith("|"):
             cells = [c.strip() for c in stripped.split("|")[1:-1]]
             if all(set(c) <= {"-", ":", " "} for c in cells):
-                continue  # separator row
-            if not in_table:
-                result.append(
-                    '<table style="border-collapse:collapse;width:100%;font-size:14px;margin:10px 0">'
-                )
-                in_table = True
-                tag = "th"
-            else:
-                tag = "td"
-            bg = ' style="background:#f5f5f5;border:1px solid #ddd;padding:8px"' if tag == "th" else ' style="border:1px solid #ddd;padding:8px"'
-            row = "<tr>" + "".join(f"<{tag}{bg}>{c}</{tag}>" for c in cells) + "</tr>"
-            result.append(row)
+                continue
+            tag = "th" if not in_table else "td"
+            in_table = True
+            style = ' style="background:#f5f5f5;border:1px solid #ddd;padding:8px"' if tag == "th" else ' style="border:1px solid #ddd;padding:8px"'
+            result.append("<tr>" + "".join(f"<{tag}{style}>{c}</{tag}>" for c in cells) + "</tr>")
         else:
             if in_table:
                 result.append("</table>")
                 in_table = False
             result.append(line)
-
     if in_table:
         result.append("</table>")
     return "\n".join(result)
 
 
-# ─── CDP Helpers ─────────────────────────────────────────────────────
-async def cdp_get_ws_url(target_id: str | None = None) -> str:
-    """Get WebSocket URL for CDP connection, optionally filtering by target."""
-    import httpx
-
-    async with httpx.AsyncClient() as c:
-        r = await c.get(f"{CDP_URL}/json/list")
-        tabs = r.json()
-    if target_id:
-        for t in tabs:
-            if target_id in t.get("id", "") or target_id in t.get("targetId", ""):
-                return t["webSocketDebuggerUrl"]
-    # Default: first page tab
-    for t in tabs:
-        if t.get("type") == "page":
-            return t["webSocketDebuggerUrl"]
-    raise RuntimeError("No browser tab found")
+# ─── Clipboard Image Paste ─────────────────────────────────────────
+async def get_existing_cdn_urls(page) -> dict[str, str]:
+    """Get all existing mmbiz CDN URLs currently in the editor.
+    Returns {filename_hint: url} for dedup checking.
+    """
+    return await page.evaluate("""() => {
+        const imgs = document.querySelectorAll('.ProseMirror img');
+        const result = {};
+        imgs.forEach((img, i) => {
+            if (img.src && img.src.includes('mmbiz')) {
+                result['existing_' + i] = img.src;
+            }
+        });
+        return result;
+    }""")
 
 
-async def cdp_evaluate(ws, expression: str) -> any:
-    """Execute JS via CDP and return result."""
-    import websockets
+async def paste_image(page, image_path: str) -> str | None:
+    """Paste a PNG image via clipboard + Ctrl+V. Returns CDN URL or None."""
+    with open(image_path, "rb") as f:
+        img_b64 = base64.b64encode(f.read()).decode()
 
-    msg_id = int(time.time() * 1000) % 100000
-    await ws.send(json.dumps({
-        "id": msg_id,
-        "method": "Runtime.evaluate",
-        "params": {"expression": expression, "returnByValue": True},
-    }))
-    resp = json.loads(await ws.recv())
-    result = resp.get("result", {}).get("result", {})
-    return result.get("value")
+    # Focus ProseMirror at cursor position (does NOT clear selection)
+    await page.evaluate("() => { document.querySelector('.ProseMirror').focus(); }")
+    await page.wait_for_timeout(300)
+
+    # Write image to clipboard
+    await page.evaluate("""
+    async ([b64]) => {
+        const blob = await fetch('data:image/png;base64,' + b64).then(r => r.blob());
+        const png = new Blob([blob], {type: 'image/png'});
+        await navigator.clipboard.write([new ClipboardItem({'image/png': png})]);
+    }
+    """, [img_b64])
+
+    # Paste via keyboard (replaces current selection if any)
+    await page.keyboard.press("Control+v")
+    await page.wait_for_timeout(IMAGE_PASTE_WAIT * 1000)
+
+    # Get ALL mmbiz CDN URLs from ProseMirror (not just last)
+    all_urls = await page.evaluate("""() => {
+        const imgs = document.querySelectorAll('.ProseMirror img');
+        return Array.from(imgs)
+            .filter(i => i.src && i.src.includes('mmbiz'))
+            .map(i => i.src);
+    """)
+    return all_urls[-1] if all_urls else None
 
 
-async def cdp_upload_file(target_id: str, file_paths: list[str]) -> list[str]:
-    """Upload files via CDP DOM.setFileInputFiles. Returns CDN URLs."""
-    import httpx
-    import websockets
+async def select_placeholder(editor_page, idx: int) -> bool:
+    """Select placeholder text 【idx】 in ProseMirror. Returns True if found."""
+    return await editor_page.evaluate(f"""() => {{
+        const editor = document.querySelector('.ProseMirror');
+        const marker = '【' + {idx} + '】';
+        const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) {{
+            const node = walker.currentNode;
+            const pos = node.textContent.indexOf(marker);
+            if (pos >= 0) {{
+                const range = document.createRange();
+                range.setStart(node, pos);
+                range.setEnd(node, pos + marker.length);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+                return true;
+            }}
+        }}
+        return false;
+    }}""")
 
-    # Get ws url for the editor tab
-    async with httpx.AsyncClient() as c:
-        r = await c.get(f"{CDP_URL}/json/list")
-        tabs = r.json()
+async def paste_image_at_selection(page, image_path: str) -> str | None:
+    """Paste image via clipboard, replacing current selection.
+    Does NOT call focus() to preserve selection from select_placeholder."""
+    with open(image_path, "rb") as f:
+        img_b64 = base64.b64encode(f.read()).decode()
 
-    ws_url = None
-    for t in tabs:
-        if target_id in t.get("id", "") or target_id in t.get("targetId", "") or "appmsg_edit" in t.get("url", ""):
-            ws_url = t["webSocketDebuggerUrl"]
-            break
-    if not ws_url:
-        # Fallback: first page with appmsg
-        for t in tabs:
-            if "appmsg" in t.get("url", ""):
-                ws_url = t["webSocketDebuggerUrl"]
+    # Write image to clipboard (no focus)
+    await page.evaluate("""
+    async ([b64]) => {
+        const blob = await fetch('data:image/png;base64,' + b64).then(r => r.blob());
+        const png = new Blob([blob], {type: 'image/png'});
+        await navigator.clipboard.write([new ClipboardItem({'image/png': png})]);
+    }
+    """, [img_b64])
+    await asyncio.sleep(0.3)
+
+    # Paste via keyboard (replaces current selection)
+    await page.keyboard.press("Control+v")
+    await page.wait_for_timeout(IMAGE_PASTE_WAIT * 1000)
+
+    all_urls = await page.evaluate("""() => {
+        const imgs = document.querySelectorAll('.ProseMirror img');
+        return Array.from(imgs)
+            .filter(i => i.src && i.src.includes('mmbiz'))
+            .map(i => i.src);
+    }""")
+    return all_urls[-1] if all_urls else None
+
+
+async def collect_all_cdn_urls(page) -> dict[str, str]:
+    """Collect all mmbiz CDN URLs from ProseMirror after pasting.
+    Returns {original_filename: cdn_url} by index matching.
+    """
+    return await page.evaluate("""() => {
+        const imgs = document.querySelectorAll('.ProseMirror img');
+        const result = {};
+        imgs.forEach((img, i) => {
+            if (img.src && img.src.includes('mmbiz')) {
+                result['img_' + i] = img.src;
+            }
+        });
+        return result;
+    }""")
+
+
+# ─── 一键排版 (One-Click Formatting) ─────────────────────────────
+async def apply_format(editor_page, context):
+    """Click 一键排版 → wait for articlestruct tab → click 使用此排版."""
+    log("🎨", "Applying 一键排版...")
+
+    # Scroll to top first to ensure toolbar is visible
+    await editor_page.evaluate("() => window.scrollTo(0, 0)")
+    await asyncio.sleep(1)
+
+    # Try multiple selectors for 一键排版 button
+    clicked = await editor_page.evaluate("""() => {
+        // Method 1: exact text match
+        const all = document.querySelectorAll('span, div, button, a, [class*="tool"]');
+        for (const el of all) {
+            if (el.textContent.trim() === '一键排版') {
+                // Try clicking even if offsetParent is null (might be in overflow menu)
+                el.click();
+                return 'clicked: ' + el.tagName;
+            }
+        }
+        // Method 2: contains text
+        for (const el of all) {
+            if (el.textContent.includes('一键排版') && el.textContent.trim().length < 10) {
+                el.click();
+                return 'clicked (contains): ' + el.tagName;
+            }
+        }
+        return 'not found';
+    }""")
+
+    if 'not found' in clicked:
+        log("⚠️ ", f"一键排版 button not found ({clicked}), skipping")
+        return
+
+    log("✅", f"一键排版 button {clicked}")
+
+    # Wait for articlestruct tab to open (poll up to 15s)
+    format_page = None
+    for _ in range(15):
+        for page in context.pages:
+            if "articlestruct" in page.url:
+                format_page = page
                 break
-    if not ws_url:
-        raise RuntimeError(f"Editor tab not found for target {target_id}")
-
-    async with websockets.connect(ws_url) as ws:
-        # Find the file input element
-        expr = """document.querySelector('input[type="file"][accept*="image"]')"""
-        await ws.send(json.dumps({
-            "id": 1,
-            "method": "Runtime.evaluate",
-            "params": {"expression": expr, "returnByValue": False},
-        }))
-        resp = json.loads(await ws.recv())
-        obj_id = resp["result"]["result"]["objectId"]
-
-        # Set files on the input
-        await ws.send(json.dumps({
-            "id": 2,
-            "method": "DOM.setFileInputFiles",
-            "params": {"objectId": obj_id, "files": file_paths},
-        }))
-        await ws.recv()
-
-    log("⏳", f"Waiting for {len(file_paths)} images to upload...")
-    await asyncio.sleep(8)
-
-    # Now collect CDN URLs from ProseMirror
-    async with websockets.connect(ws_url) as ws:
-        urls = await cdp_evaluate(ws, """(() => {
-            const imgs = document.querySelectorAll('.ProseMirror img');
-            return Array.from(imgs).map(i => i.src).filter(s => s.includes('mmbiz') || s.includes('op_res'));
-        })()""")
-    return urls or []
-
-
-async def cdp_inject_html(target_id: str, html: str) -> str:
-    """Inject HTML into ProseMirror editor via CDP."""
-    import httpx
-    import websockets
-
-    async with httpx.AsyncClient() as c:
-        r = await c.get(f"{CDP_URL}/json/list")
-        tabs = r.json()
-
-    ws_url = None
-    for t in tabs:
-        if target_id in t.get("id", "") or target_id in t.get("targetId", "") or "appmsg_edit" in t.get("url", ""):
-            ws_url = t["webSocketDebuggerUrl"]
+        if format_page:
             break
-    if not ws_url:
-        for t in tabs:
-            if "appmsg" in t.get("url", ""):
-                ws_url = t["webSocketDebuggerUrl"]
-                break
-    if not ws_url:
-        raise RuntimeError("Editor tab not found")
+        await asyncio.sleep(1)
 
-    # Write HTML to temp file, then read it in the expression to avoid length limits
-    tmp_file = "/tmp/gzh_article_body.html"
-    Path(tmp_file).write_text(html, encoding="utf-8")
+    if not format_page:
+        log("⚠️ ", "articlestruct tab not found after 15s, skipping format")
+        return
 
-    async with websockets.connect(ws_url) as ws:
-        result = await cdp_evaluate(
-            ws,
-            f"""(() => {{
-                const editor = document.querySelector('.ProseMirror');
-                if (!editor) return 'ProseMirror not found';
-                editor.focus();
-                // Read from temp file not possible in browser, use direct injection
-                const html = {json.dumps(html)};
-                editor.innerHTML = html;
-                editor.dispatchEvent(new Event('input', {{bubbles: true}}));
-                return 'injected: ' + html.length + ' chars';
-            }})()""",
-        )
-    return result
+    log("✅", "Format preview tab opened")
+
+    # Wait for preview to fully render — poll for "使用此排版" button (up to 60s)
+    # Long articles (5000+ words) need more time for preview rendering
+    log("⏳", "Waiting for format preview to render...")
+    btn_ready = False
+    for attempt in range(30):
+        await asyncio.sleep(2)
+        # Scroll to bottom each time to find the button
+        await format_page.evaluate("() => window.scrollTo(0, document.body.scrollHeight)")
+        await asyncio.sleep(0.5)
+        found = await format_page.evaluate("""() => {
+            const btns = document.querySelectorAll('button, a, [role="button"]');
+            for (const btn of btns) {
+                if (btn.textContent.trim() === '使用此排版' && btn.offsetParent !== null) {
+                    return true;
+                }
+            }
+            return false;
+        }""")
+        if found:
+            btn_ready = True
+            log("✅", f"使用此排版 button ready after {(attempt+1)*2}s")
+            break
+        if attempt % 5 == 4:
+            log("⏳", f"Still waiting... ({(attempt+1)*2}s)")
+
+    if not btn_ready:
+        log("⚠️ ", "使用此排版 button not found after 60s, skipping")
+        try:
+            await format_page.close()
+        except Exception:
+            pass
+        return
+
+    # Click "使用此排版" button
+    clicked = await format_page.evaluate("""() => {
+        const btns = document.querySelectorAll('button, a, [role="button"]');
+        for (const btn of btns) {
+            if (btn.textContent.trim() === '使用此排版' && btn.offsetParent !== null) {
+                btn.click();
+                return 'clicked';
+            }
+        }
+        return 'not found';
+    }""")
+
+    if clicked == 'clicked':
+        log("✅", "一键排版 applied")
+        # Wait for format to be applied and tab to close
+        await asyncio.sleep(3)
+    else:
+        log("⚠️ ", "使用此排版 click failed")
+        try:
+            await format_page.close()
+        except Exception:
+            pass
 
 
-# ─── Main Publish Flow ─────────────────────────────────────────────
+# ─── Cover Image Selection ────────────────────────────────────────
+async def set_cover_from_body(editor_page):
+    """Set cover image by uploading cover-16x9.jpg to editor first.
+    WeChat '从正文选择' only recognizes pasted/uploaded images, not innerHTML.
+    So we paste the cover image first, then use '从正文选择'.
+    """
+    log("🖼️ ", "Setting cover image...")
+
+    # Scroll to top
+    await editor_page.evaluate("() => window.scrollTo(0, 0)")
+    await asyncio.sleep(1)
+
+    # Try 方法1: 从正文选择 (works if images were pasted before innerHTML)
+    clicked = await editor_page.evaluate("""() => {
+        const items = document.querySelectorAll('#js_cover_description_area a, #js_cover a, a');
+        for (const el of items) {
+            if (el.textContent.includes('从正文选择')) {
+                el.click();
+                return 'clicked';
+            }
+        }
+        return 'not found';
+    }""")
+
+    if clicked == 'clicked':
+        await asyncio.sleep(3)
+        selected = await editor_page.evaluate("""() => {
+            const items = document.querySelectorAll('.appmsg_content_img_item');
+            if (items.length > 0) {
+                items[0].click();
+                return 'selected: ' + items.length;
+            }
+            return 'empty';
+        }""")
+        if 'empty' in str(selected):
+            log("⚠️ ", "从正文选择 dialog empty, closing...")
+            # Close the dialog
+            await editor_page.evaluate("""() => {
+                const close = document.querySelector('.weui-desktop-dialog__hd .weui-desktop-dialog__close');
+                if (close) close.click();
+            }""")
+            await asyncio.sleep(1)
+            # Fallback: try 从图片库选择
+            clicked2 = await editor_page.evaluate("""() => {
+                const items = document.querySelectorAll('#js_cover_description_area a, a');
+                for (const el of items) {
+                    if (el.textContent.includes('从图片库选择')) {
+                        el.click();
+                        return 'clicked';
+                    }
+                }
+                return 'not found';
+            }""")
+            if clicked2 == 'clicked':
+                log("✅", "从图片库选择 opened")
+                return True
+            else:
+                log("⚠️ ", "从图片库选择 not found either, skipping cover")
+                return False
+        else:
+            log("✅", f"Cover image {selected}")
+    else:
+        log("⚠️ ", f"从正文选择 not found, skipping cover")
+        return False
+
+    # Click 下一步 → 确认
+    for btn_text in ['下一步', '确认']:
+        clicked = await editor_page.evaluate(f"""() => {{
+            const btns = document.querySelectorAll('button, .weui-desktop-dialog__ft button');
+            for (const btn of btns) {{
+                if (btn.textContent.trim() === '{btn_text}' && btn.offsetParent !== null) {{
+                    btn.click();
+                    return 'clicked';
+                }}
+            }}
+            return 'not found';
+        }}""")
+        if clicked == 'clicked':
+            log("✅", f"Cover: clicked {btn_text}")
+            await asyncio.sleep(2)
+        else:
+            log("⚠️ ", f"Cover: {btn_text} not found")
+
+    log("✅", "Cover image set")
+    return True
+
+
+# ─── Main Flow ─────────────────────────────────────────────────────
 async def publish_to_gzh(
     article_path: str,
-    cover_path: str | None,
     author: str,
     image_paths: list[str],
-    draft_only: bool = True,
+    do_format: bool = True,
+    do_cover: bool = True,
 ) -> dict:
-    """Full publish flow: login → create → fill → upload → inject → format → cover → save."""
     from playwright.async_api import async_playwright
 
     result = {
@@ -381,315 +605,292 @@ async def publish_to_gzh(
         "title": "",
         "author": author,
         "draft_saved": False,
-        "published": False,
-        "screenshot_path": "",
         "images_uploaded": 0,
+        "images_skipped": 0,
+        "cdn_urls": {},
         "appmsgid": "",
+        "format_applied": False,
+        "cover_set": False,
     }
 
-    # Parse article
     article = parse_article(article_path)
     title = article["title"][:TITLE_MAX]
     body_md = article["body"]
+    if not author and article["author"]:
+        author = article["author"]
     result["title"] = title
+    result["author"] = author
+    log("📄", f"Article: '{title}' ({len(body_md)} chars)")
 
-    log("📄", f"Article parsed: title='{title}' ({len(body_md)} chars)")
+    # Auto-discover images if not provided
+    if not image_paths:
+        image_paths = discover_images(article_path)
+        if image_paths:
+            log("🔍", f"Auto-discovered {len(image_paths)} images from {Path(article_path).parent}")
 
-    # ─── Connect to browser ────────────────────────────────────
-    pw = await async_playwright().start()
-    try:
+    # Convert images to PNG
+    png_paths = copy_to_uploads(image_paths) if image_paths else []
+    if png_paths:
+        log("📸", f"{len(png_paths)} images ready (converted to PNG)")
+
+    async with async_playwright() as pw:
         browser = await pw.chromium.connect_over_cdp(CDP_URL)
         ctx = browser.contexts[0]
-        page = ctx.pages[0] if ctx.pages else await ctx.new_page()
 
-        # ─── Step 1: Navigate & verify login ───────────────────
+        # Grant clipboard permissions
+        await ctx.grant_permissions(["clipboard-read", "clipboard-write"])
+
+        # ─── Step 1: Find or create editor ────────────────────
+        home_page = None
+        editor_page = None
+        for page in ctx.pages:
+            if "appmsg_edit" in page.url and "isNew=1" not in page.url:
+                pass  # Existing draft
+            elif "mp.weixin.qq.com" in page.url and "home" in page.url:
+                home_page = page
+
+        if not home_page:
+            home_page = ctx.pages[0] if ctx.pages else await ctx.new_page()
+
         log("🌐", "Navigating to mp.weixin.qq.com...")
-        await page.goto(MP_HOME, wait_until="domcontentloaded", timeout=30000)
-        await page.wait_for_timeout(3000)
+        await home_page.goto(MP_HOME, wait_until="domcontentloaded", timeout=30000)
+        await home_page.wait_for_timeout(3000)
 
-        body_text = await page.evaluate("document.body.innerText.substring(0, 200)")
+        body_text = await home_page.inner_text("body")
         if "请登录" in body_text or "扫码" in body_text:
             ss = screenshot_path("login_qr")
-            await page.screenshot(path=ss)
-            result["error"] = "Not logged in. Scan QR code to continue."
+            await home_page.screenshot(path=ss)
+            result["error"] = "Not logged in. Scan QR code."
             result["screenshot_path"] = ss
-            log("❌", "Not logged in! Screenshot saved.")
+            log("❌", "Not logged in!")
             return result
-
         log("✅", "Login verified")
 
-        # ─── Step 2: New article ───────────────────────────────
+        # ─── Step 2: New article ─────────────────────────────
         log("📝", "Creating new article...")
-        # Click "新的创作" heading to expand menu
-        await page.evaluate("""() => {
+        await home_page.evaluate("""() => {
             const h2s = document.querySelectorAll('h2');
             for (const h of h2s) {
-                if (h.textContent.trim() === '新的创作') { h.click(); return 'clicked'; }
+                if (h.textContent.trim() === '新的创作') { h.click(); return; }
             }
-            return 'not found';
         }""")
-        await page.wait_for_timeout(1000)
+        await home_page.wait_for_timeout(1000)
 
-        # Click "文章" option (it's a div inside the creation area)
-        clicked = await page.evaluate("""() => {
+        await home_page.evaluate("""() => {
             const all = document.querySelectorAll('*');
             for (const el of all) {
                 if (el.textContent.trim() === '文章' && el.children.length === 0) {
                     const r = el.getBoundingClientRect();
                     if (r.width > 0 && r.height > 0 && r.y > 300) {
-                        el.click();
-                        return 'clicked at ' + r.x + ',' + r.y;
+                        el.click(); return;
                     }
                 }
             }
-            return 'not found';
         }""")
-        log("📝", f"文章: {clicked}")
-        await page.wait_for_timeout(5000)
+        await home_page.wait_for_timeout(6000)
 
-        # Find the new editor tab
+        # Log all tabs for debugging
+        log("📋", f"Open tabs: {len(ctx.pages)}")
+        for i, page in enumerate(ctx.pages):
+            log("📋", f"  [{i}] {page.url[:80]}...")
+
+        # Find new editor tab (prioritize isNew=1, fallback to any appmsg_edit)
         editor_page = None
-        for pg in ctx.pages:
-            if "appmsg_edit" in pg.url:
-                editor_page = pg
-                break
+        for page in ctx.pages:
+            if "appmsg_edit" in page.url and page != home_page:
+                if "isNew=1" in page.url:
+                    editor_page = page
+                    break  # Best match: freshly created
+                elif not editor_page:
+                    editor_page = page  # Fallback: any editor tab
 
         if not editor_page:
             result["error"] = "Editor tab not opened"
-            log("❌", "Editor tab not found after clicking 文章")
+            log("❌", "Editor tab not found")
             return result
+        log("✅", "Editor ready")
 
-        log("✅", f"Editor tab opened: {editor_page.url[:80]}")
-        target_id = editor_page.url  # for CDP targeting
+        # ─── Step 3: Fill title + author ─────────────────────
+        # Wait for editor to fully load
+        await editor_page.wait_for_selector("textarea", timeout=15000)
+        await asyncio.sleep(1)
 
-        # ─── Step 3: Fill title ────────────────────────────────
-        await editor_page.evaluate(f"""() => {{
+        # Use JS evaluate for title (more reliable than Playwright fill)
+        title_result = await editor_page.evaluate(f"""() => {{
             const ta = document.querySelector('textarea');
-            if (!ta) return 'no textarea';
+            if (!ta) return 'textarea not found';
             ta.focus();
             ta.value = {json.dumps(title)};
             ta.dispatchEvent(new Event('input', {{bubbles: true}}));
             ta.dispatchEvent(new Event('change', {{bubbles: true}}));
             return 'filled: ' + ta.value;
         }}""")
-        log("✅", f"Title: {title} ({len(title)} chars)")
+        log("✅", f"Title: {title_result}")
 
-        # ─── Step 4: Fill author ───────────────────────────────
         if author:
-            await editor_page.evaluate(f"""() => {{
+            author_result = await editor_page.evaluate(f"""() => {{
                 const inp = document.querySelector('input[placeholder*="作者"]');
-                if (!inp) return 'no author input';
+                if (!inp) return 'author input not found';
                 inp.focus();
                 inp.value = {json.dumps(author)};
                 inp.dispatchEvent(new Event('input', {{bubbles: true}}));
-                return 'author: ' + inp.value;
+                inp.dispatchEvent(new Event('change', {{bubbles: true}}));
+                return 'filled';
             }}""")
-            log("✅", f"Author: {author}")
+            log("✅", f"Author: {author_result}")
 
-        # ─── Step 5a: Upload images & collect CDN URLs ─────────
-        cdn_urls: list[str] = []
-        if image_paths:
-            valid_paths = [p for p in image_paths if Path(p).exists()][:IMAGE_MAX]
-            if valid_paths:
-                log("🖼️ ", f"Uploading {len(valid_paths)} images...")
-                # Copy to uploads dir (required by CDP)
-                upload_dir = Path("/tmp/openclaw/uploads")
-                upload_dir.mkdir(parents=True, exist_ok=True)
-                upload_paths = []
-                for img_path in valid_paths:
-                    dest = upload_dir / Path(img_path).name
-                    import shutil
-                    shutil.copy2(img_path, dest)
-                    upload_paths.append(str(dest))
+        # ─── Step 4: Inject text HTML with image placeholders ──
+        # innerHTML img tags don't persist on save. Use placeholder <p> tags
+        # that will be replaced by pasted images.
+        # Auto-insert image references into markdown based on filename keywords
+        body_md, matched_images = auto_insert_images(body_md, png_paths)
+        log("📸", f"Matched {len(matched_images)} image positions")
+        
+        html_body, img_count = md_to_wechat_html(body_md, placeholders=True)
+        log("📝", f"Injecting text HTML: {len(html_body)} chars ({img_count} image placeholders)")
 
-                # Get targetId from pages
-                editor_target_id = None
-                # The page object has internal _impl_obj with target info
-                # Use URL matching instead
-                cdn_urls = await cdp_upload_file("", upload_paths)
-                log("🖼️ ", f"Got {len(cdn_urls)} CDN URLs")
-                result["images_uploaded"] = len(cdn_urls)
-
-        # ─── Step 5b: Build HTML & inject ──────────────────────
-        image_map = {}
-        if image_paths and cdn_urls:
-            for i, p in enumerate(image_paths[:len(cdn_urls)]):
-                image_map[Path(p).name] = cdn_urls[i]
-
-        html_body = md_to_wechat_html(body_md, image_map)
-        log("📝", f"HTML generated: {len(html_body)} chars")
-
-        # Inject via ProseMirror
-        inject_result = await cdp_inject_html("", html_body)
+        inject_result = await editor_page.evaluate(f"""() => {{
+            const editor = document.querySelector('.ProseMirror');
+            if (!editor) return 'ProseMirror not found';
+            editor.focus();
+            const html = {json.dumps(html_body)};
+            editor.innerHTML = html;
+            editor.dispatchEvent(new Event('input', {{bubbles: true}}));
+            return 'injected: ' + html.length;
+        }}""")
         log("✅", f"HTML injected: {inject_result}")
         await editor_page.wait_for_timeout(2000)
 
-        # Verify injection
         editor_text = await editor_page.evaluate(
-            "document.querySelector('.ProseMirror')?.innerText?.substring(0, 100) || 'empty'"
+            "() => document.querySelector('.ProseMirror')?.innerText?.substring(0, 80) || 'empty'"
         )
-        log("📝", f"Editor text preview: {editor_text[:60]}...")
+        log("📝", f"Preview: {editor_text[:60]}...")
 
-        # ─── Step 6: 一键排版 ──────────────────────────────────
-        try:
-            log("🎨", "Applying 一键排版...")
-            await editor_page.evaluate("""() => {
-                const divs = document.querySelectorAll('div');
-                for (const d of divs) {
-                    if (d.textContent.trim() === '一键排版' && d.offsetParent !== null) {
-                        d.click();
-                        return 'clicked';
-                    }
-                }
-                return 'not found';
-            }""")
-            await editor_page.wait_for_timeout(3000)
+        # ─── Step 5: Paste images at placeholder positions ──────
+        cdn_urls: dict[str, str] = {}
+        original_names = [Path(p).name for p in image_paths] if image_paths else []
+        paste_count = min(len(png_paths), img_count)
 
-            # Check for articlestruct tab
-            for pg in ctx.pages:
-                if "articlestruct" in pg.url:
-                    log("🎨", "Found 排版 preview tab, clicking 使用此排版...")
-                    await pg.evaluate("""() => {
-                        const btns = document.querySelectorAll('button, a, div');
-                        for (const b of btns) {
-                            if (b.textContent.trim() === '使用此排版' && b.offsetParent !== null) {
-                                b.click();
-                                return 'clicked';
-                            }
-                        }
-                        return 'not found';
-                    }""")
-                    await editor_page.wait_for_timeout(3000)
-                    break
+        for i in range(paste_count):
+            fname = original_names[i] if i < len(original_names) else Path(png_paths[i]).name
+            log("📸", f"Pasting {fname} at placeholder {i}...")
 
-            log("✅", "一键排版 applied")
-        except Exception as e:
-            log("⚠️ ", f"一键排版 failed (non-fatal): {e}")
+            # Select the placeholder element so Ctrl+V replaces it
+            found = await select_placeholder(editor_page, i)
+            if not found:
+                log("⚠️ ", f"  Placeholder {i} not found, appending at end")
+                await editor_page.evaluate("() => { document.querySelector('.ProseMirror').focus(); }")
 
-        # ─── Step 7: Cover from body image ─────────────────────
-        if cover_path and Path(cover_path).exists():
-            try:
-                log("🖼️ ", "Setting cover from body image...")
-                # Click "从正文选择"
-                clicked_cover = await editor_page.evaluate("""() => {
-                    const items = document.querySelectorAll('#js_cover_description_area a');
-                    for (const el of items) {
-                        if (el.textContent.includes('从正文选择') && el.offsetParent !== null) {
-                            el.click();
-                            return 'clicked';
-                        }
-                    }
-                    return 'not found';
-                }""")
+            await asyncio.sleep(0.3)
+            cdn_url = await paste_image_at_selection(editor_page, png_paths[i])
+            if cdn_url:
+                cdn_urls[fname] = cdn_url
+                log("✅", f"  {fname} → CDN OK ({len(cdn_url)} chars)")
+            else:
+                log("⚠️ ", f"  {fname} → CDN URL not found")
 
-                if clicked_cover == "clicked":
-                    await editor_page.wait_for_timeout(2000)
-                    # Select first image
-                    await editor_page.evaluate("""() => {
-                        const items = document.querySelectorAll('.appmsg_content_img_item');
-                        if (items.length > 0) { items[0].click(); return 'selected'; }
-                        return 'no images';
-                    }""")
-                    await editor_page.wait_for_timeout(1000)
+        result["cdn_urls"] = cdn_urls
+        result["images_uploaded"] = len(cdn_urls)
+        log("📸", f"Images pasted: {len(cdn_urls)}/{paste_count}")
 
-                    # Click 下一步
-                    await editor_page.evaluate("""() => {
-                        const btns = document.querySelectorAll('.weui-desktop-dialog__ft button');
-                        for (const btn of btns) {
-                            if (btn.textContent.trim() === '下一步' && btn.offsetParent !== null) {
-                                btn.click();
-                                return 'clicked 下一步';
-                            }
-                        }
-                        return 'not found';
-                    }""")
-                    await editor_page.wait_for_timeout(2000)
+        # ─── Step 6: Set cover (from paste-registered images) ──
+        if do_cover:
+            await set_cover_from_body(editor_page)
+            result["cover_set"] = True
+        else:
+            log("⏭️ ", "Skipping cover selection (--no-cover)")
 
-                    # Click 确认
-                    await editor_page.evaluate("""() => {
-                        const btns = document.querySelectorAll('.weui-desktop-dialog__ft button');
-                        for (const btn of btns) {
-                            if (btn.textContent.trim() === '确认' && btn.offsetParent !== null) {
-                                btn.click();
-                                return 'clicked 确认';
-                            }
-                        }
-                        return 'not found';
-                    }""")
-                    await editor_page.wait_for_timeout(2000)
-                    log("✅", "Cover set from body image")
-                else:
-                    log("⚠️ ", "从正文选择 not found, skipping cover")
-            except Exception as e:
-                log("⚠️ ", f"Cover setting failed (non-fatal): {e}")
+        # ─── Step 7: 一键排版 ────────────────────────────────
+        if do_format:
+            await apply_format(editor_page, ctx)
+            result["format_applied"] = True
+        else:
+            log("⏭️ ", "Skipping 一键排版 (--no-format)")
 
-        # ─── Step 8: Save draft ────────────────────────────────
+        # ─── Step 8: Verify images before saving ─────────────
+        img_check = await editor_page.evaluate("""() => {
+            const imgs = document.querySelectorAll('.ProseMirror img');
+            const mmbiz = Array.from(imgs).filter(i => i.src.includes('mmbiz'));
+            return {total: imgs.length, cdn: mmbiz.length};
+        }""")
+        log("📸", f"Images in editor: {img_check['cdn']} CDN / {img_check['total']} total")
+
+        # ─── Step 9: Save draft ──────────────────────────────
         log("💾", "Saving draft...")
         await editor_page.evaluate("""() => {
             const btns = document.querySelectorAll('button, div, a, span');
             for (const b of btns) {
                 if (b.textContent.trim() === '保存为草稿' && b.offsetParent !== null) {
-                    b.click();
-                    return 'clicked';
+                    b.click(); return 'clicked';
                 }
             }
             return 'not found';
         }""")
-        await editor_page.wait_for_timeout(5000)
+        await editor_page.wait_for_timeout(10000)
 
-        # Extract appmsgid from URL
-        current_url = editor_page.url
-        appmsgid_match = re.search(r"appmsgid=(\d+)", current_url)
+        # Dismiss any dialog
+        try:
+            await editor_page.evaluate("""() => {
+                const btns = document.querySelectorAll('button');
+                for (const btn of btns) {
+                    const t = btn.textContent.trim();
+                    if ((t === '确认' || t === '确定') && btn.offsetParent !== null) {
+                        btn.click(); return;
+                    }
+                }
+            }""")
+            await editor_page.wait_for_timeout(3000)
+        except Exception:
+            pass
+
+        # Extract appmsgid
+        appmsgid_match = re.search(r"appmsgid=(\d+)", editor_page.url)
         if appmsgid_match:
             result["appmsgid"] = appmsgid_match.group(1)
 
-        # Final screenshot
         ss = screenshot_path("draft_saved")
-        await editor_page.screenshot(path=ss)
-        result["screenshot_path"] = ss
+        try:
+            await editor_page.screenshot(path=ss)
+            result["screenshot_path"] = ss
+        except Exception as e:
+            log("⚠️ ", f"Screenshot failed: {e}")
+            result["screenshot_path"] = f"(failed: {e})"
 
         result["status"] = "ok"
         result["draft_saved"] = True
         result["content_length"] = len(body_md)
-        log("✅", "Draft saved!")
-        if result["appmsgid"]:
-            log("📋", f"appmsgid={result['appmsgid']}")
-
-    except Exception as e:
-        result["error"] = str(e)
-        log("❌", f"Error: {e}")
-    finally:
-        await p.stop()
+        log("✅", f"Draft saved! appmsgid={result['appmsgid']}")
 
     return result
 
 
 # ─── CLI ─────────────────────────────────────────────────────────────
 def main():
-    parser = argparse.ArgumentParser(description="GZH Publisher — 微信公众号草稿箱发布")
+    parser = argparse.ArgumentParser(description="GZH Publisher v3.1 — 微信公众号草稿箱发布")
     parser.add_argument("--article", required=True, help="Markdown article path")
-    parser.add_argument("--cover", default=None, help="Cover image path (optional, will try 从正文选择)")
-    parser.add_argument("--author", default="", help="Author name")
-    parser.add_argument("--images", nargs="*", default=[], help="Additional image paths to upload")
-    parser.add_argument("--decision", choices=["draft", "publish"], default="draft", help="draft only (default)")
+    parser.add_argument("--author", default="", help="Author name (or from frontmatter)")
+    parser.add_argument("--images", nargs="*", default=[], help="Image paths (auto-convert JPG→PNG). If empty, auto-scan article directory.")
+    parser.add_argument("--no-format", action="store_true", help="Skip 一键排版")
+    parser.add_argument("--no-cover", action="store_true", help="Skip cover image selection")
     args = parser.parse_args()
 
     if not Path(args.article).exists():
         print(f"❌ Article not found: {args.article}")
         sys.exit(1)
 
-    log("🚀", "GZH Publisher v1.0 starting...")
+    log("🚀", "GZH Publisher v3.1 starting...")
     log("📄", f"Article: {args.article}")
-    log("🖼️ ", f"Cover: {args.cover or 'none'}")
-    log("👤", f"Author: {args.author or 'empty'}")
-    log("🖼️ ", f"Images: {len(args.images)}")
+    log("👤", f"Author: {args.author or '(from article)'}")
+    log("📸", f"Images: {len(args.images)} (empty=auto-scan)")
+    log("🎨", f"一键排版: {'off' if args.no_format else 'on'}")
+    log("🖼️ ", f"Cover: {'off' if args.no_cover else 'on'}")
 
     result = asyncio.run(publish_to_gzh(
         article_path=args.article,
-        cover_path=args.cover,
         author=args.author,
         image_paths=args.images,
-        draft_only=(args.decision == "draft"),
+        do_format=not args.no_format,
+        do_cover=not args.no_cover,
     ))
 
     print("\n" + "=" * 50)

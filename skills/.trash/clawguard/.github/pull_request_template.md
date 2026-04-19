@@ -1,7 +1,0 @@
-## Summary
-
--
-
-## Testing
-
-- [ ] `npm test`
