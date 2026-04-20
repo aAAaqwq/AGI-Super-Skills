@@ -6,8 +6,8 @@ class CodingAgent {
     this.name = 'coding-agent';
     this.enabled = true;
     this.pty = true;
-    // Gemini API 配置（已填入你的 API Key）
-    this.apiKey = "AIzaSyCKWmPmAkZWvI2KiblawWPUESyCp9dEjk0";
+    // Gemini API 配置
+    this.apiKey = process.env.GEMINI_API_KEY || "";
     this.modelUrl = "https://generativelanguage.googleapis.com/v1/models/gemini-3.1-pro:generateContent";
   }
 
