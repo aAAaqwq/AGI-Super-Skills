@@ -1,0 +1,120 @@
+name: Update Skill Showcase Image
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'  # Weekly on Monday at 04:00 UTC
+  workflow_dispatch:       # Manual trigger
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**'
+      - 'skills/README.md'
+
+jobs:
+  update-showcase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Count skills by category
+        id: count
+        run: |
+          # Count total skills
+          TOTAL=$(ls -1 skills/*/SKILL.md 2>/dev/null | wc -l)
+          echo "Total skills: $TOTAL"
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
+          
+          # Count skills with scripts
+          WITH_SCRIPTS=$(find skills -name "*.sh" -o -name "*.py" -o -name "*.js" 2>/dev/null | wc -l)
+          echo "Skills with scripts: $WITH_SCRIPTS"
+          echo "with_scripts=$WITH_SCRIPTS" >> $GITHUB_OUTPUT
+          
+          # Count Chinese content skills
+          ZH_COUNT=$(grep -l "中文\|小红书\|抖音\|公众号" skills/*/SKILL.md 2>/dev/null | wc -l)
+          echo "Chinese content skills: $ZH_COUNT"
+          echo "zh_count=$ZH_COUNT" >> $GITHUB_OUTPUT
+          
+          # Get latest 5 skills (by directory mtime)
+          LATEST=$(ls -t1d skills/*/SKILL.md 2>/dev/null | head -5 | xargs -I{} dirname {} | xargs -I{} basename {})
+          echo "Latest skills:"
+          echo "$LATEST"
+          echo "latest=$LATEST" >> $GITHUB_OUTPUT
+
+      - name: Generate SVG showcase
+        run: |
+          TOTAL=${{ steps.count.outputs.total }}
+          WITH_SCRIPTS=${{ steps.count.outputs.with_scripts }}
+          ZH_COUNT=${{ steps.count.outputs.zh_count }}
+          CURRENT_DATE=$(date +%Y-%m-%d)
+          
+          cat > assets/skill-showcase.svg << 'SVGEOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#e94560"/>
+      <stop offset="100%" style="stop-color:#0f3460"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="url(#bg)"/>
+  
+  <!-- Header -->
+  <text x="40" y="60" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#ffffff">
+    AGI Super Team
+  </text>
+  <text x="40" y="90" font-family="Arial, sans-serif" font-size="18" fill="#888888">
+    Skills Library • Updated '''${CURRENT_DATE}'''
+  </text>
+  
+  <!-- Stats Cards -->
+  <g transform="translate(40, 120)">
+    <!-- Total Skills Card -->
+    <rect width="160" height="100" rx="10" fill="#0f3460"/>
+    <text x="80" y="45" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#e94560" text-anchor="middle">'''${TOTAL}'''</text>
+    <text x="80" y="70" font-family="Arial, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle">Total Skills</text>
+    
+    <!-- With Scripts Card -->
+    <rect x="180" width="160" height="100" rx="10" fill="#0f3460"/>
+    <text x="260" y="45" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#4ecca3" text-anchor="middle">'''${WITH_SCRIPTS}'''</text>
+    <text x="260" y="70" font-family="Arial, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle">With Scripts</text>
+    
+    <!-- Chinese Content Card -->
+    <rect x="360" width="160" height="100" rx="10" fill="#0f3460"/>
+    <text x="440" y="45" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#ffd700" text-anchor="middle">'''${ZH_COUNT}'''</text>
+    <text x="440" y="70" font-family="Arial, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle">中文内容</text>
+  </g>
+  
+  <!-- Category Bar -->
+  <g transform="translate(40, 260)">
+    <rect width="720" height="8" rx="4" fill="#0f3460"/>
+    <rect width="720" height="8" rx="4" fill="url(#accent)"/>
+  </g>
+  
+  <!-- Footer -->
+  <text x="400" y="380" font-family="Arial, sans-serif" font-size="12" fill="#666666" text-anchor="middle">
+    github.com/aAAaqwq/AGI-Super-Team
+  </text>
+</svg>
+SVGEOF
+
+          echo "SVG generated successfully"
+
+      - name: Check for changes
+        id: check
+        run: |
+          git diff --quiet assets/skill-showcase.svg && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/skill-showcase.svg
+          git commit -m "assets: auto-update skill showcase image"
+          git push
