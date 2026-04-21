@@ -1,6 +1,6 @@
 # 🛠️ Skills Catalog
 
-> **737 skills** ready to deploy · [← Back to main README](../README.md)
+> **739 skills** ready to deploy · [← Back to main README](../README.md)
 
 ---
 
@@ -24,7 +24,7 @@
 | 🧬 Bioinformatics | 9 |
 | 🧠 Thinking Frameworks | 29 |
 | 🧩 Other | 2 |
-| **Total** | **737** |
+|  **739** | **737** |
 
 ---
 

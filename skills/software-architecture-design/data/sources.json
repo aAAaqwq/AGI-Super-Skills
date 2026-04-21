@@ -1,0 +1,400 @@
+{
+  "metadata": {
+    "skill": "software-architecture-design",
+    "description": "Curated resources for system design, architecture patterns, and scalability",
+    "last_updated": "2026-01-17",
+    "total_sources": 60
+  },
+  "architecture_patterns": [
+    {
+      "name": "Microservices.io - Pattern Catalog",
+      "url": "https://microservices.io/patterns/index.html",
+      "description": "Comprehensive microservices pattern catalog by Chris Richardson",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Microsoft Azure - Architecture Center",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/",
+      "description": "Cloud architecture patterns, best practices, and design guidance",
+      "add_as_web_search": true
+    },
+    {
+      "name": "AWS Well-Architected Framework",
+      "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html",
+      "description": "AWS architecture best practices across six pillars",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Google Cloud Architecture Framework",
+      "url": "https://cloud.google.com/architecture/framework",
+      "description": "Google Cloud system design principles and patterns",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Martin Fowler - Architecture",
+      "url": "https://martinfowler.com/architecture/",
+      "description": "Classic architecture patterns and refactoring guides",
+      "add_as_web_search": false
+    },
+    {
+      "name": "C4 Model",
+      "url": "https://c4model.com/",
+      "description": "Lightweight architecture diagramming model optimized for communication and maintenance",
+      "add_as_web_search": true
+    },
+    {
+      "name": "The Twelve-Factor App",
+      "url": "https://12factor.net/",
+      "description": "Operational principles for cloud-native apps (config, logs, disposability, concurrency)",
+      "add_as_web_search": true
+    }
+  ],
+  "distributed_systems": [
+    {
+      "name": "ByteByteGo - Scalability Patterns",
+      "url": "https://blog.bytebytego.com/p/scalability-patterns-for-modern-distributed",
+      "description": "Scalability patterns for distributed systems with diagrams",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Designing Distributed Systems (Book)",
+      "url": "https://info.microsoft.com/rs/157-GQE-382/images/EN-CNTNT-eBook-DesigningDistributedSystems.pdf",
+      "description": "Brendan Burns - Patterns using Kubernetes and containers",
+      "add_as_web_search": false
+    },
+    {
+      "name": "Distributed Systems Patterns",
+      "url": "https://dev.to/somadevtoo/9-software-architecture-patterns-for-distributed-systems-2o86",
+      "description": "Essential patterns for scalability and resilience",
+      "add_as_web_search": true
+    },
+    {
+      "name": "System Design Scalability Guide",
+      "url": "https://www.geeksforgeeks.org/guide-for-designing-highly-scalable-systems/",
+      "description": "Comprehensive guide to designing scalable systems",
+      "add_as_web_search": true
+    }
+  ],
+  "adr_templates": [
+    {
+      "name": "ADR GitHub Organization",
+      "url": "https://adr.github.io/",
+      "description": "Official ADR homepage with multiple template formats",
+      "add_as_web_search": false
+    },
+    {
+      "name": "Documenting Architecture Decisions (Michael Nygard)",
+      "url": "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
+      "description": "The canonical ADR write-up: when to write ADRs and what to include",
+      "add_as_web_search": true
+    },
+    {
+      "name": "ADR Template Repository",
+      "url": "https://github.com/joelparkerhenderson/architecture-decision-record",
+      "description": "200+ ADR examples and template variations",
+      "add_as_web_search": false
+    },
+    {
+      "name": "AWS ADR Best Practices",
+      "url": "https://aws.amazon.com/blogs/architecture/master-architecture-decision-records-adrs-best-practices-for-effective-decision-making/",
+      "description": "AWS guidance on effective ADR processes",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Microsoft ADR Guide",
+      "url": "https://learn.microsoft.com/en-us/azure/well-architected/architect-role/architecture-decision-record",
+      "description": "Azure Well-Architected ADR practices",
+      "add_as_web_search": true
+    },
+    {
+      "name": "MADR - Markdown ADR",
+      "url": "https://adr.github.io/madr/",
+      "description": "Markdown ADR format with pros/cons analysis",
+      "add_as_web_search": false
+    }
+  ],
+  "scalability_reliability": [
+    {
+      "name": "Google SRE Book",
+      "url": "https://sre.google/sre-book/table-of-contents/",
+      "description": "Site Reliability Engineering practices from Google",
+      "add_as_web_search": false
+    },
+    {
+      "name": "Google SRE Workbook",
+      "url": "https://sre.google/workbook/table-of-contents/",
+      "description": "Practical SRE implementation guide",
+      "add_as_web_search": false
+    },
+    {
+      "name": "CAP Theorem Explained",
+      "url": "https://www.ibm.com/topics/cap-theorem",
+      "description": "Understanding consistency, availability, partition tolerance",
+      "add_as_web_search": false
+    },
+    {
+      "name": "Database Scaling Patterns",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/sharding",
+      "description": "Sharding, replication, and partitioning strategies",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Circuit Breaker Pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker",
+      "description": "Prevent cascading failures in distributed systems",
+      "add_as_web_search": false
+    },
+    {
+      "name": "Retry Pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/retry",
+      "description": "Exponential backoff and retry strategies",
+      "add_as_web_search": false
+    },
+    {
+      "name": "Bulkhead Pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/bulkhead",
+      "description": "Isolate resources to prevent total failure",
+      "add_as_web_search": false
+    }
+  ],
+  "event_driven": [
+    {
+      "name": "Event-Driven Architecture Guide",
+      "url": "https://aws.amazon.com/event-driven-architecture/",
+      "description": "AWS patterns for event-driven systems",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Event Sourcing Pattern",
+      "url": "https://martinfowler.com/eaaDev/EventSourcing.html",
+      "description": "Martin Fowler's event sourcing guide",
+      "add_as_web_search": false
+    },
+    {
+      "name": "CQRS Pattern",
+      "url": "https://martinfowler.com/bliki/CQRS.html",
+      "description": "Command Query Responsibility Segregation",
+      "add_as_web_search": false
+    },
+    {
+      "name": "Saga Pattern",
+      "url": "https://microservices.io/patterns/data/saga.html",
+      "description": "Distributed transaction management",
+      "add_as_web_search": false
+    }
+  ],
+  "observability": [
+    {
+      "name": "OpenTelemetry",
+      "url": "https://opentelemetry.io/docs/",
+      "description": "Observability framework for cloud-native software",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Distributed Tracing Best Practices",
+      "url": "https://opentelemetry.io/docs/concepts/observability-primer/",
+      "description": "Understanding traces, metrics, and logs",
+      "add_as_web_search": true
+    },
+    {
+      "name": "SLI/SLO/SLA Guide",
+      "url": "https://sre.google/sre-book/service-level-objectives/",
+      "description": "Service level objectives and error budgets",
+      "add_as_web_search": false
+    }
+  ],
+  "api_design": [
+    {
+      "name": "REST API Best Practices",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design",
+      "description": "Microsoft API design guidelines",
+      "add_as_web_search": true
+    },
+    {
+      "name": "RFC 9457 - Problem Details for HTTP APIs",
+      "url": "https://www.rfc-editor.org/rfc/rfc9457",
+      "description": "Standard error response format for HTTP APIs (updates RFC 7807)",
+      "add_as_web_search": true
+    },
+    {
+      "name": "GraphQL Best Practices",
+      "url": "https://graphql.org/learn/best-practices/",
+      "description": "Official GraphQL patterns and conventions",
+      "add_as_web_search": true
+    },
+    {
+      "name": "gRPC Design Guide",
+      "url": "https://grpc.io/docs/guides/",
+      "description": "High-performance RPC framework patterns",
+      "add_as_web_search": true
+    },
+    {
+      "name": "API Gateway Pattern",
+      "url": "https://microservices.io/patterns/apigateway.html",
+      "description": "Single entry point for microservices",
+      "add_as_web_search": false
+    }
+  ],
+  "security_architecture": [
+    {
+      "name": "OWASP Architecture Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Microservices_Security_Cheat_Sheet.html",
+      "description": "Security patterns for microservices",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Zero Trust Architecture",
+      "url": "https://www.nist.gov/publications/zero-trust-architecture",
+      "description": "NIST zero trust security model",
+      "add_as_web_search": false
+    },
+    {
+      "name": "Service Mesh Security",
+      "url": "https://istio.io/latest/docs/concepts/security/",
+      "description": "mTLS and service-to-service authentication",
+      "add_as_web_search": true
+    }
+  ],
+  "books_resources": [
+    {
+      "name": "Designing Data-Intensive Applications",
+      "url": "https://dataintensive.net/",
+      "description": "Martin Kleppmann - Distributed systems bible",
+      "add_as_web_search": false
+    },
+    {
+      "name": "Building Microservices (2nd Edition)",
+      "url": "https://www.oreilly.com/library/view/building-microservices-2nd/9781492034018/",
+      "description": "Sam Newman - Microservices patterns",
+      "add_as_web_search": false
+    },
+    {
+      "name": "Release It! (2nd Edition)",
+      "url": "https://pragprog.com/titles/mnee2/release-it-second-edition/",
+      "description": "Michael Nygard - Production-ready patterns",
+      "add_as_web_search": false
+    }
+  ],
+  "modern_architecture_2025": [
+    {
+      "name": "InfoQ Architecture Trends 2025",
+      "url": "https://www.infoq.com/articles/architecture-trends-2025/",
+      "description": "Annual architecture trends: data mesh, composable, edge computing, AI integration",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Data Mesh Architecture - Zhamak Dehghani",
+      "url": "https://www.datamesh-architecture.com/",
+      "description": "Canonical data mesh principles: domain ownership, data as product, federated governance",
+      "add_as_web_search": true
+    },
+    {
+      "name": "CNCF Platform Engineering Maturity Model",
+      "url": "https://tag-app-delivery.cncf.io/whitepapers/platforms/",
+      "description": "Internal developer platforms, golden paths, self-service infrastructure",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Continuous Architecture in Practice",
+      "url": "https://continuousarchitecture.com/",
+      "description": "Iterative architecture planning, fitness functions, just-enough upfront design",
+      "add_as_web_search": false
+    },
+    {
+      "name": "Edge Computing Patterns - AWS",
+      "url": "https://aws.amazon.com/edge/",
+      "description": "Edge computing patterns for IoT, latency-sensitive applications",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Composable Architecture - Gartner",
+      "url": "https://www.gartner.com/en/information-technology/glossary/composable-business",
+      "description": "Packaged business capabilities (PBCs), API-first composition",
+      "add_as_web_search": false
+    }
+  ],
+  "optional_ai_architecture": [
+    {
+      "name": "RAG Architecture Patterns - Anthropic",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/retrieval-augmented-generation",
+      "description": "Retrieval-augmented generation: vector stores, retrievers, context packing",
+      "add_as_web_search": true,
+      "optional": true
+    },
+    {
+      "name": "Building Effective Agents - Anthropic",
+      "url": "https://www.anthropic.com/research/building-effective-agents",
+      "description": "Multi-agent architecture: single, hierarchical, decentralized patterns",
+      "add_as_web_search": true,
+      "optional": true
+    },
+    {
+      "name": "LangChain Architecture",
+      "url": "https://python.langchain.com/docs/concepts/",
+      "description": "LLM application architecture: chains, agents, memory, retrieval",
+      "add_as_web_search": true,
+      "optional": true
+    },
+    {
+      "name": "LlamaIndex RAG Patterns",
+      "url": "https://docs.llamaindex.ai/en/stable/",
+      "description": "Data indexing, retrieval strategies, response synthesis",
+      "add_as_web_search": true,
+      "optional": true
+    },
+    {
+      "name": "Google's Eight Multi-Agent Design Patterns",
+      "url": "https://www.infoq.com/news/2026/01/multi-agent-design-patterns/",
+      "description": "Eight foundational multi-agent architectures: sequential, loop, parallel, hierarchical, bidding, human-in-loop",
+      "add_as_web_search": true,
+      "optional": true
+    },
+    {
+      "name": "Google Cloud - Agent Design Pattern Guide",
+      "url": "https://docs.cloud.google.com/architecture/choose-design-pattern-agentic-ai-system",
+      "description": "Official Google guidance on agentic AI architecture patterns and A2A protocol",
+      "add_as_web_search": true,
+      "optional": true
+    },
+    {
+      "name": "MCP Architecture Patterns - Speakeasy",
+      "url": "https://www.speakeasy.com/mcp/using-mcp/ai-agents/architecture-patterns",
+      "description": "Model Context Protocol integration patterns for AI agents",
+      "add_as_web_search": true,
+      "optional": true
+    },
+    {
+      "name": "Salesforce - Agentic Enterprise IT Architecture",
+      "url": "https://architect.salesforce.com/fundamentals/agentic-enterprise-it-architecture",
+      "description": "Enterprise architecture for AI-powered applications and headless app re-engineering",
+      "add_as_web_search": true,
+      "optional": true
+    }
+  ],
+  "platform_engineering_2026": [
+    {
+      "name": "Platform Engineering Predictions 2026",
+      "url": "https://platformengineering.org/blog/10-platform-engineering-predictions-for-2026",
+      "description": "AI-platform convergence, FinOps integration, internal developer platforms, unified delivery pipelines",
+      "add_as_web_search": true
+    },
+    {
+      "name": "AI Merging with Platform Engineering - The New Stack",
+      "url": "https://thenewstack.io/in-2026-ai-is-merging-with-platform-engineering-are-you-ready/",
+      "description": "AI agents as first-class platform citizens, unified ML and app delivery",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Backstage - Spotify Internal Developer Portal",
+      "url": "https://backstage.io/docs/overview/what-is-backstage",
+      "description": "Widely used IDP framework: service catalog, templates (golden paths), and developer portal patterns",
+      "add_as_web_search": true
+    },
+    {
+      "name": "Modular Monolith Guide - ByteByteGo",
+      "url": "https://blog.bytebytego.com/p/monolith-vs-microservices-vs-modular",
+      "description": "Monolith vs microservices vs modular monolith comparison with industry data",
+      "add_as_web_search": true
+    }
+  ]
+}
