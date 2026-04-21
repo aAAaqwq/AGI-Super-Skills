@@ -1,18 +1,18 @@
 <p align="center">
-  <img src="logo.png" alt="AGI Super Team" width="120">
+  <img src="assets/logo.png" alt="AGI Super Team" width="120">
 </p>
 
 <h1 align="center">AGI Super Team</h1>
 
 <p align="center">
-  <strong>737 AI Skills · 12 C-Suite Agents · 29 Thinking Frameworks</strong><br/>
+  <strong>739 AI Skills · 12 C-Suite Agents · 29 Thinking Frameworks</strong><br/>
   Build your AI-native company in minutes.
 </p>
 
 <p align="center">
   <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/Powered%20by-OpenClaw-blue?logo=github" alt="OpenClaw"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Skills-737-blueviolet" alt="Skills">
+  <img src="https://img.shields.io/badge/Skills-739-blueviolet" alt="Skills">
   <img src="https://img.shields.io/badge/Agents-12-orange" alt="Agents">
   <img src="https://img.shields.io/badge/Frameworks-29-cyan" alt="Frameworks">
 </p>
@@ -22,8 +22,7 @@
   <a href="#quick-start">Quick Start</a> ·
   <a href="./skills/README.md">All Skills</a> ·
   <a href="./agents/README.md">Agents</a> ·
-  <a href="./cookbook/">Cookbooks</a> ·
-  <a href="./workflows/">Workflows</a>
+  <a href="./cookbook/">Cookbooks</a>
 </p>
 
 ---
@@ -32,7 +31,7 @@
 
 A **plug-and-play AI team template** — deploy a complete virtual C-Suite using [OpenClaw](https://github.com/openclaw/openclaw). Each agent has a **spirit mentor** (Elon Musk, Jensen Huang, Warren Buffett...) that shapes their personality and decision-making.
 
-**737 skills. 12 agents. 29 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
+**739 skills. 12 agents. 29 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
 
 ## 🏛️ Architecture
 
@@ -120,23 +119,40 @@ done
 | **Shared** | Daily standup, weekly review, crisis escalation, cross-agent handoff |
 | **Per-Agent** | Content pipeline (CCO), market morning brief (CQO), P&L tracking (CFO), code review (PE), incident response (COO) |
 
-👉 **[All workflows →](./workflows/README.md)**
+Each agent directory (e.g. `agents/cco/WORKFLOW.md`) contains role-specific and shared workflows.
 
 ## 🚀 Quick Start
+
+### Prerequisites
+
+Install [OpenClaw](https://github.com/openclaw/openclaw) (AI agent runtime):
+```bash
+npm install -g openclaw
+openclaw init
+```
+
+### Deploy your AI team
 
 ```bash
 # 1. Clone the repo
 git clone https://github.com/aAAaqwq/AGI-Super-Team.git
 cd AGI-Super-Team
 
-# 2. Deploy an agent (e.g., CEO)
+# 2. Deploy an agent (e.g., CEO with Elon Musk's thinking)
 mkdir -p ~/.openclaw/workspace-main/skills/
 cp -r skills/thinking-elon-musk/ ~/.openclaw/workspace-main/skills/
+cp agents/main/SOUL.md agents/main/AGENTS.md ~/.openclaw/workspace-main/
 
-# 3. Add skills to any agent
+# 3. Add more skills
 cp -r skills/api-design/ ~/.openclaw/workspace-main/skills/
 
-# 4. Restart OpenClaw — done!
+# 4. Deploy more agents (e.g., PE for coding)
+mkdir -p ~/.openclaw/workspace-pe/skills/
+cp agents/pe/SOUL.md agents/pe/AGENTS.md ~/.openclaw/workspace-pe/
+cp -r skills/thinking-linus-torvalds/ ~/.openclaw/workspace-pe/skills/
+
+# 5. Restart OpenClaw — done!
+openclaw gateway restart
 ```
 
 ## 📚 Cookbooks
@@ -159,14 +175,14 @@ AGI-Super-Team/
 │   ├── ceo/          # SOUL.md · AGENTS.md · TOOLS.md
 │   ├── cto/          # ...
 │   └── README.md     # Architecture diagram & skill matrix
-├── skills/           # 737 skills (flat structure, each with SKILL.md)
+├── skills/           # 739 skills (flat structure, each with SKILL.md)
 │   └── README.md     # Full catalog
-├── workflows/        # 30 standard operating procedures
+
 ├── cookbook/         # 5 in-depth learning guides
-├── docs/             # Category indexes, migration docs, quant scripts
+├── docs/             # Category indexes, quant scripts
 ├── CHARTER.md        # Team constitution (12 principles)
 ├── STARTUP.md        # Quick-start guide
-└── COLLABORATION.md  # Inter-agent collaboration network
+├── COLLABORATION.md  # Inter-agent collaboration network
 ```
 
 ## 🤝 Contributing

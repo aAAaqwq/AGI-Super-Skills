@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" alt="AGI Super Team" width="120">
+  <img src="assets/logo.png" alt="AGI Super Team" width="120">
 </p>
 
 <h1 align="center">AGI Super Team</h1>
