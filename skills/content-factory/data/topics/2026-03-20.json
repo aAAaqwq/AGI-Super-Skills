@@ -1,0 +1,3162 @@
+{
+  "date": "2026-03-20",
+  "scored_at": "2026-03-20T09:41:10.560433",
+  "total_scored": 158,
+  "top_count": 10,
+  "weights": {
+    "heat": 0.35,
+    "timeliness": 0.25,
+    "creativity": 0.4
+  },
+  "top": [
+    {
+      "source": "toutiao",
+      "title": "美以伊战事如何搅动世界经济",
+      "url": "https://www.toutiao.com/trending/7618851017433825322",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 1607236
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 90,
+        "timeliness": 95,
+        "creativity": 85
+      },
+      "angle": "分析美以伊地缘冲突如何通过能源、航运、金融市场三条主线冲击全球经济格局。",
+      "total_score": 89,
+      "score": 89
+    },
+    {
+      "source": "linuxdo",
+      "title": "一觉醒来，电脑数据全被加密了",
+      "url": "https://linux.do/t/topic/1786024",
+      "summary": "",
+      "category": "11",
+      "engagement": {
+        "views": 234,
+        "likes": 7,
+        "comments": 23
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 90,
+        "timeliness": 95,
+        "creativity": 85
+      },
+      "angle": "结合真实勒索软件案例，剖析个人数据防护的常见误区，并提供可操作的多层备份与应急响应方案。",
+      "total_score": 89,
+      "score": 89
+    },
+    {
+      "source": "zhihu",
+      "title": "刘慈欣提出「技术能生成一切，却不能辨认伟大」，有道理吗？这对当下理解 AI 与人的关系有何启示？",
+      "url": "https://www.zhihu.com/question/2017606912024207686",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 95,
+        "creativity": 90
+      },
+      "angle": "借刘慈欣观点，探讨AI时代“伟大”的标准应由谁定义，以及人类创造力不可替代的核心要素。",
+      "total_score": 88,
+      "score": 88
+    },
+    {
+      "source": "douyin",
+      "title": "小米发布会把半个车圈请来了",
+      "url": "https://www.douyin.com/search/%E5%B0%8F%E7%B1%B3%E5%8F%91%E5%B8%83%E4%BC%9A%E6%8A%8A%E5%8D%8A%E4%B8%AA%E8%BD%A6%E5%9C%88%E8%AF%B7%E6%9D%A5%E4%BA%86",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7655589
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 88,
+        "timeliness": 92,
+        "creativity": 85
+      },
+      "angle": "剖析小米汽车发布会的“破圈”营销策略及其对行业竞争生态的重塑。",
+      "total_score": 88,
+      "score": 88
+    },
+    {
+      "source": "zhihu",
+      "title": "小米新一代 SU7 发布，王传福、李想、何小鹏纷纷到场助阵，怎样解读？小米汽车在行业内有怎样的影响力？",
+      "url": "https://www.zhihu.com/question/2018050979702989965",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 90,
+        "timeliness": 95,
+        "creativity": 80
+      },
+      "angle": "透过竞争对手集体站台现象，解读小米汽车如何以生态整合者角色重构智能汽车行业竞合关系。",
+      "total_score": 87,
+      "score": 87
+    },
+    {
+      "source": "toutiao",
+      "title": "雷军请了半个车圈的老总到场支持",
+      "url": "https://www.toutiao.com/trending/7618950827205529115",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 39429567
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 90,
+        "timeliness": 95,
+        "creativity": 80
+      },
+      "angle": "分析雷军如何通过‘朋友圈营销’整合行业资源，为小米汽车SU7发布会造势的商业策略。",
+      "total_score": 87,
+      "score": 87
+    },
+    {
+      "source": "douyin",
+      "title": "小米新一代SU7售价21.99万起",
+      "url": "https://www.douyin.com/search/%E5%B0%8F%E7%B1%B3%E6%96%B0%E4%B8%80%E4%BB%A3SU7%E5%94%AE%E4%BB%B721.99%E4%B8%87%E8%B5%B7",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7716628
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 90,
+        "timeliness": 95,
+        "creativity": 80
+      },
+      "angle": "深度解析SU7定价策略对新能源汽车市场格局的冲击与消费者选择逻辑。",
+      "total_score": 87,
+      "score": 87
+    },
+    {
+      "source": "youtube",
+      "title": "7 new open source AI tools you need right now…",
+      "url": "https://www.youtube.com/watch?v=x36UmiSiEzc",
+      "summary": "[Fireship] 7 new open source AI tools you need right now…",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "Fireship",
+      "published": "2026-03-09T18:31:50+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 85
+      },
+      "angle": "盘点这7款开源AI工具的实际应用场景与优劣对比，为不同需求的开发者提供选型指南。",
+      "total_score": 86,
+      "score": 86
+    },
+    {
+      "source": "bilibili",
+      "title": "[热搜] 大漠叔叔深入妙瓦底园区",
+      "url": "https://search.bilibili.com/all?keyword=%E5%A4%A7%E6%BC%A0%E5%8F%94%E5%8F%94%E6%B7%B1%E5%85%A5%E5%A6%99%E7%93%A6%E5%BA%95%E5%9B%AD%E5%8C%BA",
+      "summary": "大漠叔叔深入妙瓦底园区",
+      "category": "热搜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 85
+      },
+      "angle": "从大漠叔叔深入妙瓦底园区切入，探讨自媒体在跨国犯罪报道中的角色与风险。",
+      "total_score": 86,
+      "score": 86
+    },
+    {
+      "source": "zhihu",
+      "title": "新一代小米 SU7 发布，全系搭载 V6s Plus 超级电机，最高续航达 902km，还有哪些看点？",
+      "url": "https://www.zhihu.com/question/2018016098444863053",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 95,
+        "timeliness": 95,
+        "creativity": 70
+      },
+      "angle": "对比小米SU7与同级竞品的技术参数与定价策略，剖析其“性价比旗舰”定位对新能源车市场的冲击。",
+      "total_score": 85,
+      "score": 85
+    }
+  ],
+  "all_scored": [
+    {
+      "source": "toutiao",
+      "title": "美以伊战事如何搅动世界经济",
+      "url": "https://www.toutiao.com/trending/7618851017433825322",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 1607236
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 90,
+        "timeliness": 95,
+        "creativity": 85
+      },
+      "angle": "分析美以伊地缘冲突如何通过能源、航运、金融市场三条主线冲击全球经济格局。",
+      "total_score": 89,
+      "score": 89
+    },
+    {
+      "source": "linuxdo",
+      "title": "一觉醒来，电脑数据全被加密了",
+      "url": "https://linux.do/t/topic/1786024",
+      "summary": "",
+      "category": "11",
+      "engagement": {
+        "views": 234,
+        "likes": 7,
+        "comments": 23
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 90,
+        "timeliness": 95,
+        "creativity": 85
+      },
+      "angle": "结合真实勒索软件案例，剖析个人数据防护的常见误区，并提供可操作的多层备份与应急响应方案。",
+      "total_score": 89,
+      "score": 89
+    },
+    {
+      "source": "zhihu",
+      "title": "刘慈欣提出「技术能生成一切，却不能辨认伟大」，有道理吗？这对当下理解 AI 与人的关系有何启示？",
+      "url": "https://www.zhihu.com/question/2017606912024207686",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 95,
+        "creativity": 90
+      },
+      "angle": "借刘慈欣观点，探讨AI时代“伟大”的标准应由谁定义，以及人类创造力不可替代的核心要素。",
+      "total_score": 88,
+      "score": 88
+    },
+    {
+      "source": "douyin",
+      "title": "小米发布会把半个车圈请来了",
+      "url": "https://www.douyin.com/search/%E5%B0%8F%E7%B1%B3%E5%8F%91%E5%B8%83%E4%BC%9A%E6%8A%8A%E5%8D%8A%E4%B8%AA%E8%BD%A6%E5%9C%88%E8%AF%B7%E6%9D%A5%E4%BA%86",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7655589
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 88,
+        "timeliness": 92,
+        "creativity": 85
+      },
+      "angle": "剖析小米汽车发布会的“破圈”营销策略及其对行业竞争生态的重塑。",
+      "total_score": 88,
+      "score": 88
+    },
+    {
+      "source": "zhihu",
+      "title": "小米新一代 SU7 发布，王传福、李想、何小鹏纷纷到场助阵，怎样解读？小米汽车在行业内有怎样的影响力？",
+      "url": "https://www.zhihu.com/question/2018050979702989965",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 90,
+        "timeliness": 95,
+        "creativity": 80
+      },
+      "angle": "透过竞争对手集体站台现象，解读小米汽车如何以生态整合者角色重构智能汽车行业竞合关系。",
+      "total_score": 87,
+      "score": 87
+    },
+    {
+      "source": "toutiao",
+      "title": "雷军请了半个车圈的老总到场支持",
+      "url": "https://www.toutiao.com/trending/7618950827205529115",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 39429567
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 90,
+        "timeliness": 95,
+        "creativity": 80
+      },
+      "angle": "分析雷军如何通过‘朋友圈营销’整合行业资源，为小米汽车SU7发布会造势的商业策略。",
+      "total_score": 87,
+      "score": 87
+    },
+    {
+      "source": "douyin",
+      "title": "小米新一代SU7售价21.99万起",
+      "url": "https://www.douyin.com/search/%E5%B0%8F%E7%B1%B3%E6%96%B0%E4%B8%80%E4%BB%A3SU7%E5%94%AE%E4%BB%B721.99%E4%B8%87%E8%B5%B7",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7716628
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 90,
+        "timeliness": 95,
+        "creativity": 80
+      },
+      "angle": "深度解析SU7定价策略对新能源汽车市场格局的冲击与消费者选择逻辑。",
+      "total_score": 87,
+      "score": 87
+    },
+    {
+      "source": "youtube",
+      "title": "7 new open source AI tools you need right now…",
+      "url": "https://www.youtube.com/watch?v=x36UmiSiEzc",
+      "summary": "[Fireship] 7 new open source AI tools you need right now…",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "Fireship",
+      "published": "2026-03-09T18:31:50+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 85
+      },
+      "angle": "盘点这7款开源AI工具的实际应用场景与优劣对比，为不同需求的开发者提供选型指南。",
+      "total_score": 86,
+      "score": 86
+    },
+    {
+      "source": "bilibili",
+      "title": "[热搜] 大漠叔叔深入妙瓦底园区",
+      "url": "https://search.bilibili.com/all?keyword=%E5%A4%A7%E6%BC%A0%E5%8F%94%E5%8F%94%E6%B7%B1%E5%85%A5%E5%A6%99%E7%93%A6%E5%BA%95%E5%9B%AD%E5%8C%BA",
+      "summary": "大漠叔叔深入妙瓦底园区",
+      "category": "热搜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 85
+      },
+      "angle": "从大漠叔叔深入妙瓦底园区切入，探讨自媒体在跨国犯罪报道中的角色与风险。",
+      "total_score": 86,
+      "score": 86
+    },
+    {
+      "source": "zhihu",
+      "title": "新一代小米 SU7 发布，全系搭载 V6s Plus 超级电机，最高续航达 902km，还有哪些看点？",
+      "url": "https://www.zhihu.com/question/2018016098444863053",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 95,
+        "timeliness": 95,
+        "creativity": 70
+      },
+      "angle": "对比小米SU7与同级竞品的技术参数与定价策略，剖析其“性价比旗舰”定位对新能源车市场的冲击。",
+      "total_score": 85,
+      "score": 85
+    },
+    {
+      "source": "zhihu",
+      "title": "买辆车的费用打车一辈子都用不完，那么买车有什么意义?",
+      "url": "https://www.zhihu.com/question/658524414",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 85,
+        "creativity": 90
+      },
+      "angle": "超越经济账，从控制感、隐私、家庭情感联结与社会身份等维度，解读私家车的深层价值。",
+      "total_score": 85,
+      "score": 85
+    },
+    {
+      "source": "bilibili",
+      "title": "[热搜] 伊朗称击中美军F35战机",
+      "url": "https://search.bilibili.com/all?keyword=%E4%BC%8A%E6%9C%97%E7%A7%B0%E5%87%BB%E4%B8%AD%E7%BE%8E%E5%86%9BF35%E6%88%98%E6%9C%BA",
+      "summary": "伊朗称击中美军F35战机",
+      "category": "热搜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 90,
+        "timeliness": 95,
+        "creativity": 75
+      },
+      "angle": "分析伊朗声称击落F35事件背后的地缘政治博弈、军事技术角力与信息战特点。",
+      "total_score": 85,
+      "score": 85
+    },
+    {
+      "source": "zhihu",
+      "title": "养孩子这些年，你觉得最难的是什么？是经济、精力，还是情绪管理？",
+      "url": "https://www.zhihu.com/question/2000549449521463712",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 90
+      },
+      "angle": "结合心理学与社会学，剖析现代育儿中情绪劳动的价值与困境，提供可操作的情绪管理方法。",
+      "total_score": 84,
+      "score": 84
+    },
+    {
+      "source": "toutiao",
+      "title": "60岁后养老你觉得啥最靠谱",
+      "url": "https://www.toutiao.com/trending/7618731278871085110",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 23915241
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 90,
+        "creativity": 85
+      },
+      "angle": "对比分析养老金、以房养老、商业保险、子女赡养等多种养老模式的优劣与适用人群。",
+      "total_score": 84,
+      "score": 84
+    },
+    {
+      "source": "toutiao",
+      "title": "雷军幽默回应分得清舒淇与SU7",
+      "url": "https://www.toutiao.com/trending/7619103833486298662",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 10745810
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 84,
+        "timeliness": 92,
+        "creativity": 78
+      },
+      "angle": "从雷军的幽默回应切入，分析企业家如何利用个人IP与高情商互动，进行危机公关或品牌宣传。",
+      "total_score": 84,
+      "score": 84
+    },
+    {
+      "source": "toutiao",
+      "title": "“万吨大驱”南昌舰以一敌二逼退外舰",
+      "url": "https://www.toutiao.com/trending/7618524915618349119",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 1077362
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 80
+      },
+      "angle": "解析南昌舰‘以一敌二’的战术意义，展现中国海军远海防卫能力的跨越式发展。",
+      "total_score": 84,
+      "score": 84
+    },
+    {
+      "source": "toutiao",
+      "title": "妻子肺癌晚期求丈夫送至安宁病房",
+      "url": "https://www.toutiao.com/trending/7618792508344844331",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 438022
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 80
+      },
+      "angle": "探讨临终关怀、家庭责任与生命尊严的伦理困境与现实选择。",
+      "total_score": 84,
+      "score": 84
+    },
+    {
+      "source": "douyin",
+      "title": "周杰伦新歌预告像连续剧",
+      "url": "https://www.douyin.com/search/%E5%91%A8%E6%9D%B0%E4%BC%A6%E6%96%B0%E6%AD%8C%E9%A2%84%E5%91%8A%E5%83%8F%E8%BF%9E%E7%BB%AD%E5%89%A7",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7654781
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 87,
+        "timeliness": 88,
+        "creativity": 78
+      },
+      "angle": "解析周杰伦新歌的悬念式营销如何持续激活粉丝社群与维持文化影响力。",
+      "total_score": 84,
+      "score": 84
+    },
+    {
+      "source": "youtube",
+      "title": "Google just changed the future of UI/UX design...",
+      "url": "https://www.youtube.com/watch?v=ReAnFFqvCeA",
+      "summary": "[Fireship] Google just changed the future of UI/UX design...",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "Fireship",
+      "published": "2026-03-18T17:56:58+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 95,
+        "creativity": 80
+      },
+      "angle": "深入解读Google新设计范式对开发者与普通用户的影响，预测未来交互体验的变革方向。",
+      "total_score": 84,
+      "score": 84
+    },
+    {
+      "source": "bilibili",
+      "title": "[热搜] 科学家拍到物质从量子真空诞生",
+      "url": "https://search.bilibili.com/all?keyword=%E7%A7%91%E5%AD%A6%E5%AE%B6%E6%8B%8D%E5%88%B0%E7%89%A9%E8%B4%A8%E4%BB%8E%E9%87%8F%E5%AD%90%E7%9C%9F%E7%A9%BA%E8%AF%9E%E7%94%9F",
+      "summary": "科学家拍到物质从量子真空诞生",
+      "category": "热搜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 95,
+        "creativity": 90
+      },
+      "angle": "用通俗语言解读‘物质从量子真空诞生’的实验，探讨其对物理学和哲学认知的颠覆。",
+      "total_score": 84,
+      "score": 84
+    },
+    {
+      "source": "github",
+      "title": "obra/superpowers 🔥+3494⭐/today",
+      "url": "https://github.com/obra/superpowers",
+      "summary": "obra /\n\n      superpowers  \n\n    \n      An agentic skills framework &amp; software development methodology that works.",
+      "category": "GitHub Trending",
+      "engagement": {
+        "stars_today": 3494
+      },
+      "author": "obra",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 95,
+        "creativity": 90
+      },
+      "angle": "解读Superpowers框架，探讨其‘智能体技能框架’如何重新定义软件开发的协作模式与自动化边界。",
+      "total_score": 84,
+      "score": 84
+    },
+    {
+      "source": "linuxdo",
+      "title": "从零开始的VPS科普(1)：认识你的第一台服务器",
+      "url": "https://linux.do/t/topic/1785540",
+      "summary": "",
+      "category": "4",
+      "engagement": {
+        "views": 841,
+        "likes": 240,
+        "comments": 82
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 90
+      },
+      "angle": "用生活化比喻解读服务器核心概念，并规划从零到部署应用的完整学习路径与资源推荐。",
+      "total_score": 84,
+      "score": 84
+    },
+    {
+      "source": "zhihu",
+      "title": "经济周期一定存在吗？为什么？",
+      "url": "https://www.zhihu.com/question/29216749",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 90,
+        "creativity": 85
+      },
+      "angle": "梳理不同学派对经济周期的解释，结合当前全球形势，讨论周期理论是否依然有效。",
+      "total_score": 83,
+      "score": 83
+    },
+    {
+      "source": "toutiao",
+      "title": "伊朗称击中美军F-35战机",
+      "url": "https://www.toutiao.com/trending/7618363759882485769",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 26430429
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 88,
+        "timeliness": 95,
+        "creativity": 70
+      },
+      "angle": "从军事技术角度分析伊朗宣称击落F-35的可能性，并解读其背后的地缘政治信息战意图。",
+      "total_score": 83,
+      "score": 83
+    },
+    {
+      "source": "toutiao",
+      "title": "伊朗击中F35后让美以期待更多惊喜",
+      "url": "https://www.toutiao.com/trending/7619015208602288191",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 11875957
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 86,
+        "timeliness": 92,
+        "creativity": 75
+      },
+      "angle": "分析伊朗‘期待更多惊喜’的威慑言论，解读中东地区‘代理人战争’升级的风险与博弈逻辑。",
+      "total_score": 83,
+      "score": 83
+    },
+    {
+      "source": "toutiao",
+      "title": "小米上线三款自研大模型",
+      "url": "https://www.toutiao.com/trending/7618780734119202330",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 3236575
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 90,
+        "creativity": 85
+      },
+      "angle": "横向对比小米大模型与行业竞品的差异，分析其如何与自身硬件生态结合塑造新体验。",
+      "total_score": 83,
+      "score": 83
+    },
+    {
+      "source": "toutiao",
+      "title": "学者：日本修宪动向加速须引起警惕",
+      "url": "https://www.toutiao.com/trending/7619095893757345834",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 591269
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 90,
+        "creativity": 85
+      },
+      "angle": "解读日本修宪加速的深层动因，及其对东亚安全格局与历史和解进程的潜在冲击。",
+      "total_score": 83,
+      "score": 83
+    },
+    {
+      "source": "github",
+      "title": "gsd-build/get-shit-done 🔥+1491⭐/today",
+      "url": "https://github.com/gsd-build/get-shit-done",
+      "summary": "gsd-build /\n\n      get-shit-done  \n\n    \n      A light-weight and powerful meta-prompting, context engineering and spec-driven development system for Claude Code by TÂCHES.",
+      "category": "GitHub Trending",
+      "engagement": {
+        "stars_today": 1491
+      },
+      "author": "gsd-build",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 82,
+        "timeliness": 88,
+        "creativity": 80
+      },
+      "angle": "解读元提示工程与规范驱动开发如何重构AI编程工作流，并分享高效使用Claude Code的技巧。",
+      "total_score": 83,
+      "score": 83
+    },
+    {
+      "source": "zhihu",
+      "title": "有哪些你认为是“全世界都应该有的东西”，实际上只有中国才有？",
+      "url": "https://www.zhihu.com/question/398758985",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 70,
+        "creativity": 90
+      },
+      "angle": "列举移动支付、高铁网络、政务服务“一网通办”等案例，探讨中国模式如何通过技术迭代实现生活便利性超越。",
+      "total_score": 82,
+      "score": 82
+    },
+    {
+      "source": "zhihu",
+      "title": "伊朗称打击行动命中美国第五舰队，造成破坏有多大？对美军有哪些影响？",
+      "url": "https://www.zhihu.com/question/2018054333028071026",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 75
+      },
+      "angle": "分析伊朗打击声明的军事与政治双重意图，及其对中东地缘格局的潜在影响。",
+      "total_score": 82,
+      "score": 82
+    },
+    {
+      "source": "toutiao",
+      "title": "傅盛深夜开撕周鸿祎称其“欠钱不还”",
+      "url": "https://www.toutiao.com/trending/7618318102576545833",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 29210142
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 75
+      },
+      "angle": "复盘傅盛与周鸿祎的恩怨史，剖析中国互联网江湖中大佬关系从合作到对立的典型模式。",
+      "total_score": 82,
+      "score": 82
+    },
+    {
+      "source": "toutiao",
+      "title": "曝美用艾滋药物威胁赞比亚交出采矿权",
+      "url": "https://www.toutiao.com/trending/7618964949615935529",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 882069
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 85,
+        "creativity": 90
+      },
+      "angle": "剖析美国被曝以药物为要挟事件，揭示全球资源争夺中‘新殖民主义’的隐蔽操作手法。",
+      "total_score": 82,
+      "score": 82
+    },
+    {
+      "source": "toutiao",
+      "title": "女子被母亲介绍的相亲对象骗走85万",
+      "url": "https://www.toutiao.com/trending/7618501089826029604",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 653453
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 80,
+        "creativity": 85
+      },
+      "angle": "以‘相亲骗走85万’案例，拆解熟人社交场景下的新型诈骗套路与防骗心理建设。",
+      "total_score": 82,
+      "score": 82
+    },
+    {
+      "source": "douyin",
+      "title": "狗狗：不要低估我们回家的决心",
+      "url": "https://www.douyin.com/search/%E7%8B%97%E7%8B%97%EF%BC%9A%E4%B8%8D%E8%A6%81%E4%BD%8E%E4%BC%B0%E6%88%91%E4%BB%AC%E5%9B%9E%E5%AE%B6%E7%9A%84%E5%86%B3%E5%BF%83",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7649817
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 75
+      },
+      "angle": "从动物本能、忠诚与情感联结角度，探讨宠物与人类家庭的深刻羁绊。",
+      "total_score": 82,
+      "score": 82
+    },
+    {
+      "source": "youtube",
+      "title": "This Paradox Splits Smart People 50/50",
+      "url": "https://www.youtube.com/watch?v=DJ_5_JS9_Rs",
+      "summary": "[Veritasium] This Paradox Splits Smart People 50/50",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "Veritasium",
+      "published": "2026-03-02T02:00:10+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 80,
+        "creativity": 90
+      },
+      "angle": "拆解该悖论的逻辑核心与认知陷阱，探讨它为何能揭示人类思维决策中的普遍性偏见。",
+      "total_score": 82,
+      "score": 82
+    },
+    {
+      "source": "github",
+      "title": "jarrodwatts/claude-hud 🔥+1851⭐/today",
+      "url": "https://github.com/jarrodwatts/claude-hud",
+      "summary": "jarrodwatts /\n\n      claude-hud  \n\n    \n      A Claude Code plugin that shows what's happening - context usage, active tools, running agents, and todo progress",
+      "category": "GitHub Trending",
+      "engagement": {
+        "stars_today": 1851
+      },
+      "author": "jarrodwatts",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 75
+      },
+      "angle": "深度解析Claude Code插件如何提升开发效率与上下文管理，对比其他AI编程助手工具。",
+      "total_score": 82,
+      "score": 82
+    },
+    {
+      "source": "toutiao",
+      "title": "特朗普当高市面将对伊行动比作珍珠港",
+      "url": "https://www.toutiao.com/trending/7618764055230300214",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 16030865
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 82,
+        "timeliness": 90,
+        "creativity": 75
+      },
+      "angle": "对比特朗普的‘珍珠港’类比与历史事实，分析其煽动性言论对美国大选及中东政策的影响。",
+      "total_score": 81,
+      "score": 81
+    },
+    {
+      "source": "toutiao",
+      "title": "硬核“龙抬头”国之重器尽显锋芒",
+      "url": "https://www.toutiao.com/trending/7618559053749862451",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 1315893
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "结合‘龙抬头’节气，解读近期亮相的国之重器如何体现中国科技与工业的‘硬核’崛起。",
+      "total_score": 81,
+      "score": 81
+    },
+    {
+      "source": "douyin",
+      "title": "石油美元黄金到底是什么关系",
+      "url": "https://www.douyin.com/search/%E7%9F%B3%E6%B2%B9%E7%BE%8E%E5%85%83%E9%BB%84%E9%87%91%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7630556
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 90,
+        "creativity": 85
+      },
+      "angle": "用通俗比喻拆解国际货币体系本质，探讨地缘政治变动下的财富逻辑。",
+      "total_score": 81,
+      "score": 81
+    },
+    {
+      "source": "youtube",
+      "title": "Cloudflare vs Vercel",
+      "url": "https://www.youtube.com/watch?v=mIn-xRCKVb8",
+      "summary": "[ThePrimeagen] Cloudflare vs Vercel",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "ThePrimeagen",
+      "published": "2026-03-19T13:02:03+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 90,
+        "creativity": 80
+      },
+      "angle": "从性能、成本、开发者体验和战略定位多维度对比两大平台，为项目技术选型提供深度参考。",
+      "total_score": 81,
+      "score": 81
+    },
+    {
+      "source": "bilibili",
+      "title": "[热搜] 让大模型学会选择性记忆",
+      "url": "https://search.bilibili.com/all?keyword=%E8%AE%A9%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%BC%9A%E9%80%89%E6%8B%A9%E6%80%A7%E8%AE%B0%E5%BF%86",
+      "summary": "让大模型学会选择性记忆",
+      "category": "热搜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 90,
+        "creativity": 85
+      },
+      "angle": "探讨大模型‘选择性记忆’技术的原理、伦理挑战及其对AI安全与隐私的未来影响。",
+      "total_score": 81,
+      "score": 81
+    },
+    {
+      "source": "github",
+      "title": "unslothai/unsloth 🔥+1262⭐/today",
+      "url": "https://github.com/unslothai/unsloth",
+      "summary": "unslothai /\n\n      unsloth  \n\n    \n      Unified web UI for training and running open models like Qwen, DeepSeek, gpt-oss and Gemma locally.",
+      "category": "GitHub Trending",
+      "engagement": {
+        "stars_today": 1262
+      },
+      "author": "unslothai",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "探讨开源大模型本地化训练与部署的一站式解决方案，分析其对开发者和研究者的意义。",
+      "total_score": 81,
+      "score": 81
+    },
+    {
+      "source": "zhihu",
+      "title": "如何看待央视网发布的AI短视频《流金谷恩仇录》？",
+      "url": "https://www.zhihu.com/question/2017676791603553270",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "分析央视网AI短视频如何用武侠叙事解构科技伦理，探讨主流媒体在AI内容创作上的新尝试。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "zhihu",
+      "title": "为什么短剧明明剧情也不咋地，观众却那么宽容？",
+      "url": "https://www.zhihu.com/question/1908833817701095067",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 80,
+        "creativity": 85
+      },
+      "angle": "从神经经济学与媒介心理学切入，解析短剧如何通过高密度爽点设计激活多巴胺回路，塑造新型观看契约。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "zhihu",
+      "title": "在中文语境中，如何翻译 token 这个词更恰当？",
+      "url": "https://www.zhihu.com/question/39279003",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 95,
+        "creativity": 80
+      },
+      "angle": "梳理“token”在语言学、计算机与区块链中的多重含义，提出兼顾准确与意蕴的中文译法。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "toutiao",
+      "title": "非遗体验引领文旅新风尚",
+      "url": "https://www.toutiao.com/article/7618842903960224271",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 35677348
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 85,
+        "creativity": 85
+      },
+      "angle": "结合具体案例，探讨非遗体验如何成为文旅融合的新引擎，并分析其可持续性发展路径。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "toutiao",
+      "title": "美是石油净出口国 为何遏制油价上涨",
+      "url": "https://www.toutiao.com/trending/7618151118858993727",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 21639405
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "深入解析美国作为石油净出口国，其国内政治、全球战略与金融霸权如何共同影响其油价政策。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "toutiao",
+      "title": "退休后你会选择自驾游吗",
+      "url": "https://www.toutiao.com/trending/7618584449404731455",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 19580143
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "探讨‘银发自驾游’兴起的背后：退休人群的新生活方式、消费潜力与面临的现实挑战。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "toutiao",
+      "title": "舒淇苏炳添为雷军送上大麦",
+      "url": "https://www.toutiao.com/trending/7619103337308376622",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 14505327
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 83,
+        "timeliness": 92,
+        "creativity": 70
+      },
+      "angle": "解码明星‘送大麦’背后的营销密码：如何利用谐音梗与名人效应为品牌发布会制造话题。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "toutiao",
+      "title": "感受中国无人机进化到何种程度",
+      "url": "https://www.toutiao.com/trending/7618842628259450377",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 5336211
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "梳理中国无人机从消费级到工业级、军用级的进化路径，分析其背后的产业链与技术突破。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "youtube",
+      "title": "Bad Bot Problem - Computerphile",
+      "url": "https://www.youtube.com/watch?v=zuZBkTNrv0g",
+      "summary": "[NetworkChuck] Bad Bot Problem - Computerphile",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "NetworkChuck",
+      "published": "2026-02-10T14:01:50+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "深入分析恶意机器人的技术手段、经济动机与治理难点，探讨有效的技术与非技术应对策略。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "bilibili",
+      "title": "[热搜] 黄天鹅硬刚媒体背后的公关困局",
+      "url": "https://search.bilibili.com/all?keyword=%E9%BB%84%E5%A4%A9%E9%B9%85%E7%A1%AC%E5%88%9A%E5%AA%92%E4%BD%93%E8%83%8C%E5%90%8E%E7%9A%84%E5%85%AC%E5%85%B3%E5%9B%B0%E5%B1%80",
+      "summary": "黄天鹅硬刚媒体背后的公关困局",
+      "category": "热搜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "拆解黄天鹅公关事件，分析企业应对负面舆情的策略得失与危机公关新范式。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "bilibili",
+      "title": "[热搜] 周杰伦太阳之子预告第3弹",
+      "url": "https://search.bilibili.com/all?keyword=%E5%91%A8%E6%9D%B0%E4%BC%A6%E5%A4%AA%E9%98%B3%E4%B9%8B%E5%AD%90%E9%A2%84%E5%91%8A%E7%AC%AC3%E5%BC%B9",
+      "summary": "周杰伦太阳之子预告第3弹",
+      "category": "热搜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 70
+      },
+      "angle": "解析周杰伦《太阳之子》预告的视觉符号、叙事悬念与粉丝文化的互动营销策略。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "github",
+      "title": "louis-e/arnis 🔥+946⭐/today",
+      "url": "https://github.com/louis-e/arnis",
+      "summary": "louis-e /\n\n      arnis  \n\n    \n      Generate any location from the real world in Minecraft with a high level of detail.",
+      "category": "GitHub Trending",
+      "engagement": {
+        "stars_today": 946
+      },
+      "author": "louis-e",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 80,
+        "creativity": 85
+      },
+      "angle": "探讨如何利用AI与地理数据在游戏中重建真实世界场景，并延伸至数字孪生与虚拟旅游的应用。",
+      "total_score": 80,
+      "score": 80
+    },
+    {
+      "source": "zhihu",
+      "title": "小米 SU7 应网友呼声官宣舒淇为代言人，从品牌营销角度如何评价这一做法？会给品牌带来哪些变化？",
+      "url": "https://www.zhihu.com/question/2017891290054943068",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 85,
+        "creativity": 75
+      },
+      "angle": "结合舒淇的国民度与艺术形象，解析小米汽车如何通过代言人策略实现品牌调性从“极客”向“人文科技”跃迁。",
+      "total_score": 79,
+      "score": 79
+    },
+    {
+      "source": "douyin",
+      "title": "手机涨价该“买”还是该“等”",
+      "url": "https://www.douyin.com/search/%E6%89%8B%E6%9C%BA%E6%B6%A8%E4%BB%B7%E8%AF%A5%E2%80%9C%E4%B9%B0%E2%80%9D%E8%BF%98%E6%98%AF%E8%AF%A5%E2%80%9C%E7%AD%89%E2%80%9D",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 10207360
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 85,
+        "creativity": 75
+      },
+      "angle": "结合消费心理与市场趋势，提供不同预算和需求的购机策略与时机分析。",
+      "total_score": 79,
+      "score": 79
+    },
+    {
+      "source": "douyin",
+      "title": "特朗普见高市早苗提偷袭珍珠港",
+      "url": "https://www.douyin.com/search/%E7%89%B9%E6%9C%97%E6%99%AE%E8%A7%81%E9%AB%98%E5%B8%82%E6%97%A9%E8%8B%97%E6%8F%90%E5%81%B7%E8%A2%AD%E7%8F%8D%E7%8F%A0%E6%B8%AF",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7773373
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 82,
+        "timeliness": 88,
+        "creativity": 70
+      },
+      "angle": "探讨历史记忆在当代国际政治话语中的运用与可能引发的争议。",
+      "total_score": 79,
+      "score": 79
+    },
+    {
+      "source": "github",
+      "title": "langchain-ai/open-swe 🔥+965⭐/today",
+      "url": "https://github.com/langchain-ai/open-swe",
+      "summary": "langchain-ai /\n\n      open-swe  \n\n    \n      An Open-Source Asynchronous Coding Agent",
+      "category": "GitHub Trending",
+      "engagement": {
+        "stars_today": 965
+      },
+      "author": "langchain-ai",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 90,
+        "creativity": 85
+      },
+      "angle": "分析LangChain开源异步编码智能体Open-SWE，探讨其对开发者工作流与AI编程范式的革新。",
+      "total_score": 79,
+      "score": 79
+    },
+    {
+      "source": "github",
+      "title": "shareAI-lab/learn-claude-code 🔥+1448⭐/today",
+      "url": "https://github.com/shareAI-lab/learn-claude-code",
+      "summary": "shareAI-lab /\n\n      learn-claude-code  \n\n    \n      Bash is all you need - A nano claude code–like 「agent harness」, built from 0 to 1",
+      "category": "GitHub Trending",
+      "engagement": {
+        "stars_today": 1448
+      },
+      "author": "shareAI-lab",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 78,
+        "timeliness": 85,
+        "creativity": 75
+      },
+      "angle": "从零构建AI代理框架的实践教程，探讨Bash脚本在轻量级AI工具开发中的核心作用。",
+      "total_score": 79,
+      "score": 79
+    },
+    {
+      "source": "zhihu",
+      "title": "美以袭击伊朗进入第 21 天，当前局势如何？哪些信息值得关注？",
+      "url": "https://www.zhihu.com/question/2018125516700426373",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 85,
+        "timeliness": 90,
+        "creativity": 65
+      },
+      "angle": "梳理美以伊三方军事动态与外交博弈，分析冲突外溢风险对全球能源格局与地缘政治的影响。",
+      "total_score": 78,
+      "score": 78
+    },
+    {
+      "source": "zhihu",
+      "title": "二次元游戏的高昂成本真的合理吗？",
+      "url": "https://www.zhihu.com/question/1999079021129004339",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 80,
+        "creativity": 85
+      },
+      "angle": "拆解二次元游戏成本构成，探讨高投入是否必然带来高艺术价值与玩家体验。",
+      "total_score": 78,
+      "score": 78
+    },
+    {
+      "source": "zhihu",
+      "title": "太多人说做股票交易是反人性，能不能证明一下反人性？",
+      "url": "https://www.zhihu.com/question/638152335",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 80,
+        "creativity": 85
+      },
+      "angle": "用行为金融学与心理学实验，揭示交易中贪婪、恐惧等人性弱点如何导致非理性决策。",
+      "total_score": 78,
+      "score": 78
+    },
+    {
+      "source": "toutiao",
+      "title": "民营企业家亿元资产转移之谜",
+      "url": "https://www.toutiao.com/trending/7618968820880080923",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 9723211
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 80,
+        "creativity": 85
+      },
+      "angle": "以案例剖析民营企业家资产转移的常见路径、动机、法律风险及其对企业和家庭的影响。",
+      "total_score": 78,
+      "score": 78
+    },
+    {
+      "source": "toutiao",
+      "title": "加州火锅店机器人突然蹦迪",
+      "url": "https://www.toutiao.com/trending/7618570187772772390",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 7203132
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "从火锅店机器人“失控”切入，探讨服务机器人技术瓶颈、人机交互的伦理与趣味性。",
+      "total_score": 78,
+      "score": 78
+    },
+    {
+      "source": "toutiao",
+      "title": "外婆踢开小孙女直接扔到沙地里",
+      "url": "https://www.toutiao.com/trending/7618830071403069467",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 974837
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 70,
+        "creativity": 85
+      },
+      "angle": "由‘外婆扔孙女’视频争议，探讨隔代教育中的边界、情绪管理与网络舆论审判现象。",
+      "total_score": 78,
+      "score": 78
+    },
+    {
+      "source": "douyin",
+      "title": "正义女神孤儿院院长骗保",
+      "url": "https://www.douyin.com/search/%E6%AD%A3%E4%B9%89%E5%A5%B3%E7%A5%9E%E5%AD%A4%E5%84%BF%E9%99%A2%E9%99%A2%E9%95%BF%E9%AA%97%E4%BF%9D",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7649316
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 80,
+        "creativity": 80
+      },
+      "angle": "剖析慈善行业监管漏洞与公众信任危机，反思如何建立透明公益机制。",
+      "total_score": 78,
+      "score": 78
+    },
+    {
+      "source": "douyin",
+      "title": "北京汽水音乐节全阵容官宣",
+      "url": "https://www.douyin.com/search/%E5%8C%97%E4%BA%AC%E6%B1%BD%E6%B0%B4%E9%9F%B3%E4%B9%90%E8%8A%82%E5%85%A8%E9%98%B5%E5%AE%B9%E5%AE%98%E5%AE%A3",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7108159
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 95,
+        "creativity": 70
+      },
+      "angle": "解析音乐节阵容背后的潮流趋势与青年文化符号，探讨线下娱乐消费的复苏与演变。",
+      "total_score": 78,
+      "score": 78
+    },
+    {
+      "source": "youtube",
+      "title": "The Internet Was Weeks Away From Disaster and No One Knew",
+      "url": "https://www.youtube.com/watch?v=qtPPfM7Tz1o",
+      "summary": "[Veritasium] The Internet Was Weeks Away From Disaster and No One Knew",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "Veritasium",
+      "published": "2026-02-22T03:00:53+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 80,
+        "creativity": 85
+      },
+      "angle": "复盘这场鲜为人知的互联网危机，反思现代数字基础设施的脆弱性与系统性风险防范。",
+      "total_score": 78,
+      "score": 78
+    },
+    {
+      "source": "youtube",
+      "title": "The most beautiful formula not enough people understand",
+      "url": "https://www.youtube.com/watch?v=d0ai33oqqDE",
+      "summary": "[3Blue1Brown] The most beautiful formula not enough people understand",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "3Blue1Brown",
+      "published": "2026-02-18T06:02:59+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 70,
+        "creativity": 95
+      },
+      "angle": "用直观的视觉化与生活化类比，揭示欧拉公式如何连接数学中几个最核心的常数与概念。",
+      "total_score": 78,
+      "score": 78
+    },
+    {
+      "source": "zhihu",
+      "title": "领导突然说要提拔我当主管，月薪涨5K，让我别声张，结果1个月后他离职了，新领导不认这事，怎么办？",
+      "url": "https://www.zhihu.com/question/2017862792787568038",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 75,
+        "creativity": 85
+      },
+      "angle": "从职场权术、口头承诺的法律效力与向上管理技巧切入，为读者提供应对“领导画饼后离职”的实操指南。",
+      "total_score": 77,
+      "score": 77
+    },
+    {
+      "source": "toutiao",
+      "title": "中方对以方说法感到震惊",
+      "url": "https://www.toutiao.com/trending/7618008213321056266",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 2169541
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 90,
+        "creativity": 70
+      },
+      "angle": "解读中国外交辞令中的“震惊”所传递的信号，分析中方在中东问题上的立场与考量。",
+      "total_score": 77,
+      "score": 77
+    },
+    {
+      "source": "douyin",
+      "title": "外星小绿猫舞姿真的很曼妙",
+      "url": "https://www.douyin.com/search/%E5%A4%96%E6%98%9F%E5%B0%8F%E7%BB%BF%E7%8C%AB%E8%88%9E%E5%A7%BF%E7%9C%9F%E7%9A%84%E5%BE%88%E6%9B%BC%E5%A6%99",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7628204
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 85,
+        "creativity": 70
+      },
+      "angle": "从萌宠经济与拟人化传播切入，分析动物内容为何能持续引爆社交平台。",
+      "total_score": 77,
+      "score": 77
+    },
+    {
+      "source": "linuxdo",
+      "title": "火山引擎上线“火山联网搜索Skill”，个人每月免费500次调用",
+      "url": "https://linux.do/t/topic/1780838",
+      "summary": "",
+      "category": "34",
+      "engagement": {
+        "views": 305,
+        "likes": 12,
+        "comments": 16
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 90,
+        "creativity": 75
+      },
+      "angle": "评测火山引擎免费联网搜索API的性能与适用场景，对比其他商业及开源搜索解决方案的性价比。",
+      "total_score": 77,
+      "score": 77
+    },
+    {
+      "source": "zhihu",
+      "title": "伊朗议员透露，议会正在推动一项法案「拟征收霍尔木兹海峡通行费」，具体情况如何？有实施的可能性吗？",
+      "url": "https://www.zhihu.com/question/2018046040935200157",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 70
+      },
+      "angle": "从国际海洋法、历史先例与伊朗实际控制力角度，评估霍尔木兹海峡收费法案的象征意义与现实可行性。",
+      "total_score": 76,
+      "score": 76
+    },
+    {
+      "source": "zhihu",
+      "title": "游戏玩家不是喜欢追求真实感吗，为什么《CS》更新换弹匣机制会让玩家怨声载道？",
+      "url": "https://www.zhihu.com/question/2017919936731771888",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "分析游戏“真实感”与“游戏性”的平衡，探讨核心玩家社群对机制变革的抵触心理。",
+      "total_score": 76,
+      "score": 76
+    },
+    {
+      "source": "toutiao",
+      "title": "春分巧遇“龙抬头”本世纪仅有三次",
+      "url": "https://www.toutiao.com/trending/7618811572610089014",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 43576411
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 70
+      },
+      "angle": "从天文历法与民俗文化融合的角度，探讨‘龙抬头’与春分相遇的百年奇观及其文化寓意。",
+      "total_score": 76,
+      "score": 76
+    },
+    {
+      "source": "toutiao",
+      "title": "伊朗称以色列密谋袭击沙特石油设施",
+      "url": "https://www.toutiao.com/trending/7619103330027163163",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 8797925
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 70
+      },
+      "angle": "分析中东地缘政治新变局，探讨沙特、伊朗、以色列三方博弈对全球能源安全的影响。",
+      "total_score": 76,
+      "score": 76
+    },
+    {
+      "source": "toutiao",
+      "title": "伊朗：击中美国第五舰队",
+      "url": "https://www.toutiao.com/trending/7618459226796523571",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 4368920
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 90,
+        "creativity": 65
+      },
+      "angle": "分析伊朗军事声明的战略意图，解读波斯湾地区美伊对抗的最新动态与潜在风险。",
+      "total_score": 76,
+      "score": 76
+    },
+    {
+      "source": "toutiao",
+      "title": "半夜赶海偶遇搁浅江豚博主发声",
+      "url": "https://www.toutiao.com/trending/7618884595055919147",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 1776270
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "从博主偶遇搁浅江豚事件，探讨公众参与海洋保护的正确方式与科学救助知识。",
+      "total_score": 76,
+      "score": 76
+    },
+    {
+      "source": "douyin",
+      "title": "伊朗称击中一架美军F35战机",
+      "url": "https://www.douyin.com/search/%E4%BC%8A%E6%9C%97%E7%A7%B0%E5%87%BB%E4%B8%AD%E4%B8%80%E6%9E%B6%E7%BE%8E%E5%86%9BF35%E6%88%98%E6%9C%BA",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7686755
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 78,
+        "timeliness": 90,
+        "creativity": 65
+      },
+      "angle": "评估地区军事冲突风险、信息战特点及对全球安全态势的潜在影响。",
+      "total_score": 76,
+      "score": 76
+    },
+    {
+      "source": "youtube",
+      "title": "Cloudflare just slop forked Next.js…",
+      "url": "https://www.youtube.com/watch?v=wzzh7Not8XE",
+      "summary": "[Fireship] Cloudflare just slop forked Next.js…",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "Fireship",
+      "published": "2026-02-26T18:26:18+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 85,
+        "creativity": 75
+      },
+      "angle": "分析Cloudflare此举对前端开发生态、边缘计算竞争格局以及开源商业模式的潜在冲击。",
+      "total_score": 76,
+      "score": 76
+    },
+    {
+      "source": "youtube",
+      "title": "Making A Giant Zipper To Explain How It Works",
+      "url": "https://www.youtube.com/watch?v=R8oiho_gKSo",
+      "summary": "[Veritasium] Making A Giant Zipper To Explain How It Works",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "Veritasium",
+      "published": "2026-03-12T15:59:15+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 75,
+        "creativity": 90
+      },
+      "angle": "通过拉链原理引申到工程学与日常设计的智慧，探讨简单机械中蕴含的普适性解决问题思维。",
+      "total_score": 76,
+      "score": 76
+    },
+    {
+      "source": "linuxdo",
+      "title": "VPS_FIRST vps机器到手后的第一步",
+      "url": "https://linux.do/t/topic/1786106",
+      "summary": "",
+      "category": "14",
+      "engagement": {
+        "views": 43,
+        "likes": 6,
+        "comments": 4
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "深入解析VPS初始化最佳安全与实践清单，对比不同应用场景下的配置差异与优化技巧。",
+      "total_score": 76,
+      "score": 76
+    },
+    {
+      "source": "bilibili",
+      "title": "[热搜] JDG 3-0 LOUD 赛后雷达图",
+      "url": "https://search.bilibili.com/all?keyword=JDG%203-0%20LOUD%20%E8%B5%9B%E5%90%8E%E9%9B%B7%E8%BE%BE%E5%9B%BE",
+      "summary": "JDG 3-0 LOUD 赛后雷达图",
+      "category": "热搜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 80,
+        "timeliness": 85,
+        "creativity": 65
+      },
+      "angle": "通过JDG vs LOUD的雷达图，深入解读战术执行、选手状态与电竞赛事的数据化分析趋势。",
+      "total_score": 75,
+      "score": 75
+    },
+    {
+      "source": "zhihu",
+      "title": "如何评价 C 刊史学论文引用「番茄小说」来源的史料，这种引用符合学术规范吗？",
+      "url": "https://www.zhihu.com/question/2017925688498288452",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 75,
+        "creativity": 85
+      },
+      "angle": "探讨网络文学作为民间记忆载体的史料价值，反思数字时代学术规范应如何适应新型文献来源。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "zhihu",
+      "title": "女子网红店等位3200多号等到崩溃，黄牛囤号、倒卖频发遭消费者集体投诉，门店对此该负责任吗？",
+      "url": "https://www.zhihu.com/question/2017890651220436716",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 80,
+        "creativity": 75
+      },
+      "angle": "从饥饿营销、黄牛产业链与平台监管漏洞三方面，分析网红经济模式下消费者权益保护的困境与出路。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "zhihu",
+      "title": "博主用冰可乐缓解肠胃炎，冰可乐真有这种功效吗？这是什么原理？",
+      "url": "https://www.zhihu.com/question/2017223907044718478",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 75,
+        "creativity": 80
+      },
+      "angle": "结合医学原理与民间偏方案例，科普碳酸饮料对轻度肠胃症状的临时缓解作用及潜在风险。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "zhihu",
+      "title": "如何看待主播「芜湖大司马」直播带货宣称全网最低价，遭弹幕打脸后，厂商瞬间将该商品全网提价的操作？",
+      "url": "https://www.zhihu.com/question/2017550373682950542",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 80,
+        "creativity": 75
+      },
+      "angle": "剖析直播带货中“全网最低价”话术的营销本质，探讨价格操纵行为对消费者信任与行业规范的冲击。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "toutiao",
+      "title": "四川兴文石海溶洞丁达尔效应超惊艳",
+      "url": "https://www.toutiao.com/trending/7618802931559104550",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 5897425
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 75,
+        "creativity": 85
+      },
+      "angle": "结合丁达尔效应，深度介绍中国喀斯特地貌奇观，并延伸科普自然光学的视觉魔法。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "toutiao",
+      "title": "夫妻携机密叛逃15年后入境被抓",
+      "url": "https://www.toutiao.com/trending/7618795705100451886",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 2928575
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 80,
+        "creativity": 75
+      },
+      "angle": "复盘跨国追逃案例，剖析国家安全的“隐形战线”，探讨新时代反间谍工作的挑战。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "toutiao",
+      "title": "《逐玉》樊长玉铠甲造型太绝了",
+      "url": "https://www.toutiao.com/trending/7618801235470172179",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 1963082
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 80,
+        "creativity": 70
+      },
+      "angle": "从《逐玉》樊长玉的铠甲造型，解析古装剧服化道如何塑造人物与传递文化内涵。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "toutiao",
+      "title": "媒体评临沂大货车压塌桥面",
+      "url": "https://www.toutiao.com/trending/7618627299115384886",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 1190669
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 80,
+        "creativity": 75
+      },
+      "angle": "从临沂桥梁事故切入，探讨我国乡村及老旧基础设施的养护困境与超载治理难题。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "toutiao",
+      "title": "6岁娃被妈妈独自丢酒店每天求抱抱",
+      "url": "https://www.toutiao.com/trending/7618625936360816683",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 798129
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 75,
+        "creativity": 80
+      },
+      "angle": "从‘6岁娃被丢酒店’事件，讨论低龄儿童独自留守的法律责任、心理创伤与育儿焦虑。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "toutiao",
+      "title": "伊朗为遇难官兵和官员举行葬礼",
+      "url": "https://www.toutiao.com/trending/7617992115432407067",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 396339
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 65
+      },
+      "angle": "分析中东地缘政治格局变化及伊朗国内局势的潜在影响。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "douyin",
+      "title": "张予曦复仇摇有二十四个小时",
+      "url": "https://www.douyin.com/search/%E5%BC%A0%E4%BA%88%E6%9B%A6%E5%A4%8D%E4%BB%87%E6%91%87%E6%9C%89%E4%BA%8C%E5%8D%81%E5%9B%9B%E4%B8%AA%E5%B0%8F%E6%97%B6",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7469427
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 65
+      },
+      "angle": "分析“复仇摇”等短视频爆款动作的传播链，探讨肢体语言的情绪传染性。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "douyin",
+      "title": "河狸变身计划蜥蜴演我精神状态",
+      "url": "https://www.douyin.com/search/%E6%B2%B3%E7%8B%B8%E5%8F%98%E8%BA%AB%E8%AE%A1%E5%88%92%E8%9C%A5%E8%9C%B4%E6%BC%94%E6%88%91%E7%B2%BE%E7%A5%9E%E7%8A%B6%E6%80%81",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7298831
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 80,
+        "creativity": 75
+      },
+      "angle": "以动物拟人化内容为镜，剖析当代年轻人用幽默解构精神内耗的表达方式。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "douyin",
+      "title": "石油跟我们生活的关系有多密切",
+      "url": "https://www.douyin.com/search/%E7%9F%B3%E6%B2%B9%E8%B7%9F%E6%88%91%E4%BB%AC%E7%94%9F%E6%B4%BB%E7%9A%84%E5%85%B3%E7%B3%BB%E6%9C%89%E5%A4%9A%E5%AF%86%E5%88%87",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7242767
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 70,
+        "creativity": 85
+      },
+      "angle": "从日常用品到地缘政治，揭秘石油如何无形中塑造我们的现代生活与消费选择。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "youtube",
+      "title": "Coding a Guitar Sound in C - Computerphile",
+      "url": "https://www.youtube.com/watch?v=_x0vbnUKYSU",
+      "summary": "[NetworkChuck] Coding a Guitar Sound in C - Computerphile",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "NetworkChuck",
+      "published": "2026-02-25T13:31:16+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 70,
+        "creativity": 90
+      },
+      "angle": "从数字音频基础原理出发，手把手演示如何用代码创造声音， bridging the gap between art and code.",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "bilibili",
+      "title": "[热搜] 红色沙漠80小时游玩评测",
+      "url": "https://search.bilibili.com/all?keyword=%E7%BA%A2%E8%89%B2%E6%B2%99%E6%BC%A080%E5%B0%8F%E6%97%B6%E6%B8%B8%E7%8E%A9%E8%AF%84%E6%B5%8B",
+      "summary": "红色沙漠80小时游玩评测",
+      "category": "热搜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 80,
+        "creativity": 70
+      },
+      "angle": "基于80小时深度评测，分析《红色沙漠》的游戏设计、开放世界构建与玩家沉浸感。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "github",
+      "title": "opendataloader-project/opendataloader-pdf 🔥+1416⭐/today",
+      "url": "https://github.com/opendataloader-project/opendataloader-pdf",
+      "summary": "opendataloader-project /\n\n      opendataloader-pdf  \n\n    \n      PDF Parser for AI-ready data. Automate PDF accessibility. Open-source.",
+      "category": "GitHub Trending",
+      "engagement": {
+        "stars_today": 1416
+      },
+      "author": "opendataloader-project",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 85,
+        "creativity": 80
+      },
+      "angle": "评测OpenDataLoader-PDF项目，探讨开源PDF解析工具如何解决AI数据预处理的核心痛点。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "github",
+      "title": "newton-physics/newton 🔥+346⭐/today",
+      "url": "https://github.com/newton-physics/newton",
+      "summary": "newton-physics /\n\n      newton  \n\n    \n      An open-source, GPU-accelerated physics simulation engine built upon NVIDIA Warp, specifically targeting roboticists and simulation researchers.",
+      "category": "GitHub Trending",
+      "engagement": {
+        "stars_today": 346
+      },
+      "author": "newton-physics",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 85,
+        "creativity": 75
+      },
+      "angle": "分析GPU加速物理引擎在机器人仿真与科研中的应用前景，解读其技术架构与性能优势。",
+      "total_score": 74,
+      "score": 74
+    },
+    {
+      "source": "zhihu",
+      "title": "如何看待内存条价格崩了？",
+      "url": "https://www.zhihu.com/question/2017860793417356112",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 80,
+        "creativity": 75
+      },
+      "angle": "从全球存储芯片产能周期、国产替代进程与消费电子需求疲软三方面，解读内存价格暴跌背后的产业链逻辑。",
+      "total_score": 73,
+      "score": 73
+    },
+    {
+      "source": "toutiao",
+      "title": "女子体检发现肺结节 1个月后确诊肺癌",
+      "url": "https://www.toutiao.com/trending/7618804927502155812",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 3953162
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 75,
+        "creativity": 75
+      },
+      "angle": "以案例为引，科普肺结节的筛查、诊断与科学管理，消除公众恐慌并强调早筛重要性。",
+      "total_score": 73,
+      "score": 73
+    },
+    {
+      "source": "douyin",
+      "title": "李维刚改造贵州小学操场",
+      "url": "https://www.douyin.com/search/%E6%9D%8E%E7%BB%B4%E5%88%9A%E6%94%B9%E9%80%A0%E8%B4%B5%E5%B7%9E%E5%B0%8F%E5%AD%A6%E6%93%8D%E5%9C%BA",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7656329
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 68,
+        "timeliness": 75,
+        "creativity": 75
+      },
+      "angle": "聚焦公益行动对乡村教育环境的实际改善，探讨可持续的公益模式。",
+      "total_score": 73,
+      "score": 73
+    },
+    {
+      "source": "douyin",
+      "title": "闫妮新剧三婚好抓马的一集",
+      "url": "https://www.douyin.com/search/%E9%97%AB%E5%A6%AE%E6%96%B0%E5%89%A7%E4%B8%89%E5%A9%9A%E5%A5%BD%E6%8A%93%E9%A9%AC%E7%9A%84%E4%B8%80%E9%9B%86",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7652403
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 72,
+        "timeliness": 80,
+        "creativity": 70
+      },
+      "angle": "分析都市情感剧中“多婚”情节设定的社会议题折射与观众猎奇心理。",
+      "total_score": 73,
+      "score": 73
+    },
+    {
+      "source": "zhihu",
+      "title": "为什么微软Office有几个GB，而WPS Office只有1GB多？",
+      "url": "https://www.zhihu.com/question/2011123880824182141",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 75,
+        "creativity": 80
+      },
+      "angle": "对比Office与WPS的架构设计、功能集成与商业模式，解析体积差异背后的技术哲学。",
+      "total_score": 72,
+      "score": 72
+    },
+    {
+      "source": "zhihu",
+      "title": "写小说，是先立人设还是先写大纲?",
+      "url": "https://www.zhihu.com/question/12649051159",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 70,
+        "creativity": 85
+      },
+      "angle": "探讨不同创作流派（如角色驱动与情节驱动）下，人设与大纲的互动关系及优先顺序。",
+      "total_score": 72,
+      "score": 72
+    },
+    {
+      "source": "douyin",
+      "title": "雪宝机器人让童年照进现实",
+      "url": "https://www.douyin.com/search/%E9%9B%AA%E5%AE%9D%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%AE%A9%E7%AB%A5%E5%B9%B4%E7%85%A7%E8%BF%9B%E7%8E%B0%E5%AE%9E",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7644304
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 85,
+        "creativity": 70
+      },
+      "angle": "探讨科技如何具象化童年幻想，分析IP衍生品对消费者情感价值的满足。",
+      "total_score": 72,
+      "score": 72
+    },
+    {
+      "source": "bilibili",
+      "title": "[热搜] GEN LYON",
+      "url": "https://search.bilibili.com/all?keyword=GEN%20LYON",
+      "summary": "GEN战胜LYON 全球先锋赛",
+      "category": "热搜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 75,
+        "timeliness": 85,
+        "creativity": 60
+      },
+      "angle": "复盘GEN战胜LYON的比赛，剖析战术布局、团队协作与《无畏契约》电竞的全球格局。",
+      "total_score": 72,
+      "score": 72
+    },
+    {
+      "source": "github",
+      "title": "mobile-dev-inc/Maestro 🔥+492⭐/today",
+      "url": "https://github.com/mobile-dev-inc/Maestro",
+      "summary": "mobile-dev-inc /\n\n      Maestro  \n\n    \n      Painless E2E Automation for Mobile and Web",
+      "category": "GitHub Trending",
+      "engagement": {
+        "stars_today": 492
+      },
+      "author": "mobile-dev-inc",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 80,
+        "creativity": 70
+      },
+      "angle": "评测Maestro在移动端和Web端自动化测试中的优势，并对比其他主流E2E测试框架。",
+      "total_score": 72,
+      "score": 72
+    },
+    {
+      "source": "linuxdo",
+      "title": "Grok反代已无法使用内置联网搜索？",
+      "url": "https://linux.do/t/topic/1786148",
+      "summary": "",
+      "category": "11",
+      "engagement": {
+        "views": 9,
+        "likes": 0,
+        "comments": 2
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 85,
+        "creativity": 70
+      },
+      "angle": "技术分析Grok等AI工具联网搜索功能的限制与反代失效原因，探讨合规使用第三方API的替代方案。",
+      "total_score": 72,
+      "score": 72
+    },
+    {
+      "source": "zhihu",
+      "title": "如何评价远程办公软件ToDesk的口碑不佳？",
+      "url": "https://www.zhihu.com/question/456281276",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 80,
+        "creativity": 70
+      },
+      "angle": "从用户体验、安全隐私与商业模式角度，探讨远程办公软件口碑崩塌的深层原因。",
+      "total_score": 71,
+      "score": 71
+    },
+    {
+      "source": "toutiao",
+      "title": "从良渚玉镯上看“龙抬头”",
+      "url": "https://www.toutiao.com/trending/7619092082434588726",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 484090
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 50,
+        "timeliness": 70,
+        "creativity": 90
+      },
+      "angle": "从良渚玉镯上的‘龙’纹，探寻中华龙图腾的远古起源与玉文化中的精神信仰演变。",
+      "total_score": 71,
+      "score": 71
+    },
+    {
+      "source": "douyin",
+      "title": "小米全新笔记本Pro 14开箱",
+      "url": "https://www.douyin.com/search/%E5%B0%8F%E7%B1%B3%E5%85%A8%E6%96%B0%E7%AC%94%E8%AE%B0%E6%9C%ACPro%2014%E5%BC%80%E7%AE%B1",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7641799
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 95,
+        "creativity": 65
+      },
+      "angle": "从产品设计、市场定位切入，分析小米如何通过细分品类突破PC红海。",
+      "total_score": 71,
+      "score": 71
+    },
+    {
+      "source": "youtube",
+      "title": "The ladybug clock puzzle",
+      "url": "https://www.youtube.com/watch?v=FE-hM1kRK4Y",
+      "summary": "[3Blue1Brown] The ladybug clock puzzle",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "3Blue1Brown",
+      "published": "2025-11-05T13:09:45+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 55,
+        "timeliness": 70,
+        "creativity": 85
+      },
+      "angle": "将谜题作为引子，引导观众体验数学建模与逻辑推导的乐趣，并探讨其背后的数学思想。",
+      "total_score": 71,
+      "score": 71
+    },
+    {
+      "source": "linuxdo",
+      "title": "Any牌路由器使用清障！",
+      "url": "https://linux.do/t/topic/1779614",
+      "summary": "",
+      "category": "4",
+      "engagement": {
+        "views": 5383,
+        "likes": 1304,
+        "comments": 601
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 80,
+        "creativity": 75
+      },
+      "angle": "以Any牌路由器为例，总结家用网络设备常见故障排查方法论，并延伸至家庭网络架构优化建议。",
+      "total_score": 71,
+      "score": 71
+    },
+    {
+      "source": "zhihu",
+      "title": "刘文祥麻辣烫被曝后厨员工穿拖鞋作业，边干活边抽烟，当地市场监管部门已介入，暴露出门店管理存在哪些问题？",
+      "url": "https://www.zhihu.com/question/2017354169212692301",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 75,
+        "creativity": 70
+      },
+      "angle": "以连锁餐饮后厨乱象为案例，反思加盟模式下标准化管理失效的根源与食品安全监管的盲区。",
+      "total_score": 70,
+      "score": 70
+    },
+    {
+      "source": "toutiao",
+      "title": "俄称以袭击俄媒记者严重违反国际法",
+      "url": "https://www.toutiao.com/trending/7618545273333170182",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 6517663
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 80,
+        "creativity": 65
+      },
+      "angle": "剖析战时新闻自由与记者安全的困境，解读国际法在冲突地区的实际效力与挑战。",
+      "total_score": 70,
+      "score": 70
+    },
+    {
+      "source": "toutiao",
+      "title": "爸爸背着爷爷一路小跑见入伍的孙子",
+      "url": "https://www.toutiao.com/trending/7618077614087012390",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 3576969
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 70,
+        "creativity": 80
+      },
+      "angle": "透过温情瞬间，解读中国家庭代际情感表达的变化，以及“家国情怀”在当代的传承。",
+      "total_score": 70,
+      "score": 70
+    },
+    {
+      "source": "toutiao",
+      "title": "美国女教师用蛋糕引诱性侵学生",
+      "url": "https://www.toutiao.com/trending/7617687605497151531",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 2649884
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 75,
+        "creativity": 70
+      },
+      "angle": "从权力不对等角度分析校园性侵案，探讨如何构建更有效的学生保护机制与师德监督。",
+      "total_score": 70,
+      "score": 70
+    },
+    {
+      "source": "toutiao",
+      "title": "海关查获10公斤“发菜”",
+      "url": "https://www.toutiao.com/trending/7618511444159135785",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 1454287
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 75,
+        "creativity": 75
+      },
+      "angle": "以‘发菜’查获案为例，深挖濒危物种非法贸易链及其背后的生态与文化隐忧。",
+      "total_score": 70,
+      "score": 70
+    },
+    {
+      "source": "toutiao",
+      "title": "前男友偷走900克黄金 女子3年后报警",
+      "url": "https://www.toutiao.com/trending/7617759591993655350",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 358622
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 60,
+        "creativity": 75
+      },
+      "angle": "从情感纠纷、信任危机与法律追诉时效角度，剖析亲密关系中的财产侵害。",
+      "total_score": 70,
+      "score": 70
+    },
+    {
+      "source": "douyin",
+      "title": "全世界请来提醒孟子义发抖音",
+      "url": "https://www.douyin.com/search/%E5%85%A8%E4%B8%96%E7%95%8C%E8%AF%B7%E6%9D%A5%E6%8F%90%E9%86%92%E5%AD%9F%E5%AD%90%E4%B9%89%E5%8F%91%E6%8A%96%E9%9F%B3",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7649634
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 70,
+        "timeliness": 85,
+        "creativity": 60
+      },
+      "angle": "分析明星与粉丝互动新范式，探讨社交媒体如何重塑艺人形象管理。",
+      "total_score": 70,
+      "score": 70
+    },
+    {
+      "source": "youtube",
+      "title": "Temporal Networks, Where Page Rank meets Lord of the Rings - Computerphile",
+      "url": "https://www.youtube.com/watch?v=YDdKiQNw80c",
+      "summary": "[NetworkChuck] Temporal Networks, Where Page Rank meets Lord of the Rings - Computerphile",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "NetworkChuck",
+      "published": "2026-03-11T14:30:26+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 55,
+        "timeliness": 75,
+        "creativity": 80
+      },
+      "angle": "用《指环王》的叙事结构类比时序网络，生动解释这一复杂概念在现实网络分析中的应用价值。",
+      "total_score": 70,
+      "score": 70
+    },
+    {
+      "source": "bilibili",
+      "title": "[热搜] 回顾DLSS发展史",
+      "url": "https://search.bilibili.com/all?keyword=%E5%9B%9E%E9%A1%BEDLSS%E5%8F%91%E5%B1%95%E5%8F%B2",
+      "summary": "回顾DLSS发展史",
+      "category": "热搜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 70,
+        "creativity": 75
+      },
+      "angle": "回顾DLSS发展史，分析其技术迭代如何重塑游戏图形工业与实时渲染的未来。",
+      "total_score": 70,
+      "score": 70
+    },
+    {
+      "source": "toutiao",
+      "title": "男孩因不能看电视向妈妈扔拖鞋",
+      "url": "https://www.toutiao.com/trending/7618190487904976950",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 13124962
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 70,
+        "creativity": 75
+      },
+      "angle": "以此事件为引，深入探讨数字时代亲子冲突、儿童情绪管理及家庭教育的有效沟通方法。",
+      "total_score": 68,
+      "score": 68
+    },
+    {
+      "source": "toutiao",
+      "title": "内蒙古党委书记赶赴车间爆炸现场",
+      "url": "https://www.toutiao.com/trending/7618927510553628186",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 2397714
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 85,
+        "creativity": 60
+      },
+      "angle": "聚焦安全生产责任落实，分析重大事故中地方主官的应急响应与舆情管理策略。",
+      "total_score": 68,
+      "score": 68
+    },
+    {
+      "source": "toutiao",
+      "title": "北京男篮4连胜遭终结 麦基空砍大两双",
+      "url": "https://www.toutiao.com/trending/7618250666724851753",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 722177
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 85,
+        "creativity": 65
+      },
+      "angle": "分析北京男篮连胜终结原因，聚焦外援麦基表现与球队战术体系的兼容性问题。",
+      "total_score": 68,
+      "score": 68
+    },
+    {
+      "source": "douyin",
+      "title": "剑来2一曲无恙岁岁无恙",
+      "url": "https://www.douyin.com/search/%E5%89%91%E6%9D%A52%E4%B8%80%E6%9B%B2%E6%97%A0%E6%81%99%E5%B2%81%E5%B2%81%E6%97%A0%E6%81%99",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7608769
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 75,
+        "creativity": 70
+      },
+      "angle": "从国风音乐与网文IP联动，看传统文化元素在流行创作中的现代化表达。",
+      "total_score": 68,
+      "score": 68
+    },
+    {
+      "source": "github",
+      "title": "FujiwaraChoki/MoneyPrinterV2 🔥+146⭐/today",
+      "url": "https://github.com/FujiwaraChoki/MoneyPrinterV2",
+      "summary": "FujiwaraChoki /\n\n      MoneyPrinterV2  \n\n    \n      Automate the process of making money online.",
+      "category": "GitHub Trending",
+      "engagement": {
+        "stars_today": 146
+      },
+      "author": "FujiwaraChoki",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 75,
+        "creativity": 70
+      },
+      "angle": "理性分析自动化赚钱项目的可行性、风险与伦理边界，提供实操建议与避坑指南。",
+      "total_score": 68,
+      "score": 68
+    },
+    {
+      "source": "toutiao",
+      "title": "“龙抬头”有什么习俗和讲究",
+      "url": "https://www.toutiao.com/trending/7618605516420268042",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 32282199
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 80,
+        "creativity": 60
+      },
+      "angle": "系统梳理‘龙抬头’的南北习俗差异，并解读其背后的传统文化内涵与现代传承意义。",
+      "total_score": 67,
+      "score": 67
+    },
+    {
+      "source": "toutiao",
+      "title": "拼豆爆炸起火炸伤小孩手部",
+      "url": "https://www.toutiao.com/trending/7618555465064808491",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 7960692
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 80,
+        "creativity": 60
+      },
+      "angle": "聚焦儿童玩具安全盲区，科普如何辨别和防范网红玩具的潜在危险，呼吁家长加强监管。",
+      "total_score": 67,
+      "score": 67
+    },
+    {
+      "source": "toutiao",
+      "title": "8岁女孩跟着爸爸户外吹唢呐",
+      "url": "https://www.toutiao.com/trending/7618027157529133110",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 4828404
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 55,
+        "timeliness": 70,
+        "creativity": 75
+      },
+      "angle": "探讨传统民乐在年轻一代中的传承新形式，以及户外教育对儿童性格培养的积极影响。",
+      "total_score": 67,
+      "score": 67
+    },
+    {
+      "source": "douyin",
+      "title": "隐身的名字母女线好戳人",
+      "url": "https://www.douyin.com/search/%E9%9A%90%E8%BA%AB%E7%9A%84%E5%90%8D%E5%AD%97%E6%AF%8D%E5%A5%B3%E7%BA%BF%E5%A5%BD%E6%88%B3%E4%BA%BA",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7654244
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 58,
+        "timeliness": 70,
+        "creativity": 72
+      },
+      "angle": "探讨影视剧中母女关系的细腻刻画如何引发观众的情感共鸣与代际思考。",
+      "total_score": 67,
+      "score": 67
+    },
+    {
+      "source": "douyin",
+      "title": "一条视频安利你好1983",
+      "url": "https://www.douyin.com/search/%E4%B8%80%E6%9D%A1%E8%A7%86%E9%A2%91%E5%AE%89%E5%88%A9%E4%BD%A0%E5%A5%BD1983",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7633198
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 55,
+        "timeliness": 70,
+        "creativity": 75
+      },
+      "angle": "解读怀旧文化成为流量密码的原因，分析经典IP在当代的传播变形。",
+      "total_score": 67,
+      "score": 67
+    },
+    {
+      "source": "youtube",
+      "title": "we're so back",
+      "url": "https://www.youtube.com/watch?v=3crPzGV5C7U",
+      "summary": "[ThePrimeagen] we're so back",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "ThePrimeagen",
+      "published": "2026-03-18T18:02:07+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 80,
+        "creativity": 60
+      },
+      "angle": "分析ThePrimeagen的‘we're so back’梗在开发者社区的文化意义与传播路径。",
+      "total_score": 67,
+      "score": 67
+    },
+    {
+      "source": "toutiao",
+      "title": "北京男篮主帅：这场比赛输给了自己",
+      "url": "https://www.toutiao.com/trending/7618756263425490953",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 535002
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 55,
+        "timeliness": 90,
+        "creativity": 60
+      },
+      "angle": "从主帅‘输给自己’的赛后总结，探讨职业球队在连胜后的心态管理与临场调整能力。",
+      "total_score": 66,
+      "score": 66
+    },
+    {
+      "source": "douyin",
+      "title": "重庆机车约拍帮我圆了机车梦",
+      "url": "https://www.douyin.com/search/%E9%87%8D%E5%BA%86%E6%9C%BA%E8%BD%A6%E7%BA%A6%E6%8B%8D%E5%B8%AE%E6%88%91%E5%9C%86%E4%BA%86%E6%9C%BA%E8%BD%A6%E6%A2%A6",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7625780
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 75,
+        "creativity": 65
+      },
+      "angle": "探讨小众爱好社群如何通过视觉创作构建身份认同与城市文化符号。",
+      "total_score": 66,
+      "score": 66
+    },
+    {
+      "source": "youtube",
+      "title": "Solution to the ladybug clock puzzle",
+      "url": "https://www.youtube.com/watch?v=BHdbsHFs2P0",
+      "summary": "[3Blue1Brown] Solution to the ladybug clock puzzle",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "3Blue1Brown",
+      "published": "2026-01-31T14:57:42+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 50,
+        "timeliness": 65,
+        "creativity": 80
+      },
+      "angle": "不止于公布答案，重点拆解解题的思维过程与数学工具的应用，提升观众的抽象推理能力。",
+      "total_score": 66,
+      "score": 66
+    },
+    {
+      "source": "douyin",
+      "title": "翟潇闻边做wave边叫姐姐",
+      "url": "https://www.douyin.com/search/%E7%BF%9F%E6%BD%87%E9%97%BB%E8%BE%B9%E5%81%9Awave%E8%BE%B9%E5%8F%AB%E5%A7%90%E5%A7%90",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7621557
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 80,
+        "creativity": 55
+      },
+      "angle": "剖析偶像工业中“女友感”互动的话术设计，探讨粉丝经济的情绪供给。",
+      "total_score": 65,
+      "score": 65
+    },
+    {
+      "source": "toutiao",
+      "title": "外甥正月没理发拉横幅找舅舅要红包",
+      "url": "https://www.toutiao.com/trending/7618148631732273193",
+      "summary": "",
+      "category": "头条热榜",
+      "engagement": {
+        "hot_value": 324495
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 65,
+        "timeliness": 50,
+        "creativity": 70
+      },
+      "angle": "解构传统习俗（正月理发）在现代社会的娱乐化表达与代际互动新形式。",
+      "total_score": 63,
+      "score": 63
+    },
+    {
+      "source": "douyin",
+      "title": "高至霆 感觉至上的天菜",
+      "url": "https://www.douyin.com/search/%E9%AB%98%E8%87%B3%E9%9C%86%20%E6%84%9F%E8%A7%89%E8%87%B3%E4%B8%8A%E7%9A%84%E5%A4%A9%E8%8F%9C",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7657094
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 60,
+        "timeliness": 70,
+        "creativity": 60
+      },
+      "angle": "分析新生代演员的个人特质与“天菜”人设如何在社交媒体中塑造与传播。",
+      "total_score": 62,
+      "score": 62
+    },
+    {
+      "source": "douyin",
+      "title": "林沐然一拳把我给帅懵了",
+      "url": "https://www.douyin.com/search/%E6%9E%97%E6%B2%90%E7%84%B6%E4%B8%80%E6%8B%B3%E6%8A%8A%E6%88%91%E7%BB%99%E5%B8%85%E6%87%B5%E4%BA%86",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7622232
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 55,
+        "timeliness": 70,
+        "creativity": 60
+      },
+      "angle": "解析“少年感”打戏的视觉塑造，探讨武打设计如何服务角色人格魅力。",
+      "total_score": 61,
+      "score": 61
+    },
+    {
+      "source": "douyin",
+      "title": "谢征樊长玉吵架花絮也好嗑",
+      "url": "https://www.douyin.com/search/%E8%B0%A2%E5%BE%81%E6%A8%8A%E9%95%BF%E7%8E%89%E5%90%B5%E6%9E%B6%E8%8A%B1%E7%B5%AE%E4%B9%9F%E5%A5%BD%E5%97%91",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7655281
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 55,
+        "timeliness": 65,
+        "creativity": 60
+      },
+      "angle": "从影视剧CP营销角度，解读“吵架花絮”如何满足观众的沉浸式嗑糖需求。",
+      "total_score": 60,
+      "score": 60
+    },
+    {
+      "source": "linuxdo",
+      "title": "突然发现和女朋友在一起8 年 8 个月零 8 天了",
+      "url": "https://linux.do/t/topic/1446040",
+      "summary": "",
+      "category": "11",
+      "engagement": {
+        "views": 713,
+        "likes": 76,
+        "comments": 79
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 50,
+        "timeliness": 60,
+        "creativity": 70
+      },
+      "angle": "从技术从业者的视角，探讨如何平衡高强度工作与亲密关系维护，分享时间管理与情感沟通的实用技巧。",
+      "total_score": 60,
+      "score": 60
+    },
+    {
+      "source": "zhihu",
+      "title": "关张赵三者之一替代马谡，但是依然按照马谡的策略在山上布军，能守住街亭吗？",
+      "url": "https://www.zhihu.com/question/1961560467148354849",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 55,
+        "timeliness": 40,
+        "creativity": 75
+      },
+      "angle": "结合三国将领的军事风格与街亭地形，推演名将如何灵活执行或调整“山上布军”策略。",
+      "total_score": 59,
+      "score": 59
+    },
+    {
+      "source": "douyin",
+      "title": "齐旻应该早点给俞浅浅讲八卦",
+      "url": "https://www.douyin.com/search/%E9%BD%90%E6%97%BB%E5%BA%94%E8%AF%A5%E6%97%A9%E7%82%B9%E7%BB%99%E4%BF%9E%E6%B5%85%E6%B5%85%E8%AE%B2%E5%85%AB%E5%8D%A6",
+      "summary": "",
+      "category": "抖音热搜",
+      "engagement": {
+        "hot_value": 7624752
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 50,
+        "timeliness": 65,
+        "creativity": 60
+      },
+      "angle": "分析影视CP的幕后互动如何成为宣发素材，探讨观众的情感投射机制。",
+      "total_score": 58,
+      "score": 58
+    },
+    {
+      "source": "youtube",
+      "title": "12 codex subs",
+      "url": "https://www.youtube.com/watch?v=QuV7YSdX8-g",
+      "summary": "[ThePrimeagen] 12 codex subs",
+      "category": "Video/Tech",
+      "engagement": {},
+      "author": "ThePrimeagen",
+      "published": "2026-03-17T18:01:18+00:00",
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 50,
+        "timeliness": 75,
+        "creativity": 55
+      },
+      "angle": "探讨ThePrimeagen的12个Codex订阅内容，分析其作为知识付费或社区运营的案例。",
+      "total_score": 58,
+      "score": 58
+    },
+    {
+      "source": "linuxdo",
+      "title": "有没有正在戒烟的佬友, 怎么坚持下来的",
+      "url": "https://linux.do/t/topic/1765463",
+      "summary": "",
+      "category": "11",
+      "engagement": {
+        "views": 351,
+        "likes": 47,
+        "comments": 98
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 50,
+        "timeliness": 60,
+        "creativity": 65
+      },
+      "angle": "结合科学方法与社区经验，总结适用于高压工作人群（如开发者）的戒烟策略与心理支持。",
+      "total_score": 58,
+      "score": 58
+    },
+    {
+      "source": "linuxdo",
+      "title": "那些搞笑的名字。。。。不断更新更新",
+      "url": "https://linux.do/t/topic/1508806",
+      "summary": "",
+      "category": "11",
+      "engagement": {
+        "views": 190,
+        "likes": 10,
+        "comments": 9
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 40,
+        "timeliness": 65,
+        "creativity": 60
+      },
+      "angle": "收集技术领域趣味命名案例，分析其背后的文化梗与行业幽默，探讨命名对项目传播的影响。",
+      "total_score": 54,
+      "score": 54
+    },
+    {
+      "source": "zhihu",
+      "title": "1号24点00分00秒，和2号00点00分00秒，是同一天吗？",
+      "url": "https://www.zhihu.com/question/2009978699357906227",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 40,
+        "timeliness": 50,
+        "creativity": 65
+      },
+      "angle": "从时间定义、文化习俗与编程实践三个层面，探讨时间边界问题的现实意义。",
+      "total_score": 52,
+      "score": 52
+    },
+    {
+      "source": "linuxdo",
+      "title": "请不要把互联网上的戾气带来这里！",
+      "url": "https://linux.do/t/topic/482293",
+      "summary": "",
+      "category": "2",
+      "engagement": {
+        "views": 339147,
+        "likes": 81989,
+        "comments": 4672
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 45,
+        "timeliness": 55,
+        "creativity": 50
+      },
+      "angle": "反思网络戾气的成因与影响，提出在技术交流中保持理性与建设性对话的沟通准则。",
+      "total_score": 50,
+      "score": 50
+    },
+    {
+      "source": "linuxdo",
+      "title": "净化社区环境我们是认真的",
+      "url": "https://linux.do/t/topic/1776032",
+      "summary": "",
+      "category": "2",
+      "engagement": {
+        "views": 9563,
+        "likes": 1840,
+        "comments": 761
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 40,
+        "timeliness": 50,
+        "creativity": 55
+      },
+      "angle": "探讨技术社区治理与氛围维护的挑战，分享构建健康、专业讨论环境的有效方法。",
+      "total_score": 48,
+      "score": 48
+    },
+    {
+      "source": "linuxdo",
+      "title": "《秘密花园园丁邀请函》",
+      "url": "https://linux.do/t/topic/847468",
+      "summary": "",
+      "category": "2",
+      "engagement": {
+        "views": 185973,
+        "likes": 21621,
+        "comments": 2873
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 30,
+        "timeliness": 40,
+        "creativity": 60
+      },
+      "angle": "分析小众社区邀请制的利弊，以及如何通过精心设计的内容与规则培养高质量用户群体。",
+      "total_score": 44,
+      "score": 44
+    },
+    {
+      "source": "linuxdo",
+      "title": "「抽奖」庆祝第一个项目突破github 100 stars。抽5个6.66的口令红包",
+      "url": "https://linux.do/t/topic/1784697",
+      "summary": "",
+      "category": "36",
+      "engagement": {
+        "views": 462,
+        "likes": 81,
+        "comments": 256
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 25,
+        "timeliness": 75,
+        "creativity": 40
+      },
+      "angle": "探讨个人开发者项目冷启动策略，分析GitHub stars增长对开源项目发展的实际意义与局限性。",
+      "total_score": 44,
+      "score": 44
+    },
+    {
+      "source": "zhihu",
+      "title": "无卸力无防护转身全力右直拳重击水泥墙，只有轻微红肿，后续1小时基本消肿，只轻微疼痛，算什么生理水平？",
+      "url": "https://www.zhihu.com/question/2017218675623608593",
+      "summary": "",
+      "category": "知乎热榜",
+      "engagement": {},
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 30,
+        "timeliness": 40,
+        "creativity": 50
+      },
+      "angle": "结合运动医学与人体极限，科学分析该行为的风险，并探讨网络“硬核挑战”的心理动机。",
+      "total_score": 40,
+      "score": 40
+    },
+    {
+      "source": "linuxdo",
+      "title": "怀念LDC第4天，再抽EDU教育邮箱5个",
+      "url": "https://linux.do/t/topic/1785640",
+      "summary": "",
+      "category": "36",
+      "engagement": {
+        "views": 517,
+        "likes": 58,
+        "comments": 303
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 35,
+        "timeliness": 40,
+        "creativity": 45
+      },
+      "angle": "探讨教育邮箱在开发者生态中的特殊价值与使用风险，以及社区抽奖活动的运营与用户维系策略。",
+      "total_score": 40,
+      "score": 40
+    },
+    {
+      "source": "linuxdo",
+      "title": "恭喜5位佬友抽中LINUX DO专属定制卫衣1件",
+      "url": "https://linux.do/t/topic/1784902",
+      "summary": "",
+      "category": "36",
+      "engagement": {
+        "views": 293,
+        "likes": 5,
+        "comments": 18
+      },
+      "fetched_at": "2026-03-20T09:33:04.818933+08:00",
+      "scores": {
+        "heat": 20,
+        "timeliness": 70,
+        "creativity": 30
+      },
+      "angle": "分析社区专属福利对技术社区凝聚力的作用，探讨如何设计有效的社区激励活动。",
+      "total_score": 36,
+      "score": 36
+    }
+  ]
+}

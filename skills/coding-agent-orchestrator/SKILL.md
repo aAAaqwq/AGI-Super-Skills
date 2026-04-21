@@ -1,56 +1,37 @@
----
-name: coding-router
-description: Compatibility entry skill for plan-first coding work in OpenClaw.
-metadata:
-  openclaw:
-    emoji: 💻
-    requires:
-      bins:
-      - gh
-      anyBins:
-      - codex
-      - claude
-      env: []
-author: Daniel Li
----
-# Coding Router Skill 💻
+# coding-agent-orchestrator
+> 编码 Agent 编排调度——解析 Claude CLI 和 ACPX 二进制路径，支持多编码 Agent 协同
 
-- Author: Daniel Li
-- Copyright © Daniel Li. All rights reserved.
+## 使用场景
+- 在多 Agent 环境中调度 Claude Code 或 ACPX 编码 Agent
+- 自动解析编码 Agent 可执行文件路径（支持环境变量覆盖、本地安装、系统 PATH）
+- 作为 coding workflow 的底层 CLI 解析器
 
-This file exists for backward compatibility with single-entry skill setups (for example `/coding`).
-Canonical sibling skills live at:
+## 使用方法
+```bash
+# 在 shell 脚本中 source 使用
+source ~/clawd/skills/coding-agent-orchestrator/scripts/lib/resolve-cli.sh
 
-- `skills/plan-issue/SKILL.md`
-- `skills/coding-agent/SKILL.md`
+# 解析 Claude CLI 路径
+claude_bin=$(resolve_claude_bin)
+echo "Claude: $claude_bin"
 
-## Routing Rules
+# 解析 ACPX 路径
+acpx_bin=$(resolve_acpx_bin)
+echo "ACPX: $acpx_bin"
 
-1. If user asks to plan/scope/estimate/design, follow `plan-issue` behavior.
-2. For non-trivial implementation requests, produce a plan first and wait for exact `APPROVE` before any writes.
-3. Only after `APPROVE`, follow `coding-agent` behavior with ACP-aware execution routing and CLI fallback.
+# 环境变量覆盖
+export CODING_AGENT_CLAUDE_BIN=/custom/path/to/claude
+export CODING_AGENT_ACPX_CMD=/custom/path/to/acpx
+```
 
-## Command Routing (Channel Aliases)
+## 路径解析优先级
+1. 环境变量 `CODING_AGENT_CLAUDE_BIN` / `CODING_AGENT_ACPX_CMD`
+2. `~/.claude/local/claude`（本地安装）
+3. 系统 PATH（`which claude` / `which acpx`）
 
-When invoked via channel aliases:
+## 配置要求
+- Bash
+- Claude Code 或 ACPX 已安装（至少一个）
 
-- `/coding` → use this compatibility skill as router.
-- `/plan` → route directly to `plan-issue` behavior.
-- `/plan-review` → route to plan review flow using `scripts/plan-review`.
-- `/plan-review-live` → route to interactive plan review checkpoints using `scripts/plan-review-live` (Lobster in-repo workflow first, legacy fallback).
-- `/review_pr` → route to review flow using `references/reviews.md`.
-
-## Runtime Status Contract
-
-When wrappers are used for planning/review:
-- Emit `RUN_EVENT start` at run start.
-- If the run exceeds 30s, emit `RUN_EVENT heartbeat` every 20s.
-- If interrupted or timed out, emit `RUN_EVENT interrupted` immediately with exit code.
-- On non-interruption failure, emit `RUN_EVENT failed`.
-- On success, emit `RUN_EVENT done`.
-
-## Non-Negotiable Gates
-
-1. Never write files, install packages, commit, or open PRs before explicit `APPROVE`.
-2. Never default to bypass flags (`--yolo`, `--dangerously-skip-permissions`).
-3. Use bypass flags only when the user explicitly asks to bypass approvals.
+## 相关文件
+- `scripts/lib/resolve-cli.sh` — CLI 路径解析器

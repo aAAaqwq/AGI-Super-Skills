@@ -33,7 +33,7 @@ def load_config():
 OVERSEAS_SOURCES = {"twitter", "reddit", "youtube", "github"}
 
 # 代理地址（从环境变量或默认 Clash）
-PROXY_URL = os.environ.get("CONTENT_PROXY", "http://127.0.0.1:7890")
+PROXY_URL = os.environ.get("CONTENT_PROXY", "http://127.0.0.1:7897")
 
 
 def curl_get(url, headers=None, timeout=15, use_proxy=False):
