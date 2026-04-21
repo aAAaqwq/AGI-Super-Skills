@@ -121,7 +121,7 @@ done
 
 Each agent directory (e.g. `agents/cco/WORKFLOW.md`) contains role-specific and shared workflows.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -179,7 +179,6 @@ AGI-Super-Team/
 │   └── README.md     # Full catalog
 
 ├── cookbook/         # 5 in-depth learning guides
-├── docs/             # Category indexes, quant scripts
 ├── CHARTER.md        # Team constitution (12 principles)
 ├── STARTUP.md        # Quick-start guide
 ├── COLLABORATION.md  # Inter-agent collaboration network
