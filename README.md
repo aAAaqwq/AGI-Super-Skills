@@ -5,15 +5,16 @@
 <h1 align="center">AGI Super Team</h1>
 
 <p align="center">
-  <strong>637 AI Skills + 12 C-Suite Agents</strong> — Build your AI-native company in minutes.
+  <strong>700+ AI Skills · 12 C-Suite Agents · 86 Thinking Frameworks</strong><br/>
+  Build your AI-native company in minutes.
 </p>
 
 <p align="center">
   <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/Powered%20by-OpenClaw-blue?logo=github" alt="OpenClaw"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Skills-637-blueviolet" alt="Skills">
+  <img src="https://img.shields.io/badge/Skills-700%2B-blueviolet" alt="Skills">
   <img src="https://img.shields.io/badge/Agents-12-orange" alt="Agents">
-  <img src="https://img.shields.io/badge/Thinking%20Frameworks-32-cyan" alt="Frameworks">
+  <img src="https://img.shields.io/badge/Frameworks-86-cyan" alt="Frameworks">
 </p>
 
 <p align="center">
@@ -31,7 +32,7 @@
 
 A **plug-and-play AI team template** — deploy a complete virtual C-Suite using [OpenClaw](https://github.com/openclaw/openclaw). Each agent has a **spirit mentor** (Elon Musk, Jensen Huang, Warren Buffett...) that shapes their personality and decision-making.
 
-**637 skills. 12 agents. 32 thinking frameworks. 31 workflows.** Zero boilerplate — copy, customize, ship.
+**700+ skills. 12 agents. 86 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
 
 ## 🏛️ Architecture
 
@@ -73,7 +74,7 @@ You (Founder / Chairman)
 
 ## 🧠 Thinking Frameworks
 
-32 distilled thinking skills based on real-world mentors — mental models, decision frameworks, classic quotes with sources:
+86 distilled thinking skills based on real-world mentors — mental models, decision frameworks, classic quotes with sources:
 
 ```bash
 # Inject a mentor's thinking into any agent
@@ -88,30 +89,31 @@ done
 
 ## 🛠️ Skill Categories
 
-| Category | Count | Highlights |
-|----------|:-----:|-----------|
-| 🔌 SaaS Integrations | 62 | Notion, Airtable, HubSpot, Stripe, 55+ more |
-| 📝 Content & Writing | 38 | SEO, viral copy, anti-AI-slop, social media |
-| 🔧 Development | 35 | Backend, frontend, Docker, Git, TDD, API design |
-| 💰 Trading & Finance | 32 | Crypto, Polymarket, DeFi, portfolio management |
-| ⚙️ OpenClaw Tools | 28 | Config, auth, cron, MCP, token guard |
-| 🤖 AI Agent Patterns | 25 | Multi-agent orchestration, parallel execution |
-| 📊 Data & Analytics | 21 | Web scraping, DuckDB, CSV pipelines, arXiv |
-| 📈 Marketing & SEO | 19 | SEO audits, GEO optimization, A/B testing |
-| 🎨 Design & Media | 15 | Image generation, UI/UX, brand identity |
-| 🏢 Business & Strategy | 15 | SaaS launch, competitor teardown, financial modeling |
-| 📋 Project Management | 18 | PRD, roadmaps, Scrum, team coordination |
-| 💬 Communication | 13 | Email, Feishu, WeChat, cross-instance messaging |
-| 📱 Chinese Platforms | 13 | Xiaohongshu, Douyin, WeChat MP, Juejin |
-| ⚙️ DevOps & Infra | 10 | AWS, Docker, Linux, observability |
-| 🎬 Video & Digital Human | 5 | Digital human, video merge, storyboard |
-| 🧩 Other | 18 | RSS, calendars, presentations, design thinking |
+| Category | Highlights |
+|----------|-----------|
+| 🔌 SaaS Integrations | Notion, Airtable, HubSpot, Stripe, ActiveCampaign, 60+ more |
+| 📝 Content & Writing | SEO, viral copy, anti-AI-slop, social media |
+| 🔧 Development | Backend, frontend, Docker, Git, TDD, API design, code review |
+| 💰 Trading & Finance | Crypto, Polymarket, DeFi, portfolio management, backtesting |
+| ⚙️ OpenClaw Tools | Config, auth, cron, MCP, token guard, agent orchestration |
+| 🤖 AI Agent Patterns | Multi-agent orchestration, parallel execution, sub-agents |
+| 📊 Data & Analytics | Web scraping, DuckDB, CSV pipelines, arXiv |
+| 📈 Marketing & SEO | SEO audits, GEO optimization, A/B testing, competitor analysis |
+| 🎨 Design & Media | Image generation, UI/UX, brand identity |
+| 🏢 Business & Strategy | SaaS launch, competitor teardown, financial modeling |
+| 📋 Project Management | PRD, roadmaps, Scrum, team coordination |
+| 💬 Communication | Email, Feishu, WeChat, Telegram, LinkedIn, cross-instance messaging |
+| 📱 Chinese Platforms | Xiaohongshu, Douyin, WeChat MP, Juejin, Zhihu |
+| ⚙️ DevOps & Infra | AWS, Docker, Linux, observability, deployment |
+| 🧬 Bioinformatics | Genome analysis, metagenomics, pharmacogenomics |
+| 🎬 Video & Digital Human | Video editing, digital human, storyboard, subtitle |
+| 🤖 Web3 & Autonomys | Decentralized storage, auto-deploy, auto-memory |
 
 👉 **[Full skill catalog →](./skills/README.md)**
 
 ## 🔄 Workflows
 
-31 production-ready workflows across all C-Suite roles:
+30 production-ready workflows across all C-Suite roles:
 
 | Scope | Examples |
 |-------|---------|
@@ -132,7 +134,7 @@ mkdir -p ~/.openclaw/workspace-main/skills/
 cp -r skills/thinking-elon-musk/ ~/.openclaw/workspace-main/skills/
 
 # 3. Add skills to any agent
-cp -r skills/code-review/ ~/.openclaw/workspace-main/skills/
+cp -r skills/api-design/ ~/.openclaw/workspace-main/skills/
 
 # 4. Restart OpenClaw — done!
 ```
@@ -157,11 +159,11 @@ AGI-Super-Team/
 │   ├── ceo/          # SOUL.md · AGENTS.md · TOOLS.md
 │   ├── cto/          # ...
 │   └── README.md     # Architecture diagram & skill matrix
-├── skills/           # 637 skills (20 categories)
-│   ├── README.md     # Full catalog with ratings
-│   └── categories/   # Per-category indexes
-├── workflows/        # 31 standard operating procedures
+├── skills/           # 700+ skills (flat structure, each with SKILL.md)
+│   └── README.md     # Full catalog
+├── workflows/        # 30 standard operating procedures
 ├── cookbook/         # 5 in-depth learning guides
+├── docs/             # Category indexes, migration docs, quant scripts
 ├── CHARTER.md        # Team constitution (12 principles)
 ├── STARTUP.md        # Quick-start guide
 └── COLLABORATION.md  # Inter-agent collaboration network

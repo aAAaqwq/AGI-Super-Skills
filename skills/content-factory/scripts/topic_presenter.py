@@ -24,7 +24,9 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
-from paths import TOPICS_DIR, NEWSBOT_SEND
+TOPICS_DIR = Path.home() / "clawd/workspace/content-pipeline/topics"
+NEWSBOT_SEND = Path.home() / "clawd/scripts/newsbot_send.py"
+ALT_NEWSBOT_SEND = Path.home() / "clawd/skills/content-source-aggregator/newsbot_send.py"
 
 
 def load_topics(date_str: str) -> dict:
@@ -80,9 +82,9 @@ def format_message(top_items: list, date_str: str, title_prefix: str = "📰 今
 
 
 def send(message: str) -> None:
-    sender = NEWSBOT_SEND
+    sender = NEWSBOT_SEND if NEWSBOT_SEND.exists() else ALT_NEWSBOT_SEND
     if not sender.exists():
-        raise FileNotFoundError(f"newsbot_send.py 不存在：{NEWSBOT_SEND} (set NEWSBOT_SEND env var)")
+        raise FileNotFoundError(f"newsbot_send.py 不存在：{NEWSBOT_SEND} / {ALT_NEWSBOT_SEND}")
 
     proc = subprocess.run(
         [sys.executable, str(sender), "--message", message],

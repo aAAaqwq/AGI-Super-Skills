@@ -26,7 +26,10 @@ for k in ['http_proxy', 'https_proxy', 'HTTP_PROXY', 'HTTPS_PROXY', 'all_proxy',
     os.environ.pop(k, None)
 
 # === 路径配置 ===
-from paths import HOTPOOL_DIR, TOPICS_DIR, FETCH_ALL, NEWSBOT_SEND
+HOTPOOL_DIR = Path.home() / "clawd/workspace/content-pipeline/hotpool"
+TOPICS_DIR = Path.home() / "clawd/workspace/content-pipeline/topics"
+FETCH_ALL = Path.home() / "clawd/skills/content-source-aggregator/scripts/fetch_all.py"
+NEWSBOT_SEND = Path.home() / "clawd/scripts/newsbot_send.py"
 
 # === LLM 配置（多后端，按优先级） ===
 API_BACKENDS = [
