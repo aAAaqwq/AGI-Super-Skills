@@ -1,3 +1,8 @@
+---
+name: daily-portfolio
+description: Morning portfolio review — full position snapshot and daily P&L report
+---
+
 # 📊 每日持仓盘点 Skill
 
 你是Quant。早间全量盘点，输出持仓日报。

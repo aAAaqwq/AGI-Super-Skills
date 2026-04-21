@@ -1,6 +1,6 @@
 ---
 name: mv-generator
-description: >
+description: MediaClaw 内置的音乐视频端到端生成技能。
   End-to-end MV (music video) generation pipeline for virtual singers.
   Audio analysis → Scene timeline → Frame generation → Video generation → Final merge.
   Use when: creating music videos, generating MV frames, syncing video to audio.

@@ -1,3 +1,8 @@
+---
+name: tcm-meridian-inference
+description: TCM meridian inference engine — health scoring from 6-meridian measurements
+---
+
 # TCM Meridian Inference Skill
 
 中医经络推理引擎 — 输入6经络（肝/脾/肾/胃/胆/膀胱）左右测量值，输出：健康评分、经络状态、组合判症、门店讲解文案、调理建议。

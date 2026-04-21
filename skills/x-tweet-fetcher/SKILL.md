@@ -1,6 +1,6 @@
 ---
 name: x-tweet-fetcher
-description: >
+description: Fetch tweets from X/Twitter without authentication. Supports tweet content, reply threads, user timelines, and Chinese platforms
   Fetch tweets, replies, and user timelines from X/Twitter without login or API keys.
   Also supports Chinese platforms (Weibo, Bilibili, CSDN, WeChat).
   Includes camofox_search() for zero-cost Google search without API keys.

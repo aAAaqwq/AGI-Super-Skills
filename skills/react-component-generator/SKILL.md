@@ -1,6 +1,6 @@
 ---
 name: "react-component-generator"
-description: |
+description: This skill provides automated assistance for react component generator tasks within the Frontend Development domain
   Generate react component generator operations. Auto-activating skill for Frontend Development.
   Triggers on: react component generator, react component generator
   Part of the Frontend Development skill category. Use when working with react component generator functionality. Trigger with phrases like "react component generator", "react generator", "react".

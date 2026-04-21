@@ -1,6 +1,6 @@
 ---
 name: monitoring-whale-activity
-description: |
+description: Track large cryptocurrency transactions and whale wallet movements across multiple blockchains. Monitor exchange inflows/outflows, manage watchlists, 
   Track large cryptocurrency transactions and whale wallet movements in real-time.
   Use when tracking large holder movements, exchange flows, or wallet activity.
   Trigger with phrases like "track whales", "monitor large transfers", "check whale activity", "exchange inflows", or "watch wallet".

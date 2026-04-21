@@ -1,6 +1,6 @@
 ---
 name: article-material-collect
-description: |
+description: 上层编排 Skill，通过 **Brave Search 发现 → 智能选择浏览器截图** 完成结构化素材采集。
   文章素材收集编排Skill。为MediaClaw内容生产提供结构化的多平台素材采集workflow。
   强制使用OpenClaw Browser截图实际文章页面，支持GitHub/Reddit/X/Medium/知乎等。
   用法: (1) content-ops-toolkit素材阶段调用 (2) daily-*-content素材采集 (3) 独立素材收集任务。

@@ -1,3 +1,8 @@
+---
+name: content-factory
+description: Content factory pipeline — topic scoring, drafting, and production at scale
+---
+
 # content-factory
 > 内容工厂——从热点池批量筛选评分选题，生成内容选题卡片并推送
 

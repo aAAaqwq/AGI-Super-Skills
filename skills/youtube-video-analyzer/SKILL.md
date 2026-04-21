@@ -1,6 +1,6 @@
 ---
 name: youtube-video-analyzer
-description: >
+description: This skill performs deep analysis of YouTube videos through **both information channels**
   Multimodal YouTube video analysis through both audio (transcript) and visual (frame extraction + image analysis) channels.
   Especially powerful for HowTo videos, tutorials, demos, and explainer videos where what is SHOWN (screenshots, UI demos,
   diagrams, code, physical actions) is just as important as what is SAID. Use this skill whenever a user wants to analyze,

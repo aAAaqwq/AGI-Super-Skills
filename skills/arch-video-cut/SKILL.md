@@ -1,3 +1,8 @@
+---
+name: arch-video-cut
+description: Automatic architecture video editing workflow with self-learning preferences
+---
+
 # arch-video-cut
 
 Automatic Architecture Video Editing Workflow with Self-Learning Preferences

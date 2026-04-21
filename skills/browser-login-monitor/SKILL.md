@@ -1,3 +1,8 @@
+---
+name: browser-login-monitor
+description: Monitor and detect browser login state changes for automation workflows
+---
+
 # browser-login-monitor
 > 浏览器登录安全监控——监测浏览器会话状态与登录安全
 

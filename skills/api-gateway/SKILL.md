@@ -1,6 +1,6 @@
 ---
 name: api-gateway
-description: |
+description: Passthrough proxy for direct access to third-party APIs using managed OAuth connections, provided by [Maton](https://maton.ai). The API gateway lets y
   Connect to 100+ APIs (Google Workspace, Microsoft 365, GitHub, Notion, Slack, Airtable, HubSpot, etc.) with managed OAuth.
   Use this skill when users want to interact with external services.
   Security: The MATON_API_KEY authenticates with Maton.ai but grants NO access to third-party services by itself. Each service requires explicit OAuth authorization by the user through Maton's connect flow. Access is strictly scoped to connections the user has authorized. Provided by Maton (https://maton.ai).

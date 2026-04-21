@@ -1,3 +1,8 @@
+---
+name: orchestra-research-skills
+description: Orchestrate multi-source research — coordinate deep research across agents
+---
+
 # orchestra-research-skills
 > 多源研究编排——聚合多个数据源进行深度研究
 

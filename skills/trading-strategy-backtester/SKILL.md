@@ -1,6 +1,6 @@
 ---
 name: backtesting-trading-strategies
-description: |
+description: Validate trading strategies against historical data before risking real capital. This skill provides a complete backtesting framework with 8 built-in 
   Backtest crypto and traditional trading strategies against historical data.
   Calculates performance metrics (Sharpe, Sortino, max drawdown), generates equity curves,
   and optimizes strategy parameters. Use when user wants to test a trading strategy,

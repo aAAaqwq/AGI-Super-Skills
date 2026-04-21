@@ -1,6 +1,6 @@
 ---
 name: create-viral-content
-description: |
+description: This skill synthesizes findings from 40 documented research sources
   AUTOMATIC ACTIVATION: Use this skill whenever generating content for social media platforms including Reddit posts, Twitter/X threads, LinkedIn posts, YouTube videos/comments, TikTok scripts, Instagram posts/reels, email subject lines, blog titles, or any content intended for public engagement. Also triggers on: "make this viral", "social media post", "catchy headline", "hook", "engagement", "shareable", "go viral", "attention-grabbing", "clickable", "scroll-stopping", "title ideas", "hot take", "more engaging", "subreddit", "thread". Apply to any AI-generated content facing public audience or hostile perception.
 license: MIT
 metadata:

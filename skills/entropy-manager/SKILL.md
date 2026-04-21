@@ -1,3 +1,8 @@
+---
+name: entropy-manager
+description: Entropy scanner for codebases — detect disorder and suggest cleanup actions
+---
+
 # 熵管理 Skill (Entropy Manager)
 
 > **核心信念**：AI 团队每行代码都在增加系统的混乱度。不主动减熵，系统会自然腐败。

@@ -1,3 +1,8 @@
+---
+name: thinking-dhh
+description: DHH's thinking framework — convention over configuration, ship fast, perfect is the enemy
+---
+
 
 4. "正常人在8小时内可以把事情做得很好。加班是管理失败的症状，而不是勤奋的标志。"
    ——DHH，《重来》（Rework，2010）

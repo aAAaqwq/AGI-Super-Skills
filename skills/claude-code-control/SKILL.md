@@ -1,3 +1,8 @@
+---
+name: claude-code-control
+description: Control Claude Code programmatically through Terminal.app windows on macOS
+---
+
 # Claude Code Control
 
 Control Claude Code programmatically through visible Terminal.app windows on macOS.

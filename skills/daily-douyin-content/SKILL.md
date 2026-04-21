@@ -1,3 +1,8 @@
+---
+name: daily-douyin-content
+description: Daily Douyin content production SOP — from topic selection to publishing
+---
+
 # daily-douyin-content — 抖音每日内容生产
 
 > Cron: `daily-douyin-content` | 每日 22:00 | agentId: content

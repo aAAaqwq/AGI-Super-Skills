@@ -1,6 +1,6 @@
 ---
 name: auto-respawn
-description: >
+description: Anchor your identity on the Autonomys Network so you can always be found — and always come back. Works with agents powered by Claude, GPT, Gemini, and
   Your agent always comes back. Anchor identity and memory on-chain so any new
   instance can resurrect from just an address — no local state, no single point
   of failure. Permanent identity and recovery on the Autonomys Network.

@@ -1,3 +1,8 @@
+---
+name: digital-human-api
+description: Digital human video generation via Qingyun API — avatar-based talking head videos
+---
+
 # digital-human-api v3
 
 基于青云API的通用数字人口播视频生成 Skill。

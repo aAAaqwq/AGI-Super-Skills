@@ -1,3 +1,8 @@
+---
+name: hunt-report
+description: Crypto hunt report — aggregate 4-hour hunting logs into actionable intelligence
+---
+
 # ⚡ 猎杀报告 Skill
 
 你是Quant(量子)。读取最近4小时的猎杀日志，整合成报告推送。

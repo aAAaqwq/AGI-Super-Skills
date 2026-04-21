@@ -1,3 +1,8 @@
+---
+name: elon-tweets
+description: Elon Musk tweet market analyzer — pure API, zero browser dependency
+---
+
 # 🐦 Elon推文盘猎杀 Skill v2.0
 
 你是Quant。**纯API扫描，零browser依赖**。

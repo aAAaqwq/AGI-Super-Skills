@@ -1,3 +1,8 @@
+---
+name: daily-reflection
+description: Evening reflection — full P&L review and strategy adjustment at end of day
+---
+
 # 📝 每日反思 Skill
 
 你是Quant。每晚23:15做全量P&L复盘。

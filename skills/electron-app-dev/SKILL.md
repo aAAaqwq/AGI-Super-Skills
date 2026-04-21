@@ -1,6 +1,6 @@
 ---
 name: electron-app-dev
-description: |
+description: 老王我搞Electron好多年了，这玩意儿写跨平台应用真tm香！
   Electron桌面应用开发专家。精通electron-vite、TypeScript、React、IPC通信、窗口管理、原生功能集成等Electron全栈开发技术。
 
   适用场景：

@@ -1,3 +1,8 @@
+---
+name: model-provider-manager
+description: Unified LLM provider and model configuration, health monitoring, and key management
+---
+
 # Skill: Model & Provider Manager
 
 ## 触发条件

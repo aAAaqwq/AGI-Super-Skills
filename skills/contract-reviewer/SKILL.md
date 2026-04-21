@@ -1,6 +1,6 @@
 ---
 name: contract-reviewer
-description: >
+description: Review any business contract for risks, gaps, and unfavorable terms. Outputs a structured risk report
   Review business contracts for risks, missing clauses, unfavorable terms, and compliance gaps.
   Use when analyzing NDAs, MSAs, SaaS agreements, vendor contracts, SOWs, or employment agreements.
   Generates a structured risk report with recommendations. Built by AfrexAI.

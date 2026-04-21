@@ -1,3 +1,8 @@
+---
+name: qingyun-api
+description: Qingyun unified API — image generation, video, TTS, and embedding via single gateway
+---
+
 # qingyun-api Skill
 
 青云聚合API多模态调用 Skill — 覆盖生图、生视频、语音、Embedding 等能力。
