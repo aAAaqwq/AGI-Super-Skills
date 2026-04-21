@@ -1,6 +1,6 @@
 ---
 name: web-content-capture
-description: |
+description: 为内容生产提供**网页截图和素材采集**能力。所有内容生成类 skill 在素材阶段应调用本 skill。
   网页内容截图与素材采集。优先使用OpenClaw browser（保持登录态），备选Playwright（公开页面）。
   用法: (1) 文章调研时采集GitHub/Reddit/X等平台截图 (2) 获取社交媒体讨论素材 (3) 抓取网页关键内容作为配图。
   Trigger: "截图", "采集素材", "web capture", "screenshot", "爬取内容", "获取素材", "素材采集".

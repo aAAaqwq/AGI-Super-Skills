@@ -1,3 +1,8 @@
+---
+name: workspace-directory-manager
+description: Workspace directory manager — maintain cleanliness of ~/.openclaw/ and ~/clawd/
+---
+
 # Skill: OpenClaw & Workspace Directory Manager
 
 ## 触发条件

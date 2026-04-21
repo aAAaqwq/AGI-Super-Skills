@@ -1,3 +1,8 @@
+---
+name: virtual-singer-mv-script
+description: Virtual singer MV script generator — audio analysis to video storyboard pipeline
+---
+
 # 🎬 Virtual Singer MV Script Generator
 
 > 为虚拟歌手生成完整的 MV 分镜剧本 — 从歌词/音频到可执行的视频制作蓝图

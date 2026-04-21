@@ -1,6 +1,6 @@
 ---
 name: tracking-crypto-derivatives
-description: |
+description: Comprehensive derivatives market analysis across centralized and decentralized exchanges. This skill aggregates funding rates, open interest, liquidat
   Track cryptocurrency futures, options, and perpetual swaps with funding rates, open interest, liquidations, and comprehensive derivatives market analysis.
   Use when monitoring derivatives markets, analyzing funding rates, tracking open interest, finding liquidation levels, or researching options flow.
   Trigger with phrases like "funding rate", "open interest", "perpetual swap", "futures basis", "liquidation levels", "options flow", "put call ratio", "derivatives analysis", or "BTC perps".

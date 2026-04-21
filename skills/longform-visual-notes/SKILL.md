@@ -1,6 +1,6 @@
 ---
 name: longform-visual-notes
-description: |
+description: MediaClaw内容生产的核心配图skill。当有长篇文章需要转化为可传播的视觉笔记时调用。
   长文知识提取转图Skill。将深度长文降维提取核心逻辑，生成3-5张高真实感、含密集中文文字信息的视觉笔记图。
   使用qingyun-api的gemini-3-pro-image模型生成。
   用法: (1) content-ops-toolkit配图阶段调用 (2) daily-gzh-content/daily-xhs-content/daily-douyin-content配图

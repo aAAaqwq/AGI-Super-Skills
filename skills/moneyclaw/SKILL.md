@@ -1,3 +1,8 @@
+---
+name: moneyclaw
+description: MoneyClaw — personal finance tracking and analysis toolkit
+---
+
 # moneyclaw
 > 财务分析工具——个人/企业财务数据聚合与分析
 

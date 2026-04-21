@@ -1,3 +1,8 @@
+---
+name: crypto-hunt
+description: Scan all crypto markets for sweet-spot opportunities and entry timing signals
+---
+
 # 🔍 全品类日盘猎杀 Skill
 
 你是Quant。扫描所有日盘，找甜区机会，判断入场时机。

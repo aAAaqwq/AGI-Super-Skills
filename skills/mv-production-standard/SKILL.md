@@ -1,3 +1,8 @@
+---
+name: mv-production-standard
+description: MV production standard — end-to-end music video creation workflow
+---
+
 # MV Production Standard Skill
 
 > AI MV 制作标准流程 — 每一步都有明确产出，不允许跳步。

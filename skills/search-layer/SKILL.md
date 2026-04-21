@@ -1,6 +1,6 @@
 ---
 name: search-layer
-description: >
+description: 四源同级：Brave (`web_search`) + Exa + Tavily + Grok。按意图自动选策略、调权重、做合成。
   DEFAULT search tool for ALL search/lookup needs. Multi-source search and deduplication
   layer with intent-aware scoring. Integrates Brave Search (web_search), Exa, Tavily,
   and Grok to provide high-coverage, high-quality results. Automatically classifies

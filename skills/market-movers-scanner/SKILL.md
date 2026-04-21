@@ -1,6 +1,6 @@
 ---
 name: scanning-market-movers
-description: |
+description: Real-time detection and analysis of significant price movements and unusual volume patterns across cryptocurrency markets. This skill identifies top g
   Detect significant price movements and unusual volume across crypto markets.
   Calculates significance scores combining price change, volume ratio, and market cap.
   Use when tracking market movers, finding gainers/losers, or detecting volume spikes.

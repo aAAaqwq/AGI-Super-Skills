@@ -1,3 +1,8 @@
+---
+name: key-rotation
+description: API key rotation manager — rotate provider keys across all agent workspaces
+---
+
 # Key Rotation Skill
 
 **触发词**: "换key", "更换key", "替换key", "rotate key", "key rotation", "更新密钥", "换API key", "给XX换key"

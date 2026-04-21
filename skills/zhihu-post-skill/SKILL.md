@@ -1,3 +1,8 @@
+---
+name: zhihu-post-skill
+description: Zhihu article publishing automation — format and post to Zhihu platform
+---
+
 # zhihu-post-skill
 > 知乎文章发布——知乎平台内容创作与发布自动化
 

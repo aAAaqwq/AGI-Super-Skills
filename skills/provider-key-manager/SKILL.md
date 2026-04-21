@@ -1,3 +1,8 @@
+---
+name: provider-key-manager
+description: Provider key manager — rotate and sync API keys across multi-agent workspaces
+---
+
 # Provider Key Manager
 
 > 一条命令更换供应商 API Key，全员生效，零遗漏。

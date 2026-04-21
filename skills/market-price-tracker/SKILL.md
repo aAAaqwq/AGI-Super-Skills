@@ -1,6 +1,6 @@
 ---
 name: tracking-crypto-prices
-description: |
+description: Foundation skill providing real-time and historical cryptocurrency price data. This skill is the data layer for the crypto plugin ecosystem - 10+ othe
   Track real-time cryptocurrency prices across exchanges with historical data and alerts.
   Provides price data infrastructure for dependent skills (portfolio, tax, DeFi, arbitrage).
   Use when checking crypto prices, monitoring markets, or fetching historical price data.
