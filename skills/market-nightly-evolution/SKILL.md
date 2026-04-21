@@ -1,3 +1,8 @@
+---
+name: market-nightly-evolution
+description: Nightly market evolution report — overnight market analysis and strategy prep
+---
+
 # Market Nightly Evolution Skill
 
 > 用于小market agent夜间深度进化 cron 任务。隔离 session 工作空间 ≠ ~/clawd/market/，必须使用绝对路径。

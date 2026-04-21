@@ -1,6 +1,6 @@
 ---
 name: startup-business-analyst-business-case
-description: |
+description: Generate a comprehensive, investor-ready business case document covering market opportunity, solution, competitive landscape, financial projections, t
   Generate comprehensive investor-ready business case document with
   market, solution, financials, and strategy
 allowed-tools: Read Write Edit Glob Grep Bash WebSearch WebFetch

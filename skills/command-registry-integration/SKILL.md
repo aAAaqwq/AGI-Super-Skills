@@ -1,3 +1,8 @@
+---
+name: command-registry-integration
+description: Integrate new chat commands into OpenClaw's formal command registry
+---
+
 # command-registry-integration
 
 Integrate a new chat command into OpenClaw’s formal command registry and command handling chain so it appears in `/commands`, supports native slash registration where applicable, and avoids brittle text-intercept hacks.

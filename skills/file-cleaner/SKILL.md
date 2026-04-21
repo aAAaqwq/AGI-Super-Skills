@@ -1,3 +1,8 @@
+---
+name: file-cleaner
+description: Automated file cleanup and organization for workspace maintenance
+---
+
 # file-cleaner
 > 文件清理与归档——自动化 workspace 整理，清理过期/冗余文件
 

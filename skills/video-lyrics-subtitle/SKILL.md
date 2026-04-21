@@ -1,3 +1,8 @@
+---
+name: video-lyrics-subtitle
+description: Video lyrics subtitle generator — create synchronized subtitle files for music videos
+---
+
 # 🎵 视频歌词字幕生成 Skill
 
 > 视频歌词字幕生成引擎：从歌词文本 + 时间轴 → SRT/ASS 字幕 → FFmpeg 烧录到视频

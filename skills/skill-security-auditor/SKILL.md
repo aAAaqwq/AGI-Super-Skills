@@ -1,6 +1,6 @@
 ---
 name: skill-security-auditor
-description: >
+description: Scan and audit AI agent skills for security risks before installation. Produces a
   Security audit and vulnerability scanner for AI agent skills before installation.
   Use when: (1) evaluating a skill from an untrusted source, (2) auditing a skill
   directory or git repo URL for malicious code, (3) pre-install security gate for

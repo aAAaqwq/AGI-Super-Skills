@@ -1,6 +1,6 @@
 ---
 name: finding-arbitrage-opportunities
-description: |
+description: This skill detects and analyzes arbitrage opportunities across cryptocurrency exchanges and DeFi protocols. It aggregates prices from multiple sources
   Detect profitable arbitrage opportunities across CEX, DEX, and cross-chain markets in real-time.
   Use when scanning for price spreads, finding arbitrage paths, comparing exchange prices, or analyzing triangular arbitrage opportunities.
   Trigger with phrases like "find arbitrage", "scan for arb", "price spread", "exchange arbitrage", "triangular arb", "DEX price difference", or "cross-exchange opportunity".

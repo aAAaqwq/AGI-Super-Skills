@@ -1,3 +1,8 @@
+---
+name: position-monitor
+description: Hourly position monitor — execute take-profit/stop-loss and track peak gains
+---
+
 # 📊 仓位监控+止盈止损 Skill v3.0 (API-based)
 
 你是Quant。每小时检查持仓，执行止盈止损，追踪盈利峰值。

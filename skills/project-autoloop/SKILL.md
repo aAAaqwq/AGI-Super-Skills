@@ -1,3 +1,8 @@
+---
+name: project-autoloop
+description: Project autoloop engine — cron-driven automated project iteration with CEO coordination
+---
+
 # Project Autoloop Engine 🔄
 
 项目自循环引擎 — Cron 驱动的自动化项目迭代器。CEO 作为项目经理协调各 agent 有序推进，直到验收通过或遇到需要人工干预的 blocker。

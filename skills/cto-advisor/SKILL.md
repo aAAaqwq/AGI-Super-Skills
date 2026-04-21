@@ -1,6 +1,6 @@
 ---
 name: cto-advisor
-description: >
+description: Strategic frameworks and tools for technology leadership, team scaling, and engineering excellence
   Technical leadership guidance for engineering teams, architecture decisions,
   and technology strategy. Includes tech debt analyzer, team scaling calculator,
   engineering metrics frameworks, technology evaluation tools, and ADR

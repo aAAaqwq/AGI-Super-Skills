@@ -3,7 +3,7 @@ created: 2025-12-16
 modified: 2025-12-16
 reviewed: 2026-02-08
 name: shell-expert
-description: |
+description: Expert knowledge for shell scripting, command-line tools, and automation with focus on robust, portable, and efficient solutions
   Shell scripting expertise, command-line tools, automation, and cross-platform
   scripting best practices. Covers shell script development, CLI tool usage,
   and system automation with bash, zsh, and POSIX shell.

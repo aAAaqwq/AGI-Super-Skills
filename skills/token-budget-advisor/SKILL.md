@@ -1,6 +1,6 @@
 ---
 name: token-budget-advisor
-description: >-
+description: Intercept the response flow to offer the user a choice about response depth **before** Claude answers
   Offers the user an informed choice about how much response depth to
   consume before answering. Use this skill when the user explicitly
   wants to control response length, depth, or token budget.

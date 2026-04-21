@@ -1,6 +1,6 @@
 ---
 name: financial-analyst
-description: >
+description: Production-ready financial analysis toolkit providing ratio analysis, DCF valuation, budget variance analysis, and rolling forecast construction. Desi
   Performs financial ratio analysis, DCF valuation, budget variance analysis,
   and rolling forecast construction for strategic decision-making
 license: MIT + Commons Clause

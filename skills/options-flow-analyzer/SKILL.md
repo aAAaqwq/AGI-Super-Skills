@@ -1,6 +1,6 @@
 ---
 name: analyzing-options-flow
-description: |
+description: This skill provides automated assistance for the described functionality
   Track crypto options flow to identify institutional positioning and market sentiment.
   Use when tracking institutional options flow.
   Trigger with phrases like "track options flow", "analyze derivatives", or "check institutional".

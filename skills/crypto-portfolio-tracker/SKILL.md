@@ -1,6 +1,6 @@
 ---
 name: tracking-crypto-portfolio
-description: |
+description: This skill provides comprehensive cryptocurrency portfolio tracking with
   Track cryptocurrency portfolio with real-time valuations, allocation analysis, and P&L tracking.
   Use when checking portfolio value, viewing holdings breakdown, analyzing allocations, or exporting portfolio data.
   Trigger with phrases like "show my portfolio", "check crypto holdings", "portfolio allocation", "track my crypto", or "export portfolio".

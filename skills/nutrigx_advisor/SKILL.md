@@ -1,3 +1,8 @@
+---
+name: nutrigx_advisor
+description: Nutrigenomics advisor — personalized nutrition guidance based on genetic profiles
+---
+
 # NutriGx Advisor — Personalised Nutrition from Genetic Data
 
 **Skill ID**: `nutrigx-advisor`  

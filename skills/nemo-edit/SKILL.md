@@ -2,7 +2,7 @@
 name: nemo-edit
 version: 1.0.0
 displayName: Nemo Edit — AI Video Editor for Fast, Effortless Video Editing Online
-description: >
+description: Most video editing tools make a promise they don't keep: "easy video editing." Then you spend 45 minutes figuring out how to sync audio, another 30 mi
   Nemo Edit is a powerful AI-powered online video editing skill from NemoVideo, designed for content creators, social media managers, small business owners, marketers, educators, YouTubers, TikTokers, Instagram Reels creators, and anyone who needs to produce polished, professional videos without spending hours in complex editing software. With Nemo Edit, you can trim and cut footage, merge clips, add subtitles and captions automatically, adjust speed and pacing, apply color correction, insert music and sound effects, and export optimized videos for any platform — all from a simple, intuitive interface powered by AI that automates the tedious work so you can focus on telling your story.
 
   Nemo Edit handles every core editing task in one place: upload your raw footage, let AI analyze and suggest cuts, add auto-generated captions in 50+ languages, apply your brand colors and logo, choose from a library of royalty-free music, and export in minutes. Whether you're editing a 15-second TikTok, a 10-minute YouTube tutorial, or a 2-minute Instagram Reel, Nemo Edit adapts to your workflow and produces broadcast-quality output without requiring a professional editing background.

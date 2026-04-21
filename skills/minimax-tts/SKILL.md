@@ -1,3 +1,8 @@
+---
+name: minimax-tts
+description: Text-to-speech synthesis via MiniMax WebSocket API
+---
+
 # MiniMax TTS (WebSocket)
 
 ## 触发条件
