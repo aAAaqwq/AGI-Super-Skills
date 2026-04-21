@@ -102,7 +102,6 @@ AGI-Super-Team/
 ├── skills/           # 737 个技能（扁平结构）
 ├── workflows/        # 30 个标准工作流
 ├── cookbook/         # 5 个深度教程
-├── docs/             # 分类索引、迁移文档
 ├── CHARTER.md        # 团队宪章
 └── STARTUP.md        # 快速开始指南
 ```
