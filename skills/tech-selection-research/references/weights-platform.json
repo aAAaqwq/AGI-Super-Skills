@@ -1,0 +1,15 @@
+{
+  "scenario": "Platform engineering or shared infrastructure",
+  "weights": {
+    "architecture_fit": 15,
+    "operability_and_observability": 15,
+    "security_and_compliance": 15,
+    "ecosystem_maturity": 15,
+    "migration_cost": 10,
+    "team_capability_fit": 10,
+    "long_term_evolution": 10,
+    "business_fit": 5,
+    "delivery_speed": 3,
+    "runtime_and_scalability": 2
+  }
+}

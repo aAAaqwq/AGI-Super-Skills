@@ -1,0 +1,15 @@
+{
+  "scenario": "Core business system",
+  "weights": {
+    "business_fit": 15,
+    "architecture_fit": 15,
+    "operability_and_observability": 15,
+    "security_and_compliance": 15,
+    "team_capability_fit": 10,
+    "ecosystem_maturity": 10,
+    "migration_cost": 10,
+    "delivery_speed": 5,
+    "runtime_and_scalability": 3,
+    "long_term_evolution": 2
+  }
+}
