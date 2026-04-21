@@ -5,16 +5,16 @@
 <h1 align="center">AGI Super Team</h1>
 
 <p align="center">
-  <strong>700+ AI 技能 · 12 位 C-Suite Agent · 86 个思维框架</strong><br/>
+  <strong>737 AI 技能 · 12 位 C-Suite Agent · 29 个思维框架</strong><br/>
   几分钟内打造你的 AI 原生公司
 </p>
 
 <p align="center">
   <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/Powered%20by-OpenClaw-blue?logo=github" alt="OpenClaw"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Skills-700%2B-blueviolet" alt="Skills">
+  <img src="https://img.shields.io/badge/Skills-737-blueviolet" alt="Skills">
   <img src="https://img.shields.io/badge/Agents-12-orange" alt="Agents">
-  <img src="https://img.shields.io/badge/Frameworks-86-cyan" alt="Frameworks">
+  <img src="https://img.shields.io/badge/Frameworks-29-cyan" alt="Frameworks">
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@
 
 一个**即插即用的 AI 团队模板** — 基于 [OpenClaw](https://github.com/openclaw/openclaw) 部署完整的虚拟 C-Suite。每个 Agent 都有**精神导师**（Elon Musk、Jensen Huang、Warren Buffett...）塑造其性格和决策方式。
 
-**700+ 技能 · 12 个 Agent · 86 个思维框架 · 30 个工作流。** 零配置 — 复制、定制、发布。
+**737 技能 · 12 个 Agent · 29 个思维框架 · 30 个工作流。** 零配置 — 复制、定制、发布。
 
 ## 🏛️ 架构
 
@@ -99,7 +99,7 @@ cp -r skills/api-design/ ~/.openclaw/workspace-main/skills/
 ```
 AGI-Super-Team/
 ├── agents/           # 12 个 C-Suite Agent
-├── skills/           # 700+ 技能（扁平结构）
+├── skills/           # 737 个技能（扁平结构）
 ├── workflows/        # 30 个标准工作流
 ├── cookbook/         # 5 个深度教程
 ├── docs/             # 分类索引、迁移文档

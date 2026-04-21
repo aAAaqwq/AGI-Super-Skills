@@ -5,16 +5,16 @@
 <h1 align="center">AGI Super Team</h1>
 
 <p align="center">
-  <strong>700+ AI Skills · 12 C-Suite Agents · 86 Thinking Frameworks</strong><br/>
+  <strong>737 AI Skills · 12 C-Suite Agents · 29 Thinking Frameworks</strong><br/>
   Build your AI-native company in minutes.
 </p>
 
 <p align="center">
   <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/Powered%20by-OpenClaw-blue?logo=github" alt="OpenClaw"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Skills-700%2B-blueviolet" alt="Skills">
+  <img src="https://img.shields.io/badge/Skills-737-blueviolet" alt="Skills">
   <img src="https://img.shields.io/badge/Agents-12-orange" alt="Agents">
-  <img src="https://img.shields.io/badge/Frameworks-86-cyan" alt="Frameworks">
+  <img src="https://img.shields.io/badge/Frameworks-29-cyan" alt="Frameworks">
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@
 
 A **plug-and-play AI team template** — deploy a complete virtual C-Suite using [OpenClaw](https://github.com/openclaw/openclaw). Each agent has a **spirit mentor** (Elon Musk, Jensen Huang, Warren Buffett...) that shapes their personality and decision-making.
 
-**700+ skills. 12 agents. 86 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
+**737 skills. 12 agents. 29 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
 
 ## 🏛️ Architecture
 
@@ -74,7 +74,7 @@ You (Founder / Chairman)
 
 ## 🧠 Thinking Frameworks
 
-86 distilled thinking skills based on real-world mentors — mental models, decision frameworks, classic quotes with sources:
+29 distilled thinking skills based on real-world mentors — mental models, decision frameworks, classic quotes with sources:
 
 ```bash
 # Inject a mentor's thinking into any agent
@@ -159,7 +159,7 @@ AGI-Super-Team/
 │   ├── ceo/          # SOUL.md · AGENTS.md · TOOLS.md
 │   ├── cto/          # ...
 │   └── README.md     # Architecture diagram & skill matrix
-├── skills/           # 700+ skills (flat structure, each with SKILL.md)
+├── skills/           # 737 skills (flat structure, each with SKILL.md)
 │   └── README.md     # Full catalog
 ├── workflows/        # 30 standard operating procedures
 ├── cookbook/         # 5 in-depth learning guides
