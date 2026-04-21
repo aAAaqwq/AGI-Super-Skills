@@ -81,6 +81,11 @@ skills/*/banner.png
 skills/*/promo.gif
 skills/openssf-security
 
+# Large data files
+skills/*/data/*.gz
+skills/*/data/*.zip
+skills/qingyun-api/docs/api-*.md
+
 # Python
 **/__pycache__/
 **/node_modules/
