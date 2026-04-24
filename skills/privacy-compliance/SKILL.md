@@ -1,6 +1,6 @@
 ---
 name: privacy-compliance
-description: >
+description: Tools and guidance for multi-regulation privacy compliance across 9 major global privacy frameworks, DPA review, and data subject request lifecycle ma
   Multi-regulation privacy compliance navigator. Use for GDPR, CCPA, LGPD,
   POPIA, PIPEDA, PDPA, Privacy Act, PIPL, UK GDPR compliance assessments,
   DPA reviews, and data subject request management.

@@ -1,3 +1,8 @@
+---
+name: multi-search-engine
+description: Multi-engine web search — aggregate results from multiple search providers
+---
+
 # multi-search-engine
 > 多搜索引擎聚合查询——17 个搜索引擎一站式检索
 

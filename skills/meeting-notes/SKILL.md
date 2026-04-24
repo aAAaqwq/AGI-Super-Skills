@@ -5,7 +5,7 @@
 
 # Basic Information
 name: meeting-notes
-description: ">"
+description: description: ">"
 version: "1.0.0"
 author: Claude Office Skills Contributors
 license: MIT

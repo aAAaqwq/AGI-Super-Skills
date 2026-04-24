@@ -1,6 +1,6 @@
 ---
 name: ads
-description: >
+description: Comprehensive ad account analysis across all major platforms (Google, Meta
   Comprehensive paid advertising audit and optimization for any business type.
   Performs full multi-platform audits (Google Ads, Meta Ads, LinkedIn Ads, TikTok
   Ads, Microsoft Ads), single-platform deep analysis, conversion tracking health

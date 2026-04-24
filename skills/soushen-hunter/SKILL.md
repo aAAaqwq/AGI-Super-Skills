@@ -1,3 +1,8 @@
+---
+name: soushen-hunter
+description: SouShen content hunter — discover trending topics via Bing search aggregation
+---
+
 # soushen-hunter
 > 搜神猎手——基于 Playwright 的高性能 Bing 搜索与深度网页信息提取
 

@@ -1,6 +1,6 @@
 # 🛠️ Skills Catalog
 
-> **773 skills** ready to deploy · [← Back to main README](../README.md)
+> **741 skills** ready to deploy · [← Back to main README](../README.md)
 
 ---
 
@@ -8,35 +8,34 @@
 
 | Category | Skills |
 |:---------|-------:|
-| 🔧 Development | 99 |
-| 💰 Trading & Finance | 48 |
-| 📝 Content & Writing | 49 |
-| 📈 Marketing & SEO | 34 |
-| 📱 Chinese Platforms | 31 |
+| 🔧 Development | 88 |
+| 💰 Trading & Finance | 44 |
+| 📝 Content & Writing | 47 |
+| 📈 Marketing & SEO | 33 |
+| 📱 Chinese Platforms | 29 |
 | 🔌 SaaS Integrations | 47 |
-| 💬 Communication | 48 |
+| 💬 Communication | 47 |
 | 🎬 Video & Media | 37 |
-| 🤖 AI Agent Patterns | 62 |
-| 📊 Data & Analytics | 27 |
-| 🏢 Business & Strategy | 50 |
+| 🤖 AI Agent Patterns | 61 |
+| 📊 Data & Analytics | 26 |
+| 🏢 Business & Strategy | 46 |
 | ⚙️ DevOps & Infra | 20 |
-| ⚙️ OpenClaw Tools | 23 |
+| ⚙️ OpenClaw Tools | 19 |
 | 🧬 Bioinformatics | 12 |
 | 🧠 Thinking Frameworks | 31 |
-| 🧩 Other | 155 |
-| **Total** | **773** |
+| 🧩 Other | 154 |
+| **Total** | **741** |
 
 ---
 
 ## 📋 Full Listing
 
-### 🔧 Development (99)
+### 🔧 Development (88)
 
 | Skill | Description |
 |:------|:------------|
 | ⭐ [`api-design`](./api-design/) | REST API design patterns including resource naming, status codes, pagination, filtering, e |
 | [`api-design-patterns`](./api-design-patterns/) | Comprehensive API design patterns covering REST, GraphQL, gRPC, versioning, authentication |
-| [`api-designer`](./api-designer/) | Design, document, and implement RESTful/GraphQL APIs with best practices. Use when: (1) cr |
 | [`api-gateway`](./api-gateway/) | Passthrough proxy for direct access to third-party APIs using managed OAuth connections, p |
 | [`api-provider-setup`](./api-provider-setup/) | 添加和配置第三方 API 中转站供应商到 OpenClaw。当用户需要添加新的 API 供应商、配置中转站、设置自定义模型端点时使用此技能。支持 Anthropic 兼容和 Ope |
 | [`api-provider-status`](./api-provider-status/) | 查询 API 供应商的余额、用量与可用状态，支持多供应商监控与定时汇报。 |
@@ -44,32 +43,26 @@
 | [`api-toolkit`](./api-toolkit/) | 通用 REST API 工具包，用于快速接入第三方服务、调试端点和构建自动化流程。 |
 | [`apify-competitor-intelligence`](./apify-competitor-intelligence/) | Analyze competitor strategies, content, pricing, ads, and market positioning across Google |
 | [`apify-ultimate-scraper`](./apify-ultimate-scraper/) | Universal AI-powered web scraper for any platform. Scrape data from Instagram, Facebook, T |
-| [`architecture-decision`](./architecture-decision/) | Systematically evaluate architecture decisions, document trade-offs, and select appropriat |
 | [`architecture-decision-records`](./architecture-decision-records/) | Write and maintain Architecture Decision Records (ADRs) following best practices for techn |
 | [`backend-development`](./backend-development/) | 老王我是后端通才，啥后端技术都能搞！但你得告诉老王你想用啥语言，别tm让老王我瞎猜！ |
 | [`backtesting-frameworks`](./backtesting-frameworks/) | Build robust backtesting systems for trading strategies with proper handling of look-ahead |
 | [`bat-cat`](./bat-cat/) | A cat clone with syntax highlighting, line numbers, and Git integration - a modern replace |
-| [`claude-code-control`](./claude-code-control/) | Control Claude Code programmatically through Terminal.app windows on macOS |
-| [`claude-code-controller`](./claude-code-controller/) | Orchestrate Claude Code CLI as a supervised execution worker with ECC-aware context, small |
 | [`claude-code-expert`](./claude-code-expert/) | Especialista profundo em Claude Code - CLI da Anthropic. Maximiza produtividade com atalho |
 | [`claude-code-runner`](./claude-code-runner/) | Execute programming tasks via Claude Code using PTY-based invocation. Handles non-TTY envi |
 | [`cli-developer`](./cli-developer/) | Use when building CLI tools, implementing argument parsing, or adding interactive prompts. |
-| [`code-material-gen`](./code-material-gen/) | | |
-| [`code-moment-codex-switch`](./code-moment-codex-switch/) | **状态**: TODO — 目录已创建，待实现 |
+| [`code-material-gen`](./code-material-gen/) | 当素材需要**全中文、手写字体、字迹清晰、可复现**时使用。替代API生图方案（longform-visual-notes），不消耗任何API额度。 |
+| [`code-moment-codex-switch`](./code-moment-codex-switch/) | Smart switch between Claude Code and Codex — auto-select the optimal coding agent |
 | ⭐ [`code-review`](./code-review/) | AI code review for PR or local changes |
 | [`code-review-quality`](./code-review-quality/) | Conduct context-driven code reviews focusing on quality, testability, and maintainability. |
 | [`codex-cc-guide`](./codex-cc-guide/) | 如何用 ACP sessions_spawn 调用 Claude Code / Codex 写代码 — 小code 团队编码任务指南 |
 | [`coding-agent-backup`](./coding-agent-backup/) | Delegate coding tasks to Codex, Claude Code, or Pi agents via background process. Use when |
-| [`coding-agent-orchestrator`](./coding-agent-orchestrator/) |  |
+| [`coding-agent-orchestrator`](./coding-agent-orchestrator/) | Orchestrate and dispatch coding tasks across multiple AI coding agents |
 | [`conventional-commits`](./conventional-commits/) | Format commit messages using the Conventional Commits specification. Use when creating com |
 | [`db-migrator`](./db-migrator/) | Database schema migration, versioning, and rollback management for SQL and NoSQL databases |
 | [`digital-human-api`](./digital-human-api/) | Digital human video generation via Qingyun API — avatar-based talking head videos |
 | [`distributed-tracing`](./distributed-tracing/) | Implement distributed tracing with Jaeger and Tempo for request flow visibility across mic |
 | [`doc-coauthoring`](./doc-coauthoring/) | Guide users through a structured workflow for co-authoring documentation. Use when user wa |
-| [`docker-containerization`](./docker-containerization/) | > |
-| [`docker-deployment`](./docker-deployment/) | Docker container deployment with Nginx HTTPS configuration and Cloudflare Tunnel integrati |
 | [`docker-essentials`](./docker-essentials/) | Essential Docker commands and workflows for container management, image operations, and de |
-| [`docker-pro`](./docker-pro/) | [TODO: Complete and informative explanation of what the skill does and when to use it. Inc |
 | [`docx`](./docx/) | Comprehensive document creation, editing, and analysis with support for tracked changes, c |
 | [`docx-perfect`](./docx-perfect/) | Word文档美化与格式化专家。专门用于将Word文档中的文本内容转换为专业表格格式，应用一致的样式（深蓝色表头、斑马纹数据行、边框），支持版本化迭代管理。当用户需要美化Word文档 |
 | [`e2e-automator`](./e2e-automator/) | [TODO: Complete and informative explanation of what the skill does and when to use it. Inc |
@@ -78,11 +71,9 @@
 | [`electron-app-dev`](./electron-app-dev/) | 老王我搞Electron好多年了，这玩意儿写跨平台应用真tm香！ |
 | [`expo-tailwind-setup`](./expo-tailwind-setup/) | Set up Tailwind CSS v4 in Expo with react-native-css and NativeWind v5 for universal styli |
 | [`file-organizer`](./file-organizer/) | Intelligently organizes your files and folders across your computer by understanding conte |
-| [`frontend-design`](./frontend-design/) | Create distinctive, production-grade frontend interfaces with high design quality. Use thi |
 | [`frontend-design-ultimate`](./frontend-design-ultimate/) | Create distinctive, production-grade static sites with React, Tailwind CSS, and shadcn/ui  |
-| [`frontend-development`](./frontend-development/) | 前端页面开发。当用户需要开发 Web 应用、创建 UI 组件、实现交互功能或优化前端性能时使用此技能。 |
 | [`frontend-slides`](./frontend-slides/) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoin |
-| [`full-cycle-skill`](./full-cycle-skill/) | **状态**: TODO — 目录已创建，待实现 |
+| [`full-cycle-skill`](./full-cycle-skill/) | Full-cycle development — from requirements to deployment in one workflow |
 | [`ghost-scan-code`](./ghost-scan-code/) | Ghost Security - SAST code scanner. Finds security vulnerabilities in source code by plann |
 | [`git-workflow`](./git-workflow/) | Git workflow: branches, PR, merge, cleanup |
 | [`github`](./github/) | Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` f |
@@ -108,7 +99,7 @@
 | [`redis-caching`](./redis-caching/) | [TODO: Complete and informative explanation of what the skill does and when to use it. Inc |
 | [`redis-inspect`](./redis-inspect/) | Inspect Redis cache keys, values, and TTLs for debugging. Supports both main cache and sys |
 | [`requesting-code-review`](./requesting-code-review/) | Use when completing tasks, implementing major features, or before merging to verify work m |
-| [`shell-expert`](./shell-expert/) | | |
+| [`shell-expert`](./shell-expert/) | Expert knowledge for shell scripting, command-line tools, and automation with focus on rob |
 | [`skill-creator`](./skill-creator/) | Guide for creating effective skills. This skill should be used when users want to create a |
 | [`skillforge`](./skillforge/) | Intelligent skill router and creator. Analyzes ANY input to recommend existing skills, imp |
 | [`software-architecture-design`](./software-architecture-design/) | Designs system structure across monolith/microservices/serverless. Use when structuring sy |
@@ -117,10 +108,8 @@
 | [`sp-testing-anti-patterns`](./sp-testing-anti-patterns/) | Never test mock behavior. Never add test-only methods to production classes. Understand de |
 | [`sp-using-git-worktrees`](./sp-using-git-worktrees/) | Create isolated git worktrees with smart directory selection and safety verification |
 | [`sql-optimization`](./sql-optimization/) | Universal SQL performance optimization assistant for comprehensive query tuning, indexing  |
-| [`sql-optimization-patterns`](./sql-optimization-patterns/) | Master SQL query optimization, indexing strategies, and EXPLAIN analysis to dramatically i |
-| [`sql-optimizer`](./sql-optimizer/) | [TODO: Complete and informative explanation of what the skill does and when to use it. Inc |
 | [`sql-pro`](./sql-pro/) | Master modern SQL with cloud-native databases, OLTP/OLAP optimization, and advanced query  |
-| [`static-code-analysis`](./static-code-analysis/) | > |
+| [`static-code-analysis`](./static-code-analysis/) | Use automated tools to analyze code without executing it, catching bugs, security issues,  |
 | [`subagent-driven-development`](./subagent-driven-development/) | Use when executing implementation plans with independent tasks in the current session |
 | ⭐ [`systematic-debugging`](./systematic-debugging/) | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixe |
 | [`tailwindcss`](./tailwindcss/) | Tailwind CSS utility-first CSS framework. Use when styling web applications with utility c |
@@ -134,7 +123,7 @@
 | [`web-scraping-automation`](./web-scraping-automation/) | 自动化爬取网站数据和 API 接口。当用户需要抓取网页内容、调用 API、解析数据或创建爬虫脚本时使用此技能。 |
 | [`webapp-testing`](./webapp-testing/) | Toolkit for interacting with and testing local web applications using Playwright. Supports |
 
-### 💰 Trading & Finance (48)
+### 💰 Trading & Finance (44)
 
 | Skill | Description |
 |:------|:------------|
@@ -150,9 +139,8 @@
 | [`crypto-hunt`](./crypto-hunt/) | Scan all crypto markets for sweet-spot opportunities and entry timing signals |
 | [`crypto-portfolio-management`](./crypto-portfolio-management/) | Guide to cryptocurrency portfolio management — asset allocation, rebalancing strategies, r |
 | [`crypto-portfolio-tracker`](./crypto-portfolio-tracker/) | This skill provides comprehensive cryptocurrency portfolio tracking with |
-| [`crypto-signal-generator`](./crypto-signal-generator/) | | |
+| [`crypto-signal-generator`](./crypto-signal-generator/) | Multi-indicator signal generation system that analyzes price action using 7 technical indi |
 | [`ct-monitor`](./ct-monitor/) | CT Monitor — Crypto Intelligence Analyst. Monitors 5000+ KOL tweets, real-time news, RSS f |
-| [`ct-monitor-skill`](./ct-monitor-skill/) | **状态**: TODO — 目录已创建，待实现 |
 | [`daily-portfolio`](./daily-portfolio/) | Morning portfolio review — full position snapshot and daily P&L report |
 | [`daily-reflection`](./daily-reflection/) | Evening reflection — full P&L review and strategy adjustment at end of day |
 | [`defi-risk-assessment`](./defi-risk-assessment/) | Framework for evaluating DeFi protocol risk — smart contract audits, TVL analysis, governa |
@@ -165,47 +153,44 @@
 | [`hunt-report`](./hunt-report/) | Crypto hunt report — aggregate 4-hour hunting logs into actionable intelligence |
 | [`market-ab-test-setup`](./market-ab-test-setup/) | When the user wants to plan, design, or implement an A/B test or experiment. Also use when |
 | [`market-churn-prevention`](./market-churn-prevention/) | Reduce voluntary and involuntary churn through cancel flow design, save offers, exit surve |
-| [`market-movers-scanner`](./market-movers-scanner/) | | |
+| [`market-movers-scanner`](./market-movers-scanner/) | Real-time detection and analysis of significant price movements and unusual volume pattern |
 | [`market-nightly-evolution`](./market-nightly-evolution/) | Nightly market evolution report — overnight market analysis and strategy prep |
 | [`market-price-tracker`](./market-price-tracker/) | Foundation skill providing real-time and historical cryptocurrency price data. This skill  |
 | [`market-research`](./market-research/) | Size markets, analyze competitors, and validate opportunities with practical frameworks an |
 | [`market-sentiment-analyzer`](./market-sentiment-analyzer/) | This skill provides comprehensive cryptocurrency market sentiment analysis by combining mu |
 | [`market-sizing-analysis`](./market-sizing-analysis/) | Use when the user asks to calculate TAM, determine SAM, estimate SOM, size a market, calcu |
-| [`moneyclaw`](./moneyclaw/) | **状态**: TODO — 有 Python 库（lib/），待完善 |
 | [`nano-banana-pro`](./nano-banana-pro/) | Generate/edit images with Nano Banana Pro (Gemini 3 Pro Image). Use for image create/modif |
 | [`news-predictor`](./news-predictor/) | Monitor crypto/macroeconomic news for signals that predict impending price crashes or pump |
 | [`options-flow-analyzer`](./options-flow-analyzer/) | This skill provides automated assistance for the described functionality |
 | [`polymarket-copy-tracker`](./polymarket-copy-tracker/) | Analyze top Polymarket traders for copy trading. Use when asked to find best traders to co |
 | [`polymarket-profit`](./polymarket-profit/) | 围绕 Polymarket 预测市场执行小资金量化交易与收益跟踪策略。 |
-| [`polymarket-skill`](./polymarket-skill/) | **状态**: TODO — 目录已创建，待实现 |
 | [`portfolio-manager`](./portfolio-manager/) | Comprehensive portfolio analysis using Alpaca MCP Server integration to fetch holdings and |
 | [`position-monitor`](./position-monitor/) | Hourly position monitor — execute take-profit/stop-loss and track peak gains |
 | [`quant-analyst`](./quant-analyst/) | Build financial models, backtest trading strategies, and analyze market data. Implements r |
 | [`sperax-defi-guide`](./sperax-defi-guide/) | Comprehensive guide to DeFi yield farming strategies — lending, liquidity provision, auto- |
-| [`synthetic-market-research`](./synthetic-market-research/) | > |
+| [`synthetic-market-research`](./synthetic-market-research/) | You are an expert market researcher who uses LLM-generated synthetic survey responses and  |
 | [`trading-strategy-backtester`](./trading-strategy-backtester/) | Validate trading strategies against historical data before risking real capital. This skil |
-| [`unum-strat`](./unum-strat/) | **状态**: TODO — 目录已创建，待实现 |
 | [`whale-alert-monitor`](./whale-alert-monitor/) | Track large cryptocurrency transactions and whale wallet movements across multiple blockch |
 
-### 📝 Content & Writing (49)
+### 📝 Content & Writing (47)
 
 | Skill | Description |
 |:------|:------------|
 | [`article-material-collect`](./article-material-collect/) | 上层编排 Skill，通过 **Brave Search 发现 → 智能选择浏览器截图** 完成结构化素材采集。 |
 | [`brainstorming`](./brainstorming/) | You MUST use this before any creative work - creating features, building components, addin |
-| [`content-cover-gen`](./content-cover-gen/) | > |
+| [`content-cover-gen`](./content-cover-gen/) | 把文章核心观点变成一张 **3秒能看懂、带文字、有设计感** 的封面图。 |
 | [`content-creator`](./content-creator/) | Create SEO-optimized marketing content with consistent brand voice. Includes brand voice a |
-| [`content-distributor`](./content-distributor/) | **状态**: TODO — 有 demo 输出模板，待实现自动化 |
+| [`content-distributor`](./content-distributor/) | Cross-platform content distribution — one content, multi-platform publishing |
 | [`content-extract`](./content-extract/) | Robust URL-to-Markdown extraction for OpenClaw workflows. Use when the |
-| [`content-factory`](./content-factory/) |  |
+| [`content-factory`](./content-factory/) | Content factory pipeline — topic scoring, drafting, and production at scale |
 | [`content-illustration-strategy`](./content-illustration-strategy/) | 这不是“随便找几张图填空”的 skill。 |
 | [`content-marketer`](./content-marketer/) | You are an elite content marketing strategist specializing in AI-powered content creation, |
-| [`content-ops-toolkit`](./content-ops-toolkit/) | | |
+| [`content-ops-toolkit`](./content-ops-toolkit/) | **先跑通，再精修。不要一上来追求完美。** |
 | [`content-repurposing`](./content-repurposing/) | Content atomization — turn one piece of content into many formats. Covers blog-to-thread,  |
 | [`content-repurposing-engine`](./content-repurposing-engine/) | Turn one piece of content into 10+ formats. Transform blog posts, podcasts, videos, or tal |
 | [`content-research-writer`](./content-research-writer/) | Assists in writing high-quality content by conducting research, adding citations, improvin |
 | [`content-rewriter`](./content-rewriter/) | Cross-platform content repurposer. Takes one piece of content and rewrites it for multiple |
-| [`content-source-aggregator`](./content-source-aggregator/) |  |
+| [`content-source-aggregator`](./content-source-aggregator/) | Aggregate content sources from multiple platforms into a unified content pool |
 | [`content-typography`](./content-typography/) | 这不是“选个字体” skill。 |
 | [`copy-editing`](./copy-editing/) | When the user wants to edit, review, or improve existing marketing copy. Also use when the |
 | [`copywriting`](./copywriting/) | Write, rewrite, or improve marketing copy for homepages, landing pages, pricing pages, fea |
@@ -213,17 +198,15 @@
 | [`domain-name-brainstormer`](./domain-name-brainstormer/) | Generates creative domain name ideas for your project and checks availability across multi |
 | [`geo-content-optimizer`](./geo-content-optimizer/) | Use when the user asks to "optimize for AI", "get cited by ChatGPT", "AI optimization", "a |
 | [`humanize-zh`](./humanize-zh/) | 将AI生成的机械化文本转换为自然、有人情味的人类写作风格 |
-| ⭐ [`humanizer`](./humanizer/) | | |
+| ⭐ [`humanizer`](./humanizer/) | You are a writing editor that identifies and removes signs of AI-generated text to make wr |
 | [`image-enhancer`](./image-enhancer/) | Improves the quality of images, especially screenshots, by enhancing resolution, sharpness |
 | [`image-vision`](./image-vision/) | Image analysis using multimodal vision models. Use when user needs to: (1) Describe what's |
 | [`longform-visual-notes`](./longform-visual-notes/) | MediaClaw内容生产的核心配图skill。当有长篇文章需要转化为可传播的视觉笔记时调用。 |
-| [`media-auto-publisher`](./media-auto-publisher/) |  |
+| [`media-auto-publisher`](./media-auto-publisher/) | Automated media publishing with platform navigation and session management |
 | [`multimodal-gen`](./multimodal-gen/) | 多模态内容生成（图片、视频）。当用户需要生成图片、生成图像、生成视频、AI绘画、AI作图、画一张图、做个视频、文生图、文生视频时使用此技能。自动调用 multimodal-agen |
-| [`planning-with-files`](./planning-with-files/) | **状态**: TODO — 目录已创建，待实现 |
 | [`seo-audit`](./seo-audit/) | Diagnose and audit SEO issues affecting crawlability, indexation, rankings, and organic pe |
 | [`seo-competitor-analysis`](./seo-competitor-analysis/) | Deep SEO competitor analysis — keyword mapping, backlink profiling, content strategy audit |
 | [`seo-content-writer`](./seo-content-writer/) | Write SEO blog posts, articles, landing pages with keyword integration, header optimizatio |
-| [`seo-content-writing`](./seo-content-writing/) | SEO 文章撰写。当用户需要创建搜索引擎优化的内容、撰写营销文案或优化网站内容时使用此技能。 |
 | [`seo-geo`](./seo-geo/) | SEO & GEO (Generative Engine Optimization) for websites. Analyze keywords, generate schema |
 | [`seo-meta-optimizer`](./seo-meta-optimizer/) | Creates optimized meta titles, descriptions, and URL suggestions based on character limits |
 | [`seo-strategy`](./seo-strategy/) | Build and execute an SEO strategy for organic search traffic. Use when planning keyword ta |
@@ -241,16 +224,15 @@
 | [`xhs-content-creator`](./xhs-content-creator/) | Generate Xiaohongshu (小红书/RED) content optimized for the platform''s |
 | [`xhs-writing-coach`](./xhs-writing-coach/) | Coach and generate Xiaohongshu (小红书/RedNote/XHS) note writing. Use when |
 
-### 📈 Marketing & SEO (34)
+### 📈 Marketing & SEO (33)
 
 | Skill | Description |
 |:------|:------------|
-| [`ads`](./ads/) | > |
+| [`ads`](./ads/) | Comprehensive ad account analysis across all major platforms (Google, Meta |
 | [`ads-agent`](./ads-agent/) | AI-агент для управления Facebook рекламой. Вызывай для анализа, оптимизации, создания камп |
-| [`ai-marketing-skills`](./ai-marketing-skills/) | **状态**: TODO — 目录已创建，待实现 |
 | [`ai-marketing-videos`](./ai-marketing-videos/) | Create AI marketing videos for ads, promos, product launches, and brand content. Models: V |
 | [`b2b-saas-marketing`](./b2b-saas-marketing/) | Эксперт по B2B SaaS маркетингу. Используй для стратегий генерации спроса, growth-маркетинг |
-| [`campaign-analytics`](./campaign-analytics/) | > |
+| [`campaign-analytics`](./campaign-analytics/) | Production-grade campaign performance analysis with multi-touch attribution modeling, funn |
 | [`competitive-ads-extractor`](./competitive-ads-extractor/) | Extracts and analyzes competitors' ads from ad libraries (Facebook, LinkedIn, etc.) to und |
 | [`competitor-alternatives`](./competitor-alternatives/) | When the user wants to create competitor comparison or alternative pages for SEO and sales |
 | [`competitor-price-tracker`](./competitor-price-tracker/) | Monitor competitor pricing pages and send alerts when prices change. Track discount patter |
@@ -267,9 +249,9 @@
 | ⭐ [`programmatic-seo`](./programmatic-seo/) | You are an expert in **programmatic SEO strategy**—designing systems that generate |
 | [`query-leads`](./query-leads/) | Search, filter, reports on CRM data |
 | [`roi-analysis`](./roi-analysis/) | Use when calculating marketing ROI on Xiaohongshu, measuring campaign return on investment |
-| [`saas-metrics-coach`](./saas-metrics-coach/) | > |
+| [`saas-metrics-coach`](./saas-metrics-coach/) | Production-ready SaaS metrics toolkit for calculating MRR/ARR, analyzing cohort retention, |
 | [`skill-amazon-ads`](./skill-amazon-ads/) | Amazon Ads API v3 skill for OpenClaw agents. List profiles, manage Sponsored Products camp |
-| [`social-media-management`](./social-media-management/) | | |
+| [`social-media-management`](./social-media-management/) | Create, optimize, analyze, and repurpose social media content across all platforms |
 | [`social-media-poster`](./social-media-poster/) | 社媒内容自动发布 - 支持多平台内容一键发布、定时推送、效果追踪。适用于自媒体、运营，品牌方。 |
 | [`tiktok-growth`](./tiktok-growth/) | TikTok content strategy and video script generator for any niche. Hook formulas, viral scr |
 | [`tiktok-marketing`](./tiktok-marketing/) | TikTok content strategy, video creation workflows, posting optimization, and analytics. Ba |
@@ -277,10 +259,10 @@
 | [`twitter-algorithm-optimizer`](./twitter-algorithm-optimizer/) | Analyze and optimize tweets for maximum reach using Twitter's open-source algorithm insigh |
 | [`twitter-automation`](./twitter-automation/) | Automate Twitter/X tasks via Rube MCP (Composio): posts, search, users, bookmarks, lists,  |
 | [`video-marketing`](./video-marketing/) | When the user wants to plan video marketing, create video scripts, or optimize for short-f |
-| [`x-tweet-fetcher`](./x-tweet-fetcher/) | > |
+| [`x-tweet-fetcher`](./x-tweet-fetcher/) | Fetch tweets from X/Twitter without authentication. Supports tweet content, reply threads, |
 | [`xiaohongshu-growth`](./xiaohongshu-growth/) | 小红书内容创作运营增长综合解决方案。包含爆款内容创作、封面设计、发布优化、数据分析和账号增长策略。当用户需要：(1) 创建小红书爆款内容 (2) 优化账号运营策略 (3) 分析竞品 |
 
-### 📱 Chinese Platforms (31)
+### 📱 Chinese Platforms (29)
 
 | Skill | Description |
 |:------|:------------|
@@ -289,7 +271,6 @@
 | [`daily-douyin-content`](./daily-douyin-content/) | 抖音每日内容生产：选题→创作→封面→质量检查→保存 |
 | [`daily-gzh-content`](./daily-gzh-content/) | 公众号每日内容生产：选题→创作→素材生成→质量检查→保存→发布草稿 |
 | [`daily-xhs-content`](./daily-xhs-content/) | 小红书每日内容生产：选题→创作→配图→质量检查→发布草稿 |
-| [`douyin-creator`](./douyin-creator/) |  |
 | [`douyin-hot-trend`](./douyin-hot-trend/) | 获取抖音热榜/热搜榜数据，包含热门视频、挑战赛、音乐等多领域热门内容，并输出标题、热度值、跳转链接及封面图（如有）。 |
 | [`douyin-publisher`](./douyin-publisher/) | 抖音图文/视频发布（OpenClaw Browser 自动化）：登录检测→内容校验→上传页导航→填标题/正文→上传封面+素材→暂存离开。 |
 | ⭐ [`douyin-smart-publish`](./douyin-smart-publish/) | 抖音创作者平台智能发布（视频/图文）：内容适配→上传→填描述/#话题→封面→存草稿→截图回传确认。默认只存草稿；只有在 Daniel 明确确认后才允许点击发布。覆盖标题(≤55字) |
@@ -297,9 +278,9 @@
 | [`gzh-publisher`](./gzh-publisher/) | 微信公众号统一发布技能：通过 OpenClaw Browser 自动化完成登录、写文章、一键排版、封面、存草稿。 |
 | [`gzh-publisher-skill`](./gzh-publisher-skill/) | 微信公众号统一发布技能：通过 OpenClaw Browser 自动化完成登录、写文章、一键排版、封面、存草稿。 |
 | ⭐ [`influencer-analyzer`](./influencer-analyzer/) | 分析抖音/小红书/B站博主的主页、内容风格、爆款规律。可根据链接、博主名、主题三种方式触发。输出结构化的博主画像和内容风格报告，为内容创作者提供可复制的对标参考。触发词：分析博主、 |
-| [`juejin-publisher-custom`](./juejin-publisher-custom/) | **状态**: TODO — 目录结构已创建（references/scripts/templates），待实现核心功能 |
+| [`juejin-publisher-custom`](./juejin-publisher-custom/) | Custom Juejin (掘金) technical article publishing automation |
 | [`juejin-smart-publish`](./juejin-smart-publish/) | 掘金技术社区智能发布：Markdown编辑器全功能支持。覆盖标题(15-35字)、分类(必选)、标签(1-5个)、封面上传、摘要填写、GFM排版。Playwright自动化+API |
-| [`soushen-hunter`](./soushen-hunter/) |  |
+| [`soushen-hunter`](./soushen-hunter/) | SouShen content hunter — discover trending topics via Bing search aggregation |
 | [`tianyancha-cn`](./tianyancha-cn/) | 企业信息查询 - 天眼查/企查查/爱企查数据查询（Bloomberg 终端中国版） |
 | [`wechat-channel`](./wechat-channel/) | 微信 (WeChat) 与 OpenClaw 的双向集成通道。基于 Wechaty + PadLocal 实现微信消息的接收和发送，支持私聊、群聊、@提及检测、图片/文件传输。当需 |
 | [`wechat-mp-publisher`](./wechat-mp-publisher/) | 微信公众号智能发布全流程：Markdown→微信HTML转换、UEditor排版(15px/#3f3f3f/1.75倍行距)、封面图(900×500头条/200×200次条)、摘要 |
@@ -311,7 +292,6 @@
 | [`weixin-channels-publish`](./weixin-channels-publish/) | 微信视频号助手网页版视频发布全流程。通过浏览器自动化操控 channels.weixin.qq.com 完成登录检测、扫码登录、上传视频、填写描述和短标题、截图确认后发布或保存草稿 |
 | ⭐ [`xhs-publisher`](./xhs-publisher/) | 将 Markdown 文章自动发布到小红书（XHS）草稿箱。支持多图上传（封面+素材）。 |
 | [`xhs-smart-publisher`](./xhs-smart-publisher/) | 小红书智能发布：内容适配→排版→Playwright自动发布/存草稿。覆盖标题公式(≤20字+emoji+数字)、正文排版(空行分段+emoji点缀)、标签策略(热门+长尾3-8个 |
-| [`zhihu-post-skill`](./zhihu-post-skill/) | **状态**: TODO — 目录已创建，待实现 |
 | [`ziliu-publisher`](./ziliu-publisher/) | 字流(Ziliu) - AI驱动的多平台内容分发工具。用于一次创作、智能适配排版、一键分发到16+平台（公众号/知乎/小红书/B站/抖音/微博/X等）。当用户需要多平台发布、内容排 |
 | [`zsxq-publisher`](./zsxq-publisher/) | Publish and manage content on 知识星球 (zsxq.com). Supports talk posts, |
 | [`zsxq-smart-publish`](./zsxq-smart-publish/) | Publish and manage content on 知识星球 (zsxq.com). Supports talk posts, Q&A, long articles, fi |
@@ -368,7 +348,7 @@
 | [`tailored-resume-generator`](./tailored-resume-generator/) | Analyzes job descriptions and generates tailored resumes that highlight relevant experienc |
 | [`todoist-automation`](./todoist-automation/) | Automate Todoist task management, projects, sections, filtering, and bulk operations via R |
 
-### 💬 Communication (48)
+### 💬 Communication (47)
 
 | Skill | Description |
 |:------|:------------|
@@ -399,12 +379,11 @@
 | [`log-activity`](./log-activity/) | Log activity to activities.csv |
 | [`mass-outreach`](./mass-outreach/) | Multi-channel outreach via Telegram/Email/WhatsApp |
 | [`meeting-insights-analyzer`](./meeting-insights-analyzer/) | Analyzes meeting transcripts and recordings to uncover behavioral patterns, communication  |
-| [`meeting-notes`](./meeting-notes/) | > |
+| [`meeting-notes`](./meeting-notes/) | description: "> |
 | [`outbound-email-strategy`](./outbound-email-strategy/) | Comprehensive outbound email strategy skill for cold outreach, email sequences, and multi- |
 | [`qq-email-operator`](./qq-email-operator/) | QQ邮箱操作技能。支持通过 IMAP/SMTP 读取邮件、搜索邮件、回复邮件、发送邮件。凭据通过 pass 安全存储。 |
 | [`team-coordinator`](./team-coordinator/) | 团队协调与智能任务分配。作为高管，将用户任务拆解并分配给最合适的员工 agent 执行，协调多 agent 并行协作，汇总审核产出。 |
-| [`team-foreman`](./team-foreman/) |  |
-| [`team-supervisor`](./team-supervisor/) | 监控多 agent 团队的任务执行状态，自动识别未响应、卡住或未完成任务并催促。 |
+| [`team-foreman`](./team-foreman/) | Team foreman — agent task supervision, progress tracking, and quality enforcement |
 | [`telegram-automation`](./telegram-automation/) | Automate Telegram tasks via Rube MCP (Composio): send messages, manage chats, share photos |
 | [`telegram-check`](./telegram-check/) | Check inbound Telegram messages |
 | [`telegram-contacts`](./telegram-contacts/) | Export/import/lookup Telegram contacts |
@@ -443,7 +422,7 @@
 | [`playwright-automation`](./playwright-automation/) | Playwright 浏览器自动化。用于自动化爬虫、数据采集、表单填写、UI 测试等需要浏览器自动化的场景。无需人工干预，适合 cron 定时任务。 |
 | [`poster-design-generation`](./poster-design-generation/) | Generate professional poster designs using each::sense AI. Create movie posters, event pos |
 | [`pptx`](./pptx/) | Presentation creation, editing, and analysis. When Claude needs to work with presentations |
-| [`relay-image-gen`](./relay-image-gen/) | > |
+| [`relay-image-gen`](./relay-image-gen/) | Multi-provider image generation with automatic priority fallback |
 | [`relay-video-gen`](./relay-video-gen/) | Multi-provider video generation with async polling and automatic model fallback |
 | [`showcase-video-builder`](./showcase-video-builder/) | Build polished showcase and demo videos from screenshots, avatars, and text overlays using |
 | [`slidev-agent-skill`](./slidev-agent-skill/) | Create, edit, theme, build, and export Slidev presentations using a script-first workflow  |
@@ -463,7 +442,7 @@
 | [`virtual-singer-mv-script`](./virtual-singer-mv-script/) | Virtual singer MV script generator — audio analysis to video storyboard pipeline |
 | [`youtube-video-analyzer`](./youtube-video-analyzer/) | This skill performs deep analysis of YouTube videos through **both information channels** |
 
-### 🤖 AI Agent Patterns (62)
+### 🤖 AI Agent Patterns (61)
 
 | Skill | Description |
 |:------|:------------|
@@ -493,12 +472,11 @@
 | [`meta-cognition`](./meta-cognition/) | Meta-cognitive framing for analyze-before-doing, ownership routing, risk gating, minimum-c |
 | [`model-fallback`](./model-fallback/) | 模型自动降级与故障切换。当主模型请求失败、超时、达到速率限制或配额耗尽时，自动切换到备用模型，确保服务连续性。支持多供应商、多优先级的智能模型选择，提供健康监控、自动重试和错误恢复 |
 | [`model-health-check`](./model-health-check/) | 检查已配置模型供应商的连通性、延迟和可用性，用于快速诊断模型侧故障。 |
-| [`model-hierarchy-skill`](./model-hierarchy-skill/) | **状态**: TODO — 目录已创建，待实现 |
+| [`model-hierarchy-skill`](./model-hierarchy-skill/) | Model hierarchy configuration — define fallback chains and model priority |
 | [`model-provider-manager`](./model-provider-manager/) | Unified LLM provider and model configuration, health monitoring, and key management |
 | [`model-usage`](./model-usage/) | Use CodexBar CLI local cost usage to summarize per-model usage for Codex |
 | [`model-usage-linux`](./model-usage-linux/) | Track OpenClaw AI token usage and cost per model on Linux by parsing session JSONL files.  |
 | ⭐ [`multi-agent-architecture`](./multi-agent-architecture/) | 多 Agent 架构设计与智能 Spawn 系统。当需要设计多 Agent 系统、配置专业化 Agent、实现智能任务分发、或优化并发处理能力时使用此技能。 |
-| [`orchestration-workflow`](./orchestration-workflow/) | **状态**: TODO — 目录已创建，待实现 |
 | [`proactive-agent-lite`](./proactive-agent-lite/) | Transform AI agents from task-followers into proactive partners with |
 | [`prompt-optimizer`](./prompt-optimizer/) | Evaluate, optimize, and enhance prompts using 58 proven prompting techniques. Use when use |
 | ⭐ [`ralph`](./ralph/) | Use when the user explicitly asks to use Ralph mode for persistent plan-execute-check-retr |
@@ -530,13 +508,13 @@
 | [`verification-before-completion`](./verification-before-completion/) | Use when about to claim work is complete, fixed, or passing, before committing or creating |
 | [`work-to-skill`](./work-to-skill/) | 工作即技能：每次完成一项有复用价值的工作后，自动评估并封装为可复用 Skill。让团队在工作中持续进化。 |
 
-### 📊 Data & Analytics (27)
+### 📊 Data & Analytics (26)
 
 | Skill | Description |
 |:------|:------------|
 | [`analytics-tracking`](./analytics-tracking/) | Design, audit, and improve analytics tracking systems that produce reliable, decision-read |
 | [`arxiv-automation`](./arxiv-automation/) | Search and monitor arXiv papers. Query by topic, author, or category. Track new papers, do |
-| [`company-analyzer`](./company-analyzer/) |  |
+| [`company-analyzer`](./company-analyzer/) | Analyze company data, financials, and market positioning for business intelligence |
 | [`csv-pipeline`](./csv-pipeline/) | Process, transform, analyze, and report on CSV and JSON data files. Use when the user need |
 | [`dashboard-builder`](./dashboard-builder/) | Build monitoring dashboards that answer real operator questions for Grafana, SigNoz, and s |
 | [`data-analyst`](./data-analyst/) | Data visualization, report generation, SQL queries, and spreadsheet automation. Transform  |
@@ -550,11 +528,10 @@
 | [`grafana-dashboards`](./grafana-dashboards/) | Create and manage production Grafana dashboards for real-time visualization of system and  |
 | [`image-scraper`](./image-scraper/) | Scrape and download all images from a given URL. Takes a URL, extracts image URLs from the |
 | [`kpi-dashboard-design`](./kpi-dashboard-design/) | Design effective KPI dashboards with metrics selection, visualization best practices, and  |
-| [`mineru-extract`](./mineru-extract/) | **状态**: TODO — 目录已创建，待实现 |
+| [`mineru-extract`](./mineru-extract/) | Document extraction using MinerU — PDF and image to structured text |
 | [`ml-engineer`](./ml-engineer/) | Build production ML systems with PyTorch 2.x, TensorFlow, and modern ML frameworks. Implem |
 | [`moltbook-interact`](./moltbook-interact/) | Interact with Moltbook social network for AI agents. Post, reply, browse, and analyze enga |
-| [`multi-search-engine`](./multi-search-engine/) |  |
-| [`orchestra-research-skills`](./orchestra-research-skills/) | **状态**: TODO — 目录已创建，待实现 |
+| [`multi-search-engine`](./multi-search-engine/) | Multi-engine web search — aggregate results from multiple search providers |
 | [`research-engineer`](./research-engineer/) | An uncompromising Academic Research Engineer. Operates with absolute scientific rigor, obj |
 | [`senior-data-engineer`](./senior-data-engineer/) | Data engineering skill for building scalable data pipelines, ETL/ELT systems, and data inf |
 | [`senior-data-scientist`](./senior-data-scientist/) | World-class data science skill for statistical modeling, experimentation, causal inference |
@@ -562,7 +539,7 @@
 | [`web-search`](./web-search/) | 网络搜索与网页内容获取。当用户需要搜索互联网信息、获取网页内容、查找实时数据、进行 websearch 时使用此技能。支持多种搜索工具：WebFetch、Firecrawl ski |
 | [`youtube-knowledge-extractor`](./youtube-knowledge-extractor/) | This skill performs deep analysis of YouTube videos through **both information channels** |
 
-### 🏢 Business & Strategy (50)
+### 🏢 Business & Strategy (46)
 
 | Skill | Description |
 |:------|:------------|
@@ -577,17 +554,16 @@
 | ⭐ [`competitive-analysis`](./competitive-analysis/) | Help users understand and respond to competition. Use when someone is positioning against  |
 | [`contract-and-proposal-writer`](./contract-and-proposal-writer/) | Draft business proposals, SOWs, NDAs, MSAs, and freelance contracts with |
 | [`contract-review`](./contract-review/) | Analyze contracts for risks, check completeness, and provide actionable recommendations. S |
-| [`contract-reviewer`](./contract-reviewer/) | Review any business contract for risks, gaps, and unfavorable terms. Outputs a structured  |
-| [`cto-advisor`](./cto-advisor/) | > |
+| [`cto-advisor`](./cto-advisor/) | Strategic frameworks and tools for technology leadership, team scaling, and engineering ex |
 | [`customs-trade-compliance`](./customs-trade-compliance/) | Codified expertise for customs documentation, tariff classification, duty optimisation, re |
 | [`dependency-auditor`](./dependency-auditor/) | Audit project dependencies for vulnerabilities, license risks, upgrade |
 | [`domestic-acquisition`](./domestic-acquisition/) | 聚焦中国大陆市场客户获取与线索转化的模块化 skills 包索引。用于规划、创建、验收和迭代国内获客相关子模块，如企业线索采集、社媒引流、私域转化、竞品监控、客户画像与触达自动化。 |
 | [`employment-contract-templates`](./employment-contract-templates/) | Create employment contracts, offer letters, and HR policy documents following legal best p |
 | [`expense-tracker`](./expense-tracker/) | Manage expense tracker bot — deploy, check expenses, export data, sync locally |
-| [`financial-analyst`](./financial-analyst/) | > |
+| [`financial-analyst`](./financial-analyst/) | Production-ready financial analysis toolkit providing ratio analysis, DCF valuation, budge |
 | [`financial-calculator`](./financial-calculator/) | Advanced financial calculator with future value tables, present value, discount calculatio |
 | [`financial-tracker`](./financial-tracker/) | Track business income and expenses in structured CSV format. Categorize transactions, moni |
-| [`gdpr-dsgvo-expert`](./gdpr-dsgvo-expert/) | > |
+| [`gdpr-dsgvo-expert`](./gdpr-dsgvo-expert/) | Tools and guidance for EU General Data Protection Regulation (GDPR) and German Bundesdaten |
 | [`healthcare-monitor`](./healthcare-monitor/) | 医疗行业企业融资监控系统。实时监控医疗健康企业的工商变更，识别融资信号，自动推送告警。支持天眼查/企查查数据采集、AI融资判断、多渠道推送。 |
 | [`invoice`](./invoice/) | Manual invoice generation without CRM |
 | [`invoice-generator-agent`](./invoice-generator-agent/) | Automatic invoice generation with CRM integration |
@@ -595,19 +571,16 @@
 | [`legal-advisor`](./legal-advisor/) | Draft privacy policies, terms of service, disclaimers, and legal notices. Creates GDPR-com |
 | [`legal-cog`](./legal-cog/) | Legal demands two things: frontier-level reasoning and precision document generation. Cell |
 | [`legal-review`](./legal-review/) | Review legal documents (NDA, contracts, agreements) for sensitive clauses, risks, and red  |
-| [`legal-risk-assessment`](./legal-risk-assessment/) | > |
+| [`legal-risk-assessment`](./legal-risk-assessment/) | Structured legal risk assessment using a quantitative 5x5 Severity x Likelihood matrix. Sc |
 | [`micro-saas-launcher`](./micro-saas-launcher/) | Expert in launching small, focused SaaS products fast - the indie hacker approach to build |
 | [`openclaw-workspace-audit`](./openclaw-workspace-audit/) | Audit and optimize OpenClaw workspace documents (AGENTS.md, SOUL.md, |
 | [`openssf-security`](./openssf-security/) | You are a security advisor helping developers implement OpenSSF (Open Source Security Foun |
 | [`pci-compliance`](./pci-compliance/) | Implement PCI DSS compliance requirements for secure handling of payment card data and pay |
 | [`pm-competitive-teardown`](./pm-competitive-teardown/) | Run structured competitive teardowns using pricing, reviews, positioning, |
-| [`privacy-compliance`](./privacy-compliance/) | > |
+| [`privacy-compliance`](./privacy-compliance/) | Tools and guidance for multi-regulation privacy compliance across 9 major global privacy f |
 | [`process-analyst`](./process-analyst/) | Process analysis, gap finding, human dialogue, spec generation |
-| [`product-manager-skills`](./product-manager-skills/) | **状态**: TODO — 目录已创建，待实现 |
 | [`security-audit`](./security-audit/) | Comprehensive security auditing for Clawdbot deployments. Scans for exposed credentials, o |
-| [`security-auditor`](./security-auditor/) | [TODO: Complete and informative explanation of what the skill does and when to use it. Inc |
 | [`security-compliance-compliance-check`](./security-compliance-compliance-check/) | You are a compliance expert specializing in regulatory requirements for software systems i |
-| [`security-monitor`](./security-monitor/) | Real-time security monitoring for Clawdbot. Detects intrusions, unusual API calls, credent |
 | [`skill-security-auditor`](./skill-security-auditor/) | Scan and audit AI agent skills for security risks before installation. Produces a |
 | [`startup-analyst`](./startup-analyst/) | Expert startup business analysis for market sizing, financial modeling, competitive analys |
 | [`startup-business-analyst-business-case`](./startup-business-analyst-business-case/) | Generate a comprehensive, investor-ready business case document covering market opportunit |
@@ -635,20 +608,19 @@
 | [`linux-troubleshooting`](./linux-troubleshooting/) | Linux system troubleshooting workflow for diagnosing and resolving system issues, performa |
 | [`mcstatus`](./mcstatus/) | 生成 Agent 与 Cron 的模型配置状态报告，展示主模型、fallback 链和任务分配情况。 |
 | [`nginx`](./nginx/) | Configure Nginx for reverse proxy, load balancing, SSL termination, and high-performance s |
-| ⭐ [`nginx-configuration`](./nginx-configuration/) | > |
+| ⭐ [`nginx-configuration`](./nginx-configuration/) | Master Nginx configuration for production-grade web servers, reverse proxies, load balanci |
 | [`observability-designer`](./observability-designer/) | Design production observability strategies covering SLI/SLOs, metrics, |
 | [`postmortem-writer`](./postmortem-writer/) | Creates comprehensive post-incident documents with timeline, root cause analysis, contribu |
 | [`remote-openclaw-deploy`](./remote-openclaw-deploy/) | 通用远程部署 OpenClaw Agent 项目。支持任意定制化 agent 团队、跨 macOS/Linux、多渠道（飞书/Telegram/Discord）、deploy.js |
 | [`ssh-manager`](./ssh-manager/) | 专业 SSH 连接管理工具。处理 Tailscale SSH、主机密钥、代理绕过、远程命令执行等操作。 |
 | [`tailscale-operator`](./tailscale-operator/) | Manage, connect to, and troubleshoot devices on a Tailscale tailnet. Use when a user asks  |
 
-### ⚙️ OpenClaw Tools (23)
+### ⚙️ OpenClaw Tools (19)
 
 | Skill | Description |
 |:------|:------------|
 | [`auth-manager`](./auth-manager/) | 网页登录态管理。使用 OpenClaw 内置 browser (profile=openclaw) 统一管理各平台登录状态，定期检查可用性。 |
 | [`auth-system`](./auth-system/) | Implement secure authentication and authorization systems with JWT, OAuth2, Session-based  |
-| [`browser-login-monitor`](./browser-login-monitor/) | **状态**: TODO — 目录已创建，待实现 |
 | [`browser-profile-guide`](./browser-profile-guide/) | OpenClaw Browser 配置文件系统完全指南 — 哪个 profile 何时用、如何选 |
 | [`browser-use`](./browser-use/) | AI驱动的智能浏览器自动化工具。使用LLM理解页面并自动执行任务，比传统Playwright更智能、更省token。适用于复杂交互、动态页面、需要智能决策的浏览器操作。Chrome |
 | [`command-registry-integration`](./command-registry-integration/) | Integrate new chat commands into OpenClaw's formal command registry |
@@ -661,12 +633,9 @@
 | [`openclaw-acp-channel-skill`](./openclaw-acp-channel-skill/) | ACP channel plugin for OpenClaw — configure and use. Covers single/multi identity configur |
 | [`openclaw-config-helper`](./openclaw-config-helper/) | OpenClaw 配置修改助手。修改任何 OpenClaw 配置前必须先查阅官方文档，确保格式正确，避免系统崩溃或功能异常。强制执行：查 |
 | [`openclaw-inter-instance`](./openclaw-inter-instance/) | OpenClaw 实例间通信。当需要在多个 OpenClaw 实例之间传递消息、同步数据、远程执行命令时使用此技能。覆盖 agent-to-agent |
-| [`openclaw-master-skills`](./openclaw-master-skills/) | **状态**: TODO — 目录已创建，待实现 |
 | [`openclaw-memory-enhancer`](./openclaw-memory-enhancer/) | Edge-optimized RAG memory system for OpenClaw with semantic search. Automatically loads me |
 | [`provider-key-manager`](./provider-key-manager/) | Provider key manager — rotate and sync API keys across multi-agent workspaces |
-| [`team-memory-sync`](./team-memory-sync/) | 同步团队记忆与认知结论，减少多 agent 协作中的上下文漂移和信息断层。 |
-| [`token-budget-advisor`](./token-budget-advisor/) | >- |
-| ⭐ [`token-guard`](./token-guard/) | **状态**: TODO — 目录已创建，待实现 |
+| [`token-budget-advisor`](./token-budget-advisor/) | Intercept the response flow to offer the user a choice about response depth **before** Cla |
 | [`token-reporter`](./token-reporter/) | 每日自动统计 OpenClaw 实例 Token 消耗和工作产出，上报到飞书多维表格。扫描 JSONL 日志按模型聚合 token，收集各 |
 | [`workspace-directory-manager`](./workspace-directory-manager/) | Workspace directory manager — maintain cleanliness of ~/.openclaw/ and ~/clawd/ |
 
@@ -723,11 +692,11 @@
 | [`thinking-warren-buffett`](./thinking-warren-buffett/) | 蒸馏Warren Buffett思维模式的实用框架——价值投资、能力圈、护城河、安全边际、反向思考 |
 | [`thinking-yingshi-juufeng`](./thinking-yingshi-juufeng/) | 蒸馏影视飓风Tim思维模式的实用框架——视觉叙事、技术科普平民化、B站爆款方法论 |
 
-### 🧩 Other (155)
+### 🧩 Other (154)
 
 | Skill | Description |
 |:------|:------------|
-| [`account-executive`](./account-executive/) | > |
+| [`account-executive`](./account-executive/) | The agent operates as an expert account executive, driving revenue through disciplined pip |
 | [`afrexai-personal-finance`](./afrexai-personal-finance/) | Complete personal finance system — budgeting, debt payoff, investing, tax optimization, ne |
 | [`after-sales`](./after-sales/) | Use when managing post-purchase experience, building customer loyalty, or increasing repea |
 | [`architecture-patterns`](./architecture-patterns/) | Software architecture patterns and best practices |
@@ -758,11 +727,10 @@
 | [`experiment-runner-run`](./experiment-runner-run/) | Run survival arena experiments |
 | [`figma-automation`](./figma-automation/) | Automate Figma tasks via Rube MCP (Composio): files, components, design tokens, comments,  |
 | [`figma-implement-design`](./figma-implement-design/) | Translates Figma designs into production-ready application code with 1:1 visual fidelity.  |
-| [`file-cleaner`](./file-cleaner/) | **状态**: TODO — 目录结构已创建（assets/references），待实现核心功能 |
 | [`find-skills`](./find-skills/) | Helps users discover and install agent skills when they ask questions like "how do I do X" |
 | [`finishing-a-development-branch`](./finishing-a-development-branch/) | Use when implementation is complete, all tests pass, and you need to decide how to integra |
 | [`firecrawl`](./firecrawl/) | 专业网页抓取和数据提取。使用 Firecrawl API 抓取网页、提取结构化数据、批量爬取网站。当用户需要抓取复杂网页、提取结构化数据、批量爬取时使用此技能。 |
-| [`firecrawl-crawl`](./firecrawl-crawl/) | | |
+| [`firecrawl-crawl`](./firecrawl-crawl/) | Bulk extract content from a website. Crawls pages following links up to a depth/limit |
 | [`freshdesk-automation`](./freshdesk-automation/) | Automate Freshdesk helpdesk operations including tickets, contacts, companies, notes, and  |
 | [`gh-issues`](./gh-issues/) | Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and ad |
 | [`gmail-automation`](./gmail-automation/) | Automate Gmail tasks via Rube MCP (Composio): send/reply, search, labels, drafts, attachme |
@@ -803,7 +771,7 @@
 | [`pipedrive-automation`](./pipedrive-automation/) | Automate Pipedrive CRM operations including deals, contacts, organizations, activities, no |
 | [`pm-done`](./pm-done/) | Mark task done + schedule follow-up |
 | [`podcast-generation`](./podcast-generation/) | Generate AI-powered podcast-style audio narratives using Azure OpenAI's GPT Realtime Mini  |
-| [`polyclaw`](./polyclaw/) | **状态**: 部分实现 — 有 Python 库代码 |
+| [`polyclaw`](./polyclaw/) | PolyClaw — multi-chain portfolio and DeFi analytics toolkit |
 | [`posthog-automation`](./posthog-automation/) | Automate PostHog tasks via Rube MCP (Composio): events, feature flags, projects, user prof |
 | [`postmark-automation`](./postmark-automation/) | Automate Postmark email delivery tasks via Rube MCP (Composio): send templated emails, man |
 | [`prd-development`](./prd-development/) | Guide product managers through structured PRD (Product Requirements Document) creation by  |
@@ -859,7 +827,7 @@
 | [`tiktok-automation`](./tiktok-automation/) | Automate TikTok tasks via Rube MCP (Composio): upload/publish videos, post photos, manage  |
 | [`timezone`](./timezone/) | Local time detection, timezone conversion |
 | [`trade-prediction-markets`](./trade-prediction-markets/) | Build and test Polymarket prediction market trading strategies for YES/NO token trading. P |
-| [`trailofbits-skills`](./trailofbits-skills/) | **状态**: 部分实现 — 有安全审计插件 |
+| [`trailofbits-skills`](./trailofbits-skills/) | Trail of Bits security audit — best practices from professional security researchers |
 | [`trello-automation`](./trello-automation/) | Automate Trello boards, cards, and workflows via Rube MCP (Composio). Create cards, manage |
 | [`ui-ux-pro-max`](./ui-ux-pro-max/) | UI/UX design intelligence. 50 styles, 21 palettes, 50 font pairings, 20 charts, 9 stacks ( |
 | [`uml-diagram-design`](./uml-diagram-design/) | UML 图表设计和绘制。当用户需要创建系统架构图、类图、时序图、用例图或其他 UML 图表时使用此技能。 |
@@ -872,7 +840,7 @@
 | [`web-design-guidelines`](./web-design-guidelines/) | Review UI code for Web Interface Guidelines compliance. Use when asked to "review my UI",  |
 | [`webflow-automation`](./webflow-automation/) | Automate Webflow CMS collections, site publishing, page management, asset uploads, and eco |
 | [`weekly-review`](./weekly-review/) | Weekly project review report |
-| [`wemp-operator`](./wemp-operator/) |  |
+| [`wemp-operator`](./wemp-operator/) | WeChat MP operator — draft management, article publishing, and template messaging |
 | [`wiki-page-writer`](./wiki-page-writer/) | Generates rich technical documentation pages with dark-mode Mermaid diagrams, source code  |
 | [`wiki-qa`](./wiki-qa/) | Answers questions about a code repository using source file analysis. Use when the user as |
 | [`workflow-automation`](./workflow-automation/) | Workflow automation is the infrastructure that makes AI agents reliable. Without durable e |
