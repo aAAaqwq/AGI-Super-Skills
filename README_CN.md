@@ -32,7 +32,7 @@
 
 一个**即插即用的 AI 团队模板** — 基于 [OpenClaw](https://github.com/openclaw/openclaw) 部署完整的虚拟 C-Suite。每个 Agent 都有**精神导师**（Elon Musk、Jensen Huang、Warren Buffett...）塑造其性格和决策方式。
 
-**737 技能 · 12 个 Agent · 29 个思维框架 · 30 个工作流。** 零配置 — 复制、定制、发布。
+**727 技能 · 12 个 Agent · 29 个思维框架 · 30 个工作流。** 零配置 — 复制、定制、发布。
 
 ## 🏛️ 架构
 
