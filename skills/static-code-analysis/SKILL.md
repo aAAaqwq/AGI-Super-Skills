@@ -1,6 +1,6 @@
 ---
 name: static-code-analysis
-description: >
+description: Use automated tools to analyze code without executing it, catching bugs, security issues, and style violations early
   Implement static code analysis with linters, formatters, and security scanners
   to catch bugs early. Use when enforcing code standards, detecting security
   vulnerabilities, or automating code review.

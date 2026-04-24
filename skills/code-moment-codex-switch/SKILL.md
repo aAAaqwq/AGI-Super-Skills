@@ -1,3 +1,8 @@
+---
+name: code-moment-codex-switch
+description: Smart switch between Claude Code and Codex — auto-select the optimal coding agent
+---
+
 # code-moment-codex-switch
 > Code/Codex 智能切换——在 Claude Code 和 Codex 之间自动选择最优编码 Agent
 

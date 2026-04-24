@@ -1,6 +1,6 @@
 ---
 name: nginx-configuration
-description: >
+description: Master Nginx configuration for production-grade web servers, reverse proxies, load balancing, SSL termination, caching, and API gateway patterns with 
   Configure Nginx web server for high-performance reverse proxy, load balancing,
   SSL/TLS, caching, and API gateway functionality.
 ---
