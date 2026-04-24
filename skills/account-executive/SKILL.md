@@ -1,6 +1,6 @@
 ---
 name: account-executive
-description: >
+description: The agent operates as an expert account executive, driving revenue through disciplined pipeline management, structured discovery, value-based selling
   Expert sales execution covering pipeline management, discovery, demos,
   negotiation, and deal closing. Use when qualifying opportunities, running
   MEDDIC discovery, building account plans, handling objections, structuring

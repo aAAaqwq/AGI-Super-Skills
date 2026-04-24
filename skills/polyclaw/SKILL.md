@@ -1,3 +1,8 @@
+---
+name: polyclaw
+description: PolyClaw — multi-chain portfolio and DeFi analytics toolkit
+---
+
 # polyclaw
 > 多策略聚合交易——Polymarket/CLOB 多策略交易执行引擎
 
