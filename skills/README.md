@@ -1,6 +1,6 @@
 # 🛠️ Skills Catalog
 
-> **726 skills** ready to deploy · [← Back to main README](../README.md)
+> **727 skills** ready to deploy · [← Back to main README](../README.md)
 
 ---
 
@@ -23,8 +23,8 @@
 | ⚙️ OpenClaw Tools | 19 |
 | 🧬 Bioinformatics | 12 |
 | 🧠 Thinking Frameworks | 31 |
-| 🧩 Other | 154 |
-| **Total** | **726** |
+| 🧩 Other | 155 |
+| **Total** | **727** |
 
 ---
 
@@ -677,7 +677,7 @@
 | [`thinking-warren-buffett`](./thinking-warren-buffett/) | 蒸馏Warren Buffett思维模式的实用框架——价值投资、能力圈、护城河、安全边际、反向思考 |
 | [`thinking-yingshi-juufeng`](./thinking-yingshi-juufeng/) | 蒸馏影视飓风Tim思维模式的实用框架——视觉叙事、技术科普平民化、B站爆款方法论 |
 
-### 🧩 Other (154)
+### 🧩 Other (155)
 
 | Skill | Description |
 |:------|:------------|
@@ -694,6 +694,7 @@
 | [`clawrouter`](./clawrouter/) | Smart LLM router — save 67% on inference costs. Routes every request to the cheapest capab |
 | [`collaboration`](./collaboration/) | Guide for collaborating on GitHub projects. This skill should be used when contributing to |
 | [`commit-analyzer`](./commit-analyzer/) | Analyze git commit frequency, categories, and timing patterns to diagnose |
+| [`composio-sdk`](./composio-sdk/) | Build AI agents and apps with Composio - access 200+ external tools with Tool Router or di |
 | [`create-project`](./create-project/) | Create new project with breakdown |
 | [`cross-platform-poster`](./cross-platform-poster/) | Publish one piece of content across MoltX, Twitter/X, Discord, and Telegram |
 | [`cross-team-comm`](./cross-team-comm/) | 通过 Tailscale、SSH、Gateway API 与 sessions_send 实现跨团队、跨实例的 OpenClaw 协作通信。 |
