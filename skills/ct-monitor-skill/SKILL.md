@@ -1,8 +1,3 @@
----
-name: ct-monitor-skill
-description: Real-time crypto intelligence monitoring with KOL tracking and smart money alerts
----
-
 # ct-monitor-skill
 > 证书透明度监控——SSL/TLS 证书透明度日志监控与告警
 

@@ -209,11 +209,16 @@ def generate(title, items, material_type="list", font="MaShanZheng",
     w, h = size.split("x")
     os.makedirs(os.path.dirname(os.path.abspath(output)), exist_ok=True)
     with sync_playwright() as p:
-        browser = p.chromium.launch()
-        page = browser.new_page(viewport={"width": int(w), "height": int(h)}, device_scale_factor=2)
+        cdp_url = os.getenv("OPENCLAW_CDP_URL", "http://127.0.0.1:18800")
+        try:
+            browser = p.chromium.connect_over_cdp(cdp_url)
+            page = browser.new_page(viewport={"width": int(w), "height": int(h)}, device_scale_factor=2)
+        except Exception:
+            browser = p.chromium.launch()
+            page = browser.new_page(viewport={"width": int(w), "height": int(h)}, device_scale_factor=2)
         page.set_content(html, wait_until="networkidle")
         page.screenshot(path=output, full_page=False)
-        browser.close()
+        page.close()
     sz = os.path.getsize(output)
     print(f"✅ {output} ({sz//1024}KB)")
 

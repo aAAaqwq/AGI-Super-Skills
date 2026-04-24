@@ -1,8 +1,3 @@
----
-name: ai-marketing-skills
-description: AI marketing strategy — market analysis, user profiling, and AI-powered ad copy generation
----
-
 # ai-marketing-skills
 > AI 营销策略——利用 AI 进行市场分析、用户画像、营销文案生成
 

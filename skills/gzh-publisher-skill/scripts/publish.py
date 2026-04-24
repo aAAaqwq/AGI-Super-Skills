@@ -178,7 +178,12 @@ def parse_article(path: str) -> dict:
 
 # ─── Markdown → WeChat HTML ────────────────────────────────────────
 def auto_insert_images(md_body: str, image_paths: list[str]) -> tuple[str, list[str]]:
-    """Insert ![keyword](path) into markdown at positions matching filename keywords."""
+    """Insert ![keyword](path) into markdown at positions matching filename keywords.
+    Skips entirely if markdown already contains image references."""
+    # If markdown already has image references, respect author's layout
+    if re.search(r'!\[', md_body):
+        log("📸", "Markdown already has image references, skipping auto-insert")
+        return md_body, []
     inserted = []
     for img_path in image_paths:
         fname = Path(img_path).stem
@@ -256,21 +261,80 @@ def md_to_wechat_html(md: str, image_map: dict[str, str] | None = None, placehol
 
 
 def _convert_tables(html: str) -> str:
-    lines, result, in_table = html.split("\n"), [], False
+    """Convert markdown pipe tables to styled WeChat-compatible HTML tables.
+    
+    Features:
+    - Zebra-striped rows for readability
+    - Responsive width with min-width per column
+    - Header row with distinct background
+    - Clean borders and padding
+    """
+    lines = html.split("\n")
+    result = []
+    in_table = False
+    row_idx = 0
+
+    # Table wrapper style: centered, no overflow, clean border
+    table_open = (
+        '<table style="'
+        'width:100%;'
+        'border-collapse:collapse;'
+        'margin:16px 0;'
+        'font-size:14px;'
+        'border:1px solid #e0e0e0;'
+        'border-radius:4px;'
+        'overflow:hidden'
+        '">'
+    )
+    th_style = (
+        ' style="'
+        'background:#1a73e8;'
+        'color:#fff;'
+        'font-weight:600;'
+        'padding:10px 12px;'
+        'text-align:left;'
+        'border:1px solid #1a73e8'
+        '"'
+    )
+    td_base = (
+        ' style="'
+        'padding:10px 12px;'
+        'text-align:left;'
+        'border:1px solid #e8e8e8'
+        '"'
+    )
+    td_zebra = (
+        ' style="'
+        'padding:10px 12px;'
+        'text-align:left;'
+        'border:1px solid #e8e8e8;'
+        'background:#f8fafc'
+        '"'
+    )
+
     for line in lines:
         stripped = line.strip()
         if "|" in stripped and stripped.startswith("|"):
             cells = [c.strip() for c in stripped.split("|")[1:-1]]
+            # Skip separator row (---|---|---)
             if all(set(c) <= {"-", ":", " "} for c in cells):
                 continue
-            tag = "th" if not in_table else "td"
-            in_table = True
-            style = ' style="background:#f5f5f5;border:1px solid #ddd;padding:8px"' if tag == "th" else ' style="border:1px solid #ddd;padding:8px"'
-            result.append("<tr>" + "".join(f"<{tag}{style}>{c}</{tag}>" for c in cells) + "</tr>")
+            if not in_table:
+                result.append(table_open)
+                in_table = True
+                row_idx = 0
+            # Header row
+            if row_idx == 0:
+                result.append("<tr>" + "".join(f"<th{th_style}>{c}</th>" for c in cells) + "</tr>")
+            else:
+                style = td_zebra if row_idx % 2 == 0 else td_base
+                result.append("<tr>" + "".join(f"<td{style}>{c}</td>" for c in cells) + "</tr>")
+            row_idx += 1
         else:
             if in_table:
                 result.append("</table>")
                 in_table = False
+                row_idx = 0
             result.append(line)
     if in_table:
         result.append("</table>")
@@ -348,13 +412,10 @@ async def select_placeholder(editor_page, idx: int) -> bool:
         return false;
     }}""")
 
-async def paste_image_at_selection(page, image_path: str) -> str | None:
-    """Paste image via clipboard, replacing current selection.
-    Does NOT call focus() to preserve selection from select_placeholder."""
+async def write_clipboard_image(page, image_path: str) -> None:
+    """Write image to clipboard. This may steal ProseMirror focus."""
     with open(image_path, "rb") as f:
         img_b64 = base64.b64encode(f.read()).decode()
-
-    # Write image to clipboard (no focus)
     await page.evaluate("""
     async ([b64]) => {
         const blob = await fetch('data:image/png;base64,' + b64).then(r => r.blob());
@@ -362,12 +423,12 @@ async def paste_image_at_selection(page, image_path: str) -> str | None:
         await navigator.clipboard.write([new ClipboardItem({'image/png': png})]);
     }
     """, [img_b64])
-    await asyncio.sleep(0.3)
 
-    # Paste via keyboard (replaces current selection)
+
+async def paste_at_current_position(page) -> str | None:
+    """Ctrl+V paste at current selection/cursor. Returns CDN URL or None."""
     await page.keyboard.press("Control+v")
     await page.wait_for_timeout(IMAGE_PASTE_WAIT * 1000)
-
     all_urls = await page.evaluate("""() => {
         const imgs = document.querySelectorAll('.ProseMirror img');
         return Array.from(imgs)
@@ -657,7 +718,7 @@ async def publish_to_gzh(
         await home_page.wait_for_timeout(3000)
 
         body_text = await home_page.inner_text("body")
-        if "请登录" in body_text or "扫码" in body_text:
+        if "请登录" in body_text or "扫码登录" in body_text:
             ss = screenshot_path("login_qr")
             await home_page.screenshot(path=ss)
             result["error"] = "Not logged in. Scan QR code."
@@ -775,14 +836,18 @@ async def publish_to_gzh(
             fname = original_names[i] if i < len(original_names) else Path(png_paths[i]).name
             log("📸", f"Pasting {fname} at placeholder {i}...")
 
-            # Select the placeholder element so Ctrl+V replaces it
+            # 1. Write clipboard FIRST (may steal focus from ProseMirror)
+            await write_clipboard_image(editor_page, png_paths[i])
+            await asyncio.sleep(0.2)
+
+            # 2. Select placeholder AFTER clipboard write (re-sets focus + selection)
             found = await select_placeholder(editor_page, i)
             if not found:
                 log("⚠️ ", f"  Placeholder {i} not found, appending at end")
                 await editor_page.evaluate("() => { document.querySelector('.ProseMirror').focus(); }")
 
-            await asyncio.sleep(0.3)
-            cdn_url = await paste_image_at_selection(editor_page, png_paths[i])
+            # 3. Paste immediately (selection is fresh, nothing in between)
+            cdn_url = await paste_at_current_position(editor_page)
             if cdn_url:
                 cdn_urls[fname] = cdn_url
                 log("✅", f"  {fname} → CDN OK ({len(cdn_url)} chars)")
@@ -866,7 +931,7 @@ async def publish_to_gzh(
 
 # ─── CLI ─────────────────────────────────────────────────────────────
 def main():
-    parser = argparse.ArgumentParser(description="GZH Publisher v3.1 — 微信公众号草稿箱发布")
+    parser = argparse.ArgumentParser(description="GZH Publisher v3.2 — 微信公众号草稿箱发布")
     parser.add_argument("--article", required=True, help="Markdown article path")
     parser.add_argument("--author", default="", help="Author name (or from frontmatter)")
     parser.add_argument("--images", nargs="*", default=[], help="Image paths (auto-convert JPG→PNG). If empty, auto-scan article directory.")
@@ -878,7 +943,7 @@ def main():
         print(f"❌ Article not found: {args.article}")
         sys.exit(1)
 
-    log("🚀", "GZH Publisher v3.1 starting...")
+    log("🚀", "GZH Publisher v3.2 starting...")
     log("📄", f"Article: {args.article}")
     log("👤", f"Author: {args.author or '(from article)'}")
     log("📸", f"Images: {len(args.images)} (empty=auto-scan)")

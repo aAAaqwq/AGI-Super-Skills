@@ -1,8 +1,3 @@
----
-name: company-analyzer
-description: Analyze company data, financials, and market positioning for business intelligence
----
-
 # company-analyzer
 > 企业深度分析引擎——多框架 LLM 分析，带缓存、成本追踪、速率限制
 

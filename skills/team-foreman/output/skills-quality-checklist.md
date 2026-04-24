@@ -180,3 +180,89 @@
 ---
 
 *最后更新：2026-04-21 18:55 | 由 CEO 小a 整理*
+
+---
+
+## v4 新增推荐（2026-04-22 凌晨10轮调研）
+
+### A+ 级（>500 installs，质量顶级）
+
+| Skill | 安装量 | Agent | 推荐理由 |
+|---|---|---|---|
+| `charting` | 4.3K | CQO | 技术图表分析，TradingView级 |
+| `seo-content-writer` | 4K | CCO/CMO | SEO文章写作，完整内容工作流 |
+| `figma-implement-design` | 2.7K | CPO | Figma→代码，设计师开发者桥接 |
+| `usability-testing` | 1K | CPO | 用户测试，完整测试流程 |
+| `enterprise-sales` | 1.1K | CSO | 企业销售，售前售后全流程 |
+| `technical-analysis` | 1.1K | CQO | 技术指标，覆盖主流指标库 |
+| `tradingview-quantitative` | 620 | CQO | TradingView量化策略 |
+| `trading-expert` | 614 | CQO | 交易专家级方法论 |
+| `customer-success` | 611 | CSO | 客户成功，NPS/留存/增购 |
+| `asana-automation` | 565 | COO | Asana自动化，工作流编排 |
+| `apify-ultimate-scraper` | 7.2K | CRO | **最大发现**，7.2K级爬虫 |
+| `business-intelligence` | 775 | CRO/CDO | BI分析，仪表盘+洞察 |
+
+### A 级（100~500 installs，高质量）
+
+| Skill | 安装量 | Agent | 推荐理由 |
+|---|---|---|---|
+| `oauth-implementation` | 323 | CTO/CLO | OAuth认证实现 |
+| `social-media-management` | 312 | CMO | 社媒内容日历管理 |
+| `database-design` | 272 | CDO | 数据建模，schema设计 |
+| `jira` | 273 | COO/CPO | Jira集成，项目追踪 |
+| `project-workflow` | 369 | COO | 项目工作流编排 |
+| `vue` | 204 | PE | Vue开发 |
+| `github-actions-expert` | 146 | CTO/PE | GitHub Actions标准化 |
+| `crm-integration` | 163 | CSO | CRM集成 |
+| `ux-researcher` | 163 | CPO | 用户研究 |
+| `frontend-development` | 153 | PE | 前端综合开发 |
+| `finance` | 253 | CFO | 通用财务分析 |
+| `devops-incident-responder` | 105 | CTO | 事件响应 |
+| `design-to-component-translator` | 94 | CPO/CCO | 设计稿翻译组件 |
+| `sales-operations` | 85 | CSO | 销售运营 |
+| `account-executive` | 70 | CSO | 大客户管理 |
+| `graphql-api-development` | 66 | PE | GraphQL API开发 |
+
+### 待安装清单（Daniel批准后执行）
+
+```bash
+# CQO重大升级（替换现有低质量skill）
+npx skills add starchild-ai-agent/official-skills@charting -g -y
+npx skills add omer-metin/skills-for-antigravity@technical-analysis -g -y
+npx skills add hypier/tradingview-quantitative-skills@tradingview-quantitative -g -y
+npx skills add personamanagmentlayer/pcl@trading-expert -g -y
+
+# CRO数据采集（7.2K安装量，CRITICAL）
+npx skills add apify/agent-skills@apify-ultimate-scraper -g -y
+npx skills add borghei/claude-skills@business-intelligence -g -y
+
+# CPO产品力升级
+npx skills add refoundai/lenny-skills@usability-testing -g -y
+npx skills add 404kidwiz/claude-supercode-skills@ux-researcher -g -y
+npx skills add figma/mcp-server-guide@figma-implement-design -g -y
+
+# CSO销售升级
+npx skills add refoundai/lenny-skills@enterprise-sales -g -y
+npx skills add claude-office-skills/skills@customer-success -g -y
+
+# COO运营升级
+npx skills add claude-office-skills/skills@asana-automation -g -y
+npx skills add membranedev/application-skills@jira -g -y
+npx skills add jezweb/claude-skills@project-workflow -g -y
+
+# CCO/CMO内容升级
+npx skills add aaron-he-zhu/seo-geo-claude-skills@seo-content-writer -g -y
+
+# CTO系统级升级
+npx skills add cin12211/orca-q@github-actions-expert -g -y
+npx skills add aj-geddes/useful-ai-prompts@oauth-implementation -g -y
+
+# PE工程升级
+npx skills add bobmatnyc/claude-mpm-skills@vue -g -y
+npx skills add manutej/luxor-claude-marketplace@graphql-api-development -g -y
+
+# CFO财务升级
+npx skills add travisjneuman/.claude@finance -g -y
+```
+
+*最后更新：2026-04-22 01:09 | v4: 10轮find-skills调研完成*
