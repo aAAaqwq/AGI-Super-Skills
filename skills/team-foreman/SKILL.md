@@ -1,8 +1,3 @@
----
-name: team-foreman
-description: Team foreman — agent task supervision, progress tracking, and quality enforcement
----
-
 # Team Foreman — 团队监工巡查 Skill
 
 > 每 15 分钟由 cron 调用。核心目标：**真实推进任务，不是写报告。**

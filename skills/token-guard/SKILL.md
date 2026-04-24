@@ -1,8 +1,3 @@
----
-name: token-guard
-description: Token budget control — auto-downgrade models when spending limits are approached
----
-
 # token-guard
 > Token 用量防护与限制——API 调用成本监控与预算保护
 

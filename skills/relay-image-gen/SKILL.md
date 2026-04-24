@@ -1,6 +1,6 @@
 ---
 name: relay-image-gen
-description: Multi-provider image generation with automatic priority fallback
+description: >
   Multi-provider image generation with priority fallback.
   Priority: qingyun Gemini (gemini-3-pro-image) → OpenClaw image tool → relay providers (boluobao → xingjiabi).
   Supports 1K/2K/4K, multiple aspect ratios, auto fallback.

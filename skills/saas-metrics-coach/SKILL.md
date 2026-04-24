@@ -1,6 +1,6 @@
 ---
 name: saas-metrics-coach
-description: Production-ready SaaS metrics toolkit for calculating MRR/ARR, analyzing cohort retention, and evaluating unit economics. Designed for SaaS founders, 
+description: >
   This skill should be used when the user asks to "calculate MRR", "analyze churn",
   "compute SaaS metrics", "do cohort retention analysis", "calculate LTV or CAC",
   "evaluate unit economics", or "track subscription revenue growth".

@@ -1,8 +1,3 @@
----
-name: mineru-extract
-description: Document extraction using MinerU — PDF and image to structured text
----
-
 # mineru-extract
 > MinerU 文档提取——PDF/图片/文档智能解析与内容提取
 

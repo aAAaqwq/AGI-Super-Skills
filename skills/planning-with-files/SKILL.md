@@ -1,8 +1,3 @@
----
-name: planning-with-files
-description: File-based planning system — organize work through structured file hierarchies
----
-
 # planning-with-files
 > 基于文件的产品规划——用文件系统进行产品规划和项目管理的轻量方案
 

@@ -1,8 +1,3 @@
----
-name: model-hierarchy-skill
-description: Model hierarchy configuration — define fallback chains and model priority
----
-
 # model-hierarchy-skill
 > 模型层级调度——根据任务复杂度自动选择合适的 LLM 模型
 

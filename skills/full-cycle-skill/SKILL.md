@@ -1,8 +1,3 @@
----
-name: full-cycle-skill
-description: Full-cycle development — from requirements to deployment in one workflow
----
-
 # full-cycle-skill
 > 全周期开发技能——从需求到部署的完整开发流程支持
 

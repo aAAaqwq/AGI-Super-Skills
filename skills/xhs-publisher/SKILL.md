@@ -1,5 +1,8 @@
 ---
 name: xhs-publisher
+description: "将 Markdown 文章自动发布到小红书（XHS）草稿箱。支持多图上传（封面+素材）。"
+metadata: {"version":"1.5.0","author":"xiaocode + CCO Ives","domains":["content","publishing","automation","xiaohongshu"],"type":"automation"}
+---
 description: "将 Markdown 文章自动发布到小红书（XHS）草稿箱。支持多图上传（封面+素材）、标题/正文填充、标签匹配、排版优化检查。基于 Playwright file_chooser API + CDP 操作。"
 license: MIT
 metadata:

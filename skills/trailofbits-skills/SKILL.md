@@ -1,8 +1,3 @@
----
-name: trailofbits-skills
-description: Trail of Bits security audit — best practices from professional security researchers
----
-
 # trailofbits-skills
 > Trail of Bits 安全审计——基于 Trail of Bits 开源工具链的安全审计插件
 

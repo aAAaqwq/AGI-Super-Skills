@@ -1,6 +1,9 @@
 ---
 name: daily-gzh-content
 description: "公众号每日内容生产：选题→创作→素材生成→质量检查→保存→发布草稿"
+metadata: {"version":"2.1.0","author":"CCO Ives","domains":["content","weixin-mp","automation"],"type":"production"}
+---
+description: "公众号每日内容生产：选题→创作→素材生成→质量检查→保存→发布草稿"
 metadata:
   version: 2.1.0
   author: CCO Ives
@@ -27,7 +30,7 @@ metadata:
 
 ## 任务
 
-产出 **3 篇** 公众号深度文章，存草稿箱。
+产出 **1 篇** 高质量公众号深度文章，存草稿箱。
 
 ## 执行流程
 
@@ -57,30 +60,57 @@ metadata:
 3. humanizer 去 AI 痕迹
 4. 摘要：≤ 120 字
 
-### Step 3: 素材生成
+### Step 3: 素材生成（**必须使用 code-material-gen**）
 
-生成封面和配图素材，保存到 `素材/` 目录。
+使用 `code-material-gen` 生成封面和配图素材，保存到 `素材/` 目录。
 
-**素材生成优先级（从高到低）**：
+**⚠️ 素材生成强制规则**：
+- **必须使用 `code-material-gen`**（HTML/CSS + Playwright 渲染，零成本、全中文、像素精确）
+- 其他方案（`longform-visual-notes`、`baoyu-xhs-images` 等）仅作为**补充**，不得替代 `code-material-gen`
+- `code-material-gen` 不可用时才降级到 `longform-visual-notes`（API 生图）
 
-| 优先级 | 方案 | 适用场景 |
-|--------|------|---------|
-| 1 | `longform-visual-notes` | 知识转视觉笔记（首选） |
-| 2 | `baoyu-xhs-images` | 信息图（10风格8布局） |
-| 3 | `content-cover-gen` | 封面生成 |
-| 4 | `relay-image-gen` | 兜底AI生图 |
-| 5 | `web-content-capture` | 网页截图（**最低优先级**） |
+**素材生成流程**：
 
-**封面规格**：16:9 比例，`-a "16:9" -r "1k"`
+1. 分析文章结构，确定需要几张素材（建议 3-5 张）
+2. 为每张素材选择类型、配色和字体：
 
-**素材风格规范**：
-- ❌ 严禁英文文字（标题、标签、数据标签全部中文）
-- ✅ 手写字体风格（如：站酷快乐体、方正手迹、手写风格）
-- ✅ 字迹清晰可读，字体大小 ≥ 16px
-- ✅ 配色与文章情绪一致（科技用蓝/深灰，争议用红/黑，经验用暖色）
-- ❌ 严禁"深色底+金色/白色几何装饰"通用模板
+| 素材类型 | 适用场景 | 命令 type |
+|----------|---------|----------|
+| 对比表 | A vs B 对比（如产品对比） | `compare` |
+| 要点列表 | N 个要点/硬伤/建议 | `list` |
+| 金句卡 | 核心观点/结论 | `quote` |
+| 时间线 | 阶段/发展历程 | `timeline` |
+| 封面 | 文章封面 | `cover` |
+| 数据图 | 数据展示 | `chart` |
 
-**如有 Daniel 手动提供的素材**（截图/图片），一并放入 `素材/` 目录。
+3. 调用 `code-material-gen` 生成素材：
+```bash
+python3 ~/clawd/projects/MediaClaw/skills/code-material-gen/scripts/generate.py \
+  --type {compare|list|quote|timeline|chart|cover} \
+  --title "标题" \
+  --items "项1" "项2" ... \
+  --font MaShanZheng \
+  --palette {tech|warm|ink|minimal} \
+  --size 1536x1024 \
+  --output 素材/{filename}.png
+```
+
+4. **素材生成后必须插入到 markdown 文章的相应位置**：
+   - 对比表 → 插入到对应对比段落后
+   - 要点列表 → 插入到对应列表段落后
+   - 金句卡 → 插入到文章结尾总结部分
+   - 使用 `![描述](素材/filename.png)` 格式插入
+   - 插入位置要自然，紧跟相关段落，不要全部堆在文末
+
+**配色选择**：
+| palette | 适用 |
+|---------|------|
+| `tech` | 科技/数据/AI 主题（深蓝+亮蓝） |
+| `ink` | 观点/分析类（水墨风） |
+| `warm` | 经验分享/教程（暖色） |
+| `minimal` | 通用/商务 |
+
+**如有 Daniel 手动提供的素材**（截图/图片），一并放入 `素材/` 目录，并在 markdown 中插入到对应位置。
 
 ### Step 4: 质量检查（必须逐项对照 `platforms/weixin-mp.md`）
 
@@ -150,11 +180,9 @@ python3 skills/gzh-publisher-skill/scripts/publish.py \
 |-------|------|--------|------|
 | brave-search | AI深度热点搜索 | 条件 | Step 1（未指定选题时） |
 | **humanizer** | **去AI痕迹** | **必须** | **Step 2 后** |
-| longform-visual-notes | 知识视觉笔记 | 素材1 | Step 3 |
-| baoyu-xhs-images | 信息图 | 素材2 | Step 3 |
-| content-cover-gen | 封面生成 | 素材3 | Step 3 |
-| relay-image-gen | 兜底AI生图 | 素材4 | Step 3 |
-| web-content-capture | 网页截图 | **最低** | Step 3（无其他素材时） |
+| **code-material-gen** | **代码生成素材（对比表/要点/金句）** | **必须** | **Step 3** |
+| longform-visual-notes | 知识视觉笔记 | 补充 | Step 3（code-material-gen 不可用时） |
+| content-cover-gen | 封面生成 | 补充 | Step 3 |
 | **gzh-publisher-skill** | **发布草稿** | **必须** | **Step 6** |
 
 ## GZH 润色要点（humanizer 后检查）
