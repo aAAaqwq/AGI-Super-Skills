@@ -1,8 +1,3 @@
----
-name: orchestration-workflow
-description: Agent orchestration workflow — task decomposition and parallel execution
----
-
 # orchestration-workflow
 > Agent 编排工作流——多 Agent 任务分发与协调
 

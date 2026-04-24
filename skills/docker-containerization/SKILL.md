@@ -1,6 +1,6 @@
 ---
 name: docker-containerization
-description: Build production-ready Docker containers following best practices for security, performance, and maintainability
+description: >
   Create optimized Docker containers with multi-stage builds, security best
   practices, and minimal image sizes. Use when containerizing applications,
   creating Dockerfiles, optimizing container images, or setting up Docker

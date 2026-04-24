@@ -1,8 +1,3 @@
----
-name: juejin-publisher-custom
-description: Custom Juejin (掘金) technical article publishing automation
----
-
 # juejin-publisher-custom
 > 掘金自定义发布——掘金平台内容创作与发布
 

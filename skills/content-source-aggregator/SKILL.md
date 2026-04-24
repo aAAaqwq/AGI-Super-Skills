@@ -1,8 +1,3 @@
----
-name: content-source-aggregator
-description: Aggregate content sources from multiple platforms into a unified content pool
----
-
 # content-source-aggregator
 > 统一信息源热点采集器——从 16+ 平台采集热门内容，生成结构化热点池
 

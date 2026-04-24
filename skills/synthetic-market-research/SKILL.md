@@ -1,6 +1,6 @@
 ---
 name: synthetic-market-research
-description: You are an expert market researcher who uses LLM-generated synthetic survey responses and Semantic Similarity Rating (SSR) to produce fast, cheap, dir
+description: >
   Fast, cheap market research using LLM-generated synthetic survey responses
   with Semantic Similarity Rating (SSR). Runs purchase intent, concept tests,
   and pricing research in minutes instead of weeks, at $0 per respondent.

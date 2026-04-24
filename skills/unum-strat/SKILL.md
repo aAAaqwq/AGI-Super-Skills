@@ -1,8 +1,3 @@
----
-name: unum-strat
-description: Unum strategy — systematic trading strategy with configurable parameters
----
-
 # unum-strat
 > Unum 策略引擎——量化交易策略开发与回测
 

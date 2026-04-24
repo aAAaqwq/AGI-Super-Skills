@@ -1,6 +1,6 @@
 ---
 name: content-ops-toolkit
-description: **先跑通，再精修。不要一上来追求完美。**
+description: |
   内容运营方法论工具箱。包含选题竞争分析、标题优化评分、多平台内容适配、数据复盘框架。
   用法: (1) 选题前做竞争分析 (2) 写完文章优化标题 (3) 一文多发多平台适配 (4) 周度内容数据复盘。
   Trigger: "选题分析", "竞争分析", "标题评分", "标题优化", "多平台适配", "内容复盘", "content review", "topic analysis", "title scoring".

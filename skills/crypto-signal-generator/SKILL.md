@@ -1,6 +1,6 @@
 ---
 name: generating-trading-signals
-description: Multi-indicator signal generation system that analyzes price action using 7 technical indicators and produces composite BUY/SELL signals with confiden
+description: |
   Generate trading signals using technical indicators (RSI, MACD, Bollinger Bands, etc.).
   Combines multiple indicators into composite signals with confidence scores.
   Use when analyzing assets for trading opportunities or checking technical indicators.

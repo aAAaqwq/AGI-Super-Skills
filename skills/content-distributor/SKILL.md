@@ -1,8 +1,3 @@
----
-name: content-distributor
-description: Cross-platform content distribution — one content, multi-platform publishing
----
-
 # content-distributor
 > 内容分发管理——一篇文章多平台适配分发
 

@@ -1,6 +1,9 @@
 ---
 name: daily-xhs-content
 description: "小红书每日内容生产：选题→创作→配图→质量检查→发布草稿"
+metadata: {"version":"2.0.0","author":"CCO Ives","domains":["content","xiaohongshu","automation"],"type":"production"}
+---
+description: "小红书每日内容生产：选题→创作→配图→质量检查→发布草稿"
 metadata:
   version: 2.0.0
   author: CCO Ives
@@ -27,7 +30,7 @@ metadata:
 
 ## 任务
 
-产出 **3 篇** 小红书内容（正文 + 封面），存草稿箱。
+产出 **1 篇** 高质量小红书内容（正文 + 封面），存草稿箱。
 
 ## 执行流程
 

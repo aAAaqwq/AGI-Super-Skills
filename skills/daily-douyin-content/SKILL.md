@@ -1,9 +1,17 @@
 ---
 name: daily-douyin-content
-description: Daily Douyin content production SOP — from topic selection to publishing
+description: "抖音每日内容生产：选题→创作→封面→质量检查→保存"
+metadata: {"version":"2.0.0","author":"CCO Ives","domains":["content","douyin","automation"],"type":"production"}
+---
+description: "抖音每日内容生产：选题→创作→封面→质量检查→保存"
+metadata:
+  version: 2.0.0
+  author: CCO Ives
+  domains: [content, douyin, automation]
+  type: production
 ---
 
-# daily-douyin-content — 抖音每日内容生产
+
 
 > Cron: `daily-douyin-content` | 每日 22:00 | agentId: content
 
@@ -20,7 +28,7 @@ description: Daily Douyin content production SOP — from topic selection to pub
 
 ## 任务
 
-产出 **3 条** 抖音高质量内容（视频脚本 + 图文描述 + 封面）。
+产出 **1 条** 高质量抖音内容（视频脚本 + 图文描述 + 封面）。
 
 ## 执行流程
 

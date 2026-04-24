@@ -1,8 +1,3 @@
----
-name: product-manager-skills
-description: Product manager toolkit — PRD writing, roadmap planning, and feature prioritization
----
-
 # product-manager-skills
 > 产品经理技能集——PRD、用户故事、竞品分析、路线图等产品方法论工具
 
