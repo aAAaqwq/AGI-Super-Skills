@@ -1,6 +1,6 @@
 # 🛠️ Skills Catalog
 
-> **741 skills** ready to deploy · [← Back to main README](../README.md)
+> **726 skills** ready to deploy · [← Back to main README](../README.md)
 
 ---
 
@@ -8,29 +8,29 @@
 
 | Category | Skills |
 |:---------|-------:|
-| 🔧 Development | 88 |
+| 🔧 Development | 83 |
 | 💰 Trading & Finance | 44 |
-| 📝 Content & Writing | 47 |
+| 📝 Content & Writing | 46 |
 | 📈 Marketing & SEO | 33 |
-| 📱 Chinese Platforms | 29 |
+| 📱 Chinese Platforms | 26 |
 | 🔌 SaaS Integrations | 47 |
 | 💬 Communication | 47 |
-| 🎬 Video & Media | 37 |
-| 🤖 AI Agent Patterns | 61 |
-| 📊 Data & Analytics | 26 |
+| 🎬 Video & Media | 36 |
+| 🤖 AI Agent Patterns | 59 |
+| 📊 Data & Analytics | 25 |
 | 🏢 Business & Strategy | 46 |
-| ⚙️ DevOps & Infra | 20 |
+| ⚙️ DevOps & Infra | 18 |
 | ⚙️ OpenClaw Tools | 19 |
 | 🧬 Bioinformatics | 12 |
 | 🧠 Thinking Frameworks | 31 |
 | 🧩 Other | 154 |
-| **Total** | **741** |
+| **Total** | **726** |
 
 ---
 
 ## 📋 Full Listing
 
-### 🔧 Development (88)
+### 🔧 Development (83)
 
 | Skill | Description |
 |:------|:------------|
@@ -51,7 +51,6 @@
 | [`claude-code-runner`](./claude-code-runner/) | Execute programming tasks via Claude Code using PTY-based invocation. Handles non-TTY envi |
 | [`cli-developer`](./cli-developer/) | Use when building CLI tools, implementing argument parsing, or adding interactive prompts. |
 | [`code-material-gen`](./code-material-gen/) | 当素材需要**全中文、手写字体、字迹清晰、可复现**时使用。替代API生图方案（longform-visual-notes），不消耗任何API额度。 |
-| [`code-moment-codex-switch`](./code-moment-codex-switch/) | Smart switch between Claude Code and Codex — auto-select the optimal coding agent |
 | ⭐ [`code-review`](./code-review/) | AI code review for PR or local changes |
 | [`code-review-quality`](./code-review-quality/) | Conduct context-driven code reviews focusing on quality, testability, and maintainability. |
 | [`codex-cc-guide`](./codex-cc-guide/) | 如何用 ACP sessions_spawn 调用 Claude Code / Codex 写代码 — 小code 团队编码任务指南 |
@@ -65,7 +64,6 @@
 | [`docker-essentials`](./docker-essentials/) | Essential Docker commands and workflows for container management, image operations, and de |
 | [`docx`](./docx/) | Comprehensive document creation, editing, and analysis with support for tracked changes, c |
 | [`docx-perfect`](./docx-perfect/) | Word文档美化与格式化专家。专门用于将Word文档中的文本内容转换为专业表格格式，应用一致的样式（深蓝色表头、斑马纹数据行、边框），支持版本化迭代管理。当用户需要美化Word文档 |
-| [`e2e-automator`](./e2e-automator/) | [TODO: Complete and informative explanation of what the skill does and when to use it. Inc |
 | [`e2e-testing`](./e2e-testing/) | Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, arti |
 | [`e2e-testing-patterns`](./e2e-testing-patterns/) | Master end-to-end testing with Playwright and Cypress to build reliable test suites that c |
 | [`electron-app-dev`](./electron-app-dev/) | 老王我搞Electron好多年了，这玩意儿写跨平台应用真tm香！ |
@@ -73,7 +71,6 @@
 | [`file-organizer`](./file-organizer/) | Intelligently organizes your files and folders across your computer by understanding conte |
 | [`frontend-design-ultimate`](./frontend-design-ultimate/) | Create distinctive, production-grade static sites with React, Tailwind CSS, and shadcn/ui  |
 | [`frontend-slides`](./frontend-slides/) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoin |
-| [`full-cycle-skill`](./full-cycle-skill/) | Full-cycle development — from requirements to deployment in one workflow |
 | [`ghost-scan-code`](./ghost-scan-code/) | Ghost Security - SAST code scanner. Finds security vulnerabilities in source code by plann |
 | [`git-workflow`](./git-workflow/) | Git workflow: branches, PR, merge, cleanup |
 | [`github`](./github/) | Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` f |
@@ -96,7 +93,6 @@
 | [`react-component-generator`](./react-component-generator/) | This skill provides automated assistance for react component generator tasks within the Fr |
 | [`react-expert`](./react-expert/) | Use when researching React APIs or concepts for documentation. Use when you need authorita |
 | [`receiving-code-review`](./receiving-code-review/) | Use when receiving code review feedback, before implementing suggestions, especially if fe |
-| [`redis-caching`](./redis-caching/) | [TODO: Complete and informative explanation of what the skill does and when to use it. Inc |
 | [`redis-inspect`](./redis-inspect/) | Inspect Redis cache keys, values, and TTLs for debugging. Supports both main cache and sys |
 | [`requesting-code-review`](./requesting-code-review/) | Use when completing tasks, implementing major features, or before merging to verify work m |
 | [`shell-expert`](./shell-expert/) | Expert knowledge for shell scripting, command-line tools, and automation with focus on rob |
@@ -116,7 +112,6 @@
 | [`tdd-guide`](./tdd-guide/) | Test-driven development workflow with test generation, coverage analysis, and multi-framew |
 | ⭐ [`tdd-workflow`](./tdd-workflow/) | Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test- |
 | [`test-automator`](./test-automator/) | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehe |
-| [`test-genius`](./test-genius/) | [TODO: Complete and informative explanation of what the skill does and when to use it. Inc |
 | [`using-git-worktrees`](./using-git-worktrees/) | Use when starting feature work that needs isolation from current workspace or before execu |
 | [`vibe-code-auditor`](./vibe-code-auditor/) | Audit rapidly generated or AI-produced code for structural flaws, fragility, and productio |
 | [`web-artifacts-builder`](./web-artifacts-builder/) | Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using mode |
@@ -172,7 +167,7 @@
 | [`trading-strategy-backtester`](./trading-strategy-backtester/) | Validate trading strategies against historical data before risking real capital. This skil |
 | [`whale-alert-monitor`](./whale-alert-monitor/) | Track large cryptocurrency transactions and whale wallet movements across multiple blockch |
 
-### 📝 Content & Writing (47)
+### 📝 Content & Writing (46)
 
 | Skill | Description |
 |:------|:------------|
@@ -180,7 +175,6 @@
 | [`brainstorming`](./brainstorming/) | You MUST use this before any creative work - creating features, building components, addin |
 | [`content-cover-gen`](./content-cover-gen/) | 把文章核心观点变成一张 **3秒能看懂、带文字、有设计感** 的封面图。 |
 | [`content-creator`](./content-creator/) | Create SEO-optimized marketing content with consistent brand voice. Includes brand voice a |
-| [`content-distributor`](./content-distributor/) | Cross-platform content distribution — one content, multi-platform publishing |
 | [`content-extract`](./content-extract/) | Robust URL-to-Markdown extraction for OpenClaw workflows. Use when the |
 | [`content-factory`](./content-factory/) | Content factory pipeline — topic scoring, drafting, and production at scale |
 | [`content-illustration-strategy`](./content-illustration-strategy/) | 这不是“随便找几张图填空”的 skill。 |
@@ -262,7 +256,7 @@
 | [`x-tweet-fetcher`](./x-tweet-fetcher/) | Fetch tweets from X/Twitter without authentication. Supports tweet content, reply threads, |
 | [`xiaohongshu-growth`](./xiaohongshu-growth/) | 小红书内容创作运营增长综合解决方案。包含爆款内容创作、封面设计、发布优化、数据分析和账号增长策略。当用户需要：(1) 创建小红书爆款内容 (2) 优化账号运营策略 (3) 分析竞品 |
 
-### 📱 Chinese Platforms (29)
+### 📱 Chinese Platforms (26)
 
 | Skill | Description |
 |:------|:------------|
@@ -276,9 +270,7 @@
 | ⭐ [`douyin-smart-publish`](./douyin-smart-publish/) | 抖音创作者平台智能发布（视频/图文）：内容适配→上传→填描述/#话题→封面→存草稿→截图回传确认。默认只存草稿；只有在 Daniel 明确确认后才允许点击发布。覆盖标题(≤55字) |
 | [`douyin-video-analyst`](./douyin-video-analyst/) | 抖音账号视频批量采集与文案分析工作流。当用户提供抖音账号主页链接、要求抓取最新 N 条视频链接、提取视频文案（语音转文字）、或对视频内容进行总结归纳时，激活此 skill。依赖 b |
 | [`gzh-publisher`](./gzh-publisher/) | 微信公众号统一发布技能：通过 OpenClaw Browser 自动化完成登录、写文章、一键排版、封面、存草稿。 |
-| [`gzh-publisher-skill`](./gzh-publisher-skill/) | 微信公众号统一发布技能：通过 OpenClaw Browser 自动化完成登录、写文章、一键排版、封面、存草稿。 |
 | ⭐ [`influencer-analyzer`](./influencer-analyzer/) | 分析抖音/小红书/B站博主的主页、内容风格、爆款规律。可根据链接、博主名、主题三种方式触发。输出结构化的博主画像和内容风格报告，为内容创作者提供可复制的对标参考。触发词：分析博主、 |
-| [`juejin-publisher-custom`](./juejin-publisher-custom/) | Custom Juejin (掘金) technical article publishing automation |
 | [`juejin-smart-publish`](./juejin-smart-publish/) | 掘金技术社区智能发布：Markdown编辑器全功能支持。覆盖标题(15-35字)、分类(必选)、标签(1-5个)、封面上传、摘要填写、GFM排版。Playwright自动化+API |
 | [`soushen-hunter`](./soushen-hunter/) | SouShen content hunter — discover trending topics via Bing search aggregation |
 | [`tianyancha-cn`](./tianyancha-cn/) | 企业信息查询 - 天眼查/企查查/爱企查数据查询（Bloomberg 终端中国版） |
@@ -293,7 +285,6 @@
 | ⭐ [`xhs-publisher`](./xhs-publisher/) | 将 Markdown 文章自动发布到小红书（XHS）草稿箱。支持多图上传（封面+素材）。 |
 | [`xhs-smart-publisher`](./xhs-smart-publisher/) | 小红书智能发布：内容适配→排版→Playwright自动发布/存草稿。覆盖标题公式(≤20字+emoji+数字)、正文排版(空行分段+emoji点缀)、标签策略(热门+长尾3-8个 |
 | [`ziliu-publisher`](./ziliu-publisher/) | 字流(Ziliu) - AI驱动的多平台内容分发工具。用于一次创作、智能适配排版、一键分发到16+平台（公众号/知乎/小红书/B站/抖音/微博/X等）。当用户需要多平台发布、内容排 |
-| [`zsxq-publisher`](./zsxq-publisher/) | Publish and manage content on 知识星球 (zsxq.com). Supports talk posts, |
 | [`zsxq-smart-publish`](./zsxq-smart-publish/) | Publish and manage content on 知识星球 (zsxq.com). Supports talk posts, Q&A, long articles, fi |
 
 ### 🔌 SaaS Integrations (47)
@@ -400,7 +391,7 @@
 | ⭐ [`whatsapp-send`](./whatsapp-send/) | Baileys WhatsApp message sending |
 | [`zoho-crm-automation`](./zoho-crm-automation/) | Automate Zoho CRM tasks via Rube MCP (Composio): create/update records, search contacts, m |
 
-### 🎬 Video & Media (37)
+### 🎬 Video & Media (36)
 
 | Skill | Description |
 |:------|:------------|
@@ -440,9 +431,8 @@
 | [`videocut-setup`](./videocut-setup/) | 环境准备。安装依赖、配置 API Key、验证环境。触发词：安装、环境准备、初始化 |
 | [`videocut-subtitle`](./videocut-subtitle/) | 字幕生成与烧录。火山引擎转录→词典纠错→审核→烧录。触发词：加字幕、生成字幕、字幕 |
 | [`virtual-singer-mv-script`](./virtual-singer-mv-script/) | Virtual singer MV script generator — audio analysis to video storyboard pipeline |
-| [`youtube-video-analyzer`](./youtube-video-analyzer/) | This skill performs deep analysis of YouTube videos through **both information channels** |
 
-### 🤖 AI Agent Patterns (61)
+### 🤖 AI Agent Patterns (59)
 
 | Skill | Description |
 |:------|:------------|
@@ -472,7 +462,6 @@
 | [`meta-cognition`](./meta-cognition/) | Meta-cognitive framing for analyze-before-doing, ownership routing, risk gating, minimum-c |
 | [`model-fallback`](./model-fallback/) | 模型自动降级与故障切换。当主模型请求失败、超时、达到速率限制或配额耗尽时，自动切换到备用模型，确保服务连续性。支持多供应商、多优先级的智能模型选择，提供健康监控、自动重试和错误恢复 |
 | [`model-health-check`](./model-health-check/) | 检查已配置模型供应商的连通性、延迟和可用性，用于快速诊断模型侧故障。 |
-| [`model-hierarchy-skill`](./model-hierarchy-skill/) | Model hierarchy configuration — define fallback chains and model priority |
 | [`model-provider-manager`](./model-provider-manager/) | Unified LLM provider and model configuration, health monitoring, and key management |
 | [`model-usage`](./model-usage/) | Use CodexBar CLI local cost usage to summarize per-model usage for Codex |
 | [`model-usage-linux`](./model-usage-linux/) | Track OpenClaw AI token usage and cost per model on Linux by parsing session JSONL files.  |
@@ -491,7 +480,6 @@
 | [`sp-defense-in-depth`](./sp-defense-in-depth/) | Validate at every layer data passes through to make bugs impossible |
 | [`sp-dispatching-parallel-agents`](./sp-dispatching-parallel-agents/) | Use multiple Claude agents to investigate and fix independent problems concurrently |
 | [`sp-executing-plans`](./sp-executing-plans/) | Execute detailed plans in batches with review checkpoints |
-| [`sp-finishing-a-development-branch`](./sp-finishing-a-development-branch/) | Complete feature development with structured options for merge, PR, or cleanup |
 | [`sp-inversion-exercise`](./sp-inversion-exercise/) | Flip core assumptions to reveal hidden constraints and alternative approaches - "what if t |
 | [`sp-meta-pattern-recognition`](./sp-meta-pattern-recognition/) | Spot patterns appearing in 3+ domains to find universal principles |
 | [`sp-preserving-productive-tensions`](./sp-preserving-productive-tensions/) | Recognize when disagreements reveal valuable context, preserve multiple valid approaches i |
@@ -508,7 +496,7 @@
 | [`verification-before-completion`](./verification-before-completion/) | Use when about to claim work is complete, fixed, or passing, before committing or creating |
 | [`work-to-skill`](./work-to-skill/) | 工作即技能：每次完成一项有复用价值的工作后，自动评估并封装为可复用 Skill。让团队在工作中持续进化。 |
 
-### 📊 Data & Analytics (26)
+### 📊 Data & Analytics (25)
 
 | Skill | Description |
 |:------|:------------|
@@ -528,7 +516,6 @@
 | [`grafana-dashboards`](./grafana-dashboards/) | Create and manage production Grafana dashboards for real-time visualization of system and  |
 | [`image-scraper`](./image-scraper/) | Scrape and download all images from a given URL. Takes a URL, extracts image URLs from the |
 | [`kpi-dashboard-design`](./kpi-dashboard-design/) | Design effective KPI dashboards with metrics selection, visualization best practices, and  |
-| [`mineru-extract`](./mineru-extract/) | Document extraction using MinerU — PDF and image to structured text |
 | [`ml-engineer`](./ml-engineer/) | Build production ML systems with PyTorch 2.x, TensorFlow, and modern ML frameworks. Implem |
 | [`moltbook-interact`](./moltbook-interact/) | Interact with Moltbook social network for AI agents. Post, reply, browse, and analyze enga |
 | [`multi-search-engine`](./multi-search-engine/) | Multi-engine web search — aggregate results from multiple search providers |
@@ -590,17 +577,15 @@
 | [`tech-decision`](./tech-decision/) | This skill should be used when the user asks to "기술 의사결정", "뭐 쓸지 고민", "A vs B", "비교 분석", " |
 | [`tech-selection-research`](./tech-selection-research/) | Use when the user wants to research, compare, or evaluate a technology, framework, platfor |
 
-### ⚙️ DevOps & Infra (20)
+### ⚙️ DevOps & Infra (18)
 
 | Skill | Description |
 |:------|:------------|
 | [`aws-cost-cleanup`](./aws-cost-cleanup/) | Automated cleanup of unused AWS resources to reduce costs |
-| [`ci-cd-builder`](./ci-cd-builder/) | [TODO: Complete and informative explanation of what the skill does and when to use it. Inc |
 | [`cloudflare-pages`](./cloudflare-pages/) | Deploy static sites to Cloudflare Pages with custom domains and CI/CD. Use when the user w |
 | [`cost-optimization`](./cost-optimization/) | Optimize cloud costs through resource rightsizing, tagging strategies, reserved instances, |
 | [`deploy-website`](./deploy-website/) | Website deployment via GitHub PR + Cloud Build |
 | [`deployment-automation`](./deployment-automation/) | Automate application deployment to cloud platforms and servers. Use when setting up CI/CD  |
-| [`k8s-deploy`](./k8s-deploy/) | [TODO: Complete and informative explanation of what the skill does and when to use it. Inc |
 | [`key-rotation`](./key-rotation/) | API key rotation manager — rotate provider keys across all agent workspaces |
 | [`kubernetes-deployment`](./kubernetes-deployment/) | Kubernetes deployment workflow for container orchestration, Helm charts, service mesh, and |
 | [`kubernetes-specialist`](./kubernetes-specialist/) | Use when deploying or managing Kubernetes workloads. Invoke to create deployment manifests |
