@@ -1,8 +1,3 @@
----
-name: media-auto-publisher
-description: Automated media publishing with platform navigation and session management
----
-
 # media-auto-publisher
 > 多平台自动发布——内容一键分发到多个社交媒体平台
 
