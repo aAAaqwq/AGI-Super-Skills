@@ -1,8 +1,3 @@
----
-name: coding-agent-orchestrator
-description: Orchestrate and dispatch coding tasks across multiple AI coding agents
----
-
 # coding-agent-orchestrator
 > 编码 Agent 编排调度——解析 Claude CLI 和 ACPX 二进制路径，支持多编码 Agent 协同
 

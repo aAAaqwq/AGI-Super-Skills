@@ -1,6 +1,6 @@
 ---
 name: campaign-analytics
-description: Production-grade campaign performance analysis with multi-touch attribution modeling, funnel conversion analysis, and ROI calculation. Three Python CL
+description: >
   Analyzes campaign performance with multi-touch attribution, funnel conversion,
   and ROI calculation for marketing optimization
 license: MIT + Commons Clause
