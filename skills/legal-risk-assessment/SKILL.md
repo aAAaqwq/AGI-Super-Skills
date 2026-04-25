@@ -1,6 +1,6 @@
 ---
 name: legal-risk-assessment
-description: Structured legal risk assessment using a quantitative 5x5 Severity x Likelihood matrix. Scores risks, maintains registers, generates assessment memos
+description: >
   Structured legal risk assessment with 5x5 Severity x Likelihood matrix. Use
   for risk scoring, risk registers, escalation decisions, and risk memos.
 license: MIT + Commons Clause

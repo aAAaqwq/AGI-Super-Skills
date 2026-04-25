@@ -1,8 +1,3 @@
----
-name: wemp-operator
-description: WeChat MP operator — draft management, article publishing, and template messaging
----
-
 # wemp-operator
 > 微信公众号全功能运营——草稿/发布/评论/用户/素材/群发/统计/菜单/二维码 API 封装
 

@@ -1,6 +1,6 @@
 ---
 name: code-material-gen
-description: 当素材需要**全中文、手写字体、字迹清晰、可复现**时使用。替代API生图方案（longform-visual-notes），不消耗任何API额度。
+description: |
   代码生成配图素材。用 HTML/CSS + Playwright 渲染高质量中文配图。
   不依赖任何AI图片API，100%代码生成，字体可控、像素精确、零成本。
   Trigger: "代码生成素材", "配图生成", "素材生成", "code material", "render material".
