@@ -1,8 +1,3 @@
----
-name: qingyun-api
-description: Qingyun unified API — image generation, video, TTS, and embedding via single gateway
----
-
 # qingyun-api Skill
 
 青云聚合API多模态调用 Skill — 覆盖生图、生视频、语音、Embedding 等能力。
@@ -53,16 +48,10 @@ description: Qingyun unified API — image generation, video, TTS, and embedding
 ### 🎨 特效/高级 (4)
 | Model ID | 名称 | 格式 | 特点 |
 |----------|------|------|------|
-| `kling-v2-5-turbo` | 可灵数字人视频 | Kling 图生视频 | 图片转数字人说话视频（需配合 voice_list 参数） |
+| `kling-avatar-image2video` | 可灵数字人视频 | Kling 图生视频 | 图片转数字人说话视频 |
 | `kling-advanced-lip-sync` | 可灵高级对口型 | Kling 对口型 | 精准视频对口型/人脸识别 |
 | `kling-effects` | 可灵视频特效 | Kling 视频特效 | 视频特效滤镜/风格迁移 |
 | `gemini-embedding-2-preview` | Gemini Embedding | OpenAI 兼容 | 文本向量化（embedding） |
-
-### ⚠️ 重要更正（2026-04-08）
-- **`kling-avatar-image2video` 不是有效的模型名**（青云API会返回500错误）
-- 数字人视频正确调用方式：`POST /kling/v1/videos/image2video` + `model_name: kling-v2-5-turbo`
-- 如需带音色，使用 `voice_list` 参数指定音色ID，并用 `<<<voice_1>>>` 在 prompt 中引用
-- Daniel 要求的 `/kling/v1/videos/avatar/image2video` 端点不存在，数字人功能走标准 `/kling/v1/videos/image2video` 接口
 
 ## API 格式分类
 
@@ -152,59 +141,6 @@ bash ~/clawd/skills/qingyun-api/scripts/qingyun-image-gemini.sh \
 ## 安全
 - API key 从 `pass show api/qingyun` 获取，永不明文写入脚本
 - 脚本内部通过 `$QINGYUN_API_KEY` 环境变量引用
-
-## 数字人/可灵avatar API 完整调用方法
-
-**端点**: `POST https://api.qingyuntop.top/kling/v1/videos/image2video`
-**查询**: `GET https://api.qingyuntop.top/kling/v1/videos/image2video/{task_id}`
-
-```json
-{
-  "model_name": "kling-v2-5-turbo",
-  "image": "<base64或URL>",
-  "prompt": "男人<<<voice_1>>>说：你好",
-  "negative_prompt": "animation, cartoon",
-  "duration": "5",
-  "aspect_ratio": "9:16",
-  "mode": "std",
-  "cfg_scale": 0.3,
-  "voice_list": [{"voice_id": "<音色ID>"}],
-  "sound": "on"
-}
-```
-
-**说明**:
-- `voice_list`: 指定音色列表（最多2个音色），配合 prompt 中 `<<<voice_N>>>` 引用
-- `sound: on`: 开启音频生成（有音视频则按"有指定音色"计费）
-- `mode`: std（标准/性价比高）| pro（高品质/高表现）
-- 脚本位置: `scripts/qingyun-video-kling.sh`（已实现，支持 voice_list）
-
-## Gemini 图生图 API（补充 2026-04-08）
-
-青云支持两种 Gemini 图生图调用方式：
-
-**方式1: Gemini 原生格式**
-```bash
-curl -X POST "https://api.qingyuntop.top/v1beta/models/gemini-3-pro-image-preview:generateContent?key=$QINGYUN_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "contents": {"parts": [{"text": "生成一张图片"}]},
-    "generationConfig": {
-      "responseModalities": ["TEXT", "IMAGE"],
-      "imageConfig": {"aspectRatio": "16:9"}
-    }
-  }'
-```
-
-**方式2: Chat 兼容格式（推荐，更简单）**
-```bash
-curl -X POST "https://api.qingyuntop.top/v1/chat/completions" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $QINGYUN_API_KEY" \
-  -d '{"model": "gemini-3-pro-image-preview", "messages": [{"role": "user", "content": "生成一张图片"}]}'
-```
-
-脚本位置: `scripts/qingyun-image-gemini.sh`
 
 ## 官方文档
 - API 文档: https://qingyuntop.apifox.cn/
