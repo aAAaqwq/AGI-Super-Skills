@@ -1,181 +1,181 @@
----
-name: daily-xhs-content
-description: "小红书每日内容生产：选题→创作→配图→质量检查→发布草稿"
-metadata: {"version":"2.0.0","author":"CCO Ives","domains":["content","xiaohongshu","automation"],"type":"production"}
----
-description: "小红书每日内容生产：选题→创作→配图→质量检查→发布草稿"
-metadata:
-  version: 2.0.0
-  author: CCO Ives
-  domains: [content, xiaohongshu, automation]
-  type: production
----
-
-# daily-xhs-content — 小红书每日内容生产 v2.0
+# daily-xhs-content — 小红书每日内容生产
 
 > Cron: `daily-xhs-content` | 每日 21:00 | agentId: content
 
 ## 角色定义
 
-你是 CCO（Ives），Daniel Li 的内容 Agent。极简+数据双驱动。
+你是 CCO，Daniel Li 的内容 Agent。
 
 ## 参考文档
 
-| 文档 | 路径 | 用途 |
-|------|------|------|
-| 平台规范 | `~/clawd/projects/MediaClaw/references/platforms/xiaohongshu.md` | **质量检查必须对照** |
-| 人设 | `~/.openclaw/workspace-content/USER.md` | Daniel画像 |
-| SOP | `~/clawd/docs/content-engineering-sop.md` | 内容工程方法论 |
-| 发布skill | `../xhs-publisher/SKILL.md` | XHS草稿发布流程 |
+- SOP: `~/clawd/docs/content-engineering-sop.md`
+- 人设: `~/.openclaw/workspace-content/USER.md`
+- 飞书方法论: `~/clawd/memory/feishu-wiki-prompt-templates-v1-full.txt`
 
 ## 任务
 
-产出 **1 篇** 高质量小红书内容（正文 + 封面），存草稿箱。
+产出 **3 篇** 小红书高质量内容（正文 + 封面）。
 
 ## 执行流程
 
-### Step 1: 选题（7角度竞争分析）
+### Step 1: 选题
 
-1. 搜索 AI 热点：
+1. 调用 brave-search 搜索 AI 热点：
    ```bash
    cd ~/.openclaw/skills/brave-search && ./search.js "小红书 AI 热点 2026" -n 5 --content
    ```
-   关键词池：AI工具、AI创业、AI效率、ChatGPT、Claude、Cursor、AI Agent、大学生AI
-2. 7 角度竞争分析法，选出 3 个差异化选题
-3. 5 维评分（点击欲望/信息密度/清晰度/差异化/正文匹配度），每个选题生成 12 个标题选 Top1
+   关键词：AI工具、AI创业、AI效率、ChatGPT、Claude、Cursor、AI Agent、大学生AI
+2. 用 7 角度竞争分析法，选出 3 个差异化选题
+3. 按 5 维评分法（点击欲望/信息密度/清晰度/差异化/正文匹配度），每个选题生成 12 个标题选 Top1
 
 ### Step 2: 内容创作
 
-**正文结构（400-800字，≤1000字）**：
-- emoji 开头钩子（第一句决定生死）
-- 2-4 个信息点，短句为主
-- "我"的视角，有个人观点和真实经历
-- humanizer 去 AI 痕迹
-- 结尾：💬互动 + ⭐收藏 + 👋关注
-- 标签：5-8 个 `#话题名` 嵌入正文末尾
+1. 小红书正文结构（400-800字，≤1000字）：
+   - emoji 开头钩子（第一句决定生死）
+   - 2-4 个信息点，短句为主
+   - 有个人观点和真实经历（"我"的视角）
+   - humanizer 去 AI 痕迹：无赋能/闭环/底层逻辑，有吐槽/不确定性/长短句交替
+   - 结尾：💬互动引导 + ⭐收藏引导 + 👋关注引导
+2. 标签：5-8 个 `#话题名`
 
-### Step 3: 素材生成
+❌ **注意：`-a` 参数现在为必需参数（2026-04-14 修复）。省略 `-a` 将导致脚本报错。任何调用必须显式指定比例。**
 
-生成封面和配图素材，保存到 `素材/` 目录。
+**核心原则：每张封面必须是一个视觉故事，3 秒内传达文章核心观点。**
 
-**素材生成优先级（从高到低）**：
+提示词结构：`[主体场景] + [视觉隐喻/故事] + [色彩情绪] + [风格] + [格式]`
 
-| 优先级 | 方案 | 适用场景 | 命令 |
-|--------|------|---------|------|
-| 1 | `longform-visual-notes` | 知识转视觉笔记 | skill 调用 |
-| 2 | `baoyu-xhs-images` | 信息图（10风格8布局） | skill 调用 |
-| 3 | `content-cover-gen` | 封面生成 | skill 调用 |
-| 4 | `relay-image-gen` | 兜底AI生图 | `uv run relay_image_gen.py -p "..." -f "..." -a "3:4" -r "1k"` |
-| 5 | `web-content-capture` | 网页截图（**最低优先级**） | skill 调用 |
+设计流程：
+1. 提炼文章核心观点（一句话）
+2. 把观点变成视觉隐喻（问：这个观点像什么画面？）
+3. 选择色彩情绪（警告=红黑，科技=蓝白，批判=红金，教程=蓝绿，创业=金黑）
+4. 补全风格和格式
 
-**封面规格**：3:4 比例，≥720×960，`-a "3:4" -r "1k"`
+❌ 严禁："深色底+强调色+抽象几何" 这种通用提示词
+✅ 要求：提示词中必须包含文章主题相关的具体物体、场景和隐喻
 
-**封面设计原则**：
-1. 提炼核心观点（一句话）
-2. 变成视觉隐喻（这个观点像什么画面？）
-3. 色彩情绪：警告=红黑，科技=蓝白，批判=红金，教程=蓝绿，创业=金黑
-4. ❌ 严禁："深色底+强调色+抽象几何"通用提示词
-5. ✅ 要求：包含文章主题相关的具体物体、场景和隐喻
+参数：`-a "3:4" -r "1k"`
 
-### Step 4: 质量检查（必须逐项对照 `platforms/xiaohongshu.md`）
-
-> **此步骤不可跳过。** 对照 `~/clawd/projects/MediaClaw/references/platforms/xiaohongshu.md` 逐章检查。
-
-**内容合规（对照第二章·内容创作规范）**：
-- [ ] 无违法违规内容（第二章红线清单逐项检查）
-- [ ] 无虚假体验/低质搬运（对照第三章违规类型）
-- [ ] 无导流到微信/其他平台（第三章·违规营销）
-- [ ] 无违禁词（对照第七章处罚机制·违规词清单）
-
-**格式合规**：
-- [ ] 标题 ≤ 20 字（含emoji和数字）
-- [ ] 正文 ≥ 100 字，≤ 1000 字
-- [ ] 标签 5-8 个（正文内 `#话题` 格式）
-
-**内容质量**：
-- [ ] 开头有 emoji + 悬念/数字/冲突
-- [ ] 短句为主，每句 ≤ 20 字
-- [ ] 有"我"的视角，有吐槽/情绪
-- [ ] AI 痕迹 < 5%（humanizer 已跑）
-- [ ] 封面与文章强关联（非通用背景）
-- [ ] 结尾三件套：💬互动 + ⭐收藏 + 👋关注
-
-**AI 内容规范（对照第五章·AIGC）**：
-- [ ] AIGC 内容已标注（发布时勾选AI生成标签）
-- [ ] 不伪造真实体验
-- [ ] 不声称AI生成为实拍
-
-**不通过则重写，直到全部 ✅。**
-
-### Step 5: 保存
-
-输出目录结构：
+命令：
+```bash
+uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示词" -f "输出路径" -a "3:4" -r "1k"
 ```
-~/clawd/projects/MediaClaw/output/articles/{YYYY-MM-DD}/{topic-slug}/
-├── xhs/
-│   ├── article.md          # 精简版文章（用于发布）
-│   └── cover-3x4.jpg       # 3:4封面
-├── 素材/
-│   ├── README.md           # 素材清单
-│   └── *.jpg / *.png       # 素材图
-└── README.md               # 文章说明
+
+### Step 4: 质量检查
+
+- [ ] 人设匹配（直接犀利有观点）
+- [ ] AI 痕迹 < 5%
+- [ ] 标题 ≤ 20 字
+- [ ] 正文 ≥ 100 字
+- [ ] 标签 5-8 个
+- [ ] 封面跟文章内容强关联（非通用背景）
+- [ ] 无违禁词
+
+### Step 5: 输出格式
+
+每篇按此格式：
+
 ```
+📌 标题：
+🏷️ 标签：
+📝 正文：
+🖼️ 封面提示词：[写出生成的实际提示词]
+🖼️ 封面：[已生成/待生成]
+⏰ 建议发布：21:00-23:00
+```
+
+最后附选题评分表。
+
+### Step 6: 保存
+
+保存到 `~/clawd/docs/daily-content/{YYYY-MM-DD}/xhs/`
 
 ```bash
-DIR="~/clawd/projects/MediaClaw/output/articles/$(date +%Y-%m-%d)/{topic-slug}"
-mkdir -p "$DIR/xhs" "$DIR/素材"
+mkdir -p ~/clawd/docs/daily-content/$(date +%Y-%m-%d)/xhs
 ```
-
-### Step 6: 发布到草稿箱
-
-引用 `xhs-publisher` skill（同目录下）：
-
-```bash
-unset ALL_PROXY all_proxy https_proxy http_proxy
-python3 skills/xhs-publisher/scripts/publish.py \
-  --article {article_dir}/xhs/article.md \
-  --cover {article_dir}/xhs/cover-3x4.jpg \
-  --images {article_dir}/素材/*.png {article_dir}/素材/*.jpg \
-  --decision draft
-```
-
-**注意**：
-- 发布前必须 `unset ALL_PROXY`（代理阻断CDP连接）
-- 依赖：openclaw browser(18800) + XHS cookie
-- 仅存草稿，由 Daniel 人工审核后发布
 
 ## 调用的 Skills
 
-| Skill | 用途 | 优先级 | 时机 |
-|-------|------|--------|------|
-| brave-search | AI热点搜索 | 必须 | Step 1 |
-| **humanizer** | **去AI痕迹** | **必须** | **Step 2 后** |
-| longform-visual-notes | 知识视觉笔记 | 素材1 | Step 3 |
-| baoyu-xhs-images | 信息图 | 素材2 | Step 3 |
-| content-cover-gen | 封面生成 | 素材3 | Step 3 |
-| relay-image-gen | 兜底AI生图 | 素材4 | Step 3 |
-| web-content-capture | 网页截图 | **最低** | Step 3（无其他素材时） |
-| **xhs-publisher** | **发布草稿** | **必须** | **Step 6** |
+| Skill | 用途 | 调用时机 |
+|-------|------|---------|
+| brave-search | 搜索 AI 热点 | Step 1 选题 |
+| **humanizer** | **去 AI 痕迹（必须跑）** | **Step 2 之后，Step 4 之前** |
+| xhs-writing-coach | 标题公式/正文结构参考 | Step 2 创作 |
+| relay-image-gen | 生成封面图（3:4） | Step 3 封面 |
+| content-typography | 中文封面排版规范 | Step 3 封面 |
+| content-illustration-strategy | 配图策略（内容驱动，可选） | Step 3 之前 |
+| content-ops-toolkit | 选题分析、标题优化方法论 | Step 1 选题 |
 
-## XHS 润色要点（humanizer 后检查）
+---
 
-| 检查项 | ❌ 错误示范 | ✅ 正确示范 |
-|--------|-----------|-----------|
-| 开头 | "今天给大家分享..." | "🔥 21岁，我用AI赚了第一个100万" |
-| 句式 | "我觉得这个东西非常好用，因为它..." | "效率拉满。早上用它2小时干完一天的活。" |
-| 视角 | "AI Agent 可以提高效率" | "我用它替代了3个外包，上周省了2000块" |
-| AI痕迹 | "赋能/闭环/底层逻辑/打法" | 正常人说话 |
+## ✍️ XHS 专属润色要点（humanizer 之后检查）
 
-**AI痕迹黑名单**：赋能、闭环、底层逻辑、打法、不仅...而且...而且、让我们一起、相信...、高效便捷简单易用
+润色后的文案必须满足：
 
-## 更新日志
+- [ ] **开头决定生死**：第一句必须是 emoji + 悬念/冲突/数字开头
+  - ❌ "今天给大家分享..."
+  - ✅ "🔥 21岁，我用AI赚了第一个100万"
+- [ ] **短句为主**：每句话≤20字，拒绝长段落
+  - ❌ "我觉得这个东西非常好用，因为它可以帮助我们提高效率"
+  - ✅ "效率拉满。早上用它2小时干完一天的活。"
+- [ ] **有"我"的视角**：真实经历、真实吐槽、真实数据
+  - ❌ "AI Agent 可以提高效率"
+  - ✅ "我用它替代了3个外包，上周省了2000块"
+- [ ] **有吐槽/情绪**：不说正确的废话
+- [ ] **标签到位**：正文内 `#话题` XHS 自动识别（不用手动选话题按钮）
+- [ ] **结尾三件套**：💬互动 + ⭐收藏 + 👋关注
+- [ ] **AI痕迹 < 5%**：不得出现：
+  - "赋能/闭环/底层逻辑/打法"
+  - 三个一组排比（"不仅...而且...而且..."）
+  - "让我们一起..."、"相信..."
+  - 每句话都是四字格（"高效便捷、简单易用"）
 
-- **v2.0.0** (2026-04-16): 全面重构
-  - 消除硬编码路径，输出目录统一到 `MediaClaw/output/articles/`
-  - 质量检查必须对照 `platforms/xiaohongshu.md` 逐章执行
-  - 配图优先级排序，web采集降为最低优先级
-  - 发布引用同目录 `xhs-publisher` skill
-  - xhs-publisher 路径改为相对引用（`skills/xhs-publisher/`）
-  - 新增输出目录结构规范
-  - 精简冗余内容（封面生成只保留一处）
-- **v1.0.0** (2026-04-14): 初始版本
+---
+
+## 🖼️ 封面生成
+
+⚠️ **`-a` 参数为必需参数。省略 `-a` 将报错。XHS 必须用 `-a "3:4"`。**
+
+提示词结构：`[主体场景] + [视觉隐喻/故事] + [色彩情绪] + [风格] + [格式]`
+
+设计流程：
+1. 提炼文章核心观点（一句话）
+2. 把观点变成视觉隐喻（问：这个观点像什么画面？）
+3. 选择色彩情绪（警告=红黑，科技=蓝白，批判=红金，教程=蓝绿，创业=金黑）
+4. 补全风格和格式
+
+❌ 严禁："深色底+强调色+抽象几何" 这种通用提示词
+✅ 要求：提示词中必须包含文章主题相关的具体物体、场景和隐喻
+
+参数：`-a "3:4" -r "1k"`
+
+命令：
+```bash
+uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示词" -f "输出路径" -a "3:4" -r "1k"
+```
+
+---
+
+## ✅ 质量检查清单（Step 4）
+
+- [ ] 标题 ≤ 20 字（含emoji和数字）
+- [ ] 正文 ≥ 100 字，≤ 1000 字
+- [ ] AI 痕迹 < 5%（逐项对照上方检查）
+- [ ] 开头有 emoji + 悬念/数字/冲突
+- [ ] 短句为主，有"我"的视角
+- [ ] 标签 5-8 个（在正文中用 # 格式）
+- [ ] 封面跟文章内容强关联（非通用背景）
+- [ ] 结尾有互动引导
+- [ ] 无违禁词
+
+---
+
+## 📤 发布
+
+```bash
+python3 ~/clawd/skills/xhs-publisher/scripts/publish.py \
+  --article ~/clawd/docs/daily-content/{YYYY-MM-DD}/xhs/article.md \
+  --cover ~/clawd/docs/daily-content/{YYYY-MM-DD}/xhs/cover.jpg \
+  --decision draft
+```
+
+依赖：openclaw browser + xhs cookie（`~/.playwright-data/xiaohongshu/state-default.json`）

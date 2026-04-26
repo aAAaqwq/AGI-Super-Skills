@@ -1,217 +1,172 @@
----
-name: daily-gzh-content
-description: "公众号每日内容生产：选题→创作→素材生成→质量检查→保存→发布草稿"
-metadata: {"version":"2.1.0","author":"CCO Ives","domains":["content","weixin-mp","automation"],"type":"production"}
----
-description: "公众号每日内容生产：选题→创作→素材生成→质量检查→保存→发布草稿"
-metadata:
-  version: 2.1.0
-  author: CCO Ives
-  domains: [content, weixin-mp, automation]
-  type: production
----
-
-# daily-gzh-content — 公众号每日内容生产 v2.0
+# daily-gzh-content — 公众号每日内容生产
 
 > Cron: `daily-gzh-content` | 每日 21:30 | agentId: content
 
 ## 角色定义
 
-你是 CCO（Ives），Daniel Li 的内容 Agent。理性专业但不死板，敢说。
+你是 CCO，Daniel Li 的内容 Agent。
 
 ## 参考文档
 
-| 文档 | 路径 | 用途 |
-|------|------|------|
-| 平台规范 | `~/clawd/projects/MediaClaw/references/platforms/weixin-mp.md` | **质量检查必须对照** |
-| 人设 | `~/.openclaw/workspace-content/USER.md` | Daniel画像 |
-| SOP | `~/clawd/docs/content-engineering-sop.md` | 内容工程方法论 |
-| 发布skill | `../gzh-publisher-skill/SKILL.md` | GZH草稿发布流程 |
+- SOP: `~/clawd/docs/content-engineering-sop.md`
+- 人设: `~/.openclaw/workspace-content/USER.md`
+- 飞书方法论: `~/clawd/memory/feishu-wiki-prompt-templates-v1-full.txt`
 
 ## 任务
 
-产出 **1 篇** 高质量公众号深度文章，存草稿箱。
+产出 **3 篇** 微信公众号高质量深度文章。
 
 ## 执行流程
 
 ### Step 1: 选题
 
-**如果 Daniel 指定了选题**，直接使用指定选题，跳过搜索。
-
-**未指定时**，自动搜索：
 1. brave-search 搜索 AI 深度热点：
    ```bash
    cd ~/.openclaw/skills/brave-search && ./search.js "AI技术深度分析 2026" -n 5 --content
+   ./search.js "AI行业趋势 2026" -n 5 --content
    ```
 2. 7 角度竞争分析，选 3 个差异化选题（适合深度长文方向）
 3. 5 维评分法，每个选题生成 12 标题选 Top1
 
 ### Step 2: 内容创作
 
-1. 公众号结构（4000-8000 字）：
-   - 写在前面：为什么写这篇，读者能获得什么（200-400 字）
-   - 一、背景/痛点（600-1000 字）
-   - 二、核心内容（2000-4000 字，3-5 子主题，每子主题 400-800 字）
-   - 三、实战/案例/对比（600-1000 字，至少 2 个真实案例）
-   - 四、进阶思考/反常识观点（400-800 字）
-   - 五、总结与行动建议（300-500 字）
-   - 参考资料来源
+1. 公众号结构（1500-3000 字）：
+   - 写在前面：为什么写这篇，读者能获得什么（100-200 字）
+   - 一、背景/痛点（300-500 字）
+   - 二、核心内容（800-1500 字，2-3 子主题）
+   - 三、实战/案例/对比（300-500 字）
+   - 四、总结（100-200 字）
 2. 风格：第一人称、有观点敢说、数据支撑
 3. humanizer 去 AI 痕迹
 4. 摘要：≤ 120 字
 
-### Step 3: 素材生成（**必须使用 code-material-gen**）
+### Step 3: 封面生成（⚠️ 内容驱动，严禁纯风格）
 
-使用 `code-material-gen` 生成封面和配图素材，保存到 `素材/` 目录。
+**核心原则：封面必须在 3 秒内传达文章核心观点，吸引点击。**
 
-**⚠️ 素材生成强制规则**：
-- **必须使用 `code-material-gen`**（HTML/CSS + Playwright 渲染，零成本、全中文、像素精确）
-- 其他方案（`longform-visual-notes`、`baoyu-xhs-images` 等）仅作为**补充**，不得替代 `code-material-gen`
-- `code-material-gen` 不可用时才降级到 `longform-visual-notes`（API 生图）
+⚠️ **`-a` 参数为必需参数（2026-04-14 修复）。省略 `-a` 将报错。GZH 必须用 `-a "16:9"`。**
 
-**素材生成流程**：
+提示词结构：`[主体场景] + [视觉隐喻/故事] + [色彩情绪] + [风格] + [格式]`
 
-1. 分析文章结构，确定需要几张素材（建议 3-5 张）
-2. 为每张素材选择类型、配色和字体：
+设计流程：
+1. 提炼文章核心观点（一句话）
+2. 把观点变成视觉隐喻
+3. 选择色彩情绪
+4. 编辑风格，深色底，专业感
 
-| 素材类型 | 适用场景 | 命令 type |
-|----------|---------|----------|
-| 对比表 | A vs B 对比（如产品对比） | `compare` |
-| 要点列表 | N 个要点/硬伤/建议 | `list` |
-| 金句卡 | 核心观点/结论 | `quote` |
-| 时间线 | 阶段/发展历程 | `timeline` |
-| 封面 | 文章封面 | `cover` |
-| 数据图 | 数据展示 | `chart` |
+❌ 严禁："深色底+金色/白色几何装饰" 这种通用提示词
+✅ 要求：提示词必须包含文章主题的具体物体、场景和隐喻
 
-3. 调用 `code-material-gen` 生成素材：
+参数：`-a "16:9" -r "1k"`
+
+命令：
 ```bash
-python3 ~/clawd/projects/MediaClaw/skills/code-material-gen/scripts/generate.py \
-  --type {compare|list|quote|timeline|chart|cover} \
-  --title "标题" \
-  --items "项1" "项2" ... \
-  --font MaShanZheng \
-  --palette {tech|warm|ink|minimal} \
-  --size 1536x1024 \
-  --output 素材/{filename}.png
+uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示词" -f "输出路径" -a "16:9" -r "1k"
 ```
 
-4. **素材生成后必须插入到 markdown 文章的相应位置**：
-   - 对比表 → 插入到对应对比段落后
-   - 要点列表 → 插入到对应列表段落后
-   - 金句卡 → 插入到文章结尾总结部分
-   - 使用 `![描述](素材/filename.png)` 格式插入
-   - 插入位置要自然，紧跟相关段落，不要全部堆在文末
+### Step 4: 质量检查
 
-**配色选择**：
-| palette | 适用 |
-|---------|------|
-| `tech` | 科技/数据/AI 主题（深蓝+亮蓝） |
-| `ink` | 观点/分析类（水墨风） |
-| `warm` | 经验分享/教程（暖色） |
-| `minimal` | 通用/商务 |
-
-**如有 Daniel 手动提供的素材**（截图/图片），一并放入 `素材/` 目录，并在 markdown 中插入到对应位置。
-
-### Step 4: 质量检查（必须逐项对照 `platforms/weixin-mp.md`）
-
-> **此步骤不可跳过。** 对照 `~/clawd/projects/MediaClaw/references/platforms/weixin-mp.md` 逐章检查。
-
-**内容合规（对照第二、三章）**：
-- [ ] 无违法违规内容
-- [ ] 无标题党（无夸大/混淆官方/信息来源机密）
-- [ ] 无诱导分享/关注/导流
+- [ ] 人设匹配（理性专业但不死板）
+- [ ] AI 痕迹 < 5%
+- [ ] 标题 ≤ 64 字（建议 13-22 字）
+- [ ] 正文 1500-3000 字
+- [ ] 有数据/案例支撑
+- [ ] 封面跟文章内容强关联
 - [ ] 无违禁词
 
-**原创与AIGC（对照第四、七章）**：
-- [ ] 原创声明合规（非整合引用、非公共内容、非营销宣传）
-- [ ] AIGC 内容已标注
-- [ ] 不伪造真实体验
+### Step 5: 输出格式
 
-**内容质量**：
-- [ ] 标题 ≤ 64 字（建议 13-22 字）
-- [ ] 正文 4000-8000 字
-- [ ] 摘要 ≤ 120 字
-- [ ] 有数据/案例支撑
-- [ ] AI 痕迹 < 5%（humanizer 已跑）
-- [ ] 封面与文章强关联
-
-**不通过则重写，直到全部 ✅。**
-
-### Step 5: 保存
-
-输出目录结构：
 ```
-~/clawd/projects/MediaClaw/output/articles/{YYYY-MM-DD}/{topic-slug}/
-├── gzh/
-│   ├── article.md          # 公众号Markdown版
-│   └── cover-16x9.jpg      # 16:9封面
-├── 素材/
-│   ├── README.md           # 素材清单
-│   └── *.jpg / *.png       # 素材图
-└── README.md               # 文章说明
+📌 标题：
+📝 摘要：
+📝 正文：
+🖼️ 封面提示词：[写出生成的实际提示词]
+🖼️ 封面：
+⏰ 建议发布：21:00-22:00
 ```
+
+### Step 6: 保存
+
+保存到 `~/clawd/docs/daily-content/{YYYY-MM-DD}/gzh/`
 
 ```bash
-DIR="~/clawd/projects/MediaClaw/output/articles/$(date +%Y-%m-%d)/{topic-slug}"
-mkdir -p "$DIR/gzh" "$DIR/素材"
+mkdir -p ~/clawd/docs/daily-content/$(date +%Y-%m-%d)/gzh
 ```
-
-### Step 6: 发布到草稿箱
-
-引用 `gzh-publisher-skill`：
-
-```bash
-unset ALL_PROXY all_proxy https_proxy http_proxy
-python3 skills/gzh-publisher-skill/scripts/publish.py \
-  --article {article_dir}/gzh/article.md \
-  --cover {article_dir}/gzh/cover-16x9.jpg \
-  --images {article_dir}/素材/*.png {article_dir}/素材/*.jpg \
-  --decision draft
-```
-
-**注意**：
-- 发布前必须 `unset ALL_PROXY`（代理阻断CDP连接）
-- 依赖：openclaw browser + 微信MP cookie
-- 仅存草稿，由 Daniel 人工审核后群发
 
 ## 调用的 Skills
 
-| Skill | 用途 | 优先级 | 时机 |
-|-------|------|--------|------|
-| brave-search | AI深度热点搜索 | 条件 | Step 1（未指定选题时） |
-| **humanizer** | **去AI痕迹** | **必须** | **Step 2 后** |
-| **code-material-gen** | **代码生成素材（对比表/要点/金句）** | **必须** | **Step 3** |
-| longform-visual-notes | 知识视觉笔记 | 补充 | Step 3（code-material-gen 不可用时） |
-| content-cover-gen | 封面生成 | 补充 | Step 3 |
-| **gzh-publisher-skill** | **发布草稿** | **必须** | **Step 6** |
+| Skill | 用途 | 调用时机 |
+|-------|------|---------|
+| brave-search | 搜索 AI 深度热点 | Step 1 选题 |
+| **humanizer** | **去 AI 痕迹（必须跑）** | **Step 2 之后，Step 4 之前** |
+| relay-image-gen | 生成封面图（16:9） | Step 3 封面 |
+| content-typography | 中文排版规范 | Step 4 质量检查 |
+| content-illustration-strategy | 配图策略（可选） | Step 3 之前 |
+| content-ops-toolkit | 选题分析、标题优化 | Step 1 选题 |
 
-## GZH 润色要点（humanizer 后检查）
+---
 
-| 检查项 | ❌ 错误 | ✅ 正确 |
-|--------|--------|--------|
-| 视角 | 中性罗列 | 有"我认为"、"我的判断" |
-| 立场 | 和稀泥 | 有鲜明观点，敢说 |
-| 黑话 | 赋能/闭环/底层逻辑/打法/赛道/生态/颠覆 | 正常人说话 |
-| 句式 | 长句连篇 | 短句优先，每段≤3-4句 |
-| 论据 | 泛泛而谈 | 有具体数字/案例/链接 |
-| 结尾 | "感谢阅读" | 引导留言/讨论 |
+## ✍️ GZH 专属润色要点（humanizer 之后检查）
 
-**AI痕迹黑名单**：值得注意的是、此外、与此同时、代表了、凸显了、体现了、让我们拭目以待、未来可期
+润色后的文章必须满足：
 
-## 更新日志
+- [ ] **第一人称观点**：有"我认为"、"我的判断"，不是中性罗列
+- [ ] **敢说**：有鲜明立场，不和稀泥
+- [ ] **删除黑话**：去掉"赋能/闭环/底层逻辑/打法/赛道/生态/颠覆"
+- [ ] **短句优先**：长句拆成短句，每段不超过3-4句
+- [ ] **数据支撑**：有具体数字/案例/链接，不是泛泛而谈
+- [ ] **结尾有互动**：引导留言/讨论，不是"感谢阅读"这种废话
+- [ ] **AI痕迹 < 5%**：全文不得出现以下AI特征：
+  - "值得注意的是"、"此外"、"与此同时"
+  - "代表了.../凸显了.../体现了..."
+  - "让我们拭目以待"、"未来可期"
+  - 三个一组排比句（"不仅...而且...而且..."）
 
-- **v2.1.0** (2026-04-18): 内容规格升级
-  - 正文字数 1500-3000 → 4000-8000 字
-  - 新增"进阶思考"章节结构
-  - 素材规范：严禁英文、要求手写字体、字迹清晰
-  - 封面和素材配色与文章情绪关联
-- **v2.0.0** (2026-04-16): 全面重构
-  - 消除硬编码路径，输出目录统一到 `MediaClaw/output/articles/`
-  - Step 1 支持用户指定选题（未指定才自动搜索）
-  - Step 2 拆分为纯内容创作（素材采集移到 Step 3）
-  - Step 3 统一素材生成优先级（与 daily-xhs-content 一致）
-  - Step 5 保存，Step 6 发布（与 xhs 流程对齐）
-  - 质量检查必须对照 `platforms/weixin-mp.md` 逐章执行
-  - 去除重复的封面生成段落（原来写了两遍）
-  - 去除 content-illustration-strategy / xhs-writing-coach 等冗余引用
-- **v1.0.0** (2026-04-14): 初始版本
+---
+
+## 🖼️ 封面生成
+
+⚠️ **`-a` 参数为必需参数（2026-04-14 修复）。省略 `-a` 将报错。GZH 必须用 `-a "16:9"`。**
+
+提示词结构：`[主体场景] + [视觉隐喻/故事] + [色彩情绪] + [风格] + [格式]`
+
+设计流程：
+1. 提炼文章核心观点（一句话）
+2. 把观点变成视觉隐喻
+3. 选择色彩情绪
+4. 编辑风格，深色底，专业感
+
+❌ 严禁："深色底+金色/白色几何装饰" 这种通用提示词
+✅ 要求：提示词必须包含文章主题的具体物体、场景和隐喻
+
+参数：`-a "16:9" -r "1k"`
+
+命令：
+```bash
+uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示词" -f "输出路径" -a "16:9" -r "1k"
+```
+
+---
+
+## ✅ 质量检查清单（Step 4）
+
+- [ ] 标题 ≤ 64 字（建议 13-22 字）
+- [ ] 正文 1500-3000 字
+- [ ] AI 痕迹 < 5%（逐项对照上方检查）
+- [ ] 人设匹配（理性专业但不死板，有观点）
+- [ ] 有数据/案例支撑
+- [ ] 封面跟文章内容强关联
+- [ ] 无违禁词
+
+---
+
+## 📤 发布
+
+```bash
+python3 ~/clawd/skills/wechat-mp-smart-publish/scripts/publish.py \
+  --article ~/clawd/docs/daily-content/{YYYY-MM-DD}/gzh/article.md \
+  --cover ~/clawd/docs/daily-content/{YYYY-MM-DD}/gzh/cover.jpg \
+  --decision draft
+```
+
+依赖：openclaw browser + wechat cookie（`~/.playwright-data/wechat/state-default.json`）

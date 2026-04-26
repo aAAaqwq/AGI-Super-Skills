@@ -1,17 +1,4 @@
----
-name: daily-douyin-content
-description: "抖音每日内容生产：选题→创作→封面→质量检查→保存"
-metadata: {"version":"2.0.0","author":"CCO Ives","domains":["content","douyin","automation"],"type":"production"}
----
-description: "抖音每日内容生产：选题→创作→封面→质量检查→保存"
-metadata:
-  version: 2.0.0
-  author: CCO Ives
-  domains: [content, douyin, automation]
-  type: production
----
-
-
+# daily-douyin-content — 抖音每日内容生产
 
 > Cron: `daily-douyin-content` | 每日 22:00 | agentId: content
 
@@ -24,11 +11,10 @@ metadata:
 - SOP: `~/clawd/docs/content-engineering-sop.md`
 - 人设: `~/.openclaw/workspace-content/USER.md`
 - 飞书方法论: `~/clawd/memory/feishu-wiki-prompt-templates-v1-full.txt`
-- **📋 抖音平台规范**: `~/clawd/projects/MediaClaw/references/platforms/douyin.md` — 社区公约(11大类违规)、推荐算法(三级火箭)、AIGC标识、账号健康分、处罚机制
 
 ## 任务
 
-产出 **1 条** 高质量抖音内容（视频脚本 + 图文描述 + 封面）。
+产出 **3 条** 抖音高质量内容（视频脚本 + 图文描述 + 封面）。
 
 ## 执行流程
 
@@ -47,14 +33,7 @@ mkdir -p ~/clawd/docs/daily-content/$(date +%Y-%m-%d)/douyin
 2. 7 角度竞争分析，选 3 个适合短视频的选题
 3. 5 维评分法选标题（≤ 30 字）
 
-### Step 2: 素材采集 + 内容创作
-
-**素材采集**：
-- 调用 `web-content-capture` skill 截取相关截图
-- 抖音重点：竖屏截图（9:16），截图需裁剪为手机视图
-- 素材保存到 `~/clawd/projects/MediaClaw/output/articles/{YYYY-MM-DD}/{topic-slug}/`
-
-**内容创作**：
+### Step 2: 内容创作
 
 1. 60 秒短视频脚本（220-260 字）
 2. 同时准备图文版本描述（≤ 200 字）
@@ -63,17 +42,6 @@ mkdir -p ~/clawd/docs/daily-content/$(date +%Y-%m-%d)/douyin
 5. humanizer 去 AI 痕迹：口语化、像跟朋友聊天
 
 ### Step 3: 封面/缩略图生成
-
-> **⚡ 优先方案：Canvas 文字图生成**
-> 
-> 使用 `frontend-design` skill 生成带文字的对比图/信息图/数据可视化配图。
-> - 参考风格：深色背景 + 蓝橙配色 + 大标题 + 清晰数据
-> - 素材路径：`~/clawd/projects/MediaClaw/output/articles/*/素材/canvas-*.png`
-> - 适用场景：对比类、数据类、技术评测类内容
-> - 生成方式：HTML/CSS + browser 截图
-> - 尺寸调整：生成后裁剪为 9:16 竖屏或 3:4
-
-**备选方案：AI 图片生成**
 
 提示词必须由视频主题驱动，严禁纯风格模板。
 
@@ -95,10 +63,7 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示�
 - [ ] 有 Hook + CTA
 - [ ] 封面跟视频内容强关联
 - [ ] AIGC 已标注
-- [ ] 无违禁词（对照 `platforms/douyin.md` 11大类违规清单）
-- [ ] 无危险行为/低俗擦边/虚假宣传
-- [ ] 素材（音乐/图片）有合法授权
-- [ ] AIGC 已标注（使用抖音AI标识功能）
+- [ ] 无违禁词
 
 ### Step 5: 输出格式
 
@@ -124,11 +89,10 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示�
 |-------|------|---------|
 | brave-search | 搜索抖音 AI 热点 | Step 1 选题 |
 | **humanizer** | **去 AI 痕迹（必须跑）** | **Step 2 之后，Step 4 之前** |
-| relay-image-gen | 生成封面图（3:4 竖屏） | Step 3 封面 |
-| content-typography | 中文封面排版规范 | Step 4 |
-| content-illustration-strategy | 配图策略（可选） | Step 4 之前 |
+| relay-image-gen | 生成封面图（9:16 竖屏） | Step 3 封面 |
+| content-typography | 中文封面排版规范 | Step 3 |
+| content-illustration-strategy | 配图策略（可选） | Step 3 之前 |
 | content-ops-toolkit | 选题分析、标题优化 | Step 1 选题 |
-| **web-content-capture** | **网页截图、素材采集** | **Step 2 素材采集** |
 
 ---
 
@@ -151,17 +115,13 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py -p "提示�
 
 ---
 
-### Step 7: 发布到草稿箱
+## 📤 发布
 
-调用 `douyin-smart-publish` skill 完成发布（含音乐选择）。
+```bash
+python3 ~/clawd/skills/douyin-smart-publish/scripts/publish.py \
+  --article ~/clawd/docs/daily-content/{YYYY-MM-DD}/douyin/article.md \
+  --cover ~/clawd/docs/daily-content/{YYYY-MM-DD}/douyin/cover.jpg \
+  --decision draft
+```
 
 依赖：openclaw browser + douyin cookie
-
-
-## 配图策略
-
-**优先级**：
-1. `longform-visual-notes` — 长文知识转视觉笔记图（首选，gemini-3-pro-image）
-2. `baoyu-xhs-images` — 小红书信息图系列（10种风格+8种布局）
-3. `content-cover-gen` — 封面图生成
-4. `image_generate` — 兜底AI生图
