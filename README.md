@@ -22,10 +22,22 @@
   <a href="#quick-start">Quick Start</a> ·
   <a href="./skills/README.md">All Skills</a> ·
   <a href="./agents/README.md">Agents</a> ·
-  <a href="./cookbook/">Cookbooks</a>
+  <a href="./cookbook/">Cookbooks</a> ·
+  <a href="./starter-kits/">Starter Kits</a> ·
+  <a href="./setup.md">Agent Setup Guide</a>
 </p>
 
 ---
+
+## 🤖 For AI Agents
+
+> **如果你是 Claude Code / OpenClaw / Codex / Cursor，读这个文件：[`setup.md`](./setup.md)**
+>
+> 或者直接告诉你的 Agent：
+> ```
+> 帮我安装 AGI Super Team：https://github.com/aAAaqwq/AGI-Super-Team
+> 我要 solo-founder kit
+> ```
 
 ## 💡 What Is This?
 
