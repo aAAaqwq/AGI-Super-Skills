@@ -121,38 +121,40 @@ done
 
 Each agent directory (e.g. `agents/cco/WORKFLOW.md`) contains role-specific and shared workflows.
 
-## Quick Start
+## ⚡ Quick Start (30 seconds)
 
-### Prerequisites
+### One-command deploy (recommended)
 
-Install [OpenClaw](https://github.com/openclaw/openclaw) (AI agent runtime):
 ```bash
+# Prerequisites: Node.js v20+ and OpenClaw
 npm install -g openclaw
-openclaw init
+
+# Deploy a starter kit — pick your role:
+curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- solo-founder    # 🚀 一个人创业
+# curl ... | bash -s -- content-creator   # 🎨 自媒体
+# curl ... | bash -s -- quant-trader      # 📈 量化交易
+# curl ... | bash -s -- full-team         # 🏛️ 全部12个Agent
+
+# Configure API keys, then restart
+openclaw config
+openclaw gateway restart
 ```
 
-### Deploy your AI team
+### Starter Kits
+
+| Kit | Agents | Best for |
+|-----|--------|----------|
+| 🚀 [**Solo Founder**](./starter-kits/solo-founder/) | CEO + PE + CCO | 独立开发者、创业者 |
+| 🎨 [**Content Creator**](./starter-kits/content-creator/) | CCO + CDO + CMO | 自媒体人、内容团队 |
+| 📈 [**Quant Trader**](./starter-kits/quant-trader/) | CQO + CDO + CFO | 量化交易、投资 |
+| 🏛️ **Full Team** | All 12 agents | 完整 AI 公司 |
+
+### Manual deploy
 
 ```bash
-# 1. Clone the repo
 git clone https://github.com/aAAaqwq/AGI-Super-Team.git
 cd AGI-Super-Team
-
-# 2. Deploy an agent (e.g., CEO with Elon Musk's thinking)
-mkdir -p ~/.openclaw/workspace-main/skills/
-cp -r skills/thinking-elon-musk/ ~/.openclaw/workspace-main/skills/
-cp agents/main/SOUL.md agents/main/AGENTS.md ~/.openclaw/workspace-main/
-
-# 3. Add more skills
-cp -r skills/api-design/ ~/.openclaw/workspace-main/skills/
-
-# 4. Deploy more agents (e.g., PE for coding)
-mkdir -p ~/.openclaw/workspace-pe/skills/
-cp agents/pe/SOUL.md agents/pe/AGENTS.md ~/.openclaw/workspace-pe/
-cp -r skills/thinking-linus-torvalds/ ~/.openclaw/workspace-pe/skills/
-
-# 5. Restart OpenClaw — done!
-openclaw gateway restart
+./install.sh solo-founder    # or any kit / agent name
 ```
 
 ## 📚 Cookbooks
@@ -177,8 +179,12 @@ AGI-Super-Team/
 │   └── README.md     # Architecture diagram & skill matrix
 ├── skills/           # 727 skills (flat structure, each with SKILL.md)
 │   └── README.md     # Full catalog
-
+├── starter-kits/     # 🆕 One-click deployment bundles
+│   ├── solo-founder/ # CEO + PE + CCO
+│   ├── content-creator/ # CCO + CDO + CMO
+│   └── quant-trader/ # CQO + CDO + CFO
 ├── cookbook/         # 5 in-depth learning guides
+├── install.sh        # 🆕 One-click deployer
 ├── CHARTER.md        # Team constitution (12 principles)
 ├── STARTUP.md        # Quick-start guide
 ├── COLLABORATION.md  # Inter-agent collaboration network
