@@ -1,6 +1,6 @@
 # daily-xhs-content — 小红书每日内容生产
 
-> Cron: `daily-xhs-content` | 每日 21:00 | agentId: content
+> Cron: `daily-xhs-content` | 每日 21:00
 
 ## 角色定义
 
