@@ -201,6 +201,20 @@ def count_consecutive(candles):
             bear += 1
     return bull, bear
 
+def fetch_fng():
+    """Fetch Fear & Greed Index from alternative.me"""
+    try:
+        req = urllib.request.Request(
+            "https://api.alternative.me/fng/?limit=1",
+            headers={"User-Agent": "5minbtc-engine/3.1"}
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read())
+        d = data["data"][0]
+        return {"value": int(d["value"]), "label": d["value_classification"]}
+    except Exception:
+        return {"value": None, "label": None}
+
 def run():
     # 1. Current candle info
     info = current_candle_info()
@@ -269,6 +283,7 @@ def run():
             "vol_now": round(vol_now, 1),
             "vol_avg": round(vol_avg, 1)
         },
+        "fng": fetch_fng(),
         "momentum": {
             "consecutive_bull": con_bull,
             "consecutive_bear": con_bear
