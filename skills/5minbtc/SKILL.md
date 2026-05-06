@@ -22,10 +22,12 @@
 ```
 并行组:
 ├── exec: settle-all + 引擎脚本（合并一条命令）
-├── web_search: "Bitcoin BTC price news today" count=3-5
-├── web_search: "site:binance.com/en/square BTC Bitcoin" count=3
-└── web_search: "比特币 BTC 行情 最新" count=3
+├── web_search: "Bitcoin BTC breaking news price" count=3 freshness=day
+├── web_search: "crypto market macro stocks today" count=3 freshness=day
+└── web_search: "比特币 BTC 最新 晚间" count=3 freshness=day
 ```
+
+引擎输出已包含FnG(恐惧贪婪指数)，无需额外API调用。
 
 引擎命令：
 ```bash
