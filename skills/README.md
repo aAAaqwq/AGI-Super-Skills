@@ -1,6 +1,6 @@
 # 🛠️ Skills Catalog
 
-> **727 skills** ready to deploy · [← Back to main README](../README.md)
+> **728 skills** ready to deploy · [← Back to main README](../README.md)
 
 ---
 
@@ -11,7 +11,7 @@
 | 🔧 Development | 83 |
 | 💰 Trading & Finance | 44 |
 | 📝 Content & Writing | 46 |
-| 📈 Marketing & SEO | 33 |
+| 📈 Marketing & SEO | 34 |
 | 📱 Chinese Platforms | 26 |
 | 🔌 SaaS Integrations | 47 |
 | 💬 Communication | 47 |
@@ -24,7 +24,7 @@
 | 🧬 Bioinformatics | 12 |
 | 🧠 Thinking Frameworks | 31 |
 | 🧩 Other | 155 |
-| **Total** | **727** |
+| **Total** | **728** |
 
 ---
 
@@ -218,7 +218,7 @@
 | [`xhs-content-creator`](./xhs-content-creator/) | Generate Xiaohongshu (小红书/RED) content optimized for the platform''s |
 | [`xhs-writing-coach`](./xhs-writing-coach/) | Coach and generate Xiaohongshu (小红书/RedNote/XHS) note writing. Use when |
 
-### 📈 Marketing & SEO (33)
+### 📈 Marketing & SEO (34)
 
 | Skill | Description |
 |:------|:------------|
@@ -255,6 +255,7 @@
 | [`video-marketing`](./video-marketing/) | When the user wants to plan video marketing, create video scripts, or optimize for short-f |
 | [`x-tweet-fetcher`](./x-tweet-fetcher/) | Fetch tweets from X/Twitter without authentication. Supports tweet content, reply threads, |
 | [`xiaohongshu-growth`](./xiaohongshu-growth/) | 小红书内容创作运营增长综合解决方案。包含爆款内容创作、封面设计、发布优化、数据分析和账号增长策略。当用户需要：(1) 创建小红书爆款内容 (2) 优化账号运营策略 (3) 分析竞品 |
+| [`xquik-twitter-api`](./xquik-twitter-api/) | Use Xquik for X/Twitter API workflows: tweet search, profile tweets, follower export, media download, posting, and more. |
 
 ### 📱 Chinese Platforms (26)
 
