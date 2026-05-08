@@ -19,7 +19,8 @@ CEO (main)
     ├── CPO ← 产品                     │
     ├── CLO ← 法务                     │
     ├── CSO ← 销售                     │
-    └── COO ← 运维/安全 ──────────────┘
+    ├── COO ← 运维/安全 ──────────────┘
+    └── Governor ← 治理验证（三证验真）
 ```
 
 ## Agent 速查表
@@ -39,8 +40,10 @@ CEO (main)
 | [CRO](cro/) | 🔬 首席研究官 | Richard Feynman, Karpathy | AGENTS · SOUL · MEMORY · IDENTITY · BOOTSTRAP · WORKFLOW · TOOLS |
 | [CSO](cso/) | 🤝 首席销售官 | Michael Dell, Aaron Ross | AGENTS · SOUL · MEMORY · IDENTITY · BOOTSTRAP · TOOLS |
 | [COO](coo/) | ⚙️ 首席运营官 | Andy Grove, Jeff Bezos | AGENTS · SOUL · MEMORY · IDENTITY · BOOTSTRAP · WORKFLOW · TOOLS |
+| [Governor](governor/) | ⚖️ 治理官（三省合一） | 诸葛亮, 王阳明 | AGENTS · SOUL · MEMORY · IDENTITY · BOOTSTRAP · TOOLS |
 
-> **PE = 首席工程师（Principal Engineer）**，负责全栈工程和 DevOps 执行
+> **PE = 首席工程师（Principal Engineer）**，负责全栈工程和 DevOps 执行  
+> **Governor = 治理官**，融合三省职能（定法/执法/验真），负责交付验证与质量管控
 
 ## Agent 目录结构
 
