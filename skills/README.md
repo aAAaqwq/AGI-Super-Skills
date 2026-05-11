@@ -255,7 +255,7 @@
 | [`video-marketing`](./video-marketing/) | When the user wants to plan video marketing, create video scripts, or optimize for short-f |
 | [`x-tweet-fetcher`](./x-tweet-fetcher/) | Fetch tweets from X/Twitter without authentication. Supports tweet content, reply threads, |
 | [`xiaohongshu-growth`](./xiaohongshu-growth/) | 小红书内容创作运营增长综合解决方案。包含爆款内容创作、封面设计、发布优化、数据分析和账号增长策略。当用户需要：(1) 创建小红书爆款内容 (2) 优化账号运营策略 (3) 分析竞品 |
-| [`xquik-twitter-api`](./xquik-twitter-api/) | Use Xquik for X/Twitter API workflows — tweet search, profile tweets, follower export, media download, posting, and more. |
+| [`xquik-twitter-api`](./xquik-twitter-api/) | Use Xquik for X/Twitter API workflows: tweet search, profile tweets, follower export, media download, posting, and more. |
 
 ### 📱 Chinese Platforms (26)
 
