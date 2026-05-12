@@ -15,7 +15,7 @@ Filter: only last 6h of news included.
 ```bash
 curl -s "https://min-api.cryptocompare.com/data/v2/news/?lang=EN&limit=10&api_key=$CRYPTOCOMPARE_KEY"
 ```
-- **Key**: stored in `.env.polymarket` as `CRYPTOCOMPARE_KEY`
+- **Key**: stored in `.env.poly` as `CRYPTOCOMPARE_KEY`
 - **Coverage**: 50+ crypto news sources, real-time, structured JSON
 - **Categories**: BTC, ETH, SOL, ALTCOIN, REGULATION, MACROECONOMICS, SECURITY INCIDENTS, etc.
 - **Sentiment**: per-article sentiment field (bullish/bearish/neutral)
@@ -45,7 +45,7 @@ curl -s -H "User-Agent: Mozilla/5.0" "https://feeds.bloomberg.com/markets/news.r
 ```bash
 curl -s "https://api.stlouisfed.org/fred/series/observations?series_id=CPIAUCSL&api_key=$FRED_KEY&file_type=json&limit=1"
 ```
-- **Key**: stored in `.env.polymarket` as `FRED_KEY` (free registration at https://fred.stlouisfed.org/docs/api/api_key.html)
+- **Key**: stored in `.env.poly` as `FRED_KEY` (free registration at https://fred.stlouisfed.org/docs/api/api_key.html)
 - **Free tier**: 120 requests/min
 - **Series**: CPIAUCSL (CPI), UNRATE (unemployment), FEDFUNDS (Fed rate), GDP, PAYEMS (NFP)
 - **Use**: Cross-verify macro data, detect data surprises

@@ -1,0 +1,14 @@
+📰 News sentiment | BEARISH
+
+市场：BTC $78513 (-0.63%), ETH $2338.43 (-2.43%), SOL $86.30 (-2.10%)
+
+关键信号：
+• Bitcoin slips from near $80,000 as oil price increase weighs on risk assets
+• JPMorgan says persistent security flaws curb DeFi's institutional appeal
+• The $145 billion math: Why bitcoin's quantum threat is manageable, not existential
+
+新闻方向：BEARISH — 多重利空因素叠加，BTC短期承压下行
+波动等级：HIGH_VOL — 建议仓位减半至50%，止损收窄至1.5×ATR
+
+文件：updated
+Telegram：sent（HIGH_VOL触发推送）

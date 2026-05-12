@@ -1,0 +1,14 @@
+📰 News sentiment | BEARISH
+
+市场：BTC $78,317 (24h), ETH $2,320.25 (24h), SOL $83.38 (24h)
+
+关键信号：
+• Veteran trader sees Bitcoin hitting $250,000 after bottom forms
+• XRP breaks above $1.40 on rising volume signaling breakout
+• Bitcoin reclaims $80,000 but traders hedge amid doubts
+
+新闻方向：BEARISH — 市场偏空，短期BTC面临下行压力
+波动等级：HIGH_VOL — 建议仓位减至50%，止损收窄至1.5×ATR
+
+文件：updated
+Telegram：sent (HIGH_VOL trigger)

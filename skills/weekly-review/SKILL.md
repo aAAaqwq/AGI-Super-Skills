@@ -1,127 +1,35 @@
----
-name: weekly-review
-description: Weekly project review report
----
-# PM Weekly Review
+# 📈 周度绩效回顾 Skill
 
-> Weekly work review -- hours, tokens, progress
+你是Quant。每周一做周度绩效统计和策略调整。
 
-## When to use
+## Step 1: 获取持仓数据
 
-- "weekly report"
-- "what was done this week"
-- At the end of the week
-- Before planning the next week
+Gamma API 获取当前持仓。
 
-## Paths
+## Step 2: 读取过去7天记忆
 
-| What | Path |
-|------|------|
-| Tasks | `$PM_PATH/pm_tasks_master.csv` |
-| Execution Log | `$PM_PATH/pm_execution_log.csv` |
-| Learnings | `$PM_PATH/pm_learnings.csv` |
-| Script | `$PROJECT_ROOT/projects/scripts/weekly_report.py` |
+`memory/` 目录下过去7天的 YYYY-MM-DD.md，提取交易记录。
 
-## Quick start
+## Step 3: 周度统计
 
-```bash
-cd $PROJECT_ROOT
-python3 projects/scripts/weekly_report.py
-```
+总交易笔数、胜率、总P&L、平均每笔、最大盈亏
 
-## Manual analysis
+## Step 4: 按策略分层统计
 
-```python
-import pandas as pd
-from datetime import date, timedelta
+S1甜区 / S2趋势 / S-Elon / S3套利 / S7短线 — 笔数/胜率/P&L/平均回报
 
-# Last 7 days
-week_ago = str(date.today() - timedelta(days=7))
-today = str(date.today())
+## Step 5: 风控回顾
 
-tasks = pd.read_csv('$PM_PATH/pm_tasks_master.csv')
-log = pd.read_csv('$PM_PATH/pm_execution_log.csv')
-learnings = pd.read_csv('$PM_PATH/pm_learnings.csv')
+铁律违反、止损执行、仓位集中度、最大回撤
 
-# Filter by date
-log_week = log[(log['date'] >= week_ago) & (log['date'] <= today)]
-```
+## Step 6: 下周策略调整
 
-## Metrics
+策略加减、品类配置、参数微调
 
-```python
-# Total hours
-total_hours = log_week['duration_minutes'].sum() / 60
-print(f"Total hours: {total_hours:.1f}")
-
-# Total tokens
-total_tokens = log_week['tokens_total'].sum()
-print(f"Total tokens: {total_tokens:,}")
-
-# Completed tasks
-completed = tasks[(tasks['status'] == 'done') & (tasks['last_updated'] >= week_ago)]
-print(f"Tasks completed: {len(completed)}")
-
-# By activity type
-by_type = log_week.groupby('activity_type')['duration_minutes'].sum() / 60
-print("\nBy type:")
-print(by_type)
-
-# By project
-by_project = log_week.groupby('project_id')['duration_minutes'].sum() / 60
-print("\nBy project:")
-print(by_project)
-```
-
-## Report format
+## Step 7: 推送周报
 
 ```
-=== WEEKLY REPORT ===
-Period: 2025-01-27 — 2025-02-03
-
-METRICS
-* Hours: 12.5
-* Tokens: 45,230
-* Tasks completed: 8
-
-BY PROJECT
-* proj-001 (Client D): 6.5 hrs
-* proj-002 (CRM): 4.0 hrs
-* proj-003 (Infra): 2.0 hrs
-
-BY TYPE
-* coding: 5.5 hrs
-* research: 3.0 hrs
-* planning: 2.0 hrs
-* discussion: 2.0 hrs
-
-COMPLETED TASKS
-* [proj-001] Send outreach
-* [proj-001] Check responses
-* [proj-002] Update CRM schema
-...
-
-LEARNINGS
-* Telegram has a 60 sec limit between messages
-* WhatsApp does not sync history
-...
-
-BLOCKED
-* [proj-003] task-004: Waiting for Tailscale account
-
-NEXT WEEK
-* Finish proj-001
-* Start proj-004
+message(action='send', channel='telegram', target='REDACTED_TG_USER_ID', message='周报内容')
 ```
 
-## Saving the report
-
-```python
-report_path = f'$PROJECT_ROOT/reports/weekly_{today}.md'
-with open(report_path, 'w') as f:
-    f.write(report_content)
-```
-
-## Related skills
-
-- `show-today` -- what's for today
+写入 memory/今天.md

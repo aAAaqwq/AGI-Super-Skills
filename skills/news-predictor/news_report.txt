@@ -1,0 +1,15 @@
+📰 News sentiment | BULLISH
+
+市场：BTC $77,349 (24h), ETH $2,265 (24h), SOL $83.12 (24h)
+
+关键信号：
+• SBI Holdings收购Bitbank建立数字资产巨头
+• Robinhood加密货币暂时性下跌，大资金看好反弹
+• Gemini获得衍生品牌照挑战Polymarket
+• 北韩黑客攻击Drift协议损失$285M
+
+新闻方向：BULLISH — 机构持续流入，乐观情绪主导短期走势
+波动等级：LOW_RISK — 市场稳定，正常仓位，2×ATR止损
+
+文件：updated
+Telegram：sent

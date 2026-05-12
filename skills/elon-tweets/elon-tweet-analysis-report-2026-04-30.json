@@ -1,0 +1,36 @@
+{
+  "analysisType": "lightweight",
+  "scanTime": "2026-04-30T13:02:11Z",
+  "market": "elon-musk-of-tweets-april-2026",
+  "settlement": "2026-05-01T04:00:00Z",
+  "hoursLeft": 15.0,
+  "analysisMode": ">12h recording only",
+  "totalVolume": 12616127.05,
+  "liquidity": 215511.25,
+  "activeMarkets": 22,
+  "topMarkets": [
+    {
+      "range": "1040-1079",
+      "probability": 78.0,
+      "volume": 427161,
+      "liquidity": 11865
+    },
+    {
+      "range": "1000-1039", 
+      "probability": 14.6,
+      "volume": 262267,
+      "liquidity": 6767
+    },
+    {
+      "range": "1080-1119",
+      "probability": 2.4,
+      "volume": 418555,
+      "liquidity": 10658
+    }
+  ],
+  "marketImplied": 1001,
+  "dailyRate": 15.2,
+  "edgeAnalysis": "no edge found",
+  "decision": "SKIP - 15h remaining, lightweight recording only",
+  "nextSteps": "monitor for <6h window"
+}

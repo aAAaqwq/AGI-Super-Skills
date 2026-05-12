@@ -1,0 +1,98 @@
+{
+  "scanTime": "2026-05-04T13:01:00+00:00",
+  "etDate": "may 4",
+  "slugsChecked": 15,
+  "eventsFound": 1,
+  "endDate": "2026-05-06T16:00:00Z",
+  "startDate": "2026-05-02T16:14:30.093269Z",
+  "events": [
+    {
+      "slug": "elon-musk-of-tweets-may-4-may-6",
+      "title": "Elon Musk # tweets May 4 - May 6, 2026?",
+      "volume": 109721.171286,
+      "liquidity": 68829.2776,
+      "markets": [
+        {
+          "id": "2140899",
+          "question": "Will Elon Musk post <40 tweets from May 4 to May 6, 2026?",
+          "slug": "elon-musk-of-tweets-may-4-may-6-0-39",
+          "outcomePrices": ["0.14", "0.86"],
+          "volume": "15481.457478000002",
+          "liquidity": "3924.147"
+        },
+        {
+          "id": "2140900",
+          "question": "Will Elon Musk post 40-64 tweets from May 4 to May 6, 2026?",
+          "slug": "elon-musk-of-tweets-may-4-may-6-40-64",
+          "outcomePrices": ["0.535", "0.465"],
+          "volume": "8622.766542000001",
+          "liquidity": "7084.8817"
+        },
+        {
+          "id": "2140901",
+          "question": "Will Elon Musk post 65-89 tweets from May 4 to May 6, 2026?",
+          "slug": "elon-musk-of-tweets-may-4-may-6-65-89",
+          "outcomePrices": ["0.245", "0.755"],
+          "volume": "8258.891664",
+          "liquidity": "4966.664"
+        },
+        {
+          "id": "2140904",
+          "question": "Will Elon Musk post 90-114 tweets from May 4 to May 6, 2026?",
+          "slug": "elon-musk-of-tweets-may-4-may-6-90-114",
+          "outcomePrices": ["0.065", "0.935"],
+          "volume": "7036.770161",
+          "liquidity": "5234.5117"
+        },
+        {
+          "id": "2140906",
+          "question": "Will Elon Musk post 115-139 tweets from May 4 to May 6, 2026?",
+          "slug": "elon-musk-of-tweets-may-4-may-6-115-139",
+          "outcomePrices": ["0.0155", "0.9845"],
+          "volume": "6485.667525000002",
+          "liquidity": "4830.52647"
+        },
+        {
+          "id": "2140908",
+          "question": "Will Elon Musk post 140-164 tweets from May 4 to May 6, 2026?",
+          "slug": "elon-musk-of-tweets-may-4-may-6-140-164",
+          "outcomePrices": ["0.0065", "0.9935"],
+          "volume": "8617.240777",
+          "liquidity": "6537.29156"
+        },
+        {
+          "id": "2140911",
+          "question": "Will Elon Musk post 165-189 tweets from May 4 to May 6, 2026?",
+          "slug": "elon-musk-of-tweets-may-4-may-6-165-189",
+          "outcomePrices": ["0.0015", "0.9985"],
+          "volume": "9434.814",
+          "liquidity": "4280.24079"
+        },
+        {
+          "id": "2140915",
+          "question": "Will Elon Musk post 190-214 tweets from May 4 to May 6, 2026?",
+          "slug": "elon-musk-of-tweets-may-4-may-6-190-214",
+          "outcomePrices": ["0.0015", "0.9985"],
+          "volume": "9832.764",
+          "liquidity": "4301.4709"
+        },
+        {
+          "id": "2140917",
+          "question": "Will Elon Musk post 215-239 tweets from May 4 to May 6, 2026?",
+          "slug": "elon-musk-of-tweets-may-4-may-6-215-239",
+          "outcomePrices": ["0.0005", "0.9995"],
+          "volume": "17573.602",
+          "liquidity": "11637.54695"
+        },
+        {
+          "id": "2140922",
+          "question": "Will Elon Musk post 240+ tweets from May 4 to May 6, 2026?",
+          "slug": "elon-musk-of-tweets-may-4-may-6-240plus",
+          "outcomePrices": ["0.0005", "0.9995"],
+          "volume": "18377.197138999996",
+          "liquidity": "8614.91978"
+        }
+      ]
+    }
+  ]
+}

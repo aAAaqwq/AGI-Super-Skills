@@ -1,0 +1,7 @@
+{
+  "risk_level": "HIGH_VOL",
+  "sentiment": "BEARISH",
+  "timestamp": "2026-05-03T10:27:00+08:00",
+  "reasoning": "Multiple high-impact bearish signals detected (5 items with impact >=5), including major hack news with impact 7",
+  "position_adjustment": "Reduce position size to 50%, tighten stop loss to 1.5×ATR"
+}

@@ -1,0 +1,27 @@
+{
+  "scanTime": "2026-05-01T18:00:00Z",
+  "etDate": "april 30",
+  "slug": "elon-musk-of-tweets-april-2026",
+  "title": "Elon Musk # tweets April 2026?",
+  "startDate": "2026-02-24T05:12:26.976701Z",
+  "endDate": "2026-05-01T04:00:00Z",
+  "hoursLeft": 15.0,
+  "volume": 12616127.053781005,
+  "liquidity": 215511.25333,
+  "markets": [
+    {
+      "id": "1423715",
+      "question": "Will Elon Musk post 960-999 tweets in April 2026?",
+      "slug": "elon-musk-of-tweets-april-2026-960-999",
+      "outcomePrices": ["0.001", "0.999"],
+      "volume": 0,
+      "title": "960-999",
+      "groupItemThreshold": "48",
+      "lastTradePrice": 0.001,
+      "bestAsk": 0.001,
+      "bestBid": 0.001,
+      "active": false,
+      "closed": true
+    }
+  ]
+}

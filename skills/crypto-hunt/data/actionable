@@ -1,0 +1,19 @@
+[
+  {
+    "slug": "bnb-up-or-down-on-may-11-2026",
+    "market_slug": "bnb-up-or-down-on-may-11-2026",
+    "question": "BNB Up or Down on May 11?",
+    "coin": "BNB",
+    "type": "UNKNOWN",
+    "threshold": null,
+    "hours_left": 0.5,
+    "end_date": "2026-05-11T16:00",
+    "yes_price": 0.835,
+    "no_price": 0.165,
+    "yes_token": "39667725811332357765216109790409137884528582590741408511026190456562425869871",
+    "no_token": "8656612418338167161465472634436893699801521424655115615508242990210970053255",
+    "condition_id": "0x1fc937fe880ad7fe7d232fec9315546a5eb48a637f900e939a57d967ee022ad5",
+    "volume": 3058.9239820000025,
+    "liquidity": 54.1834
+  }
+]

@@ -1,0 +1,218 @@
+{
+  "BTC": {
+    "trend": "UP",
+    "strength": 0.87,
+    "ma_score": 2,
+    "mom_4h": 0.22,
+    "mom_12h": 0.79,
+    "mom_24h": -0.06,
+    "rsi": 47.0,
+    "sma5": 81129.912,
+    "sma10": 80988.736,
+    "sma20": 81106.6075,
+    "price": 81372.59,
+    "volatility_ann": 44.3,
+    "predict_hours": 14.0,
+    "prediction": {
+      "predicted": 81944.9648,
+      "low": 80873.0981,
+      "high": 83016.8316,
+      "slope_per_hour": 40.883916,
+      "confidence": 0.99
+    },
+    "entry_YES": {
+      "signal": "FAVORABLE",
+      "multiplier": 1.0,
+      "trend_aligned": true,
+      "trend_opposed": false,
+      "rsi_favorable": true
+    },
+    "entry_NO": {
+      "signal": "UNFAVORABLE",
+      "multiplier": 0.25,
+      "trend_aligned": false,
+      "trend_opposed": true,
+      "rsi_favorable": true
+    }
+  },
+  "ETH": {
+    "trend": "DOWN",
+    "strength": -1.43,
+    "ma_score": -3,
+    "mom_4h": -0.06,
+    "mom_12h": 0.17,
+    "mom_24h": -0.56,
+    "rsi": 37.0,
+    "sma5": 2327.72,
+    "sma10": 2329.912,
+    "sma20": 2337.936,
+    "price": 2334.5,
+    "volatility_ann": 56.8,
+    "predict_hours": 14.0,
+    "prediction": {
+      "predicted": 2323.4992,
+      "low": 2283.7292,
+      "high": 2363.2692,
+      "slope_per_hour": -0.785769,
+      "confidence": 0.98
+    },
+    "entry_YES": {
+      "signal": "UNFAVORABLE",
+      "multiplier": 0.25,
+      "trend_aligned": false,
+      "trend_opposed": true,
+      "rsi_favorable": true
+    },
+    "entry_NO": {
+      "signal": "FAVORABLE",
+      "multiplier": 1.0,
+      "trend_aligned": true,
+      "trend_opposed": false,
+      "rsi_favorable": true
+    }
+  },
+  "SOL": {
+    "trend": "UP",
+    "strength": 1.38,
+    "ma_score": 2,
+    "mom_4h": 1.23,
+    "mom_12h": 1.75,
+    "mom_24h": 2.0,
+    "rsi": 53.0,
+    "sma5": 95.376,
+    "sma10": 95.286,
+    "sma20": 95.387,
+    "price": 96.42,
+    "volatility_ann": 71.5,
+    "predict_hours": 14.0,
+    "prediction": {
+      "predicted": 96.8028,
+      "low": 94.6682,
+      "high": 98.9374,
+      "slope_per_hour": 0.027343,
+      "confidence": 0.98
+    },
+    "entry_YES": {
+      "signal": "FAVORABLE",
+      "multiplier": 1.0,
+      "trend_aligned": true,
+      "trend_opposed": false,
+      "rsi_favorable": true
+    },
+    "entry_NO": {
+      "signal": "UNFAVORABLE",
+      "multiplier": 0.25,
+      "trend_aligned": false,
+      "trend_opposed": true,
+      "rsi_favorable": true
+    }
+  },
+  "XRP": {
+    "trend": "STRONG_UP",
+    "strength": 2.31,
+    "ma_score": 3,
+    "mom_4h": 2.0,
+    "mom_12h": 2.65,
+    "mom_24h": 2.97,
+    "rsi": 68.4,
+    "sma5": 1.4669,
+    "sma10": 1.4586,
+    "sma20": 1.4581,
+    "price": 1.4871,
+    "volatility_ann": 88.7,
+    "predict_hours": 14.0,
+    "prediction": {
+      "predicted": 1.5213,
+      "low": 1.4821,
+      "high": 1.5606,
+      "slope_per_hour": 0.002445,
+      "confidence": 0.97
+    },
+    "entry_YES": {
+      "signal": "OK",
+      "multiplier": 0.75,
+      "trend_aligned": true,
+      "trend_opposed": false,
+      "rsi_favorable": false
+    },
+    "entry_NO": {
+      "signal": "UNFAVORABLE",
+      "multiplier": 0.25,
+      "trend_aligned": false,
+      "trend_opposed": true,
+      "rsi_favorable": true
+    }
+  },
+  "BNB": {
+    "trend": "UP",
+    "strength": 1.21,
+    "ma_score": 2,
+    "mom_4h": 0.66,
+    "mom_12h": 1.3,
+    "mom_24h": 0.73,
+    "rsi": 57.1,
+    "sma5": 656.336,
+    "sma10": 654.181,
+    "sma20": 655.127,
+    "price": 660.27,
+    "volatility_ann": 55.8,
+    "predict_hours": 14.0,
+    "prediction": {
+      "predicted": 668.9285,
+      "low": 657.809,
+      "high": 680.0479,
+      "slope_per_hour": 0.618462,
+      "confidence": 0.98
+    },
+    "entry_YES": {
+      "signal": "FAVORABLE",
+      "multiplier": 1.0,
+      "trend_aligned": true,
+      "trend_opposed": false,
+      "rsi_favorable": true
+    },
+    "entry_NO": {
+      "signal": "UNFAVORABLE",
+      "multiplier": 0.25,
+      "trend_aligned": false,
+      "trend_opposed": true,
+      "rsi_favorable": true
+    }
+  },
+  "DOGE": {
+    "trend": "UP",
+    "strength": 1.15,
+    "ma_score": 2,
+    "mom_4h": 0.4,
+    "mom_12h": 1.51,
+    "mom_24h": 1.49,
+    "rsi": 50.9,
+    "sma5": 0.1101,
+    "sma10": 0.1098,
+    "sma20": 0.1099,
+    "price": 0.11076,
+    "volatility_ann": 99.4,
+    "predict_hours": 14.0,
+    "prediction": {
+      "predicted": 0.1117,
+      "low": 0.1085,
+      "high": 0.115,
+      "slope_per_hour": 6.8e-05,
+      "confidence": 0.97
+    },
+    "entry_YES": {
+      "signal": "FAVORABLE",
+      "multiplier": 1.0,
+      "trend_aligned": true,
+      "trend_opposed": false,
+      "rsi_favorable": true
+    },
+    "entry_NO": {
+      "signal": "UNFAVORABLE",
+      "multiplier": 0.25,
+      "trend_aligned": false,
+      "trend_opposed": true,
+      "rsi_favorable": true
+    }
+  }
+}

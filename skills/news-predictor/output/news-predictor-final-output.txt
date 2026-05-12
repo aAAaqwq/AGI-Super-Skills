@@ -1,0 +1,14 @@
+📰 News sentiment | BEARISH
+
+市场：BTC $81,423 (24h), ETH $2,368 (24h), SOL $86 (24h)
+
+关键信号：
+• North Korea terror victims escalate fight to seize $71 million from Aave hack
+• Kelp claims that LayerZero approved the setup blamed for $292 million bridge hack  
+• Drift outlines recovery plan after $295 million DPRK-linked exploit
+
+新闻方向：BEARISH — 高冲击安全事件增多，短期BTC走势偏向下行压力
+波动等级：HIGH_VOL — 减少仓位至50%，止损收窄至1.5×ATR
+
+文件：updated
+Telegram：sent

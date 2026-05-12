@@ -1,0 +1,80 @@
+{
+  "analysisTime": "2026-05-06T22:05:00Z",
+  "market": "elon-musk-of-tweets-may-4-may-6",
+  "endDate": "2026-05-06T16:00:00Z",
+  "hoursLeft": 23.9,
+  "analysisType": "far_market_recording",
+  "markets": [
+    {
+      "question": "Will Elon Musk post <40 tweets from May 4 to May 6, 2026?",
+      "yesPrice": 0.107,
+      "noPrice": 0.893,
+      "impliedProbability": 0.107
+    },
+    {
+      "question": "Will Elon Musk post 40-64 tweets from May 4 to May 6, 2026?",
+      "yesPrice": 0.785,
+      "noPrice": 0.215,
+      "impliedProbability": 0.785
+    },
+    {
+      "question": "Will Elon Musk post 65-89 tweets from May 4 to May 6, 2026?",
+      "yesPrice": 0.105,
+      "noPrice": 0.895,
+      "impliedProbability": 0.105
+    },
+    {
+      "question": "Will Elon Musk post 90-114 tweets from May 4 to May 6, 2026?",
+      "yesPrice": 0.013,
+      "noPrice": 0.987,
+      "impliedProbability": 0.013
+    },
+    {
+      "question": "Will Elon Musk post 115-139 tweets from May 4 to May 6, 2026?",
+      "yesPrice": 0.0015,
+      "noPrice": 0.9985,
+      "impliedProbability": 0.0015
+    },
+    {
+      "question": "Will Elon Musk post 140-164 tweets from May 4 to May 6, 2026?",
+      "yesPrice": 0.0005,
+      "noPrice": 0.9995,
+      "impliedProbability": 0.0005
+    },
+    {
+      "question": "Will Elon Musk post 165-189 tweets from May 4 to May 6, 2026?",
+      "yesPrice": 0.0005,
+      "noPrice": 0.9995,
+      "impliedProbability": 0.0005
+    },
+    {
+      "question": "Will Elon Musk post 190-214 tweets from May 4 to May 6, 2026?",
+      "yesPrice": 0.0005,
+      "noPrice": 0.9995,
+      "impliedProbability": 0.0005
+    },
+    {
+      "question": "Will Elon Musk post 215-239 tweets from May 4 to May 6, 2026?",
+      "yesPrice": 0.0005,
+      "noPrice": 0.9995,
+      "impliedProbability": 0.0005
+    },
+    {
+      "question": "Will Elon Musk post 240+ tweets from May 4 to May 6, 2026?",
+      "yesPrice": 0.0005,
+      "noPrice": 0.9995,
+      "impliedProbability": 0.0005
+    }
+  ],
+  "keyInsights": {
+    "mostProbableRange": "40-64 tweets",
+    "highestProbability": 0.785,
+    "expectedTweetRange": "40-64",
+    "marketSentiment": "Bullish for moderate posting activity"
+  },
+  "decision": {
+    "action": "observe",
+    "reason": "far market (>12h), only recording price distribution",
+    "nextCheckTime": "when hoursLeft < 12"
+  }
+}

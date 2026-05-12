@@ -1,0 +1,44 @@
+{
+  "BTC": {
+    "trend": "NEUTRAL",
+    "momentum": -0.01,
+    "price": 81372.59,
+    "yes_size": 75,
+    "no_size": 75
+  },
+  "ETH": {
+    "trend": "DOWN",
+    "momentum": -0.66,
+    "price": 2334.5,
+    "yes_size": 50,
+    "no_size": 100
+  },
+  "SOL": {
+    "trend": "UP",
+    "momentum": 1.67,
+    "price": 96.42,
+    "yes_size": 100,
+    "no_size": 50
+  },
+  "XRP": {
+    "trend": "UP",
+    "momentum": 1.02,
+    "price": 1.4871,
+    "yes_size": 100,
+    "no_size": 50
+  },
+  "BNB": {
+    "trend": "UP",
+    "momentum": 0.48,
+    "price": 660.27,
+    "yes_size": 100,
+    "no_size": 50
+  },
+  "DOGE": {
+    "trend": "UP",
+    "momentum": 1.01,
+    "price": 0.11076,
+    "yes_size": 100,
+    "no_size": 50
+  }
+}

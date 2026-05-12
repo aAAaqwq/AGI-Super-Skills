@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-05-04T00:02:00+08:00",
+  "analysis_type": "elon_tweet_scan",
+  "status": "no_active_markets",
+  "scan_results": {
+    "total_markets_found": 10,
+    "active_markets": 10,
+    "future_markets": 0,
+    "expired_markets": 10,
+    "may_2026_markets": 0
+  },
+  "markets": [
+    {
+      "slug": "elon-musk-of-tweets-april-23-april-25-0-39",
+      "active": true,
+      "endDate": "2026-04-25T16:00:00Z",
+      "days_remaining": -9,
+      "outcomePrices": ["0.1525", "0.8475"],
+      "volume": 104119.23,
+      "liquidity": 9288.58
+    }
+  ],
+  "decision": "skip",
+  "reason": "未找到未来结算的Elon推文市场，所有扫描到的市场已过期",
+  "next_action": "wait_for_next_scan"
+}

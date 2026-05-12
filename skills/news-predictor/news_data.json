@@ -1,0 +1,65 @@
+[
+  {
+    "ts": "2026-05-01T03:30:05+08:00", 
+    "headline": "From Cathie Wood to Cantor Fitzgerald, the big money is betting that Robinhood's crypto slump is just a temporary speed bump", 
+    "source": "coindesk", 
+    "sentiment": "bullish", 
+    "impact": 6, 
+    "signal": "OPPORTUNITY", 
+    "assets": ["BTC", "ETH", "SOL"]
+  },
+  {
+    "ts": "2026-04-30T23:27:33+08:00", 
+    "headline": "A Polymarket-linked bet on the weather in France forecasts a major data issue", 
+    "source": "coindesk", 
+    "sentiment": "bullish", 
+    "impact": 5, 
+    "signal": "OPPORTUNITY", 
+    "assets": []
+  },
+  {
+    "ts": "2026-04-30T23:22:39+08:00", 
+    "headline": "Gemini eyes prediction market challenge to Kalshi, Polymarket, secures derivatives license; shares surge", 
+    "source": "coindesk", 
+    "sentiment": "bullish", 
+    "impact": 5, 
+    "signal": "OPPORTUNITY", 
+    "assets": ["BTC", "ETH", "SOL"]
+  },
+  {
+    "ts": "2026-04-30T20:58:16+08:00", 
+    "headline": "The long con: How North Korean spies spent months in-person to drain $285 million from Drift", 
+    "source": "coindesk", 
+    "sentiment": "bearish", 
+    "impact": 6, 
+    "signal": "CAUTION", 
+    "assets": ["BTC", "ETH", "SOL"]
+  },
+  {
+    "ts": "2026-04-30T19:57:29+08:00", 
+    "headline": "The Green Beret was just the start: New data suggests military insider trading crisis on Polymarket", 
+    "source": "coindesk", 
+    "sentiment": "bearish", 
+    "impact": 6, 
+    "signal": "CAUTION", 
+    "assets": []
+  },
+  {
+    "ts": "2026-04-30T19:01:26+08:00", 
+    "headline": "Bitcoin faces $80,000 resistance as derivatives show signs of risk aversion", 
+    "source": "coindesk", 
+    "sentiment": "caution", 
+    "impact": 4, 
+    "signal": "CAUTION", 
+    "assets": ["BTC", "OIL", "ETH", "SOL"]
+  },
+  {
+    "ts": "2026-04-30T18:37:47+08:00", 
+    "headline": "Wasabi Protocol drained of $4.5 million in apparent admin key compromise", 
+    "source": "coindesk", 
+    "sentiment": "bearish", 
+    "impact": 6, 
+    "signal": "CAUTION", 
+    "assets": []
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "endDate": "2026-05-01T04:00:00Z",
+  "startDate": "2026-02-24T05:00:12Z",
+  "markets": [
+    {
+      "question": "Will Elon Musk post 700-719 tweets in April 2026?",
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "volumeNum": 88769.54250800001,
+      "liquidityNum": 0
+    },
+    {
+      "question": "Will Elon Musk post 720-739 tweets in April 2026?",
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "volumeNum": 70852.85615200005,
+      "liquidityNum": 0
+    },
+    {
+      "question": "Will Elon Musk post 740-759 tweets in April 2026?",
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "volumeNum": 51888.43286400005,
+      "liquidityNum": 0
+    }
+  ]
+}

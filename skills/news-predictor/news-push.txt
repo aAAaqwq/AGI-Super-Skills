@@ -1,0 +1,14 @@
+📰 News sentiment | BEARISH
+
+市场：BTC $78,665 (24h +4.1%), ETH $2,397 (24h +3.4%), SOL $87 (24h +2.1%)
+
+关键信号：
+• Kelp DAO $292M exploit creates systemic fear across crypto ecosystems
+• Bitcoin slipping from $80K on risk asset pressure and oil price concerns
+• Crypto bridges identified as weakest links following multiple exploits
+
+新闻方向：BEARISH — 安全事件导致市场恐慌，短期BTC面临下行压力
+波动等级：HIGH_VOL — 建议减仓至50%，止损收窄至1.5×ATR
+
+文件：updated
+Telegram：sent (风险等级HIGH_VOL，需推送)

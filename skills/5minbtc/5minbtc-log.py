@@ -160,14 +160,35 @@ def settle_all_unsettled():
                             entry["in_range"] = in_range
                             entry["direction_correct"] = direction_ok
                             settled_count += 1
-                            print(f"✅ {entry['candle']}: pred=${pred:.0f} actual=${actual_close:.0f} err={err:+.0f} ({err_pct:+.2f}%) rng={'✅' if in_range else '❌'} dir={'✅' if direction_ok else '❌'}")
+                            pred_dir = entry['bias'].split('-')[0]  # bull/bear/neutral
+                            actual_dir = 'bull' if actual_close > float(candle[1]) else 'bear'
+                            dir_sym = '✅' if direction_ok else '❌'
+                            rng_sym = '✅' if in_range else '❌'
+                            print(f"✅ {entry['candle']}: pred=${pred:.0f} actual=${actual_close:.0f} err={err:+.0f} ({err_pct:+.2f}%)")
+                            print(f"   方向: pred={pred_dir} actual={actual_dir} {dir_sym} | 区间: pred=[{entry['pred_range'][0]:.0f},{entry['pred_range'][1]:.0f}] actual=[{actual_low:.0f},{actual_high:.0f}] {rng_sym}")
                 except Exception as ex:
                     print(f"⚠️ {entry['candle']}: {ex}")
             lines.append(json.dumps(entry) + "\n")
     with open(LOG_FILE, "w") as f:
         f.writelines(lines)
     if settled_count == 0:
-        print("No unsettled predictions to settle")
+        # Show last settled for verification even when nothing new to settle
+        last_settled = None
+        for line in lines:
+            e = json.loads(line.strip())
+            if e.get("settled"):
+                last_settled = e
+        if last_settled:
+            e = last_settled
+            rng_sym = '✅' if e['in_range'] else '❌'
+            dir_sym = '✅' if e['direction_correct'] else '❌'
+            pred_dir = e['bias'].split('-')[0]
+            actual_dir = 'bull' if e['actual_close'] > e.get('actual_open', e['pred_close']) else 'bear'
+            # Try to infer actual direction from actual_close vs pred_range low (open proxy)
+            print(f"📋 Last settled: {e['candle']} pred=${e['pred_close']:.0f} actual=${e['actual_close']:.0f} err={e['error']:+.0f} ({e['error_pct']:+.2f}%)")
+            print(f"   方向: pred={pred_dir} actual={actual_dir} {dir_sym} | 区间: pred=[{e['pred_range'][0]:.0f},{e['pred_range'][1]:.0f}] actual=[{e['actual_low']:.0f},{e['actual_high']:.0f}] {rng_sym}")
+        else:
+            print("No predictions found")
     else:
         print(f"\n📊 Batch settled {settled_count} predictions")
 

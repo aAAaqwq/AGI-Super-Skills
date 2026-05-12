@@ -1,71 +1,107 @@
----
-name: position-monitor
-description: Hourly position monitor — execute take-profit/stop-loss and track peak gains
----
+# 📊 仓位监控+止盈止损 Skill v8.1
 
-# 📊 仓位监控+止盈止损 Skill v3.0 (API-based)
+你是Quant。每小时检查持仓，执行止盈止损/Claim结算。
 
-你是Quant。每小时检查持仓，执行止盈止损，追踪盈利峰值。
+## 脚本目录
 
-## 执行方式
-
-**优先使用API脚本**（零token消耗、速度快）：
-```bash
-unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY all_proxy ALL_PROXY
-python3 ${WORKSPACE}/scripts/api_position_monitor.py
+```
+skills/position-monitor/scripts/
+├── poly_positions.py       # 持仓+余额+TP/SL检查
+├── get_balance_stable.py   # 三层fallback余额查询
+└── trade.py                # CLOB API下单（卖出/查单）
 ```
 
-实时交易模式（实际执行卖出）：
+## 执行原则
+
+- **API-first**：持仓查询、止盈止损、卖出走 API
+- **Browser 仅用于 Claim / API失败兜底**
+- **卖出统一走 `scripts/trade.py sell`**
+
+---
+
+## Step 0: 预检
+
 ```bash
 unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY all_proxy ALL_PROXY
-python3 ${WORKSPACE}/scripts/api_position_monitor.py --live
+python3 "$SKILL_DIR/scripts/get_balance_stable.py"
 ```
 
-**Browser为fallback**（API失败时）：参照下方Step 3。
+- `source: "api"` → API正常
+- `source: "cache"` → 缓存可用
+- `source: "fallback_conservative"` → 全链路失败，用保守$50
 
-## 数据源
+Browser检查只在 Claim / API卖出失败 时触发。
 
-| 数据 | API来源 | 说明 |
-|------|---------|------|
-| 持仓 | CLOB `get_trades()` 重建 | 从交易历史聚合净仓位+当前价格 |
-| 现金余额 | CLOB `get_balance_allowance()` | USDC余额 |
-| 现价 | CLOB `get_price(token_id)` | 实时报价 |
-| BTC/ETH价格 | Binance API | 趋势分析 |
-| 可Claim仓位 | CLOB trades (price=0, net>0) | 已结算待认领 |
+---
 
-⚠️ **data-api `/positions` 不可靠**（经常返回空），用CLOB trades重建替代。
+## Step 1: 查持仓 + TP/SL
 
-## 止盈止损规则 v5.0（按优先级执行）
+```bash
+python3 "$SKILL_DIR/scripts/poly_positions.py" --check-tpsl
+```
 
-### 止损（先检查）
-| # | 条件 | 动作 |
-|---|------|------|
-| SL1 | 亏 > 40% | **全部止损** |
-| SL2 | 亏 > 25% | **减仓40%** |
-| SL3 | 亏 > 15% 且 4h连跌2根+buffer<3% | **止损一半** |
+输出：现金余额、总资产、活跃持仓详情、redeemable、TP/SL触发提示。
 
-### 止盈（再检查）
-| # | 条件 | 动作 |
-|---|------|------|
-| TP1 | 现价 ≥ 99¢ 且 结算 > 4h | **全卖**（1¢不值等）|
-| TP2 | 盈利 ≥ 50% | **全卖** |
-| TP3 | 盈利 ≥ 30% 且 现价 ≥ 95¢ | **全卖**（上升空间<5¢）|
-| TP4 | 盈利 ≥ 25% | **卖50%** |
-| TP4b | 盈利 ≥ 15% | **卖60%** |
-| TP5 | 盈利峰值回撤 ≥ 10pp（且峰值≥10%）| **卖50%** |
-| TP6 | 利润腰斩相对值（且峰值≥10%）| **全卖** |
+---
 
-### TP5/TP6 说明
-- 峰值+25%，现在+15% → 回撤10pp → **TP5卖半**
-- 峰值+20%，现在+10% → 回撤10pp且=50%峰值 → **TP6全卖**
-- 峰值+12%，现在+2% → 回撤10pp → **TP5卖半**
-- 峰值+8%，现在+5% → 回撤3pp，峰值<10% → **不触发**
+## Step 2: 执行止盈止损
 
-## Browser Fallback（API失败时）
+**优先级**：先SL → TP → Claim
 
-Step 3-7: 与v2.0相同，用browser打开portfolio、snapshot、执行操作。
+**止损规则 v7.0**（三档阶梯 + 持仓新闻调节）：
 
-## 变更记录
-- v3.0 (2026-03-24): API化重构。CLOB trades重建持仓替代data-api/browser，支持`--live`执行卖出
-- v2.0 (2026-03-17): Daniel指令重设止盈止损。新增TP4/TP5/TP6回撤止盈，profit-peaks.json峰值追踪
-- v1.0 (2026-03-15): 从cron prompt迁移为skill
+### 结算豁免优先检查
+同时满足 → 跳过所有SL：
+1. 结算 ≤ 12h
+2. Buffer ≥ 2%
+3. 仍盈利
+
+### 止损表
+
+| # | 基础条件 | 基础动作 | CRISIS | BEARISH | BULLISH |
+|---|----------|----------|--------|---------|---------|
+| SL1 | 亏≥15% | 全止 | 10%全止 | 12%全止 | 18%全止 |
+| SL2 | 亏≥10% | 减仓40% | 7%减60% | 8%减50% | 13%减30% |
+| SL3 | 亏≥5% | 减仓20% | 3%减40% | 4%减30% | 不触发 |
+
+### 止盈表
+
+| # | 条件 | 动作 | CRISIS/BEARISH | BULLISH |
+|---|------|------|----------------|---------|
+| TP1 | ≥99¢且结算>4h | 全卖 | 不变 | 不变 |
+| TP2 | 盈≥30% | 全卖 | ≥25% | ≥35% |
+| TP3 | 盈≥25% | 卖80% | ≥20% | ≥30% |
+| TP4 | 盈≥15% | 卖60% | ≥10% | ≥20% |
+| TP5 | 峰值回撤≥10pp | 卖半 | ≥7pp | 不变 |
+| TP6 | 利润腰斩 | 全卖 | 不变 | 不变 |
+
+### 新闻强度判断
+- `brave-search: "{BTC/ETH} news today"` → 前3条含"crash/plunge/hack/ban"=CRISIS，"drop/bearish"=BEARISH，"surge/rally"=BULLISH，其他=NEUTRAL
+
+### 卖出执行
+```bash
+python3 "$SKILL_DIR/scripts/trade.py" sell <slug> <YES/NO> <usd_amount> [--threshold N]
+```
+
+---
+
+## Step 3: Claim（Browser，非阻塞）
+
+有 redeemable 仓位时：
+1. 检查 browser 可用性
+2. 不可用 → 记录 pending，不卡主流程
+3. 可用 → 打开 portfolio，逐个 Claim
+
+**Claim 失败不拖垮主流程。**
+
+---
+
+## Step 4: 纯文本总结（必须输出）
+
+```
+📊 仓位监控已完成 HH:MM
+总资产 $XX | 现金 $XX | 活跃持仓 N 个
+本轮操作：无交易 / 卖出XXX / Claim $X.XX
+结果：未触发新TP/SL / 已执行SL2
+备注：API正常
+```

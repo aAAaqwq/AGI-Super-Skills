@@ -1,0 +1,15 @@
+{
+  "scanTime": "2026-05-03T01:01:24+08:00",
+  "analysisType": "monitoring_only",
+  "settlementInHours": 696,
+  "marketsFound": 6,
+  "bestMarket": "elon-musk-of-tweets-may-2026-1920-1999",
+  "decision": "observe_only",
+  "reason": ">12h from settlement, per skill rules",
+  "marketSummary": {
+    "most_likely_range": "1600-1679",
+    "highest_yes_odds": "0.0085",
+    "market_sentiment": "extremely_bearish",
+    "liquidity_leader": "elon-musk-of-tweets-may-2026-1920-1999 ($13,143)"
+  }
+}

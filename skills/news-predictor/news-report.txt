@@ -1,0 +1,14 @@
+📰 News sentiment | BULLISH
+
+市场：BTC $82,692 (+2.2%), ETH $2,417 (+1.7%), SOL $90 (+5.8%)
+
+关键信号：
+• Robinhood和Bitstamp宣布银行准备构建链上应用，机构采用加速
+• OKX推出OpenAI和SpaceX永续期货，IPO热潮吸引大量资金流入
+• 比特币突破82,000关键阻力位，ZEC和DASH双位数涨幅
+
+新闻方向：BULLISH — 多头情绪占优，BTC有望延续上涨势头
+波动等级：LOW_RISK — 适合正常仓位操作，建议止损2×ATR
+
+文件：updated
+Telegram：skipped

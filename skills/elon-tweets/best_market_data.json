@@ -1,0 +1,48 @@
+{
+  "startDate": "2026-03-24T04:14:07.14921Z",
+  "endDate": "2026-06-01T04:00:00Z",
+  "markets": [
+    {
+      "question": "Will Elon Musk post 1520-1599 tweets in May 2026?",
+      "outcomePrices": ["0.009", "0.991"],
+      "volumeNum": 7369.684559,
+      "liquidityNum": 1120.83558
+    },
+    {
+      "question": "Will Elon Musk post 1600-1679 tweets in May 2026?",
+      "outcomePrices": ["0.0085", "0.9915"], 
+      "volumeNum": 4694.684559,
+      "liquidityNum": 2239.83558
+    },
+    {
+      "question": "Will Elon Musk post 1680-1759 tweets in May 2026?",
+      "outcomePrices": ["0.0065", "0.9935"],
+      "volumeNum": 5856.326979,
+      "liquidityNum": 3152.1356
+    },
+    {
+      "question": "Will Elon Musk post 1760-1839 tweets in May 2026?",
+      "outcomePrices": ["0.0045", "0.9955"],
+      "volumeNum": 4888.245832999998, 
+      "liquidityNum": 12756.33356
+    },
+    {
+      "question": "Will Elon Musk post 1840-1919 tweets in May 2026?",
+      "outcomePrices": ["0.0045", "0.9955"],
+      "volumeNum": 6966.224854,
+      "liquidityNum": 12030.90888
+    },
+    {
+      "question": "Will Elon Musk post 1920-1999 tweets in May 2026?",
+      "outcomePrices": ["0.0005", "0.9995"],
+      "volumeNum": 19738.103137000002,
+      "liquidityNum": 9599.96697
+    },
+    {
+      "question": "Will Elon Musk post 2000+ tweets in May 2026?",
+      "outcomePrices": ["0.0015", "0.9985"],
+      "volumeNum": 15549.899696000002,
+      "liquidityNum": 9689.75424
+    }
+  ]
+}

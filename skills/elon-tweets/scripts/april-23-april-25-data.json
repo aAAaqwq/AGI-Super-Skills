@@ -1,0 +1,91 @@
+{
+  "slug": "elon-musk-of-tweets-april-23-april-25",
+  "title": "Elon Musk # tweets April 23 - April 25, 2026?",
+  "startDate": "2026-04-20T16:12:09.728222Z",
+  "endDate": "2026-04-25T16:00:00Z",
+  "hoursLeft": 54,
+  "volume": 225093.859591,
+  "liquidity": 157677.65558,
+  "markets": [
+    {
+      "id": "2034442",
+      "slug": "elon-musk-of-tweets-april-23-april-25-0-39",
+      "question": "Will Elon Musk post <40 tweets from April 23 to April 25, 2026?",
+      "outcomePrices": ["0.0475", "0.9525"],
+      "volume": 38771.75420800004,
+      "liquidity": 10482.0301
+    },
+    {
+      "id": "2034445",
+      "slug": "elon-musk-of-tweets-april-23-april-25-40-64",
+      "question": "Will Elon Musk post 40-64 tweets from April 23 to April 25, 2026?",
+      "outcomePrices": ["0.405", "0.595"],
+      "volume": 14647.76046099999,
+      "liquidity": 9043.7239
+    },
+    {
+      "id": "2034448",
+      "slug": "elon-musk-of-tweets-april-23-april-25-65-89",
+      "question": "Will Elon Musk post 65-89 tweets from April 23 to April 25, 2026?",
+      "outcomePrices": ["0.395", "0.605"],
+      "volume": 13193.844028,
+      "liquidity": 9301.3533
+    },
+    {
+      "id": "2034453",
+      "slug": "elon-musk-of-tweets-april-23-april-25-90-114",
+      "question": "Will Elon Musk post 90-114 tweets from April 23 to April 25, 2026?",
+      "outcomePrices": ["0.115", "0.885"],
+      "volume": 10690.701744000004,
+      "liquidity": 8910.4646
+    },
+    {
+      "id": "2034454",
+      "slug": "elon-musk-of-tweets-april-23-april-25-115-139",
+      "question": "Will Elon Musk post 115-139 tweets from April 23 to April 25, 2026?",
+      "outcomePrices": ["0.032", "0.968"],
+      "volume": 11644.337823000002,
+      "liquidity": 8444.21323
+    },
+    {
+      "id": "2034457",
+      "slug": "elon-musk-of-tweets-april-23-april-25-140-164",
+      "question": "Will Elon Musk post 140-164 tweets from April 23 to April 25, 2026?",
+      "outcomePrices": ["0.0075", "0.9925"],
+      "volume": 12303.625374000003,
+      "liquidity": 6904.57492
+    },
+    {
+      "id": "2034461",
+      "slug": "elon-musk-of-tweets-april-23-april-25-165-189",
+      "question": "Will Elon Musk post 165-189 tweets from April 23 to April 25, 2026?",
+      "outcomePrices": ["0.0045", "0.9955"],
+      "volume": 19122.89121399999,
+      "liquidity": 9209.97173
+    },
+    {
+      "id": "2034464",
+      "slug": "elon-musk-of-tweets-april-23-april-25-190-214",
+      "question": "Will Elon Musk post 190-214 tweets from April 23 to April 25, 2026?",
+      "outcomePrices": ["0.0015", "0.9985"],
+      "volume": 48413.35759099996,
+      "liquidity": 39441.36114
+    },
+    {
+      "id": "2034468",
+      "slug": "elon-musk-of-tweets-april-23-april-25-215-239",
+      "question": "Will Elon Musk post 215-239 tweets from April 23 to April 25, 2026?",
+      "outcomePrices": ["0.0005", "0.9995"],
+      "volume": 24675.423499999994,
+      "liquidity": 32017.39309
+    },
+    {
+      "id": "2034472",
+      "slug": "elon-musk-of-tweets-april-23-april-25-240plus",
+      "question": "Will Elon Musk post 240+ tweets from April 23 to April 25, 2026?",
+      "outcomePrices": ["0.001", "0.999"],
+      "volume": 31631.802991,
+      "liquidity": 23613.23871
+    }
+  ]
+}

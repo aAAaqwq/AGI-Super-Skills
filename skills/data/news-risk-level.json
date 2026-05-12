@@ -1,0 +1,9 @@
+{
+  "risk_level": "LOW_RISK",
+  "sentiment": "BULLISH",
+  "timestamp": "2026-05-11T16:15:48Z",
+  "bullish_count": 5,
+  "bearish_count": 1,
+  "article_count": 30,
+  "high_impact_count": 1
+}

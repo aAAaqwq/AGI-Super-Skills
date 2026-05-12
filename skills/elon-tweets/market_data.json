@@ -1,0 +1,42 @@
+{
+  "scanned_at": "2026-04-26T15:04:00Z",
+  "current_utc": "2026-04-26 15:04:00",
+  "markets_found": 12,
+  "active_markets": [
+    {
+      "id": "1423701",
+      "slug": "elon-musk-of-tweets-april-2026-700-719",
+      "title": "Will Elon Musk post 700-719 tweets in April 2026?",
+      "endDate": "2026-05-01T04:00:00Z",
+      "hours_left": 119,
+      "volume": "88769.54250800002",
+      "outcome_prices": ["0", "1"],
+      "last_trade_price": "0.001"
+    },
+    {
+      "id": "1423702", 
+      "slug": "elon-musk-of-tweets-april-2026-720-739",
+      "title": "Will Elon Musk post 720-739 tweets in April 2026?",
+      "endDate": "2026-05-01T04:00:00Z",
+      "hours_left": 119,
+      "volume": "70852.85615200005",
+      "outcome_prices": ["0", "1"],
+      "last_trade_price": "0.001"
+    },
+    {
+      "id": "1423703",
+      "slug": "elon-musk-of-tweets-april-2026-740-759", 
+      "title": "Will Elon Musk post 740-759 tweets in April 2026?",
+      "endDate": "2026-05-01T04:00:00Z",
+      "hours_left": 119,
+      "volume": "51888.43286400005",
+      "outcome_prices": ["0", "1"],
+      "last_trade_price": "0.001"
+    }
+  ],
+  "analysis": {
+    "time_window": ">12h (119h remaining)",
+    "action": "只记录盘名+赔率，禁browser/brave-search",
+    "best_market": "elon-musk-of-tweets-april-2026-700-719"
+  }
+}

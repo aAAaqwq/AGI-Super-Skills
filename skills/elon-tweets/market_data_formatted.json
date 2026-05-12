@@ -1,0 +1,76 @@
+{
+  "endDate": "2026-05-01T04:00:00Z",
+  "startDate": "2026-02-24T05:00:12Z",
+  "markets": [
+    {
+      "id": "1423701",
+      "question": "Will Elon Musk post 700-719 tweets in April 2026?",
+      "outcomePrices": ["0.001", "0.999"],
+      "volumeNum": 88769.54250800002,
+      "liquidityNum": 0
+    },
+    {
+      "id": "1423702",
+      "question": "Will Elon Musk post 720-739 tweets in April 2026?", 
+      "outcomePrices": ["0.001", "0.999"],
+      "volumeNum": 70852.85615200005,
+      "liquidityNum": 0
+    },
+    {
+      "id": "1423703",
+      "question": "Will Elon Musk post 740-759 tweets in April 2026?",
+      "outcomePrices": ["0.001", "0.999"],
+      "volumeNum": 51888.43286400005,
+      "liquidityNum": 0
+    },
+    {
+      "id": "1423696",
+      "question": "Will Elon Musk post 400-419 tweets in April 2026?",
+      "outcomePrices": ["0.001", "0.999"],
+      "volumeNum": 24887.298497999982,
+      "liquidityNum": 0
+    },
+    {
+      "id": "1423693",
+      "question": "Will Elon Musk post 500-519 tweets in April 2026?",
+      "outcomePrices": ["0.001", "0.999"],
+      "volumeNum": 101550.54762400007,
+      "liquidityNum": 0
+    },
+    {
+      "id": "1423704",
+      "question": "Will Elon Musk post 680-699 tweets in April 2026?",
+      "outcomePrices": ["0.001", "0.999"],
+      "volumeNum": 74607.48371099995,
+      "liquidityNum": 0
+    },
+    {
+      "id": "1423648",
+      "question": "Will Elon Musk post 240-259 tweets in April 2026?",
+      "outcomePrices": ["0.001", "0.999"],
+      "volumeNum": 41248.88366499999,
+      "liquidityNum": 0
+    },
+    {
+      "id": "1423674",
+      "question": "Will Elon Musk post 340-359 tweets in April 2026?",
+      "outcomePrices": ["0.001", "0.999"],
+      "volumeNum": 36419.722055000006,
+      "liquidityNum": 0
+    },
+    {
+      "id": "1423697",
+      "question": "Will Elon Musk post 540-559 tweets in April 2026?",
+      "outcomePrices": ["0.001", "0.999"],
+      "volumeNum": 85260.72192000004,
+      "liquidityNum": 0
+    },
+    {
+      "id": "1423698",
+      "question": "Will Elon Musk post 560-579 tweets in April 2026?",
+      "outcomePrices": ["0.001", "0.999"],
+      "volumeNum": 127089.01948900013,
+      "liquidityNum": 0
+    }
+  ]
+}

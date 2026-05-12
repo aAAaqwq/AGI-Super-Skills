@@ -1,0 +1,46 @@
+{
+  "endDate": "2026-05-06T16:00:00Z",
+  "startDate": "2026-05-04T16:00:00Z",
+  "markets": [
+    {
+      "question": "Will Elon Musk post <40 tweets from May 4 to May 6, 2026?",
+      "outcomePrices": ["0.107", "0.893"]
+    },
+    {
+      "question": "Will Elon Musk post 40-64 tweets from May 4 to May 6, 2026?",
+      "outcomePrices": ["0.785", "0.215"]
+    },
+    {
+      "question": "Will Elon Musk post 65-89 tweets from May 4 to May 6, 2026?",
+      "outcomePrices": ["0.105", "0.895"]
+    },
+    {
+      "question": "Will Elon Musk post 90-114 tweets from May 4 to May 6, 2026?",
+      "outcomePrices": ["0.013", "0.987"]
+    },
+    {
+      "question": "Will Elon Musk post 115-139 tweets from May 4 to May 6, 2026?",
+      "outcomePrices": ["0.0015", "0.9985"]
+    },
+    {
+      "question": "Will Elon Musk post 140-164 tweets from May 4 to May 6, 2026?",
+      "outcomePrices": ["0.0005", "0.9995"]
+    },
+    {
+      "question": "Will Elon Musk post 165-189 tweets from May 4 to May 6, 2026?",
+      "outcomePrices": ["0.0005", "0.9995"]
+    },
+    {
+      "question": "Will Elon Musk post 190-214 tweets from May 4 to May 6, 2026?",
+      "outcomePrices": ["0.0005", "0.9995"]
+    },
+    {
+      "question": "Will Elon Musk post 215-239 tweets from May 4 to May 6, 2026?",
+      "outcomePrices": ["0.0005", "0.9995"]
+    },
+    {
+      "question": "Will Elon Musk post 240+ tweets from May 4 to May 6, 2026?",
+      "outcomePrices": ["0.0005", "0.9995"]
+    }
+  ]
+}

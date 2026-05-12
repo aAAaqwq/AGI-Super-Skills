@@ -1,7 +1,7 @@
-# 5minbtc — BTC 5分钟实时预测 Skill v3.1
+# 5minbtc — BTC 5分钟实时预测 Skill v3.2
 
 > 触发词: `5minbtc`, `5min btc`, `btc 5min`
-> 最后更新: 2026-05-06 v3.1 引擎提供数据+基准，LLM做完整分析
+> 最后更新: 2026-05-12 v3.3 新闻源精简：移除失效源，Cointelegraph TG(3min)+CoinDesk RSS(14min)+TreeNews(120min)
 
 ## 概述
 
@@ -17,11 +17,12 @@
 
 ## 执行步骤
 
-### Step 1: 并行启动（4个调用同时发出）
+### Step 1: 并行启动（5个调用同时发出）
 
 ```
 并行组:
 ├── exec: settle-all + 引擎脚本（合并一条命令）
+├── exec: 5minbtc-news.py（新闻扫描，更新news-risk-level.json）
 ├── web_search: "Bitcoin BTC breaking news price" count=3 freshness=day
 ├── web_search: "crypto market macro stocks today" count=3 freshness=day
 └── web_search: "比特币 BTC 最新 晚间" count=3 freshness=day
@@ -34,8 +35,12 @@
 cd /home/aa/.openclaw/workspace-cqo && \
   python3 skills/5minbtc/5minbtc-log.py settle-all 2>&1; \
   echo "---ENGINE---"; \
-  python3 skills/5minbtc/5minbtc-engine.py 2>&1
+  python3 skills/5minbtc/5minbtc-engine.py 2>&1; \
+  echo "---NEWS---"; \
+  python3 skills/5minbtc/5minbtc-news.py 2>&1
 ```
+
+新闻扫描会自动更新 `data/news-risk-level.json`（结构化情绪+风险等级），供Step 2使用。
 
 ### Step 2: LLM完整分析（参考引擎数据，不是机械填模板）
 
@@ -47,12 +52,13 @@ LLM收到引擎JSON后，必须：
 
 **B. 综合判断方向**（引擎给基准，LLM最终决定）
 - 引擎的bias/strength是**参考起点**，不是最终答案
+- 读取 `data/news-risk-level.json` 获取结构化新闻情绪（sentiment, risk_level）
 - LLM必须考虑引擎忽略的因素：
   - 超卖/超买后的反转概率（RSI<30不一定是继续跌）
   - BB下轨/上轨的支撑/阻力效应
   - 连续阴/阳线后的疲劳（5连阴后反弹概率上升）
   - K线形态（十字星、锤子线、吞没等）
-  - 新闻方向的权重调整
+  - 新闻方向的权重调整（HIGH_VOL→降低信心，LOW_RISK→可提高信心）
 - 如果LLM调整了引擎方向，必须说明理由
 
 **C. 微调预测价**（引擎给基准，LLM微调±ATR*0.3以内）
@@ -86,11 +92,11 @@ python3 skills/5minbtc/5minbtc-log.py log \
 当前K线: HH:MM→HH:MM | ⏱ XX.X% (剩XmXs)
 实时价: $XX,XXX | O=XX,XXX H=XX,XXX L=XX,XXX C=XX,XXX (body ±$XX)
 ---
-📰 今日关键新闻:
+📰 今日关键新闻 [结构化信号: 🟢BULLISH/🟡NEUTRAL/🔴BEARISH | 风险: LOW_RISK/NORMAL/ELEVATED/HIGH_VOL]:
 - 🟢 [新闻1] — 影响
 - 🟡 [新闻2] — 影响
 - 🔴 [新闻3] — 影响
-新闻净效应: 🟢/🟡/🔴 [原因]
+新闻净效应: 🟢/🟡/🔴 [原因] | 结构化: [news-risk-level.json sentiment]
 
 🧭 方向: 📈/📉 [bull/bear] [strong/medium/weak] | 依据: [2-3个关键指标+新闻]
 - 引擎基准: [engine bias/strength] → LLM调整: [如有调整写理由，无则写"确认引擎判断"]
@@ -138,6 +144,92 @@ python3 skills/5minbtc/5minbtc-log.py log \
 ```bash
 python3 skills/5minbtc/5minbtc-log.py stats
 ```
+
+## 新闻数据源 (5minbtc-news.py)
+
+新闻脚本：`skills/5minbtc/5minbtc-news.py`
+输出文件：`data/news-risk-level.json`（供引擎读取）
+
+| 源 | 延迟 | 状态 |
+|-----|------|------|
+| **Cointelegraph** | **~3min** | ✅ Telegram TG频道，实时推送 |
+| **CoinDesk** | **~14min** | ✅ RSS实时 |
+| **TreeNews** | ~120min | ⚠️ Telegram群，依赖tree_channel编辑推送频率 |
+| CoinTelegraph RSS | 144min+ | ❌ 已移除（延迟过高） |
+| NewsData.io | 20h+ | ❌ 已移除（数据完全失效） |
+| TheBlock | blocked | ❌ 已移除（SSL封锁） |
+| BitcoinMagazine | blocked | ❌ 已移除（连接重置） |
+| Fear&Greed | blocked | ❌ 已移除（连接重置） |
+| CryptoCompare | 需key | ❌ 已移除（无API key） |
+
+**Keys**（已写入 `~/.bashrc`）:
+- `COINDESK_API_KEY=8377a336c7b8905443ce21cbd5af8ed84556d5bad27b7289486c4a9a417ec4b5`
+- `NEWSDATA_API_KEY=pub_9df63ace021a4dcba61c70a529cc6e68`
+
+风险判定规则:
+- bearish ≥ 2 → BEARISH + HIGH_VOL
+- bullish ≥ 2 → BULLISH + LOW_RISK
+- bearish = 1 → NEUTRAL + ELEVATED
+- 其他 → NEUTRAL + NORMAL
+
+## 引擎进化史 & 复盘记录
+
+### 版本演进
+
+| 版本 | 架构 | 方向准确率 | 关键变更 |
+|------|------|-----------|----------|
+| v3.1 | 线性打分(EMA+RSI+MACD+Vol) | 64% | 基础版，引擎+LLM混合 |
+| v3.2 | +量价背离/动量衰竭/VWAP | — | Alpha101借鉴，+16行 |
+| v3.3 | +RSS/Binance新闻 | — | 新闻数据源接入 |
+| v3.4 | +OB/Funding/鲸鱼 | — | 实时微结构(后被证明噪声) |
+| v3.5 | **概率框架重写** | 75% | 8因子→log-odds→贝叶斯概率 |
+| v3.5.1 | +低vol衰减/VWAP因子 | 77% | 当前版本 |
+| v3.2 | +结构化新闻扫描 | — | 5minbtc-news.py集成，news-risk-level.json供引擎读取 |
+
+### 全量复盘 (141笔结算)
+
+| 日期 | 笔数 | 方向 | 区间 | MAE | 特征 |
+|------|------|------|------|-----|------|
+| 05-05 | 107 | 64% | 55% | 0.071% | v3.1，大量测试，bull偏多 |
+| 05-06 | 28 | 57% | 71% | 0.068% | v3.1，bear偏多，区间最好 |
+| 05-11 | 8+ | 83% | 83% | 0.042% | v3.1手动，最佳表现 |
+| 05-12 | 27 | 74% | 56% | 0.038% | v3.5.1 cron运行 |
+
+**全局**: 方向 64% | 区间 60% | MAE 0.069%
+
+### 核心教训
+
+1. **线性打分是初学者错误** — 多个共线指标叠加不增加信息量
+2. **64%方向准确率接近随机** — 应专注区间覆盖而非方向预测
+3. **引擎越自信越错(v3.4)** — 极端信号出现在行情末端=反转概率最高(v3.5已修复)
+4. **低vol微波动不应判方向** — ≤0.05%波动是噪声(v3.5.1衰减至0.3)
+5. **EMA在底部反弹期天然滞后** — 导致连续判DOWN(VWAP因子部分修复)
+
+### 因子有效性 (148笔验证)
+
+| ✅ 有效 | ❌ 无效/噪声 |
+|---------|-------------|
+| EMA delta (弱) | RSI (5min 40-60无信号) |
+| Vol pct (辅助) | MACD (与EMA共线) |
+| 量价背离 (理论有效) | OB失衡 (快照噪声) |
+| VWAP (抵消EMA滞后) | Funding (8h结算无关5min) |
+| 动量衰竭 (趋势末端) | 鲸鱼大单 (0.05BTC门槛太低) |
+| — | RSS情绪 (148笔贡献为0) |
+
+### v3.5 概率框架要点
+
+- 8个独立因子 → log-odds → 贝叶斯概率 P(UP/DOWN/NEUTRAL)
+- Regime detection: ranging(低vol衰减0.3) / transitional / trending
+- 区间设计: ranging=0.45ATR, trending=0.35ATR
+- 砍掉: RSI, MACD, RSS, 高权重OB/Funding
+- 确信度vs准确率: 60-69%最稳(80%), 90%+命中(100%)
+- UP判断88%准确, DOWN判断65%(瓶颈)
+
+### 下一步优化方向
+
+1. RSI超卖反弹因子 (RSI<30→UP +0.5, 抵消EMA滞后)
+2. 低可信度标签 (regime=ranging+vol<25%→标注⚠️)
+3. 区间加宽至0.50 ATR (56%太低)
 
 ## v2→v3.1 变更
 

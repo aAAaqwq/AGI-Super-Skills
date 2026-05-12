@@ -1,0 +1,103 @@
+{
+  "scanTime": "2026-04-28T13:03:00Z",
+  "etDate": "april 28",
+  "slug": "elon-musk-of-tweets-april-27-april-29",
+  "title": "Elon Musk # tweets April 27 - April 29, 2026?",
+  "startDate": "2026-04-25T16:11:42.616202Z",
+  "endDate": "2026-04-29T16:00:00Z",
+  "hoursLeft": 31.0,
+  "volume": 481020.866224,
+  "liquidity": 61125.77915,
+  "markets": [
+    {
+      "id": "2078261",
+      "question": "Will Elon Musk post <40 tweets from April 27 to April 29, 2026?",
+      "slug": "elon-musk-of-tweets-april-27-april-29-0-39",
+      "outcomePrices": ["0.0005", "0.9995"],
+      "volume": 187534.077489,
+      "title": "<40",
+      "groupItemThreshold": "0"
+    },
+    {
+      "id": "2078264",
+      "question": "Will Elon Musk post 40-64 tweets from April 27 to April 29, 2026?",
+      "slug": "elon-musk-of-tweets-april-27-april-29-40-64",
+      "outcomePrices": ["0.135", "0.865"],
+      "volume": 58257.028162000046,
+      "title": "40-64",
+      "groupItemThreshold": "1"
+    },
+    {
+      "id": "2078266",
+      "question": "Will Elon Musk post 65-89 tweets from April 27 to April 29, 2026?",
+      "slug": "elon-musk-of-tweets-april-27-april-29-65-89",
+      "outcomePrices": ["0.59", "0.41"],
+      "volume": 35783.88649999998,
+      "title": "65-89",
+      "groupItemThreshold": "2"
+    },
+    {
+      "id": "2078268",
+      "question": "Will Elon Musk post 90-114 tweets from April 27 to April 29, 2026?",
+      "slug": "elon-musk-of-tweets-april-27-april-29-90-114",
+      "outcomePrices": ["0.245", "0.755"],
+      "volume": 27608.738602000012,
+      "title": "90-114",
+      "groupItemThreshold": "3"
+    },
+    {
+      "id": "2078270",
+      "question": "Will Elon Musk post 115-139 tweets from April 27 to April 29, 2026?",
+      "slug": "elon-musk-of-tweets-april-27-april-29-115-139",
+      "outcomePrices": ["0.06", "0.94"],
+      "volume": 32049.250153999998,
+      "title": "115-139",
+      "groupItemThreshold": "4"
+    },
+    {
+      "id": "2078272",
+      "question": "Will Elon Musk post 140-164 tweets from April 27 to April 29, 2026?",
+      "slug": "elon-musk-of-tweets-april-27-april-29-140-164",
+      "outcomePrices": ["0.2455", "0.7545"],
+      "volume": 27796.761786000003,
+      "title": "140-164",
+      "groupItemThreshold": "5"
+    },
+    {
+      "id": "2078275",
+      "question": "Will Elon Musk post 165-189 tweets from April 27 to April 29, 2026?",
+      "slug": "elon-musk-of-tweets-april-27-april-29-165-189",
+      "outcomePrices": ["0.2205", "0.7795"],
+      "volume": 30347.81743999999,
+      "title": "165-189",
+      "groupItemThreshold": "6"
+    },
+    {
+      "id": "2078280",
+      "question": "Will Elon Musk post 215-239 tweets from April 27 to April 29, 2026?",
+      "slug": "elon-musk-of-tweets-april-27-april-29-215-239",
+      "outcomePrices": ["0.0095", "0.9905"],
+      "volume": 22218.553571999997,
+      "title": "215-239",
+      "groupItemThreshold": "8"
+    },
+    {
+      "id": "2078278",
+      "question": "Will Elon Musk post 190-214 tweets from April 27 to April 29, 2026?",
+      "slug": "elon-musk-of-tweets-april-27-april-29-190-214",
+      "outcomePrices": ["0.011", "0.989"],
+      "volume": 24588.656183999978,
+      "title": "190-214",
+      "groupItemThreshold": "7"
+    },
+    {
+      "id": "2078281",
+      "question": "Will Elon Musk post 240+ tweets from April 27 to April 29, 2026?",
+      "slug": "elon-musk-of-tweets-april-27-april-29-240plus",
+      "outcomePrices": ["0.0005", "0.9995"],
+      "volume": 34852.50299999997,
+      "title": "240+",
+      "groupItemThreshold": "9"
+    }
+  ]
+}
