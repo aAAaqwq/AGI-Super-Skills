@@ -1,6 +1,6 @@
 # 🛠️ Skills Catalog
 
-> **728 skills** ready to deploy · [← Back to main README](../README.md)
+> **729 skills** ready to deploy · [← Back to main README](../README.md)
 
 ---
 
@@ -11,7 +11,7 @@
 | 🔧 Development | 83 |
 | 💰 Trading & Finance | 44 |
 | 📝 Content & Writing | 46 |
-| 📈 Marketing & SEO | 34 |
+| 📈 Marketing & SEO | 35 |
 | 📱 Chinese Platforms | 26 |
 | 🔌 SaaS Integrations | 47 |
 | 💬 Communication | 47 |
@@ -24,7 +24,7 @@
 | 🧬 Bioinformatics | 12 |
 | 🧠 Thinking Frameworks | 31 |
 | 🧩 Other | 155 |
-| **Total** | **728** |
+| **Total** | **729** |
 
 ---
 
@@ -218,7 +218,7 @@
 | [`xhs-content-creator`](./xhs-content-creator/) | Generate Xiaohongshu (小红书/RED) content optimized for the platform''s |
 | [`xhs-writing-coach`](./xhs-writing-coach/) | Coach and generate Xiaohongshu (小红书/RedNote/XHS) note writing. Use when |
 
-### 📈 Marketing & SEO (34)
+### 📈 Marketing & SEO (35)
 
 | Skill | Description |
 |:------|:------------|
@@ -250,6 +250,7 @@
 | [`tiktok-growth`](./tiktok-growth/) | TikTok content strategy and video script generator for any niche. Hook formulas, viral scr |
 | [`tiktok-marketing`](./tiktok-marketing/) | TikTok content strategy, video creation workflows, posting optimization, and analytics. Ba |
 | [`traffic-acquisition`](./traffic-acquisition/) | Use when driving traffic to Xiaohongshu account from external sources, acquiring new follo |
+| [`tweetclaw-openclaw`](./tweetclaw-openclaw/) | Use TweetClaw from OpenClaw for tweet search, reply search, follower export, monitors, webhooks, giveaway draws, and approved posting. |
 | [`twitter-algorithm-optimizer`](./twitter-algorithm-optimizer/) | Analyze and optimize tweets for maximum reach using Twitter's open-source algorithm insigh |
 | [`twitter-automation`](./twitter-automation/) | Automate Twitter/X tasks via Rube MCP (Composio): posts, search, users, bookmarks, lists,  |
 | [`video-marketing`](./video-marketing/) | When the user wants to plan video marketing, create video scripts, or optimize for short-f |

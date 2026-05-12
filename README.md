@@ -5,14 +5,14 @@
 <h1 align="center">AGI Super Team</h1>
 
 <p align="center">
-  <strong>728 AI Skills · 12 C-Suite Agents · 29 Thinking Frameworks</strong><br/>
+  <strong>729 AI Skills · 12 C-Suite Agents · 29 Thinking Frameworks</strong><br/>
   Build your AI-native company in minutes.
 </p>
 
 <p align="center">
   <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/Powered%20by-OpenClaw-blue?logo=github" alt="OpenClaw"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Skills-728-blueviolet" alt="Skills">
+  <img src="https://img.shields.io/badge/Skills-729-blueviolet" alt="Skills">
   <img src="https://img.shields.io/badge/Agents-12-orange" alt="Agents">
   <img src="https://img.shields.io/badge/Frameworks-29-cyan" alt="Frameworks">
 </p>
@@ -43,7 +43,7 @@
 
 A **plug-and-play AI team template** — deploy a complete virtual C-Suite using [OpenClaw](https://github.com/openclaw/openclaw). Each agent has a **spirit mentor** (Elon Musk, Jensen Huang, Warren Buffett...) that shapes their personality and decision-making.
 
-**728 skills. 12 agents. 29 thinking frameworks. 30 workflows.** Zero boilerplate: copy, customize, ship.
+**729 skills. 12 agents. 29 thinking frameworks. 30 workflows.** Zero boilerplate: copy, customize, ship.
 
 ## 🏛️ Architecture
 
@@ -189,7 +189,7 @@ AGI-Super-Team/
 │   ├── ceo/          # SOUL.md · AGENTS.md · TOOLS.md
 │   ├── cto/          # ...
 │   └── README.md     # Architecture diagram & skill matrix
-├── skills/           # 728 skills (flat structure, each with SKILL.md)
+├── skills/           # 729 skills (flat structure, each with SKILL.md)
 │   └── README.md     # Full catalog
 ├── starter-kits/     # 🆕 One-click deployment bundles
 │   ├── solo-founder/ # CEO + PE + CCO
