@@ -6,7 +6,7 @@
 - **禁止长篇空话，禁止复盘历史，禁止超时研究**
 - 总长度：300-600中文字
 - 不要表格，要可读性
-- 像发给Daniel的真实交易风控简报，不要像API返回值
+- 像发给用户的真实交易风控简报，不要像API返回值
 
 ---
 
@@ -45,7 +45,7 @@ bash "$SKILL_DIR/scripts/macro_calendar.sh" >/dev/null 2>&1 || true
 - `data/news-signals.jsonl` — 信号历史
 
 ### Step 5: 推送条件
-**仅当**以下情况之一时，推送 Daniel Telegram (REDACTED_TG_USER_ID)：
+**仅当**以下情况之一时，推送用户 Telegram (YOUR_TELEGRAM_CHAT_ID)：
 - 新闻方向（sentiment）发生变化
 - 波动等级为 HIGH_VOL
 - 其他重大新闻（impact >= 8）

@@ -34,7 +34,7 @@ python3 "$SKILL_DIR/scripts/poly_positions.py"
 
 ## Step 5: 推送日报
 ```
-message(action='send', channel='telegram', target='REDACTED_TG_USER_ID', message='报告内容')
+message(action='send', channel='telegram', target='YOUR_TELEGRAM_CHAT_ID', message='报告内容')
 ```
 
 格式：

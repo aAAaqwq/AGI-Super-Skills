@@ -87,7 +87,7 @@ cat "$WORKSPACE/data/portfolio-snapshot.json" 2>/dev/null || echo "无仓位快�
 ## Step 3: 推送
 
 ```
-message(action='send', channel='telegram', target='REDACTED_TG_USER_ID', message='报告内容')
+message(action='send', channel='telegram', target='YOUR_TELEGRAM_CHAT_ID', message='报告内容')
 ```
 
 ## Step 4: 更新 memory/$(date +%Y-%m-%d).md

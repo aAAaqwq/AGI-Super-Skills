@@ -16,7 +16,7 @@ for k in list(os.environ.keys()):
         del os.environ[k]
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
-TELEGRAM_CHAT = "REDACTED_TG_USER_ID"
+TELEGRAM_CHAT = "YOUR_TELEGRAM_CHAT_ID"
 
 def fetch(url, timeout=15):
     headers = {

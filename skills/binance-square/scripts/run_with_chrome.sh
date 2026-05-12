@@ -2,7 +2,7 @@
 # Binance Square Scraper — Chrome CDP 启动器
 # 功能：
 #   1. 检测 Chrome CDP 是否已在 9222 端口运行
-#   2. 若无，自动启动 Chrome（Daniel 的 Profile + Remote Debugging）
+#   2. 若无，自动启动 Chrome（User Profile + Remote Debugging）
 #   3. 运行 scraper
 #   4. 可选：结束后关闭 Chrome（--keep-alive 时保留）
 #

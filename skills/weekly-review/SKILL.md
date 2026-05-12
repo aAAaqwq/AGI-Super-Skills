@@ -29,7 +29,7 @@ S1甜区 / S2趋势 / S-Elon / S3套利 / S7短线 — 笔数/胜率/P&L/平均�
 ## Step 7: 推送周报
 
 ```
-message(action='send', channel='telegram', target='REDACTED_TG_USER_ID', message='周报内容')
+message(action='send', channel='telegram', target='YOUR_TELEGRAM_CHAT_ID', message='周报内容')
 ```
 
 写入 memory/今天.md

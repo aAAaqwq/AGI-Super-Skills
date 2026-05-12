@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Binance Square Scraper — v9.0 (CDP Live Session)
-Uses Playwright CDP to connect to Daniel's existing Chrome session,
+Uses Playwright CDP to connect to User's existing Chrome session,
 extracting full content from Binance Square with login state.
 """
 import re, json, argparse, time, ast
@@ -123,7 +123,7 @@ URLS = {
 }
 
 def _scrape_cdp(url, scroll_rounds=3):
-    """Connect via CDP to Daniel's Chrome session and scrape Binance Square."""
+    """Connect via CDP to User's Chrome session and scrape Binance Square."""
     from playwright.sync_api import sync_playwright
     
     cdp_url = "http://127.0.0.1:18800"

@@ -1,7 +1,7 @@
 # Binance Square 热度猎杀
 
-> 作者：Daniel Li
-> 版权所有 © 2026 Daniel Li
+> 作者：Your Name
+> 版权所有 © 2026 Your Name
 > 版本：**v12.0**（CDP Live Session + Multi-Topic + Concurrent）
 
 ---
@@ -18,7 +18,7 @@
 
 | 组件 | 说明 |
 |------|------|
-| Chrome 浏览器 | Daniel 已登录的默认配置文件 |
+| Chrome 浏览器 | 已登录的默认配置文件 |
 | Playwright | `pip install playwright && playwright install chromium` |
 | CDP 端口 | 9222（原生）或 18800（OpenClaw） |
 
@@ -47,7 +47,7 @@ curl -s --max-time 3 http://localhost:9222/json
 
 **`run_with_chrome.sh` 功能**：
 1. 检测 Chrome CDP 是否已在 9222 端口运行
-2. 若无，自动启动 Chrome（Daniel Profile + Remote Debugging）
+2. 若无，自动启动 Chrome（User Profile + Remote Debugging）
 3. 运行 scraper
 4. 脚本结束自动关闭 Chrome（加 `--keep-alive` 保留进程）
 
@@ -124,7 +124,7 @@ python3 square_scraper_cdp.py --min 60 --topics 10 --per-topic 20 --scrolls 2 --
 ```
 
 **流程**：
-1. 连接 Daniel 的 Chrome CDP 会话
+1. 连接 Chrome CDP 会话
 2. 打开 trends 页面 → 解析所有话题的 slug
 3. 依次进入每个话题页 → 滚动 2 轮 → 提取 innerText
 4. 纯 Python 正则解析时间戳/币种/互动数
@@ -169,4 +169,4 @@ skills/binance-square/
 
 本工具仅供个人学习研究使用。
 
-版权所有 © 2026 Daniel Li。保留所有权利。
+版权所有 © 2026 Your Name。保留所有权利。
