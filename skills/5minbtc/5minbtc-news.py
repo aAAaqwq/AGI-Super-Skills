@@ -29,7 +29,7 @@ CST = timezone(timedelta(hours=8))
 # ─── API Keys (从.bashrc读取) ───
 def load_env():
     """从.bashrc加载API keys"""
-    env_file = os.path.expanduser("~/.bashrc")
+    env_file = os.path.expanduser("~/.bashrc")  # or use .env file
     if not os.path.exists(env_file):
         return
     with open(env_file) as f:
@@ -410,7 +410,7 @@ def scan_treenews():
         result = subprocess.run(
             [sys.executable, script_path, "30"],
             capture_output=True, text=True, timeout=30,
-            env={**os.environ, "PYTHONPATH": "/home/aa/.local/lib/python3.12/site-packages"}
+            env={**os.environ, "PYTHONPATH": "<python-path>"}
         )
         if result.returncode != 0 or not result.stdout.strip():
             return results

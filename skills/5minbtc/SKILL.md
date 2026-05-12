@@ -32,7 +32,7 @@
 
 引擎命令：
 ```bash
-cd /home/aa/.openclaw/workspace-cqo && \
+cd <workspace> && \
   python3 skills/5minbtc/5minbtc-log.py settle-all 2>&1; \
   echo "---ENGINE---"; \
   python3 skills/5minbtc/5minbtc-engine.py 2>&1; \
@@ -163,8 +163,8 @@ python3 skills/5minbtc/5minbtc-log.py stats
 | CryptoCompare | 需key | ❌ 已移除（无API key） |
 
 **Keys**（已写入 `~/.bashrc`）:
-- `COINDESK_API_KEY=8377a336c7b8905443ce21cbd5af8ed84556d5bad27b7289486c4a9a417ec4b5`
-- `NEWSDATA_API_KEY=pub_9df63ace021a4dcba61c70a529cc6e68`
+- `COINDESK_API_KEY=<your-coindesk-key>`
+- `NEWSDATA_API_KEY=<your-newsdata-key>`
 
 风险判定规则:
 - bearish ≥ 2 → BEARISH + HIGH_VOL
