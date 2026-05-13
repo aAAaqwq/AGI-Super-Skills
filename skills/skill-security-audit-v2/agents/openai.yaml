@@ -1,0 +1,3 @@
+interface:
+  display_name: "Installed Skill Security Audit"
+  short_description: "Audit installed skills for risky execution, data access, exfiltration, and overscoped triggers"

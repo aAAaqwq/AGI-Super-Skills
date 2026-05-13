@@ -1,0 +1,9 @@
+{
+  "name": "Skill Security Audit",
+  "displayName": "Skill Security Audit",
+  "description": "已安装 Skills 的安全审计工具 - 批量审计安全性、发现风险、提供修复建议",
+  "version": "1.0.0",
+  "author": "chen su",
+  "tags": ["security", "audit", "safety", "skill-audit"],
+  "license": "MIT"
+}

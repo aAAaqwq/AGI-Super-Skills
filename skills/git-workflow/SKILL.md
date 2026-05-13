@@ -1,104 +1,167 @@
 ---
 name: git-workflow
-description: Git workflow: branches, PR, merge, cleanup
+description: |
+  OpenClaw Git 工作流技能。
+  
+  当用户提及以下任务时使用：
+  - 提交代码或文档
+  - 推送到远程仓库
+  - 管理多个 Git 仓库
+  - 查看 Git 状态
+  
+  核心能力:
+  - 自动检测文件变更
+  - 自动生成提交信息
+  - 自动推送到远程仓库
+  - 多仓库管理
+license: MIT
+compatibility: |
+  需要以下环境：
+  - Git 已安装
+  - 已配置 Git 用户信息
+  - 已配置远程仓库
+  
+  支持平台:
+  - OpenClaw ✅
+  - Claude Code ✅
+metadata:
+  author: OpenClaw 实战团队
+  version: 1.0.0
+  category: git-workflow
+  tags: [git, version-control, automation]
+  created: 2026-02-26
 ---
-# Git Workflow
 
-> Standard Git workflow: branches, commits, PR, merge
+# Git 工作流技能
 
-## When to use
+## 核心指令
 
-- Any change to data or code going to GitHub
-- "commit" / "push" / "create PR" / "merge"
-- After running any skill that modifies files
+### 第一步：检测文件变更
+```bash
+# 检查 Git 状态
+git status
 
-## Rules
+# 查看变更文件
+git diff --name-only
+```
 
-### 1. Never push to main directly
+### 第二步：添加文件
+```bash
+# 添加所有变更
+git add .
 
-Always through PR:
+# 或添加指定文件
+git add <file1> <file2>
+```
+
+### 第三步：生成提交信息
+根据变更内容自动生成提交信息：
 
 ```bash
-git checkout -b <prefix>/<name>
-# changes
-git add <files>
-git commit -m "Description"
-git push -u origin <prefix>/<name>
-gh pr create --title "..." --body "..."
-gh pr merge --squash --delete-branch
-git checkout main && git pull
+# 提交信息格式
+<type>: <description>
+
+# 类型说明
+feat: 新功能
+fix: 修复 bug
+docs: 文档更新
+style: 代码格式
+refactor: 重构
+test: 测试
+chore: 构建/工具
 ```
 
-### 2. Branch naming
-
-| Change type | Prefix | Example |
-|-------------|--------|---------|
-| New feature | `feature/` | `feature/clientk-lookalikes` |
-| Data update | `update/` | `update/stream-cohort-2026-02-08` |
-| Fix | `fix/` | `fix/crm-product-fk` |
-| New lead/contact | `feat/` | `feat/kyrylo-mazur-lead` |
-
-### 3. Merge strategy
-
-**Always squash merge + delete branch:**
-
+### 第四步：提交并推送
 ```bash
-gh pr merge --squash --delete-branch
+# 提交
+git commit -m "提交信息"
+
+# 推送
+git push
 ```
 
-- `--squash` -- one clean commit in main
-- `--delete-branch` -- automatically deletes the branch after merge
+## 示例
 
-### 4. After merge
+### 示例 1: 分析完成后自动提交
+**触发**: 分析任务完成
 
+**操作**:
+1. 检测新生成的文件
+2. 添加到 Git
+3. 生成提交信息
+4. 提交并推送
+
+**提交信息示例**:
+```
+feat: 完成股票分析
+
+- 分析 000657 中钨高新
+- 生成三高股票筛选报告
+- 保存到 Stock-Analysis 仓库
+```
+
+### 示例 2: 多仓库管理
+**触发**: 需要提交到多个仓库
+
+**操作**:
+1. 识别文件所属仓库
+2. 分别提交到对应仓库
+3. 分别推送
+
+**仓库示例**:
+- Jarvis: 记忆、配置
+- Stock-Analysis: 股票分析代码
+- Amazon-Analyzer: 亚马逊运营工具
+
+## 故障排除
+
+### 错误 1: Git 未配置
+**错误消息**: "Please tell me who you are"
+
+**解决方案**:
 ```bash
-git checkout main
-git pull origin main
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
 ```
 
-### 5. Commit message format
+### 错误 2: 推送失败
+**错误消息**: "Authentication failed"
 
-```
-<Action>: <what exactly was done>
+**解决方案**:
+1. 检查 Git 凭据
+2. 使用 Token 代替密码
+3. 配置 SSH Key
 
-Details if needed.
+### 错误 3: 冲突
+**错误消息**: "CONFLICT (content)"
 
-Co-Authored-By: Claude <noreply@anthropic.com>
-```
+**解决方案**:
+1. 查看冲突文件
+2. 手动解决冲突
+3. 标记为解决
+   ```bash
+   git add <resolved_file>
+   ```
+4. 完成提交
+   ```bash
+   git commit
+   ```
 
-Examples:
-- `Add 24 stream participants (p-fb-018..041)`
-- `Update task-042: expand stream outreach to 39 people`
-- `Fix CRM product FK consistency`
+## 最佳实践
 
-### 6. Cleanup
+### 提交频率
+- 小改动：随时提交
+- 大功能：功能完成后提交
+- 每日结束：提交当日工作
 
-If old branches have accumulated:
+### 提交信息
+- 清晰简洁
+- 使用现在时
+- 首字母大写
+- 不超过 50 字符
 
-```bash
-# View all remote branches
-gh api repos/your-org/<repo>/branches --jq '.[].name'
-
-# Delete a specific one
-gh api repos/your-org/<repo>/git/refs/heads/<branch> -X DELETE
-```
-
-## Repositories
-
-| Repo | What's there | Prefix |
-|------|-------------|--------|
-| `your-org/$PROJECT_ROOT` | CRM + PM data | `update/`, `feat/`, `fix/` |
-| `your-org/claude-skills` | Claude skills | `update/`, `feature/` |
-| `your-org/google-tools` | Google API scripts | `feature/`, `fix/` |
-
-## Restrictions
-
-- DO NOT commit secrets (.env, token.json, credentials.json)
-- DO NOT force push
-- DO NOT rebase main
-- DO NOT leave dead branches after merge
-
-## Related skills
-
-- `change-review` -- CRM/PM data validation before PR
-- `code-review` -- code review for code PRs
+### 分支管理
+- main/master: 主分支
+- feature/*: 功能分支
+- fix/*: 修复分支
+- docs/*: 文档分支

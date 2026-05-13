@@ -1,0 +1,23 @@
+{
+  "name": "openclaw-shield",
+  "version": "1.0.0",
+  "description": "Security audit engine for OpenClaw configurations — find vulnerabilities, misconfigs, and secret leaks before they become breaches.",
+  "main": "src/audit.js",
+  "bin": {
+    "shield": "bin/shield.js"
+  },
+  "scripts": {
+    "audit": "node bin/shield.js audit --live --summary",
+    "audit:json": "node bin/shield.js audit --live",
+    "test": "node bin/shield.js audit --live --summary"
+  },
+  "keywords": [
+    "openclaw",
+    "security",
+    "audit",
+    "config",
+    "hardening"
+  ],
+  "author": "Autonomous Intelligence",
+  "license": "MIT"
+}

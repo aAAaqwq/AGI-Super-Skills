@@ -1,0 +1,22 @@
+{
+  "name": "@openclaw/ceo-delegation",
+  "version": "1.0.0",
+  "description": "CEO-style task delegation workflow for AI agents. Delegate, monitor, and report instead of doing everything yourself.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "openclaw",
+    "delegation",
+    "workflow",
+    "management",
+    "agent"
+  ],
+  "author": "OpenClaw Community",
+  "license": "MIT",
+  "files": [
+    "SKILL.md",
+    "scripts/"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "quality-convergence-engine",
+  "version": "1.0.0",
+  "description": "Multi-dimensional Quality Acceptance and Problem Convergence Engine - Deeply deconstruct requirements, eliminate extreme defects, define absolutely objective acceptance and failure criteria.",
+  "main": "SKILL.md",
+  "keywords": [
+    "quality",
+    "acceptance",
+    "convergence",
+    "engine",
+    "code-review",
+    "architecture",
+    "risk-assessment",
+    "quality-assurance",
+    "verification",
+    "validation"
+  ],
+  "author": "Alosa",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alosa/quality-convergence-engine"
+  },
+  "files": [
+    "SKILL.md",
+    "EXAMPLES.md",
+    "QUICK_REFERENCE.md",
+    "package.json"
+  ]
+}

@@ -1,0 +1,14 @@
+---
+name: strategic-orchestration
+description: Coordinate agents toward a unified objective; assign roles, sequence work, prevent conflicts, and define success criteria.
+version: 2.0.0
+display_name: "Strategic Orchestration"
+triggers:
+  - strategic orchestration
+  - coordinate agents
+  - multi agent plan
+  - assign roles
+  - orchestrate
+  - route tasks
+  - system objective
+---

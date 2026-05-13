@@ -1,466 +1,448 @@
 ---
-# ═══════════════════════════════════════════════════════════════════════════════
-# CLAUDE OFFICE SKILL - Enhanced Metadata v2.0
-# ═══════════════════════════════════════════════════════════════════════════════
-
-# Basic Information
 name: contract-review
-description: "Analyze contracts for risks, check completeness, and provide actionable recommendations. Supports employment contracts, NDAs, service agreements, and more."
-version: "1.0.0"
-author: claude-office-skills
+description: Legal contract analysis using CUAD dataset (41 risk categories). Supports NDA, SaaS, M&A, employment, payment/merchant, and finder/broker agreements. Identifies red flags, suggests redlines, compares to market standards.
+version: 1.0.0
+author: IrisGo.AI
 license: MIT
-
-# Categorization
-category: legal
-tags:
-  - contract
-  - review
-  - risk-analysis
-  - legal
-  - compliance
-department: Legal
-
-# AI Model Compatibility
-models:
-  recommended:
-    - claude-sonnet-4
-    - claude-opus-4
-  compatible:
-    - claude-3-5-sonnet
-    - gpt-4
-    - gpt-4o
-
-# MCP Tools Integration
-# Skills = Solution Guide (WHAT + HOW)
-# MCP = Tool Provider (WITH WHAT)
-mcp:
-  server: office-mcp
-  tools:
-    - extract_text_from_pdf
-    - extract_text_from_docx
-    - analyze_document_structure
-  optional_tools:
-    - create_docx
-    - docx_to_pdf
-
-# Knowledge Base Integration
-# Knowledge = Domain expertise as structured data
-knowledge:
-  base:
-    - mcp-servers/office-mcp/knowledge/base/risk_patterns.json
-    - mcp-servers/office-mcp/knowledge/base/completeness.json
-  jurisdictions:
-    - mcp-servers/office-mcp/knowledge/base/jurisdictions/us.json
-    - mcp-servers/office-mcp/knowledge/base/jurisdictions/china.json
-    - mcp-servers/office-mcp/knowledge/base/jurisdictions/eu.json
-  custom:
-    # Users can add their own knowledge files here
-    # Example: ./knowledge/my_company_rules.json
-
-# Skill Capabilities (for discovery/matching)
-capabilities:
-  - contract_analysis
-  - risk_identification
-  - legal_compliance_check
-  - negotiation_recommendations
-
-# Input/Output Specification
-input:
-  required:
-    - type: file
-      formats: [pdf, docx, txt]
-      description: The contract document to review
-    - type: text
-      name: party_role
-      description: Which party you are (employee, contractor, buyer, etc.)
-  optional:
-    - type: text
-      name: jurisdiction
-      description: Legal jurisdiction (US, EU, China, UK)
-    - type: text
-      name: concerns
-      description: Specific areas of concern
-
-output:
-  primary:
-    type: report
-    format: markdown
-    sections:
-      - risk_summary
-      - detailed_findings
-      - completeness_check
-      - negotiation_priorities
-
-# Language Support
-languages:
-  - en
-  - zh
-
-# Related Skills
-related_skills:
-  - nda-generator
-  - offer-letter
-  - contract-template
+metadata: {"tags":["legal","contracts","nda","saas","due-diligence"],"repository":"https://github.com/IrisGoLab/contract-review-skill"}
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
 ---
 
-# Contract Review Skill
+# Contract Review
 
-## Overview
+Review legal contracts for risks, extract key terms, and suggest redlines. Built on the CUAD dataset (41 risk categories), ContractEval benchmarks, and LegalBench.
 
-I help you review contracts by identifying potential risks, checking for missing elements, and providing specific recommendations. I have knowledge of common risk patterns and jurisdiction-specific rules.
+> **Disclaimer:** This skill provides informational analysis only. It is not legal advice. Material terms should be reviewed by qualified legal counsel before signing.
 
-**What I can do:**
-- Identify 15+ common contract risks
-- Check if your contract is complete
-- Explain complex legal language in plain terms
-- Suggest specific changes to protect your interests
-- Support US, EU, China, and UK jurisdictions
+## When to Activate
 
-**What I cannot do:**
-- Provide legal advice (I'm an AI, not a lawyer)
-- Guarantee legal compliance
-- Replace professional legal review for high-stakes contracts
+- User mentions "review contract", "analyze agreement", "check this contract"
+- User uploads or references a PDF/DOCX legal document
+- User asks about specific clauses, risks, or terms
 
 ---
 
-## How to Use Me
+## Step 1: Pre-Review Checklist
 
-### Step 1: Share Your Contract
-Upload your contract file (PDF, DOCX, or paste text) and tell me:
-- What type of contract is this? (employment, NDA, service, lease, etc.)
-- Which party are you? (employee, contractor, buyer, seller, etc.)
-- What jurisdiction/country?
-- Any specific concerns?
+Before analyzing content, verify document completeness:
 
-### Step 2: I Will Analyze
-I'll review the contract and provide:
-1. **Risk Summary** - High/Medium/Low risks found
-2. **Clause Analysis** - Specific problematic clauses
-3. **Completeness Check** - Missing standard elements
-4. **Recommendations** - What to negotiate or change
+- [ ] **Blank fields**: Flag any "$X", "TBD", "[amount]", "____" placeholders
+- [ ] **Missing exhibits**: List all referenced schedules/exhibits and note which are missing
+- [ ] **Signature status**: Draft or already executed?
+- [ ] **All pages present**: Check for truncation or missing sections
 
-### Step 3: Ask Follow-ups
-Feel free to ask:
-- "Explain Section 5 in simple terms"
-- "What's the worst case if I sign this?"
-- "How do I negotiate the non-compete clause?"
-- "Is this normal for [industry]?"
+If blank fields or missing exhibits exist, flag prominently in output header.
 
 ---
 
-## Risk Patterns I Look For
+## Step 2: Identify Document Type & User Position
 
-### High Risk (Red Flags)
+**Ask if unclear:** "Which party are you? (customer, vendor, buyer, seller, licensor, licensee, receiving party, disclosing party)"
 
-#### 1. Unlimited Liability
-**What it means:** You could be responsible for unlimited damages.
-**Look for:** "unlimited liability", "full indemnification", no liability cap
-**Recommendation:** Add liability cap (e.g., 12 months of fees, or contract value)
+This affects what's "risky":
+- Customer reviewing vendor agreement: flag vendor-favorable terms
+- Vendor reviewing own template: flag customer-favorable terms
+- Buyer in M&A: flag seller-favorable terms
+- Seller in M&A: flag buyer-favorable terms
+- Receiving party in NDA: flag disclosing party-favorable terms
 
-#### 2. Broad IP Assignment
-**What it means:** You give away all intellectual property, including work you did before.
-**Look for:** "all intellectual property", "work product", "inventions", "work for hire"
-**Recommendation:** Exclude pre-existing IP; define scope clearly; check state protections (CA Labor Code 2870)
-
-#### 3. Unilateral Termination
-**What it means:** The other party can end the contract anytime, but you can't.
-**Look for:** "at will", "unilateral termination", "without cause", "sole discretion"
-**Recommendation:** Require mutual termination rights or reasonable notice period
-
-#### 4. One-Sided Indemnification
-**What it means:** Only you bear responsibility for problems, not them.
-**Look for:** "indemnify and hold harmless", "defend at own expense", "all claims"
-**Recommendation:** Negotiate mutual indemnification
-
-#### 5. Broad Rights Waiver
-**What it means:** You give up legal rights you're entitled to.
-**Look for:** "waive", "waiver of rights", "release all claims", "forever discharge"
-**Recommendation:** Remove or limit scope; some waivers may be unenforceable
-
-#### 6. Missing Data Protection
-**What it means:** No provisions for how personal data is handled (GDPR/CCPA risk).
-**Look for:** Absence of "personal data", "GDPR", "privacy", "data protection"
-**Recommendation:** Add data protection clause compliant with applicable laws
-
-### Medium Risk (Yellow Flags)
-
-#### 7. Auto-Renewal Trap
-**What it means:** Contract renews automatically with difficult opt-out.
-**Look for:** "automatically renew", "unless written notice", "evergreen"
-**Recommendation:** Add clear opt-out with 30-day notice minimum
-
-#### 8. Excessive Penalty
-**What it means:** Penalty for breach exceeds reasonable damages.
-**Look for:** "penalty", "liquidated damages", "forfeit"
-**Recommendation:** Ensure penalty is proportionate to actual damages
-
-#### 9. Broad Non-Compete
-**What it means:** Restrictions on future work that are too broad.
-**Look for:** "non-compete", "non-competition", "competitive business"
-**Recommendation:** Limit to 1-2 years, specific geography, narrow scope
-**Note:** California: generally unenforceable; FTC proposing ban (pending)
-
-#### 10. Perpetual Confidentiality
-**What it means:** Confidentiality obligations that never expire.
-**Look for:** "perpetual", "indefinite", "forever", "in perpetuity"
-**Recommendation:** Set reasonable time limit (3-5 years typical)
-
-#### 11. Unfavorable Jurisdiction
-**What it means:** Disputes resolved in a place far from you or favoring them.
-**Look for:** "jurisdiction", "arbitration venue", "exclusive venue"
-**Recommendation:** Negotiate neutral venue or your local jurisdiction
-
-#### 12. Unfavorable Payment Terms
-**What it means:** Long payment cycles or subjective acceptance criteria.
-**Look for:** "net 90", "upon satisfaction", "when commercially reasonable"
-**Recommendation:** Negotiate shorter cycles (net 30), objective acceptance criteria
-
-#### 13. Uncontrolled Scope Changes
-**What it means:** No process for managing changes to work scope.
-**Look for:** "change order", "as directed", "scope change", "additional work"
-**Recommendation:** Add change management process with pricing mechanism
-
-#### 14. Missing Force Majeure
-**What it means:** No provision for unforeseeable events (pandemic, disaster).
-**Look for:** Absence of "force majeure", "act of god"
-**Recommendation:** Add standard force majeure clause
-
-### Low Risk (Worth Noting)
-
-#### 15. Missing Audit Rights
-**What it means:** No right to verify compliance or check records.
-**Look for:** Absence of "inspection", "audit rights", "records access"
-**Recommendation:** Add reasonable audit rights for significant contracts
-
----
-
-## Completeness Checklist
-
-A well-drafted contract should include:
-
-### Essential Elements
-- [ ] **Parties**: Full legal names and addresses of all parties
-- [ ] **Effective Date**: When the contract begins
-- [ ] **Term/Duration**: How long the contract lasts
-- [ ] **Scope**: What's being provided/delivered
-- [ ] **Compensation**: Payment amount, schedule, and method
-- [ ] **Termination**: How and when the contract can be ended
-
-### Important Clauses
-- [ ] **Confidentiality**: How sensitive information is protected
-- [ ] **Intellectual Property**: Who owns created work
-- [ ] **Liability Limits**: Caps on responsibility
-- [ ] **Indemnification**: Who covers what damages
-- [ ] **Governing Law**: Which jurisdiction's laws apply
-- [ ] **Dispute Resolution**: How disagreements are handled
-
-### Execution
-- [ ] **Signature Blocks**: Space for all parties to sign
-- [ ] **Date Lines**: When signatures were added
-- [ ] **Witness/Notary**: If required by type or jurisdiction
-
----
-
-## Jurisdiction-Specific Knowledge
-
-### United States
-
-#### Employment Contracts
-- **At-Will Default**: Most states allow termination without cause (except Montana)
-- **Exempt vs Non-Exempt**: Critical classification for overtime eligibility
-  - Non-exempt: Entitled to overtime (1.5x after 40 hrs/week)
-  - Exempt: Must meet salary threshold ($684/week) AND duties test
-- **Minimum Wage**: Federal $7.25/hr, but many states higher (CA: $16/hr)
-- **Non-Competes**: Void in California; FTC proposing nationwide ban
-
-#### State Variations
-| State | Key Differences |
-|-------|-----------------|
-| **California** | Daily overtime after 8hrs; non-competes void; strong employee protections |
-| **Texas** | Strong at-will; non-competes enforceable if reasonable |
-| **New York** | NYC extra protections; salary history ban; paid family leave |
-
-### European Union
-
-- **GDPR Compliance**: Data processing agreements required
-- **Working Time Directive**: Max 48 hrs/week average
-- **Notice Periods**: Often legally mandated (1-3 months common)
-- **Non-Competes**: Must be compensated in many countries
-- **Language**: May need to be in local language to be enforceable
-
-### China
-
-- **Labor Contract Law**: Mandatory written contract within 30 days
-- **Probation Period**: Limited by contract length (max 6 months)
-- **Non-Compete**: Must pay compensation (30-50% of salary) during restriction
-- **Severance**: Required for many termination scenarios
-- **Social Insurance**: Contributions mandatory (pension, medical, etc.)
-
-### United Kingdom
-
-- **Statutory Rights**: Cannot contract out of employment rights
-- **Notice Periods**: Minimum 1 week per year of service (up to 12)
-- **Restrictive Covenants**: Must be reasonable to be enforceable
-- **TUPE**: Employee rights protected in business transfers
+**Assess power dynamic:**
+- Startup vs. large enterprise? (limited negotiating leverage)
+- Standard form vs. negotiated? (some terms non-negotiable)
+- Regulated industry? (some terms legally required)
 
 ---
 
 ## Output Format
 
-When I review your contract, I'll provide:
+Use **markdown** for readable, scannable output.
 
+---
+
+### Example Output
+
+```markdown
+# Contract Review: [Document Name]
+
+**Document Type:** SaaS Subscription Agreement
+**Your Position:** Customer
+**Counterparty:** Acme Software Inc.
+**Risk Level:** Medium
+**Document Status:** Draft / Executed on [date]
+
+## Pre-Signing Alerts
+
+- **Blank field:** Fee amount in Section 4.1 is "$____"
+- **Missing exhibit:** Exhibit B (SLA) referenced but not attached
+
+## Executive Summary
+
+Standard vendor agreement with some one-sided terms. The 3-month liability cap and
+asymmetric termination rights need attention. Data ownership is clear.
+
+---
+
+## Key Terms
+
+| Term | Value | Location |
+|------|-------|----------|
+| Initial Term | 12 months | Section 8.1 |
+| Auto-Renewal | 12-month periods, 60-day notice | Section 8.2 |
+| Liability Cap | 3 months' fees | Section 10.2 |
+| Governing Law | Delaware | Section 12.1 |
+
+---
+
+## Red Flags (Quick Scan)
+
+| Flag | Found | Location |
+|------|-------|----------|
+| Liability cap < 6 months | Yes | Section 10.2 |
+| Uncapped indemnification | No | -- |
+| Unilateral amendment rights | Yes | Section 14.1 |
+| No termination for convenience | No | -- |
+| Perpetual obligations | No | -- |
+| Offshore jurisdiction | No | -- |
+
+---
+
+## Risk Analysis
+
+### Critical
+
+**Limitation of Liability** (Section 10.2)
+> "Liability shall not exceed fees paid in the preceding three (3) months"
+
+- **Issue:** 3-month cap is below market standard (typically 12 months)
+- **Risk:** For $120K annual contract, liability capped at $30K
+- **Market Standard:** 12 months' fees
+- **Negotiability:** Medium -- most vendors accept 6-12 months
+- **Redline:** Change "three (3) months" to "twelve (12) months"
+- **Fallback:** Accept 6 months as compromise
+
+---
+
+### Important
+
+**Termination for Convenience** (Section 8.5)
+> "Vendor may terminate for any reason upon 30 days notice"
+
+- **Issue:** One-sided; customer lacks equivalent right
+- **Market Standard:** Mutual termination rights
+- **Negotiability:** High -- reasonable ask
+- **Redline:** Add "Either party may terminate..." or change to "90 days"
+
+---
+
+### Reviewed & Acceptable
+
+| Category | Status | Notes |
+|----------|--------|-------|
+| Data Ownership | OK | Customer owns all customer data |
+| IP Rights | OK | Clear separation, no broad assignment |
+| Confidentiality | OK | Mutual, 3-year term, standard exceptions |
+| Governing Law | OK | Delaware -- neutral for commercial |
+
+---
+
+## Missing Provisions
+
+| Provision | Priority | Why It Matters |
+|-----------|----------|----------------|
+| Data Export Rights | Critical | No guaranteed way to get data out on termination |
+| SLA Credits | Important | 99.9% uptime stated but no remedy for breach |
+| Price Increase Cap | Important | Renewal pricing uncapped |
+
+**Suggested language for Data Export:**
+> "Upon termination, Vendor shall make Customer Data available for export in CSV or JSON format for 90 days at no additional charge."
+
+---
+
+## Internal Consistency Issues
+
+- Section 5.2 references "Exhibit C" but no Exhibit C exists
+- "Confidential Information" defined in Section 3.1 but used lowercase in Section 7
+
+---
+
+## Negotiation Priority
+
+| # | Issue | Ask | Negotiability |
+|---|-------|-----|---------------|
+| 1 | Liability cap | 12 months | Medium |
+| 2 | Termination rights | Mutual | High |
+| 3 | Data export | Add provision | High |
+| 4 | Price cap | 5% annual max | Medium |
+
+---
+
+*This review is for informational purposes only. Material terms should be reviewed by qualified legal counsel.*
 ```
-## Contract Analysis Report
-
-**Document**: [Contract Name]
-**Type**: [Employment/Service/NDA/etc.]
-**Jurisdiction**: [Country/State]
-**Your Role**: [Which party you are]
 
 ---
 
-### Risk Summary
+## Red Flags Quick Scan
 
-| Severity | Count | Key Issues |
-|----------|-------|------------|
-| 🔴 High  | X     | [Brief list] |
-| 🟡 Medium| X     | [Brief list] |
-| 🟢 Low   | X     | [Brief list] |
+Check these danger signs FIRST before deep analysis:
 
-**Overall Assessment**: [SAFE / REVIEW NEEDED / HIGH RISK]
-
----
-
-### Detailed Findings
-
-#### 🔴 High Risk Issues
-
-**1. [Issue Name]** (Section X.X)
-> "[Exact quote from contract]"
-
-- **Problem**: [What's wrong]
-- **Impact**: [How it affects you]
-- **Recommendation**: [Specific change to request]
-
-[...continue for each issue...]
+| Red Flag | Why It Matters |
+|----------|----------------|
+| Liability cap < 6 months | Inadequate protection |
+| Uncapped indemnification | Unlimited exposure |
+| "As-is" with no warranty | No recourse for defects |
+| Unilateral suspension without notice | Service can vanish |
+| Unilateral amendment rights | Terms can change |
+| No termination for convenience | Locked in |
+| Perpetual obligations (tails, non-competes) | Indefinite exposure |
+| Offshore jurisdiction (BVI, Cayman) | Expensive to enforce |
+| Pre-signed conflict waivers | No recourse for conflicts |
+| "Sole discretion" language favoring counterparty | No objective standard |
+| Class action waiver + mandatory arbitration | Limited remedies |
+| Asymmetric assignment rights | They can assign, you can't |
 
 ---
 
-### Completeness Check
+## Document Type Checklists
 
-✅ Present:
-- [List of included elements]
+### NDA Checklist
 
-⚠️ Missing or Unclear:
-- [List of missing elements with recommendations]
+| Category | Check For |
+|----------|-----------|
+| Direction | One-way or mutual? |
+| Definition scope | "All information" too broad? Standard exceptions? |
+| Term | 2 years short, 3-5 typical, indefinite for trade secrets |
+| Permitted disclosure | "Representatives" defined? Flow-down required? |
+| Residuals clause | Can use general knowledge retained in memory? |
+| Non-solicitation | Employees protected? |
+| Standstill | Prevents hostile acquisition actions? |
+| No-contact | Customers, suppliers, employees protected? |
+| Return/destruction | Certification required? |
+| Public announcement | Prohibits disclosure of discussions? |
+| Compelled disclosure | Notice required? Time to seek protective order? |
+| Injunctive relief | Pre-agreed specific performance? Bond waiver? |
 
----
+### SaaS/MSA Checklist
 
-### Negotiation Priorities
+| Category | Check For |
+|----------|-----------|
+| Liability cap | 12+ months = standard |
+| Uptime SLA | 99.9% with credits = standard |
+| Suspension rights | Unilateral? Notice required? |
+| Data ownership | Customer owns customer data? |
+| Data export | Format, duration, cost on termination? |
+| Price increases | Capped? Notice period? |
+| Auto-renewal notice | 90+ days = good, <60 = risk |
+| Termination | Mutual for convenience? Cure period for cause? |
+| Subprocessors | Notice of changes? Approval rights? |
+| Insurance | Vendor carries E&O, cyber? |
 
-1. **Must Change**: [Most critical issues]
-2. **Should Change**: [Important but negotiable]
-3. **Nice to Have**: [Lower priority improvements]
+### Payment/Merchant Agreement Checklist
 
----
+| Category | Check For |
+|----------|-----------|
+| Reserve/holdback | Amount, duration, release conditions? |
+| Chargeback liability | Capped? Fraud protection? |
+| Network rules | Incorporated by reference? Access provided? |
+| Auto-debit authority | Notice before debits? |
+| Settlement timing | When do you receive funds? |
+| Volume commitments | Realistic? Penalty for shortfall? |
+| Suspension rights | Immediate or notice? |
+| Termination tail | How long do obligations survive? |
+| Audit rights | Frequency, notice, cost allocation? |
+| PCI compliance | Who bears cost? |
 
-### Disclaimer
+### M&A Agreement Checklist
 
-This analysis is for informational purposes only and does not constitute 
-legal advice. For important contracts, consult a qualified attorney.
-```
+| Category | Check For |
+|----------|-----------|
+| Purchase price | Cash vs. stock vs. earnout mix? |
+| Earnout mechanics | Measurement, discretion, audit rights, acceleration? |
+| Escrow/holdback | Amount (10-15% typical), duration (12-18 mo), release? |
+| Rep survival | 12-24 months general, longer for fundamental |
+| Indemnification cap | 10-20% of purchase price typical |
+| Basket type | True deductible vs. tipping? |
+| Sandbagging | Pro-buyer or anti-sandbagging? |
+| Non-compete | 2-3 years, geographic scope? |
+| Working capital | Target, collar, true-up mechanism? |
+| MAC definition | Carve-outs for market conditions? |
+| Employment comp | Counted in purchase price or separate? |
 
----
+### Finder/Broker Agreement Checklist
 
-## Example Interactions
-
-### Example 1: Employment Contract Review
-
-**User**: Review this employment contract. I'm the employee, this is for a US company in California.
-
-**Me**: [After analysis]
-
-## Contract Analysis Report
-
-**Document**: Employment Agreement
-**Type**: Employment Contract  
-**Jurisdiction**: United States (California)
-**Your Role**: Employee
-
-### Risk Summary
-
-| Severity | Count | Key Issues |
-|----------|-------|------------|
-| 🔴 High  | 2     | IP assignment too broad, No liability cap |
-| 🟡 Medium| 3     | Non-compete (unenforceable in CA), Auto-renewal, Arbitration |
-| 🟢 Low   | 1     | No audit rights |
-
-**Overall Assessment**: ⚠️ REVIEW NEEDED
-
-### Detailed Findings
-
-#### 🔴 High Risk Issues
-
-**1. Broad IP Assignment** (Section 5.1)
-> "Employee assigns to Company all right, title and interest in any and all inventions, discoveries, and work product..."
-
-- **Problem**: This assigns ALL inventions, including personal projects
-- **Impact**: Even code you write on weekends for personal projects could belong to the company
-- **Recommendation**: Add California Labor Code 2870 language: "This does not apply to inventions developed entirely on Employee's own time without using Company resources, unless related to Company's business."
-
-**2. Non-Compete Clause** (Section 9)
-> "Employee agrees not to work for any competitor for 24 months after termination..."
-
-- **Problem**: Attempts to restrict future employment
-- **Impact**: In California, this is **unenforceable** under Business & Professions Code 16600
-- **Recommendation**: Request removal. If they refuse, don't worry - it's void in CA anyway.
-
----
-
-### Example 2: Quick Question
-
-**User**: Is a 3-year non-compete normal?
-
-**Me**: No, 3 years is longer than typical. Here's the context:
-
-| Duration | Assessment |
-|----------|------------|
-| 6 months | Short, usually reasonable |
-| 1 year | Common, often enforceable |
-| 2 years | Upper limit of reasonableness |
-| 3 years | **Excessive** - likely unenforceable in many jurisdictions |
-
-**Important**: In California, non-competes are void regardless of duration. Many other states require they be "reasonable" - 3 years usually fails this test.
-
-**Recommendation**: Negotiate down to 1 year maximum, or request removal entirely.
+| Category | Check For |
+|----------|-----------|
+| Fee percentage | Specified or blank? |
+| Fee calculation | What's included in deal value? Employment comp? |
+| "Covered buyer" definition | How broad? Any prior relationship carve-out? |
+| Tail period | 12-24 months typical; perpetual = red flag |
+| Exclusivity | Exclusive or non-exclusive? |
+| Minimum fee | Floor amount? |
+| Joint representation | Consent required? Conflict waiver? |
+| Escrow deduction | Auto-pay from proceeds? |
+| Term/termination | Can you exit? |
+| Broker status | BD registered if securities involved? |
 
 ---
 
-## Tips for Better Results
+## Risk Categories (CUAD 41 + Extensions)
 
-1. **Tell me your role**: Are you the employee, contractor, buyer, or seller?
-2. **Specify jurisdiction**: US? Which state? EU? China?
-3. **Share context**: Is this a job you really want? Big client? High stakes?
-4. **Ask follow-ups**: I can explain any clause in more detail
-5. **Use me iteratively**: Review → Negotiate → Review revised version
+### Document Basics
+- Document Name and Type
+- Parties (legal names, roles)
+- Agreement Date / Effective Date
+- Expiration Date
+- Renewal Terms
+- Document Status (draft/executed)
+- Blank Fields / Placeholders
+
+### Term & Termination
+- Contract Term / Duration
+- Termination for Convenience
+- Termination for Cause
+- Post-Termination Services
+- Survival Clauses
+- Suspension Rights (immediate vs. with notice)
+- Cure Periods
+
+### Assignment & Control
+- Anti-Assignment Clause
+- Change of Control
+- Consent Requirements
+- Asymmetric Assignment (they can, you can't)
+
+### Financial Terms
+- Payment Terms
+- Price Restrictions / Adjustments
+- Most Favored Nation (MFN)
+- Minimum Commitment
+- Volume Restrictions
+- Audit Rights
+- Price Escalation Caps
+- Reserve/Holdback Requirements
+- Auto-Debit Authority
+
+### Liability & Risk
+- Limitation of Liability
+- Cap on Liability
+- Uncapped Liability Carve-outs
+- Indemnification
+- Insurance Requirements
+- Warranty Duration
+- Warranty Disclaimer (As-Is)
+- Exclusive Remedy Clauses
+- Chargeback/Return Liability
+
+### IP & Confidentiality
+- IP Ownership Assignment
+- License Grant
+- Affiliate License - Licensor/Licensee
+- Covenant Not To Sue
+- Non-Compete
+- Non-Solicitation (Employees/Customers)
+- Competitive Restriction Exception
+- Exclusivity
+- Non-Disparagement
+- Confidentiality Duration
+- Third Party Beneficiary
+- Residuals Clause
+- Feedback Ownership
+
+### Dispute Resolution
+- Governing Law
+- Jurisdiction / Venue
+- Arbitration vs Litigation
+- Jury Trial Waiver
+- Class Action Waiver
+- Offshore Jurisdiction Flags
+
+### Special Provisions
+- ROFR / ROFO / ROFN
+- Revenue/Profit Sharing
+- Joint IP Ownership
+- Source Code Escrow
+- Irrevocable or Perpetual License
+- Data Export Rights
+- Uptime/Availability SLA
+- Sublicensing Rights
+- Unilateral Amendment Rights
 
 ---
 
-## Limitations
+## Market Standard Benchmarks
 
-- I provide general guidance, not legal advice
-- My knowledge may not reflect the latest legal changes
-- Some risks are industry-specific and may need expert review
-- For high-stakes contracts (M&A, major deals), always use a lawyer
-- I can't verify if the other party will actually follow the contract
+| Provision | Standard | Yellow Flag | Red Flag |
+|-----------|----------|-------------|----------|
+| Liability cap | 12 months' fees | 6-11 months | <6 months |
+| Non-compete duration | 1-2 years | 3-4 years | 5+ years |
+| Non-compete geography | Where business operates | State-wide | Nationwide |
+| Auto-renewal notice | 90+ days | 60-89 days | <60 days |
+| Termination notice | Mutual, 60-90 days | One-sided, 30 days | Immediate |
+| Indemnification | Mutual, capped | Asymmetric | Uncapped |
+| Rep survival (M&A) | 12-18 months general | 24-30 months | 36+ months |
+| Escrow (M&A) | 10-15% for 12-18 mo | 15-20% for 18-24 mo | >20% or >24 mo |
+| Confidentiality (NDA) | 3 years general | 2 years | 5+ years |
+| Fee tail (broker) | 12-18 months | 24 months | Perpetual |
+| SLA uptime | 99.9% with credits | 99.5% | No SLA |
+| Data export | 90 days, standard format | 30 days | None |
+| Price increase cap | CPI or 5% annual | 10% annual | Uncapped |
+| Cure period | 30 days | 15 days | None |
 
 ---
 
-## Languages
+## Negotiability Guide
 
-This skill works with contracts in multiple languages including English and Chinese. 
-Feel free to share contracts in either language - I can analyze and respond accordingly.
+| Rating | Meaning | Examples |
+|--------|---------|----------|
+| High | Usually accepted | Mutual termination, cure periods, data export |
+| Medium | Depends on leverage | Liability cap increase, price caps |
+| Low | Rarely changed | Network rules (payments), regulatory requirements |
+| None | Non-negotiable | Card network mandates, banking regulations |
+
+**Power dynamic factors:**
+- Large customer + small vendor = more leverage
+- Startup + enterprise vendor = less leverage
+- Competitive market = more leverage
+- Sole-source vendor = less leverage
+- Regulated terms = no leverage (legally required)
 
 ---
 
-*Built by the Claude Office Skills community. Contributions welcome!*
+## Jurisdiction Notes
+
+**Non-Competes:**
+- California, North Dakota, Oklahoma, Minnesota: Generally void
+- Other states: Reasonableness test applies
+
+**Choice of Law:**
+- Delaware: Corp-friendly, predictable
+- New York: Financial agreements, sophisticated courts
+- California: Employee-friendly, tech industry
+- BVI/Cayman: Offshore, expensive to litigate, potential red flag
+
+**Arbitration Venues:**
+- AAA, JAMS: Standard US commercial
+- SIAC (Singapore), LCIA (London): International, expensive
+- Mandatory + class waiver: Limits remedies significantly
+
+---
+
+## Guardrails
+
+- **Not legal advice**: Recommend attorney review for material terms
+- **Not tax advice**: Flag but don't opine
+- **Jurisdiction matters**: Note when enforceability varies
+- **Express uncertainty**: Say when interpretation is unclear
+- **No hallucination**: Only reference text actually in document
+- **Show what's acceptable**: Always include "Reviewed & Acceptable" section
+- **Document status matters**: Note if already executed (review is informational)
+
+---
+
+## License
+
+MIT License. Open source contribution by [IrisGo.AI](https://irisgo.ai).

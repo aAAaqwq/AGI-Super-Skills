@@ -1,0 +1,46 @@
+{
+  "name": "market-intelligence",
+  "version": "1.0.0",
+  "description": "AI Market Intelligence Agent - 自动收集和分析市场/行业信息",
+  "main": "main.sh",
+  "scripts": {
+    "run": "./main.sh",
+    "report": "./main.sh --keyword \"\" --format markdown",
+    "setup": "./setup.sh"
+  },
+  "config": {
+    "sources": {
+      "news": {
+        "enabled": false,
+        "api_key": "",
+        "category": "business,technology"
+      },
+      "twitter": {
+        "enabled": false,
+        "api_key": "",
+        "keywords": []
+      },
+      "reddit": {
+        "enabled": false,
+        "subreddits": ["technology", "artificial", "business"]
+      }
+    },
+    "output": {
+      "format": "markdown",
+      "directory": "./output",
+      "include_json": true
+    },
+    "pricing": {
+      "single_report": 10,
+      "monthly_subscription": 100,
+      "enterprise": "contact"
+    }
+  },
+  "keywords": ["market", "intelligence", "research", "analytics", "monitoring"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openclaw/market-intelligence"
+  },
+  "author": "OpenClaw AI Agent",
+  "license": "MIT"
+}

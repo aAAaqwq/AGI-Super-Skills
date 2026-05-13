@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Audit Panel"
+  short_description: "Two-pass code audits across security, perf, UX, DX, and edge."
+  default_prompt: "Audit this codebase with Security, Performance, UX, DX, and Edge experts in two passes, then deliver one prioritized report as tie-breaker lead."

@@ -1,0 +1,261 @@
+{
+  "info": "完整64卦数据位于 assets/hexagrams_full.json",
+  "hexagrams": {
+    "1": {
+      "name": "卦1",
+      "available": true
+    },
+    "2": {
+      "name": "卦2",
+      "available": true
+    },
+    "3": {
+      "name": "卦3",
+      "available": true
+    },
+    "4": {
+      "name": "卦4",
+      "available": true
+    },
+    "5": {
+      "name": "卦5",
+      "available": true
+    },
+    "6": {
+      "name": "卦6",
+      "available": true
+    },
+    "7": {
+      "name": "卦7",
+      "available": true
+    },
+    "8": {
+      "name": "卦8",
+      "available": true
+    },
+    "9": {
+      "name": "卦9",
+      "available": true
+    },
+    "10": {
+      "name": "卦10",
+      "available": true
+    },
+    "11": {
+      "name": "卦11",
+      "available": true
+    },
+    "12": {
+      "name": "卦12",
+      "available": true
+    },
+    "13": {
+      "name": "卦13",
+      "available": true
+    },
+    "14": {
+      "name": "卦14",
+      "available": true
+    },
+    "15": {
+      "name": "卦15",
+      "available": true
+    },
+    "16": {
+      "name": "卦16",
+      "available": true
+    },
+    "17": {
+      "name": "卦17",
+      "available": true
+    },
+    "18": {
+      "name": "卦18",
+      "available": true
+    },
+    "19": {
+      "name": "卦19",
+      "available": true
+    },
+    "20": {
+      "name": "卦20",
+      "available": true
+    },
+    "21": {
+      "name": "卦21",
+      "available": true
+    },
+    "22": {
+      "name": "卦22",
+      "available": true
+    },
+    "23": {
+      "name": "卦23",
+      "available": true
+    },
+    "24": {
+      "name": "卦24",
+      "available": true
+    },
+    "25": {
+      "name": "卦25",
+      "available": true
+    },
+    "26": {
+      "name": "卦26",
+      "available": true
+    },
+    "27": {
+      "name": "卦27",
+      "available": true
+    },
+    "28": {
+      "name": "卦28",
+      "available": true
+    },
+    "29": {
+      "name": "卦29",
+      "available": true
+    },
+    "30": {
+      "name": "卦30",
+      "available": true
+    },
+    "31": {
+      "name": "卦31",
+      "available": true
+    },
+    "32": {
+      "name": "卦32",
+      "available": true
+    },
+    "33": {
+      "name": "卦33",
+      "available": true
+    },
+    "34": {
+      "name": "卦34",
+      "available": true
+    },
+    "35": {
+      "name": "卦35",
+      "available": true
+    },
+    "36": {
+      "name": "卦36",
+      "available": true
+    },
+    "37": {
+      "name": "卦37",
+      "available": true
+    },
+    "38": {
+      "name": "卦38",
+      "available": true
+    },
+    "39": {
+      "name": "卦39",
+      "available": true
+    },
+    "40": {
+      "name": "卦40",
+      "available": true
+    },
+    "41": {
+      "name": "卦41",
+      "available": true
+    },
+    "42": {
+      "name": "卦42",
+      "available": true
+    },
+    "43": {
+      "name": "卦43",
+      "available": true
+    },
+    "44": {
+      "name": "卦44",
+      "available": true
+    },
+    "45": {
+      "name": "卦45",
+      "available": true
+    },
+    "46": {
+      "name": "卦46",
+      "available": true
+    },
+    "47": {
+      "name": "卦47",
+      "available": true
+    },
+    "48": {
+      "name": "卦48",
+      "available": true
+    },
+    "49": {
+      "name": "卦49",
+      "available": true
+    },
+    "50": {
+      "name": "卦50",
+      "available": true
+    },
+    "51": {
+      "name": "卦51",
+      "available": true
+    },
+    "52": {
+      "name": "卦52",
+      "available": true
+    },
+    "53": {
+      "name": "卦53",
+      "available": true
+    },
+    "54": {
+      "name": "卦54",
+      "available": true
+    },
+    "55": {
+      "name": "卦55",
+      "available": true
+    },
+    "56": {
+      "name": "卦56",
+      "available": true
+    },
+    "57": {
+      "name": "卦57",
+      "available": true
+    },
+    "58": {
+      "name": "卦58",
+      "available": true
+    },
+    "59": {
+      "name": "卦59",
+      "available": true
+    },
+    "60": {
+      "name": "卦60",
+      "available": true
+    },
+    "61": {
+      "name": "卦61",
+      "available": true
+    },
+    "62": {
+      "name": "卦62",
+      "available": true
+    },
+    "63": {
+      "name": "卦63",
+      "available": true
+    },
+    "64": {
+      "name": "卦64",
+      "available": true
+    }
+  }
+}

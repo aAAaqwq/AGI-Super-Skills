@@ -1,0 +1,50 @@
+{
+  "capsule": {
+    "blast_radius": {
+      "files": 1,
+      "lines": 168
+    },
+    "confidence": 0.85,
+    "content": "---\nname: git-workflow\ndescription: |\n  OpenClaw Git 工作流技能。\n  \n  当用户提及以下任务时使用：\n  - 提交代码或文档\n  - 推送到远程仓库\n  - 管理多个 Git 仓库\n  - 查看 Git 状态\n  \n  核心能力:\n  - 自动检测文件变更\n  - 自动生成提交信息\n  - 自动推送到远程仓库\n  - 多仓库管理\nlicense: MIT\ncompatibility: |\n  需要以下环境：\n  - Git 已安装\n  - 已配置 Git 用户信息\n  - 已配置远程仓库\n  \n  支持平台:\n  - OpenClaw ✅\n  - Claude Code ✅\nmetadata:\n  author: OpenClaw 实战团队\n  version: 1.0.0\n  category: git-workflow\n  tags: [git, version-control, automation]\n  created: 2026-02-26\n---\n\n# Git 工作流技能\n\n## 核心指令\n\n### 第一步：检测文件变更\n```bash\n# 检查 Git 状态\ngit status\n\n# 查看变更文件\ngit diff --name-only\n```\n\n### 第二步：添加文件\n```bash\n# 添加所有变更\ngit add .\n\n# 或添加指定文件\ngit add <file1> <file2>\n```\n\n### 第三步：生成提交信息\n根据变更内容自动生成提交信息：\n\n```bash\n# 提交信息格式\n<type>: <description>\n\n# 类型说明\nfeat: 新功能\nfix: 修复 bug\ndocs: 文档更新\nstyle: 代码格式\nrefactor: 重构\ntest: 测试\nchore: 构建/工具\n```\n\n### 第四步：提交并推送\n```bash\n# 提交\ngit commit -m \"提交信息\"\n\n# 推送\ngit push\n```\n\n## 示例\n\n### 示例 1: 分析完成后自动提交\n**触发**: 分析任务完成\n\n**操作**:\n1. 检测新生成的文件\n2. 添加到 Git\n3. 生成提交信息\n4. 提交并推送\n\n**提交信息示例**:\n```\nfeat: 完成股票分析\n\n- 分析 000657 中钨高新\n- 生成三高股票筛选报告\n- 保存到 Stock-Analysis 仓库\n```\n\n### 示例 2: 多仓库管理\n**触发**: 需要提交到多个仓库\n\n**操作**:\n1. 识别文件所属仓库\n2. 分别提交到对应仓库\n3. 分别推送\n\n**仓库示例**:\n- Jarvis: 记忆、配置\n- Stock-Analysis: 股票分析代码\n- Amazon-Analyzer: 亚马逊运营工具\n\n## 故障排除\n\n### 错误 1: Git 未配置\n**错误消息**: \"Please tell me who you are\"\n\n**解决方案**:\n```bash\ngit config --global user.name \"Your Name\"\ngit config --global user.email \"your.email@example.com\"\n```\n\n### 错误 2: 推送失败\n**错误消息**: \"Authentication failed\"\n\n**解决方案**:\n1. 检查 Git 凭据\n2. 使用 Token 代替密码\n3. 配置 SSH Key\n\n### 错误 3: 冲突\n**错误消息**: \"CONFLICT (content)\"\n\n**解决方案**:\n1. 查看冲突文件\n2. 手动解决冲突\n3. 标记为解决\n   ```bash\n   git add <resolved_file>\n   ```\n4. 完成提交\n   ```bash\n   git commit\n   ```\n\n## 最佳实践\n\n### 提交频率\n- 小改动：随时提交\n- 大功能：功能完成后提交\n- 每日结束：提交当日工作\n\n### 提交信息\n- 清晰简洁\n- 使用现在时\n- 首字母大写\n- 不超过 50 字符\n\n### 分支管理\n- main/master: 主分支\n- feature/*: 功能分支\n- fix/*: 修复分支\n- docs/*: 文档分支\n",
+    "env_fingerprint": {
+      "arch": "x64",
+      "platform": "linux"
+    },
+    "gene": "sha256:f79b57a0359d63ebd29e55ecda73ceac5932bfd92aa68a8b121dc6dace3685b1",
+    "outcome": {
+      "score": 0.85,
+      "status": "success"
+    },
+    "schema_version": "1.5.0",
+    "summary": "Git 工作流",
+    "trigger": [
+      "git"
+    ],
+    "type": "Capsule"
+  },
+  "event": {
+    "capsule_id": "sha256:f79b57a0359d63ebd29e55ecda73ceac5932bfd92aa68a8b121dc6dace3685b1",
+    "genes_used": [
+      "sha256:f79b57a0359d63ebd29e55ecda73ceac5932bfd92aa68a8b121dc6dace3685b1"
+    ],
+    "intent": "automate",
+    "outcome": {
+      "score": 0.85,
+      "status": "success"
+    },
+    "source": "Skills-Bank migration",
+    "type": "EvolutionEvent"
+  },
+  "gene": {
+    "category": "automate",
+    "schema_version": "1.5.0",
+    "signals_match": [
+      "git-workflow"
+    ],
+    "strategy": [
+      "OpenClaw Git 工作流技能。自动化 Git 提交、推送、版本管理，   支持多仓库管理和自动提交信息生成。  license: MIT"
+    ],
+    "summary": "Git 工作流",
+    "type": "Gene"
+  }
+}

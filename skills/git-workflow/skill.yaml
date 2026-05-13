@@ -1,0 +1,54 @@
+name: git-workflow
+title: Git 工作流
+version: 1.0.0
+description: |
+  OpenClaw Git 工作流技能。自动化 Git 提交、推送、版本管理，
+  支持多仓库管理和自动提交信息生成。
+
+author: OpenClaw 实战团队
+license: MIT
+tags:
+  - git
+  - version-control
+  - automation
+  - workflow
+
+repository: https://git.kingcms.cn/OpenClaw/Skills-Collection
+
+files:
+  - SKILL.md
+
+requirements:
+  - exec
+  - read
+  - write
+
+compatibility:
+  openclaw: ">=2026.2.23"
+  platforms:
+    - linux
+    - macos
+  dependencies:
+    - git
+
+examples:
+  - name: 自动提交变更
+    input: "提交刚才的代码修改"
+    output: |
+      ✅ 已自动提交
+
+      **仓库**: /root/.openclaw/workspace
+      **变更文件**: 3 个文件
+      **提交信息**: feat: 更新记忆管理功能
+      
+      已推送到远程仓库。
+
+  - name: 多仓库管理
+    input: "检查所有项目仓库的状态"
+    output: |
+      **仓库状态检查**:
+      
+      ✅ Skills-Collection - 最新
+      ✅ Amazon-Analyzer - 最新
+      ✅ Stock-Analysis - 有未提交变更 (2 个文件)
+      ✅ OpenClaw/workspace - 最新
