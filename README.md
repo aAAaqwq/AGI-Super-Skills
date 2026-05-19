@@ -68,7 +68,7 @@ You (Founder / Chairman)
 
 | Agent | Role | Spirit Mentor | Thinking |
 |-------|------|---------------|----------|
-| [`ceo`](./agents/ceo/) | 👑 CEO | Elon Musk | First Principles, Critical Thinking |
+| [`ceo`](./agents/main/) | 👑 CEO | Elon Musk | First Principles, Critical Thinking |
 | [`cto`](./agents/cto/) | ⚡ CTO | Jensen Huang | Systems Thinking, Technical Depth |
 | [`cpo`](./agents/cpo/) | 🎨 CPO | Steve Jobs | Design Thinking, User Empathy |
 | [`cqo`](./agents/cqo/) | 📈 CQO | Jim Simons | Mathematical Rigor, Probabilistic Thinking |
