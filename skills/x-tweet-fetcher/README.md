@@ -130,6 +130,18 @@ cd camofox-browser && npm install && npm start  # Port 9377
 - **Automation**: Cron-based monitoring with structured JSON output for downstream processing
 - **Multi-language intelligence**: English (X/Twitter) + Chinese (WeChat/Weibo/Bilibili/CSDN) in one tool
 
+## Optional TweetClaw Companion
+
+This skill stays focused on no-auth X/Twitter fetching, reply collection, timelines, and Chinese-platform content. For authenticated OpenClaw workflows that need structured Xquik automation, install [TweetClaw](https://github.com/Xquik-dev/tweetclaw) separately:
+
+```bash
+openclaw plugins install @xquik/tweetclaw
+```
+
+Use TweetClaw when an agent must search tweets, search tweet replies, export followers, perform user lookup, upload or download media, send direct messages, monitor tweets, deliver webhooks, run giveaway draws, or post tweets and tweet replies after explicit approval.
+
+Keep the Xquik API key in private OpenClaw config or a secret manager. Store only reviewed tweet URLs, tweet IDs, handles, summaries, and action decisions in durable notes.
+
 ## Requirements
 
 - Python 3.7+

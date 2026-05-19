@@ -142,7 +142,7 @@ Each agent directory (e.g. `agents/cco/WORKFLOW.md`) contains role-specific and 
 npm install -g openclaw
 
 # Deploy a starter kit — pick your role:
-curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- solo-founder    # 🚀 一个人创业
+curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/master/install.sh | bash -s solo-founder    # 🚀 一个人创业
 # curl ... | bash -s -- content-creator   # 🎨 自媒体
 # curl ... | bash -s -- quant-trader      # 📈 量化交易
 # curl ... | bash -s -- full-team         # 🏛️ 全部12个Agent
