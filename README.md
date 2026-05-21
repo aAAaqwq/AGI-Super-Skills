@@ -5,14 +5,14 @@
 <h1 align="center">AGI Super Team</h1>
 
 <p align="center">
-  <strong>727 AI Skills · 12 C-Suite Agents · 29 Thinking Frameworks</strong><br/>
+  <strong>814 AI Skills · 12 C-Suite Agents · 29 Thinking Frameworks</strong><br/>
   Build your AI-native company in minutes.
 </p>
 
 <p align="center">
   <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/Powered%20by-OpenClaw-blue?logo=github" alt="OpenClaw"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Skills-727-blueviolet" alt="Skills">
+  <img src="https://img.shields.io/badge/Skills-814-blueviolet" alt="Skills">
   <img src="https://img.shields.io/badge/Agents-12-orange" alt="Agents">
   <img src="https://img.shields.io/badge/Frameworks-29-cyan" alt="Frameworks">
 </p>

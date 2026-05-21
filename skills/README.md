@@ -1,6 +1,6 @@
 # 🛠️ Skills Catalog
 
-> **727 skills** ready to deploy · [← Back to main README](../README.md)
+> **814 skills** ready to deploy · [← Back to main README](../README.md)
 
 ---
 
