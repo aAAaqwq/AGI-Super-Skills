@@ -34,7 +34,7 @@
 
 ### KGKB — Knowledge Graph Knowledge Base (2026-03-16~17, P0)
 - **GitHub**: https://github.com/aAAaqwq/KGKB
-- **本地**: ~/clawd/projects/knowledge-graph-kb/
+- **本地**: ~/openclaw/projects/knowledge-graph-kb/
 - **状态**: P0 MVP 已完成，待验证
 - **技术选型**: Python Typer+Rich CLI / FastAPI 后端 / React+D3.js 前端 / SQLite+FAISS 存储
 - **设计灵感来源**:
@@ -50,11 +50,11 @@
 - **待做**: pip install 验证, npm dev 验证, Ollama embedding 接入, 自动关联建议
 
 ### Polymarket 交易脚本
-- 路径: ~/clawd/skills/polymarket-profit/
+- 路径: ~/openclaw/skills/polymarket-profit/
 - BTC 5分钟纸盘交易
 
 ### browser-use 集成
-- 路径: ~/clawd/skills/browser-use/
+- 路径: ~/openclaw/skills/browser-use/
 - Playwright 自动化
 
 ### 飞书多Agent部署 (2026-03-14)
@@ -104,7 +104,7 @@
 ## 🔑 关键路径
 - Agent 工作目录: ~/.openclaw/workspace-code/
 - Agent 配置: ~/.openclaw/agents/code/agent/
-- 项目目录: ~/clawd/projects/
+- 项目目录: ~/openclaw/projects/
 - Skills 目录: ~/.agents/skills/ (54个)
 - Self-improving: ~/self-improving/domains/code.md
 - Claude Code 配置: ~/.claude/settings.json (ZAI/GLM-5)

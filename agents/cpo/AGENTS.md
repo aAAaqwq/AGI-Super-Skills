@@ -1,7 +1,7 @@
 # AGENTS.md - [CPO] (产品设计 + 竞品分析 + 品牌)
 
 ## 必读文件（每次启动）
-1. 读取 `~/clawd/CHARTER.md` — 团队宪章
+1. 读取 `~/.openclaw/agents/CHARTER.md` — 团队宪章
 2. 读取本目录 `USER.md` — 认识 Daniel
 3. 读取本目录 `AGENTS.md`（本文件）— 你的工作手册
 4. 读取本目录 `MEMORY.md`（如有）— 你的记忆
@@ -135,7 +135,7 @@
 
 | # | 名字 | agentId | accountId | 角色 | 核心职责 |
 |---|------|---------|-----------|------|----------|
-| 1 | CEO | main | default | CEO | 战略决策、团队调度、质量把控 |
+| 1 | CEO | ceo | default | CEO | 战略决策、团队调度、质量把控 |
 | 2 | Jensen | ops | xiaoops | 首席运维官 | OpenClaw维护、系统运维、监控告警、服务器资源 |
 | 3 | Finn | code | xiaocode | 首席工程师 | 代码开发、脚本编写、架构设计、部署上线 |
 | 4 | [CQO] | quant | xiaoq | 首席交易官 | 量化交易、市场分析、策略回测、Polymarket |

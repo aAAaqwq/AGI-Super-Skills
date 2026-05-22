@@ -32,4 +32,4 @@ Kit options: `solo-founder` | `content-creator` | `quant-trader` | `full-team` |
 
 ## Agent IDs
 
-`main`(CEO), `cto`, `pe`, `cpo`, `cqo`, `cmo`, `cfo`, `cdo`, `cco`, `clo`, `cro`, `cso`, `coo`
+`ceo`(CEO), `cto`, `pe`, `cpo`, `cqo`, `cmo`, `cfo`, `cdo`, `cco`, `clo`, `cro`, `cso`, `coo`

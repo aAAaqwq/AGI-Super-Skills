@@ -86,7 +86,7 @@ declare -A AGENT_SKILLS=(
 # ── Deploy a single agent ─────────────────────────────────────
 deploy_agent() {
   local repo_dir="$1"
-  local agent_key="$2"   # e.g. "main", "pe", "cco"
+  local agent_key="$2"   # e.g. "ceo", "pe", "cco"
   local ws="${OPENCLAW_DIR}/workspace-${agent_key}"
 
   local display_name="${AGENT_NAMES[$agent_key]:-$agent_key}"
@@ -133,7 +133,7 @@ deploy_starter_kit() {
 
   case "$kit" in
     solo-founder)
-      agents=(main pe cco)
+      agents=(ceo pe cco)
       ;;
     content-creator)
       agents=(cco cdo cmo)
@@ -142,7 +142,7 @@ deploy_starter_kit() {
       agents=(cqo cdo cfo)
       ;;
     full-team)
-      agents=(main cto pe cpo cqo cmo cfo cdo cco clo cro cso coo)
+      agents=(ceo cto pe cpo cqo cmo cfo cdo cco clo cro cso coo)
       ;;
     *)
       # Treat as agent alias

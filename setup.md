@@ -35,7 +35,7 @@ bash ~/.agi-super-team/install.sh solo-founder
 
 ```bash
 # 检查 workspace 是否创建成功
-ls ~/.openclaw/workspace-main/    # CEO
+ls ~/.openclaw/workspace-ceo/    # CEO
 ls ~/.openclaw/workspace-pe/      # PE (如部署)
 ls ~/.openclaw/workspace-cco/     # CCO (如部署)
 ```

@@ -36,14 +36,14 @@
 - **发布频率**：冷启动3-4篇/周，成长期5-6篇/周
 - **标签策略**：2热门+3垂直+2长尾=7个标签
 - **冷启动**：养号7天，垂直度高冷启动快，连续5天5:58发布卡平台机制
-- **产出文件**：`~/clawd/reports/xiaohongshu-marketing-strategy-20260314.md`
+- **产出文件**：`~/openclaw/reports/xiaohongshu-marketing-strategy-20260314.md`
 
 ### 开源项目推广
 - **核心渠道**：GitHub → Product Hunt → Hacker News → Reddit → DEV.to → Twitter
 - **README优化**：一句话描述、Logo、快速开始、截图/GIF
 - **Product Hunt发布**：00:01 PST发布，同步多渠道
 - **增长策略**：早期用户运营、社区借势、内容营销
-- **产出文件**：`~/clawd/reports/knowledge-graph-marketing-plan.md`
+- **产出文件**：`~/openclaw/reports/knowledge-graph-marketing-plan.md`
 
 ### 增长黑客
 - **数据驱动**：每个增长实验都要有数据追踪
@@ -90,19 +90,19 @@
 ## 📊 项目经验
 
 ### 小红书运营策略分析（2026-03-14）
-- **产出**：`~/clawd/reports/xiaohongshu-marketing-strategy-20260314.md`
+- **产出**：`~/openclaw/reports/xiaohongshu-marketing-strategy-20260314.md`
 - **内容**：冷启动实践、AI话题流量趋势、SEO关键词布局、封面设计规范、发布节奏建议
 - **封面图**：生成了3个版本（深色科技风格）
 
 ### 流量增长+营销策略深度分析（2026-03-15）
-- **产出**：`~/clawd/reports/traffic-growth-strategy.md`
+- **产出**：`~/openclaw/reports/traffic-growth-strategy.md`
 - **内容**：
   - 小红书涨粉策略（账号定位、内容矩阵、标签策略、薯条投放）
   - 视频号起量策略（新号权重、社交裂变、直播带货、短视频爆款）
   - Daniel专属变现路径（30天/3个月/6-12个月）
 
 ### 知识图谱项目推广方案（2026-03-16）
-- **产出**：`~/clawd/reports/knowledge-graph-marketing-plan.md`
+- **产出**：`~/openclaw/reports/knowledge-graph-marketing-plan.md`
 - **目标**：30天100+ stars，90天500+ stars
 - **渠道**：GitHub → Product Hunt → HN/Reddit → Twitter
 - **时间线**：4周计划（准备→预热→发布→增长）
@@ -111,7 +111,7 @@
 
 ## 🎯 商业化认知框架
 
-**来源**：`~/clawd/docs/commercialization-framework.md`
+**来源**：`~/openclaw/docs/commercialization-framework.md`
 
 ### 核心一句话
 > 把价值传递给愿意付钱的人，并让这个过程可重复。

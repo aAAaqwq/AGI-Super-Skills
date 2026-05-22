@@ -7,7 +7,7 @@
 ```
 创始人 / 董事长
     ↓ 战略方向
-CEO (main)
+CEO (ceo)
     ↓ 运营调度 ───────────────────────┐
     ├── CTO + PE (首席工程师) ← 代码   │
     ├── CQO ← 量化交易                 │
@@ -27,7 +27,7 @@ CEO (main)
 
 | Agent | 角色 | 精神导师 | 核心文件 |
 |-------|------|----------|----------|
-| [CEO](main/) | 👑 首席执行官 | Elon Musk | AGENTS · SOUL · MEMORY · IDENTITY · BOOTSTRAP · WORKFLOW |
+| [CEO](ceo/) | 👑 首席执行官 | Elon Musk | AGENTS · SOUL · MEMORY · IDENTITY · BOOTSTRAP · WORKFLOW |
 | [CTO](cto/) | ⚡ 首席技术官 | Jensen Huang | AGENTS · SOUL · MEMORY · IDENTITY · BOOTSTRAP · TOOLS |
 | [PE](pe/) | 💻 首席工程师 | Linus, antirez, DHH | AGENTS · SOUL · MEMORY · IDENTITY · BOOTSTRAP · WORKFLOW · TOOLS |
 | [CQO](cqo/) | 📈 首席量化官 | Jim Simons | AGENTS · SOUL · MEMORY · IDENTITY · BOOTSTRAP · WORKFLOW · TOOLS |

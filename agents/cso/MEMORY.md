@@ -219,9 +219,9 @@
 
 ## 🔗 重要链接
 
-- **团队宪章**: ~/clawd/CHARTER.md
-- **商业化框架**: ~/clawd/docs/commercialization-framework.md
-- **医疗数据方案**: ~/clawd/docs/solutions/healthcare-data-intelligence.md
+- **团队宪章**: ~/.openclaw/agents/CHARTER.md
+- **商业化框架**: ~/openclaw/docs/commercialization-framework.md
+- **医疗数据方案**: ~/openclaw/docs/solutions/healthcare-data-intelligence.md
 - **学习日志**: ~/.openclaw/agents/sales/agent/memory/learning-log.md
 - **自我进化**: ~/self-improving/domains/sales.md
 

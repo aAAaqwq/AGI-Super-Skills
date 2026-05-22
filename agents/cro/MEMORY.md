@@ -64,8 +64,8 @@
 
 ### 工作空间
 - **主目录**: `~/.openclaw/agents/research/agent/`
-- **报告目录**: `~/clawd/reports/`
-- **项目目录**: `~/clawd/projects/`
+- **报告目录**: `~/openclaw/reports/`
+- **项目目录**: `~/openclaw/projects/`
 - **学习日志**: `memory/learning-log.md`
 
 ---
@@ -139,7 +139,7 @@
 - **应用**: 知识图谱可视化方案报告（包含代码示例）
 
 ### 2026-03-16：文件路径管理
-- **教训**: 报告保存路径需要确认（~/clawd/reports/），避免路径记错
+- **教训**: 报告保存路径需要确认（~/openclaw/reports/），避免路径记错
 - **改进**: 每次写文件后确认路径，重要报告在群里明确说明路径
 - **应用**: 后续所有报告都在群里说明完整路径
 
@@ -162,7 +162,7 @@
 - 理解团队架构（L0-L2层级）
 - 掌握宪章核心原则（验证链、第一性原理）
 - 建立学习资源索引（12领域69资源）
-- 文件：`~/clawd/reports/team-learning-resources.md`
+- 文件：`~/openclaw/reports/team-learning-resources.md`
 
 **经验总结**:
 - 顶层认知：明确自己的角色定位（CRO，不是执行者）
@@ -176,7 +176,7 @@
 
 **成果**:
 - ✅ messageId: 7153
-- ✅ 完整报告：`~/clawd/reports/knowledge-graph-plan.md`（6,215字节）
+- ✅ 完整报告：`~/openclaw/reports/knowledge-graph-plan.md`（6,215字节）
 
 **关键产出**:
 - 4个方案对比（Neo4j, Apache AGE, NetworkX, Cytoscape.js）
@@ -197,7 +197,7 @@
 
 **成果**:
 - ✅ messageId: 7175
-- ✅ 完整报告：`~/clawd/projects/knowledge-graph-kb/RESEARCH.md`（11,727字节）
+- ✅ 完整报告：`~/openclaw/projects/knowledge-graph-kb/RESEARCH.md`（11,727字节）
 
 **调研范围**:
 1. 知识图谱工具（Neo4j, Apache AGE, NetworkX, TigerGraph）
@@ -382,7 +382,7 @@
 ## 📚 参考资源
 
 ### 核心文档
-- **团队宪章**: `~/clawd/CHARTER.md`
+- **团队宪章**: `~/.openclaw/agents/CHARTER.md`
 - **身份配置**: `~/.openclaw/agents/research/agent/AGENTS.md`
 - **人物设定**: `~/.openclaw/agents/research/agent/SOUL.md`
 - **Daniel认知**: `~/.openclaw/agents/research/agent/USER.md`
