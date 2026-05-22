@@ -126,7 +126,7 @@ OpenClaw 使用 Compaction 机制管理上下文窗口——当对话历史超�
 
 ```
 Daniel（董事长）
-  └── 小a（CEO / main agent）
+  └── 小a（CEO / ceo agent）
         ├── 小quant（首席交易官）— 量化交易、市场分析
         ├── 小ops（首席技术运维）— 系统运维、监控告警
         ├── 小code（首席工程师）— 代码开发、脚本编写
@@ -266,11 +266,11 @@ my-skill/
 **实战案例**：内容生产 Cron 体系
 
 ```
-08:00  📊 日报巡检（systemEvent → main）— 检查昨日数据
+08:00  📊 日报巡检（systemEvent → ceo）— 检查昨日数据
 09:00  📝 选题生成（agentTurn → isolated）— AI 生成今日选题
 10:00  ✍️ 内容生成（agentTurn → isolated）— 基于选题写文章
 14:00  🎨 封面生成（agentTurn → isolated）— 生成平台封面
-18:00  📤 内容推送（systemEvent → main）— 推送当日产出
+18:00  📤 内容推送（systemEvent → ceo）— 推送当日产出
 23:00  🔄 日终复盘（agentTurn → isolated）— 复盘当日数据
 ```
 

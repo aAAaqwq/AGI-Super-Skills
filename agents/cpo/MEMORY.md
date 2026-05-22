@@ -96,7 +96,7 @@
 
 | 文件 | 路径 | 用途 |
 |------|------|------|
-| CHARTER.md | ~/clawd/CHARTER.md | 团队宪章 |
+| CHARTER.md | ~/.openclaw/agents/CHARTER.md | 团队宪章 |
 | USER.md | ~/.openclaw/agents/product/agent/USER.md | Daniel 认知 |
 | AGENTS.md | ~/.openclaw/agents/product/agent/AGENTS.md | 工作手册 |
 | learning-log.md | ~/.openclaw/agents/product/agent/memory/learning-log.md | 学习日志 |

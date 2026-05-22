@@ -38,7 +38,7 @@ openclaw gateway start
 
 | ID | Role | Spirit Mentor | Focus |
 |----|------|---------------|-------|
-| `main` | 👑 CEO — 首席执行官 | Elon Musk | Strategy, coordination, quality |
+| `ceo` | 👑 CEO — 首席执行官 | Elon Musk | Strategy, coordination, quality |
 | `code` | ⚡ CTO — 首席技术官 | Jensen Huang | Code, architecture, debugging |
 | `product` | 🎨 CPO — 首席产品官 | Steve Jobs | Product design, UX, brand |
 | `quant` | 📈 CQO — 首席质量官 | Jim Simons | Quant trading, analysis |

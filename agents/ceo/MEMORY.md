@@ -18,7 +18,7 @@ _从 main workspace 迁移初始化_
 ### accountId 对照表
 | agent | accountId |
 |-------|----------|
-| main | default |
+| ceo | default |
 | CTO | telegram-cto |
 | PE | telegram-peo |
 | CQO | telegram-cqo |

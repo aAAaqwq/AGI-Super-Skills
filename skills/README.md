@@ -1,6 +1,6 @@
 # 🛠️ Skills Catalog
 
-> **814 skills** ready to deploy · [← Back to main README](../README.md)
+> **2,659 skills** ready to deploy · [← Back to main README](../README.md)
 
 ---
 
@@ -24,7 +24,7 @@
 | 🧬 Bioinformatics | 12 |
 | 🧠 Thinking Frameworks | 31 |
 | 🧩 Other | 155 |
-| **Total** | **727** |
+| **Total** | **2,659** |
 
 ---
 
@@ -844,10 +844,10 @@
 ```bash
 
 # Install a single skill
-cp -r skills/api-design ~/.openclaw/workspace-main/skills/
+cp -r skills/api-design ~/.openclaw/workspace-ceo/skills/
 
 # Install all skills
-cp -r skills/ ~/.openclaw/workspace-main/skills/
+cp -r skills/ ~/.openclaw/workspace-ceo/skills/
 ```
 
 Each skill is a folder with `SKILL.md` (required), optional `scripts/` and `references/`.

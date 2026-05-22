@@ -13,8 +13,8 @@
   <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/Powered%20by-OpenClaw-blue?logo=github" alt="OpenClaw"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/Skills-737-blueviolet" alt="Skills">
-  <img src="https://img.shields.io/badge/Agents-12-orange" alt="Agents">
-  <img src="https://img.shields.io/badge/Frameworks-29-cyan" alt="Frameworks">
+  <img src="https://img.shields.io/badge/Agents-14-orange" alt="Agents">
+  <img src="https://img.shields.io/badge/Frameworks-31-cyan" alt="Frameworks">
 </p>
 
 <p align="center">
@@ -61,11 +61,11 @@ git clone https://github.com/aAAaqwq/AGI-Super-Team.git
 cd AGI-Super-Team
 
 # 2. 部署 Agent（例如 CEO）
-mkdir -p ~/.openclaw/workspace-main/skills/
-cp -r skills/thinking-elon-musk/ ~/.openclaw/workspace-main/skills/
+mkdir -p ~/.openclaw/workspace-ceo/skills/
+cp -r skills/thinking-elon-musk/ ~/.openclaw/workspace-ceo/skills/
 
 # 3. 给任何 Agent 添加技能
-cp -r skills/api-design/ ~/.openclaw/workspace-main/skills/
+cp -r skills/api-design/ ~/.openclaw/workspace-ceo/skills/
 
 # 4. 重启 OpenClaw — 完成！
 ```

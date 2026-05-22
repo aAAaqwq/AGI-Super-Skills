@@ -5,16 +5,16 @@
 <h1 align="center">AGI Super Team</h1>
 
 <p align="center">
-  <strong>814 AI Skills · 12 C-Suite Agents · 29 Thinking Frameworks</strong><br/>
+  <strong>2,600+ AI Skills · 14 C-Suite Agents · 31 Thinking Frameworks</strong><br/>
   Build your AI-native company in minutes.
 </p>
 
 <p align="center">
   <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/Powered%20by-OpenClaw-blue?logo=github" alt="OpenClaw"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Skills-814-blueviolet" alt="Skills">
-  <img src="https://img.shields.io/badge/Agents-12-orange" alt="Agents">
-  <img src="https://img.shields.io/badge/Frameworks-29-cyan" alt="Frameworks">
+  <img src="https://img.shields.io/badge/Skills-2,659-blueviolet" alt="Skills">
+  <img src="https://img.shields.io/badge/Agents-14-orange" alt="Agents">
+  <img src="https://img.shields.io/badge/Frameworks-31-cyan" alt="Frameworks">
 </p>
 
 <p align="center">
@@ -31,68 +31,71 @@
 
 ## 🤖 For AI Agents
 
-> **如果你是 Claude Code / OpenClaw / Codex / Cursor，读这个文件：[`setup.md`](./setup.md)**
+> **If you are Claude Code / OpenClaw / Codex / Cursor, read this file: [`setup.md`](./setup.md)**
 >
-> 或者直接告诉你的 Agent：
+> Or just tell your Agent:
 > ```
-> 帮我安装 AGI Super Team：https://github.com/aAAaqwq/AGI-Super-Team
-> 我要 solo-founder kit
+> Install AGI Super Team for me: https://github.com/aAAaqwq/AGI-Super-Team
+> I want the solo-founder kit
 > ```
 
 ## 💡 What Is This?
 
-A **plug-and-play AI team template** — deploy a complete virtual C-Suite using [OpenClaw](https://github.com/openclaw/openclaw). Each agent has a **spirit mentor** (Elon Musk, Jensen Huang, Warren Buffett...) that shapes their personality and decision-making.
+A **plug-and-play AI team template** — deploy a complete virtual C-Suite using [OpenClaw](https://github.com/openclaw/openclaw). Each agent is shaped by a **spirit mentor** (Elon Musk, Jensen Huang, Warren Buffett, Richard Feynman...) that defines their personality, decision-making style, and cognitive framework.
 
-**727 skills. 12 agents. 29 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
+**2,659 skills. 14 agents. 31 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
 
 ## 🏛️ Architecture
 
 ```
 You (Founder / Chairman)
   └── 👑 CEO — Strategy, coordination, quality gate
-        ├── ⚡ CTO — Code, architecture, debugging
+        ├── ⚡ CTO — Architecture, technology strategy, R&D direction
         ├── 🎨 CPO — Product design, UX, brand DNA
-        ├── 📈 CQO — Quant trading, market analysis
+        ├── 📈 CQO — Quant trading, algorithmic strategies
         ├── 📣 CMO — Marketing, SEO, growth
-        ├── 💰 CFO — Finance, P&L, cost optimization
-        ├── 📊 CDO — Data scraping, ETL, analytics
+        ├── 💰 CFO — Finance, P&L, capital allocation
+        ├── 📊 CDO — Data pipelines, analytics, governance
         ├── ✍️ CCO — Content creation, viral growth
-        ├── ⚖️ CLO — Legal, compliance, contracts
-        ├── 🔬 CRO — Deep research, intelligence
-        ├── 🤝 CSO — Sales, BD, customer analysis
-        ├── ⚙️ COO — Ops, monitoring, efficiency
-        └── 💻 PE  — Full-stack engineering, DevOps
+        ├── ⚖️ CLO — Legal, compliance, IP protection
+        ├── 🔬 CRO — Deep research, frontier intelligence
+        ├── 🤝 CSO — Sales, BD, revenue growth
+        ├── ⚙️ COO — Ops, OKRs, cross-team coordination
+        ├── 💻 PE  — Production engineering, DevOps, delivery
+        └── ⚖️ Governor — Quality assurance, delivery audit, escalation
 ```
 
 ## 👥 Agents
 
 | Agent | Role | Spirit Mentor | Thinking |
 |-------|------|---------------|----------|
-| [`ceo`](./agents/ceo/) | 👑 CEO | Elon Musk | First Principles, Critical Thinking |
-| [`cto`](./agents/cto/) | ⚡ CTO | Jensen Huang | Systems Thinking, Technical Depth |
-| [`cpo`](./agents/cpo/) | 🎨 CPO | Steve Jobs | Design Thinking, User Empathy |
+| [`ceo`](./agents/ceo/) | 👑 CEO | Elon Musk | First Principles, Cross-Domain Synthesis |
+| [`cto`](./agents/cto/) | ⚡ CTO | Jensen Huang | Systems Thinking, Accelerated Computing |
+| [`cpo`](./agents/cpo/) | 🎨 CPO | Steve Jobs | Design Thinking, Radical Simplicity |
 | [`cqo`](./agents/cqo/) | 📈 CQO | Jim Simons | Mathematical Rigor, Probabilistic Thinking |
-| [`cmo`](./agents/cmo/) | 📣 CMO | David Ogilvy | Storytelling, Audience Psychology |
+| [`cmo`](./agents/cmo/) | 📣 CMO | David Ogilvy | Data-Driven Storytelling, Audience Psychology |
 | [`cfo`](./agents/cfo/) | 💰 CFO | Warren Buffett | Value Investing, Margin of Safety |
-| [`cdo`](./agents/cdo/) | 📊 CDO | Nate Silver | Bayesian Thinking, Data-Driven |
-| [`cco`](./agents/cco/) | ✍️ CCO | MrBeast | Viral Mechanics, Platform Algorithm |
+| [`cdo`](./agents/cdo/) | 📊 CDO | Nate Silver | Bayesian Reasoning, Predictive Analytics |
+| [`cco`](./agents/cco/) | ✍️ CCO | MrBeast | Viral Mechanics, Platform Algorithms |
 | [`clo`](./agents/clo/) | ⚖️ CLO | Alan Dershowitz | Legal Reasoning, Risk Assessment |
-| [`cro`](./agents/cro/) | 🔬 CRO | Richard Feynman | Scientific Method, First Principles |
-| [`cso`](./agents/cso/) | 🤝 CSO | Michael Dell | Sales Engineering, Relationship Building |
-| [`coo`](./agents/coo/) | ⚙️ COO | Andy Grove | High Output Management, Measurement |
+| [`cro`](./agents/cro/) | 🔬 CRO | Richard Feynman | Scientific Method, Feynman Technique |
+| [`cso`](./agents/cso/) | 🤝 CSO | Michael Dell | Solution Selling, Relationship Building |
+| [`coo`](./agents/coo/) | ⚙️ COO | Andy Grove | High Output Management, OKR Discipline |
+| [`pe`](./agents/pe/) | 💻 PE | Linus Torvalds, antirez, DHH | Pragmatic Engineering, Ship Over Talk |
+| [`governor`](./agents/governor/) | ⚖️ Governor | Zhuge Liang, Wang Yangming | Tri-Verification, Evidence-Based Audit |
 
 > Each agent folder contains `SOUL.md` (personality), `AGENTS.md` (operations), `TOOLS.md` (skill links). Fully customizable.
 
 ## 🧠 Thinking Frameworks
 
-29 distilled thinking skills based on real-world mentors — mental models, decision frameworks, classic quotes with sources:
+31 distilled thinking skills based on real-world mentors — mental models, decision frameworks, and classic quotes with sources:
 
 ```bash
 # Inject a mentor's thinking into any agent
-cp -r skills/thinking-elon-musk/ ~/.openclaw/workspace-main/skills/
+cp -r skills/thinking-elon-musk/ ~/.openclaw/workspace-ceo/skills/
 
 # Or inject all frameworks to all workspaces
-for agent in main cto cpo cqo cmo cfo cdo cco clo cro cso coo pe; do
+for agent in ceo cto cpo cqo cmo cfo cdo cco clo cro cso coo pe; do
   mkdir -p ~/.openclaw/workspace-${agent}/skills/
   cp -r skills/thinking-* ~/.openclaw/workspace-${agent}/skills/
 done
@@ -133,7 +136,7 @@ done
 
 Each agent directory (e.g. `agents/cco/WORKFLOW.md`) contains role-specific and shared workflows.
 
-## ⚡ Quick Start (30 seconds)
+## ⚡ Quick Start
 
 ### One-command deploy (recommended)
 
@@ -142,10 +145,10 @@ Each agent directory (e.g. `agents/cco/WORKFLOW.md`) contains role-specific and 
 npm install -g openclaw
 
 # Deploy a starter kit — pick your role:
-curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- solo-founder    # 🚀 一个人创业
-# curl ... | bash -s -- content-creator   # 🎨 自媒体
-# curl ... | bash -s -- quant-trader      # 📈 量化交易
-# curl ... | bash -s -- full-team         # 🏛️ 全部12个Agent
+curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- solo-founder    # 🚀 Solo founder
+# curl ... | bash -s -- content-creator   # 🎨 Content creator
+# curl ... | bash -s -- quant-trader      # 📈 Quant trader
+# curl ... | bash -s -- full-team         # 🏛️ All 14 agents
 
 # Configure API keys, then restart
 openclaw config
@@ -156,10 +159,10 @@ openclaw gateway restart
 
 | Kit | Agents | Best for |
 |-----|--------|----------|
-| 🚀 [**Solo Founder**](./starter-kits/solo-founder/) | CEO + PE + CCO | 独立开发者、创业者 |
-| 🎨 [**Content Creator**](./starter-kits/content-creator/) | CCO + CDO + CMO | 自媒体人、内容团队 |
-| 📈 [**Quant Trader**](./starter-kits/quant-trader/) | CQO + CDO + CFO | 量化交易、投资 |
-| 🏛️ **Full Team** | All 12 agents | 完整 AI 公司 |
+| 🚀 [**Solo Founder**](./starter-kits/solo-founder/) | CEO + PE + CCO | Indie hackers, solo founders |
+| 🎨 [**Content Creator**](./starter-kits/content-creator/) | CCO + CDO + CMO | Content teams, self-media |
+| 📈 [**Quant Trader**](./starter-kits/quant-trader/) | CQO + CDO + CFO | Quant trading, investment |
+| 🏛️ **Full Team** | All 14 agents | Complete AI-native company |
 
 ### Manual deploy
 
@@ -185,18 +188,19 @@ In-depth learning guides in [`cookbook/`](./cookbook/):
 
 ```
 AGI-Super-Team/
-├── agents/           # 12 C-Suite agent personas
-│   ├── ceo/          # SOUL.md · AGENTS.md · TOOLS.md
+├── agents/           # 14 C-Suite agent personas
+│   ├── ceo/          # SOUL.md · AGENTS.md · TOOLS.md · WORKFLOW.md
 │   ├── cto/          # ...
+│   ├── governor/     # Quality assurance & delivery audit
 │   └── README.md     # Architecture diagram & skill matrix
-├── skills/           # 727 skills (flat structure, each with SKILL.md)
+├── skills/           # 2,659 skills (flat structure, each with SKILL.md)
 │   └── README.md     # Full catalog
-├── starter-kits/     # 🆕 One-click deployment bundles
+├── starter-kits/     # One-click deployment bundles
 │   ├── solo-founder/ # CEO + PE + CCO
 │   ├── content-creator/ # CCO + CDO + CMO
 │   └── quant-trader/ # CQO + CDO + CFO
 ├── cookbook/         # 5 in-depth learning guides
-├── install.sh        # 🆕 One-click deployer
+├── install.sh        # One-click deployer
 ├── CHARTER.md        # Team constitution (12 principles)
 ├── STARTUP.md        # Quick-start guide
 ├── COLLABORATION.md  # Inter-agent collaboration network

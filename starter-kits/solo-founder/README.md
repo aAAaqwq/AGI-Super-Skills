@@ -66,7 +66,7 @@ openclaw gateway restart
 
 ```
 你 (创始人)
-  └── 👑 CEO (main) — 接收你的指令，协调 PE 和 CCO
+  └── 👑 CEO (ceo) — 接收你的指令，协调 PE 和 CCO
         ├── 💻 PE — 代码、技术、部署
         └── ✍️ CCO — 内容、发布、传播
 ```
