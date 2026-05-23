@@ -1,11 +1,23 @@
-# 5minbtc — BTC 5分钟实时预测 Skill v3.2
+---
+name: 5minbtc
+version: 5.4
+description: BTC 5分钟K线实时方向预测。v5.4正交因子+Regime感知+微结构引擎，9因子（momentum t-stat/Z-score meanrev/RSI/volume/fatigue/decel/position/imbalance/microprice），sigmoid压缩，TREND dampening。
+triggers:
+  - 5minbtc
+  - 5min btc
+  - btc 5min
+tools:
+  - terminal
+  - web
+---
 
-> 触发词: `5minbtc`, `5min btc`, `btc 5min`
-> 最后更新: 2026-05-12 v3.3 新闻源精简：移除失效源，Cointelegraph TG(3min)+CoinDesk RSS(14min)+TreeNews(120min)
+# 5minbtc — BTC 5分钟实时预测 v4.0
+
+> 最后更新: 2026-05-22 Hermes迁移版
 
 ## 概述
 
-对当前5min K线做方向判断和收盘预测。v3.1架构：**引擎脚本算指标+给基准建议，LLM做综合分析+微调+完整输出**。
+对当前5min K线做方向判断和收盘预测。架构：**引擎脚本算指标+给基准建议，LLM做综合分析+微调+完整输出**。
 
 ## 铁律
 
@@ -15,29 +27,36 @@
 4. LLM可微调引擎的bias/pred_close/range，但必须说明理由
 5. 输出15-25行（平衡深度和Telegram可读性）
 
+## ⚠️ Pitfalls
+
+### Binance API 451 封禁
+中国大陆所有标准 Binance 端点返回 HTTP 451。必须用 `data-api.binance.vision` 替代 `api.binance.com` / `api.binance.me`。
+详见 `references/binance-api-geo.md`。
+验证: `curl -s -o /dev/null -w "%{http_code}" "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=5m&limit=5"` → 200
+
+### 路径硬编码
+不要用 `WORKSPACE = dirname(dirname(dirname(...)))` 指向旧 OpenClaw workspace。用 `SKILL_DIR = os.path.dirname(os.path.abspath(__file__))`。
+
 ## 执行步骤
 
 ### Step 1: 并行启动（5个调用同时发出）
 
 ```
 并行组:
-├── exec: settle-all + 引擎脚本（合并一条命令）
-├── exec: 5minbtc-news.py（新闻扫描，更新news-risk-level.json）
+├── exec: settle-all + 引擎脚本 + 新闻扫描（合并一条命令）
 ├── web_search: "Bitcoin BTC breaking news price" count=3 freshness=day
 ├── web_search: "crypto market macro stocks today" count=3 freshness=day
 └── web_search: "比特币 BTC 最新 晚间" count=3 freshness=day
 ```
 
-引擎输出已包含FnG(恐惧贪婪指数)，无需额外API调用。
-
-引擎命令：
+引擎命令（绝对路径）：
 ```bash
-cd <workspace> && \
-  python3 skills/5minbtc/5minbtc-log.py settle-all 2>&1; \
+SKILL_DIR=/home/aa/.hermes/profiles/cqo/skills/5minbtc && \
+  python3 $SKILL_DIR/5minbtc-log.py settle-all 2>&1; \
   echo "---ENGINE---"; \
-  python3 skills/5minbtc/5minbtc-engine.py 2>&1; \
+  python3 $SKILL_DIR/5minbtc-engine-v5.py 2>&1; \
   echo "---NEWS---"; \
-  python3 skills/5minbtc/5minbtc-news.py 2>&1
+  python3 $SKILL_DIR/5minbtc-news.py 2>&1
 ```
 
 新闻扫描会自动更新 `data/news-risk-level.json`（结构化情绪+风险等级），供Step 2使用。
@@ -52,13 +71,13 @@ LLM收到引擎JSON后，必须：
 
 **B. 综合判断方向**（引擎给基准，LLM最终决定）
 - 引擎的bias/strength是**参考起点**，不是最终答案
-- 读取 `data/news-risk-level.json` 获取结构化新闻情绪（sentiment, risk_level）
+- 读取 `data/news-risk-level.json` 获取结构化新闻情绪
 - LLM必须考虑引擎忽略的因素：
-  - 超卖/超买后的反转概率（RSI<30不一定是继续跌）
+  - 超卖/超买后的反转概率
   - BB下轨/上轨的支撑/阻力效应
-  - 连续阴/阳线后的疲劳（5连阴后反弹概率上升）
+  - 连续阴/阳线后的疲劳
   - K线形态（十字星、锤子线、吞没等）
-  - 新闻方向的权重调整（HIGH_VOL→降低信心，LOW_RISK→可提高信心）
+  - 新闻方向的权重调整
 - 如果LLM调整了引擎方向，必须说明理由
 
 **C. 微调预测价**（引擎给基准，LLM微调±ATR*0.3以内）
@@ -71,7 +90,8 @@ LLM收到引擎JSON后，必须：
 ### Step 3: 记录日志
 
 ```bash
-python3 skills/5minbtc/5minbtc-log.py log \
+SKILL_DIR=/home/aa/.hermes/profiles/cqo/skills/5minbtc && \
+  python3 $SKILL_DIR/5minbtc-log.py log \
   "<engine.candle.iso>" \
   <final_pred_close> \
   <final_pred_high> \
@@ -142,35 +162,17 @@ python3 skills/5minbtc/5minbtc-log.py log \
 ## 复盘
 
 ```bash
-python3 skills/5minbtc/5minbtc-log.py stats
+SKILL_DIR=/home/aa/.hermes/profiles/cqo/skills/5minbtc && \
+  python3 $SKILL_DIR/5minbtc-log.py stats
 ```
 
-## 新闻数据源 (5minbtc-news.py)
-
-新闻脚本：`skills/5minbtc/5minbtc-news.py`
-输出文件：`data/news-risk-level.json`（供引擎读取）
+## 新闻数据源
 
 | 源 | 延迟 | 状态 |
 |-----|------|------|
-| **Cointelegraph** | **~3min** | ✅ Telegram TG频道，实时推送 |
 | **CoinDesk** | **~14min** | ✅ RSS实时 |
-| **TreeNews** | ~120min | ⚠️ Telegram群，依赖tree_channel编辑推送频率 |
-| CoinTelegraph RSS | 144min+ | ❌ 已移除（延迟过高） |
-| NewsData.io | 20h+ | ❌ 已移除（数据完全失效） |
-| TheBlock | blocked | ❌ 已移除（SSL封锁） |
-| BitcoinMagazine | blocked | ❌ 已移除（连接重置） |
-| Fear&Greed | blocked | ❌ 已移除（连接重置） |
-| CryptoCompare | 需key | ❌ 已移除（无API key） |
-
-**Keys**（已写入 `~/.bashrc`）:
-- `COINDESK_API_KEY=<your-coindesk-key>`
-- `NEWSDATA_API_KEY=<your-newsdata-key>`
-
-风险判定规则:
-- bearish ≥ 2 → BEARISH + HIGH_VOL
-- bullish ≥ 2 → BULLISH + LOW_RISK
-- bearish = 1 → NEUTRAL + ELEVATED
-- 其他 → NEUTRAL + NORMAL
+| **Cointelegraph** | **~3min** | ⚠️ 需TG脚本（已降级为RSS fallback） |
+| **TreeNews** | ~120min | ⚠️ 需TG脚本（已降级） |
 
 ## 引擎进化史 & 复盘记录
 
@@ -179,67 +181,59 @@ python3 skills/5minbtc/5minbtc-log.py stats
 | 版本 | 架构 | 方向准确率 | 关键变更 |
 |------|------|-----------|----------|
 | v3.1 | 线性打分(EMA+RSI+MACD+Vol) | 64% | 基础版，引擎+LLM混合 |
-| v3.2 | +量价背离/动量衰竭/VWAP | — | Alpha101借鉴，+16行 |
-| v3.3 | +RSS/Binance新闻 | — | 新闻数据源接入 |
-| v3.4 | +OB/Funding/鲸鱼 | — | 实时微结构(后被证明噪声) |
-| v3.5 | **概率框架重写** | 75% | 8因子→log-odds→贝叶斯概率 |
-| v3.5.1 | +低vol衰减/VWAP因子 | 77% | 当前版本 |
-| v3.2 | +结构化新闻扫描 | — | 5minbtc-news.py集成，news-risk-level.json供引擎读取 |
+| v3.5.1 | +低vol衰减/VWAP因子 | 77% | 最佳版本 |
+| v4.0 | Hermes迁移 | 60.5% | 路径适配，功能不变 |
+| v4.1 | Phase1修复 | 目标70%+ | 过度自信压制+放量反转+bull修正+疲劳增强 |
+| **v5.4** | **正交因子+Regime** | **60.7%(50r)** | **9正交因子+sigmoid+TREND dampening+meanrev反转** |
 
-### 全量复盘 (141笔结算)
+### 全量复盘 (178笔结算)
 
 | 日期 | 笔数 | 方向 | 区间 | MAE | 特征 |
 |------|------|------|------|-----|------|
-| 05-05 | 107 | 64% | 55% | 0.071% | v3.1，大量测试，bull偏多 |
-| 05-06 | 28 | 57% | 71% | 0.068% | v3.1，bear偏多，区间最好 |
+| 05-05 | 107 | 64% | 55% | 0.071% | v3.1，大量测试 |
+| 05-06 | 28 | 57% | 71% | 0.068% | v3.1，区间最好 |
 | 05-11 | 8+ | 83% | 83% | 0.042% | v3.1手动，最佳表现 |
 | 05-12 | 27 | 74% | 56% | 0.038% | v3.5.1 cron运行 |
+| 05-23 | — | — | — | — | v4.1上线，待验证 |
 
-**全局**: 方向 64% | 区间 60% | MAE 0.069%
+**全局(v4.0)**: 方向 60.5% | 区间 62.1% | MAE 0.064%
 
 ### 核心教训
 
-1. **线性打分是初学者错误** — 多个共线指标叠加不增加信息量
-2. **64%方向准确率接近随机** — 应专注区间覆盖而非方向预测
-3. **引擎越自信越错(v3.4)** — 极端信号出现在行情末端=反转概率最高(v3.5已修复)
-4. **低vol微波动不应判方向** — ≤0.05%波动是噪声(v3.5.1衰减至0.3)
-5. **EMA在底部反弹期天然滞后** — 导致连续判DOWN(VWAP因子部分修复)
+1. **过度自信是最致命问题** — conf≥60准确率56.8% < conf<60的65.4%，极端信号=行情末端
+2. **放量≠确认方向，放量=反转预警** — 放量(≥80%)准确率仅50%
+3. **bull偏向严重** — bull准确率57.3% < bear 63.4%，引擎过度解读EMA金叉
+4. **线性打分是初学者错误** — 多个共线指标叠加不增加信息量
+5. **低vol微波动准确率最高** — 缩量时66%，应专注而非放弃
+6. **EMA在底部反弹期天然滞后** — VWAP因子部分修复
 
-### 因子有效性 (148笔验证)
+## v5.0 升级路线图
 
-| ✅ 有效 | ❌ 无效/噪声 |
-|---------|-------------|
-| EMA delta (弱) | RSI (5min 40-60无信号) |
-| Vol pct (辅助) | MACD (与EMA共线) |
-| 量价背离 (理论有效) | OB失衡 (快照噪声) |
-| VWAP (抵消EMA滞后) | Funding (8h结算无关5min) |
-| 动量衰竭 (趋势末端) | 鲸鱼大单 (0.05BTC门槛太低) |
-| — | RSS情绪 (148笔贡献为0) |
+> 详见 `references/quant-knowledge-index.md` 和 `~/.hermes/profiles/cqo/quant-knowledge/R12-integration-blueprint.md`
 
-### v3.5 概率框架要点
+### P0 — 立即实施
+1. **OFI微结构因子**: Binance WebSocket → 订单流不平衡 → 预测R²~15-25%
+2. **免费数据源**: Arkham(鲸鱼), Binance WS(LOB), Deribit(IV)
+3. **信号仪表板**: 监控因子IC/衰减率 (Simons哲学)
 
-- 8个独立因子 → log-odds → 贝叶斯概率 P(UP/DOWN/NEUTRAL)
-- Regime detection: ranging(低vol衰减0.3) / transitional / trending
-- 区间设计: ranging=0.45ATR, trending=0.35ATR
-- 砍掉: RSI, MACD, RSS, 高权重OB/Funding
-- 确信度vs准确率: 60-69%最稳(80%), 90%+命中(100%)
-- UP判断88%准确, DOWN判断65%(瓶颈)
+### P1 — 2-4周
+4. Regime-aware仓位 (HMM检测)
+5. LightGBM自动化因子筛选
+6. CVaR动态止损
 
-### 下一步优化方向
+### P2 — 1-2月
+7. TFT多时间尺度模型 → 替代贝叶斯引擎
+8. 期权IV信号 (Deribit)
+9. 完整压力测试框架
 
-1. RSI超卖反弹因子 (RSI<30→UP +0.5, 抵消EMA滞后)
-2. 低可信度标签 (regime=ranging+vol<25%→标注⚠️)
-3. 区间加宽至0.50 ATR (56%太低)
+### 关键数学升级
+- OFI (Cont et al. 2014) → 替代纯价格指标
+- Microprice (Stoikov 2018) → 替代 mid price
+- Kalman滤波 → 动态EMA权重
+- HMM Regime → 自适应仓位
+- GPD尾部 → 替代固定止损
 
-## v2→v3.1 变更
+## 参考文件
 
-| 项目 | v2 | v3 (过度精简) | v3.1 (当前) |
-|------|-----|-------------|------------|
-| 指标计算 | LLM内联 | 引擎脚本 | 引擎脚本 |
-| 方向判定 | LLM主观 | 引擎规则 | **引擎基准+LLM最终判定** |
-| 收盘预测 | LLM主观 | 引擎公式 | **引擎基准+LLM微调** |
-| 新闻判断 | LLM | LLM | LLM |
-| 输出深度 | 完整 | 过简 | **完整** |
-| MACD修复 | ❌ (signal=0) | ✅ | ✅ |
-| 推理耗时 | 70-80s | 15-20s | **25-40s** |
-| Token消耗 | ~30K | ~5K | **~10-12K** |
+- `references/binance-api-geo.md` — Binance API 区域封禁解决方案和迁移记录
+- `references/quant-knowledge-index.md` — 50轮蒸馏知识库索引(12份报告/~67KB)，含升级优先级

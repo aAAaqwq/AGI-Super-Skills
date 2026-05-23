@@ -6,7 +6,7 @@ import json, sys, math, urllib.request
 from datetime import datetime, timezone, timedelta
 
 CST = timezone(timedelta(hours=8))
-BINANCE = "https://api.binance.me/api/v3/klines"
+BINANCE = "https://data-api.binance.vision/api/v3/klines"
 
 def fetch_klines(symbol="BTCUSDT", interval="5m", limit=100):
     url = f"{BINANCE}?symbol={symbol}&interval={interval}&limit={limit}"
@@ -81,72 +81,103 @@ def current_candle_info():
     }
 
 def direction_rule(ema_delta, rsi_val, vol_pct, macd_hist, consecutive_bull, consecutive_bear):
-    """纯规则方向判定"""
+    """v4.1 方向判定 — 修复过度自信/放量反转/bull偏向/连续疲劳
+    
+    基于178笔复盘数据：
+    - 强信号(conf≥60)准确率56.8% < 弱信号65.4% → 压制极端score
+    - 放量(≥80%)准确率50% → 放量=反转信号
+    - bull准确率57.3% < bear 63.4% → 提高bull阈值
+    - 错误预测avg confidence 59.5 > 正确55.8 → 高conf=噪声
+    """
     score = 0  # -100 to +100
     
-    # EMA delta (权重40)
+    # EMA delta (权重30，降权避免EMA滞后误判)
     if ema_delta > 100:
-        score += 40
+        score += 30
     elif ema_delta > 50:
-        score += 25
+        score += 20
     elif ema_delta > 0:
-        score += 10
+        score += 8
     elif ema_delta > -50:
-        score -= 10
+        score -= 8
     elif ema_delta > -100:
-        score -= 25
+        score -= 20
     else:
-        score -= 40
+        score -= 30
     
-    # RSI (权重20)
+    # RSI (权重20 — 保持不变)
     if rsi_val > 70:
-        score -= 10  # 超买反向下调
+        score -= 15  # 超买反转（加强权重）
     elif rsi_val > 55:
-        score += 15
+        score += 12
     elif rsi_val > 45:
         score += 0
     elif rsi_val > 30:
-        score -= 15
-    else:
-        score += 10  # 超卖反弹可能
-    
-    # MACD histogram (权重25)
-    if macd_hist > 50:
-        score += 25
-    elif macd_hist > 0:
-        score += 12
-    elif macd_hist > -50:
         score -= 12
     else:
-        score -= 25
+        score += 15  # 超卖反弹（加强权重）
     
-    # Volume (权重15)
-    if vol_pct > 120:
-        score += 10 * (1 if ema_delta > 0 else -1)  # 放量确认方向
-    elif vol_pct < 40:
-        score -= 5  # 缩量减弱趋势
-    
-    # Consecutive candles momentum
-    if consecutive_bull >= 3:
+    # MACD histogram (权重20)
+    if macd_hist > 50:
+        score += 20
+    elif macd_hist > 0:
         score += 10
-    elif consecutive_bear >= 3:
+    elif macd_hist > -50:
         score -= 10
+    else:
+        score -= 20
     
-    # Map to direction
+    # Volume — v4.1核心改动：放量=反转信号
+    if vol_pct > 120:
+        # 巨量 → 反转当前方向（而不是确认！）
+        score -= 15 * (1 if score > 0 else -1)
+    elif vol_pct > 80:
+        # 放量 → 减弱当前方向
+        if score > 0: score -= 8
+        elif score < 0: score += 8
+    # 缩量(<40)→不调整（缩量时准确率最高66%）
+    
+    # Consecutive candles — v4.1增强疲劳反转
+    if consecutive_bull >= 5:
+        score -= 25  # 5根以上强烈反转
+    elif consecutive_bull >= 3:
+        score -= 15  # 加强反转力度
+    elif consecutive_bear >= 5:
+        score += 25
+    elif consecutive_bear >= 3:
+        score += 15
+    
+    # === v4.1: 过度自信压制 ===
+    # 数据证明：|score|>60时准确率暴跌，压制到合理范围
+    if abs(score) > 70:
+        score = int(score * 0.55)  # 强力压制极端信号
+    elif abs(score) > 50:
+        score = int(score * 0.75)  # 中度压制
+    
+    # === v4.1: 扩大neutral区间 + 提高bull门槛 ===
     if score > 30:
         bias = "bull"
-        strength = "strong" if score > 60 else "medium"
-    elif score > 0:
+        strength = "strong" if score > 50 else "medium"  # 提高strong阈值
+    elif score > 10:                                       # 原来0，提高bull门槛
         bias = "bull"
+        strength = "weak"
+    elif score > -10:                                      # 新增：[-10,+10]判neutral
+        bias = "neutral"
         strength = "weak"
     elif score > -30:
         bias = "bear"
         strength = "weak"
     else:
         bias = "bear"
-        strength = "strong" if score < -60 else "medium"
+        strength = "strong" if score < -50 else "medium"   # 提高strong阈值
     
-    confidence = min(80, 40 + abs(score))
+    # v4.1: confidence修正 — 高conf降分
+    raw_conf = min(80, 40 + abs(score))
+    if bias == "neutral":
+        confidence = min(raw_conf, 50)  # neutral永远低conf
+    else:
+        confidence = raw_conf
+    
     return bias, strength, confidence, score
 
 def predict_close(candles, ema9, ema21, ema_delta, rsi_val, bb_upper, bb_mid, bb_lower, atr_val, bias, strength):

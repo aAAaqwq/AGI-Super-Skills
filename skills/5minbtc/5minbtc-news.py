@@ -20,8 +20,8 @@ import json, os, sys, subprocess, re
 from datetime import datetime, timezone, timedelta
 
 # ─── 路径配置 ───
-WORKSPACE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # workspace-cqo
-DATA_DIR = os.path.join(WORKSPACE, "data")
+SKILL_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(SKILL_DIR, "data")
 NEWS_RISK_FILE = os.path.join(DATA_DIR, "news-risk-level.json")
 NEWS_SIGNALS_FILE = os.path.join(DATA_DIR, "news-signals.jsonl")
 CST = timezone(timedelta(hours=8))
@@ -403,7 +403,7 @@ def scan_newsdata():
 def scan_treenews():
     """TreeNews Telegram群消息 — 通过 telegram-treenews.py 脚本获取"""
     results = []
-    script_path = os.path.join(WORKSPACE, "scripts", "telegram-treenews.py")
+    script_path = os.path.join(SKILL_DIR, "scripts", "telegram-treenews.py")
     if not os.path.exists(script_path):
         return results
     try:
@@ -433,7 +433,7 @@ def scan_treenews():
 def scan_cointelegraph_tg():
     """Cointelegraph Telegram频道 — ~3min延迟，最快的加密新闻源"""
     results = []
-    script_path = os.path.join(WORKSPACE, "scripts", "telegram-cointelegraph.py")
+    script_path = os.path.join(SKILL_DIR, "scripts", "telegram-cointelegraph.py")
     if not os.path.exists(script_path):
         return results
     try:
