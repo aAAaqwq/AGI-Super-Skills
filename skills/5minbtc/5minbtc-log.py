@@ -33,7 +33,7 @@ def settle_candle(candle_start_iso):
     # Convert candle_start to epoch ms
     dt = datetime.fromisoformat(candle_start_iso)
     start_ms = int(dt.timestamp() * 1000)
-    url = f"https://api.binance.me/api/v3/klines?symbol=BTCUSDT&interval=5m&startTime={start_ms}&limit=1"
+    url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=5m&startTime={start_ms}&limit=1"
     req = urllib.request.Request(url)
     with urllib.request.urlopen(req, timeout=10) as resp:
         data = json.loads(resp.read())
@@ -132,7 +132,7 @@ def settle_all_unsettled():
                     import urllib.request
                     dt = datetime.fromisoformat(entry["candle"])
                     start_ms = int(dt.timestamp() * 1000)
-                    url = f"https://api.binance.me/api/v3/klines?symbol=BTCUSDT&interval=5m&startTime={start_ms}&limit=1"
+                    url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=5m&startTime={start_ms}&limit=1"
                     req = urllib.request.Request(url)
                     with urllib.request.urlopen(req, timeout=10) as resp:
                         data = json.loads(resp.read())
