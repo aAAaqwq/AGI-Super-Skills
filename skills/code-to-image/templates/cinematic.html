@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#1a1a1a;overflow:hidden;position:relative;font-family:'Noto Serif SC',serif}
+.grain{position:absolute;inset:0;opacity:0.04;
+  background:url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E");}
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.7) 100%);z-index:1}
+.light-leak{position:absolute;top:-100px;left:-100px;width:600px;height:400px;background:radial-gradient(ellipse at 30% 40%,rgba(255,180,100,0.08) 0%,transparent 60%);z-index:1}
+.content{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:120px;text-align:center}
+.studio{font-size:22px;color:rgba(255,255,255,0.3);letter-spacing:12px;margin-bottom:60px;text-transform:uppercase}
+.rating{display:flex;gap:12px;margin-bottom:48px}
+.rating span{width:14px;height:14px;background:rgba(255,180,100,0.6)}
+h1{font-size:86px;font-weight:900;line-height:1.15;color:#f5f0e8;letter-spacing:4px;margin-bottom:32px}
+h1 .fire{color:#e8843a}
+.quote-line{width:80px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,180,100,0.4),transparent);margin:0 auto 40px}
+.tagline{font-size:32px;font-weight:400;color:rgba(255,255,255,0.45);line-height:1.7;max-width:600px;margin-bottom:64px}
+.meta{display:flex;gap:64px;align-items:center}
+.meta .item{text-align:center}
+.meta .num{font-size:44px;font-weight:900;color:#f5f0e8}
+.meta .lbl{font-size:18px;color:rgba(255,255,255,0.25);letter-spacing:4px;margin-top:8px}
+.footer{position:absolute;bottom:80px;width:100%;text-align:center;font-size:18px;color:rgba(255,255,255,0.15);letter-spacing:8px}
+</style>
+</head>
+<body>
+<div class="grain"></div><div class="vignette"></div><div class="light-leak"></div>
+<div class="content">
+  <div class="studio">A CHANGQING PRODUCTION</div>
+  <div class="rating"><span></span><span></span><span></span><span></span><span style="opacity:0.3"></span></div>
+  <h1>SpaceX不造火箭了<br>它要做AI世界的<br><span class="fire">水电公司</span></h1>
+  <div class="quote-line"></div>
+  <p class="tagline">450亿美元算力租约。<br>当全世界还在争论「哪个大模型更强」，<br>他已开始修AI时代的水电站。</p>
+  <div class="meta">
+    <div class="item"><div class="num">22万</div><div class="lbl">GPU</div></div>
+    <div class="item"><div class="num">$450亿</div><div class="lbl">LEASE</div></div>
+    <div class="item"><div class="num">1 GW</div><div class="lbl">POWER</div></div>
+  </div>
+</div>
+<div class="footer">2026 . 05 . 21</div>
+</body>
+</html>

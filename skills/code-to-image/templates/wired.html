@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Space+Grotesk:wght@400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#000;overflow:hidden;position:relative;font-family:'Noto Sans SC',sans-serif}
+.scanline{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,221,0,0.015) 2px,rgba(255,221,0,0.015) 4px);z-index:2;pointer-events:none}
+.neon-glow{position:absolute;top:20%;left:30%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,221,0,0.06) 0%,transparent 70%);z-index:0}
+.content{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;padding:80px 80px}
+.masthead{display:flex;align-items:center;gap:16px;margin-bottom:120px}
+.masthead .logo{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:#ffdd00;letter-spacing:6px}
+.masthead .pipe{width:1px;height:24px;background:#ffdd00;opacity:0.4}
+.masthead .date{font-family:'Space Grotesk',sans-serif;font-size:18px;color:rgba(255,221,0,0.4);letter-spacing:4px}
+.overline{font-family:'Space Grotesk',sans-serif;font-size:20px;color:#ffdd00;letter-spacing:8px;margin-bottom:32px;text-transform:uppercase}
+h1{font-size:94px;font-weight:900;line-height:1.08;color:#fff;letter-spacing:2px;margin-bottom:28px}
+h1 .strike{color:#ffdd00;position:relative}
+h1 .strike::after{content:'';position:absolute;bottom:6px;left:0;right:0;height:4px;background:#00ccff;opacity:0.6}
+.deck{font-size:34px;font-weight:400;color:rgba(255,255,255,0.5);line-height:1.7;max-width:620px;margin-bottom:60px}
+.bar{display:flex;gap:8px;margin-bottom:60px}
+.bar span{height:4px}
+.bar .y{flex:1;background:#ffdd00}
+.bar .c{flex:0.3;background:#00ccff}
+.metrics{display:flex;gap:72px}
+.m .val{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;color:#ffdd00}
+.m .lbl{font-size:18px;color:rgba(255,255,255,0.25);letter-spacing:4px;margin-top:8px}
+.footer{position:absolute;bottom:60px;right:80px;font-family:'Space Grotesk',sans-serif;font-size:16px;color:rgba(255,221,0,0.15);letter-spacing:6px}
+</style>
+</head>
+<body>
+<div class="neon-glow"></div><div class="scanline"></div>
+<div class="content">
+  <div class="masthead"><div class="logo">WIRED</div><div class="pipe"></div><div class="date">05.21.2026</div></div>
+  <div class="overline">COVER STORY</div>
+  <h1>SpaceX不造火箭了<br>它要做AI世界的<br><span class="strike">水电公司</span></h1>
+  <p class="deck">450亿美元算力租约背后的真实棋局。当全世界还在争论「哪个大模型更强」，马斯克已经开始修AI时代的水电站。</p>
+  <div class="bar"><span class="y"></span><span class="c"></span><span class="y"></span><span class="y"></span><span class="c"></span><span class="y"></span></div>
+  <div class="metrics">
+    <div class="m"><div class="val">220K</div><div class="lbl">GPU CLUSTER</div></div>
+    <div class="m"><div class="val">$45B</div><div class="lbl">LEASE</div></div>
+    <div class="m"><div class="val">1 GW</div><div class="lbl">ORBITAL</div></div>
+  </div>
+</div>
+<div class="footer">WIRED · VOL. 32 · NO. 05</div>
+</body>
+</html>

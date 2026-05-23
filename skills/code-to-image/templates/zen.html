@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;400;700&family=Noto+Sans+SC:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#f7f3ee;overflow:hidden;position:relative;font-family:'Noto Serif SC',serif}
+.texture{position:absolute;inset:0;opacity:0.015;
+  background:url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23w)' opacity='1'/%3E%3C/svg%3E");}
+.ink-wash{position:absolute;top:-60px;right:-60px;width:400px;height:400px;border-radius:60% 40% 30% 70%/50% 60% 40% 50%;
+  background:linear-gradient(135deg,rgba(0,0,0,0.03) 0%,rgba(0,0,0,0.01) 50%,transparent 70%);}
+.ink-wash2{position:absolute;bottom:-40px;left:-40px;width:350px;height:350px;border-radius:40% 60% 70% 30%/60% 40% 50% 50%;
+  background:linear-gradient(225deg,rgba(0,0,0,0.025) 0%,transparent 60%);}
+.content{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:space-between;padding:100px 100px 80px}
+.top-row{display:flex;justify-content:space-between;align-items:flex-start}
+.en-category{font-family:'Noto Sans SC',sans-serif;font-size:18px;color:#bfb8ad;letter-spacing:8px}
+.jp-date{writing-mode:vertical-rl;font-size:22px;color:#c4bcb0;letter-spacing:6px;font-weight:200}
+.center-block{text-align:center;margin-top:-80px}
+.koan{font-size:22px;color:#c4bcb0;letter-spacing:8px;margin-bottom:60px;font-weight:200}
+h1{font-size:76px;font-weight:700;line-height:1.35;color:#2c2416;letter-spacing:3px;margin-bottom:40px}
+h1 em{font-style:normal;color:#b84c3b;font-size:80px}
+.water-stroke{width:120px;height:1px;background:linear-gradient(90deg,transparent,rgba(184,76,59,0.3),transparent);margin:0 auto 40px}
+.sub{font-size:30px;font-weight:200;color:#8c8070;line-height:2;max-width:600px;margin:0 auto 40px}
+.stats{display:flex;gap:60px;justify-content:center}
+.st{text-align:center}
+.st .num{font-size:48px;font-weight:700;color:#2c2416;font-family:'Noto Sans SC',sans-serif}
+.st .lbl{font-size:18px;color:#bfb8ad;letter-spacing:4px;margin-top:8px}
+.st .lbl::before{content:'— '}
+.st .lbl::after{content:' —'}
+.caption{font-size:18px;color:#d4cfc6;letter-spacing:4px;text-align:center}
+</style>
+</head>
+<body>
+<div class="texture"></div>
+<div class="ink-wash"></div>
+<div class="ink-wash2"></div>
+<div class="content">
+  <div class="top-row">
+    <div class="en-category">STRATEGIC ANALYSIS</div>
+    <div class="jp-date">令和八年五月</div>
+  </div>
+  <div class="center-block">
+    <div class="koan">静 观 其 变</div>
+    <h1>SpaceX不造火箭了<br>它要做AI世界的<br><em>水电公司</em></h1>
+    <div class="water-stroke"></div>
+    <p class="sub">450亿美元算力租约<br>当全世界还在争论「哪个大模型更强」<br>马斯克已开始修AI时代的水电站</p>
+  </div>
+  <div>
+    <div class="stats">
+      <div class="st"><div class="num">22万</div><div class="lbl">NVIDIA GPU</div></div>
+      <div class="st"><div class="num">$450亿</div><div class="lbl">三年租约</div></div>
+      <div class="st"><div class="num">1GW</div><div class="lbl">轨道算力</div></div>
+    </div>
+    <div class="caption" style="margin-top:60px">2026.05.21</div>
+  </div>
+</div>
+</body>
+</html>

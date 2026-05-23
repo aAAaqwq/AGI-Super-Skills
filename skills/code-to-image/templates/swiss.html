@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;900&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    width:1080px;height:1440px;
+    font-family:'Noto Sans SC',sans-serif;
+    background:#ffffff;
+    overflow:hidden;
+    position:relative;
+  }
+  .bg-shape{
+    position:absolute;bottom:0;right:0;
+    width:900px;height:900px;
+    background:
+      radial-gradient(circle at 70% 70%,rgba(34,211,238,0.06) 0%,transparent 60%),
+      radial-gradient(circle at 30% 50%,rgba(168,85,247,0.04) 0%,transparent 55%);
+    clip-path:polygon(30% 0%,100% 0%,100% 100%,0% 100%);
+  }
+  .accent-block{
+    position:absolute;top:0;right:0;
+    width:420px;height:420px;
+    background:linear-gradient(135deg,#22d3ee 0%,#06b6d4 100%);
+  }
+  .content{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;
+    justify-content:center;
+    padding:100px 100px;
+    z-index:5;
+  }
+  .section-tag{
+    font-size:22px;font-weight:500;
+    color:#06b6d4;
+    letter-spacing:6px;
+    margin-bottom:40px;
+    text-transform:uppercase;
+  }
+  h1{
+    font-size:86px;font-weight:900;
+    line-height:1.15;
+    color:#0f172a;
+    letter-spacing:1px;
+    margin-bottom:36px;
+  }
+  h1 .accent{color:#06b6d4}
+  .subtitle{
+    font-size:36px;font-weight:300;
+    color:#64748b;
+    line-height:1.6;
+    margin-bottom:60px;
+    max-width:650px;
+    letter-spacing:2px;
+  }
+  .stats{
+    display:flex;gap:72px;
+    margin-bottom:60px;
+  }
+  .stat .num{
+    font-size:56px;font-weight:900;
+    color:#0f172a;
+    letter-spacing:1px;
+  }
+  .stat .lbl{
+    font-size:20px;color:#94a3b8;
+    margin-top:10px;letter-spacing:2px;
+  }
+  .date-line{
+    font-size:22px;color:#cbd5e1;
+    letter-spacing:4px;
+  }
+  .dot-pattern{
+    position:absolute;bottom:100px;right:100px;
+    display:grid;grid-template-columns:repeat(5,1fr);gap:16px;
+  }
+  .dot-pattern span{
+    width:8px;height:8px;border-radius:50%;
+    background:#cbd5e1;
+  }
+  .dot-pattern span.active{background:#06b6d4}
+</style>
+</head>
+<body>
+<div class="bg-shape"></div>
+<div class="accent-block"></div>
+<div class="content">
+  <div class="section-tag">STRATEGY · ANALYSIS</div>
+  <h1>SpaceX不造火箭了<br>它要做AI世界的<span class="accent">水电公司</span></h1>
+  <p class="subtitle">450亿美元算力租约背后的真实棋局——当全世界还在争论「哪个大模型更强」，马斯克已经开始修AI时代的水电站</p>
+  <div class="stats">
+    <div class="stat"><div class="num">22万</div><div class="lbl">英伟达 GPU</div></div>
+    <div class="stat"><div class="num">$450亿</div><div class="lbl">三年租约</div></div>
+    <div class="stat"><div class="num">1GW</div><div class="lbl">轨道算力</div></div>
+  </div>
+  <div class="date-line">2026 / 05 / 21</div>
+</div>
+<div class="dot-pattern">
+  <span></span><span></span><span class="active"></span><span></span><span></span>
+  <span></span><span class="active"></span><span></span><span class="active"></span><span></span>
+  <span class="active"></span><span></span><span></span><span></span><span class="active"></span>
+  <span></span><span class="active"></span><span></span><span class="active"></span><span></span>
+  <span></span><span></span><span class="active"></span><span></span><span></span>
+</div>
+</body>
+</html>

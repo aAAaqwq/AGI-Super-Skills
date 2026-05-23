@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;900&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#f4ece6;overflow:hidden;position:relative;font-family:'Noto Serif SC',serif}
+.panel{position:absolute;top:0;right:0;width:420px;height:100%;background:#f2d5c4;z-index:0}
+.content{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;padding:120px}
+.vol{font-family:'Cormorant Garamond',serif;font-size:18px;color:#c4956a;letter-spacing:8px;margin-bottom:24px}
+.divider-line{width:60px;height:2px;background:#c4956a;margin-bottom:48px}
+h1{font-size:78px;font-weight:900;line-height:1.16;color:#2c2416;letter-spacing:2px;margin-bottom:40px;max-width:580px}
+h1 .accent{color:#c4956a;font-style:italic}
+.sub{font-size:32px;font-weight:300;color:#8b7355;line-height:1.7;max-width:520px;margin-bottom:56px;letter-spacing:1px}
+.stats{display:flex;gap:48px;margin-bottom:0}
+.st .num{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:600;color:#2c2416}
+.st .lbl{font-size:18px;color:#c4956a;letter-spacing:3px;margin-top:6px}
+.monogram{position:absolute;bottom:80px;right:160px;font-family:'Cormorant Garamond',serif;font-size:120px;color:rgba(196,149,106,0.08);font-style:italic}
+</style>
+</head>
+<body>
+<div class="panel"></div>
+<div class="content">
+  <div class="vol">VOL. 001 · STRATEGIC ANALYSIS</div>
+  <div class="divider-line"></div>
+  <h1>SpaceX 不造火箭了<br>它要做AI世界的 <span class="accent">水电公司</span></h1>
+  <p class="sub">450亿美元算力租约背后的真实棋局。当全世界还在争论「哪个大模型更强」，马斯克已经开始修AI时代的水电站。</p>
+  <div class="stats">
+    <div class="st"><div class="num">220,000</div><div class="lbl">NVIDIA GPU</div></div>
+    <div class="st"><div class="num">$45B</div><div class="lbl">3-YEAR LEASE</div></div>
+    <div class="st"><div class="num">1GW</div><div class="lbl">ORBITAL POWER</div></div>
+  </div>
+</div>
+<div class="monogram">SPACEX</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&family=DM+Sans:wght@400;500&family=Noto+Serif+SC:wght@400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#2d2d2d;overflow:hidden;position:relative;font-family:'Noto Serif SC',serif}
+.page{position:absolute;inset:40px 40px 40px 60px;background:#f8f6f1;z-index:2;box-shadow:0 2px 40px rgba(0,0,0,0.3)}
+.binder{position:absolute;left:20px;top:120px;display:flex;flex-direction:column;gap:60px}
+.binder span{width:18px;height:18px;border-radius:50%;background:#2d2d2d;box-shadow:inset 0 1px 2px rgba(0,0,0,0.3)}
+.tabs{position:absolute;right:0;top:0;bottom:0;width:48px;display:flex;flex-direction:column;z-index:3}
+.tab{flex:1;writing-mode:vertical-rl;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;letter-spacing:2px;color:#2d2d2d;padding:0 6px}
+.tab:nth-child(1){background:#98d4bb;flex:2}.tab:nth-child(2){background:#c7b8ea;flex:1.5}
+.tab:nth-child(3){background:#f4b8c5;flex:1}.tab:nth-child(4){background:#a8d8ea;flex:1.8}
+.tab:nth-child(5){background:#ffe6a7;flex:1.2}
+.content{padding:120px 100px 100px 80px;display:flex;flex-direction:column;justify-content:center;height:100%}
+.vol{font-family:'DM Sans',sans-serif;font-size:18px;color:#999;letter-spacing:6px;margin-bottom:80px}
+h1{font-family:'Bodoni Moda',serif;font-size:74px;font-weight:400;line-height:1.18;color:#1a1a1a;letter-spacing:1px;margin-bottom:36px}
+h1 em{font-style:italic;font-weight:700;color:#c41e3a}
+.lead{font-family:'DM Sans',sans-serif;font-size:30px;font-weight:400;color:#666;line-height:1.7;max-width:540px;margin-bottom:56px}
+.divider{width:40px;height:2px;background:#c41e3a;margin-bottom:56px}
+.data{display:flex;gap:64px}
+.d .num{font-family:'Bodoni Moda',serif;font-size:48px;font-weight:700;color:#1a1a1a;font-style:italic}
+.d .lbl{font-family:'DM Sans',sans-serif;font-size:16px;color:#bbb;letter-spacing:3px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="binder"><span></span><span></span><span></span></div>
+<div class="page">
+  <div class="tabs">
+    <div class="tab">ANALYSIS</div>
+    <div class="tab">STRATEGY</div>
+    <div class="tab">DATA</div>
+    <div class="tab">INSIGHT</div>
+    <div class="tab">REVIEW</div>
+  </div>
+  <div class="content">
+    <div class="vol">VOL. 001 · MAY 2026</div>
+    <h1>SpaceX不造火箭了<br>它要做AI世界的<br><em>水电公司</em></h1>
+    <p class="lead">450亿美元算力租约背后的真实棋局。当全世界还在争论「哪个大模型更强」，马斯克已经开始修AI时代的水电站。</p>
+    <div class="divider"></div>
+    <div class="data">
+      <div class="d"><div class="num">22万</div><div class="lbl">GPU CLUSTER</div></div>
+      <div class="d"><div class="num">$450亿</div><div class="lbl">LEASE</div></div>
+      <div class="d"><div class="num">1 GW</div><div class="lbl">POWER</div></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
