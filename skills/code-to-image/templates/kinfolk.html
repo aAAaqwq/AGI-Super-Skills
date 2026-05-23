@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#f5f0e8;overflow:hidden;position:relative;font-family:'Noto Serif SC',serif}
+.warm-gradient{position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(180deg,transparent,rgba(210,140,80,0.06));}
+.block{position:absolute;top:0;left:0;width:320px;height:100%;background:linear-gradient(180deg,rgba(180,120,60,0.04) 0%,rgba(210,140,80,0.02) 100%);}
+.content{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;padding:100px 100px 100px 140px}
+.cat{font-size:20px;color:#c4956a;letter-spacing:10px;margin-bottom:80px;font-weight:300}
+h1{font-size:78px;font-weight:400;line-height:1.2;color:#3d2b1a;letter-spacing:3px;margin-bottom:36px}
+h1 em{font-style:normal;font-weight:700;color:#b8783a}
+.rule{width:80px;height:1px;background:rgba(180,120,60,0.25);margin-bottom:48px}
+.deck{font-size:34px;font-weight:300;color:#8b7355;line-height:1.8;max-width:550px;margin-bottom:80px}
+.points{display:flex;gap:72px}
+.p .val{font-size:56px;font-weight:300;color:#3d2b1a}
+.p .lbl{font-size:20px;color:#c4a57a;letter-spacing:4px;margin-top:12px}
+.margin-note{position:absolute;bottom:80px;right:100px;font-size:20px;color:#d4c4a8;letter-spacing:4px;writing-mode:vertical-rl}
+</style>
+</head>
+<body>
+<div class="warm-gradient"></div><div class="block"></div>
+<div class="content">
+  <div class="cat">A  C O N V E R S A T I O N</div>
+  <h1>SpaceX 不造火箭了<br>它要做AI世界的<br><em>水电公司</em></h1>
+  <div class="rule"></div>
+  <p class="deck">450亿美元算力租约。当全世界还在争论「哪个大模型更强」，马斯克已开始修AI时代的水电站。</p>
+  <div class="points">
+    <div class="p"><div class="val">22万</div><div class="lbl">GPU集群</div></div>
+    <div class="p"><div class="val">$450亿</div><div class="lbl">三年租约</div></div>
+    <div class="p"><div class="val">1GW</div><div class="lbl">轨道算力</div></div>
+  </div>
+</div>
+<div class="margin-note">2026 · 05 · 21</div>
+</body>
+</html>

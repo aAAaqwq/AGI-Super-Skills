@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Noto+Serif+SC:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#faf9f7;overflow:hidden;position:relative;font-family:'Noto Serif SC',serif}
+.paper-texture{position:absolute;inset:0;opacity:0.025;
+  background:url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23t)' opacity='1'/%3E%3C/svg%3E");}
+.rule-top{position:absolute;top:80px;left:100px;right:100px;height:2px;background:#1a1a1a}
+.rule-bottom{position:absolute;bottom:80px;left:100px;right:100px;height:1px;background:#ccc}
+.content{position:absolute;inset:80px 100px;display:flex;flex-direction:column;justify-content:center}
+.issue{font-family:'Cormorant Garamond',serif;font-size:20px;color:#999;letter-spacing:8px;margin-bottom:80px;font-style:italic}
+h1{font-size:76px;font-weight:400;line-height:1.2;color:#1a1a1a;letter-spacing:2px;margin-bottom:40px}
+h1 .red{color:#c41e3a;font-weight:600}
+.drop-cap{font-family:'Cormorant Garamond',serif;font-size:120px;line-height:0.8;color:#c41e3a;float:left;margin-right:16px;margin-top:8px;font-weight:600}
+.lead{font-size:34px;font-weight:400;color:#444;line-height:1.7;max-width:620px;margin-bottom:60px}
+.ornament{text-align:center;margin-bottom:40px;color:#ccc;font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:6px}
+.stats{display:flex;gap:64px}
+.st{text-align:center}
+.st .num{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:600;color:#1a1a1a;font-style:italic}
+.st .lbl{font-size:18px;color:#999;letter-spacing:4px;margin-top:6px;font-family:'Source Serif 4',serif}
+.footnote{font-family:'Cormorant Garamond',serif;font-size:20px;color:#bbb;letter-spacing:6px;text-align:right;margin-top:40px;font-style:italic}
+</style>
+</head>
+<body>
+<div class="paper-texture"></div>
+<div class="rule-top"></div><div class="rule-bottom"></div>
+<div class="content">
+  <div class="issue">The Changqing Review · Vol. I, No. 1</div>
+  <h1>SpaceX不造火箭了<br>它要做AI世界的<br><span class="red">水电公司</span></h1>
+  <p class="lead"><span class="drop-cap">当</span>450亿美元算力租约浮出水面，全世界还在争论「哪个大模型更强」，马斯克已开始修AI时代的水电站。这不是一篇科技报道，这是一份关于权力转移的备忘录。</p>
+  <div class="ornament">❧</div>
+  <div class="stats">
+    <div class="st"><div class="num">22万</div><div class="lbl">NVIDIA GPU</div></div>
+    <div class="st"><div class="num">$450亿</div><div class="lbl">三年租约</div></div>
+    <div class="st"><div class="num">1 GW</div><div class="lbl">轨道算力</div></div>
+  </div>
+  <div class="footnote">2026年5月21日 · 北京</div>
+</div>
+</body>
+</html>

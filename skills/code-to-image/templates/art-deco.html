@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;900&family=Playfair+Display:wght@400;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#0b1120;overflow:hidden;position:relative;font-family:'Noto Sans SC',sans-serif}
+.bg-pattern{position:absolute;inset:0;opacity:0.04;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(212,175,55,0.5) 3px,rgba(212,175,55,0.5) 4px),
+  repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(212,175,55,0.5) 3px,rgba(212,175,55,0.5) 4px);}
+.gold-frame{position:absolute;inset:50px;border:1px solid rgba(212,175,55,0.15);z-index:1}
+.gold-frame2{position:absolute;inset:60px;border:1px solid rgba(212,175,55,0.08)}
+.corner-ornament{position:absolute;z-index:2}
+.corner-tl{top:50px;left:50px;width:40px;height:40px;border-top:2px solid rgba(212,175,55,0.4);border-left:2px solid rgba(212,175,55,0.4)}
+.corner-br{bottom:50px;right:50px;width:40px;height:40px;border-bottom:2px solid rgba(212,175,55,0.4);border-right:2px solid rgba(212,175,55,0.4)}
+.rays{position:absolute;top:0;left:50%;width:1px;height:100%;opacity:0.06;
+  background:linear-gradient(180deg,transparent 0%,#d4af37 20%,#d4af37 50%,#d4af37 80%,transparent 100%);
+  box-shadow:-200px 0 0 rgba(212,175,55,0.3),200px 0 0 rgba(212,175,55,0.3),-400px 0 0 rgba(212,175,55,0.15),400px 0 0 rgba(212,175,55,0.15);}
+.content{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:100px;text-align:center}
+.tag{font-family:'Playfair Display',serif;font-size:24px;color:#d4af37;letter-spacing:10px;margin-bottom:40px;text-transform:uppercase}
+.ornament-line{width:100px;height:1px;background:linear-gradient(90deg,transparent,#d4af37,transparent);margin-bottom:40px}
+h1{font-size:84px;font-weight:900;line-height:1.18;color:#faf8f0;letter-spacing:4px;margin-bottom:32px}
+h1 .gold{color:#d4af37;display:block;margin-top:8px}
+.sub{font-size:30px;font-weight:300;color:rgba(250,248,240,0.5);line-height:1.7;max-width:620px;margin-bottom:56px}
+.stats{display:flex;gap:64px}
+.st{border-top:1px solid rgba(212,175,55,0.2);padding-top:20px;text-align:center}
+.st .num{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:#d4af37}
+.st .lbl{font-size:18px;color:rgba(250,248,240,0.35);letter-spacing:4px;margin-top:8px}
+.cite{position:absolute;bottom:80px;font-family:'Playfair Display',serif;font-size:18px;color:rgba(212,175,55,0.25);letter-spacing:6px}
+</style>
+</head>
+<body>
+<div class="bg-pattern"></div>
+<div class="rays"></div>
+<div class="gold-frame"></div><div class="gold-frame2"></div>
+<div class="corner-ornament corner-tl"></div>
+<div class="corner-ornament corner-br"></div>
+<div class="content">
+  <div class="tag">Strategic Intelligence</div>
+  <div class="ornament-line"></div>
+  <h1>SpaceX 不造火箭了<br><span class="gold">它要做AI世界的水电公司</span></h1>
+  <p class="sub">450亿美元算力租约。当全世界还在争论「哪个大模型更强」，他已经开始修AI时代的水电站。</p>
+  <div class="stats">
+    <div class="st"><div class="num">220K</div><div class="lbl">NVIDIA GPU</div></div>
+    <div class="st"><div class="num">$45B</div><div class="lbl">LEASE</div></div>
+    <div class="st"><div class="num">1 GW</div><div class="lbl">ORBITAL</div></div>
+  </div>
+</div>
+<div class="cite">2026.05.21 · CHANGQING</div>
+</body>
+</html>

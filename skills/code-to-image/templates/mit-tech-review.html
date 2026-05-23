@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;900&family=IBM+Plex+Mono:wght@400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#fcfcf9;overflow:hidden;position:relative;font-family:'Noto Serif SC',serif}
+.header-bar{position:absolute;top:0;left:0;right:0;height:4px;background:#d42020}
+.grid-overlay{position:absolute;inset:0;opacity:0.03;
+  background-image:linear-gradient(#d42020 1px,transparent 1px),linear-gradient(90deg,#d42020 1px,transparent 1px);
+  background-size:60px 60px;}
+.content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:80px 100px}
+.pub-line{display:flex;gap:24px;align-items:center;margin-bottom:80px}
+.pub-line .name{font-size:24px;font-weight:900;color:#d42020;letter-spacing:4px}
+.pub-line .sep{width:1px;height:20px;background:#ccc}
+.pub-line .issue{font-family:'IBM Plex Mono',monospace;font-size:18px;color:#999;letter-spacing:2px}
+h1{font-size:80px;font-weight:900;line-height:1.18;color:#1a1a1a;letter-spacing:3px;margin-bottom:32px}
+h1 .red{color:#d42020}
+.intro{font-size:32px;font-weight:400;color:#555;line-height:1.7;max-width:600px;margin-bottom:60px}
+.divider{width:40px;height:3px;background:#d42020;margin-bottom:60px}
+.data-row{display:flex;gap:64px}
+.data .num{font-family:'IBM Plex Mono',monospace;font-size:56px;font-weight:600;color:#1a1a1a}
+.data .label{font-size:18px;color:#999;letter-spacing:3px;margin-top:10px}
+.footnote{position:absolute;bottom:60px;right:100px;font-family:'IBM Plex Mono',monospace;font-size:16px;color:#ccc;letter-spacing:2px}
+</style>
+</head>
+<body>
+<div class="header-bar"></div><div class="grid-overlay"></div>
+<div class="content">
+  <div class="pub-line">
+    <div class="name">MIT TECHNOLOGY REVIEW</div>
+    <div class="sep"></div>
+    <div class="issue">VOL. 127 · NO.3</div>
+  </div>
+  <h1>SpaceX 不造火箭了<br>它要做AI世界的<br><span class="red">水电公司</span></h1>
+  <p class="intro">450亿美元算力租约背后的真实棋局。当全世界还在争论「哪个大模型更强」，马斯克已经开始修AI时代的水电站。</p>
+  <div class="divider"></div>
+  <div class="data-row">
+    <div class="data"><div class="num">220K</div><div class="label">GPU CLUSTER</div></div>
+    <div class="data"><div class="num">$45B</div><div class="label">LEASE VALUE</div></div>
+    <div class="data"><div class="num">1GW</div><div class="label">ORBITAL PWR</div></div>
+  </div>
+</div>
+<div class="footnote">2026.05.21</div>
+</body>
+</html>

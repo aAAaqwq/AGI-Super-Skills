@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@300;400&family=Noto+Serif+SC:wght@300;400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#0f0f0f;overflow:hidden;position:relative;font-family:'Noto Serif SC',serif}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.08}
+.orb-1{width:500px;height:500px;top:-100px;right:-100px;background:#e8b4b8}
+.orb-2{width:400px;height:400px;bottom:-80px;left:-80px;background:#d4a574}
+.orb-3{width:300px;height:300px;top:40%;left:50%;background:#c9b896}
+.thin-line{position:absolute;left:80px;top:200px;bottom:200px;width:1px;background:linear-gradient(180deg,transparent,rgba(212,165,116,0.2),transparent)}
+.content{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;padding:100px 100px 100px 130px}
+.class{font-family:'Cormorant',serif;font-size:22px;color:rgba(212,165,116,0.5);letter-spacing:8px;margin-bottom:60px;font-style:italic}
+h1{font-family:'Cormorant',serif;font-size:80px;font-weight:400;line-height:1.15;color:#e8e4df;letter-spacing:3px;margin-bottom:36px}
+h1 .warm{color:#d4a574;font-style:italic}
+.lead{font-family:'IBM Plex Sans',sans-serif;font-size:30px;font-weight:300;color:rgba(232,228,223,0.45);line-height:1.8;max-width:540px;margin-bottom:64px;letter-spacing:1px}
+.accent-line{width:60px;height:1px;background:rgba(212,165,116,0.25);margin-bottom:64px}
+.numbers{display:flex;gap:72px}
+.n .val{font-family:'Cormorant',serif;font-size:56px;font-weight:400;color:#e8e4df;font-style:italic}
+.n .cap{font-family:'IBM Plex Sans',sans-serif;font-size:17px;color:rgba(212,165,116,0.4);letter-spacing:5px;margin-top:10px}
+.sig{position:absolute;bottom:80px;right:100px;font-family:'Cormorant',serif;font-size:24px;color:rgba(212,165,116,0.3);font-style:italic;letter-spacing:4px}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="thin-line"></div>
+<div class="content">
+  <div class="class">A R T I C L E</div>
+  <h1>SpaceX不造火箭了<br>它要做AI世界的<br><span class="warm">水电公司</span></h1>
+  <p class="lead">450亿美元算力租约背后的真实棋局。当全世界还在争论「哪个大模型更强」，马斯克已开始修AI时代的水电站。</p>
+  <div class="accent-line"></div>
+  <div class="numbers">
+    <div class="n"><div class="val">220K</div><div class="cap">GPU CLUSTER</div></div>
+    <div class="n"><div class="val">$45B</div><div class="cap">LEASE VALUE</div></div>
+    <div class="n"><div class="val">1 GW</div><div class="cap">ORBITAL</div></div>
+  </div>
+</div>
+<div class="sig">2026.05.21</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#f5f5f7;overflow:hidden;position:relative;font-family:'Noto Sans SC',sans-serif}
+.grain-overlay{position:absolute;inset:0;opacity:0.02;
+  background:url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");}
+.content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:120px;text-align:center}
+.dot{width:10px;height:10px;border-radius:50%;background:#86868b;margin-bottom:80px}
+h1{font-size:72px;font-weight:500;line-height:1.25;color:#1d1d1f;letter-spacing:1px;margin-bottom:40px}
+h1 .accent{color:#0071e3;font-weight:700}
+.lead{font-size:34px;font-weight:300;color:#86868b;line-height:1.7;max-width:560px;margin-bottom:80px}
+.divider{width:60px;height:1px;background:#d2d2d7;margin-bottom:60px}
+.stats{display:flex;gap:72px}
+.s{text-align:center}
+.s .num{font-size:48px;font-weight:500;color:#1d1d1f}
+.s .lbl{font-size:18px;color:#86868b;letter-spacing:3px;margin-top:10px}
+.footer{position:absolute;bottom:60px;font-size:18px;color:#d2d2d7;letter-spacing:6px}
+</style>
+</head>
+<body>
+<div class="grain-overlay"></div>
+<div class="content">
+  <div class="dot"></div>
+  <h1>SpaceX不造火箭了<br>它要做AI世界的<br><span class="accent">水电公司</span></h1>
+  <p class="lead">450亿美元算力租约背后的真实棋局。当全世界还在争论「哪个大模型更强」，马斯克已经开始修AI时代的水电站。</p>
+  <div class="divider"></div>
+  <div class="stats">
+    <div class="s"><div class="num">22万</div><div class="lbl">GPU</div></div>
+    <div class="s"><div class="num">$450亿</div><div class="lbl">LEASE</div></div>
+    <div class="s"><div class="num">1 GW</div><div class="lbl">POWER</div></div>
+  </div>
+</div>
+<div class="footer">2026.05.21</div>
+</body>
+</html>

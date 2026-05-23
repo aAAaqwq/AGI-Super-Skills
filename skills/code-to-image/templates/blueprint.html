@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;900&family=Space+Mono:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1080px;height:1440px;background:#0a1628;overflow:hidden;position:relative;font-family:'Noto Sans SC',sans-serif}
+.bp-grid{position:absolute;inset:0;
+  background:
+    linear-gradient(rgba(0,180,216,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,180,216,0.04) 1px,transparent 1px);
+  background-size:54px 54px;
+  mask-image:radial-gradient(ellipse at 40% 50%,black 50%,transparent 75%);
+}
+.guides{position:absolute;inset:0;z-index:1}
+.guide-h{position:absolute;left:0;right:0}
+.guide-h.h1{top:200px;border-top:1px solid rgba(0,180,216,0.06)}
+.guide-h.h2{top:600px;border-top:1px solid rgba(0,180,216,0.06)}
+.guide-h.h3{bottom:300px;border-top:1px solid rgba(0,180,216,0.06)}
+.guide-v{position:absolute;left:80px;top:0;bottom:0;border-left:1px solid rgba(0,180,216,0.04)}
+.dimensions{position:absolute;bottom:120px;left:80px;font-family:'Space Mono',monospace;font-size:16px;color:rgba(0,180,216,0.2);letter-spacing:2px}
+.content{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;padding:120px 100px 120px 120px}
+.project-id{font-family:'Space Mono',monospace;font-size:22px;color:rgba(0,180,216,0.35);letter-spacing:4px;margin-bottom:30px}
+.project-id::before{content:'PROJECT: ';opacity:0.4}
+h1{font-size:80px;font-weight:900;line-height:1.2;color:#e0f2fe;letter-spacing:2px;margin-bottom:30px}
+h1 .cyan{color:#22d3ee;display:block}
+.div{width:100px;height:2px;background:#22d3ee;margin-bottom:40px;opacity:0.6}
+.sub{font-size:30px;font-weight:300;color:rgba(224,242,254,0.5);line-height:1.8;max-width:560px;margin-bottom:60px}
+.specs{display:flex;gap:72px}
+.spec{position:relative;padding-left:20px;border-left:2px solid rgba(0,180,216,0.2)}
+.spec .val{font-size:52px;font-weight:900;color:#e0f2fe;font-family:'Space Mono',monospace}
+.spec .unit{font-size:18px;color:rgba(0,180,216,0.4);letter-spacing:4px;margin-top:8px}
+.coords{position:absolute;top:80px;right:100px;font-family:'Space Mono',monospace;font-size:16px;color:rgba(0,180,216,0.15);letter-spacing:2px;text-align:right}
+.coords div{margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="bp-grid"></div>
+<div class="guides"><div class="guide-h h1"></div><div class="guide-h h2"></div><div class="guide-h h3"></div><div class="guide-v"></div></div>
+<div class="content">
+  <div class="project-id">COLOSSUS-1 ANALYSIS</div>
+  <h1>SpaceX 不造火箭了<br><span class="cyan">它要做AI世界的水电公司</span></h1>
+  <div class="div"></div>
+  <p class="sub">450亿美元算力租约背后的真实棋局。当全世界还在争论「哪个大模型更强」，马斯克已经开始修AI时代的水电站。</p>
+  <div class="specs">
+    <div class="spec"><div class="val">220K</div><div class="unit">GPU UNITS</div></div>
+    <div class="spec"><div class="val">$45B</div><div class="unit">LEASE VALUE</div></div>
+    <div class="spec"><div class="val">1GW</div><div class="unit">ORBITAL POWER</div></div>
+  </div>
+</div>
+<div class="coords">
+  <div>LAT: 28.5721° N</div>
+  <div>LON: 80.6480° W</div>
+  <div>ALT: LEO 550KM</div>
+</div>
+<div class="dimensions">1080 × 1440 · 2026.05.21</div>
+</body>
+</html>
