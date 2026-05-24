@@ -17,13 +17,13 @@ TENANTS = {
         "name": "个人应用",
         "app_id": "REDACTED_FEISHU_PERSONAL_APP_ID",
         "app_secret": "REDACTED_FEISHU_PERSONAL_SECRET",
-        "default_chat": "REDACTED_FEISHU_GROUP_TOKEN_1",  # 知识云文档
+        "default_chat": os.environ.get("FEISHU_PERSONAL_CHAT", ""),  # 知识云文档
     },
     "hanxing": {
         "name": "汉兴企业",
         "app_id": "REDACTED_FEISHU_HANXING_APP_ID",
         "app_secret": "REDACTED_FEISHU_HANXING_SECRET",
-        "default_chat": "REDACTED_FEISHU_GROUP_TOKEN_4",  # 技术开发群
+        "default_chat": os.environ.get("FEISHU_HANXING_CHAT", ""),  # 技术开发群
     }
 }
 
