@@ -1,0 +1,45 @@
+#!/bin/bash
+# pre-commit hook: detect hardcoded secrets
+set -e
+
+RED='\033[0;31m'
+NC='\033[0m'
+
+FOUND=0
+
+# Check staged files only
+for file in $(git diff --cached --name-only --diff-filter=ACM); do
+  # Skip binary files
+  if file "$file" | grep -q binary; then
+    continue
+  fi
+
+  # Patterns to detect
+  PATTERNS=(
+    'cli_a[0-9a-f]{16}'
+    'oc_[0-9a-f]{20,}'
+    'sk-[A-Za-z0-9]{20,}'
+    'AKIA[0-9A-Z]{16}'
+    'pub_[0-9a-f]{20,}'
+    '[0-9]{8,10}:[A-Za-z0-9_-]{30,}'
+    '(?i)api_key\s*[=:]\s*["\x27][^"\x27YOUR_][A-Za-z0-9]{10,}'
+    '(?i)app_secret\s*[=:]\s*["\x27][A-Za-z0-9]{10,}'
+  )
+
+  for pattern in "${PATTERNS[@]}"; do
+    if git diff --cached "$file" | grep -qP "$pattern" 2>/dev/null; then
+      echo -e "${RED}⚠ SECRET DETECTED${NC} in $file (pattern: $pattern)"
+      FOUND=1
+    fi
+  done
+done
+
+if [ $FOUND -ne 0 ]; then
+  echo ""
+  echo -e "${RED}🚫 COMMIT BLOCKED: Potential secrets detected!${NC}"
+  echo "Use environment variables or .env files instead."
+  echo "To bypass (NOT recommended): git commit --no-verify"
+  exit 1
+fi
+
+exit 0
