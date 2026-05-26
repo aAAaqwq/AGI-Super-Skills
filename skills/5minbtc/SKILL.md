@@ -1,7 +1,7 @@
 ---
 name: 5minbtc
-version: 5.4
-description: BTC 5分钟K线实时方向预测。v5.4正交因子+Regime感知+微结构引擎，9因子（momentum t-stat/Z-score meanrev/RSI/volume/fatigue/decel/position/imbalance/microprice），sigmoid压缩，TREND dampening。
+version: 5.5
+description: BTC 5分钟K线实时方向预测。v5.5校准置信度引擎，9正交因子+Platt Scaling+Regime感知+Bull惩罚+中性区收缩。基于120轮v5.4实战复盘优化。
 triggers:
   - 5minbtc
   - 5min btc
@@ -11,9 +11,25 @@ tools:
   - web
 ---
 
-# 5minbtc — BTC 5分钟实时预测 v4.0
+# 5minbtc — BTC 5分钟实时预测 v5.5
 
-> 最后更新: 2026-05-22 Hermes迁移版
+> 最后更新: 2026-05-26 v5.5校准置信度引擎
+
+## v5.5 变更 (2026-05-26)
+
+基于120轮v5.4实战复盘的4项优化：
+
+| 优先级 | 修复项 | 变更 | 影响 |
+|--------|--------|------|------|
+| P0-1 | 置信度校准 | `40+abs(score)` → Platt Scaling sigmoid | conf与准确率正相关 |
+| P0-2 | 新闻因子 | 98% NEUTRAL死代码，保留扫描给LLM | 减少噪声 |
+| P1-1 | Bull bias | score>0时×0.92衰减 | bear 70.2% > bull 65.4%修正 |
+| P1-2 | 高vol惩罚 | HIGH_VOL 0.6→0.45 | 放量准确率更低 |
+
+附加优化：
+- neutral区收缩 [-2,2]→[-1,1]，减少无信息预测
+- 置信度上限 80→85，让强信号有区分度
+- `calibrate_confidence()` 独立函数，midpoint=15, steepness=0.10
 
 ## 概述
 
@@ -142,20 +158,28 @@ SKILL_DIR=/home/aa/.hermes/profiles/cqo/skills/5minbtc && \
 
 ## 引擎JSON结构（LLM直接读取）
 
+v5.4输出示例：
 ```json
 {
   "candle": {"now":"21:36:49","candle_start":"21:35","candle_end":"21:40","progress_pct":36.6,"iso":"..."},
-  "price": {"current":81995,"open":82004,"high":82025,"low":81949,"body":-9},
-  "recent_candles": [{"O":82023,"H":82089,"L":81965,"C":81995},...],
+  "price": {"current":75502,"open":75498,"high":75520,"low":75480,"body":4},
+  "recent_candles": [{"O":75498,"H":75520,"L":75480,"C":75502},...],
   "indicators": {
-    "ema9":82064.1, "ema21":82176.6, "ema_delta":-112.4,
-    "rsi":38.1, "macd":-91.49, "macd_signal":-51.46, "macd_hist":-40.04,
-    "bb_upper":82541.9, "bb_mid":82211.6, "bb_lower":81881.3,
-    "atr":142.0, "vol_pct":26.0
+    "ema9":75490.1, "ema21":75510.6, "ema_delta":-20.5,
+    "rsi":48.2, "macd":-12.3, "macd_signal":-8.1, "macd_hist":-4.2,
+    "bb_upper":75600, "bb_mid":75480, "bb_lower":75360,
+    "atr":85.0, "vol_pct":45.0
   },
   "momentum": {"consecutive_bull":1, "consecutive_bear":0},
-  "prediction": {"bias":"bear","strength":"strong","confidence":80,"score":-72,
-                 "pred_close":81970,"pred_high":82041,"pred_low":81899}
+  "regime": "TREND",
+  "factors": {
+    "momentum_tstat": -0.09, "zscore_meanrev": -0.05, "rsi_momentum": +0.21,
+    "volume_condition": 0.0, "fatigue": 0.0,
+    "momentum_deceleration": +1.00, "price_position": -0.09,
+    "imbalance": null, "microprice": null
+  },
+  "prediction": {"bias":"neutral","strength":"weak","confidence":41,"score":1,
+                 "pred_close":75502,"pred_high":75567,"pred_low":75437}
 }
 ```
 
@@ -184,7 +208,8 @@ SKILL_DIR=/home/aa/.hermes/profiles/cqo/skills/5minbtc && \
 | v3.5.1 | +低vol衰减/VWAP因子 | 77% | 最佳版本 |
 | v4.0 | Hermes迁移 | 60.5% | 路径适配，功能不变 |
 | v4.1 | Phase1修复 | 目标70%+ | 过度自信压制+放量反转+bull修正+疲劳增强 |
-| **v5.4** | **正交因子+Regime** | **60.7%(50r)** | **9正交因子+sigmoid+TREND dampening+meanrev反转** |
+| v5.4 | 正交因子+Regime | 68.1%(120r) | 9正交因子+sigmoid+TREND dampening+meanrev反转 |
+| **v5.5** | **+校准置信度** | **待验证** | **Platt Scaling+Bull惩罚+高vol增强+neutral区收缩** |
 
 ### 全量复盘 (178笔结算)
 
@@ -236,4 +261,19 @@ SKILL_DIR=/home/aa/.hermes/profiles/cqo/skills/5minbtc && \
 ## 参考文件
 
 - `references/binance-api-geo.md` — Binance API 区域封禁解决方案和迁移记录
-- `references/quant-knowledge-index.md` — 50轮蒸馏知识库索引(12份报告/~67KB)，含升级优先级
+- `references/quant-knowledge-index.md` — 50轮蒸馏知识库索引(14份报告/~80KB)，含升级优先级
+
+## 报告库
+
+14份深度蒸馏报告存放在 `reports/` 目录（也同步在 AGI-Super-Team 仓库）：
+- R01-R12：50轮蒸馏（因子理论、策略、DeFi、组合、ML、数据源、前沿研究、期权、微结构、风控、机构方法论、整合蓝图）
+- R13：准确率优化方案（178笔复盘后）
+- R14：引擎审计报告（顶尖量化审查，4个Critical修复→v5.0架构设计基础）
+
+## 仓库同步
+
+Skill已同步至 AGI-Super-Team 仓库 `skills/5minbtc/`：
+- 仓库路径: `~/clawd/repos/AGI-Super-Team/skills/5minbtc/`
+- 包含: 引擎、日志模块、新闻模块、SKILL.md、reports/、references/
+- 不包含: `data/` 目录（运行时数据）、`5minbtc-log.jsonl`（实时预测记录，按需同步）
+- 同步命令: `cp` 核心文件 → `git add` → `git commit` → `git push origin master`
