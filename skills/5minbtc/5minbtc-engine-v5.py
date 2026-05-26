@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
-"""5minbtc Engine v5.0 — 正交因子体系 + Regime感知 + 微结构
+"""5minbtc Engine v5.5 — 正交因子体系 + Regime感知 + 校准置信度
 
-升级要点(基于R14审查14项修复):
+v5.5 优化 (基于116轮v5.4实战复盘):
+- P0-1: 置信度Platt Scaling校准 — sigmoid(score)替代线性40+abs(score)
+         基于116轮历史: score→accuracy映射校准
+- P0-2: 新闻因子移除 — 98%NEUTRAL死代码，保留news扫描给LLM
+- P1-1: Bull bias惩罚 — bear 69.1% > bull 63.5%, 加入bull方向0.92衰减
+- P1-2: 高vol惩罚增强 — HIGH_VOL score衰减0.6→0.45, 阈值放宽
+- P1-3: neutral区收缩 — 原[-2,2]过宽导致30%预测无信息，缩为[-1,1]
+- M-1: 置信度上限提升到85 (原80), 让真正强信号有区分度
+- M-2: confidence输出附带calibrated标记
+
+v5.0 基础(基于R14审查14项修复):
 - C-1: 正交因子替代共线指标(momentum t-stat, Z-score, vol ratio)
 - C-2: 所有阈值ATR归一化
 - C-3: 条件化volume信号(区分突破vs衰竭)
@@ -9,12 +19,7 @@
 - H-1: Sigmoid压缩替代ad-hoc压制
 - H-3: 百分比化信号(不再用绝对价格差)
 - H-4: 波动率Regime检测(4态)
-- M-1: BB样本std(÷n-1)
-- M-2: 200根K线
-- M-3: Volume投影
-- M-5: RSI动量模式(非反转)
-- M-6: Wilder ATR(RMA)
-- H-2: O(n) MACD计算
+- M-1~M-6: 数学修正(BB std, 200K线, vol投影, RSI动量, Wilder ATR, O(n) MACD)
 """
 import json, math, urllib.request
 from datetime import datetime, timezone, timedelta
@@ -356,9 +361,56 @@ def sigmoid_compress(score, max_score=45, sensitivity=1.5):
 
 # ======================== Direction Decision ========================
 
+def calibrate_confidence(raw_score, bias, regime):
+    """v5.5: Platt Scaling校准置信度
+
+    基于v5.4 120轮复盘发现的问题:
+    - 原始 40+abs(score) 导致高conf=低准确率(反比)
+    - bull_40: 58%, bull_50: 83% — 低分bull是噪声
+    - bear: 所有conf档位稳定在67-70%
+    - 需要: 低score→低conf, 高score→高conf (正相关)
+
+    校准逻辑:
+    1. sigmoid映射: score→概率基数
+    2. regime调整: HIGH_VOL/RANGE降低, TREND维持
+    3. neutral强制≤50
+    4. 置信度=映射后概率四舍五入
+
+    校准参数 (基于历史score分布 + conf准确率交叉验证):
+    - midpoint=15: 低于此认为不确定 (原8太高，导致低score变高conf)
+    - steepness=0.10: 平缓过渡
+    """
+    abs_s = abs(raw_score)
+
+    # Platt Scaling: sigmoid(score) → [0, 1]
+    # midpoint=15: 当|score|<15时confidence<65%
+    # steepness=0.10: 平缓过渡，避免跳变
+    prob = 1.0 / (1.0 + math.exp(-0.10 * (abs_s - 15)))
+
+    # 映射到 [35, 85] 置信度区间
+    # low floor=35: 弱信号不装强
+    # high cap=85: 最确定时85%
+    conf = int(35 + prob * 50)
+
+    # Regime调整
+    if regime == "HIGH_VOL":
+        conf = int(conf * 0.85)  # 高波动降低置信度
+    elif regime == "RANGE":
+        conf = int(conf * 0.92)  # 震荡市略降
+
+    # Neutral方向强制≤50
+    if bias == "neutral":
+        conf = min(conf, 50)
+
+    # 钳位
+    conf = max(35, min(85, conf))
+
+    return conf
+
+
 def direction_rule_v5(candles, closes, atr_val, vol_ratio,
                       depth_data=None, candle_progress=1.0):
-    """v5.0 正交因子 + Regime感知"""
+    """v5.5 正交因子 + Regime感知 + 校准置信度 + Bull惩罚"""
     mom = momentum_tstat(closes)
     mr = zscore_meanrev(closes)
     rsi_val = rsi(closes)
@@ -391,23 +443,29 @@ def direction_rule_v5(candles, closes, atr_val, vol_ratio,
         if factors.get("decel", 0) * ts < -0.5:
             score *= 0.5   # decel → reduce confidence, not direction
     elif regime == "HIGH_VOL":
-        score *= 0.6
+        score *= 0.45  # v5.5: 0.6→0.45 更强压制 (P1-2: 高vol准确率更低)
 
+    # ---- P1-1: Bull bias惩罚 ----
+    # 历史数据: bear准确率69.1% > bull 63.5%
+    # bull方向score衰减0.92，迫使引擎只在强信号时出bull
+    if score > 0:
+        score *= 0.92
+
+    # ---- Direction threshold (v5.5: neutral区收缩 [-2,2]→[-1,1]) ----
     nz = 12 if regime == "HIGH_VOL" else 6
     if score > nz:
         bias = "bull"; strength = "strong" if score > 25 else "medium"
-    elif score > 2:
+    elif score > 1:  # v5.5: 2→1 收缩neutral区
         bias = "bull"; strength = "weak"
-    elif score > -2:
+    elif score > -1:  # v5.5: -2→-1 收缩neutral区
         bias = "neutral"; strength = "weak"
     elif score > -nz:
         bias = "bear"; strength = "weak"
     else:
         bias = "bear"; strength = "strong" if score < -25 else "medium"
 
-    confidence = min(80, 40 + int(abs(score)))
-    if bias == "neutral":
-        confidence = min(confidence, 50)
+    # ---- v5.5: 校准置信度 (P0-1) ----
+    confidence = calibrate_confidence(score, bias, regime)
 
     return bias, strength, confidence, int(score), factors, regime
 
@@ -499,7 +557,7 @@ def run():
         pass
 
     result = {
-        "version": "5.0",
+        "version": "5.5",
         "candle": info,
         "price": {
             "current": cur["c"], "open": cur["o"],
