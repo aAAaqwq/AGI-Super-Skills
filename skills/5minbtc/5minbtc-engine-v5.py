@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
-"""5minbtc Engine v5.5 — 正交因子体系 + Regime感知 + 校准置信度
+"""5minbtc Engine v5.6 — 正交因子体系 + Regime感知 + 校准置信度
+
+v5.6 优化 (基于v5.5 3轮方向错误复盘):
+- R1: 趋势衰竭检测 — momentum/decel方向冲突时动态降权
+      mom > 0.7 且 decel反向 > 0.8 → momentum权重降至0.4, decel升至0.9
+- R2: volume因子修复 — 使用最近完成K线的body方向替代未完成K线
+      新增 vol_breakout_signal: 区分突破放量vs衰竭放量更稳健
+- R3: V型反转因子 — 检测3根K线内低点抬高+收>开的反转模式
+      捕获Case#1那种急跌后V-reverse的强翻转信号
+- R4: Chainlink价格对齐 — 抓取Coinbase BTCUSD作为参考价格
+      计算Binance-Coinbase价差偏移量，调整预测价
 
 v5.5 优化 (基于116轮v5.4实战复盘):
 - P0-1: 置信度Platt Scaling校准 — sigmoid(score)替代线性40+abs(score)
-         基于116轮历史: score→accuracy映射校准
-- P0-2: 新闻因子移除 — 98%NEUTRAL死代码，保留news扫描给LLM
-- P1-1: Bull bias惩罚 — bear 69.1% > bull 63.5%, 加入bull方向0.92衰减
-- P1-2: 高vol惩罚增强 — HIGH_VOL score衰减0.6→0.45, 阈值放宽
-- P1-3: neutral区收缩 — 原[-2,2]过宽导致30%预测无信息，缩为[-1,1]
-- M-1: 置信度上限提升到85 (原80), 让真正强信号有区分度
-- M-2: confidence输出附带calibrated标记
+- P0-2: 新闻因子移除 — 98%NEUTRAL死代码
+- P1-1: Bull bias惩罚 — bear 69.1% > bull 63.5%, bull×0.92
+- P1-2: 高vol惩罚增强 — HIGH_VOL score衰减0.45
+- P1-3: neutral区收缩 [-1,1]
 
 v5.0 基础(基于R14审查14项修复):
 - C-1: 正交因子替代共线指标(momentum t-stat, Z-score, vol ratio)
@@ -302,6 +309,81 @@ def orderbook_signals(depth_data, mid_price):
         dev = 0
     return max(-1, min(1, imb)), max(-1, min(1, dev))
 
+def v_reversal_detect(candles):
+    """因子10: V型反转检测 — 捕获急跌后快速反转
+    检测逻辑: 最近3根K线低点逐渐抬高 + 当前K线收>开
+    返回 [-1, 1] (正=看bullish reversal)
+    v5.6新增: 解决Case#1 momentum=-0.98但实盘bull的根因
+    """
+    if len(candles) < 4:
+        return 0
+    # 取最近3根完成的K线 (不含当前未完成的)
+    recent = candles[-4:-1]  # -4, -3, -2 (3根完成的)
+    cur = candles[-1]        # 当前未完成的
+
+    # 条件1: 最近3根低点逐渐抬高 (V底)
+    lows = [c["l"] for c in recent]
+    ascending_lows = all(lows[i] <= lows[i+1] for i in range(len(lows)-1))
+
+    # 条件2: 当前K线是阳线 (收>开)
+    cur_bull = cur["c"] > cur["o"]
+
+    # 条件3: 最近3根中有至少2根是阴线 (先下跌)
+    bear_count = sum(1 for c in recent if c["c"] < c["o"])
+
+    if ascending_lows and cur_bull and bear_count >= 2:
+        # 强V反转
+        return 1.0
+    elif ascending_lows and cur_bull:
+        # 弱V反转
+        return 0.6
+    # 对称检测: 高点降低 + 阴线 = 倒V (bearish reversal)
+    highs = [c["h"] for c in recent]
+    descending_highs = all(highs[i] >= highs[i+1] for i in range(len(highs)-1))
+    cur_bear = cur["c"] < cur["o"]
+    bull_count = sum(1 for c in recent if c["c"] > c["o"])
+    if descending_highs and cur_bear and bull_count >= 2:
+        return -1.0
+    elif descending_highs and cur_bear:
+        return -0.6
+    return 0
+
+def vol_breakout_signal(candles):
+    """因子11: 突破放量信号 — 用已完成K线判断方向
+    v5.6新增: 解决volume因子用未完成K线的bug
+    逻辑: 最近3根完成K线中，量最大的一根的方向决定信号
+    """
+    if len(candles) < 4:
+        return 0
+    recent = candles[-4:-1]  # 3根完成的K线
+    vols = [(c["v"], 1 if c["c"] > c["o"] else -1) for c in recent]
+    # 找最大量的一根
+    max_vol_bar = max(vols, key=lambda x: x[0])
+    vol_max, direction = max_vol_bar
+    avg_vol = sum(v for v, _ in vols) / len(vols)
+    if avg_vol == 0:
+        return 0
+    ratio = vol_max / avg_vol
+    if ratio > 1.5:
+        # 突破放量: 方向跟随最大量K线
+        return direction * min(1.0, (ratio - 1.0) * 0.5)
+    return 0
+
+def fetch_chainlink_ref():
+    """R4: 抓取Coinbase BTC-USD作为Chainlink参考价
+    Chainlink Data Streams聚合3+CEX中位数价格
+    Coinbase是其中权重最大的成分交易所之一
+    返回 (price, source) 或 (None, None)
+    """
+    try:
+        url = "https://api.coinbase.com/v2/prices/BTC-USD/spot"
+        req = urllib.request.Request(url, headers={"User-Agent": "5minbtc/5.6"})
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read())
+        return float(data["data"]["amount"]), "coinbase"
+    except Exception:
+        return None, None
+
 # ======================== Regime Detection ========================
 
 def detect_regime(vol_ratio, candles):
@@ -327,21 +409,26 @@ def detect_regime(vol_ratio, candles):
 
 BASE_W = {'momentum': 1.0, 'meanrev': 0.5, 'rsi': 0.4,
           'volume': 0.3, 'fatigue': 0.5, 'imbalance': 0.8, 'microprice': 0.6,
-          'decel': 0.7, 'position': 0.5}
+          'decel': 0.7, 'position': 0.5,
+          'v_reversal': 0.8, 'vol_breakout': 0.4}  # v5.6: +v_reversal + vol_breakout
 
 REGIME_ADJ = {
     'HIGH_VOL': {'momentum': 0.4, 'meanrev': 0.3, 'rsi': 0.3,
                  'volume': 0.2, 'fatigue': 0.5, 'imbalance': 0.6, 'microprice': 0.5,
-                 'decel': 0.8, 'position': 0.6},
+                 'decel': 0.8, 'position': 0.6,
+                 'v_reversal': 1.0, 'vol_breakout': 0.6},  # v5.6: 高vol下V反转加权
     'TREND':    {'momentum': 1.0, 'meanrev': 0.4, 'rsi': 0.5,
                  'volume': 0.4, 'fatigue': 0.4, 'imbalance': 0.7, 'microprice': 0.5,
-                 'decel': 0.9, 'position': 0.6},
+                 'decel': 0.9, 'position': 0.6,
+                 'v_reversal': 0.9, 'vol_breakout': 0.5},  # v5.6: TREND中V反转高权重
     'RANGE':    {'momentum': 0.4, 'meanrev': 1.5, 'rsi': 0.2,
                  'volume': 0.3, 'fatigue': 0.6, 'imbalance': 0.9, 'microprice': 0.7,
-                 'decel': 0.5, 'position': 0.8},
+                 'decel': 0.5, 'position': 0.8,
+                 'v_reversal': 0.7, 'vol_breakout': 0.4},
     'LOW_VOL':  {'momentum': 0.5, 'meanrev': 1.2, 'rsi': 0.3,
                  'volume': 0.2, 'fatigue': 0.4, 'imbalance': 0.8, 'microprice': 0.6,
-                 'decel': 0.6, 'position': 0.7},
+                 'decel': 0.6, 'position': 0.7,
+                 'v_reversal': 0.5, 'vol_breakout': 0.3},
 }
 
 def combine_factors(factors, regime):
@@ -410,7 +497,7 @@ def calibrate_confidence(raw_score, bias, regime):
 
 def direction_rule_v5(candles, closes, atr_val, vol_ratio,
                       depth_data=None, candle_progress=1.0):
-    """v5.5 正交因子 + Regime感知 + 校准置信度 + Bull惩罚"""
+    """v5.6 正交因子 + Regime感知 + momentum/decel冲突 + V反转 + 放量突破 + Bull惩罚"""
     mom = momentum_tstat(closes)
     mr = zscore_meanrev(closes)
     rsi_val = rsi(closes)
@@ -424,14 +511,47 @@ def direction_rule_v5(candles, closes, atr_val, vol_ratio,
 
     imb, mpd = orderbook_signals(depth_data, closes[-1])
 
+    decel = momentum_deceleration(closes)
+
+    # v5.6 R1: momentum/decel 冲突检测 — 趋势衰竭信号
+    # 当 momentum 方向绝对值大(>0.7)但 decel 方向相反且也大(>0.8),
+    # 说明趋势正在衰竭(15根K线斜率还在惯性, 但近5根已在减速/反转)
+    # 此时动态降权 momentum, 升权 decel, 让反转信号穿透
+    mom_val = mom  # 保留原始值用于冲突检测
+    decel_val = decel
+    conflict_detected = False
+    if abs(mom_val) > 0.7 and abs(decel_val) > 0.8:
+        # 方向相反: 乘积<0 意味着 momentum 和 decel 一个正一个负
+        if mom_val * decel_val < 0:
+            conflict_detected = True
+            # 不修改原始因子值, 而是在 combine_factors 中用动态权重覆盖
+            # 记录冲突标记, 供后续使用
+
     factors = {'momentum': mom, 'meanrev': mr, 'rsi': rsi_m,
                'volume': vol, 'fatigue': fat,
                'imbalance': imb, 'microprice': mpd,
-               'decel': momentum_deceleration(closes),
-               'position': price_position(candles)}
+               'decel': decel,
+               'position': price_position(candles),
+               'v_reversal': v_reversal_detect(candles),      # v5.6 R2
+               'vol_breakout': vol_breakout_signal(candles)}   # v5.6 R3
 
     regime = detect_regime(vol_ratio, candles)
-    raw = combine_factors(factors, regime)
+
+    # v5.6 R1: 冲突时动态调整因子权重
+    # momentum 权重从1.0降至0.4, decel 权重从0.7升至0.9
+    # 让反转信号不再是噪声, 而是主导信号
+    if conflict_detected:
+        saved_base = BASE_W.copy()
+        saved_regime = REGIME_ADJ.get(regime, {}).copy() if regime in REGIME_ADJ else {}
+        BASE_W['momentum'] = 0.4   # 1.0→0.4: 趋势惯性降权
+        BASE_W['decel'] = 0.9      # 0.7→0.9: 减速信号升权
+        raw = combine_factors(factors, regime)
+        BASE_W.update(saved_base)   # 恢复全局权重
+        if saved_regime:
+            REGIME_ADJ[regime] = saved_regime
+    else:
+        raw = combine_factors(factors, regime)
+
     score = sigmoid_compress(raw)
 
     # ---- Regime-aware score adjustment ----
@@ -546,6 +666,22 @@ def run():
                "L": round(c["l"]), "C": round(c["c"])} for c in candles[-4:-1]]
     cur = candles[-1]
 
+    # v5.6 R4: Chainlink价格对齐 — Polymarket 用 BTC/USD 结算
+    # Binance BTCUSDT 系统性偏高 ~$88 (coinbase参考)
+    # 对 pred_close/high/low 施加偏移, 使预测更接近 Chainlink 结算价
+    chainlink_ref, cl_source = fetch_chainlink_ref()
+    binance_price = cur["c"]
+    cl_offset = 0.0
+    if chainlink_ref is not None and binance_price > 0:
+        cl_offset = round(chainlink_ref - binance_price)
+        # 只在偏移合理范围内补偿 ($-300~+$300, 约±0.3%)
+        if abs(cl_offset) > 300:
+            cl_offset = 0.0
+        else:
+            pred_close = round(pred_close + cl_offset)
+            pred_high = round(pred_high + cl_offset)
+            pred_low = round(pred_low + cl_offset)
+
     fng = {"value": None, "label": None}
     try:
         req = urllib.request.Request("https://api.alternative.me/fng/?limit=1",
@@ -557,7 +693,7 @@ def run():
         pass
 
     result = {
-        "version": "5.5",
+        "version": "5.6",
         "candle": info,
         "price": {
             "current": cur["c"], "open": cur["o"],
@@ -579,6 +715,7 @@ def run():
         "fng": fng,
         "factors": {k: round(v, 3) if isinstance(v, float) else v for k, v in factors.items()},
         "regime": regime,
+        "chainlink_offset": cl_offset,  # v5.6: Binance→Chainlink 价格偏移
         "prediction": {
             "bias": bias, "strength": strength,
             "confidence": confidence, "score": score,
