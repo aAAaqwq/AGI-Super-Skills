@@ -1,7 +1,7 @@
 ---
 name: 5minbtc
-version: 5.5
-description: BTC 5分钟K线实时方向预测。v5.5校准置信度引擎，9正交因子+Platt Scaling+Regime感知+Bull惩罚+中性区收缩。基于120轮v5.4实战复盘优化。
+version: 5.6
+description: BTC 5分钟K线实时方向预测。v5.6冲突检测引擎，11正交因子+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt Scaling+Bull惩罚。
 triggers:
   - 5minbtc
   - 5min btc
@@ -13,7 +13,24 @@ tools:
 
 # 5minbtc — BTC 5分钟实时预测 v5.5
 
-> 最后更新: 2026-05-26 v5.5校准置信度引擎
+> 最后更新: 2026-05-27 v5.6 冲突检测引擎
+
+## v5.6 变更 (2026-05-27)
+
+基于3次方向错误深度复盘的4项修复（已实施验证）：
+
+| 修复项 | 变更 | 根因 |
+|--------|------|------|
+| R1 momentum/decel冲突检测 | \|mom\|>0.7且\|decel\|>0.8且方向相反时，动态降权mom 1.0→0.4, 升权decel 0.7→0.9 | V型反转点momentum锁定错误方向 |
+| R2 V型反转因子 | `v_reversal_detect()` 检测低点抬高模式 [-1,1], BASE_W=0.8 | 捕捉结构性的反转信号 |
+| R3 放量突破因子 | `vol_breakout_signal()` 用最近3根完整K线的最大量K线方向 [-1,1], BASE_W=0.4 | 避免未完成K线的量价误导 |
+| R4 Chainlink价格对齐 | `fetch_chainlink_ref()` Coinbase BTC-USD作参考，自动补偿Binance偏移 | Polymarket结算价≠Binance价格 |
+
+关键代码模式：
+- **冲突降权用saved_base模式**: `saved_base = BASE_W.copy()` → 临时改权重 → `combine_factors()` → `BASE_W.update(saved_base)` 恢复。避免跨调用污染全局权重。
+- **Chainlink偏移安全边界**: |offset|>300时不补偿（防止API异常导致预测价飞出合理范围）
+- **V反转用已完成K线**: 取 `candles[-4:-1]`（最近3根完成K线），不用当前未完成K线
+- **输出新增字段**: `chainlink_offset` 追踪每次偏移量, `v_reversal`/`vol_breakout` 因子值
 
 ## v5.5 变更 (2026-05-26)
 
@@ -53,6 +70,16 @@ tools:
 ### 路径硬编码
 不要用 `WORKSPACE = dirname(dirname(dirname(...)))` 指向旧 OpenClaw workspace。用 `SKILL_DIR = os.path.dirname(os.path.abspath(__file__))`。
 
+### 全局字典临时修改模式
+当需要临时修改 `BASE_W` / `REGIME_ADJ` 等模块级字典做单次计算时，必须用 saved_base 模式：
+```python
+saved_base = BASE_W.copy()
+BASE_W['momentum'] = 0.4  # 临时修改
+raw = combine_factors(factors, regime)
+BASE_W.update(saved_base)  # 立即恢复
+```
+**不要**直接修改后不恢复——Python 模块级字典是全局可变的，下次调用会读到脏数据。
+
 ## 执行步骤
 
 ### Step 1: 并行启动（5个调用同时发出）
@@ -64,6 +91,11 @@ tools:
 ├── web_search: "crypto market macro stocks today" count=3 freshness=day
 └── web_search: "比特币 BTC 最新 晚间" count=3 freshness=day
 ```
+
+**搜索优化**: 3组通用搜索经常返回首页/目录页而非具体新闻。如果初始结果不具体，立即追加1-2组**上下文定制搜索**：
+- 用引擎当前价格方向：`"Bitcoin BTC price [rise/drop/crash] today [当前日期]"`
+- 用新闻扫描发现的关键事件：`"BTC [事件关键词] crypto impact [月份] [年份]"`
+- 这组搜索在引擎执行后、LLM分析前发起，延迟<30秒但信息价值显著提升
 
 引擎命令（绝对路径）：
 ```bash
@@ -158,29 +190,39 @@ SKILL_DIR=/home/aa/.hermes/profiles/cqo/skills/5minbtc && \
 
 ## 引擎JSON结构（LLM直接读取）
 
-v5.4输出示例：
+v5.6输出示例（实际字段名）：
 ```json
 {
-  "candle": {"now":"21:36:49","candle_start":"21:35","candle_end":"21:40","progress_pct":36.6,"iso":"..."},
-  "price": {"current":75502,"open":75498,"high":75520,"low":75480,"body":4},
-  "recent_candles": [{"O":75498,"H":75520,"L":75480,"C":75502},...],
+  "version": "5.6",
+  "candle": {"now":"22:10:26","candle_start":"22:10","candle_end":"22:15","progress_pct":8.9,"remaining_sec":273,"iso":"..."},
+  "price": {"current":74978.01,"open":75020.0,"high":75037.42,"low":74950.64,"body":-42,"body_pct":-0.056},
+  "recent_candles": [{"O":75000,"H":75102,"L":74928,"C":75073}, ...],
   "indicators": {
-    "ema9":75490.1, "ema21":75510.6, "ema_delta":-20.5,
-    "rsi":48.2, "macd":-12.3, "macd_signal":-8.1, "macd_hist":-4.2,
-    "bb_upper":75600, "bb_mid":75480, "bb_lower":75360,
-    "atr":85.0, "vol_pct":45.0
+    "ema9":75099.4, "ema21":75298.7, "ema_delta":-199.3,
+    "rsi":32.5, "macd":-209.78, "macd_signal":-191.92, "macd_hist":-17.86,
+    "bb_upper":76060.4, "bb_mid":75357.1, "bb_lower":74653.9,
+    "atr":155.6, "vol_pct":19.0
   },
-  "momentum": {"consecutive_bull":1, "consecutive_bear":0},
-  "regime": "TREND",
+  "fng": {"value":25, "label":"Extreme Fear"},
   "factors": {
-    "momentum_tstat": -0.09, "zscore_meanrev": -0.05, "rsi_momentum": +0.21,
-    "volume_condition": 0.0, "fatigue": 0.0,
-    "momentum_deceleration": +1.00, "price_position": -0.09,
-    "imbalance": null, "microprice": null
+    "momentum": -0.968, "meanrev": 0.431, "rsi": -0.351,
+    "volume": 0.25, "fatigue": 0, "imbalance": 0.234,
+    "microprice": 0.246, "decel": 1.0, "position": 0.798,
+    "v_reversal": 0, "vol_breakout": 0
   },
-  "prediction": {"bias":"neutral","strength":"weak","confidence":41,"score":1,
-                 "pred_close":75502,"pred_high":75567,"pred_low":75437}
+  "regime": "TREND",
+  "chainlink_offset": -152,
+  "prediction": {"bias":"bull","strength":"weak","confidence":45,"score":1,
+                 "pred_close":74860,"pred_high":74954,"pred_low":74766}
 }
+```
+
+**v5.6新增字段说明**:
+- `chainlink_offset`: Binance→Chainlink价格偏移（$），已自动补偿pred_close/high/low。LLM在输出末尾注明此偏移即可
+- `fng`: Fear & Greed Index，值为null时API不可用
+- `factors.v_reversal`: V型反转因子 [-1,1]，0=无反转信号
+- `factors.vol_breakout`: 放量突破因子 [-1,1]，0=无突破信号
+- `price.body_pct`: body百分比，正=阳线，负=阴线
 ```
 
 ## 复盘
@@ -210,6 +252,7 @@ SKILL_DIR=/home/aa/.hermes/profiles/cqo/skills/5minbtc && \
 | v4.1 | Phase1修复 | 目标70%+ | 过度自信压制+放量反转+bull修正+疲劳增强 |
 | v5.4 | 正交因子+Regime | 68.1%(120r) | 9正交因子+sigmoid+TREND dampening+meanrev反转 |
 | **v5.5** | **+校准置信度** | **待验证** | **Platt Scaling+Bull惩罚+高vol增强+neutral区收缩** |
+| **v5.6** | **+冲突检测+V反转+Chainlink** | **验证中** | **mom/decel冲突降权+V反转因子+放量突破+Coinbase价格对齐** |
 
 ### 全量复盘 (178笔结算)
 
@@ -231,10 +274,31 @@ SKILL_DIR=/home/aa/.hermes/profiles/cqo/skills/5minbtc && \
 4. **线性打分是初学者错误** — 多个共线指标叠加不增加信息量
 5. **低vol微波动准确率最高** — 缩量时66%，应专注而非放弃
 6. **EMA在底部反弹期天然滞后** — VWAP因子部分修复
+7. **momentum/decel冲突时，decel通常是正确的** — 当 |momentum_tstat|>0.7 且 |decel|>0.8 且方向相反时，长期斜率锁定错误方向，短期反转才是真相（V型反转场景）。此时应大幅降权momentum（×0.4），提权decel（×0.9）
+8. **volume因子使用未完成K线判断方向是致命缺陷** — 预测时点candle仅完成60-70%，在行情反转时当前K线形态仍可能是阴线但最终收盘阳线，volume因子方向判断完全错误。应改为用最近3根完整K线的量价关系
+9. **Polymarket 5min BTC盘口使用 Chainlink Data Streams** — 聚合3+家CEX数据取中位数，非单一交易所价格。与Binance BTCUSDT存在$50-150价差（0.1-0.19%），若5min方向由最后一跳决定且最后一跳跨越价差阈值，可能出现"引擎用Binance判断方向对，但Polymarket结算方向不同"的错配
 
 ## v5.0 升级路线图
 
 > 详见 `references/quant-knowledge-index.md` 和 `~/.hermes/profiles/cqo/quant-knowledge/R12-integration-blueprint.md`
+
+### v5.6 方向错误修复（✅ 已实施 2026-05-27）
+
+基于2026-05-27深度复盘的3次方向错误分析，已全部落地到引擎代码：
+
+| 优先级 | 修复项 | 状态 | 实现 |
+|--------|--------|------|------|
+| R0 | momentum/decel冲突检测 | ✅ `direction_rule_v5()` | saved_base模式动态降权mom→0.4, decel→0.9 |
+| R1 | V型反转因子 | ✅ `v_reversal_detect()` | BASE_W=0.8, TREND/HIGH_VOL下加权至0.9/1.0 |
+| R2 | 放量突破因子 | ✅ `vol_breakout_signal()` | 用最近3根完成K线，BASE_W=0.4 |
+| R3 | Chainlink价格对齐 | ✅ `fetch_chainlink_ref()+run()` | Coinbase BTC-USD参考，偏移补偿上限±$300 |
+
+**案例复盘要点**：
+- 20:20巨量突破(vol=182%)：decel=+1.0正确预判反转，但mom=-0.98权重×1.0淹没反转信号 → **R0冲突检测修复**
+- 20:25放量延续(vol=123%)：同上，momentum仍在消化15根K线的下跌斜率 → **R0冲突检测修复**
+- 20:50低vol(vol=33%)：RANGE regime下meanrev权重放大推高bull，实际仅$2波动 → **v5.5 neutral区收缩已覆盖**
+
+**实时验证**: 22:09 CST 运行恰好命中冲突场景(mom=-0.981, decel=+1.0)，输出bear conf=45% score=-1
 
 ### P0 — 立即实施
 1. **OFI微结构因子**: Binance WebSocket → 订单流不平衡 → 预测R²~15-25%
@@ -262,6 +326,14 @@ SKILL_DIR=/home/aa/.hermes/profiles/cqo/skills/5minbtc && \
 
 - `references/binance-api-geo.md` — Binance API 区域封禁解决方案和迁移记录
 - `references/quant-knowledge-index.md` — 50轮蒸馏知识库索引(14份报告/~80KB)，含升级优先级
+- `references/polymarket-data-source.md` — Polymarket BTC价格结算源(Chainlink Data Streams)、与Binance价差分析、对预测引擎的影响
+
+## 复盘记录文件
+
+存放在 skill 目录根下，按日期命名：
+- `review-2026-05-24.md` — v5.5 Platt Scaling 校准分析
+- `review-2026-05-25.md` — v5.5 上线后实战复盘
+- `review-2026-05-27.md` — v5.6 3次方向错误深度复盘 + 4项修复实施记录
 
 ## 报告库
 
