@@ -1,9 +1,8 @@
 # Quant Knowledge Bank Index
 
-> 50-round deep distillation (2026-05-23). 12 reports, ~67KB.
+> 50-round deep distillation (2026-05-23). 14 reports, ~80KB.
 > Path: `~/.hermes/profiles/cqo/quant-knowledge/`
-
-## Report Index
+> Also synced to AGI-Super-Team repo `skills/5minbtc/reports/`
 
 | File | Topic | Key Takeaways for 5minbtc |
 |------|-------|---------------------------|
@@ -19,6 +18,8 @@
 | R10-risk-management.md | CVaR, EVT, Regime, 压测 | HMM regime检测 → regime-aware仓位；GPD尾部止损 |
 | R11-institutional-methodology.md | Simons, Citadel, Two Sigma | 信号仪表板+衰减检测+弱信号组合；DSR防过拟合 |
 | R12-integration-blueprint.md | 知识图谱+升级蓝图 | **完整5阶段升级路径，P0→P2优先级** |
+| R13-accuracy-optimization-plan.md | 178笔回盘+优化方案 | bull bias根因分析；Phase1修复→v4.1部署；5大优化方向 |
+| R14-engine-audit-report.md | 顶尖量化审查 | 4个Critical缺陷(共线指标/过拟合/regime盲区/阈值硬编码)→v5.0架构设计基础 |
 
 ## P0 Upgrade Priorities (from R12)
 
