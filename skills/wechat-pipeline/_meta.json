@@ -1,0 +1,13 @@
+{
+  "name": "wechat-pipeline",
+  "version": "1.0.0",
+  "description": "公众号文章全自动流水线：写作→封面→发布。三段式编排，每段设断点检查",
+  "author": "Daniel Li",
+  "tags": ["wechat", "pipeline", "writing", "cover", "publishing"],
+  "triggers": ["公众号创作", "写公众号文章", "公众号发布", "公众号流水线", "发公众号"],
+  "requires": {
+    "skills": ["wechat-article-writer", "code-to-image", "md2wechat"],
+    "bins": ["python3", "node", "md2wechat"],
+    "env": ["WECHAT_APPID", "WECHAT_SECRET"]
+  }
+}
