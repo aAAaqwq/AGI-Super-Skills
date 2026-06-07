@@ -6,7 +6,7 @@
 
 AGI Super Team is a plug-and-play AI team template for [OpenClaw](https://github.com/openclaw/openclaw). It contains:
 - **12 C-Suite agent personas** in `agents/` (CEO, CTO, PE, CCO, etc.)
-- **727+ skills** in `skills/` (each with SKILL.md)
+- **1,639+ skills** in `skills/` (each with SKILL.md)
 - **Starter kits** in `starter-kits/` for one-click deployment
 - **Cookbooks** in `cookbook/` for deep learning
 
