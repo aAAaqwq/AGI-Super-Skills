@@ -1,0 +1,27 @@
+{
+  "name": "article-to-infographic",
+  "version": "1.0.0",
+  "description": "长文/测评文章 → 知识视觉笔记套图 Prompt 生成器（3-5张，4模块Prompt结构）",
+  "author": "Daniel Li",
+  "license": "MIT",
+  "created": "2026-06-10",
+  "updated": "2026-06-10",
+  "tags": [
+    "infographic",
+    "visual-note",
+    "knowledge-card",
+    "mind-map",
+    "prompt-engineering",
+    "wechat-publishing",
+    "xiaohongshu"
+  ],
+  "requires": {
+    "bins": ["python3"]
+  },
+  "related_skills": [
+    "vectronode-image",
+    "relay-image-gen",
+    "code-to-image",
+    "content-cover-gen"
+  ]
+}
