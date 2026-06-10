@@ -1,0 +1,30 @@
+{
+  "name": "vectronode-image",
+  "version": "1.0.0",
+  "description": "VectorNode 中转站 GPT Image 生图与编辑（智能路由）",
+  "author": "Daniel Li",
+  "license": "MIT",
+  "created": "2026-06-10",
+  "updated": "2026-06-10",
+  "tags": [
+    "image-generation",
+    "image-edit",
+    "gpt-image-2",
+    "vectronode",
+    "smart-routing",
+    "cost-optimization"
+  ],
+  "requires": {
+    "env": [
+      "VECTORNODE_API_KEY"
+    ],
+    "bins": [
+      "python3"
+    ]
+  },
+  "related_skills": [
+    "relay-image-gen",
+    "code-to-image",
+    "content-cover-gen"
+  ]
+}
