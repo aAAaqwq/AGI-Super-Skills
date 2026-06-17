@@ -1,0 +1,1705 @@
+# 🏢 Skill-Agent Mapping Matrix
+
+> Auto-generated matrix mapping **1639 skills** to 14 C-Suite AI Agents.
+
+## Summary Table
+
+| Agent | Role | Skills | Top Keywords |
+|-------|------|--------|-------------|
+| **CEO** | Chief Executive Officer | 126 | `strategy, roadmap, planning, delegation, orchestration, coordination, vision, mission` |
+| **CTO** | Chief Technology Officer | 190 | `architecture, architect, k8s, kubernetes, infra, infrastructure, cloud, aws` |
+| **PE** | Practical Engineer | 781 | `dev, code, deploy, backend, frontend, docker, git, ci/cd` |
+| **CPO** | Chief Product Officer | 88 | `product, design, ux, user-experience, ui, prd, product-requirements, user-story` |
+| **CDO** | Chief Data Officer | 18 | `data, pipeline, analytics, dashboard, db, database, python, sql` |
+| **CCO** | Chief Content Officer | 60 | `content, write, writing, video, social, blog, xiaohongshu, xhs` |
+| **CMO** | Chief Marketing Officer | 32 | `marketing, seo, ads, advertising, traffic, growth, email, campaign` |
+| **CQO** | Chief Quant Officer | 202 | `trading, quant, quantitative, finance, polymarket, crypto, cryptocurrency, backtest` |
+| **CFO** | Chief Financial Officer | 57 | `financial, budget, cost, pnl, p&l, revenue, saas-metrics, cap-table` |
+| **CRO** | Chief Research Officer | 6 | `research, paper, arxiv, competitive, intelligence, deep-research, academic, publication` |
+| **CSO** | Chief Sales Officer | 13 | `sales, crm, lead, customer, revenue, outreach, objection, selling` |
+| **CLO** | Chief Legal Officer | 23 | `legal, contract, compliance, gdpr, privacy, license, licensing, law` |
+| **COO** | Chief Operating Officer | 18 | `ops, operations, monitoring, alert, alerting, incident, incident-response, deploy` |
+| **Governor** | Governor (Audit & Quality) | 25 | `audit, quality, security, review, verification, compliance-delivery, qa, quality-assurance` |
+
+## Detailed Skills by Agent
+
+### CEO — Chief Executive Officer (126 skills)
+
+- **Swarm Orchestration**: Orchestrate multi-agent swarms with agentic-flow for parallel task execution, dynamic topology, and 
+- **agent-network**: Multi-Agent group chat collaboration system inspired by DingTalk/Lark. Enables AI agents to chat in 
+- **agent-values-alignment-detector**: 
+- **ai-viral-team-script-writing**: 脚本创作 - 短视频脚本撰写与分镜设计 职责：根据爆款模板生产内容、设计黄金3秒开头方案（3种以上）、撰写分镜脚本（包含镜头语言/场景氛围/角色动作/台词/BGM）、设计槽点埋梗与情绪钩子、规划结尾引
+- **aigc-director**: AI 视频生成全流程：通过 6 个阶段（剧本→角色/场景设计→分镜→参考图→视频生成→后期剪辑）将用户想法转化为完整视频。支持临时工作台（单独调用 LLM、VLM、文生图、图生图、视频生成）。触发词：
+- **apple-hig-expert**: Expert guidance on Apple Human Interface Guidelines (HIG). Covers iOS, macOS, and visionOS with 2026
+- **blender-motion-state-inspection**: Use this skill when inspecting Blender characters, rigs, poses, animation retargeting, ground contac
+- **blue-blood-culture-codifier**: 
+- **board**: Read, write, and browse the AgentHub message board for agent coordination.
+- **board-meeting**: Multi-agent board meeting protocol for strategic decisions. Runs a structured 6-phase deliberation: 
+- **brief**: /cs:brief <topic> — Generate a one-page strategy brief from an office-hours intake. First step in th
+- **c-level-advisor**: 10 C-level advisory agent skills and plugins for Claude Code, Codex, Gemini CLI, Cursor, OpenClaw. C
+- **c-level-agents**: Founder-mode executive team. 8 cs-* C-suite agents (CFO, CMO, CRO, CPO, COO, CHRO, CISO, Chief of St
+- **caio-review**: /cs:caio-review <plan> — Eval-demanding Chief AI Officer interrogation of any plan that involves AI:
+- **calendly-automation**: Automate Calendly scheduling, event management, invitee tracking, availability checks, and organizat
+- **capa-officer**: CAPA system management for medical device QMS. Covers root cause analysis, corrective action plannin
+- **cco-review**: /cs:cco-review <plan> — Retention-obsessed Chief Customer Officer interrogation of any plan that tou
+- **ceo-advisor**: Executive leadership guidance for strategic decision-making, organizational development, and stakeho
+- **ceo-delegation**: CEO式任务委派工作流程。当收到任何任务时使用此流程：不亲自执行，而是派发子代理执行、监控进度、汇报、验收。适用于需要高效并行处理多任务的场景。
+- **change-management**: Framework for rolling out organizational changes without chaos. Covers the ADKAR model adapted for s
+- **chief-of-staff**: C-suite orchestration layer. Routes founder questions to the right advisor role(s), triggers multi-r
+- **chro-advisor**: People leadership for scaling companies. Hiring strategy, compensation design, org structure, cultur
+- **claims**: Claims-based authorization for agents and operations. Grant, revoke, and verify permissions for secu
+- **cognitive-pattern**: Define and manage cognitive patterns for agent reasoning and decision-making
+- **company-analyzer**: 
+- **company-os**: The meta-framework for how a company runs — the connective tissue between all C-suite roles. Covers 
+- **confluence-automation**: Automate Confluence page creation, content search, space management, labels, and hierarchy navigatio
+- **content-illustration-strategy**: 文章配图决策 skill：根据文章内容判断该配什么图、图从哪里来、什么时候该用 Telegram 真实对话截图，什么时候该用工具界面图、官网图、生成插图或流程图。 适用于公众号、小红书长图文、知识星球
+- **context-manager**: AI-powered context management for OpenClaw sessions
+- **create-viral-content**: 
+- **culture-architect**: Build, measure, and evolve company culture as operational behavior — not wall posters. Covers missio
+- **de-ai-ify**: 将AI生成的机械化文本转换为自然、有人情味的人类写作风格
+- **dispatcher**: Route complex multi-step tasks, multi-skill orchestration, post-execution checklist
+- **dropbox-automation**: Automate Dropbox file management, sharing, search, uploads, downloads, and folder operations via Rub
+- **elon-tweets**: 
+- **email-send-direct**: 
+- **eval**: Evaluate and rank agent results by metric or LLM judge for an AgentHub session.
+- **executive-mentor**: Adversarial thinking partner for founders and executives. Stress-tests plans, prepares for brutal bo
+- **feishu-doc-optimizer**: 飞书云文档内容优化与格式美化。当用户需要优化飞书文档的排版、结构、格式、美观度时使用此技能。支持：(1) 读取飞书文档内容 (2) 优化文档结构和层次 (3) 清空并替换文档内容 (4) 通过浏览器自
+- **firecrawl**: 专业网页抓取和数据提取。使用 Firecrawl API 抓取网页、提取结构化数据、批量爬取网站。当用户需要抓取复杂网页、提取结构化数据、批量爬取时使用此技能。
+- **firm-orchestration**: Pyramid multi-agent orchestration for OpenClaw: routes objectives from a CEO agent down through depa
+- **founder-coach**: Personal leadership development for founders and first-time CEOs. Covers founder archetype identific
+- **full-cycle-skill**: 
+- **github-multi-repo**: Multi-repository coordination, synchronization, and architecture management with AI swarm orchestrat
+- **github-project-management**: Comprehensive GitHub project management with swarm-coordinated issue tracking, project board automat
+- **github-release-management**: Comprehensive GitHub release orchestration with AI swarm coordination for automated versioning, test
+- **hive-mind**: Byzantine fault-tolerant consensus and distributed coordination. Queen-led hierarchical swarm manage
+- **humanizer**: 
+- **image-vision**: 
+- **intl-expansion**: International market expansion strategy. Market selection, entry modes, localization, regulatory com
+- **iot-fleet**: Create and manage Cognitum Seed device fleets with firmware policies
+- **iso42001-specialist**: ISO/IEC 42001:2023 AI Management System (AIMS) specialist for compliance teams running internal audi
+- **istio-traffic-management**: Configure Istio traffic management including routing, load balancing, circuit breakers, and canary d
+- **juejin-publisher-custom**: 
+- **knowledge-ops**: Knowledge base management, ingestion, sync, and retrieval across multiple storage layers (local file
+- **liuyao**: 六爻铜钱卦占卜技能。核心理念："解一卦就是传一道，说一言就是传一智"。支持真实/虚拟起卦，集成儒道哲学。
+- **llm-stock-analyzer**: 
+- **log-activity**: Log activity to activities.csv
+- **ma-playbook**: M&A strategy for acquiring companies or being acquired. Due diligence, valuation, integration, and d
+- **market-nightly-evolution**: Nightly market evolution report — overnight market analysis and strategy prep
+- **mcp-manager**: MCP 服务器智能管理助手。自动检测 MCP 可用性、智能开关、功能问答，提供人性化的 MCP 管理体验。
+- **meeting-analyzer**: Analyzes meeting transcripts and recordings to surface behavioral patterns, communication anti-patte
+- **meeting-insights-analyzer**: Analyzes meeting transcripts and recordings to uncover behavioral patterns, communication insights, 
+- **meeting-notes**: >
+- **memory**: 
+- **meta-cognition**: Meta-cognitive framing for analyze-before-doing, ownership routing, risk gating, minimum-closure pla
+- **mineru-extract**: 
+- **monday-automation**: Automate Monday.com work management including boards, items, columns, groups, subitems, and updates 
+- **multimodal-gen**: 多模态内容生成（图片、视频）。当用户需要生成图片、生成图像、生成视频、AI绘画、AI作图、画一张图、做个视频、文生图、文生视频时使用此技能。自动调用 multimodal-agent 进行生成。
+- **mv-generator**: 
+- **nemo-edit**: 
+- **onboard**: /cs:onboard — Founder interview that populates ~/.claude/company-context.md. The first command to ru
+- **one-drive-automation**: Automate OneDrive file management, search, uploads, downloads, sharing, permissions, and folder oper
+- **orchestration-workflow**: 
+- **parallel-agents**: Multi-agent orchestration patterns. Use when multiple independent tasks can run with different domai
+- **plan-ceo-review**: CEO/founder-mode plan review. Rethink the problem, find the 10-star product, challenge premises, exp
+- **planning-with-files**: 
+- **planning-with-files-ar**: نظام تخطيط الملفات بنمط Manus لتنظيم وتتبع تقدم المهام المعقدة. ينشئ ملفات task_plan.md و findings.m
+- **planning-with-files-zh**: 基于 Manus 风格的文件规划系统，用于组织和跟踪复杂任务的进度。创建 task_plan.md、findings.md 和 progress.md 三个文件。当用户要求规划、拆解或组织多步骤项目、
+- **planning-with-files-zht**: 基於 Manus 風格的檔案規劃系統，用於組織和追蹤複雜任務的進度。建立 task_plan.md、findings.md 和 progress.md 三個檔案。當使用者要求規劃、拆解或組織多步驟專案
+- **prioritization-funnel**: Evaluate and prioritize opportunities through a structured filtering process. Use for resource alloc
+- **product-discovery**: Use when validating product opportunities, mapping assumptions, planning discovery sprints, or testi
+- **product-strategist**: Strategic product leadership toolkit for Head of Product covering OKR cascade generation, quarterly 
+- **project-autoloop**: Project autoloop engine — cron-driven automated project iteration with CEO coordination
+- **project-management**: 项目管理和产品需求分析。当用户需要制定项目计划、编写 PRD 文档、管理任务或进行需求分析时使用此技能。
+- **quality-convergence-engine**: Multi-dimensional Quality Acceptance and Problem Convergence Engine - Deeply deconstruct requirement
+- **ralph-ceo-loop**: 以持续计划-执行-检查-重试循环驱动项目推进，直到开发、部署与验收目标完成。
+- **regulatory-affairs-head**: Senior Regulatory Affairs Manager for HealthTech and MedTech companies. Prepares FDA 510(k), De Novo
+- **relay-image-gen**: 
+- **remote-ollama-gpu-scheduler**: 调度远程 Ollama GPU 资源执行批量 embedding 或推理任务，提升多机环境下的算力利用率。
+- **roadmap-planning**: Guide product managers through strategic roadmap planning by orchestrating prioritization, epic defi
+- **ruflo**: 
+- **sample-skill**: 
+- **setting-okrs-goals**: Help users set effective OKRs and goals. Use when someone is creating quarterly objectives, defining
+- **soushen-hunter**: 
+- **strategic-orchestration**: Coordinate agents toward a unified objective; assign roles, sequence work, prevent conflicts, and de
+- **task-prioritization**: Task prioritization and scoring
+- **tech-debt-tracker**: Scan codebases for technical debt, score severity, track trends, and generate prioritized remediatio
+- **telegram-groups**: Posting, members, Telegram group management
+- **tessl-skill-review**: Evaluate, score, and review an Agent Skill or SKILL.md using Tessl as the primary evaluator. Use whe
+- **testrail**: Sync tests with TestRail. Use when user mentions "testrail", "test management", "test cases", "test 
+- **thinking-antirez**: 蒸馏antirez(Salvatore Sanfilippo)思维模式的实用框架——极简代码哲学、Redis设计哲学、工程美学
+- **thinking-dan-koe**: 蒸馏Dan Koe Human 3.0框架——四象限发展模型、三级意识进化、相位成长体系、超级人类90天计划
+- **thinking-dershowitz**: 蒸馏Alan Dershowitz思维模式的实用框架——律师思维、证据链、合理怀疑、辩护策略
+- **thinking-dj-patil**: 蒸馏DJ Patil的数据科学思维、数据产品化、数据驱动决策的实用框架
+- **thinking-elon-musk**: 蒸馏Elon Musk思维模式的实用框架。当需要第一性原理、硬核工程、快速迭代式思考时激活。
+- **thinking-jeb-blount**: 蒸馏Jeb Blount思维模式的实用框架——管道宗教、狂热拓客、7个管道法则
+- **thinking-jeff-bezos**: 蒸馏Jeff Bezos思维模式的实用框架——Day 1心态、客户倒推、飞轮效应、两个披萨团队
+- **thinking-jensen-huang**: 蒸馏Jensen Huang思维模式的实用框架。当需要加速计算愿景、生态平台思维、长期技术押注式思考时激活。
+- **thinking-jony-ive**: 蒸馏Jony Ive思维模式的实用框架——极简设计哲学、故事驱动、至繁归于至简
+- **thinking-linus-torvalds**: 蒸馏Linus Torvalds思维模式的实用框架——开源哲学、代码说话、务实工程、无情审查
+- **thinking-marty-cagan**: 蒸馏Marty Cagan思维模式的实用框架——产品发现vs交付、inspired产品团队、产品经理核心能力
+- **thinking-mrbeast**: 蒸馏MrBeast思维模式的实用框架——极致内容实验、数据驱动、病毒传播公式
+- **thinking-nate-silver**: 蒸馏Nate Silver的贝叶斯思维、信号与噪声、概率预测的实用框架
+- **thinking-ogilvy**: 蒸馏David Ogilvy思维模式的实用框架——广告教父、调研驱动、大创意、品牌形象
+- **thinking-ray-dalio**: 蒸馏Ray Dalio思维模式的实用框架——原则体系、经济机器、极度透明
+- **thinking-simon**: 蒸馏 Jim Simons（文艺复兴科技）思维模式的实用框架：量化思维、大量小交易、数学即优势
+- **thinking-steve-jobs**: 蒸馏Steve Jobs思维模式的实用框架。当需要极简设计、用户体验偏执、产品哲学式思考时激活。
+- **thinking-yingshi-juufeng**: 蒸馏影视飓风Tim思维模式的实用框架——视觉叙事、技术科普平民化、B站爆款方法论
+- **traffic-acquisition**: Use when driving traffic to Xiaohongshu account from external sources, acquiring new followers beyon
+- **trailofbits-skills**: 
+- **unum-strat**: 
+- **work-to-skill**: 工作即技能：每次完成一项有复用价值的工作后，自动评估并封装为可复用 Skill。让团队在工作中持续进化。
+- **workspace-directory-manager**: Workspace directory manager — maintain cleanliness of ~/.openclaw/ and ~/clawd/
+- **ziliu-publisher**: 字流(Ziliu) - AI驱动的多平台内容分发工具。用于一次创作、智能适配排版、一键分发到16+平台（公众号/知乎/小红书/B站/抖音/微博/X等）。当用户需要多平台发布、内容排版、格式适配时使用。
+- **zoom-automation**: Automate Zoom meeting creation, management, recordings, webinars, and participant tracking via Rube 
+
+### CTO — Chief Technology Officer (190 skills)
+
+- **Inversion Exercise**: Flip core assumptions to reveal hidden constraints and alternative approaches - "what if the opposit
+- **ReasoningBank with AgentDB**: Implement ReasoningBank adaptive learning with AgentDB's 150x faster vector database. Includes traje
+- **Root Cause Tracing**: Systematically trace bugs backward through call stack to find original trigger
+- **Simplification Cascades**: Find one insight that eliminates multiple components - "if this is true, we don't need X, Y, or Z"
+- **Using Git Worktrees**: Create isolated git worktrees with smart directory selection and safety verification
+- **V3 DDD Architecture**: Domain-Driven Design architecture for claude-flow v3. Implements modular, bounded context architectu
+- **V3 Security Overhaul**: Complete security architecture overhaul for claude-flow v3. Addresses critical CVEs (CVE-1, CVE-2, C
+- **V3 Swarm Coordination**: 15-agent hierarchical mesh coordination for v3 implementation. Orchestrates parallel execution acros
+- **accessibility**: Design, implement, and audit inclusive digital products using WCAG 2.2 Level AA standards. Use this 
+- **adr-create**: Create a new Architecture Decision Record with sequential numbering and AgentDB registration
+- **adr-review**: Review code changes against accepted ADRs for compliance violations
+- **adr-verify**: Read back adr-patterns + adr-edges namespaces, surface dangling refs / supersede cycles / status mis
+- **aims-audit**: /cs:aims-audit <scope> — ISO/IEC 42001 AIMS internal-audit 6-question forcing interrogation. Use bef
+- **api-connector-builder**: Build a new API connector or provider by matching the target repo's existing integration pattern exa
+- **app-store-optimization**: App Store Optimization (ASO) toolkit for researching keywords, analyzing competitor rankings, genera
+- **arch-video-cut**: Automatic architecture video editing workflow with self-learning preferences
+- **architecture-decision**: Systematically evaluate architecture decisions, document trade-offs, and select appropriate patterns
+- **architecture-decision-records**: Write and maintain Architecture Decision Records (ADRs) following best practices for technical decis
+- **architecture-patterns**: Software architecture patterns and best practices
+- **auth-system**: 
+- **auto-drive**: 
+- **autonomous-loops**: Patterns and architectures for autonomous Claude Code loops — from simple sequential pipelines to RF
+- **aws-cost-cleanup**: Automated cleanup of unused AWS resources to reduce costs
+- **aws-solution-architect**: Design AWS architectures for startups using serverless patterns and IaC templates. Use when asked to
+- **azure-cloud-architect**: Design Azure architectures for startups and enterprises. Use when asked to design Azure infrastructu
+- **baidu-hot-cn**: 百度热榜监控 / Baidu Hot Topics Monitor. 获取百度热搜榜、搜索趋势、关键词热度 / Get Baidu trending searches, trends, keyword
+- **behuman**: Use when the user wants more human-like AI responses — less robotic, less listy, more authentic. Tri
+- **board-prep**: Board meeting preparation for the adversarial scenario, not the friendly one. Forces numbers-cold ma
+- **boardroom**: /cs:boardroom <brief> — 6-phase multi-role deliberation across the C-suite with Phase 2 isolation, c
+- **browser-auth-flow**: Probe a site's authentication flow for redirect leaks, missing CSRF, weak session cookies, and OAuth
+- **browser-login**: Drive an authentication flow once, sanitize cookies through AIDefence, and vault a reusable cookie h
+- **browser-record**: Open a named, traced browser session into an RVF cognitive container with a ruvector trajectory reco
+- **browser-replay**: Replay a recorded session trajectory against the same URL or a mutated variant; uses browser-selecto
+- **browser-screenshot-diff**: Visual + DOM diff between two recorded sessions at matching trajectory step ids; used for visual reg
+- **cdo-review**: /cs:cdo-review <plan> — Decision-driven Chief Data Officer interrogation of any plan that touches tr
+- **change-review**: Validate CRM/PM changes before PR
+- **channel-truth-run**: Automatic channel and contact synchronization
+- **chaos-engineering**: Use when planning, running, or learning from chaos engineering experiments. Triggers on "chaos exper
+- **cisco-ios-patterns**: Cisco IOS and IOS-XE review patterns for show commands, config hierarchy, wildcard masks, ACL placem
+- **client-workspace**: Create client folder structure in Drive, share docs, check permissions before calls
+- **cloud-security**: Use when assessing cloud infrastructure for security misconfigurations, IAM privilege escalation pat
+- **code-tour**: Create CodeTour `.tour` files — persona-targeted, step-by-step walkthroughs with real file and line 
+- **codebase-onboarding**: Analyze an unfamiliar codebase and generate a structured onboarding guide with architecture map, key
+- **company-wiki**: Company knowledge base — domains, services, infrastructure, accounts, credentials locations, archite
+- **connections-optimizer**: Reorganize the user's X and LinkedIn network with review-first pruning, add/follow recommendations, 
+- **content-factory**: 
+- **context-driven-development**: Creates and maintains project context artifacts (product.md, tech-stack.md, workflow.md, tracks.md) 
+- **context-recovery**: Automatically recover working context after session compaction or when continuation is implied but c
+- **cost-export**: Export cost-tracking telemetry in Prometheus textfile or webhook JSON formats — for external observa
+- **cost-federation**: Consumer-side wiring for ADR-097 Phase 3 federation_spend events — per-peer rolling windows + suspen
+- **cost-optimization**: Optimize cloud costs through resource rightsizing, tagging strategies, reserved instances, and spend
+- **cost-trend**: Read every docs/benchmarks/runs/*.json and surface drift in win rate, latency, escalation rate, and 
+- **csharp-testing**: C# and .NET testing patterns with xUnit, FluentAssertions, mocking, integration tests, and test orga
+- **cto-advisor**: Technical leadership guidance for engineering teams, architecture decisions, and technology strategy
+- **cto-review**: /cs:cto-review <plan> — Architecture and scaling interrogation. Tech debt, scaling cliffs, team scal
+- **daa-agent**: Create and adapt Dynamic Agentic Architecture agents that learn and evolve
+- **dashboard-builder**: Build monitoring dashboards that answer real operator questions for Grafana, SigNoz, and similar pla
+- **ddd-context**: Create and manage a DDD bounded context with standard directory structure
+- **decision-logger**: Two-layer memory architecture for board meeting decisions. Manages raw transcripts (Layer 1) and app
+- **design-system-patterns**: Build scalable design systems with design tokens, theming infrastructure, and component architecture
+- **dispatching-parallel-agents**: Use when facing 2+ independent tasks that can be worked on without shared state or sequential depend
+- **distributed-tracing**: Implement distributed tracing with Jaeger and Tempo for request flow visibility across microservices
+- **doc-coauthoring**: Guide users through a structured workflow for co-authoring documentation. Use when user wants to wri
+- **doc-gen**: Generate and maintain documentation with drift detection
+- **document-release**: Post-ship documentation update. Reads all project docs, cross-references the diff, builds a Diataxis
+- **docx-perfect**: Word文档美化与格式化专家。专门用于将Word文档中的文本内容转换为专业表格格式，应用一致的样式（深蓝色表头、斑马纹数据行、边框），支持版本化迭代管理。当用户需要美化Word文档、创建专业表格、或递
+- **elite-longterm-memory**: Ultimate AI agent memory system for Cursor, Claude, ChatGPT & Copilot. WAL protocol + vector search 
+- **email-ops**: Evidence-first mailbox triage, drafting, send verification, and sent-mail-safe follow-up workflow fo
+- **entropy-manager**: Entropy scanner for codebases — detect disorder and suggest cleanup actions
+- **event-store-design**: Design and implement event stores for event-sourced systems. Use when building event sourcing infras
+- **execute**: /cs:execute <decision> — Generate a 90-day execution plan with weekly milestones, DRIs, and check-in
+- **executing-plans**: Use when you have a written implementation plan to execute in a separate session with review checkpo
+- **feishu-channel**: 飞书 (Lark/Feishu) 与 OpenClaw 的双向集成通道。通过飞书机器人实现消息的接收和发送，支持私聊、群聊、@提及检测、卡片消息、文件传输。当需要通过飞书与 AI 助手交互、接收飞书消
+- **flow-nexus-platform**: Comprehensive Flow Nexus platform management - authentication, sandboxes, app deployment, payments, 
+- **flow-nexus-swarm**: Cloud-based AI swarm deployment and event-driven workflow automation with Flow Nexus platform
+- **founder-mode**: /cs:founder-mode <question> — Auto-routes any founder question to the right C-role advisor or to /cs
+- **fsharp-testing**: F# testing patterns with xUnit, FsUnit, Unquote, FsCheck property-based testing, integration tests, 
+- **gcp-cloud-architect**: Design GCP architectures for startups and enterprises. Use when asked to design Google Cloud infrast
+- **google-auth**: Google OAuth setup, refresh tokens
+- **grill-with-docs**: Docs-anchored grilling session — challenges a plan against the project's existing language (CONTEXT.
+- **gstack-upgrade**: Upgrade gstack to the latest version. Detects global vs vendored install, runs the upgrade, and show
+- **handoff**: Compact the current conversation into a handoff document for another agent to pick up. References ex
+- **hard-call**: /em -hard-call — Framework for Decisions With No Good Options
+- **healthcheck**: Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user a
+- **hive-mind-advanced**: Advanced Hive Mind collective intelligence system for queen-led multi-agent coordination with consen
+- **homelab-network-readiness**: Readiness checklist for homelab VLAN segmentation, local DNS filtering, and WireGuard-style remote a
+- **homelab-pihole-dns**: Pi-hole installation, blocklist management, DNS-over-HTTPS setup, DHCP integration, local DNS record
+- **hybrid-cloud-networking**: Configure secure, high-performance connectivity between on-premises infrastructure and cloud platfor
+- **infra-facebook-cdp**: 
+- **iot-anomalies**: Detect and classify telemetry anomalies on Cognitum Seed devices
+- **iot-witness-verify**: Verify witness chain integrity and detect provenance gaps
+- **jimeng-login**: 即梦AI平台(jimeng.jianying.com)浏览器登录。当需要操作即梦数字人、视频生成等功能前检测到未登录时触发。处理协议同意、抖音OAuth扫码、登录态持久化。
+- **k8s-manifest-generator**: Create production-ready Kubernetes manifests for Deployments, Services, ConfigMaps, and Secrets foll
+- **k8s-security-policies**: Implement Kubernetes security policies including NetworkPolicy, PodSecurityPolicy, and RBAC for prod
+- **kanbanflow-skill**: Manage KanbanFlow boards, columns, and tasks for lightweight workflow tracking and task organization
+- **kg-extract**: Extract entities and relations from source files to build a knowledge graph
+- **kotlin-coroutines-flows**: Kotlin Coroutines and Flow patterns for Android and KMP — structured concurrency, Flow operators, St
+- **kubernetes-operator**: Use when building a Kubernetes Operator — custom controllers that reconcile CRD state. Triggers on "
+- **landing-report**: Read-only queue dashboard for workspace-aware ship. Shows which VERSION slots are currently claimed 
+- **langchain-architecture**: Design LLM applications using LangChain 1.x and LangGraph for agents, memory, and tool integration. 
+- **laravel-security**: Laravel security best practices for authn/authz, validation, CSRF, mass assignment, file uploads, se
+- **linkerd-patterns**: Implement Linkerd service mesh patterns for lightweight, security-focused service mesh deployments. 
+- **managed-agent**: Run an Anthropic Claude Managed Agent — a cloud agent harness (container + filesystem + tools), the 
+- **mcstatus**: 生成 Agent 与 Cron 的模型配置状态报告，展示主模型、fallback 链和任务分配情况。
+- **mediaclaw**: 多平台社交媒体内容发布 Agent。通过浏览器自动化（agent-browser）将内容发布到小红书、抖音、视频号、公众号。支持 AI 内容生成（三种类型：文章/图文/视频）、dry-run 预览、定
+- **merge**: Merge the winning agent's branch into base, archive losers, and clean up worktrees.
+- **microservices-patterns**: Comprehensive microservices patterns skill covering service mesh, traffic management, circuit breake
+- **migration-architect**: Zero-downtime migration planning, compatibility validation, and rollback strategy generation. Tools 
+- **mle-workflow**: Production machine-learning engineering workflow for data contracts, reproducible training, model ev
+- **model-fallback**: 模型自动降级与故障切换。当主模型请求失败、超时、达到速率限制或配额耗尽时，自动切换到备用模型，确保服务连续性。支持多供应商、多优先级的智能模型选择，提供健康监控、自动重试和错误恢复机制。
+- **monitor-stream**: Stream live swarm events using the Monitor tool for real-time observability
+- **mtls-configuration**: Configure mutual TLS (mTLS) for zero-trust service-to-service communication. Use when implementing z
+- **multi-agent-architecture**: 多 Agent 架构设计与智能 Spawn 系统。当需要设计多 Agent 系统、配置专业化 Agent、实现智能任务分发、或优化并发处理能力时使用此技能。
+- **multi-cloud-architecture**: Design multi-cloud architectures using a decision framework to select and integrate services across 
+- **neural-training**: Neural pattern training with SONA (Self-Optimizing Neural Architecture), MoE (Mixture of Experts), a
+- **news-predictor**: 
+- **observability-designer**: Design production observability strategies covering SLI/SLOs, metrics, logs, traces, dashboards, and
+- **onboarding-cro**: When the user wants to optimize post-signup onboarding, user activation, first-run experience, or ti
+- **openclaw-persona-forge**: 为 OpenClaw AI Agent 锻造完整的龙虾灵魂方案。根据用户偏好或随机抽卡， 输出身份定位、灵魂描述(SOUL.md)、角色化底线规则、名字和头像生图提示词。 如当前环境提供已审核的生图 
+- **openclaw-shield**: Security audit engine for OpenClaw configurations. Detects vulnerabilities, misconfigurations, secre
+- **org-health-diagnostic**: Cross-functional organizational health check combining signals from all C-suite roles. Scores 8 dime
+- **pass-secrets**: 使用 Pass（Password Store）统一管理 API 密钥和敏感凭证，支持加密存储与 Git 同步。
+- **pci-compliance**: Implement PCI DSS compliance requirements for secure handling of payment card data and payment syste
+- **plan-orchestrate**: Read a plan document, decompose it into steps, design a per-step agent chain from the ECC catalogue,
+- **postmortem**: /em -postmortem — Honest Analysis of What Went Wrong
+- **programmatic-seo**: You are an expert in **programmatic SEO strategy**—designing systems that generate Design and evalua
+- **prometheus-configuration**: Set up Prometheus for comprehensive metric collection, storage, and monitoring of infrastructure and
+- **python-background-jobs**: Python background job patterns including task queues, workers, and event-driven architecture. Use wh
+- **python-project-structure**: Python project organization, module architecture, and public API design. Use when setting up new pro
+- **quarkus-security**: Quarkus Security best practices for authentication, authorization, JWT/OIDC, RBAC, input validation,
+- **rag-architect**: Use when the user asks to design RAG pipelines, optimize retrieval strategies, choose embedding mode
+- **ralph**: Use when the user explicitly asks to use Ralph mode for persistent plan-execute-check-retry loops th
+- **react-architect**: 
+- **remember**: Explicitly save important knowledge to auto-memory with timestamp and context. Use when a discovery 
+- **remote-access**: ttyd + Tailscale for mobile terminal access
+- **rss-automation**: RSS feed aggregation and monitoring. Parse RSS/Atom feeds, filter entries, track new items, and inte
+- **run**: Run a single experiment iteration. Edit the target file, evaluate, keep or discard.
+- **rvf-manage**: Manage RVF (Ruflo Vector Format) files for portable agent memory and cross-platform transfer
+- **secrets-management**: Implement secure secrets management for CI/CD pipelines using Vault, AWS Secrets Manager, or native 
+- **secrets-vault-manager**: Use when the user asks to set up secret management infrastructure, integrate HashiCorp Vault, config
+- **security-audit**: Audit codebases and infrastructure for security issues. Use when scanning dependencies for vulnerabi
+- **security-audit**: Audit codebases, infrastructure, AND agentic AI systems for security issues. Covers traditional secu
+- **senior-architect**: This skill should be used when the user asks to "design system architecture", "evaluate microservice
+- **seo-competitor-analysis**: Deep SEO competitor analysis — keyword mapping, backlink profiling, content strategy audit, SERP sha
+- **seo-meta-optimizer**: Creates optimized meta titles, descriptions, and URL suggestions based on character limits and best 
+- **service-mesh-observability**: Implement comprehensive observability for service meshes including distributed tracing, metrics, and
+- **site-architecture**: When the user wants to audit, redesign, or plan their website's structure, URL hierarchy, navigation
+- **skill-creator**: Guide for creating effective skills. This skill should be used when users want to create a new skill
+- **skill-finder-cn**: Skill 查找器 / Skill Finder. 帮助发现和安装 ClawHub Skills / Discover and install ClawHub Skills. 回答'有什么技能可以X'
+- **skill-share**: A skill that creates new Claude skills and automatically shares them on Slack using Rube for seamles
+- **skillforge**: Intelligent skill router and creator. Analyzes ANY input to recommend existing skills, improve them,
+- **slo-architect**: Use when defining, reviewing, or operating SLOs/SLIs/error budgets. Triggers on "define an SLO", "wh
+- **social-media-analyzer**: Social media campaign analysis and performance tracking. Calculates engagement rates, ROI, and bench
+- **software-architecture-design**: Designs system structure across monolith/microservices/serverless. Use when structuring systems, sca
+- **sparc-implement**: Run the SPARC Architecture and Implementation phases — design module boundaries, write pseudocode, i
+- **ssh-manager**: 专业 SSH 连接管理工具。处理 Tailscale SSH、主机密钥、代理绕过、远程命令执行等操作。
+- **strategic-compact**: Suggests manual context compaction at logical intervals to preserve context through task phases rath
+- **struct-predictor**: Local protein structure prediction with AlphaFold, Boltz, or Chai. Compare predicted structures, com
+- **swarm-init**: Initialize a multi-agent swarm with anti-drift configuration
+- **tailored-resume-generator**: Analyzes job descriptions and generates tailored resumes that highlight relevant experience, skills,
+- **tc-tracker**: Use when the user asks to track technical changes, create change records, manage TC lifecycles, or h
+- **team-coordinator**: 团队协调与智能任务分配。作为高管，将用户任务拆解并分配给最合适的员工 agent 执行，协调多 agent 并行协作，汇总审核产出。
+- **tech-stack-evaluator**: Technology stack evaluation and comparison with TCO analysis, security assessment, and ecosystem hea
+- **terraform-module-library**: Build reusable Terraform modules for AWS, Azure, GCP, and OCI infrastructure following infrastructur
+- **thinking-feynman**: 蒸馏Richard Feynman的费曼学习法、第一性原理物理思维与怀疑精神的实用框架
+- **thinking-karpathy**: 蒸馏Andrej Karpathy思维模式的实用框架。当需要构建即理解、AI教育平民化、软件2.0思维式思考时激活。
+- **thinking-kelsey-hightower**: 蒸馏Kelsey Hightower的Kubernetes布道、云原生哲学、实用主义的实用框架
+- **thinking-michael-dell**: 蒸馏Michael Dell思维模式的实用框架——直销模式、按需定制、供应链效率、消除中间层
+- **threat-detection**: Use when hunting for threats in an environment, analyzing IOCs, or detecting behavioral anomalies in
+- **tianyancha-cn**: 企业信息查询 - 天眼查/企查查/爱企查数据查询（Bloomberg 终端中国版）
+- **token-guard**: 
+- **trader-portfolio-cg**: Mean-variance portfolio optimization via Conjugate Gradient — 40-60× faster than the legacy Neumann 
+- **using-git-worktrees**: Use when starting feature work that needs isolation from current workspace or before executing imple
+- **ux-heuristics**: Evaluate and improve interface usability using heuristic analysis. Use when the user mentions "usabi
+- **vector-embed**: Generate embeddings via npx ruvector@0.2.25 embed text (ONNX all-MiniLM-L6-v2, 384-dim), normalize, 
+- **vector-index-tuning**: Optimize vector index performance for latency, recall, and memory. Use when tuning HNSW parameters, 
+- **vector-search**: Vector search via embeddings_* (large-scale HNSW) and ruvllm_hnsw_* (WASM router for ≤11 hot pattern
+- **vendor-management**: Use when reviewing, scoring, or auditing third-party SaaS / vendor relationships — running a vendor 
+- **video-caption-burner**: Burn existing subtitles or captions directly into video exports so they remain visible across platfo
+- **visa-doc-translate**: Translate visa application documents (images) to English and create a bilingual PDF with original an
+- **vpe-advisor**: VP of Engineering advisory for startups: delivery throughput (DORA 4 metrics + bottleneck identifica
+- **web3-testing**: Test smart contracts comprehensively using Hardhat and Foundry with unit tests, integration tests, a
+- **wechat-channel**: 微信 (WeChat) 与 OpenClaw 的双向集成通道。基于 Wechaty + PadLocal 实现微信消息的接收和发送，支持私聊、群聊、@提及检测、图片/文件传输。当需要通过微信与 AI 
+- **wechat-toolkit**: 微信公众号一站式工具包 — 集成文章搜索、文章下载、AI洗稿改写、公众号发布四大功能。当用户需要搜索/下载/改写/发布微信公众号文章时使用。
+- **wecom-automation**: 企业微信个人账号直连自动化。基于 Wechaty 框架实现企业微信消息接收、自动同意好友、知识库问答、人工介入提醒。适用于企业微信个人机器人和自动化助手场景。
+- **weixin-channels-publish**: 微信视频号助手网页版视频发布全流程。通过浏览器自动化操控 channels.weixin.qq.com 完成登录检测、扫码登录、上传视频、填写描述和短标题、截图确认后发布或保存草稿。触发场景：用户需要
+- **whatsapp-outreach-run**: Automatic WhatsApp outreach agent run
+- **whatsapp-send**: Baileys WhatsApp message sending
+- **workflow-automation**: Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, 
+- **x-api**: X/Twitter API integration for posting tweets, threads, reading timelines, search, and analytics. Cov
+
+### PE — Practical Engineer (781 skills)
+
+- **Agent Browser**: A fast Rust-based headless browser automation CLI with Node.js fallback that enables AI agents to na
+- **AgentDB Learning Plugins**: Create and train AI learning plugins with AgentDB's 9 reinforcement learning algorithms. Includes De
+- **AgentDB Memory Patterns**: Implement persistent memory patterns for AI agents using AgentDB. Includes session memory, long-term
+- **AgentDB Performance Optimization**: Optimize AgentDB performance with quantization (4-32x memory reduction), HNSW indexing (150x faster 
+- **AgentDB Vector Search**: Implement semantic vector search with AgentDB for intelligent document retrieval, similarity matchin
+- **Brainstorming Ideas Into Designs**: Interactive idea refinement using Socratic method to develop fully-formed designs
+- **Collision-Zone Thinking**: Force unrelated concepts together to discover emergent properties - "What if we treated X like Y?"
+- **Dispatching Parallel Agents**: Use multiple Claude agents to investigate and fix independent problems concurrently
+- **FFmpeg Video Editor**: Generate FFmpeg commands from natural language video editing requests - cut, trim, convert, compress
+- **Financial Tracker**: Track business income and expenses in structured CSV format. Categorize transactions, monitor cash f
+- **Market Research**: Size markets, analyze competitors, and validate opportunities with practical frameworks and free dat
+- **Meta-Pattern Recognition**: Spot patterns appearing in 3+ domains to find universal principles
+- **Nginx**: Configure Nginx for reverse proxy, load balancing, SSL termination, and high-performance static serv
+- **Pair Programming**: AI-assisted pair programming with multiple modes (driver/navigator/switch), real-time verification, 
+- **Preserving Productive Tensions**: Recognize when disagreements reveal valuable context, preserve multiple valid approaches instead of 
+- **ReasoningBank Intelligence**: Implement adaptive learning with ReasoningBank for pattern recognition, strategy optimization, and c
+- **Remembering Conversations**: Search previous Claude Code conversations for facts, patterns, decisions, and context using semantic
+- **Self-Improving Agent (With Self-Reflection)**: Self-reflection + Self-criticism + Self-learning + Self-organizing memory. Agent evaluates its own w
+- **Skill Builder**: Create new Claude Code Skills with proper YAML frontmatter, progressive disclosure structure, and co
+- **Subagent-Driven Development**: Execute implementation plan by dispatching fresh subagent for each task, with code review between ta
+- **Systematic Debugging**: Four-phase debugging framework that ensures root cause investigation before attempting fixes. Never 
+- **Test-Driven Development (TDD)**: Write the test first, watch it fail, write minimal code to pass
+- **Testing Anti-Patterns**: Never test mock behavior. Never add test-only methods to production classes. Understand dependencies
+- **Tracing Knowledge Lineages**: Understand how ideas evolved over time to find old solutions for new problems and avoid repeating pa
+- **V3 CLI Modernization**: CLI modernization and hooks system enhancement for claude-flow v3. Implements interactive prompts, c
+- **V3 Core Implementation**: Core module implementation for claude-flow v3. Implements DDD domains, clean architecture patterns, 
+- **V3 Deep Integration**: Deep agentic-flow@alpha integration implementing ADR-001. Eliminates 10,000+ duplicate lines by buil
+- **V3 MCP Optimization**: MCP server optimization and transport layer enhancement for claude-flow v3. Implements connection po
+- **V3 Memory Unification**: Unify 6+ memory systems into AgentDB with HNSW indexing for 150x-12,500x search improvements. Implem
+- **V3 Performance Optimization**: Achieve aggressive v3 performance targets: 2.49x-7.47x Flash Attention speedup, 150x-12,500x search 
+- **Verification & Quality Assurance**: Comprehensive truth scoring, code quality verification, and automatic rollback system with 0.95 accu
+- **When Stuck - Problem-Solving Dispatch**: Dispatch to the right problem-solving technique based on how you're stuck
+- **Writing Plans**: Create detailed implementation plans with bite-sized tasks for engineers with zero codebase context
+- **a11y-audit**: Accessibility audit skill for scanning, fixing, and verifying WCAG 2.2 Level A and AA compliance acr
+- **accessibility-compliance-accessibility-audit**: You are an accessibility expert specializing in WCAG compliance, inclusive design, and assistive tec
+- **acp**: ACP channel plugin for OpenClaw — configure and use. Covers single/multi identity configuration, str
+- **add-model-descriptions**: Add descriptions for new models from the HuggingFace router to chat-ui configuration. Use when new m
+- **adr-index**: Build or rebuild the ADR index + dependency graph by running scripts/import.mjs (handles v3-style an
+- **adversarial-reviewer**: Adversarial code review that breaks the self-review monoculture. Use when you want a genuinely criti
+- **aeo**: Answer Engine Optimization (AEO) skill — optimize content to be cited by AI language models (ChatGPT
+- **afrexai-compliance-audit**: Run internal compliance audits against major governance and security frameworks, highlighting gaps, 
+- **afrexai-compliance-engine**: 
+- **afrexai-prd-engine**: 
+- **after-sales**: Use when managing post-purchase experience, building customer loyalty, or increasing repeat purchase
+- **agent-builder**: 
+- **agent-model-switcher**: 批量查看和切换子 agent 的模型配置，用于统一调整多 agent 的 provider/model 设置。
+- **agent-orchestration-multi-agent-optimize**: Optimize multi-agent systems with coordinated profiling, workload distribution, and cost-aware orche
+- **agent-patterns**: Format SPAWN REQUEST messages to launch parallel agents, generate structured agent status reports, a
+- **agent-team-orchestration**: Orchestrate multi-agent teams with defined roles, task lifecycles, handoff protocols, and review wor
+- **agent-team-orchestration-v3-public**: Build and run multi-agent content production teams on OpenClaw with single-repo architecture, symlin
+- **agenthub**: Multi-agent collaboration plugin that spawns N parallel subagents competing on the same task via git
+- **agentic-engineering**: Operate as an agentic engineer using eval-first execution, decomposition, and cost-aware model routi
+- **ai-first-engineering**: Engineering operating model for teams where AI agents generate a large share of implementation outpu
+- **ai-regression-testing**: Regression testing strategies for AI-assisted development. Sandbox-mode API testing without database
+- **ai-seo**: Optimize content to get cited by AI search engines — ChatGPT, Perplexity, Google AI Overviews, Claud
+- **ai-video-gen**: End-to-end AI video generation - create videos from text prompts using image generation, video synth
+- **ai-viral-team-video-generation**: 视频生成 - AI视频生成与后期剪辑制作 职责：调用Vidu生成视频、模型选择、Prompt调优、视频拼接、质量检测 
+- **airflow-dag-patterns**: Build production Apache Airflow DAGs with best practices for operators, sensors, testing, and deploy
+- **algorithmic-art**: Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. U
+- **android-clean-architecture**: Clean Architecture patterns for Android and Kotlin Multiplatform projects — module structure, depend
+- **angular-developer**: Generates Angular code and provides architectural guidance. Trigger when creating projects, componen
+- **angular-migration**: Migrate from AngularJS to Angular using hybrid mode, incremental component rewriting, and dependency
+- **anti-reversing-techniques**: Understand anti-reversing, obfuscation, and protection techniques encountered during software analys
+- **antislop**: Detect and fix AI-generated writing patterns (slop). Comprehensive detection with 45+ patterns, tier
+- **api-design**: REST API design patterns including resource naming, status codes, pagination, filtering, error respo
+- **api-design-patterns**: Comprehensive API design patterns covering REST, GraphQL, gRPC, versioning, authentication, and mode
+- **api-design-principles**: Master REST and GraphQL API design principles to build intuitive, scalable, and maintainable APIs th
+- **api-design-reviewer**: Comprehensive REST API design review with automated linting, breaking-change detection, and design s
+- **api-docs**: Generate API documentation from source code with JSDoc and OpenAPI support
+- **api-gateway**: 
+- **api-provider-setup**: 添加和配置第三方 API 中转站供应商到 OpenClaw。当用户需要添加新的 API 供应商、配置中转站、设置自定义模型端点时使用此技能。支持 Anthropic 兼容和 OpenAI 兼容的 AP
+- **api-provider-status**: 查询 API 供应商的余额、用量与可用状态，支持多供应商监控与定时汇报。
+- **api-quota-monitor**: 查询监控 API 供应商/服务的额度、余额、消耗情况。支持官方供应商(Gemini/xAI/ZAI/Minimax/OpenRouter等)、中转站(AIXN/Provider-A等)、订阅服务(Br
+- **api-test-suite-builder**: Use when the user asks to generate API tests, create integration test suites, test REST endpoints, o
+- **api-toolkit**: 通用 REST API 工具包，用于快速接入第三方服务、调试端点和构建自动化流程。
+- **artifacts-builder**: Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern fronten
+- **arxiv-automation**: Search and monitor arXiv papers. Query by topic, author, or category. Track new papers, download PDF
+- **async-python-patterns**: Master Python asyncio, concurrent programming, and async/await patterns for high-performance applica
+- **atlassian-admin**: Atlassian Administrator for managing and organizing Atlassian products (Jira, Confluence, Bitbucket,
+- **atlassian-templates**: Atlassian Template and Files Creator/Modifier expert for creating, modifying, and managing Jira and 
+- **attack-tree-construction**: Build comprehensive attack trees to visualize threat paths. Use when mapping attack scenarios, ident
+- **audit-code**: Run a two-pass, multidisciplinary code audit led by a tie-breaker lead, combining security, performa
+- **auth-implementation-patterns**: Master authentication and authorization patterns including JWT, OAuth2, session management, and RBAC
+- **auth-manager**: 网页登录态管理。使用 OpenClaw 内置 browser (profile=openclaw) 统一管理各平台登录状态，定期检查可用性。
+- **auto-memory**: Indestructible agent memory — permanently stored, never lost. Save decisions, identity, and context 
+- **automation-audit-ops**: Evidence-first automation inventory and overlap audit workflow for ECC. Use when the user wants to k
+- **autonomous-agent-harness**: Transform Claude Code into a fully autonomous agent system with persistent memory, scheduled operati
+- **autopilot-loop**: Run an autonomous /loop iteration -- check progress, work on next task, schedule next wake
+- **autopilot-predict**: Use learned patterns and current state to predict the optimal next action
+- **autoplan**: Auto-review pipeline — reads the full CEO, design, eng, and DX review skills from disk and runs them
+- **autoresearch-agent**: Autonomous experiment loop that optimizes any file by a measurable metric. Inspired by Karpathy's au
+- **backend-development**: 老王我是后端通才，啥后端技术都能搞！但你得告诉老王你想用啥语言，别tm让老王我瞎猜！ 后端服务开发专家（通才）。精通多种后端技术栈，能够根据需求选择最合适的技术方案。 当用户需要开发API、数据库设计
+- **backend-patterns**: Backend architecture patterns, API design, database optimization, and server-side best practices for
+- **backtesting-frameworks**: Build robust backtesting systems for trading strategies with proper handling of look-ahead bias, sur
+- **basecamp-automation**: Automate Basecamp project management, to-dos, messages, people, and to-do list organization via Rube
+- **bash-defensive-patterns**: Master defensive Bash programming techniques for production-grade scripts. Use when writing robust s
+- **bash-pro**: Master of defensive Bash scripting for production automation, CI/CD pipelines, and system utilities.
+- **bat-cat**: A cat clone with syntax highlighting, line numbers, and Git integration - a modern replacement for c
+- **bats-testing-patterns**: Master Bash Automated Testing System (Bats) for comprehensive shell script testing. Use when writing
+- **bazel-build-optimization**: Optimize Bazel builds for large-scale monorepos. Use when configuring Bazel, implementing remote exe
+- **bazi-fortune**: 八字四柱命理分析工具，属于 fortune-telling-skills 运势测算套件。基于子平真诠体系， 通过出生年月日时推算四柱八字、十神关系、五行旺衰、大运流年，揭示命局格局和人生走向。 排盘为
+- **bb-browser**: AI agent browser automation via CDP. Use when you need to access websites that require login, scrape
+- **benchmark**: Use this skill to measure performance baselines, detect regressions before/after PRs, and compare st
+- **benchmark-models**: Cross-model benchmark for gstack skills. Runs the same prompt through Claude, GPT (via Codex CLI), a
+- **billing-automation**: Build automated billing systems for recurring payments, invoicing, subscription lifecycle, and dunni
+- **binary-analysis-patterns**: Master binary analysis patterns including disassembly, decompilation, control flow analysis, and cod
+- **bio-orchestrator**: Meta-agent that routes bioinformatics requests to specialised sub-skills. Handles file type detectio
+- **bitbucket-automation**: Automate Bitbucket repositories, pull requests, branches, issues, and workspace management via Rube 
+- **block-no-verify-hook**: Configure a PreToolUse hook to prevent AI agents from skipping git pre-commit hooks with --no-verify
+- **blueprint**: Turn a one-line objective into a step-by-step construction plan for multi-session, multi-agent engin
+- **board-deck-builder**: Assembles comprehensive board and investor update decks by pulling perspectives from all C-suite rol
+- **brand-identity**: Build a complete brand identity for a solopreneur business from scratch or refresh an existing one. 
+- **brand-landingpage**: Brand-first landing page designer — interviews the user to discover brand identity (adjectives, colo
+- **brand-voice**: Enforce brand tone and style consistency across all content creation skills. Load brand profiles fro
+- **brevo-automation**: Automate Brevo (Sendinblue) tasks via Rube MCP (Composio): manage email campaigns, create/edit templ
+- **browse**: Fast headless browser for QA testing and site dogfooding. Navigate any URL, interact with elements, 
+- **browser-extract**: Extract structured data via stored browser-templates or one-shot DOM queries, with mandatory AIDefen
+- **browser-form-fill**: Fill a web form by mapping field-name → value, with optional template lookup from browser-templates 
+- **browser-login-monitor**: 
+- **browser-profile-guide**: OpenClaw Browser 配置文件系统完全指南 — 哪个 profile 何时用、如何选
+- **browser-scrape**: DEPRECATED in v0.2.0 -- use browser-extract instead; this is a thin shim for backward compatibility,
+- **browser-test**: UI test recipe -- composes browser-record (capture) + browser-replay (verify) so every test produces
+- **bun-runtime**: Bun as runtime, package manager, bundler, and test runner. When to choose Bun vs Node, migration not
+- **business-growth-skills**: 4 business growth agent skills and plugins for Claude Code, Codex, Gemini CLI, Cursor, OpenClaw. Cus
+- **call-prep**: 
+- **canary**: Post-deploy canary monitoring. Watches the live app for console errors, performance regressions, and
+- **canary-watch**: Use this skill to monitor and verify a deployed URL after releases — checks HTTP endpoints, SSE stre
+- **capacity-planner**: Use when an ops leader (Director of CX, Head of Support, VP Ops, Head of BizOps, Head of IT ops, Hea
+- **capture**: Captures and organizes chaotic brain dumps into a structured, actionable system with zero informatio
+- **careful**: Safety guardrails for destructive commands. Warns before rm -rf, DROP TABLE, force-push, git reset -
+- **carrier-relationship-management**: Codified expertise for managing carrier portfolios, negotiating freight rates, tracking carrier perf
+- **challenge**: Pre-mortem plan analysis. Imagine the plan failed 12 months from now and work backwards to find the 
+- **changelog-generator**: Automatically creates user-facing changelogs from git commits by analyzing commit history, categoriz
+- **chat-format**: Format prompts for different LLM providers with chat templates and HNSW-powered context retrieval
+- **chief-ai-officer-advisor**: Chief AI Officer advisory for startups: model build-vs-buy decisions (API vs fine-tune vs in-house),
+- **chief-data-officer-advisor**: Chief Data Officer advisory for startups: AI training data rights and consent provenance, data produ
+- **ci-cd-pipeline-builder**: Generate pragmatic CI/CD pipelines from detected project stack signals — fast baseline generation, r
+- **cinematic-video-gen**: AI视频生成质量增强引擎。解决AI视频角色僵硬、表情空白、动作机械的问题。通过高级prompt工程+角色卡+运镜指令+表情库，让AI视频角色活起来。触发词：视频质量、角色僵硬、灵动、表情、动作、cin
+- **circleci-automation**: Automate CircleCI tasks via Rube MCP (Composio): trigger pipelines, monitor workflows/jobs, retrieve
+- **ciso-advisor**: Security leadership for growth-stage companies. Risk quantification in dollars, compliance roadmap (
+- **ck**: Persistent per-project memory for Claude Code. Auto-loads project context on session start, tracks s
+- **claude-api**: Build, debug, and optimize Claude API / Anthropic SDK apps. Apps built with this skill should includ
+- **claude-code-expert**: Especialista profundo em Claude Code - CLI da Anthropic. Maximiza produtividade com atalhos, hooks, 
+- **claude-code-runner**: Execute programming tasks via Claude Code using PTY-based invocation. Handles non-TTY environments, 
+- **claude-devfleet**: Orchestrate multi-agent coding tasks via Claude DevFleet — plan projects, dispatch parallel agents i
+- **claw-ancestry-pca**: Ancestry decomposition PCA against the Simons Genome Diversity Project
+- **cli-developer**: Use when building CLI tools, implementing argument parsing, or adding interactive prompts. Invoke fo
+- **click-path-audit**: Trace every user-facing button/touchpoint through its full state change sequence to find bugs where 
+- **clickhouse-io**: ClickHouse database patterns, query optimization, analytics, and data engineering best practices for
+- **clickup-automation**: Automate ClickUp project management including tasks, spaces, folders, lists, comments, and team oper
+- **client-discovery**: Analyze client automation/AI requests into structured scoping with hours, pricing, and priorities
+- **cloudflare-pages**: Deploy static sites to Cloudflare Pages with custom domains and CI/CD. Use when the user wants to de
+- **coda-automation**: Automate Coda tasks via Rube MCP (Composio): manage docs, pages, tables, rows, formulas, permissions
+- **code-material-gen**: 代码生成配图素材。用 HTML/CSS + Playwright 渲染高质量中文配图。 不依赖任何AI图片API，100%代码生成，字体可控、像素精确、零成本。 Trigger: "代码生成素材", 
+- **code-moment-codex-switch**: 
+- **code-review**: AI code review for PR or local changes
+- **code-review-excellence**: Master effective code review practices to provide constructive feedback, catch bugs early, and foste
+- **code-reviewer**: Code review automation for TypeScript, JavaScript, Python, Go, Swift, Kotlin. Analyzes PRs for compl
+- **code-to-image**: 最强免费生图方案：用前端代码(HTML/CSS/JS/Canvas/SVG)设计画面，通过 Playwright 渲染为任意分辨率高清 PNG。 零API成本、无限分辨率、中文100%准确、代码可复用
+- **code-to-prd**: Reverse-engineer any codebase into a complete Product Requirements Document (PRD). Analyzes routes, 
+- **codex**: OpenAI Codex CLI wrapper — three modes. Code review: independent diff review via codex review with p
+- **codex-cc-guide**: 如何用 ACP sessions_spawn 调用 Claude Code / Codex 写代码 — 小code 团队编码任务指南
+- **coding-agent**: Delegate coding tasks to Codex, Claude Code, or Pi agents via background process. Use when: (1) buil
+- **coding-agent-orchestrator**: 
+- **coding-standards**: Baseline cross-project coding conventions for naming, readability, immutability, and code-quality re
+- **collaboration**: Guide for collaborating on GitHub projects. This skill should be used when contributing to projects,
+- **command-guide**: Claude Code Command Selection Guide - Automatically recommend and select the right commands, agents,
+- **command-registry-integration**: Integrate new chat commands into OpenClaw's formal command registry
+- **commercial-policy**: Use when designing or revising a company's commercial policy — the rules of engagement governing dis
+- **commit-analyzer**: Analyze git commit frequency, categories, and timing patterns to diagnose autonomous agent activity 
+- **company-investment-research**: Structured, multi-dimensional company investment research framework for AI agents and human analysts
+- **competitive-ads-extractor**: Extracts and analyzes competitors' ads from ad libraries (Facebook, LinkedIn, etc.) to understand wh
+- **competitive-landscape**: Analyze competition, identify differentiation opportunities, and develop winning market positioning 
+- **competitive-offer-architect**: Design irresistible offer packages with real salary benchmarks, negotiation playbooks, and competiti
+- **competitor-alternatives**: When the user wants to create competitor comparison or alternative pages for SEO and sales enablemen
+- **competitor-price-tracker**: Monitor competitor pricing pages and send alerts when prices change. Track discount patterns, promot
+- **compliance-os**: Compliance OS — meta-orchestrator that lets compliance teams CONFIGURE which frameworks apply, COMPU
+- **compliance-readiness**: /cs:compliance-readiness <program> — Multi-framework compliance officer 6-question forcing interroga
+- **compose-multiplatform-patterns**: Compose Multiplatform and Jetpack Compose patterns for KMP projects — state management, navigation, 
+- **composio**: Build AI agents and apps with Composio - access 200+ external tools with Tool Router or direct execu
+- **configure-ecc**: Interactive installer for Everything Claude Code — guides users through selecting and installing ski
+- **confluence-expert**: Atlassian Confluence expert for creating and managing spaces, knowledge bases, and documentation. Co
+- **content-extract**: Robust URL-to-Markdown extraction for OpenClaw workflows. Use when the user wants to "extract/summar
+- **content-hash-cache-pattern**: Cache expensive file processing results using SHA-256 content hashes — path-independent, auto-invali
+- **content-humanizer**: Makes AI-generated content sound genuinely human — not just cleaned up, but alive. Use when content 
+- **context-budget**: Audits Claude Code context window consumption across agents, skills, MCP servers, and rules. Identif
+- **context-engine**: Loads and manages company context for all C-suite advisor skills. Reads ~/.claude/company-context.md
+- **context-restore**: Restore working context saved earlier by /context-save. Loads the most recent saved state (across al
+- **context-save**: Save working context. Captures git state, decisions made, and remaining work so any future session c
+- **continuous-learning**: [DEPRECATED - use continuous-learning-v2] Legacy v1 stop-hook skill extractor. v2 is a strict supers
+- **continuous-learning-v2**: Instinct-based learning system that observes sessions via hooks, creates atomic instincts with confi
+- **conventional-commits**: Format commit messages using the Conventional Commits specification. Use when creating commits, writ
+- **cost-booster-edit**: Apply a simple code transform via agent-booster's WASM engine — sub-millisecond, deterministic, $0 (
+- **cost-budget-check**: Read accumulated cost-tracking spend + budget config, compute utilization, emit 50/75/90/100% alert 
+- **cost-track**: Auto-capture per-session token usage from the Claude Code session jsonl and persist to the cost-trac
+- **cost-tracking**: Track and report Claude Code token usage, spending, and budgets from a local cost-tracking database.
+- **council**: Convene a four-voice council for ambiguous decisions, tradeoffs, and go/no-go calls. Use when multip
+- **cpp-coding-standards**: C++ coding standards based on the C++ Core Guidelines (isocpp.github.io). Use when writing, reviewin
+- **cpp-testing**: Use only when writing/updating/fixing C++ tests, configuring GoogleTest/CTest, diagnosing failing or
+- **cqrs-implementation**: Implement Command Query Responsibility Segregation for scalable architectures. Use when separating r
+- **create-plugin**: Scaffold a new Claude Code plugin with proper directory structure, plugin.json, skills, commands, an
+- **create-project**: Create new project with breakdown
+- **crm-import**: Import data from staging to master CRM with validation
+- **cro-review**: /cs:cro-review <plan> — Pipeline-paranoid interrogation of revenue, win rate, NRR, and ramp time.
+- **cron-manager**: 创建、监控、诊断和修复 OpenClaw cron 任务，支持自然语言时间与常见故障排查。
+- **cron-model-migration**: Safely change models for OpenClaw cron jobs without leaving behind session/model mismatch errors. Us
+- **cron-schedule**: Schedule persistent background workers via CronCreate
+- **cross-platform-poster**: Publish one piece of content across MoltX, Twitter/X, Discord, and Telegram with platform-specific f
+- **cross-team-comm**: 通过 Tailscale、SSH、Gateway API 与 sessions_send 实现跨团队、跨实例的 OpenClaw 协作通信。
+- **crosspost**: Multi-platform content distribution across X, LinkedIn, Threads, and Bluesky. Adapts content per pla
+- **css-ninja**: 
+- **csv-pipeline**: Process, transform, analyze, and report on CSV and JSON data files. Use when the user needs to filte
+- **customer-success-manager**: Monitors customer health, predicts churn risk, and identifies expansion opportunities using weighted
+- **dart-flutter-patterns**: Production-ready Dart and Flutter patterns covering null safety, immutable state, async composition,
+- **data-scraper-agent**: Build a fully automated AI-powered data collection agent for any public source — job boards, prices,
+- **data-storytelling**: Transform data into compelling narratives using visualization, context, and persuasive structure. Us
+- **database-designer**: Use when the user asks to design database schemas, plan data migrations, optimize queries, choose be
+- **database-migration**: Execute database migrations across ORMs and platforms with zero-downtime strategies, data transforma
+- **database-migrations**: Database migration best practices for schema changes, data migrations, rollbacks, and zero-downtime 
+- **database-schema-designer**: Use when the user asks to create ERD diagrams, normalize database schemas, design table relationship
+- **dbt-transformation-patterns**: Master dbt (data build tool) for analytics engineering with model organization, testing, documentati
+- **debugging-strategies**: Master systematic debugging techniques, profiling tools, and root cause analysis to efficiently trac
+- **decide**: /cs:decide <memo> — Log a decision to two-layer memory via decision-logger. Approved memo becomes du
+- **deepwork-tracker**: Track deep work sessions locally (start/stop/status) and generate a GitHub-contribution-graph style 
+- **delegation**: Architecture-first workflow for delegating complex projects to AI coding agents. Ensures code fits t
+- **demo-video**: Use when the user asks to create a demo video, product walkthrough, feature showcase, animated prese
+- **dependency-auditor**: Audit project dependencies for vulnerabilities, license risks, upgrade planning, and ecosystem healt
+- **dependency-check**: Scan project dependencies for known vulnerabilities and CVEs
+- **dependency-upgrade**: Manage major dependency version upgrades with compatibility analysis, staged rollout, and comprehens
+- **deploy-website**: Website deployment via GitHub PR + Cloud Build
+- **deployment-automation**: Automate application deployment to cloud platforms and servers. Use when setting up CI/CD pipelines,
+- **deployment-patterns**: Deployment workflows, CI/CD pipeline patterns, Docker containerization, health checks, rollback stra
+- **deployment-pipeline-design**: Design multi-stage CI/CD pipelines with approval gates, security checks, and deployment orchestratio
+- **design-html**: Design finalization: generates production-quality Pretext-native HTML/CSS. Works with approved mocku
+- **design-review**: Designer's eye QA: finds visual inconsistency, spacing issues, hierarchy problems, AI slop patterns,
+- **design-thinking**: Design Thinking methodology for human-centered innovation. Covers the 5-phase IDEO/Stanford d.school
+- **developer-growth-analysis**: Analyzes your recent Claude Code chat history to identify coding patterns, development gaps, and are
+- **devex-review**: Live developer experience audit. Uses the browse tool to actually TEST the developer experience: nav
+- **digital-human-api**: Digital human video generation via Qingyun API — avatar-based talking head videos
+- **discover-plugins**: Discover and recommend ruflo plugins based on your workflow, installed MCP tools, and current task
+- **django-celery**: Django + Celery async task patterns — configuration, task design, beat scheduling, retries, canvas w
+- **django-patterns**: Django architecture patterns, REST API design with DRF, ORM best practices, caching, signals, middle
+- **django-security**: Django security best practices, authentication, authorization, CSRF protection, SQL injection preven
+- **django-tdd**: Django testing strategies with pytest-django, TDD methodology, factory_boy, mocking, coverage, and t
+- **django-verification**: Verification loop for Django projects: migrations, linting, tests with coverage, security scans, and
+- **dmux-workflows**: Multi-agent orchestration using dmux (tmux pane manager for AI agents). Patterns for parallel agent 
+- **docker-development**: Docker and container development agent skill and plugin for Dockerfile optimization, docker-compose 
+- **docker-essentials**: Essential Docker commands and workflows for container management, image operations, and debugging.
+- **docker-patterns**: Docker and Docker Compose patterns for local development, container security, networking, volume str
+- **document-generate**: Generate missing documentation from scratch for a feature, module, or entire project. Uses the Diata
+- **documentation-lookup**: Use up-to-date library and framework docs via Context7 MCP instead of training data. Activates for s
+- **documents**: Manage company & personal documents — rekvizity, passport, INN, bank details, scans. Store locally +
+- **docx**: Comprehensive document creation, editing, and analysis with support for tracked changes, comments, f
+- **domain-name-brainstormer**: Generates creative domain name ideas for your project and checks availability across multiple TLDs (
+- **dossier**: Decision-grade entity research skill — produces a hypothesis-tested dossier on a specific company, p
+- **dossier-collect**: Build a graph-structured dossier on a seed entity via parallel fan-out + recursive expansion across 
+- **dotnet-backend-patterns**: Master C#/.NET backend development patterns for building robust APIs, MCP servers, and enterprise ap
+- **dotnet-patterns**: Idiomatic C# and .NET patterns, conventions, dependency injection, async/await, and best practices f
+- **douyin-publisher**: 抖音图文/视频发布（OpenClaw Browser 自动化）：登录检测→内容校验→上传页导航→填标题/正文→上传封面+素材→暂存离开。
+- **duckdb-en**: DuckDB CLI specialist for SQL analysis, data processing and file conversion. Use for SQL queries, CS
+- **e2e-testing-patterns**: Master end-to-end testing with Playwright and Cypress to build reliable test suites that catch bugs,
+- **ecc-guide**: Guide users through ECC's current agents, skills, commands, hooks, rules, install profiles, and proj
+- **ecc-tools-cost-audit**: Evidence-first ECC Tools burn and billing audit workflow. Use when investigating runaway PR creation
+- **electron-app-dev**: 老王我搞Electron好多年了，这玩意儿写跨平台应用真tm香！ Electron桌面应用开发专家。精通electron-vite、TypeScript、React、IPC通信、窗口管理、原生功能集成
+- **elite-github-skills-hub**: Curated hub of the highest-value GitHub skills/repos for Claude Code, Cursor, Codex, Gemini CLI, and
+- **email-read**: Read inbox and sent via Gmail API
+- **email-send-bulk**: Gmail API bulk email sending
+- **email-template-builder**: Build complete transactional email systems: React Email templates, provider integration (Resend, Pos
+- **energy-procurement**: Codified expertise for electricity and gas procurement, tariff optimization, demand charge managemen
+- **engineering-advanced-skills**: 25 advanced engineering agent skills and plugins for Claude Code, Codex, Gemini CLI, Cursor, OpenCla
+- **engineering-skills**: 23 engineering agent skills and plugins for Claude Code, Codex, Gemini CLI, Cursor, OpenClaw, and 6 
+- **enterprise-agent-ops**: Operate long-lived agent workloads with observability, security boundaries, and lifecycle management
+- **env-secrets-manager**: Manage environment-variable hygiene and secrets safety across local development and production. Prac
+- **env-setup**: Claude Code 环境一键同步工具。从 GitHub 仓库同步所有配置到本地：output-styles 风格、CLAUDE.md 全局提示词、MCP 服务器配置、Agent 配置、Plugin
+- **epic-design**: Build immersive, cinematic 2.5D interactive websites using scroll storytelling, parallax depth, text
+- **erc-8004**: Register AI agents on Ethereum mainnet using ERC-8004 (Trustless Agents). Use when the user wants to
+- **error-handling**: Patterns for robust error handling across TypeScript, Python, and Go. Covers typed errors, error bou
+- **error-handling-patterns**: Master error handling patterns across languages including exceptions, Result types, error propagatio
+- **eu-ai-act-specialist**: EU AI Act (Regulation (EU) 2024/1689) operational compliance for compliance teams. Three Article-lev
+- **eval-harness**: Formal evaluation framework for Claude Code sessions implementing eval-driven development (EDD) prin
+- **evaluation-methodology**: PluginEval quality methodology — dimensions, rubrics, statistical methods, and scoring formulas. Use
+- **exa-search**: Neural search via Exa MCP for web, code, and company research. Use when the user needs web search, c
+- **experiment-designer**: Use when planning product experiments, writing testable hypotheses, estimating sample size, prioriti
+- **experiment-runner-run**: Run survival arena experiments
+- **expo-tailwind-setup**: Set up Tailwind CSS v4 in Expo with react-native-css and NativeWind v5 for universal styling
+- **extract**: Turn a proven pattern or debugging solution into a standalone reusable skill with SKILL.md, referenc
+- **fabric-pattern**: Integrate Daniel Miessler's Fabric patterns into local workflows for structured prompting, text tran
+- **fal-ai-media**: Unified media generation via fal.ai MCP — image, video, and audio. Covers text-to-image (Nano Banana
+- **fast-browser-use**: Use when the user wants extremely fast browser automation via fast-browser-use / fbu, especially for
+- **fastapi-patterns**: FastAPI patterns for async APIs, dependency injection, Pydantic request and response models, OpenAPI
+- **fastapi-templates**: Create production-ready FastAPI projects with async patterns, dependency injection, and comprehensiv
+- **fda-consultant-specialist**: FDA regulatory consultant for medical device companies. Provides 510(k)/PMA/De Novo pathway guidance
+- **fda-qsr-audit-prep**: /cs:fda-qsr-audit-prep <scope> — FDA 21 CFR 820 (QSR / QMSR) audit 6-question forcing interrogation.
+- **federation-audit**: Query federation audit logs with compliance filtering
+- **federation-init**: Initialize federation on this node — generate keypair and configure peers
+- **federation-status**: Show federation health — peers, sessions, trust levels, and message metrics
+- **file-organizer**: Intelligently organizes your files and folders across your computer by understanding context, findin
+- **financial-calculator**: Advanced financial calculator with future value tables, present value, discount calculations, markup
+- **find-skills**: Helps users discover and install agent skills when they ask questions like "how do I do X", "find a 
+- **finishing-a-development-branch**: Use when implementation is complete, all tests pass, and you need to decide how to integrate the wor
+- **fix**: Fix failing or flaky Playwright tests. Use when user says "fix test", "flaky test", "test failing", 
+- **flox-environments**: Create reproducible, cross-platform development environments with Flox — a declarative environment m
+- **flutter-dart-code-review**: Library-agnostic Flutter/Dart code review checklist covering widget best practices, state management
+- **focused-fix**: Use when the user asks to fix, debug, or make a specific feature/module/area work end-to-end. Trigge
+- **foundation-models-on-device**: Apple FoundationModels framework for on-device LLM — text generation, guided generation with @Genera
+- **founder-sales**: Help founders close their first customers and build repeatable sales processes. Use when someone is 
+- **free-tool-strategy**: When the user wants to build a free tool for marketing — lead generation, SEO value, or brand awaren
+- **freeze**: /cs:freeze <decision> <days> — Lock a strategic decision for a cooldown period to prevent impulse re
+- **frontend-design**: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill wh
+- **frontend-design-direction**: Set an ECC-specific frontend design direction for production UI work. Use when building or improving
+- **frontend-design-ultimate**: Create distinctive, production-grade static sites with React, Tailwind CSS, and shadcn/ui — no mocku
+- **frontend-patterns**: Frontend development patterns for React, Next.js, state management, performance optimization, and UI
+- **frontend-slides**: Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files. U
+- **full-page-screenshot**: Use when the user asks to capture a full-page screenshot, long screenshot, or complete page capture 
+- **gan-style-harness**: GAN-inspired Generator-Evaluator agent harness for building high-quality applications autonomously. 
+- **gdpr-data-handling**: Implement GDPR-compliant data handling with consent management, data subject rights, and privacy by 
+- **gdpr-dsgvo-expert**: GDPR and German DSGVO compliance automation. Scans codebases for privacy risks, generates DPIA docum
+- **geo-agent**: Automated GEO (Generative Engine Optimization) agent for boosting brand visibility in AI search engi
+- **gget**: gget CLI and Python workflow for quick genomic database queries, sequence lookup, BLAST-style search
+- **gh-issues**: Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR r
+- **ghost-scan-code**: Ghost Security - SAST code scanner. Finds security vulnerabilities in source code by planning and ex
+- **git-advanced-workflows**: Master advanced Git workflows including rebasing, cherry-picking, bisect, worktrees, and reflog to m
+- **git-workflow**: OpenClaw Git 工作流技能。  当用户提及以下任务时使用： - 提交代码或文档 - 推送到远程仓库 - 管理多个 Git 仓库 - 查看 Git 状态  核心能力: - 自动检测文件变更 -
+- **git-worktree-manager**: Run parallel feature work safely with Git worktrees. Standardizes branch isolation, port allocation,
+- **github**: Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues,
+- **github-actions-templates**: Create production-ready GitHub Actions workflows for automated testing, building, and deploying appl
+- **github-automation**: 自动化 GitHub 操作。当用户需要推送代码到 GitHub、管理仓库、创建 PR、处理 Issue、git push 失败时使用此技能。优先使用 mcporter call github.push
+- **github-code-review**: Comprehensive GitHub code review with AI-powered swarm coordination
+- **github-ops**: GitHub repository operations, automation, and management. Issue triage, PR management, CI/CD operati
+- **gitlab-automation**: Automate GitLab project management, issues, merge requests, pipelines, branches, and user operations
+- **gitlab-ci-patterns**: Build GitLab CI/CD pipelines with multi-stage workflows, caching, and distributed runners for scalab
+- **go-concurrency-patterns**: Master Go concurrency with goroutines, channels, sync primitives, and context. Use when building con
+- **goal-plan**: Create and execute Goal-Oriented Action Plans (GOAP) with precondition analysis, cost optimization, 
+- **godot-gdscript-patterns**: Master Godot 4 GDScript patterns including signals, scenes, state machines, and optimization. Use wh
+- **golang-patterns**: Idiomatic Go patterns, best practices, and conventions for building robust, efficient, and maintaina
+- **golang-testing**: Go testing patterns including table-driven tests, subtests, benchmarks, fuzzing, and test coverage. 
+- **google-ads**: Query, audit, and optimize Google Ads campaigns. Supports two modes: (1) API mode for bulk operation
+- **google-analytics**: Analyze Google Analytics data, review website performance metrics, identify traffic patterns, and su
+- **google-analytics-automation**: Automate Google Analytics tasks via Rube MCP (Composio): run reports, list accounts/properties, funn
+- **google-drive**: Upload files, create folders, list and search Google Drive via CLI
+- **google-drive-automation**: Automate Google Drive file operations (upload, download, search, share, organize) via Rube MCP (Comp
+- **google-workspace-cli**: Google Workspace administration via the gws CLI. Install, authenticate, and automate Gmail, Drive, S
+- **google-workspace-ops**: Operate across Google Drive, Docs, Sheets, and Slides as one workflow surface for plans, trackers, d
+- **googlesheets-automation**: Automate Google Sheets operations (read, write, format, filter, manage spreadsheets) via Rube MCP (C
+- **grants**: NIH grant research skill for clinical researchers. Grill-me intake (research idea + career stage + p
+- **greenhelix-agent-workforce-orchestration**: Agent Workforce Orchestration: Hybrid Human+AI Teams. Build agent-led workforce orchestration: capab
+- **gstack-openclaw-ceo-review**: Use when asked to review a plan, challenge a proposal, run a CEO review, poke holes in an approach, 
+- **gstack-openclaw-investigate**: Use when asked to debug, fix a bug, investigate an error, or do root cause analysis, and when users 
+- **gstack-openclaw-office-hours**: Use when asked to brainstorm, evaluate whether an idea is worth building, run office hours, or think
+- **gstack-openclaw-retro**: Weekly engineering retrospective. Analyzes commit history, work patterns, and code quality metrics w
+- **guard**: Full safety mode: destructive command warnings + directory-scoped edits. Combines /careful (warns be
+- **health**: Code quality dashboard. Wraps existing project tools (type checker, linter, test runner, dead code d
+- **healthcare-emr-patterns**: EMR/EHR development patterns for healthcare applications. Clinical safety, encounter workflows, pres
+- **healthcare-phi-compliance**: Protected Health Information (PHI) and Personally Identifiable Information (PII) compliance patterns
+- **helm-chart-builder**: Helm chart development agent skill and plugin for Claude Code, Codex, Gemini CLI, Cursor, OpenClaw —
+- **helm-chart-scaffolding**: Design, organize, and manage Helm charts for templating and packaging Kubernetes applications with r
+- **hermes-imports**: Convert local Hermes operator workflows into sanitized ECC skills and release-pack artifacts. Use wh
+- **hermes-remote-deploy**: 通过 SSH 远程部署 Hermes Agent（Nous Research 自进化 AI Agent）到 Linux/macOS 服务器。Use when: (1) 用户要求在远程服务器上部署 He
+- **hexagonal-architecture**: Design, implement, and refactor Ports & Adapters systems with clear domain boundaries, dependency in
+- **heygen-avatar-lite**: Create AI digital human videos with HeyGen API. Free starter guide.
+- **homelab-network-setup**: Practical home and homelab network planning for gateways, switches, access points, IP ranges, DHCP r
+- **homelab-vlan-segmentation**: Segmenting home networks into VLANs for IoT, guest, trusted, and server traffic using UniFi, pfSense
+- **homelab-wireguard-vpn**: WireGuard VPN server setup, peer configuration, key generation, split tunneling vs full tunnel routi
+- **hookify-rules**: This skill should be used when the user asks to create a hookify rule, write a hook rule, configure 
+- **horizon-track**: Track long-horizon objectives across multiple sessions with milestone checkpoints, progress persiste
+- **hybrid-search-implementation**: Combine vector and keyword search for improved retrieval. Use when implementing RAG systems, buildin
+- **image-enhancer**: Improves the quality of images, especially screenshots, by enhancing resolution, sharpness, and clar
+- **image-scraper**: Scrape and download all images from a given URL. Takes a URL, extracts image URLs from the page, and
+- **impeccable**: Use when the user wants to design, redesign, shape, critique, audit, polish, clarify, distill, harde
+- **inbox-setup**: One-time setup skill that builds a personalized inbox triage knowledge base via interactive intervie
+- **incident-response-incident-response**: Use when working with incident response incident response
+- **information-security-manager-iso27001**: ISO 27001 ISMS implementation and cybersecurity governance for HealthTech and MedTech companies. Use
+- **init-project**: Initialize a new Ruflo project with MCP tools, hooks, and agent configuration
+- **internal-comms**: A set of resources to help me write all kinds of internal communications, using the formats that my 
+- **internal-narrative**: Build and maintain one coherent company story across all audiences — employees, investors, customers
+- **interview-system-designer**: This skill should be used when the user asks to "design interview processes", "create hiring pipelin
+- **inventory-demand-planning**: Codified expertise for demand forecasting, safety stock optimization, replenishment planning, and pr
+- **investigate**: Systematic debugging with root cause investigation. Four phases: investigate, analyze, hypothesize, 
+- **ios-clean**: Remove the DebugBridge SPM package and all #if DEBUG wiring from an iOS app. Cleans up StateServer, 
+- **ios-design-review**: Visual design audit for iOS apps on real hardware. Connects to a real iPhone via the same StateServe
+- **ios-fix**: Autonomous iOS bug fixer. Takes a bug found by /ios-qa, reads the source, writes the fix, rebuilds, 
+- **ios-icon-gen**: Generate iOS app icons as PNG imagesets for Xcode asset catalogs from SF Symbols (5000+ Apple-native
+- **ios-qa**: Live-device iOS QA for SwiftUI apps. Connects to a real iPhone via USB CoreDevice IPv6 tunnel, reads
+- **ios-sync**: Regenerate the iOS debug bridge against the latest upstream gstack templates. Updates StateServer.sw
+- **iot-register**: Register a Cognitum Seed device by endpoint and establish agent bridge
+- **isms-audit-expert**: Information Security Management System (ISMS) audit expert for ISO 27001 compliance verification, se
+- **iso27001-audit-prep**: /cs:iso27001-audit-prep <scope> — ISO 27001 ISMS audit readiness 6-question forcing interrogation. U
+- **iterative-retrieval**: Pattern for progressively refining context retrieval to solve the subagent context problem
+- **java-coding-standards**: Java coding standards for Spring Boot and Quarkus services: naming, immutability, Optional usage, st
+- **javascript-testing-patterns**: Implement comprehensive testing strategies using Jest, Vitest, and Testing Library for unit tests, i
+- **jimeng-digital-human**: 即梦AI数字人视频生成全流程自动化。通过浏览器自动化操控 jimeng.jianying.com 数字人界面，完成角色上传、音色选择、台词填入、视频生成和下载。触发场景：用户需要生成数字人视频、即梦数
+- **jira-integration**: Use this skill when retrieving Jira tickets, analyzing requirements, updating ticket status, adding 
+- **jpa-patterns**: JPA/Hibernate patterns for entity design, relationships, query optimization, transactions, auditing,
+- **karpathy-coder**: Use when writing, reviewing, or committing code to enforce Karpathy's 4 coding principles — surface 
+- **key-rotation**: API key rotation manager — rotate provider keys across all agent workspaces
+- **kotlin-exposed-patterns**: JetBrains Exposed ORM patterns including DSL queries, DAO pattern, transactions, HikariCP connection
+- **kotlin-ktor-patterns**: Ktor server patterns including routing DSL, plugins, authentication, Koin DI, kotlinx.serialization,
+- **kotlin-patterns**: Idiomatic Kotlin patterns, best practices, and conventions for building robust, efficient, and maint
+- **kotlin-testing**: Kotlin testing patterns with Kotest, MockK, coroutine testing, property-based testing, and Kover cov
+- **kubernetes-deployment**: Kubernetes deployment workflow for container orchestration, Helm charts, service mesh, and productio
+- **kubernetes-specialist**: Use when deploying or managing Kubernetes workloads. Invoke to create deployment manifests, configur
+- **landing**: Generates a premium single-page HTML landing page with 3D CSS animations, GSAP scroll effects, and m
+- **landing-page-generator**: Generates high-converting landing pages as complete Next.js/React (TSX) components with Tailwind CSS
+- **langsmith-fetch**: Debug LangChain and LangGraph agents by fetching execution traces from LangSmith Studio. Use when de
+- **laravel-patterns**: Laravel architecture patterns, routing/controllers, Eloquent ORM, service layers, queues, events, ca
+- **laravel-plugin-discovery**: Discover and evaluate Laravel packages via LaraPlugins.io MCP. Use when the user wants to find plugi
+- **laravel-tdd**: Test-driven development for Laravel with PHPUnit and Pest, factories, database testing, fakes, and c
+- **lead-research-assistant**: Identifies high-quality leads for your product or service by analyzing your business, searching for 
+- **linkedin-inbound-run**: Automatic inbound LinkedIn message processing
+- **linux-service-triage**: Diagnoses common Linux service issues using logs, systemd/PM2, file permissions, Nginx reverse proxy
+- **linux-troubleshooting**: Linux system troubleshooting workflow for diagnosing and resolving system issues, performance proble
+- **litreview**: Academic literature orientation skill that searches papers via Consensus, builds a strategic search 
+- **liuyao-yijing**: 六爻易经占卜器，基于京房纳甲体系，模拟铜钱起卦，完成纳甲装卦（天干地支、世应、六亲、六神）， 通过用神旺衰和生克制化断卦。当用户提及「六爻」「易经占卜」「铜钱起卦」「纳甲」「帮我起一卦」 「六爻预测」
+- **llm-cost-optimizer**: Use proactively whenever LLM API costs come up -- or should. Triggers include: 'my AI costs are too 
+- **llm-evaluation**: Implement comprehensive evaluation strategies for LLM applications using automated metrics, human fe
+- **logistics-exception-management**: Codified expertise for handling freight exceptions, shipment delays, damages, losses, and carrier di
+- **longform-visual-notes**: 
+- **loop-worker**: Run Ruflo background workers using Claude Code native /loop scheduling
+- **lyrics-video-sync**: 歌词-视频精准匹配引擎。将MP3中的歌词片段按时间轴精准匹配到对应视频clip，支持歌词提取、时间轴对齐、情绪映射、字幕烧录、音频分段混合。触发词：歌词匹配、lyrics sync、歌词卡点、音频对齐
+- **make-interfaces-feel-better**: Apply concrete design-engineering details that make interfaces feel polished. Use when reviewing or 
+- **make-pdf**: Turn any markdown file into a publication-quality PDF. Proper 1in margins, intelligent page breaks, 
+- **manim-video**: Build reusable Manim explainers for technical concepts, graphs, system diagrams, and product walkthr
+- **marketing-context**: Create and maintain the marketing context document that all marketing skills read before starting. U
+- **marketing-ideas**: Provide proven marketing strategies and growth ideas for SaaS and software products, prioritized usi
+- **marketing-psychology**: When the user wants to apply psychological principles, mental models, or behavioral science to marke
+- **marketing-skills**: 42 marketing agent skills and plugins for Claude Code, Codex, Gemini CLI, Cursor, OpenClaw, and 6 mo
+- **mcp-builder**: Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact wi
+- **mcp-installer**: 从GitHub搜索并自动安装配置MCP(Model Context Protocol)服务器工具到Claude配置文件。当用户需要安装MCP工具时触发此技能。工作流程：搜索GitHub上的MCP项目 
+- **mcp-server-builder**: Design and ship production-ready MCP (Model Context Protocol) servers from OpenAPI contracts instead
+- **mcp-server-patterns**: Build MCP servers with Node/TypeScript SDK — tools, resources, prompts, Zod validation, stdio vs Str
+- **mdr-745-specialist**: EU MDR 2017/745 compliance specialist for medical device classification, technical documentation, cl
+- **memory-bridge**: Bridge Claude Code auto-memory into AgentDB with ONNX embeddings, deduplicate, and enable unified cr
+- **memory-forensics**: Master memory forensics techniques including memory acquisition, process analysis, and artifact extr
+- **memory-router**: Team-wide memory routing skill — routes agent queries to the optimal knowledge source (QMD hybrid se
+- **memory-safety-patterns**: Implement memory-safe programming with RAII, ownership, smart pointers, and resource management acro
+- **messages-ops**: Evidence-first live messaging workflow for ECC. Use when the user wants to read texts or DMs, recove
+- **metrics-review**: Review and analyze product metrics with trend analysis and actionable insights. Use when running a w
+- **micro-saas-launcher**: Expert in launching small, focused SaaS products fast - the indie hacker approach to building profit
+- **migrate**: Migrate from Cypress or Selenium to Playwright. Use when user mentions "cypress", "selenium", "migra
+- **migrate-validate**: Validate pending migrations for foreign key consistency, rollback safety, and best practices
+- **minimax-tts**: Text-to-speech synthesis via MiniMax WebSocket API
+- **ml-engineer**: Build production ML systems with PyTorch 2.x, TensorFlow, and modern ML frameworks. Implements model
+- **mobile-ios-design**: Master iOS Human Interface Guidelines and SwiftUI patterns for building native iOS apps. Use when de
+- **model-provider-manager**: Unified LLM provider and model configuration, health monitoring, and key management
+- **model-usage**: Use CodexBar CLI local cost usage to summarize per-model usage for Codex or Claude, including the cu
+- **modern-javascript-patterns**: Master ES6+ features including async/await, destructuring, spread operators, arrow functions, promis
+- **monorepo-management**: Master monorepo management with Turborepo, Nx, and pnpm workspaces to build efficient, scalable mult
+- **monorepo-navigator**: Navigate, manage, and optimize monorepos. Covers Turborepo, Nx, pnpm workspaces, and Lerna. Cross-pa
+- **motion-advanced**: Advanced motion patterns for React / Next.js — drag & drop, gestures, text animations, SVG path draw
+- **motion-foundations**: Motion tokens, spring presets, performance rules, device adaptation, accessibility enforcement, and 
+- **motion-patterns**: Production-ready animation patterns for React / Next.js — button, modal, toast, stagger, page transi
+- **motion-ui**: Production-ready UI motion system for React/Next.js. Use when implementing animations, transitions, 
+- **ms365-tenant-manager**: Microsoft 365 tenant administration for Global Administrators. Automate M365 tenant setup, Office 36
+- **multi-search-engine**: 
+- **mv-production-standard**: MV production standard — end-to-end music video creation workflow
+- **mysql-patterns**: MySQL and MariaDB schema, query, indexing, transaction, replication, and connection-pool patterns fo
+- **nano-banana-pro**: Generate/edit images with Nano Banana Pro (Gemini 3 Pro Image). Use for image create/modify requests
+- **nanoclaw-repl**: Operate and extend NanoClaw v2, ECC's zero-dependency session-aware REPL built on claude -p.
+- **negotiation**: Tactical negotiation framework based on Chris Voss's "Never Split the Difference." Use when preparin
+- **nestjs-patterns**: NestJS architecture patterns for modules, controllers, providers, DTO validation, guards, intercepto
+- **network-bgp-diagnostics**: Diagnostics-only BGP troubleshooting patterns for neighbor state, route exchange, prefix policy, AS 
+- **network-interface-health**: Diagnose interface errors, drops, CRCs, duplex mismatches, flapping, speed negotiation issues, and c
+- **neural-train**: Train SONA + MicroLoRA neural patterns from successful task completions; runs the DISTILL + CONSOLID
+- **nextjs-app-router-patterns**: Master Next.js 14+ App Router with Server Components, streaming, parallel routes, and advanced data 
+- **nextjs-turbopack**: Next.js 16+ and Turbopack — incremental bundling, FS caching, dev speed, and when to use Turbopack v
+- **nft-standards**: Implement NFT standards (ERC-721, ERC-1155) with proper metadata handling, minting strategies, and m
+- **nginx-configuration**: Master Nginx configuration for production-grade web servers, reverse proxies, load balancing, SSL te
+- **nodejs-backend-patterns**: Build production-ready Node.js backend services with Express/Fastify, implementing middleware patter
+- **nodejs-keccak256**: Prevent Ethereum hashing bugs in JavaScript and TypeScript. Node's sha3-256 is NIST SHA3, not Ethere
+- **notebooklm**: Browser automation skill for controlling Google's NotebookLM. Handles reading and querying notebooks
+- **nutrient-document-processing**: Process, convert, OCR, extract, redact, sign, and fill documents using the Nutrient DWS API. Works w
+- **nutrigx_advisor**: Nutrigenomics advisor — personalized nutrition guidance based on genetic profiles
+- **nuxt4-patterns**: Nuxt 4 app patterns for hydration safety, performance, route rules, lazy loading, and SSR-safe data 
+- **nx-workspace-patterns**: Configure and optimize Nx monorepo workspaces. Use when setting up Nx, configuring project boundarie
+- **observe-metrics**: Aggregate and display system metrics with anomaly detection for a time period
+- **observe-trace**: Trace agent execution by collecting spans and building a trace tree for a task
+- **on-call-handoff-patterns**: Master on-call shift handoffs with context transfer, escalation procedures, and documentation. Use t
+- **open-gstack-browser**: Launch GStack Browser — AI-controlled Chromium with the sidebar extension baked in. Opens a visible 
+- **openai-whisper**: Local speech-to-text with the Whisper CLI (no API key).
+- **openapi-spec-generation**: Generate and maintain OpenAPI 3.1 specifications from code, design-first specs, and validation patte
+- **openclaw-browser-chain-debug**: Diagnose OpenClaw browser control failures including browser start timeouts, Chrome CDP startup fail
+- **openclaw-config-helper**: OpenClaw 配置修改助手。修改任何 OpenClaw 配置前必须先查阅官方文档，确保格式正确，避免系统崩溃或功能异常。强制执行：查 schema → 查文档 → 确认 → 修改的流程。
+- **openclaw-inter-instance**: OpenClaw 实例间通信。当需要在多个 OpenClaw 实例之间传递消息、同步数据、远程执行命令时使用此技能。覆盖 agent-to-agent 消息、nodes.run 远程执行、文件级通信等
+- **openclaw-master-skills**: 
+- **openclaw-memory-enhancer**: Edge-optimized RAG memory system for OpenClaw with semantic search. Automatically loads memory files
+- **openclaw-quick-deploy**: 通过 SSH 远程快速复刻部署 OpenClaw 系统到 Mac 电脑。Use when: (1) 用户要求在新 Mac 上部署 OpenClaw, (2) 远程搭建/复刻 OpenClaw 运行环境
+- **openclaw-workspace-audit**: Audit and optimize OpenClaw workspace documents (AGENTS.md, SOUL.md, USER.md, TOOLS.md, IDENTITY.md,
+- **openhr**: Boss直聘全流程AI自动化招聘智能体。自动登录、筛选候选人、个性化打招呼、智能聊天跟进、简历解析、飞书同步。触发词：启动招聘、自动打招呼、boss greet、openhr、简历解析、上传飞书。
+- **opensource-pipeline**: Open-source pipeline: fork, sanitize, and package private projects for safe public release. Chains 3
+- **openssf-security**: 
+- **outbound-email-strategy**: Comprehensive outbound email strategy skill for cold outreach, email sequences, and multi-channel ca
+- **page-cro**: When the user wants to optimize, improve, or increase conversions on any marketing page — including 
+- **parallel-debugging**: Debug complex issues using competing hypotheses with parallel investigation, evidence collection, an
+- **parallel-feature-development**: Coordinate parallel feature development with file ownership strategies, conflict avoidance rules, an
+- **partnerships-architect**: Use when a startup is approached by a prospective partner and someone has to decide should we sign t
+- **payment-integration**: Integrate Stripe, PayPal, and payment processors. Handles checkout flows, subscriptions, webhooks, a
+- **paypal-integration**: Integrate PayPal payment processing with support for express checkout, subscriptions, and refund man
+- **pdf**: Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/sp
+- **performance-analysis**: Comprehensive performance analysis, bottleneck detection, and optimization recommendations for Claud
+- **performance-profiler**: Systematic performance profiling for Node.js, Python, and Go applications. Identifies CPU, memory, a
+- **performing-security-code-review**: This skill provides automated assistance for security agent tasks Execute this skill enables AI assi
+- **perl-patterns**: Modern Perl 5.36+ idioms, best practices, and conventions for building robust, maintainable Perl app
+- **perl-security**: Comprehensive Perl security covering taint mode, input validation, safe process execution, DBI param
+- **perl-testing**: Perl testing patterns using Test2::V0, Test::More, prove runner, mocking, coverage with Devel::Cover
+- **permission-manager**: 管理Claude Code的全局工具权限配置，自动将MCP命令或其他工具添加到allowedTools中，避免每次使用时都需要手动批准。工作流程：确认用户需要添加的命令 -> 确认添加级别(默认全局~
+- **pii-detect**: Detect and flag personally identifiable information (PII) in text, code, and configurations
+- **pine-developer**: Writes production-quality Pine Script v6 code following TradingView guidelines and best practices. U
+- **pipedrive-automation**: Automate Pipedrive CRM operations including deals, contacts, organizations, activities, notes, and p
+- **plan-devex-review**: Interactive developer experience plan review. Explores developer personas, benchmarks against compet
+- **plan-eng-review**: Eng manager-mode plan review. Lock in the execution plan — architecture, data flow, diagrams, edge c
+- **plan-tune**: Self-tuning question sensitivity + developer psychographic for gstack (v1: observational). Review wh
+- **plankton-code-quality**: Write-time code quality enforcement using Plankton — auto-formatting, linting, and Claude-powered fi
+- **playwright-pro**: Production-grade Playwright testing toolkit. Use when the user mentions Playwright tests, end-to-end
+- **pm-skills**: 6 project management agent skills and plugins for Claude Code, Codex, Gemini CLI, Cursor, OpenClaw. 
+- **post-mortem**: /cs:post-mortem <decision> — Honest retrospective on an executed decision, scored against original a
+- **postbridge-social-growth**: Organic social media growth coach using the Post Bridge methodology (500M+ views, 132K+ downloads, $
+- **postgres-patterns**: PostgreSQL database patterns for query optimization, schema design, indexing, and security. Based on
+- **postgresql-database-engineering**: Comprehensive PostgreSQL database engineering skill covering indexing strategies, query optimization
+- **postgresql-table-design**: Use this skill when designing or reviewing a PostgreSQL-specific schema. Covers best-practices, data
+- **postmortem-writer**: Creates comprehensive post-incident documents with timeline, root cause analysis, contributing facto
+- **postmortem-writing**: Write effective blameless postmortems with root cause analysis, timelines, and action items. Use whe
+- **pr-review-expert**: Use when the user asks to review pull requests, analyze code changes, check for security issues in P
+- **pre-push-security-scan**: 【铁律】Git push 前必须执行的安全扫描。防止 API keys、tokens、passwords、私钥等敏感信息被推送到远程仓库。适用于所有 git push、gh pr create、代码同
+- **pricing-strategy**: When the user wants help with pricing decisions, packaging, or monetization strategy. Also use when 
+- **prisma-patterns**: Prisma ORM patterns for TypeScript backends — schema design, query optimization, transactions, pagin
+- **process-analyst**: Process analysis, gap finding, human dialogue, spec generation
+- **product-skills**: 10 product agent skills and plugins for Claude Code, Codex, Gemini CLI, Cursor, OpenClaw. PM toolkit
+- **production-audit**: Local-evidence production readiness audit for shipped apps, pre-launch reviews, post-merge checks, a
+- **production-scheduling**: Codified expertise for production scheduling, job sequencing, line balancing, changeover optimizatio
+- **project-flow-ops**: Operate execution flow across GitHub and Linear by triaging issues and pull requests, linking active
+- **project-guidelines-example**: 
+- **project-planner**: 项目路径规划与执行助手。帮助分析项目需求、规划执行路径、分解任务、识别风险、管理进度，确保项目高质量交付。
+- **projection-patterns**: Build read models and projections from event streams. Use when implementing CQRS read sides, buildin
+- **promote**: Graduate a proven pattern from auto-memory (MEMORY.md) to CLAUDE.md or .claude/rules/ for permanent 
+- **prompt-engineering-patterns**: Master advanced prompt engineering techniques to maximize LLM performance, reliability, and controll
+- **prompt-governance**: Use when managing prompts in production at scale: versioning prompts, running A/B tests on prompts, 
+- **prompt-optimizer**: Evaluate, optimize, and enhance prompts using 58 proven prompting techniques. Use when user asks to 
+- **protect-mcp-setup**: Configure Cedar policy enforcement and Ed25519 signed receipts for Claude Code tool calls. Use when 
+- **protocol-reverse-engineering**: Master network protocol reverse engineering including packet analysis, protocol dissection, and cust
+- **provider-key-manager**: Provider key manager — rotate and sync API keys across multi-agent workspaces
+- **proxmox-ops-skill**: 
+- **python-anti-patterns**: Use this skill when reviewing Python code for common anti-patterns to avoid. Use as a checklist when
+- **python-code-style**: Python code style, linting, formatting, naming conventions, and documentation standards. Use when wr
+- **python-configuration**: Python configuration management via environment variables and typed settings. Use when externalizing
+- **python-design-patterns**: Python design patterns including KISS, Separation of Concerns, Single Responsibility, and compositio
+- **python-error-handling**: Python error handling patterns including input validation, exception hierarchies, and partial failur
+- **python-observability**: Python observability patterns including structured logging, metrics, and distributed tracing. Use wh
+- **python-packaging**: Create distributable Python packages with proper project structure, setup.py/pyproject.toml, and pub
+- **python-patterns**: Pythonic idioms, PEP 8 standards, type hints, and best practices for building robust, efficient, and
+- **python-performance-optimization**: Profile and optimize Python code using cProfile, memory profilers, and performance best practices. U
+- **python-resource-management**: Python resource management with context managers, cleanup patterns, and streaming. Use when managing
+- **python-testing-patterns**: Implement comprehensive testing strategies with pytest, fixtures, mocking, and test-driven developme
+- **python-type-safety**: Python type safety with type hints, generics, protocols, and strict type checking. Use when adding t
+- **pytorch-patterns**: PyTorch deep learning patterns and best practices for building robust, efficient, and reproducible t
+- **qa**: Systematically QA test a web application and fix bugs found. Runs QA testing, then iteratively fixes
+- **qa-only**: Report-only QA testing. Systematically tests a web application and produces a structured report with
+- **qingyun-api**: 
+- **qmd-extended**: Extended QMD knowledge base with multi-backend embedding (Google AI Studio / Ollama / local). Use wh
+- **qms-audit-expert**: ISO 13485 internal audit expertise for medical device QMS. Covers audit planning, execution, nonconf
+- **quality-documentation-manager**: Document control system management for medical device QMS. Covers document numbering, version contro
+- **quality-manager-qmr**: Senior Quality Manager Responsible Person (QMR) for HealthTech and MedTech companies. Provides quali
+- **quality-manager-qms-iso13485**: ISO 13485 Quality Management System implementation and maintenance for medical device organizations.
+- **quality-nonconformance**: Codified expertise for quality control, non-conformance investigation, root cause analysis, correcti
+- **quarkus-patterns**: Quarkus 3.x LTS architecture patterns with Camel for messaging, RESTful API design, CDI services, da
+- **quarkus-tdd**: Test-driven development for Quarkus 3.x LTS using JUnit 5, Mockito, REST Assured, Camel testing, and
+- **ra-qm-skills**: 12 regulatory & QM agent skills and plugins for Claude Code, Codex, Gemini CLI, Cursor, OpenClaw. IS
+- **raffle-winner-picker**: Picks random winners from lists, spreadsheets, or Google Sheets for giveaways, raffles, and contests
+- **ralphinho-rfc-pipeline**: RFC-driven multi-agent DAG execution pattern with quality gates, merge queues, and work unit orchest
+- **react-component-generator**: 
+- **react-expert**: Use when researching React APIs or concepts for documentation. Use when you need authoritative usage
+- **react-modernization**: Upgrade React applications to latest versions, migrate from class components to hooks, and adopt con
+- **react-native-architecture**: Build production React Native apps with Expo, navigation, native modules, offline sync, and cross-pl
+- **react-native-design**: Master React Native styling, navigation, and Reanimated animations for cross-platform mobile develop
+- **react-state-management**: Master modern React state management with Redux Toolkit, Zustand, Jotai, and React Query. Use when s
+- **receiving-code-review**: Use when receiving code review feedback, before implementing suggestions, especially if feedback see
+- **recsys-pipeline-architect**: Design composable recommendation, ranking, and feed pipelines using the six-stage Source→Hydrator→Fi
+- **redis-inspect**: Inspect Redis cache keys, values, and TTLs for debugging. Supports both main cache and system cache.
+- **redis-patterns**: Redis data structure patterns, caching strategies, distributed locks, rate limiting, pub/sub, and co
+- **regex-vs-llm-structured-text**: Decision framework for choosing between regex and LLM when parsing structured text — start with rege
+- **relay-video-gen**: 
+- **remotion-video-creation**: Best practices for Remotion - Video creation in React. 29 domain-specific rules covering 3D, animati
+- **repo-scan**: Cross-stack source code asset audit — classifies every file, detects embedded third-party libraries,
+- **repro-enforcer**: Export any bioinformatics analysis as a reproducible bundle with Conda environment, Singularity cont
+- **requesting-code-review**: Use when completing tasks, implementing major features, or before merging to verify work meets requi
+- **research**: Default entry point for any research request — a hybrid router that classifies the question determin
+- **research-engineer**: An uncompromising Academic Research Engineer. Operates with absolute scientific rigor, objective cri
+- **research-summarizer**: Structured research summarization agent skill for non-dev users. Handles academic papers, web articl
+- **responsive-design**: Implement modern responsive layouts using container queries, fluid typography, CSS Grid, and mobile-
+- **resume**: Resume a paused experiment. Checkout the experiment branch, read results history, continue iterating
+- **returns-reverse-logistics**: Codified expertise for returns authorization, receipt and inspection, disposition decisions, refund 
+- **revenue-operations**: Analyzes sales pipeline health, revenue forecasting accuracy, and go-to-market efficiency metrics fo
+- **review**: Analyze auto-memory for promotion candidates, stale entries, consolidation opportunities, and health
+- **review-agent-setup**: Configure human-in-the-loop gating for AI agent review actions in Claude Code. Use when setting up a
+- **risk-management-specialist**: Medical device risk management specialist implementing ISO 14971 throughout product lifecycle. Provi
+- **roadmap-communicator**: Use when preparing roadmap narratives, release notes, changelogs, or stakeholder updates tailored fo
+- **roi-analysis**: Use when calculating marketing ROI on Xiaohongshu, measuring campaign return on investment, analyzin
+- **rules-distill**: Scan skills to extract cross-cutting principles and distill them into rules — append, revise, or cre
+- **runbook-generator**: Analyze a codebase and generate production-grade operational runbooks with verification steps, rollb
+- **rust-async-patterns**: Master Rust async programming with Tokio, async traits, error handling, and concurrent patterns. Use
+- **rust-patterns**: Idiomatic Rust patterns, ownership, error handling, traits, concurrency, and best practices for buil
+- **rust-testing**: Rust testing patterns including unit tests, integration tests, async testing, property-based testing
+- **saas-scaffolder**: Generates complete, production-ready SaaS project boilerplate including authentication, database sch
+- **safety-guard**: Use this skill to prevent destructive operations when working on production systems or running agent
+- **safety-scan**: Scan inputs for prompt injection, unsafe content, and adversarial attacks using AIDefence
+- **saga-orchestration**: Implement saga patterns for distributed transactions and cross-aggregate workflows. Use this skill w
+- **sales-engineer**: Analyzes RFP/RFI responses for coverage gaps, builds competitive feature comparison matrices, and pl
+- **sast-configuration**: Configure Static Application Security Testing (SAST) tools for automated vulnerability detection in 
+- **schema-markup**: When the user wants to implement, audit, or validate structured data (schema markup) on their websit
+- **scrape**: Pull data from a web page. First call on a new intent prototypes the flow via $B primitives and retu
+- **screen-reader-testing**: Test web applications with screen readers including VoiceOver, NVDA, and JAWS. Use when validating s
+- **scrna-orchestrator**: Automate single-cell RNA-seq analysis with Scanpy or Seurat. QC, normalisation, clustering, DE analy
+- **scrum-master**: Advanced Scrum Master with data-driven team health analysis, velocity forecasting, retrospective ins
+- **search-first**: Research-before-coding workflow. Search for existing tools, libraries, and patterns before writing c
+- **search-layer**: 四源同级：Brave (`web_search`) + Exa + Tavily + Grok。按意图自动选策略、调权重、做合成。 DEFAULT search tool for ALL search
+- **search-specialist**: Expert web researcher using advanced search techniques and synthesis. Masters search operators, resu
+- **security-audit**: Comprehensive security auditing for Clawdbot deployments. Scans for exposed credentials, open ports,
+- **security-guidance**: PreToolUse security-anti-pattern hook for Claude Code. Catches 12 common security risks (command inj
+- **security-review**: Use this skill when adding authentication, handling user input, working with secrets, creating API e
+- **security-scan**: Scan your Claude Code configuration (.claude/ directory) for security vulnerabilities, misconfigurat
+- **segment-automation**: Automate Segment tasks via Rube MCP (Composio): track events, identify users, manage groups, page vi
+- **self-eval**: Honestly evaluate AI work quality using a two-axis scoring system. Use after completing a task, code
+- **self-improving-agent**: Curate Claude Code's auto-memory into durable project knowledge. Analyze MEMORY.md for patterns, pro
+- **self-reflection**: Continuous self-improvement through structured reflection and memory
+- **sendgrid-automation**: Automate SendGrid email operations including sending emails, managing contacts/lists, sender identit
+- **senior-backend**: Designs and implements backend systems including REST APIs, microservices, database architectures, a
+- **senior-computer-vision**: Computer vision engineering skill for object detection, image segmentation, and visual AI systems. C
+- **senior-devops**: Comprehensive DevOps skill for CI/CD, infrastructure automation, containerization, and cloud platfor
+- **senior-frontend**: Frontend development skill for React, Next.js, TypeScript, and Tailwind CSS applications. Use when b
+- **senior-fullstack**: Fullstack development toolkit with project scaffolding for Next.js, FastAPI, MERN, and Django stacks
+- **senior-ml-engineer**: ML engineering skill for productionizing models, building MLOps pipelines, and integrating LLMs. Cov
+- **senior-prompt-engineer**: This skill should be used when the user asks to "optimize prompts", "design prompt templates", "eval
+- **senior-qa**: Generates unit tests, integration tests, and E2E tests for React/Next.js applications. Scans compone
+- **senior-secops**: Senior SecOps engineer skill for application security, vulnerability management, compliance verifica
+- **sentry-automation**: Automate Sentry tasks via Rube MCP (Composio): manage issues/events, configure alerts, track release
+- **seo-audit**: Diagnose and audit SEO issues affecting crawlability, indexation, rankings, and organic performance.
+- **seo-geo**: SEO & GEO (Generative Engine Optimization) for websites. Analyze keywords, generate schema markup, o
+- **seo-strategy**: Build and execute an SEO strategy for organic search traffic. Use when planning keyword targeting, o
+- **seq-wrangler**: Sequence QC, alignment, and BAM processing. Wraps FastQC, BWA/Bowtie2, SAMtools for automated read-t
+- **serp-analysis**: Analyze Google SERP (Search Engine Results Pages) — featured snippets, PAA (People Also Ask), AI Ove
+- **session-persist**: Persist and restore agent sessions across conversations with state snapshots
+- **setup-deploy**: Configure deployment settings for /land-and-deploy. Detects your deploy platform (Fly.io, Render, Ve
+- **setup-gbrain**: Set up gbrain for this coding agent: install the CLI, initialize a local PGLite or Supabase brain, r
+- **shell-expert**: Shell scripting expertise, command-line tools, automation, and cross-platform scripting best practic
+- **shellcheck-configuration**: Master ShellCheck static analysis configuration and usage for shell script quality. Use when setting
+- **ship**: Ship workflow: detect + merge base branch, run tests, review diff, bump VERSION, update CHANGELOG, c
+- **ship-gate**: Pre-production audit that scans a codebase for security, database, deployment, code quality, AI/LLM,
+- **showcase-video-builder**: Build polished showcase and demo videos from screenshots, avatars, and text overlays using ffmpeg. U
+- **signed-audit-trails-recipe**: Step-by-step cookbook for setting up cryptographically signed audit trails on Claude Code tool calls
+- **silicon-performance-reviewer**: Quarterly Silicon Agent performance evaluation with ByteDance-style calibration, forced distribution
+- **similarity-search-patterns**: Implement efficient similarity search with vector databases. Use when building semantic search, impl
+- **skill-amazon-ads**: Amazon Ads API v3 skill for OpenClaw agents. List profiles, manage Sponsored Products campaigns, vie
+- **skill-config-checker**: 扫描本地所有 skills，检测需要配置的 API keys、tokens、secrets 等，生成配置需求清单和操作指南。
+- **skill-scout**: Search existing local, marketplace, GitHub, and web skill sources before creating a new skill. Use w
+- **skills-search**: Search skills.sh registry from CLI. Find and discover agent skills from the skills.sh ecosystem.
+- **slidev-multi-agent**: Create, edit, theme, build, and export Slidev presentations using a script-first workflow with detai
+- **soc2-audit-prep**: /cs:soc2-audit-prep <scope> — SOC 2 Type II readiness 6-question forcing interrogation. Observation-
+- **soc2-compliance**: Use when the user asks to prepare for SOC 2 audits, map Trust Service Criteria, build control matric
+- **social-media-manager**: When the user wants to develop social media strategy, plan content calendars, manage community engag
+- **sparc-methodology**: SPARC (Specification, Pseudocode, Architecture, Refinement, Completion) comprehensive development me
+- **sparc-refine**: Run the SPARC Refinement and Completion phases — review code, improve test coverage, validate agains
+- **sparc-spec**: Run the SPARC Specification phase — gather requirements, define acceptance criteria, identify constr
+- **spark-optimization**: Optimize Apache Spark jobs with partitioning, caching, shuffle optimization, and memory tuning. Use 
+- **spawn**: Launch N parallel subagents in isolated git worktrees to compete on the session task.
+- **spec-driven-workflow**: Use when the user asks to write specs before code, define acceptance criteria, plan features before 
+- **spec-to-repo**: Use when the user says 'build me an app', 'create a project from this spec', 'scaffold a new repo', 
+- **spin-selling**: Master the consultative sales methodology trusted by enterprise sales teams worldwide. Use Neil Rack
+- **springboot-patterns**: Spring Boot architecture patterns, REST API design, layered services, data access, caching, async pr
+- **springboot-security**: Spring Security best practices for authn/authz, validation, CSRF, secrets, headers, rate limiting, a
+- **springboot-tdd**: Test-driven development for Spring Boot using JUnit 5, Mockito, MockMvc, Testcontainers, and JaCoCo.
+- **sql-database-assistant**: Use when the user asks to write SQL queries, optimize database performance, generate migrations, exp
+- **sql-optimization**: Universal SQL performance optimization assistant for comprehensive query tuning, indexing strategies
+- **sql-optimization-patterns**: Master SQL query optimization, indexing strategies, and EXPLAIN analysis to dramatically improve dat
+- **sql-pro**: Master modern SQL with cloud-native databases, OLTP/OLAP optimization, and advanced query techniques
+- **startup-metrics-framework**: Comprehensive guide to tracking, calculating, and optimizing key performance metrics for different s
+- **static-code-analysis**: Implement static code analysis with linters, formatters, and security scanners to catch bugs early. 
+- **statistical-analyst**: Run hypothesis tests, analyze A/B experiment results, calculate sample sizes, and interpret statisti
+- **strategic-alignment**: Cascades strategy from boardroom to individual contributor. Detects and fixes misalignment between c
+- **stream-chain**: Stream-JSON chaining for multi-agent pipelines, data transformation, and sequential workflows
+- **stripe-automation**: Automate Stripe tasks via Rube MCP (Composio): customers, charges, subscriptions, invoices, products
+- **stripe-integration**: Implement Stripe payment processing for robust, PCI-compliant payment flows including checkout, subs
+- **stripe-integration-expert**: Production-grade Stripe integrations: subscriptions with trials and proration, one-time payments, us
+- **stripe-webhook**: Manage AI Kitchen Pro Stripe webhook — deploy, test, switch test/prod, view logs
+- **style-guide-generator**: Generate comprehensive website style guides and design systems from URLs, screenshots, and existing 
+- **subagent-driven-development**: Use when executing implementation plans with independent tasks in the current session
+- **suno-create**: Create songs on Suno.com with custom lyrics and style. Use when user wants to (1) generate AI music 
+- **supabase**: Use when doing ANY task involving Supabase. Triggers: Supabase products (Database, Auth, Edge Functi
+- **supabase-postgres-best-practices**: Postgres performance optimization and best practices from Supabase. Use this skill when writing, rev
+- **swift-actor-persistence**: Thread-safe data persistence in Swift using actors — in-memory cache with file-backed storage, elimi
+- **swift-concurrency-6-2**: Swift 6.2 Approachable Concurrency — single-threaded by default, @concurrent for explicit background
+- **swift-protocol-di-testing**: Protocol-based dependency injection for testable Swift code — mock file system, network, and externa
+- **swiftui-patterns**: SwiftUI architecture patterns, state management with @Observable, view composition, navigation, perf
+- **syllabus**: Generates a curated supplementary reading list from any course syllabus using Consensus academic sea
+- **sync-gbrain**: Keep gbrain current with this repo's code and refresh agent search guidance in CLAUDE.md. Wraps the 
+- **sysadmin-toolbox**: Tool discovery and shell one-liner reference for sysadmin, DevOps, and security tasks. AUTO-CONSULT 
+- **systematic-debugging**: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+- **tailscale-operator**: Manage, connect to, and troubleshoot devices on a Tailscale tailnet. Use when a user asks to connect
+- **tailwindcss**: Tailwind CSS utility-first CSS framework. Use when styling web applications with utility classes, bu
+- **task-coordination-strategies**: Decompose complex tasks, design dependency graphs, and coordinate multi-agent work with proper task 
+- **task-status**: Send short status descriptions in chat for long-running tasks. Use when you need to provide periodic
+- **task-supervisor**: 定时巡检 agent 任务执行状态，识别卡住、abort、无产出等异常并触发催促或告警。
+- **tavily**: AI 优化的网络搜索。使用 Tavily API 进行智能搜索，获取实时信息。当用户需要搜索互联网、获取实时数据、查找最新信息时使用此技能。
+- **tcm-meridian-inference**: TCM meridian inference engine — health scoring from 6-meridian measurements
+- **tdd-guide**: Test-driven development workflow with test generation, coverage analysis, and multi-framework suppor
+- **tdd-workflow**: Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven dev
+- **team-communication-protocols**: Structured messaging protocols for agent team communication including message type selection, plan a
+- **team-composition-patterns**: Design optimal agent team compositions with sizing heuristics, preset configurations, and agent type
+- **tech-selection-research**: Use when the user wants to research, compare, or evaluate a technology, framework, platform, or engi
+- **telegram-inbound-run**: Automatic inbound Telegram message processing
+- **telegram-push**: 通过独立 Telegram Bot 向群聊或私聊推送消息，适合不依赖 OpenClaw channel 配置的通知场景。
+- **telegram-scraper-run**: Automatic Telegram scraping
+- **telegram-send**: Telegram DM sending from CSV, rate limiting, idempotency
+- **temporal-python-testing**: Test Temporal workflows with pytest, time-skipping, and mocking strategies. Covers unit testing, int
+- **terminal-ops**: Evidence-first repo execution workflow for ECC. Use when the user wants a command run, a repo checke
+- **terraform-patterns**: Terraform infrastructure-as-code agent skill and plugin for Claude Code, Codex, Gemini CLI, Cursor, 
+- **test-automator**: Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive qual
+- **test-driven-development**: Use when implementing any feature or bugfix, before writing implementation code
+- **theme-factory**: Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML la
+- **thinking-dhh**: DHH's thinking framework — convention over configuration, ship fast, perfect is the enemy
+- **thinking-seth-godin**: 蒸馏Seth Godin思维模式的实用框架——紫牛法则、许可营销、最小可行受众
+- **threat-mitigation-mapping**: Map identified threats to appropriate security controls and mitigations. Use when prioritizing secur
+- **tiktok-automation**: Automate TikTok tasks via Rube MCP (Composio): upload/publish videos, post photos, manage content, a
+- **tinystruct-patterns**: Expert guidance for developing with the tinystruct Java framework. Use when working on the tinystruc
+- **todoist-automation**: Automate Todoist task management, projects, sections, filtering, and bulk operations via Rube MCP (C
+- **track-management**: Use this skill when creating, managing, or working with Conductor tracks - the logical work units fo
+- **trader-backtest**: Run a historical backtest using npx neural-trader with Rust/NAPI engine (8-19x faster) and walk-forw
+- **turborepo-caching**: Configure Turborepo for efficient monorepo builds with local and remote caching. Use when setting up
+- **twitter-algorithm-optimizer**: Analyze and optimize tweets for maximum reach using Twitter's open-source algorithm insights. Rewrit
+- **typescript-advanced-types**: Master TypeScript's advanced type system including generics, conditional types, mapped types, templa
+- **ui-ux-pro-max**: UI/UX design intelligence. 50 styles, 21 palettes, 50 font pairings, 20 charts, 9 stacks (React, Nex
+- **uncloud**: Use when managing an Uncloud cluster — deploying services, configuring Caddy ingress, adding static 
+- **unfreeze**: Clear the freeze boundary set by /freeze, allowing edits to all directories again. Use when you want
+- **unified-notifications-ops**: Operate notifications as one ECC-native workflow across GitHub, Linear, desktop alerts, hooks, and c
+- **unity-ecs-patterns**: Master Unity ECS (Entity Component System) with DOTS, Jobs, and Burst for high-performance game deve
+- **user-story**: Create clear, concise user stories that combine Mike Cohn's user story format with Gherkin-style acc
+- **uv-package-manager**: Master the uv package manager for fast Python dependency management, virtual environments, and moder
+- **validate-plugin**: Validate a Claude Code plugin structure, frontmatter, and MCP tool references
+- **vcf-annotator**: Annotate VCF variants with VEP, ClinVar, gnomAD frequencies, and ancestry-aware context. Generates p
+- **vector-cluster**: Cluster code by graph community detection via npx ruvector@0.2.25 hooks graph-cluster (spectral / Lo
+- **vector-hyperbolic**: Embed hierarchical data via npx ruvector@0.2.25 embed text and project into the Poincare ball in use
+- **vector-setup**: First-run setup for ruvector@0.2.25 — installs ONNX/Brain/SONA add-ons, registers the MCP server, an
+- **vercel-react-best-practices**: React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be 
+- **verification-before-completion**: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - req
+- **verification-loop**: A comprehensive verification system for Claude Code sessions.
+- **vibe-code-auditor**: Audit rapidly generated or AI-produced code for structural flaws, fragility, and production risks.
+- **video-editing**: AI-assisted video editing workflows for cutting, structuring, and augmenting real footage. Covers th
+- **video-generation**: Use this skill when the user requests to generate, create, or imagine videos. Supports structured pr
+- **video-merge-send**: 合并多个分段视频为一个完整视频，并发送到飞书。使用ffmpeg拼接视频片段，支持淡入淡出转场。触发场景：用户需要合并视频片段、拼接分镜视频、视频合并后发飞书、把多个短视频合成一个、分段视频合并发送。配
+- **video-transcriber**: 视频转写工作流，支持B站和YouTube视频。自动判断有字幕/无字幕，有字幕则获取字幕，无字幕则下载音频+whisper转写。触发场景：(1) 用户要求总结视频内容 (2) 用户要求获取视频字幕 (3
+- **videocut:剪口播**: 口播视频转录和口误识别。生成审查稿和删除任务清单。触发词：剪口播、处理视频、识别口误
+- **videocut:字幕**: 字幕生成与烧录。火山引擎转录→词典纠错→审核→烧录。触发词：加字幕、生成字幕、字幕
+- **videocut:安装**: 环境准备。安装依赖、配置 API Key、验证环境。触发词：安装、环境准备、初始化
+- **videocut:自进化**: 自进化 skills。记录用户反馈，更新方法论和规则。触发词：更新规则、记录反馈、改进skill
+- **videodb**: See, Understand, Act on video and audio. See- ingest from local files, URLs, RTSP/live feeds, or liv
+- **virtual-singer-mv-script**: Virtual singer MV script generator — audio analysis to video storyboard pipeline
+- **vite-patterns**: Vite build tool patterns including config, plugins, HMR, env variables, proxy setup, SSR, library mo
+- **vitest**: Vitest testing framework patterns for test setup, async testing, mocking with vi.*, snapshots, and t
+- **vpe-review**: /cs:vpe-review <plan> — Throughput-first VP of Engineering interrogation of any plan that touches de
+- **wasm-agent**: Create and manage sandboxed WASM agents for isolated code execution
+- **wasm-gallery**: Browse, publish, and install WASM agents from the community gallery
+- **web-artifacts-builder**: Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern fronten
+- **web-component-design**: Master React, Vue, and Svelte component patterns including CSS-in-JS, composition strategies, and re
+- **web-scraping-automation**: 自动化爬取网站数据和 API 接口。当用户需要抓取网页内容、调用 API、解析数据或创建爬虫脚本时使用此技能。
+- **webapp-testing**: Toolkit for interacting with and testing local web applications using Playwright. Supports verifying
+- **wemp-operator**: 
+- **witness**: Sign, verify, and track fix-marker regressions over time using a deterministic Ed25519 witness manif
+- **worker-benchmarks**: Run comprehensive worker system benchmarks and performance analysis
+- **worker-integration**: Worker-Agent integration for intelligent task dispatch and performance tracking
+- **workflow-orchestration-patterns**: Design durable workflows with Temporal for distributed systems. Covers workflow vs activity separati
+- **workflow-patterns**: Use this skill when implementing tasks according to Conductor's TDD workflow, handling phase checkpo
+- **workspace-surface-audit**: Audit the active repo, MCP servers, plugins, connectors, env surfaces, and harness setup, then recom
+- **write-a-skill**: Create new agent skills with proper structure, progressive disclosure, and bundled resources. Use wh
+- **writing-plans**: Use when you have a spec or requirements for a multi-step task, before touching code
+- **x-articles**: Publish viral X (Twitter) Articles with AI. Long-form content that gets engagement. Proven hook patt
+- **x-tweet-fetcher**: Fetch tweets, replies, and user timelines from X/Twitter without login or API keys. Also supports Ch
+- **x-twitter-growth**: X/Twitter growth engine for building audience, crafting viral content, and analyzing engagement. Use
+- **xiaomo-assistant-template**: 小a助手配置模板。基于 xiaomo-starter-kit 改编，提供预配置的 OpenClaw 助手框架文件。当用户需要快速配置新助手、设置助手身份、创建助手配置文件时使用此技能。
+- **xlsx**: Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, dat
+- **youtube-downloader**: Download YouTube videos with customizable quality and format options. Use this skill when the user a
+- **youtube-factory**: Generate complete YouTube videos from a single prompt - script, voiceover, stock footage, captions, 
+- **youtube-knowledge-extractor**: This skill performs deep analysis of YouTube videos through **both information channels** Multimodal
+- **zimage-skill**: Generate images using ModelScope Z-Image-Turbo API. Use when user asks to generate, create, or make 
+
+### CPO — Chief Product Officer (88 skills)
+
+- **Condition-Based Waiting**: Replace arbitrary timeouts with condition polling for reliable async tests
+- **Executing Plans**: Execute detailed plans in batches with review checkpoints
+- **ab-test-setup**: When the user wants to plan, design, or implement an A/B test or experiment. Also use when the user 
+- **ab-test-setup**: When the user wants to plan, design, or implement an A/B test or experiment. Also use when the user 
+- **accessibility-compliance**: Implement WCAG 2.2 compliant interfaces with mobile accessibility, inclusive design patterns, and as
+- **agile-product-owner**: Agile product ownership for backlog management and sprint execution. Covers user story writing, acce
+- **analytics-tracking**: Design, audit, and improve analytics tracking systems that produce reliable, decision-ready data. Us
+- **article-material-collect**: 
+- **brainstorming**: You MUST use this before any creative work - creating features, building components, adding function
+- **brand-guidelines**: Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit fr
+- **canva-automation**: Automate Canva tasks via Rube MCP (Composio): designs, exports, folders, brand templates, autofill. 
+- **canvas-design**: Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this 
+- **chief-customer-officer-advisor**: Chief Customer Officer advisory for startups: retention decomposition (gross retention vs NRR honest
+- **chrome-automation**: Chrome 浏览器自动化操作。当用户需要自动化浏览器操作、网页测试、数据抓取或 UI 自动化时使用此技能。
+- **ciso-review**: /cs:ciso-review <plan> — Risk-paranoid interrogation of any plan that touches data, compliance, or p
+- **cmo-review**: /cs:cmo-review <plan> — Narrative-first interrogation of positioning, ICP, message house, and channe
+- **competitive-analysis**: Help users understand and respond to competition. Use when someone is positioning against competitor
+- **competitive-intel**: Systematic competitor tracking that feeds CMO positioning, CRO battlecards, and CPO roadmap decision
+- **competitive-teardown**: Analyzes competitor products and companies by synthesizing data from pricing pages, app store review
+- **competitor-teardown**: Structured competitive analysis with feature matrices, SWOT, positioning maps, and UX review. Covers
+- **content-typography**: 这不是“选个字体” skill。 中文内容视觉排版 skill：优化封面标题、信息层级、分行、字重、对齐、留白与平台适配。 适用于小红书封面、公众号首图、抖音图文封面、知识星球海报、掘金缩略图等。 当
+- **copy-editing**: When the user wants to edit, review, or improve existing marketing copy. Also use when the user ment
+- **cpo-advisor**: Product leadership for scaling companies. Product vision, portfolio strategy, product-market fit, an
+- **cpo-review**: /cs:cpo-review <plan> — JTBD-driven interrogation of product roadmap, PMF signal, and portfolio focu
+- **cs-onboard**: Founder onboarding interview that captures company context across 7 dimensions. Invoke with /cs:setu
+- **ddd-aggregate**: Scaffold an aggregate root with entity, value objects, repository interface, domain events, and test
+- **ddd-validate**: Validate domain boundaries -- detect cross-context import violations and aggregate invariant issues
+- **design-consultation**: Design consultation: understands your product, researches the landscape, proposes a complete design 
+- **design-shotgun**: Design shotgun: generate multiple AI design variants, open a comparison board, collect structured fe
+- **design-system**: Use this skill to generate or audit design systems, check visual consistency, and review PRs that to
+- **domestic-acquisition**: 聚焦中国大陆市场客户获取与线索转化的模块化 skills 包索引。用于规划、创建、验收和迭代国内获客相关子模块，如企业线索采集、社媒引流、私域转化、竞品监控、客户画像与触达自动化。
+- **douyin-video-analyst**: 抖音账号视频批量采集与文案分析工作流。当用户提供抖音账号主页链接、要求抓取最新 N 条视频链接、提取视频文案（语音转文字）、或对视频内容进行总结归纳时，激活此 skill。依赖 browser 工具（
+- **feature-requirements-clarification**: 在任何创意性工作前必须使用：创建功能、构建组件、增加能力或修改行为。通过自然对话挖掘需求，产出高质量验收标准（AC），为后续 TDD 开发提供测试依据。当用户说'我想做一个XX功能'、'帮我想想XX怎
+- **figma-implement-design**: Translates Figma designs into production-ready application code with 1:1 visual fidelity. Use when i
+- **generate**: Generate Playwright tests. Use when user says "write tests", "generate tests", "add tests for", "tes
+- **genome-compare**: Compare your genome to George Church (PGP-1) and estimate ancestry composition
+- **healthcare-eval-harness**: Patient safety evaluation harness for healthcare application deployments. Automated test suites for 
+- **hunt-report**: 
+- **incident-response**: Use when a security incident has been detected or declared and needs classification, triage, escalat
+- **interaction-design**: Design and implement microinteractions, motion design, transitions, and user feedback patterns. Use 
+- **iso13485-audit-prep**: /cs:iso13485-audit-prep <scope> — ISO 13485 QMS audit 6-question forcing interrogation. Design contr
+- **jimeng-storyboard**: 将口播视频剧本拆解为即梦AI数字人平台的分镜头脚本。输出格式为每个镜头的角色说（台词）和动作描述（镜头语言/数字人动作），适配即梦 jimeng.jianying.com 数字人视频生成界面。触发场景
+- **jira-expert**: Atlassian Jira expert for creating and managing projects, planning, product discovery, JQL queries, 
+- **kanxiang**: 看相分析技能。通过用户上传的人体部位图片，识别图片类型（面相/手相/体相/骨相），调用相应的相术规则知识库，结合图片内容进行专业分析。支持面相（五官、三庭、十二宫）、手相（掌线、指形、掌丘）、骨相（头
+- **land-and-deploy**: Land and deploy workflow. Merges the PR, waits for CI and deploy, verifies production health via can
+- **liquid-glass-design**: iOS 26 Liquid Glass design system — dynamic glass material with blur, reflection, and interactive mo
+- **media-auto-publisher**: 
+- **mobile-android-design**: Master Material Design 3 and Jetpack Compose patterns for building native Android apps. Use when des
+- **moltbook**: Interact with Moltbook social network for AI agents. Post, reply, browse, and analyze engagement. Us
+- **paywall-upgrade-cro**: When the user wants to create or optimize in-app paywalls, upgrade screens, upsell modals, or featur
+- **plan-design-review**: Designer's eye plan review — interactive, like CEO and Eng review. Rates each design dimension 0-10,
+- **playwright-automation**: Playwright 浏览器自动化。用于自动化爬虫、数据采集、表单填写、UI 测试等需要浏览器自动化的场景。无需人工干预，适合 cron 定时任务。
+- **pm-competitive-teardown**: Run structured competitive teardowns using pricing, reviews, positioning, UX, and go-to-market signa
+- **podcast-generation**: Generate AI-powered podcast-style audio narratives using Azure OpenAI's GPT Realtime Mini model via 
+- **polyclaw**: 
+- **position-monitor**: 
+- **poster-design-generation**: Generate professional poster designs using each::sense AI. Create movie posters, event posters, moti
+- **posthog-automation**: Automate PostHog tasks via Rube MCP (Composio): events, feature flags, projects, user profiles, anno
+- **prd-development**: Guide product managers through structured PRD (Product Requirements Document) creation by orchestrat
+- **prd-generator**: 专业级产品需求文档（PRD）生成器。自动生成包含 UML 用例模型、详细用例规格说明、数据字典、交互设计、UI 规范的完整 PRD。 Use when: 用户提到写PRD、写产品需求文档、产品设计、产
+- **pricing-strategist**: Use when designing or revisiting product pricing — selecting a pricing model (subscription seat-base
+- **product-analytics**: Use when defining product KPIs, building metric dashboards, running cohort or retention analysis, or
+- **product-capability**: Translate PRD intent, roadmap asks, or product discussions into an implementation-ready capability p
+- **product-lens**: Use this skill to validate the "why" before building, run product diagnostics, and pressure-test pro
+- **product-manager-skills**: 
+- **product-manager-toolkit**: Comprehensive toolkit for product managers including RICE prioritization, customer interview analysi
+- **python-resilience**: Python resilience patterns including automatic retries, exponential backoff, timeouts, and fault-tol
+- **shopify-automation**: Automate Shopify tasks via Rube MCP (Composio): products, orders, customers, inventory, collections.
+- **signup-flow-cro**: When the user wants to optimize signup, registration, account creation, or trial activation flows. A
+- **skill-comply**: Visualize whether skills, rules, and agent definitions are actually followed — auto-generates scenar
+- **skill-stocktake**: Use when auditing Claude skills and commands for quality. Supports Quick Scan (changed skills only) 
+- **social-media-poster**: 社媒内容自动发布 - 支持多平台内容一键发布、定时推送、效果追踪。适用于自媒体、运营，品牌方。
+- **tailwind-design-system**: Build scalable design systems with Tailwind CSS v4, design tokens, component libraries, and responsi
+- **team-builder**: Interactive agent picker for composing and dispatching parallel teams
+- **team-daily-report**: 自动汇总团队内 agent、cron、skill 进展与关键事件，生成并推送结构化日报。
+- **telegram-contacts**: Export/import/lookup Telegram contacts
+- **thinking-liangwenfeng**: 蒸馏梁文峰（DeepSeek/幻方量化）思维模式的实用框架：中国量化先驱、AI+量化融合、极致效率
+- **ui-demo**: Record polished UI demo videos using Playwright. Use when the user asks to create a demo, walkthroug
+- **ui-design-system**: UI design system toolkit for Senior UI Designer including design token generation, component documen
+- **ui-to-vue**: Use when the user has UI screenshots or design exports that need batch conversion into Vue 3 compone
+- **uml-diagram-design**: UML 图表设计和绘制。当用户需要创建系统架构图、类图、时序图、用例图或其他 UML 图表时使用此技能。
+- **using-superpowers**: Use when starting any conversation - establishes how to find and use skills, requiring Skill tool in
+- **ux-researcher-designer**: UX research and design toolkit for Senior UX Designer/Researcher including data-driven persona gener
+- **visual-design-foundations**: Apply typography, color theory, spacing systems, and iconography principles to create cohesive visua
+- **vp-cpo-readiness-advisor**: Coaches Directors and executives through the transition to VP or CPO across four situations: prepari
+- **web-design-guidelines**: Review UI code for Web Interface Guidelines compliance. Use when asked to "review my UI", "check acc
+- **xiaohongshu-growth**: 小红书内容创作运营增长综合解决方案。包含爆款内容创作、封面设计、发布优化、数据分析和账号增长策略。当用户需要：(1) 创建小红书爆款内容 (2) 优化账号运营策略 (3) 分析竞品和热点 (4) 发布
+- **zhihu-post-skill**: 
+
+### CDO — Chief Data Officer (18 skills)
+
+- **ETL Pipeline**: Design and automate Extract, Transform, Load data pipelines for data integration and analytics
+- **agentdb-query**: Query AgentDB through the controller bridge -- semantic routing, hierarchical recall, causal graphs,
+- **business-analyst**: Build KPI frameworks, predictive models, real-time dashboards, and strategic recommendations using m
+- **clawbio-pharmgx-reporter**: Pharmacogenomic report from DTC genetic data (23andMe/AncestryDNA)
+- **data-analyst**: Data visualization, report generation, SQL queries, and spreadsheet automation. Transform your AI ag
+- **data-engineering-data-pipeline**: You are a data pipeline architecture expert specializing in scalable, reliable, and cost-effective d
+- **data-quality-frameworks**: Implement data quality validation with Great Expectations, dbt tests, and data contracts. Use when b
+- **db-migrator**: 
+- **ecommerce-competitor-analyzer**: Multi-platform e-commerce competitor analysis skill that automatically scrapes product data from Ama
+- **firecrawl-crawl**: Bulk extract content from an entire website or site section. Use this skill when the user wants to c
+- **flow-nexus-neural**: Train and deploy neural networks in distributed E2B sandboxes with Flow Nexus
+- **football-data**: 
+- **migrate-create**: Create a new sequentially numbered database migration with up/down SQL files
+- **ml-pipeline-workflow**: Build end-to-end MLOps pipelines from data preparation through model training, validation, and produ
+- **query-leads**: Search, filter, reports on CRM data
+- **senior-data-engineer**: Data engineering skill for building scalable data pipelines, ETL/ELT systems, and data infrastructur
+- **senior-data-scientist**: World-class data science skill for statistical modeling, experimentation, causal inference, and adva
+- **snowflake-development**: Use when writing Snowflake SQL, building data pipelines with Dynamic Tables or Streams/Tasks, using 
+
+### CCO — Chief Content Officer (60 skills)
+
+- **Content Repurposer**: Turn one piece of content into 10+ formats. Transform blog posts, podcasts, videos, or talks into tw
+- **ad-creative**: When the user needs to generate, iterate, or scale ad creative for paid advertising. Use when they s
+- **ads-agent**: AI-агент для управления Facebook рекламой. Вызывай для анализа, оптимизации, создания кампаний и отч
+- **ai-marketing-videos**: Create AI marketing videos for ads, promos, product launches, and brand content. Models: Veo, Seedan
+- **apify-competitor-intelligence**: Analyze competitor strategies, content, pricing, ads, and market positioning across Google Maps, Boo
+- **apify-ultimate-scraper**: Universal AI-powered web scraper for any platform. Scrape data from Instagram, Facebook, TikTok, You
+- **article-writing**: Write articles, guides, blog posts, tutorials, newsletter issues, and other long-form content in a d
+- **av-sync-workflow**: Audio-to-video synchronization workflow: analyze audio (beats, tempo, emotion, mood), find/match vid
+- **baoyu-xhs-images**: Generates Xiaohongshu (Little Red Book) infographic series with 10 visual styles and 8 layouts. Brea
+- **content-cover-gen**: 内容驱动封面生成：从文章标题/核心观点自动生成视觉隐喻提示词，调用 relay-image-gen 出图。 每张封面3秒内传达文章核心观点，杜绝通用背景。 支持小红书(3:4)、抖音(9:16)、公众
+- **content-creator**: Create SEO-optimized marketing content with consistent brand voice. Includes brand voice analyzer, S
+- **content-distributor**: 
+- **content-engine**: Create platform-native content systems for X, LinkedIn, TikTok, YouTube, newsletters, and repurposed
+- **content-ops-toolkit**: 
+- **content-production**: Full content production pipeline — takes a topic from blank page to published-ready piece. Use when 
+- **content-repurposing**: Content atomization — turn one piece of content into many formats. Covers blog-to-thread, blog-to-ca
+- **content-research-writer**: Assists in writing high-quality content by conducting research, adding citations, improving hooks, i
+- **content-rewriter**: Cross-platform content repurposer. Takes one piece of content and rewrites it for multiple Chinese s
+- **content-source-aggregator**: 
+- **content-strategy**: When the user wants to plan a content strategy, decide what content to create, or figure out what to
+- **copywriting**: Write, rewrite, or improve marketing copy for homepages, landing pages, pricing pages, feature pages
+- **daily-douyin-content**: 
+- **daily-gzh-content**: 公众号每日内容生产：选题→创作→素材生成→质量检查→保存→发布草稿
+- **daily-xhs-content**: 
+- **douyin-creator**: 
+- **douyin-hot-trend**: 获取抖音热榜/热搜榜数据，包含热门视频、挑战赛、音乐等多领域热门内容，并输出标题、热度值、跳转链接及封面图（如有）。
+- **douyin-smart-publish**: 抖音创作者平台智能发布（视频/图文）：内容适配→上传→填描述/#话题→封面→存草稿→截图回传确认。默认只存草稿；只有在 Daniel 明确确认后才允许点击发布。覆盖标题(≤55字)、描述(建议≤200
+- **geo-content-optimizer**: Use when the user asks to "optimize for AI", "get cited by ChatGPT", "AI optimization", "appear in A
+- **influencer-analyzer**: 分析抖音/小红书/B站博主的主页、内容风格、爆款规律。可根据链接、博主名、主题三种方式触发。输出结构化的博主画像和内容风格报告，为内容创作者提供可复制的对标参考。触发词：分析博主、分析网红、对标博主、
+- **last30days**: Research a topic from the last 30 days. Also triggered by 'last30'. Sources: Reddit, X, YouTube, Hac
+- **linkedin-cdp**: 
+- **md2wechat**: Convert Markdown to WeChat Official Account HTML, inspect supported providers/themes/prompts, genera
+- **notion-automation**: 自动化 Notion 操作。当用户需要管理 Notion 页面、数据库、块内容、项目跟踪或进行内容组织和搜索时使用此技能。
+- **paid-ads**: When the user wants help with paid advertising campaigns on Google Ads, Meta (Facebook/Instagram), L
+- **prompt-engineer-toolkit**: Analyzes and rewrites prompts for better AI output, creates reusable prompt templates for marketing 
+- **redbook**: Search, read, analyze, and automate Xiaohongshu (小红书) content via CLI
+- **seo-content-writer**: Write SEO blog posts, articles, landing pages with keyword integration, header optimization, and sni
+- **social-content**: When the user wants help creating, scheduling, or optimizing social media content for LinkedIn, Twit
+- **social-graph-ranker**: Weighted social-graph ranking for warm intro discovery, bridge scoring, and network gap analysis acr
+- **social-media-management**: Comprehensive social media management for all platforms (LinkedIn, Twitter/X, Instagram, TikTok, Fac
+- **summarize**: Summarize URLs or files with the summarize CLI (web, PDFs, images, audio, YouTube).
+- **tiktok-growth**: TikTok content strategy and video script generator for any niche. Hook formulas, viral script struct
+- **tiktok-marketing**: TikTok content strategy, video creation workflows, posting optimization, and analytics. Based on n8n
+- **video-content-analyzer**: 下载视频并用AI分析内容 - 支持B站/抖音/YouTube等平台，提取语音内容并分析视频结构
+- **video-content-strategist**: Use when planning video content strategy, writing video scripts, optimizing YouTube channels, buildi
+- **video-lyrics-subtitle**: Video lyrics subtitle generator — create synchronized subtitle files for music videos
+- **video-marketing**: When the user wants to plan video marketing, create video scripts, or optimize for short-form or lon
+- **video-script**: Create video scripts and publishing materials for YouTubers/UP主. Use when user wants to prepare a vi
+- **video-subtitles**: Generate SRT subtitles from video/audio with translation support. Transcribes Hebrew (ivrit.ai) and 
+- **web-content-capture**: 
+- **wechat-article-writer**: 公众号文章自动化写作流程。支持资料搜索、文章撰写、爆款标题生成、排版优化。当用户提到写公众号、微信文章、自媒体写作、爆款文章、内容创作时使用此 skill。
+- **wechat-pipeline**: 公众号文章全自动流水线：写作→封面→发布。三段式编排 wechat-article-writer / code-to-image / md2wechat， 每段设断点检查，用户确认后才进入下一段。触发
+- **weibo-hot-trend**: 获取微博热搜榜数据，返回热搜标题、热度值和跳转链接。当用户需要查看微博热搜、微博热点、微博热榜时使用此技能。支持自定义获取条数（默认50条）。
+- **wiki-page-writer**: Generates rich technical documentation pages with dark-mode Mermaid diagrams, source code citations,
+- **writing-skills**: Use when creating new skills, editing existing skills, or verifying skills work before deployment
+- **xhs-content-creator**: Generate Xiaohongshu (小红书/RED) content optimized for the platform's CES algorithm. Use when: (1) cre
+- **xhs-publisher**: 将 Markdown 文章自动发布到小红书（XHS）草稿箱。支持多图上传（封面+素材）。
+- **xhs-smart-publisher**: 小红书智能发布：内容适配→排版→Playwright自动发布/存草稿。覆盖标题公式(≤20字+emoji+数字)、正文排版(空行分段+emoji点缀)、标签策略(热门+长尾3-8个)、封面规格(3:4
+- **xhs-writing-coach**: Coach and generate Xiaohongshu (小红书/RedNote/XHS) note writing. Use when the user wants help writing 
+- **zsxq-smart-publish**: Publish and manage content on 知识星球 (zsxq.com). Supports talk posts, Q&A, long articles, file sharing
+
+### CMO — Chief Marketing Officer (32 skills)
+
+- **a-fund-monitor**: A股基金净值监控：盘中实时估值 + 盘后实际净值，定时推送到 Telegram。
+- **ads**: 
+- **ai-marketing-skills**: 
+- **b2b-saas-marketing**: Эксперт по B2B SaaS маркетингу. Используй для стратегий генерации спроса, growth-маркетинга, PLG, ра
+- **browser**: Web browser automation with AI-optimized snapshots for claude-flow agents
+- **campaign-analytics**: Analyzes campaign performance with multi-touch attribution, funnel conversion, and ROI calculation f
+- **cmo-advisor**: Marketing leadership for scaling companies. Brand positioning, growth model design, marketing budget
+- **cold-email-sequence-generator**: Generate personalized cold email sequences (7-14 emails) with A/B test subject lines, follow-up timi
+- **content-marketer**: You are an elite content marketing strategist specializing in AI-powered content creation, omnichann
+- **effect-monitoring**: Use when monitoring Xiaohongshu marketing campaign performance, tracking promotion effectiveness, an
+- **email-automation**: 邮箱自动化：读取、搜索、草拟和发送邮件，支持 Gmail API 以及通用 IMAP/SMTP 流程。
+- **email-manager**: 多邮箱统一管理与智能助手。支持 Gmail、QQ邮箱等 IMAP 邮箱，定时查看邮件，AI 生成摘要和回复草稿，发送前需用户确认。
+- **email-marketing**: Email marketing automation - campaign creation, sequence building, A/B testing, deliverability optim
+- **email-monitor**: AI inbox classification + Telegram notification
+- **email-outreach-run**: Automatic email outreach agent run
+- **email-sequence**: When the user wants to create or optimize an email sequence, drip campaign, automated email flow, or
+- **feishu-automation**: 飞书（Lark）全通道自动化。使用 lark-mcp 工具操作飞书多维表格（Bitable）、发送消息、管理文档、创建群组、自动化工作流等。当用户需要操作飞书平台、同步数据到飞书表格、发送飞书通知、管
+- **klaviyo-automation**: Automate Klaviyo tasks via Rube MCP (Composio): manage email/SMS campaigns, inspect campaign message
+- **mailchimp-automation**: Automate Mailchimp email marketing including campaigns, audiences, subscribers, segments, and analyt
+- **marketing-demand-acquisition**: Creates demand generation campaigns, optimizes paid ad spend across LinkedIn, Google, and Meta, deve
+- **marketing-ops**: Central router for the marketing skill ecosystem. Use when unsure which marketing skill to use, when
+- **mass-outreach**: Multi-channel outreach via Telegram/Email/WhatsApp
+- **referral-program**: When the user wants to design, launch, or optimize a referral or affiliate program. Use when they me
+- **remote-openclaw-deploy**: 通用远程部署 OpenClaw Agent 项目。支持任意定制化 agent 团队、跨 macOS/Linux、多渠道（飞书/Telegram/Discord）、deploy.json 声明式配置注入
+- **saas-metrics-coach**: This skill should be used when the user asks to "calculate MRR", "analyze churn", "compute SaaS metr
+- **slack-automation**: Automate Slack messaging, channel management, search, reactions, and threads via Rube MCP (Composio)
+- **telegram-check**: Check inbound Telegram messages
+- **telegram-session**: Create/update Telethon session
+- **thinking-warren-buffett**: 蒸馏Warren Buffett思维模式的实用框架——价值投资、能力圈、护城河、安全边际、反向思考
+- **timezone**: Local time detection, timezone conversion
+- **watchers-run**: Automatic trigger monitoring for leads
+- **wecom-cs-automation**: 企业微信客服自动化系统。自动同意好友添加、基于知识库的智能问答、未知问题人工介入提醒。适用于企业微信客服场景的 AI 助手机器人。
+
+### CQO — Chief Quant Officer (202 skills)
+
+- **5minbtc**: BTC 5分钟K线实时方向预测。v5.7.1半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+C
+- **Defense-in-Depth Validation**: Validate at every layer data passes through to make bugs impossible
+- **Getting Started with Skills**: Skills wiki intro - mandatory workflows, search tool, brainstorming triggers
+- **Scale Game**: Test at extremes (1000x bigger/smaller, instant/year-long) to expose fundamental truths hidden at no
+- **Verification Before Completion**: Run verification commands and confirm output before claiming success
+- **activecampaign-automation**: Automate ActiveCampaign tasks via Rube MCP (Composio): manage contacts, tags, list subscriptions, au
+- **agent-contacts**: AI agent contacts — add, list, remove MCP contacts. Use when someone gives an agent URL, or when you
+- **agent-task-confirm**: Use when confirming whether a dispatched agent task was actually received, activated, and progressin
+- **agentic-jujutsu**: Quantum-resistant, self-learning version control for AI agents with ReasoningBank intelligence and m
+- **agentic-os**: Build persistent multi-agent operating systems on Claude Code. Covers kernel architecture, specialis
+- **ai-security**: Use when assessing AI/ML systems for prompt injection, jailbreak vulnerabilities, model inversion ri
+- **ai-trader-arena**: 
+- **airtable-automation**: Automate Airtable tasks via Rube MCP (Composio): records, bases, tables, fields, views. Always searc
+- **alpha101**: WorldQuant 101 Formulaic Alphas — 因子计算、IC测试、回测一体化工具包。 基于Kakushadze (2015) 论文，提供101个价量/波动率/相关性因子的Pyth
+- **amplitude-automation**: Automate Amplitude tasks via Rube MCP (Composio): events, user activity, cohorts, user identificatio
+- **analyzing-market-sentiment**: This skill provides comprehensive cryptocurrency market sentiment analysis by combining multiple dat
+- **analyzing-options-flow**: This skill provides automated assistance for the described functionality Track crypto options flow t
+- **asana-automation**: Automate Asana tasks via Rube MCP (Composio): tasks, projects, sections, teams, workspaces. Always s
+- **auto-respawn**: Anchor your identity on the Autonomys Network so you can always be found — and always come back. Wor
+- **backtest-expert**: Expert guidance for systematic backtesting of trading strategies. Use when developing, testing, stre
+- **backtesting-trading-strategies**: Backtest crypto and traditional trading strategies against historical data. Calculates performance m
+- **backtesting-trading-strategies**: Validate trading strategies against historical data before risking real capital. This skill provides
+- **bankr**: AI-powered crypto trading agent and LLM gateway via natural language. Use when the user wants to tra
+- **bankr-signals**: 
+- **binance-square**: 
+- **binance-trending**: 
+- **box-automation**: Automate Box cloud storage operations including file upload/download, search, folder management, sha
+- **browser-use**: AI驱动的智能浏览器自动化工具。使用LLM理解页面并自动执行任务，比传统Playwright更智能、更省token。适用于复杂交互、动态页面、需要智能决策的浏览器操作。Chrome浏览器优先。
+- **browserstack**: Run tests on BrowserStack. Use when user mentions "browserstack", "cross-browser", "cloud testing", 
+- **btc-5min-scalper**: BTC 5-minute Up/Down paper trading on Polymarket. Scans Binance 1m candles for momentum/mean-reversi
+- **cal-com-automation**: Automate Cal.com tasks via Rube MCP (Composio): manage bookings, check availability, configure webho
+- **caveman**: Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler, articles, and pleasan
+- **channel-economics**: Use when reviewing or rebalancing direct vs. partner-led channel economics — computing fully-loaded 
+- **clanker**: Deploy ERC20 tokens on Base, Ethereum, Arbitrum, and other EVM chains using the Clanker SDK. Use whe
+- **claude-code-skill**: Control Claude Code via MCP protocol. Execute commands, read/write files, search code, and use all C
+- **claw-semantic-sim**: Semantic Similarity Index for disease research literature using PubMedBERT embeddings
+- **close-automation**: Automate Close CRM tasks via Rube MCP (Composio): create leads, manage calls/SMS, handle tasks, and 
+- **commercial-forecaster**: Use when building a quarterly bookings forecast, ARR projection, pipeline forecast, NRR projection, 
+- **connect**: Connect Claude to any app. Send emails, create issues, post messages, update databases - take real a
+- **connect-apps**: Connect Claude to external apps like Gmail, Slack, GitHub. Use this skill when the user wants to sen
+- **contract-review**: Legal contract analysis using CUAD dataset (41 risk categories). Supports NDA, SaaS, M&A, employment
+- **convertkit-automation**: Automate ConvertKit (Kit) tasks via Rube MCP (Composio): manage subscribers, tags, broadcasts, and b
+- **cost-benchmark**: Run the corpus benchmark — booster locally, optional Gemini/Sonnet/Opus baselines — and persist a ve
+- **cost-optimize**: Analyze token usage patterns and recommend cost optimizations with estimated savings
+- **cost-summary**: Single-shot programmatic dump of all cost data — total spend, per-tier, top session, budget status, 
+- **crypto-bd-agent**: 
+- **crypto-hunt**: 
+- **crypto-portfolio-management**: Guide to cryptocurrency portfolio management — asset allocation, rebalancing strategies, risk-adjust
+- **ct-monitor**: CT Monitor — Crypto Intelligence Analyst. Monitors 5000+ KOL tweets, real-time news, RSS feeds & rea
+- **daily-briefing**: 
+- **daily-portfolio**: 
+- **daily-reflection**: 
+- **daily-trending**: 获取今日热榜，从tophub.today抓取各平台热搜榜单。当用户询问"今天有什么热搜"、"热榜"、"微博热搜"时触发。
+- **datadog-automation**: Automate Datadog tasks via Rube MCP (Composio): query metrics, search logs, manage monitors/dashboar
+- **deal-desk**: Use when reviewing a specific inbound deal before close — when sales has asked for a discount that e
+- **defi-amm-security**: Security checklist for Solidity AMM contracts, liquidity pools, and swap flows. Covers reentrancy, C
+- **defi-protocol-templates**: Implement DeFi protocols with production-ready templates for staking, AMMs, governance, and lending 
+- **defi-risk-assessment**: Framework for evaluating DeFi protocol risk — smart contract audits, TVL analysis, governance struct
+- **defi-yield-strategies**: Comprehensive guide to DeFi yield farming strategies — lending, liquidity provision, auto-compoundin
+- **diff-analyze**: Analyze git diffs for risk scoring, reviewer recommendations, and change classification
+- **discord-automation**: Automate Discord tasks via Rube MCP (Composio): messages, channels, roles, webhooks, reactions. Alwa
+- **docusign-automation**: Automate DocuSign tasks via Rube MCP (Composio): templates, envelopes, signatures, document manageme
+- **embeddings**: Vector embeddings with HNSW indexing, sql.js persistence, and hyperbolic support. 75x faster with ag
+- **evm-token-decimals**: Prevent silent decimal mismatch bugs across EVM chains. Covers runtime decimal lookup, chain-aware c
+- **evomap**: Connect to the EvoMap collaborative evolution marketplace. Publish Gene+Capsule bundles, fetch promo
+- **expense-tracker**: Manage expense tracker bot — deploy, check expenses, export data, sync locally
+- **facebook-automation**: Automate Facebook tasks via Rube MCP (Composio): pages, posts, insights, comments, and ad accounts. 
+- **feature-flags-architect**: Use when adding, retiring, or auditing feature flags. Triggers on "add a flag", "ship behind a flag"
+- **figma-automation**: Automate Figma tasks via Rube MCP (Composio): files, components, design tokens, comments, exports. A
+- **finding-arbitrage-opportunities**: This skill detects and analyzes arbitrage opportunities across cryptocurrency exchanges and DeFi pro
+- **form-cro**: When the user wants to optimize any form that is NOT signup/registration — including lead capture fo
+- **freshdesk-automation**: Automate Freshdesk helpdesk operations including tickets, contacts, companies, notes, and replies vi
+- **freshservice-automation**: Automate Freshservice ITSM tasks via Rube MCP (Composio): create/update tickets, bulk operations, se
+- **gateguard**: Fact-forcing gate that blocks Edit/Write/Bash (including MultiEdit) and demands concrete investigati
+- **generating-trading-signals**: Multi-indicator signal generation system that analyzes price action using 7 technical indicators and
+- **gmail-automation**: Automate Gmail tasks via Rube MCP (Composio): send/reply, search, labels, drafts, attachments. Alway
+- **google-calendar-automation**: Automate Google Calendar events, scheduling, availability checks, and attendee management via Rube M
+- **grill-me**: Interview the user relentlessly about a plan or design until reaching shared understanding, resolvin
+- **hackernews-frontpage**: Scrape the Hacker News front page (titles, points, comment counts).
+- **hads**: Use when writing technical documentation that needs to be readable by both humans and AI models, con
+- **helpdesk-automation**: Automate HelpDesk tasks via Rube MCP (Composio): list tickets, manage views, use canned responses, a
+- **hft-quant-expert**: Quantitative trading expertise for DeFi and crypto derivatives. Use when building trading strategies
+- **inbox-triage**: Runs a full inbox triage using the knowledge base created by the 'inbox-setup' skill. Light-intake b
+- **inference-optimizer**: Audit OpenClaw token usage, purge stale sessions, and optimize inference speed. Use when the user se
+- **instagram-automation**: Automate Instagram tasks via Rube MCP (Composio): create posts, carousels, manage media, get insight
+- **intercom-automation**: Automate Intercom tasks via Rube MCP (Composio): conversations, contacts, companies, segments, admin
+- **investment-research**: 
+- **jira-automation**: Automate Jira tasks via Rube MCP (Composio): issues, projects, sprints, boards, comments, users. Alw
+- **launch-strategy**: When the user wants to plan a product launch, feature announcement, or release strategy. Also use wh
+- **lead-intelligence**: AI-native lead intelligence and outreach pipeline. Replaces Apollo, Clay, and ZoomInfo with agent-po
+- **learn**: Manage project learnings. Review, search, prune, and export what gstack has learned across sessions.
+- **legal-risk-assessment**: Structured legal risk assessment with 5x5 Severity x Likelihood matrix. Use for risk scoring, risk r
+- **linear-automation**: Automate Linear tasks via Rube MCP (Composio): issues, projects, cycles, teams, labels. Always searc
+- **linkedin-automation**: Automate LinkedIn tasks via Rube MCP (Composio): create posts, manage profile, company info, comment
+- **lit-synthesizer**: Search PubMed and bioRxiv, summarise papers with LLM, build citation graphs, and generate literature
+- **llm-trading-agent-security**: Security patterns for autonomous trading agents with wallet or transaction authority. Covers prompt 
+- **loop**: Start an autonomous experiment loop with user-selected interval (10min, 1h, daily, weekly, monthly).
+- **make-automation**: Automate Make (Integromat) tasks via Rube MCP (Composio): operations, enums, language and timezone l
+- **market-ingest**: Ingest and normalize market data into OHLCV vectors with HNSW indexing
+- **market-intelligence**: 
+- **market-pattern**: Detect and classify candlestick patterns from ingested OHLCV data
+- **market-sizing-analysis**: Use when the user asks to calculate TAM, determine SAM, estimate SOM, size a market, calculate marke
+- **marketing-strategy-pmm**: Product marketing skill for positioning, GTM strategy, competitive intelligence, and product launche
+- **mcp-agent-connect**: Connect to an AI agent via MCP using their mcp_url from CRM. Discovers capabilities via agent.json, 
+- **memory-hygiene**: Audit, clean, and optimize Clawdbot's vector memory (LanceDB). Use when memory is bloated with junk,
+- **memory-management**: AgentDB memory system with HNSW vector search. Use when: need to store patterns, search for solution
+- **memory-search**: SOTA semantic search — hybrid (sparse+dense), Graph RAG multi-hop, MMR diversity reranking, recency 
+- **microsoft-teams-automation**: Automate Microsoft Teams tasks via Rube MCP (Composio): send messages, manage channels, create meeti
+- **miro-automation**: Automate Miro tasks via Rube MCP (Composio): boards, items, sticky notes, frames, sharing, connector
+- **mixpanel-automation**: Automate Mixpanel tasks via Rube MCP (Composio): events, segmentation, funnels, cohorts, user profil
+- **monitoring-whale-activity**: Track large cryptocurrency transactions and whale wallet movements across multiple blockchains. Moni
+- **multi-agent-trading**: 
+- **network-config-validation**: Pre-deployment checks for router and switch configuration, including dangerous commands, duplicate a
+- **news-aggregation**: Aggregate and deduplicate recent news from multiple sources into concise topic summaries.
+- **op0-altar**: Create and manage self-rewarding meme coins on Solana via the OP0 Altar protocol. Deploy pump.fun to
+- **orchestra-research-skills**: 
+- **outlook-automation**: Automate Outlook tasks via Rube MCP (Composio): emails, calendar, contacts, folders, attachments. Al
+- **pagerduty-automation**: Automate PagerDuty tasks via Rube MCP (Composio): manage incidents, services, schedules, escalation 
+- **pair-agent**: Pair a remote AI agent with your browser. One command generates a setup key and prints instructions 
+- **pine-backtester**: Implements comprehensive backtesting capabilities for Pine Script indicators and strategies. Use whe
+- **pine-visualizer**: Breaks down trading ideas into component parts for systematic Pine Script implementation. Use when a
+- **planning-with-files-de**: Manus-artiges Dateiplanungssystem zur Organisation und Verfolgung des Fortschritts komplexer Aufgabe
+- **planning-with-files-es**: Sistema de planificación basado en archivos estilo Manus para organizar y rastrear el progreso de ta
+- **pm-done**: Mark task done + schedule follow-up
+- **polymarket-api**: 
+- **polymarket-copy-tracker**: Analyze top Polymarket traders for copy trading. Use when asked to find best traders to copy, analyz
+- **polymarket-profit**: 围绕 Polymarket 预测市场执行小资金量化交易与收益跟踪策略。
+- **polymarket-skill**: 
+- **popup-cro**: When the user wants to create or optimize popups, modals, overlays, slide-ins, or banners for conver
+- **portfolio-manager**: Comprehensive portfolio analysis using Alpaca MCP Server integration to fetch holdings and positions
+- **postmark-automation**: Automate Postmark email delivery tasks via Rube MCP (Composio): send templated emails, manage templa
+- **pptx**: Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx fi
+- **proactive-agent-lite**: Transform AI agents from task-followers into proactive partners with memory architecture, reverse pr
+- **pulse**: Multi-source recency research skill that takes the pulse of any topic across Reddit, Hacker News, th
+- **qmd**: Local search/indexing CLI (BM25 + vectors + rerank) with MCP mode.
+- **qq-email-operator**: QQ邮箱操作技能。支持通过 IMAP/SMTP 读取邮件、搜索邮件、回复邮件、发送邮件。凭据通过 pass 安全存储。
+- **quant-analyst**: Build financial models, backtest trading strategies, and analyze market data. Implements risk metric
+- **rag-implementation**: Build Retrieval-Augmented Generation (RAG) systems for LLM applications with vector databases and se
+- **red-team**: Use when planning or executing authorized red team engagements, attack path analysis, or offensive s
+- **reddit-automation**: Automate Reddit tasks via Rube MCP (Composio): search subreddits, create posts, manage comments, and
+- **reflect**: Mid-conversation reflection skill that pauses execution and zooms out from detail-mode to honestly r
+- **relayer-trade**: 
+- **render-automation**: Automate Render tasks via Rube MCP (Composio): services, deployments, projects. Always search tools 
+- **report**: Generate test report. Use when user says "test report", "results summary", "test status", "show resu
+- **research-ops**: Evidence-first current-state research workflow for ECC. Use when the user wants fresh facts, compari
+- **research-synthesize**: Synthesize research findings from memory into structured reports with evidence grading, contradictio
+- **rfp-responder**: Use when an RFP, RFI, RFQ, security questionnaire, vendor questionnaire, or proposal request arrives
+- **risk-metrics-calculation**: Calculate portfolio risk metrics including VaR, CVaR, Sharpe, Sortino, and drawdown analysis. Use wh
+- **ruflo-doctor**: Run health checks on the Ruflo installation and fix common issues
+- **salesforce-automation**: Automate Salesforce tasks via Rube MCP (Composio): leads, contacts, accounts, opportunities, SOQL qu
+- **santa-method**: Multi-agent adversarial verification with convergence loop. Two independent review agents must both 
+- **scan**: Scans the codebase to generate project-doc.md and AGENTS.md. Runs a full scan on first use and a sma
+- **scanning-market-movers**: Real-time detection and analysis of significant price movements and unusual volume patterns across c
+- **scenario-war-room**: Cross-functional what-if modeling for cascading multi-variable scenarios. Unlike single-assumption s
+- **scholar-evaluation**: Structured scholarly-work evaluation for papers, proposals, literature reviews, methods sections, ev
+- **senior-pm**: Senior Project Manager for enterprise software, SaaS, and digital transformation projects. Specializ
+- **seo**: Audit, plan, and implement SEO improvements across technical SEO, on-page optimization, structured d
+- **sergei-mikhailov-tg-channel-reader**: Read posts and comments from Telegram channels via MTProto (Pyrogram or Telethon). Fetch recent mess
+- **session-logs**: Search and analyze your own session logs (older/parent conversations) using jq.
+- **setup**: Set up a new autoresearch experiment interactively. Collects domain, target file, eval command, metr
+- **show-today**: Priority tasks for today — checks live sources (email, calendar) before showing stale CSV data
+- **skill-search-optimizer**: Optimize agent skills for discoverability on ClawdHub/MoltHub. Use when improving search ranking, wr
+- **skillify**: Codify the most recent successful /scrape flow into a permanent browser-skill on disk. Future /scrap
+- **slo-implementation**: Define and implement Service Level Indicators (SLIs) and Service Level Objectives (SLOs) with error 
+- **solidity-security**: Master smart contract security best practices to prevent common vulnerabilities and implement secure
+- **square-automation**: Automate Square tasks via Rube MCP (Composio): payments, orders, invoices, locations. Always search 
+- **stride-analysis-patterns**: Apply STRIDE methodology to systematically identify threats. Use when analyzing system security, con
+- **suno-skills**: AI音乐生成工具Suno的浏览器自动化Skill。通过Playwright控制Suno网站(https://suno.com)进行：生成歌曲(含自定义歌词)、管理创作、下载音频。触发场景："用suno
+- **supabase-automation**: Automate Supabase database queries, table management, project administration, storage, edge function
+- **synthetic-market-research**: 
+- **tavily**: AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents.
+- **team-communications**: Write internal company communications — 3P updates (Progress/Plans/Problems), company-wide newslette
+- **team-foreman**: 
+- **tech-decision**: This skill should be used when the user asks to "기술 의사결정", "뭐 쓸지 고민", "A vs B", "비교 분석", "라이브러리 선택",
+- **technical-analysis**: Master of price action, chart patterns, and technical indicators - combining classical Wyckoff/Dow t
+- **telegram-automation**: Automate Telegram tasks via Rube MCP (Composio): send messages, manage chats, share photos/documents
+- **telegram-scrape**: Search Telegram channels, read posts, ad contacts
+- **todo-tracker**: Persistent TODO scratch pad for tracking tasks across sessions. Use when user says "add to TODO", "w
+- **token-budget-advisor**: 
+- **token-reporter**: 每日自动统计 OpenClaw 实例 Token 消耗和工作产出，上报到飞书多维表格。扫描 JSONL 日志按模型聚合 token，收集各 agent 当日工作摘要，写入飞书 Bitable。触发：'
+- **tracking-crypto-derivatives**: Comprehensive derivatives market analysis across centralized and decentralized exchanges. This skill
+- **tracking-crypto-portfolio**: This skill provides comprehensive cryptocurrency portfolio tracking with Track cryptocurrency portfo
+- **tracking-crypto-prices**: Foundation skill providing real-time and historical cryptocurrency price data. This skill is the dat
+- **trade-prediction-markets**: Build and test Polymarket prediction market trading strategies for YES/NO token trading. Provides 6 
+- **trader-cloud-backtest**: Run a heavy neural-trader job (long walk-forward, big Monte-Carlo, parameter sweep, model training) 
+- **trader-explain**: Regulator-grade feature attribution for any LSTM/Transformer signal — single-entry PageRank ranks th
+- **trader-portfolio**: Optimize portfolio allocation using npx neural-trader mean-variance engine with risk constraints and
+- **trader-regime**: Detect current market regime using npx neural-trader — bull/bear/ranging/volatile classification wit
+- **trader-risk**: Assess portfolio risk using npx neural-trader — VaR, CVaR, Sharpe, position sizing, circuit breaker 
+- **trader-signal**: Generate trading signals using npx neural-trader anomaly detection engine with Z-score scoring and n
+- **trader-train**: Train neural models (LSTM, Transformer, N-BEATS) on market data using npx neural-trader with confide
+- **trello-automation**: Automate Trello boards, cards, and workflows via Rube MCP (Composio). Create cards, manage lists, as
+- **twitter-automation**: Automate Twitter/X tasks via Rube MCP (Composio): posts, search, users, bookmarks, lists, media. Alw
+- **uspto-database**: USPTO patent and trademark data workflow for official record lookup, PatentSearch queries, TSDR chec
+- **vercel-automation**: Automate Vercel tasks via Rube MCP (Composio): manage deployments, domains, DNS, env vars, projects,
+- **web-search**: 网络搜索与网页内容获取。当用户需要搜索互联网信息、获取网页内容、查找实时数据、进行 websearch 时使用此技能。支持多种搜索工具：WebFetch、Firecrawl skill、Tavily 
+- **webflow-automation**: Automate Webflow CMS collections, site publishing, page management, asset uploads, and ecommerce ord
+- **whatsapp-automation**: Automate WhatsApp Business tasks via Rube MCP (Composio): send messages, manage templates, upload me
+- **wiki-qa**: Answers questions about a code repository using source file analysis. Use when the user asks a quest
+- **yijing-divination**: 易经占卜系统。支持铜钱法、蓍草法起卦，生成本卦、互卦、变卦，提供Oracle Voice诠释。当用户请求占卜、问卦、易经解读、或寻求决策指引时使用。
+- **youtube-automation**: Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get
+- **zendesk-automation**: Automate Zendesk tasks via Rube MCP (Composio): tickets, users, organizations, replies. Always searc
+
+### CFO — Chief Financial Officer (57 skills)
+
+- **AgentDB Advanced Features**: Master advanced AgentDB features including QUIC synchronization, multi-database management, custom d
+- **Business Intelligence**: Model business performance, define KPIs, and turn data into decision-ready dashboards, briefings, an
+- **QuickBooks Automation**: Automate QuickBooks accounting workflows including invoicing, expenses, reporting, and bank reconcil
+- **afrexai-personal-finance**: Complete personal finance system — budgeting, debt payoff, investing, tax optimization, net worth tr
+- **agent-capacity-modeler**: 
+- **bookkeeping-basics**: Set up and maintain basic bookkeeping for a solopreneur business. Use when tracking income and expen
+- **business-investment-advisor**: Business investment analysis and capital allocation advisor. Use when evaluating whether to invest i
+- **cfo-advisor**: Financial leadership for startups and scaling companies. Financial modeling, unit economics, fundrai
+- **cfo-review**: /cs:cfo-review <plan> — Numerate-skeptic interrogation of any plan that touches money. Unit economic
+- **churn-prevention**: Reduce voluntary and involuntary churn through cancel flow design, save offers, exit surveys, and du
+- **churn-prevention**: Reduce voluntary and involuntary churn through cancel flow design, save offers, exit surveys, and du
+- **claw-metagenomics**: Shotgun metagenomics profiling — taxonomy, resistome, and functional pathways
+- **clawrouter**: Smart LLM router — save 67% on inference costs. Routes every request to the cheapest capable model a
+- **commercial-skills**: Use when reviewing, approving, or designing commercial motion — pricing models, deal review, discoun
+- **cost-aware-llm-pipeline**: Cost optimization patterns for LLM API usage — model routing by task complexity, budget tracking, re
+- **cost-booster-route**: Route tasks through hooks_route, partition by Agent Booster availability, and report Tier 1 bypass u
+- **cost-compact-context**: Wrap getTokenOptimizer().getCompactContext() to retrieve compacted ReasoningBank context for cost-an
+- **cost-conversation**: Per-conversation cost view — list every session in cost-tracking with started-at, message count, top
+- **cost-report**: Generate a cost report showing token usage and USD costs by agent and model
+- **cro-advisor**: Revenue leadership for B2B SaaS companies. Revenue forecasting, sales model design, pricing strategy
+- **cross-eval**: /cs:cross-eval <memo> — Multi-model consensus on a board memo or strategy brief. Claude + Codex + Ge
+- **embedding-strategies**: Select and optimize embedding models for semantic search and RAG applications. Use when choosing emb
+- **equity**: Model cap tables, dilution scenarios, and vesting schedules for startups. Use when planning fundrais
+- **equity-scorer**: Compute HEIM diversity and equity metrics from VCF or ancestry data. Generates heterozygosity, FST, 
+- **finance-billing-ops**: Evidence-first revenue, pricing, refunds, team-billing, and billing-model truth workflow for ECC. Us
+- **finance-skills**: Financial analyst agent skill and plugin for Claude Code, Codex, Gemini CLI, Cursor, OpenClaw. Ratio
+- **financial-analyst**: Performs financial ratio analysis, DCF valuation, budget variance analysis, and rolling forecast con
+- **grafana-dashboards**: Create and manage production Grafana dashboards for real-time visualization of system and applicatio
+- **healthcare-monitor**: 医疗行业企业融资监控系统。实时监控医疗健康企业的工商变更，识别融资信号，自动推送告警。支持天眼查/企查查数据采集、AI融资判断、多渠道推送。
+- **intelligence-route**: Route tasks via the 3-tier model selector and learned patterns; emits a routing rationale via hooks_
+- **investor-materials**: Create and update pitch decks, one-pagers, investor memos, accelerator applications, financial model
+- **investor-outreach**: Draft cold emails, warm intro blurbs, follow-ups, update emails, and investor communications for fun
+- **invoice**: Manual invoice generation without CRM
+- **invoice-generator-agent**: Automatic invoice generation with CRM integration
+- **invoice-organizer**: Use when "organizing invoices", "sorting receipts", "tax preparation", "expense tracking", or asking
+- **juejin-smart-publish**: 掘金技术社区智能发布：Markdown编辑器全功能支持。覆盖标题(15-35字)、分类(必选)、标签(1-5个)、封面上传、摘要填写、GFM排版。Playwright自动化+API双通道发布。触发：发
+- **kg-traverse**: Pathfinder traversal of the knowledge graph starting from a seed entity
+- **kpi-dashboard-design**: Design effective KPI dashboards with metrics selection, visualization best practices, and real-time 
+- **llm-config**: Configure RuVLLM local inference with model selection, MicroLoRA fine-tuning, and SONA adaptation
+- **model-health-check**: 检查已配置模型供应商的连通性、延迟和可用性，用于快速诊断模型侧故障。
+- **model-hierarchy-skill**: 
+- **model-usage-linux**: Track OpenClaw AI token usage and cost per model on Linux by parsing session JSONL files. Use when a
+- **office-hours**: /cs:office-hours <topic> — YC-style 6-question founder interrogation before any advice. Forces clari
+- **openrouter-usage**: Track OpenRouter API spending — credit balance, per-model cost breakdown, and spending projections f
+- **payment-tracker-run**: Automatic payment tracking and follow-up
+- **skill-gap-analyzer**: 
+- **startup-analyst**: Expert startup business analysis for market sizing, financial modeling, competitive analysis, and st
+- **startup-business-analyst-business-case**: Generate a comprehensive, investor-ready business case document covering market opportunity, solutio
+- **startup-business-analyst-financial-projections**: Create detailed 3-5 year financial models with revenue, costs, cash flow, and scenario analysis for 
+- **startup-financial-modeling**: Use when the user asks to create financial projections, build a financial model, forecast revenue, c
+- **status**: Memory health dashboard showing line counts, topic files, capacity, stale entries, and recommendatio
+- **team-composition-analysis**: Design optimal team structures, hiring plans, compensation strategies, and equity allocation for ear
+- **test-gaps**: Detect missing test coverage and generate test suggestions
+- **thinking-aaron-ross**: 蒸馏Aaron Ross思维模式的实用框架——预可售、销售分工模型、可预测收入
+- **thinking-charlie-munger**: 蒸馏查理·芒格《穷查理宝典》——多元思维模型、逆向思维、25种误判心理学、Lollapalooza效应、能力圈决策框架
+- **thinking-munger**: 蒸馏 Charlie Munger（Berkshire Hathaway）思维模式的实用框架：多元思维模型、反向思考、lollapalooza效应
+- **workflow-create**: Create reusable workflow templates with steps, conditions, and parallel execution
+
+### CRO — Chief Research Officer (6 skills)
+
+- **competitive-intelligence**: Generate competitive analysis reports and differentiation talking points based on secondary research
+- **deep-research**: Multi-source deep research using firecrawl and exa MCPs. Searches the web, synthesizes findings, and
+- **intelligence-transfer**: Publish or fetch learned patterns across projects via IPFS (Pinata) -- the cross-project pattern tra
+- **literature-review**: Systematic literature-review workflow for academic, biomedical, technical, and scientific topics, in
+- **llm-wiki**: Use when building or maintaining a persistent personal knowledge base (second brain) in Obsidian whe
+- **pubmed-database**: Direct PubMed and NCBI E-utilities search workflows for biomedical literature, MeSH queries, PMID lo
+
+### CSO — Chief Sales Officer (13 skills)
+
+- **account-executive**: Expert sales execution covering pipeline management, discovery, demos, negotiation, and deal closing
+- **add-lead**: Add company/person/relationship to CRM
+- **cold-email**: When the user wants to write, improve, or build a sequence of B2B cold outreach emails to prospects 
+- **crm-automation**: CRM workflow automation for HubSpot, Salesforce, Pipedrive - lead management, deal tracking, and mul
+- **customer-billing-ops**: Operate customer billing workflows such as subscriptions, refunds, churn triage, billing-portal reco
+- **customer-success**: Customer success management - onboarding, health scoring, QBRs, expansion playbooks, and retention s
+- **hubspot-automation**: Automate HubSpot CRM operations (contacts, companies, deals, tickets, properties) via Rube MCP using
+- **outbound-optimizer**: Use this skill when users need to improve cold outreach, optimize cold emails or DMs, increase respo
+- **sales-enablement**: When the user wants to create sales collateral, pitch decks, one-pagers, objection handling docs, or
+- **sales-mastery**: World-class autonomous sales and revenue skill system. Use ANY time the user asks to sell, pitch, pr
+- **sandler-system**: Apply Sandler Selling System principles for consultative sales with pain discovery, budget qualifica
+- **update-lead**: Update status, contacts, notes in CRM
+- **zoho-crm-automation**: Automate Zoho CRM tasks via Rube MCP (Composio): create/update records, search contacts, manage lead
+
+### CLO — Chief Legal Officer (23 skills)
+
+- **china-contract-review**: 中国合同审查工具。Use when user needs to review contracts, identify risks, check compliance, or get legal sug
+- **continuous-agent-loop**: Patterns for continuous autonomous agent loops with quality gates, evals, and recovery controls.
+- **contract-and-proposal-writer**: Draft business proposals, SOWs, NDAs, MSAs, and freelance contracts with jurisdiction-aware structur
+- **cross-instance-comm**: Use when sending messages or tasks between multiple OpenClaw instances over Tailscale Gateway, such 
+- **customs-trade-compliance**: Codified expertise for customs documentation, tariff classification, duty optimisation, restricted p
+- **employment-contract-templates**: Create employment contracts, offer letters, and HR policy documents following legal best practices. 
+- **first-principles-thinking**: Socratic coach for breaking down problems to fundamental truths. Use when users want to think throug
+- **gc-review**: /cs:gc-review <plan> — General Counsel interrogation of contracts, IP, regulatory, term sheets, and 
+- **gdpr-compliance**: Generate UK/EU GDPR compliance documents — privacy policies, cookie policies, DPIAs, ROPA, DSAR resp
+- **general-counsel-advisor**: General Counsel advisory for startups: contract review (MSA, SaaS, NDA, DPA, employment), IP strateg
+- **hipaa-compliance**: HIPAA-specific entrypoint for healthcare privacy and security work. Use when a task is explicitly fr
+- **legal-advisor**: Draft privacy policies, terms of service, disclaimers, and legal notices. Creates GDPR-compliant tex
+- **legal-cog**: Legal demands two things: frontier-level reasoning and precision document generation. CellCog delive
+- **legal-review**: Review legal documents (NDA, contracts, agreements) for sensitive clauses, risks, and red flags
+- **moneyclaw**: 
+- **multi-reviewer-patterns**: Coordinate parallel code reviews across multiple quality dimensions with finding deduplication, seve
+- **patent**: Patent prior-art and landscape intelligence skill — not generic patent help. Commits to one of five 
+- **privacy-compliance**: Multi-regulation privacy compliance navigator. Use for GDPR, CCPA, LGPD, POPIA, PIPEDA, PDPA, Privac
+- **procurement-optimizer**: Use when running an annual SaaS audit, doing category-level spend review, or rationalizing the suppl
+- **security-compliance-compliance-check**: You are a compliance expert specializing in regulatory requirements for software systems including G
+- **self-improving-legal**: Captures clause risks, compliance gaps, precedent shifts, contract deviations, regulatory changes, a
+- **slack-gif-creator**: Toolkit for creating animated GIFs optimized for Slack, with validators for size constraints and com
+- **thinking-lessig**: 蒸馏Lawrence Lessig思维模式的实用框架——代码即法律、创用CC、互联网自由、制度腐败分析
+
+### COO — Chief Operating Officer (18 skills)
+
+- **ai-act-readiness**: /cs:ai-act-readiness <system> — EU AI Act 6-question forcing interrogation. Use during AI-system int
+- **business-operations-skills**: Use when running, diagnosing, or designing internal business operations — process documentation, ven
+- **coo-advisor**: Operations leadership for scaling companies. Process design, OKR execution, operational cadence, and
+- **ct-monitor-skill**: 
+- **file-cleaner**: 
+- **gitops-workflow**: Implement GitOps workflows with ArgoCD and Flux for automated, declarative Kubernetes deployments wi
+- **healthcare-cdss-patterns**: Clinical Decision Support System (CDSS) development patterns. Drug interaction checking, dose valida
+- **hr-automation**: HR workflow automation - recruiting, onboarding, employee management, and offboarding processes
+- **incident-commander**: Comprehensive incident response framework from detection through resolution and post-incident review
+- **incident-runbook-templates**: Create structured incident response runbooks with step-by-step procedures, escalation paths, and rec
+- **iot-firmware**: Orchestrate firmware rollouts with canary deployment and anomaly-gated advancement
+- **okr**: 基于流行 OKR 体系管理智能体目标（O）与关键结果（KR）。当用户提到目标管理、季度计划、OKR、关键结果、复盘、评分、经验沉淀时使用，并将信息维护到 memory/okr.md。
+- **process-mapper**: Use when a BizOps lead, COO, or process-improvement owner needs to document an end-to-end business p
+- **release-manager**: Use when the user asks to plan releases, manage changelogs, coordinate deployments, create release b
+- **shrimp-coach**: 训练垂直领域 agent 的教练型 skill，用于按宪章、手册和复盘机制持续提升 agent 能力。
+- **swarm-advanced**: Advanced swarm orchestration patterns for research, development, testing, and complex distributed wo
+- **thinking-andy-grove**: 蒸馏Andy Grove思维模式的实用框架——高产出管理、OKR、战略转折点、只有偏执狂才能生存
+- **workflow-run**: Execute, pause, resume, and cancel running workflows
+
+### Governor — Governor (Audit & Quality) (25 skills)
+
+- **agent-tester**: 
+- **browser-qa**: Use this skill to automate visual testing and UI interaction verification using browser automation a
+- **code-review-quality**: Conduct context-driven code reviews focusing on quality, testability, and maintainability. Use when 
+- **coverage**: Analyze test coverage gaps. Use when user says "test coverage", "what's not tested", "coverage gaps"
+- **cso**: Chief Security Officer mode. Infrastructure-first security audit: secrets archaeology, dependency su
+- **data-quality-auditor**: Audit datasets for completeness, consistency, accuracy, and validity. Profile data distributions, de
+- **e2e-testing**: Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact manag
+- **gdpr-audit-prep**: /cs:gdpr-audit-prep <scope> — GDPR audit 6-question Article-cited forcing interrogation. Use before 
+- **init**: Set up Playwright in a project. Use when user says "set up playwright", "add e2e tests", "configure 
+- **laravel-verification**: Verification loop for Laravel projects: env checks, linting, static analysis, tests with coverage, s
+- **python-testing**: Python testing strategies using pytest, TDD methodology, fixtures, mocking, parametrization, and cov
+- **quarkus-verification**: Verification loop for Quarkus projects: build, static analysis, tests with coverage, security scans,
+- **security-bounty-hunter**: Hunt for exploitable, bounty-worthy security issues in repositories. Focuses on remotely reachable v
+- **security-pen-testing**: Use when the user asks to perform security audits, penetration testing, vulnerability scanning, OWAS
+- **security-requirement-extraction**: Derive security requirements from threat models and business context. Use when translating threats i
+- **senior-security**: Security engineering toolkit for threat modeling, vulnerability analysis, secure architecture, and p
+- **setup-browser-cookies**: Import cookies from your real Chromium browser into the headless browse session. Opens an interactiv
+- **skill-security-audit**: 已安装 Skills 的安全审计工具。用于批量审计 Skills 的安全性，包括命令执行、网络访问、文件访问、数据泄露、依赖风险、提示词越权和触发条件检查。适用于用户提供 Skills 列表和文件内容
+- **skill-security-auditor**: 
+- **skill-tester**: Validate, test, and score the quality of skills within the claude-skills ecosystem. Comprehensive me
+- **springboot-verification**: Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security sc
+- **stress-test**: /em -stress-test — Business Assumption Stress Testing
+- **wcag-audit-patterns**: Conduct WCAG 2.2 accessibility audits with automated testing, manual verification, and remediation g
+- **weekly-review**: 
+- **windows-desktop-e2e**: E2E testing for Windows native desktop apps (WPF, WinForms, Win32/MFC, Qt) using pywinauto and Windo
