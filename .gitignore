@@ -91,3 +91,4 @@ skills/qingyun-api/docs/api-*.md
 **/node_modules/
 *.pyc
 skills/mediaclaw/
+skills/openssf-security/
