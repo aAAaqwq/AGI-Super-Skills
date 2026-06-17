@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGI Super Team — AI 原生公司模板</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "PingFang SC", "Noto Sans SC", "SF Pro Text", "Helvetica Neue", sans-serif;
+      background: #0d0d0d;
+      color: #d4d4d4;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #6eb4ff; text-decoration: none; }
+    a:hover { color: #8fc7ff; text-decoration: underline; }
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+    /* Header */
+    header {
+      padding: 80px 0 48px;
+      border-bottom: 1px solid #1e1e1e;
+    }
+    header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #f0f0f0;
+      margin-bottom: 12px;
+    }
+    header h1 span { background: linear-gradient(135deg, #6eb4ff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    header .subtitle {
+      font-size: 1.15rem;
+      color: #888;
+      max-width: 600px;
+    }
+    header .stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    header .stat-item { display: flex; align-items: baseline; gap: 6px; }
+    header .stat-num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f0f0f0;
+      font-variant-numeric: tabular-nums;
+    }
+    header .stat-label { font-size: 0.9rem; color: #777; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    /* Section */
+    section { padding: 56px 0; border-bottom: 1px solid #1a1a1a; }
+    section:last-of-type { border-bottom: none; }
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #f0f0f0;
+      margin-bottom: 24px;
+      letter-spacing: -0.01em;
+    }
+
+    /* Agent Grid */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .agent-card {
+      background: #141414;
+      border: 1px solid #242424;
+      border-radius: 8px;
+      padding: 16px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .agent-card:hover { border-color: #444; background: #1a1a1a; }
+    .agent-card .emoji { font-size: 1.4rem; }
+    .agent-card .name {
+      font-weight: 600;
+      color: #f0f0f0;
+      font-size: 0.95rem;
+      margin: 4px 0 2px;
+    }
+    .agent-card .role {
+      font-size: 0.8rem;
+      color: #777;
+    }
+    .agent-card .skills-count {
+      font-size: 0.75rem;
+      color: #6eb4ff;
+      margin-top: 6px;
+    }
+
+    /* Feature list */
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .feature-item {
+      background: #141414;
+      border: 1px solid #242424;
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .feature-item h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #f0f0f0;
+      margin-bottom: 6px;
+    }
+    .feature-item p {
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    /* Links */
+    .link-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .link-list a {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #d4d4d4;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .link-list a:hover {
+      background: #1e1e1e;
+      border-color: #6eb4ff;
+      text-decoration: none;
+    }
+
+    /* Footer */
+    footer {
+      padding: 32px 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #555;
+    }
+    footer a { color: #888; }
+
+    @media (max-width: 600px) {
+      header { padding: 48px 0 32px; }
+      header h1 { font-size: 2.2rem; }
+      .agent-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+      header .stats { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <h1><span>AGI</span> Super Team</h1>
+    <p class="subtitle">即插即用的 AI 原生公司模板 —— 在 OpenClaw 上部署完整的虚拟 C  Suite</p>
+    <div class="stats">
+      <div class="stat-item"><span class="stat-num">70</span><span class="stat-label">Stars</span></div>
+      <div class="stat-item"><span class="stat-num">15</span><span class="stat-label">Forks</span></div>
+      <div class="stat-item"><span class="stat-num">1,639</span><span class="stat-label">Skills</span></div>
+      <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">Agents</span></div>
+      <div class="stat-item"><span class="stat-num">31</span><span class="stat-label">Thinking Frameworks</span></div>
+    </div>
+  </header>
+
+  <!-- Agents -->
+  <section>
+    <h2>👥 14 个 Agent</h2>
+    <div class="agent-grid">
+      <div class="agent-card"><div class="emoji">👑</div><div class="name">CEO</div><div class="role">战略 · 协调 · 质量把关</div><div class="skills-count">28 skills</div></div>
+      <div class="agent-card"><div class="emoji">⚡</div><div class="name">CTO</div><div class="role">架构 · 技术战略 · 研发方向</div><div class="skills-count">20 skills</div></div>
+      <div class="agent-card"><div class="emoji">💻</div><div class="name">PE</div><div class="role">生产工程 · DevOps · 交付</div><div class="skills-count">325 skills</div></div>
+      <div class="agent-card"><div class="emoji">🎨</div><div class="name">CPO</div><div class="role">产品设计 · UX · 品牌 DNA</div><div class="skills-count">21 skills</div></div>
+      <div class="agent-card"><div class="emoji">📈</div><div class="name">CQO</div><div class="role">量化交易 · 算法策略</div><div class="skills-count">52 skills</div></div>
+      <div class="agent-card"><div class="emoji">📊</div><div class="name">CDO</div><div class="role">数据管道 · 分析 · 治理</div><div class="skills-count">23 skills</div></div>
+      <div class="agent-card"><div class="emoji">✍️</div><div class="name">CCO</div><div class="role">内容创作 · 病毒式增长</div><div class="skills-count">149 skills</div></div>
+      <div class="agent-card"><div class="emoji">📣</div><div class="name">CMO</div><div class="role">市场营销 · SEO · 增长</div><div class="skills-count">34 skills</div></div>
+      <div class="agent-card"><div class="emoji">💰</div><div class="name">CFO</div><div class="role">财务 · P&L · 资本配置</div><div class="skills-count">12 skills</div></div>
+      <div class="agent-card"><div class="emoji">🔬</div><div class="name">CRO</div><div class="role">深度研究 · 前沿智能</div><div class="skills-count">18 skills</div></div>
+      <div class="agent-card"><div class="emoji">⚖️</div><div class="name">CLO</div><div class="role">法务 · 合规 · IP 保护</div><div class="skills-count">28 skills</div></div>
+      <div class="agent-card"><div class="emoji">🤝</div><div class="name">CSO</div><div class="role">销售 · 商务拓展 · 营收增长</div><div class="skills-count">27 skills</div></div>
+      <div class="agent-card"><div class="emoji">⚙️</div><div class="name">COO</div><div class="role">运营 · OKR · 跨团队协同</div><div class="skills-count">15 skills</div></div>
+      <div class="agent-card"><div class="emoji">⚖️</div><div class="name">Governor</div><div class="role">质量保证 · 交付审计 · 升级</div><div class="skills-count">11 skills</div></div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section>
+    <h2>⚡ 核心特性</h2>
+    <div class="feature-list">
+      <div class="feature-item">
+        <h3>🔌 60+ SaaS 集成</h3>
+        <p>Notion, Airtable, HubSpot, Stripe, 飞书, Telegram 等开箱即用</p>
+      </div>
+      <div class="feature-item">
+        <h3>🧠 31 种思维框架</h3>
+        <p>Elon Musk、Jensen Huang、Warren Buffett 等大师级思维模型注入</p>
+      </div>
+      <div class="feature-item">
+        <h3>🔄 30 个生产工作流</h3>
+        <p>每日站会、周报、危机升级、跨 Agent 协作，开箱即用</p>
+      </div>
+      <div class="feature-item">
+        <h3>📦 一键部署工具包</h3>
+        <p>Solo Founder、Content Creator、Quant Trader 等预设组合</p>
+      </div>
+      <div class="feature-item">
+        <h3>🏗️ 模块化技能体系</h3>
+        <p>1,639+ 独立 skill，按 Agent 自动分配，可灵活组合</p>
+      </div>
+      <div class="feature-item">
+        <h3>🤖 多 Agent 编排</h3>
+        <p>CEO 分配任务 → Agent 执行 → Governor 审计，闭环交付</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Links -->
+  <section>
+    <h2>🔗 链接</h2>
+    <div class="link-list">
+      <a href="https://github.com/aAAaqwq/AGI-Super-Team" target="_blank" rel="noopener">📘 GitHub 仓库</a>
+      <a href="https://github.com/aAAaqwq/AGI-Super-Team/blob/master/README.md" target="_blank" rel="noopener">📖 README</a>
+      <a href="skills-matrix" target="_blank">📊 Skill-Agent 矩阵</a>
+      <a href="https://github.com/aAAaqwq/AGI-Super-Team/graphs/contributors" target="_blank" rel="noopener">👥 贡献者</a>
+      <a href="https://star-history.com/#aAAaqwq/AGI-Super-Team&Date" target="_blank" rel="noopener">⭐ Star 历史</a>
+      <a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener">⚡ 基于 OpenClaw</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p><a href="https://github.com/aAAaqwq/AGI-Super-Team">AGI Super Team</a> — Built with ❤️ using <a href="https://github.com/openclaw/openclaw">OpenClaw</a></p>
+  </footer>
+
+</div>
+
+</body>
+</html>
