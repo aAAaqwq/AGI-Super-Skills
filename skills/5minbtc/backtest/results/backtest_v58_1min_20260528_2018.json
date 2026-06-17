@@ -1,0 +1,195 @@
+{
+  "version": "v5.8-1min-half",
+  "timestamp": "20260528_2018",
+  "n_half": 2,
+  "sample_rate": 6,
+  "max_days": 180,
+  "stats_1m": {
+    "label": "v5.7 + 真实1min半K线(前2根)",
+    "total_candles": 8598,
+    "directional": 4477,
+    "correct": 2764,
+    "wrong": 1713,
+    "neutral": 4121,
+    "accuracy": 61.7,
+    "edge_vs_random": 11.7,
+    "max_win_streak": 16,
+    "max_lose_streak": 12,
+    "avg_win_streak": 2.6,
+    "avg_lose_streak": 1.6,
+    "half_body_active": 7044,
+    "half_body_active_pct": 81.9,
+    "half_body_dir": 3674,
+    "half_body_correct": 2342,
+    "half_body_acc": 63.7,
+    "monthly": {
+      "2025-11": {
+        "total": 20,
+        "correct": 13,
+        "neutral": 36
+      },
+      "2025-12": {
+        "total": 766,
+        "correct": 489,
+        "neutral": 722
+      },
+      "2026-01": {
+        "total": 787,
+        "correct": 483,
+        "neutral": 701
+      },
+      "2026-02": {
+        "total": 704,
+        "correct": 437,
+        "neutral": 640
+      },
+      "2026-03": {
+        "total": 760,
+        "correct": 477,
+        "neutral": 728
+      },
+      "2026-04": {
+        "total": 755,
+        "correct": 466,
+        "neutral": 685
+      },
+      "2026-05": {
+        "total": 685,
+        "correct": 399,
+        "neutral": 609
+      }
+    },
+    "factor_correlation": {
+      "decel": {
+        "acc": 48.6,
+        "count": 3947
+      },
+      "fatigue": {
+        "acc": 48.5,
+        "count": 1266
+      },
+      "half_body": {
+        "acc": 49.3,
+        "count": 2998
+      },
+      "meanrev": {
+        "acc": 48.8,
+        "count": 3979
+      },
+      "momentum": {
+        "acc": 50.5,
+        "count": 4223
+      },
+      "position": {
+        "acc": 48.9,
+        "count": 4065
+      },
+      "rsi": {
+        "acc": 51.3,
+        "count": 2951
+      },
+      "v_reversal": {
+        "acc": 50.0,
+        "count": 1999
+      },
+      "vol_breakout": {
+        "acc": 49.5,
+        "count": 1641
+      },
+      "volume": {
+        "acc": 57.7,
+        "count": 3707
+      }
+    }
+  },
+  "stats_open": {
+    "label": "v5.6 开盘baseline",
+    "total_candles": 8640,
+    "directional": 4471,
+    "correct": 2112,
+    "wrong": 2359,
+    "neutral": 4169,
+    "accuracy": 47.2,
+    "edge_vs_random": -2.8,
+    "max_win_streak": 10,
+    "max_lose_streak": 13,
+    "avg_win_streak": 1.9,
+    "avg_lose_streak": 2.1,
+    "half_body_active": 0,
+    "half_body_active_pct": 0.0,
+    "half_body_dir": 0,
+    "half_body_correct": 0,
+    "half_body_acc": 0,
+    "monthly": {
+      "2025-11": {
+        "total": 49,
+        "correct": 18,
+        "neutral": 49
+      },
+      "2025-12": {
+        "total": 776,
+        "correct": 370,
+        "neutral": 712
+      },
+      "2026-01": {
+        "total": 787,
+        "correct": 373,
+        "neutral": 701
+      },
+      "2026-02": {
+        "total": 692,
+        "correct": 319,
+        "neutral": 652
+      },
+      "2026-03": {
+        "total": 750,
+        "correct": 363,
+        "neutral": 738
+      },
+      "2026-04": {
+        "total": 741,
+        "correct": 355,
+        "neutral": 699
+      },
+      "2026-05": {
+        "total": 676,
+        "correct": 314,
+        "neutral": 618
+      }
+    },
+    "factor_correlation": {
+      "decel": {
+        "acc": 49.1,
+        "count": 3845
+      },
+      "fatigue": {
+        "acc": 49.6,
+        "count": 1412
+      },
+      "meanrev": {
+        "acc": 49.5,
+        "count": 4030
+      },
+      "momentum": {
+        "acc": 50.4,
+        "count": 4225
+      },
+      "position": {
+        "acc": 49.2,
+        "count": 4096
+      },
+      "rsi": {
+        "acc": 51.0,
+        "count": 3077
+      },
+      "vol_breakout": {
+        "acc": 51.3,
+        "count": 1652
+      },
+      "volume": {
+        "acc": 47.2,
+        "count": 4471
+      }
+    }
+  }
+}

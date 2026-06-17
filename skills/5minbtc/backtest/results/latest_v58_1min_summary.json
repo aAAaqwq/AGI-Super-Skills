@@ -1,0 +1,12 @@
+{
+  "version": "v5.8-1min-half",
+  "timestamp": "20260528_2020",
+  "n_half": 4,
+  "accuracy_1m": 69.5,
+  "edge_vs_random": 19.5,
+  "directional": 4460,
+  "correct": 3100,
+  "half_body_acc": 71.2,
+  "max_win_streak": 22,
+  "max_lose_streak": 11
+}

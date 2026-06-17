@@ -1,0 +1,105 @@
+{
+  "version": "v5.8-1min-half",
+  "timestamp": "20260528_2019",
+  "n_half": 5,
+  "sample_rate": 6,
+  "max_days": 180,
+  "stats_1m": {
+    "label": "v5.7 + 真实1min半K线(前5根)",
+    "total_candles": 8598,
+    "directional": 4522,
+    "correct": 3442,
+    "wrong": 1080,
+    "neutral": 4076,
+    "accuracy": 76.1,
+    "edge_vs_random": 26.1,
+    "max_win_streak": 27,
+    "max_lose_streak": 5,
+    "avg_win_streak": 4.2,
+    "avg_lose_streak": 1.3,
+    "half_body_active": 7583,
+    "half_body_active_pct": 88.2,
+    "half_body_dir": 3996,
+    "half_body_correct": 3110,
+    "half_body_acc": 77.8,
+    "monthly": {
+      "2025-11": {
+        "total": 23,
+        "correct": 14,
+        "neutral": 33
+      },
+      "2025-12": {
+        "total": 773,
+        "correct": 585,
+        "neutral": 715
+      },
+      "2026-01": {
+        "total": 806,
+        "correct": 600,
+        "neutral": 682
+      },
+      "2026-02": {
+        "total": 704,
+        "correct": 531,
+        "neutral": 640
+      },
+      "2026-03": {
+        "total": 776,
+        "correct": 610,
+        "neutral": 712
+      },
+      "2026-04": {
+        "total": 743,
+        "correct": 584,
+        "neutral": 697
+      },
+      "2026-05": {
+        "total": 697,
+        "correct": 518,
+        "neutral": 597
+      }
+    },
+    "factor_correlation": {
+      "decel": {
+        "acc": 48.5,
+        "count": 4021
+      },
+      "fatigue": {
+        "acc": 49.4,
+        "count": 1253
+      },
+      "half_body": {
+        "acc": 48.5,
+        "count": 3462
+      },
+      "meanrev": {
+        "acc": 48.6,
+        "count": 4088
+      },
+      "momentum": {
+        "acc": 51.5,
+        "count": 4274
+      },
+      "position": {
+        "acc": 48.3,
+        "count": 4136
+      },
+      "rsi": {
+        "acc": 51.5,
+        "count": 3079
+      },
+      "v_reversal": {
+        "acc": 49.6,
+        "count": 2061
+      },
+      "vol_breakout": {
+        "acc": 48.9,
+        "count": 1643
+      },
+      "volume": {
+        "acc": 54.4,
+        "count": 3445
+      }
+    }
+  }
+}
