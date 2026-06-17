@@ -6,7 +6,7 @@ _法务 · 本地工具配置和笔记_
 
 | 路径 | 说明 |
 |------|------|
-| ~/openclaw/skills/ | 150+ 技能库 |
+| ../skills/ | AGI Super Team 技能库 |
 | ~/openclaw/scripts/ | 工具脚本（newsbot_send.py, model-health-check.sh 等）|
 | ~/openclaw/workspace/content-pipeline/ | 内容管线（drafts, hotpool, topics）|
 | ~/openclaw/projects/ | 项目（MediaClaw, super-quant-claw）|
@@ -16,13 +16,13 @@ _法务 · 本地工具配置和笔记_
 
 ## 推荐 Skills
 
-### ~/openclaw/skills/ (本地)
-- **compliance-skills.md**: 合规检查与法律风险分析
-- **tianyancha-cn**: 天眼查企业工商数据查询
-- **browser-login-monitor**: 浏览器登录安全监控
-- **email-manager**: 邮件管理
-- **auth-manager**: 认证与权限管理
-- **healthcare-monitor**: 医疗健康监管
+### ../skills/ (仓库)
 
-### ~/openclaw/repos/awesome-skills/ (社区)
-- **docusign-automation**: DocuSign 电子签章自动化
+- **contract-review**: Legal contract analysis using CUAD dataset (41 risk categories). Supports NDA, SaaS, M&A, employment, payment/merchant, and finder/broker agreements.
+- **gdpr-dsgvo-expert**: GDPR and German DSGVO compliance automation. Scans codebases for privacy risks, generates DPIA documentation, tracks data subject rights requests.
+- **tianyancha-cn**: 企业信息查询 - 天眼查/企查查/爱企查数据查询（Bloomberg 终端中国版）
+- **auth-manager**: 网页登录态管理。使用 OpenClaw 内置 browser 统一管理各平台登录状态。
+- **browser-login-monitor**: 浏览器登录安全监控——监测浏览器会话状态与登录安全
+- **healthcare-monitor**: 医疗行业企业融资监控系统。实时监控医疗健康企业的工商变更，识别融资信号。
+- **email-manager**: 多邮箱统一管理与智能助手。支持 Gmail、QQ邮箱等 IMAP 邮箱。
+- **docusign-automation**: Automate DocuSign tasks via Rube MCP: templates, envelopes, signatures, document management.
