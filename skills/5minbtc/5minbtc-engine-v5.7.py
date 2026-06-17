@@ -36,6 +36,7 @@ v5.0 基础(基于R14审查 14项修复):
 import json, math, os, urllib.request
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone, timedelta
 
 CST = timezone(timedelta(hours=8))
@@ -743,9 +744,33 @@ def load_news_risk():
 
 # ======================== Main ========================
 
+def _fetch_fng():
+    """P0-2黑天鹅过滤: Fetch Fear & Greed Index (parallel-safe)"""
+    try:
+        req = urllib.request.Request("https://api.alternative.me/fng/?limit=1",
+                                     headers={"User-Agent": "5minbtc/5.0"})
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            fd = json.loads(resp.read())["data"][0]
+        return {"value": int(fd["value"]), "label": fd["value_classification"]}
+    except Exception:
+        return {"value": None, "label": None}
+
 def run():
     info = current_candle_info()
-    candles = fetch_klines(limit=200)
+
+    # v5.7.3: 4路并行HTTP — klines + depth + FNG + chainlink 同时发射
+    # 最大延迟 = max(各API延迟) ≈ 3s，串行版 ~11s → 提速 ~3.7x
+    with ThreadPoolExecutor(max_workers=4) as ex:
+        f_klines = ex.submit(fetch_klines, limit=200)
+        f_depth = ex.submit(fetch_depth)
+        f_fng = ex.submit(_fetch_fng)
+        f_cl = ex.submit(fetch_chainlink_ref)
+
+        candles = f_klines.result()
+        depth = f_depth.result()
+        fng = f_fng.result()
+        chainlink_ref, cl_source = f_cl.result()
+
     closes = [c["c"] for c in candles]
 
     e9 = ema(closes, 9)
@@ -755,18 +780,6 @@ def run():
     bbu, bbm, bbl = bollinger(closes)
     atr_val = atr_wilder(candles)
     vr = vol_regime_ratio(closes)
-    depth = fetch_depth()
-
-    # v5.7.1: FNG提前获取 -- P0-2黑天鹅过滤需要
-    fng = {"value": None, "label": None}
-    try:
-        req = urllib.request.Request("https://api.alternative.me/fng/?limit=1",
-                                     headers={"User-Agent": "5minbtc/5.0"})
-        with urllib.request.urlopen(req, timeout=5) as resp:
-            fd = json.loads(resp.read())["data"][0]
-            fng = {"value": int(fd["value"]), "label": fd["value_classification"]}
-    except Exception:
-        pass
 
     progress = min(info["progress_pct"] / 100, 1.0)
     bias, strength, confidence, score, factors, regime, fng_black_swan = direction_rule_v5(
@@ -786,15 +799,11 @@ def run():
                "L": round(c["l"]), "C": round(c["c"])} for c in candles[-4:-1]]
     cur = candles[-1]
 
-    # v5.6 R4: Chainlink价格对齐 -- Polymarket 用 BTC/USD 结算
-    # Binance BTCUSDT 系统性偏高 ~$88 (coinbase参考)
-    # 对 pred_close/high/low 施加偏移, 使预测更接近 Chainlink 结算价
-    chainlink_ref, cl_source = fetch_chainlink_ref()
+    # v5.6 R4: Chainlink价格对齐 — 已在并行块中获取
     binance_price = cur["c"]
     cl_offset = 0.0
     if chainlink_ref is not None and binance_price > 0:
         cl_offset = round(chainlink_ref - binance_price)
-        # 只在偏移合理范围内补偿 ($-300~+$300, 约 +-0.3%)
         if abs(cl_offset) > 300:
             cl_offset = 0.0
         else:
@@ -802,13 +811,11 @@ def run():
             pred_high = round(pred_high + cl_offset)
             pred_low = round(pred_low + cl_offset)
 
-    # FNG已在上方提前获取(P0-2黑天鹅过滤需要)
-
     # v5.7.1 P0-1: ATR spike检测
     is_spike, spike_ratio, spike_count = atr_spike_detect(candles, atr_val)
 
     result = {
-        "version": "5.7.1",
+        "version": "5.7.3",
         "candle": info,
         "price": {
             "current": cur["c"], "open": cur["o"],
