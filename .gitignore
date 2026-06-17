@@ -90,3 +90,4 @@ skills/qingyun-api/docs/api-*.md
 **/__pycache__/
 **/node_modules/
 *.pyc
+skills/mediaclaw/
