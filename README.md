@@ -5,14 +5,14 @@
 <h1 align="center">AGI Super Team</h1>
 
 <p align="center">
-  <strong>2,600+ AI Skills · 14 C-Suite Agents · 31 Thinking Frameworks</strong><br/>
+  <strong>1,639 AI Skills · 14 C-Suite Agents · 31 Thinking Frameworks</strong><br/>
   Build your AI-native company in minutes.
 </p>
 
 <p align="center">
   <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/Powered%20by-OpenClaw-blue?logo=github" alt="OpenClaw"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Skills-2,659-blueviolet" alt="Skills">
+  <img src="https://img.shields.io/badge/Skills-1,639-blueviolet" alt="Skills">
   <img src="https://img.shields.io/badge/Agents-14-orange" alt="Agents">
   <img src="https://img.shields.io/badge/Frameworks-31-cyan" alt="Frameworks">
 </p>
@@ -43,7 +43,7 @@
 
 A **plug-and-play AI team template** — deploy a complete virtual C-Suite using [OpenClaw](https://github.com/openclaw/openclaw). Each agent is shaped by a **spirit mentor** (Elon Musk, Jensen Huang, Warren Buffett, Richard Feynman...) that defines their personality, decision-making style, and cognitive framework.
 
-**2,659 skills. 14 agents. 31 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
+**1,639 skills. 14 agents. 31 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
 
 ## 🏛️ Architecture
 
@@ -122,6 +122,8 @@ done
 | 🧬 Bioinformatics | Genome analysis, metagenomics, pharmacogenomics |
 | 🎬 Video & Digital Human | Video editing, digital human, storyboard, subtitle |
 | 🤖 Web3 & Autonomys | Decentralized storage, auto-deploy, auto-memory |
+
+👉 **[Skill-Agent Mapping Matrix →](./SKILL-AGENT-MATRIX.md)** — Each skill mapped to its C-Suite agent (PE, CTO, CQO, etc.)
 
 👉 **[Full skill catalog →](./skills/README.md)**
 
