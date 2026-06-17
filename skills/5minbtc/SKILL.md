@@ -526,11 +526,43 @@ SKILL_DIR=/home/aa/.hermes/profiles/cqo/skills/5minbtc && \
 
 ## 仓库同步
 
-Skill已同步至 AGI-Super-Team 仓库 `skills/5minbtc/`：
-- 仓库路径: `~/clawd/repos/AGI-Super-Team/skills/5minbtc/`
-- 包含: 引擎、日志模块、新闻模块、SKILL.md、reports/、references/
-- 不包含: `data/` 目录（运行时数据）、`5minbtc-log.jsonl`（实时预测记录，按需同步）
-- 同步命令: `cp` 核心文件 → `git add` → `git commit` → `git push origin master`
+Skill已同步至 AGI-Super-Team 仓库 `skills/5minbtc/`。
+
+```bash
+# 1. rsync 本地最新版到共享仓库（排除运行时数据和日志）
+rsync -av \
+  --exclude='data/' --exclude='__pycache__/' \
+  --exclude='*.jsonl' --exclude='*.jsonl.*' --exclude='*.gz' \
+  /home/aa/.hermes/profiles/cqo/skills/5minbtc/ \
+  /home/aa/clawd/repos/AGI-Super-Team/skills/5minbtc/
+
+# 2. 提交推送
+cd /home/aa/clawd/repos/AGI-Super-Team
+git add skills/5minbtc/
+git commit -m "sync(skills/5minbtc): <变更简述>"
+git push origin master
+```
+
+**Commit message 惯例**: `sync(skills/5minbtc): <版本> 全量同步 — 引擎+回测+复盘+参考文档`
+
+**同步内容**:
+- ✅ 引擎 (`5minbtc-engine*.py`)、日志模块 (`5minbtc-log.py`)、新闻模块 (`5minbtc-news.py`)
+- ✅ `SKILL.md`（含冲突裁决规则同步）
+- ✅ `backtest/`（含脚本、结果JSON、README）
+- ✅ `references/`（含黑天鹅防御、Dreaming恢复、Binance地理、性能历史）
+- ✅ `review-*.md` 全量复盘记录
+- ❌ `data/`、`__pycache__/`（运行时产物）
+- ❌ `*.jsonl`、`*.jsonl.*.gz`（海量预测日志，按需同步）
+
+**同步前dry-run验证**:
+```bash
+rsync -av --dry-run \
+  --exclude='data/' --exclude='__pycache__/' --exclude='*.jsonl' --exclude='*.jsonl.*' --exclude='*.gz' \
+  /home/aa/.hermes/profiles/cqo/skills/5minbtc/ \
+  /home/aa/clawd/repos/AGI-Super-Team/skills/5minbtc/
+```
+
+**推送前检查point**: 确保不包含敏感数据（密钥、API凭证）、市场数据（data/）、海量日志（*.jsonl.gz）
 
 ## 回测系统
 
