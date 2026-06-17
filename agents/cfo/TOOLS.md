@@ -1,31 +1,22 @@
 # TOOLS.md — CFO (Buffett)
 
-_财务 · 本地工具配置和笔记_
+_财务 · 仓库工具配置和笔记_
 
-## ~/clawd 目录索引
+## Repo 路径说明
 
-| 路径 | 说明 |
-|------|------|
-| ~/openclaw/skills/ | 150+ 技能库 |
-| ~/openclaw/scripts/ | 工具脚本（newsbot_send.py, model-health-check.sh 等）|
-| ~/openclaw/workspace/content-pipeline/ | 内容管线（drafts, hotpool, topics）|
-| ~/openclaw/projects/ | 项目（MediaClaw, super-quant-claw）|
-| ~/openclaw/reports/ | 报告输出 |
-| ~/openclaw/repos/awesome-skills/ | 111 个社区 skills |
-| ~/openclaw/repos/AGI-Super-Team/ | 团队配置 |
+所有路径均相对于 `agents/cfo/`，格式为 `../skills/<name>/`。
 
 ## 推荐 Skills
 
-### ~/openclaw/skills/ (本地)
+### 本地 Skills (../skills/)
 - **token-guard**: Token 用量防护与限制
 - **token-reporter**: Token 消耗报告生成
-- **finance-skills.md**: 财务分析技能集
 - **token-budget-advisor**: Token 预算顾问
 - **cost-aware-llm-pipeline**: 成本感知 LLM 管道
 - **model-provider-manager**: 模型提供商管理
 - **provider-key-manager**: API Key 管理
-
-### ~/openclaw/repos/awesome-skills/ (社区)
+- **finance-skills**: 财务分析技能集
 - **stripe-automation**: Stripe 支付自动化
+- **stripe-integration**: Stripe 集成
 - **invoice-organizer**: 发票整理自动化
 - **square-automation**: Square 支付自动化
