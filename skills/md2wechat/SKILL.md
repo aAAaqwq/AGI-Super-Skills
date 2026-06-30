@@ -142,60 +142,11 @@ Draft behavior:
 - `--title` / `--author` / `--digest` affect draft metadata, not necessarily visible body HTML.
 - Markdown images are only uploaded/replaced during `--upload` or `--draft`, not during plain `convert --preview`.
 
-## Publish Gate（发布门禁）· MANDATORY CHECKPOINT
-
-**Before any `--draft`, `create_draft`, or `test-draft` push to WeChat, you MUST present the following to the user and wait for explicit confirmation:**
-
-```
-┌─────────────────────────────────────────┐
-│   🔴 PUBLISH GATE — 发布前审查           │
-├─────────────────────────────────────────┤
-│  ☐ 标题（≤32字，确认措辞）              │
-│  ☐ 作者（≤16字，确认署名）              │
-│  ☐ 封面图（已生成/已选择，用户看过）     │
-│  ☐ 摘要（≤128字，前60字可见需精炼）     │
-│  ☐ 排版风格（主题名，已确认）            │
-│  ☐ 用户回复"发"/"推"/"OK"等明确批准      │
-└─────────────────────────────────────────┘
-```
-
-### Gate Rules (不可越过的铁律)
-
-1. **标题必须展示** — 把完整标题文本发给用户看，标注字数。不要说"标题没问题"而不展示内容。
-2. **作者必须确认** — 不要假设作者名。默认是 frontmatter.author 或空。空值必须让用户填。
-3. **封面图必须可视化** — 用图片消息发送封面图给用户。不要只说"封面已生成"。≥2 个备选方案更佳。
-4. **摘要必须展示** — 展示完整摘要文本，标注微信折叠线（前 60 字）。
-5. **显式批准** — 用户必须回复明确的肯定词（发/推/OK/行/好/可以/go）才能继续。沉默 ≠ 同意。
-6. **每个门禁项缺失都要报** — 如果某字段为空，主动标注 ⚠️ 缺失并询问用户填写。
-
-### Gate Output Template（审查输出模板）
-
-```
-📋 发布审查
-
-🏷️ 标题（27/32字）：
-微信排版从2小时到2秒：我用一行命令干掉了公众号最烦人的活
-
-✍️ 作者（9/16字）：
-Daniel Li
-
-📝 摘要（73/128字，折叠线≈60字）：
-从手动排版到全自动发布，md2wechat 一行命令搞定公众号 Markdown→草稿箱的全流程。含 20 个自定义主题详解，让你的文章从此有视觉人设。
-
-🖼️ 封面：[发送封面图]
-
-🎨 排版风格：Coffee Notes（06·暖色系·焦糖棕）
-
----
-以上信息确认无误？回复"发"推送到草稿箱，或告知修改内容。
-```
-
 ## Agent Rules
 
 - Start with discovery commands before committing to a provider, theme, or prompt.
 - Route by publish target first: article draft => `convert`; image post / 小绿书 / newspic => `create_image_post`.
-- **CRITICAL: The Publish Gate above is MANDATORY. Every draft push MUST pass through it. No exceptions.**
-- Prefer the confirm-first flow for article work: `inspect` -> `preview` -> **Publish Gate** -> `--draft`.
+- Prefer the confirm-first flow for article work: `inspect` -> `preview` -> `convert` / `--draft`.
 - If the user says `小绿书`, `图文笔记`, `图片消息`, `newspic`, or asks for a multi-image post, prefer `create_image_post` even when the source content lives in Markdown.
 - Prefer `generate_cover` or `generate_infographic` over a raw `generate_image "prompt"` call when a bundled preset fits the task.
 - Validate config before any draft, publish, or image-post action.
@@ -460,3 +411,87 @@ When using AI mode conversion, embed the selected theme's color palette, font st
 - May download remote images when asked.
 - May call external image-generation services when configured.
 - May upload HTML, images, drafts, and image posts to WeChat when the user explicitly requests those actions.
+
+## Mandatory Pre-Publish Layout Review (强制排版审查)
+
+> **铁律 (2026-06-03, Daniel Li 反馈)**: 公众号发布前 **必须** 先渲染 HTML 视觉预览 → 检查渲染问题 → 修复后再发布。**绝不允许「渲染→发布」二步并一步。**
+
+### 为什么
+
+WeChat 公众号编辑器和常规 HTML 浏览器渲染存在以下差异，**不预览直接发布**会导致用户在前台看到排版事故：
+
+1. **公众号样式覆盖不可控** — `<style>` 中的部分 CSS 会被微信编辑器过滤（如 `position: fixed`）
+2. **主题/模板的"装饰元素"在公众号里会变成视觉噪点** — 例如 `tech` 主题在每个 `<li>` 前面注入 `$` 装饰 span，叠加微信默认 `list-style:disc` 会出现 `•$ 文本` 双重前缀
+3. **代码高亮的内联 span 在某些主题里会被错误合并或嵌套**
+4. **blockquote 的渐变背景在暗色主题下可能让文字不可读**
+
+### 强制 5 步审查流程
+
+每次发布前必须执行，不允许跳过：
+
+```bash
+# Step 1: 渲染并保存 HTML
+md2wechat convert article.md --mode ai --theme <theme> -o /tmp/review.html
+
+# Step 2: 视觉预览（生成本地 HTML 截图或浏览器打开）
+open /tmp/review.html  # macOS
+# 或使用 Playwright/Chrome 截图
+playwright screenshot --full-page /tmp/review.html /tmp/review.png
+
+# Step 3: 检查清单（必须全部 ✅ 才能发布）
+#   ✅ list 渲染：ul/ol 是否有重复前缀（$ / • / -）
+#   ✅ list 渲染：是否有 list-style:none 与 list-style-type 冲突
+#   ✅ code 渲染：代码块是否有高亮 span 嵌套错误
+#   ✅ table 渲染：表头和隔行背景是否清晰
+#   ✅ blockquote 渲染：暗色主题下文字是否可读
+#   ✅ heading 渲染：H1/H2 编号徽章是否对齐
+#   ✅ 图片渲染：cover 和内联图是否上传成功、是否溢出
+
+# Step 4: 修复（用 scripts/fix-list-rendering.js 等后处理脚本）
+node scripts/fix-list-rendering.js /tmp/review.html -o /tmp/review-fixed.html
+
+# Step 5: 重新预览 → 确认无误 → 才允许发布
+md2wechat convert /tmp/review-fixed.html --draft --cover cover.jpg
+```
+
+### 已知主题渲染陷阱 (Common Rendering Issues)
+
+| 主题 | 问题 | 修复 |
+|------|------|------|
+| `tech` (深色终端风) | `<li>` 前面有 `$` 装饰 span + `list-style:none`，与 `<ul>` 的 `list-style-type:disc` 冲突 → 公众号渲染出 `•$ 文本` 双重前缀 | 移除 `$` span，移除 `list-style:none`，让微信默认 `disc/decimal` 渲染 |
+| `tech` | blockquote 使用 `linear-gradient(#0F172A,#1E293B)` 深色背景 + `#94A3B8` 浅灰文字 → 部分主题下文字-背景对比度 < 4.5:1，无障碍不达标 | 提高文字色亮度到 `#D1FAE5` 或 `#E0F2F1` |
+| `tech` | 代码块 `<code>` 内联 span 颜色 `#B91C1C` 在深色背景下对比度不足 | 改为 `#FCA5A5` 或 `#FECACA` |
+| `business` | 表格 `<th>` 渐变背景在公众号中可能丢失，文字看不清 | 改用纯色 `#1E40AF` |
+| `simple` | H2 左侧 4px 绿色竖条在某些公众号编辑器被裁切 | 改用 `border-left: 4px solid` 而非 `box-shadow` |
+| 任何主题 | `<ul style="padding-left:28px">` 在 6.5 寸屏上偏右 | 改 `padding-left:24px` |
+
+### 自动化审查脚本
+
+发布前必跑的修复脚本（位于 `scripts/`）：
+
+- `scripts/fix-list-rendering.js` — 修复列表重复前缀
+- `scripts/check-rendering.py` — 渲染问题静态检查（grep 已知问题模式）
+- `scripts/wechat-preview.html` — 公众号兼容的本地预览模板
+
+### 不允许的操作
+
+- ❌ 不允许 `md2wechat convert` 后直接 `md2wechat convert --draft`
+- ❌ 不允许跳过 `preview` 或视觉检查就发到草稿箱
+- ❌ 不允许在 `tech` 主题下使用默认 HTML 模板不经过审查就发
+- ❌ 不允许"我相信它会渲染对"作为跳过审查的理由
+
+### 审查后必须报告
+
+每次发布到草稿箱前，AI Agent 必须输出审查报告：
+
+```
+✅ 排版审查报告 (2026-06-03)
+- 主题: tech (深色终端风)
+- 文件: /tmp/review-fixed.html
+- 列表 ul/ol: 0 个重复前缀 / 0 个 list-style:none
+- 代码块: 12 个，高亮正常
+- 表格: 1 个，隔行背景正常
+- 引用块: 0 个，文字可读
+- 封面: markitdown-cover.png ✅
+- 审查结论: 可发布
+```

@@ -2,11 +2,11 @@
 name: relay-image-gen
 description: Multi-provider image generation with automatic priority fallback
   Multi-provider image generation with priority fallback.
-  Priority: qingyun Gemini (gemini-3-pro-image) → OpenClaw image tool → relay providers (boluobao → xingjiabi).
+  Priority: vectronode (gpt-image-2/gpt-image-2-all) → qingyun Gemini → OpenClaw image tool → relay providers.
   Supports 1K/2K/4K, multiple aspect ratios, auto fallback.
   Extensible: add custom relay/API providers to PROVIDER_CONFIG.
   Use when: creating images, generating pictures/illustrations, poster art.
-  Trigger: "生成图片", "生成封面", "画一张", "generate image", "create image".
+  Trigger: "生成图片", "生成封面", "画一张", "generate image", "create image", "gpt-image", "gpt生图".
   Author: Daniel Li
 ---
 
@@ -17,18 +17,42 @@ Multi-provider image generation with automatic priority fallback.
 ## Priority Chain
 
 ```
-1. qingyun Gemini (gemini-3-pro-image-preview) ← 首选，质量最佳
+1. vectronode (gpt-image-2 / gpt-image-2-all) ← 首选，VectorNode中转站，API Key已配，最可靠
    ↓ 失败/不可用
-2. OpenClaw image_generate tool ← 官方内置
+2. qingyun Gemini (gemini-3-pro-image-preview) ← 质量最佳
    ↓ 失败/不可用
-3. boluobao (中转API) ← relay fallback 1
+3. OpenClaw image_generate tool ← 官方内置
    ↓ 失败/不可用
-4. xingjiabi (多模型fallback) ← relay fallback 2
+4. boluobao (中转API) ← relay fallback 1
    ↓ 失败/不可用
-5. 自定义扩展 providers ← 按需添加
+5. xingjiabi (多模型fallback) ← relay fallback 2
+   ↓ 失败/不可用
+6. 自定义扩展 providers ← 按需添加
 ```
 
-### 1. qingyun Gemini（首选）
+### 1. vectronode（首选 — 2026-06-17 起）
+
+**VectorNode 中转站 GPT Image，按提示词长度自动路由 gpt-image-2（Token计费）/ gpt-image-2-all（按次计费）。目前最可靠。**
+
+```bash
+python3 ~/.openclaw/skills/vectronode-image/scripts/vectronode_image.py generate \
+  --prompt "your prompt" \
+  --output "/path/to/output.png" \
+  --size 2048x1152
+```
+
+| Flag | 说明 | 默认值 |
+|------|------|--------|
+| `--prompt` | 提示词 | 必填 |
+| `--output` | 输出文件路径 | 必填 |
+| `--size` | `1024x1024` / `1536x1024` / `2048x1152` / `2K` / `4K` / `auto` | `auto` |
+| `--model` | `gpt-image-2` / `gpt-image-2-all` / `auto` | `auto` |
+| `--quality` | `low` / `medium` / `high` / `auto` | `auto` |
+
+**优点**：VectorNode API Key 已配（`VECTORNODE_API_KEY`），即开即用，支持 gpt-image-2 全系列
+**要求**：`VECTORNODE_API_KEY` 在 `~/.openclaw/.env`
+
+### 2. qingyun Gemini
 
 **推荐用于所有内容封面和高质量图片生成。**
 
@@ -88,6 +112,7 @@ uv run ~/.openclaw/skills/relay-image-gen/scripts/relay_image_gen.py \
 
 | Provider | API Key 来源 | 默认模型 | Fallback |
 |----------|-------------|---------|----------|
+| **vectronode** | 环境变量 `VECTORNODE_API_KEY` | gpt-image-2 | gpt-image-2-all |
 | **boluobao** | `pass show api/boluobao` | gemini-3-pro-image-preview | — |
 | **xingjiabi** | 环境变量 `XINGJIABIAPI_KEY` | dall-e-3 | gpt-image-1 → imagen-4 |
 
@@ -140,7 +165,13 @@ RELAY_PRIORITY = [
 ## 调用示例
 
 ```bash
-# 内容封面（首选 qingyun）
+# 首选：vectronode GPT Image（当前最可靠）
+python3 ~/.openclaw/skills/vectronode-image/scripts/vectronode_image.py generate \
+  --prompt "Editorial flat illustration of AI tools comparison..." \
+  --output ~/clawd/output/cover.png \
+  --size 2048x1152
+
+# 内容封面（备选：qingyun Gemini）
 export QINGYUN_API_KEY=$(pass show api/qingyun | head -n 1)
 bash ~/clawd/skills/qingyun-api/scripts/qingyun-image-gemini.sh \
   "Editorial flat illustration of AI tools comparison..." \
