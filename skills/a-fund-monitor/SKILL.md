@@ -46,16 +46,19 @@ OpenClaw cron，使用 **Asia/Shanghai** 时区。
 | 10:30 | 盘中估值 | fundgz 接口 |
 | 12:30 | 盘中估值 | 同上 |
 | 14:30 | 盘中估值 | 同上 |
-| 20:30 | 收盘净值 | lsjz 接口 |
+| **22:00** | 收盘净值 | lsjz 接口（避开 20:30 数据未发布，QDII 滞后 1 天） |
 
 **合并为 1 个 cron job**: `04a185b2-f8ae-454e-b454-bc1944ca5c00`
 
 ```
-Cron:     30 10,12,14,20 * * 1-5 (Asia/Shanghai)
+Cron:     30 10,12,14,22 * * 1-5 (Asia/Shanghai)
 Runtime:  isolated agentTurn (changqing)
-Timeout:  180s
+Model:    minimax/MiniMax-M3 (fallback: deepseek/deepseek-v4-pro)
+Timeout:  300s
 Delivery: announce → telegram:8518085684 (Daniel 私聊)
 ```
+
+**v2.1.1 (2026-06-22) 调整**：20:30 → 22:00。多数基金 21:00-22:30 才陆续发布 NAV，旧时间会拿到 4-5 天前的旧数据。同时叠加「今日过滤 + QDII 标记 + HTTP 重试」三重防护。
 
 ### 模式判断逻辑
 
@@ -85,6 +88,7 @@ FUNDS = [
 
 | 日期 | 版本 | 变更 |
 |------|------|------|
+| 2026-06-22 | v2.1.1 | 20:30 → 22:00 避免旧数据；脚本升级为「今日过滤 + QDII 标记 🌏 + HTTP 重试」；cron model 改为 minimax primary（避开 glm-5.1 限流）；timeout 提到 300s |
 | 2026-05-25 | v2.1.0 | 4 个 cron 合并为 1 个(逗号分隔小时)；从 Hermes 迁移到 OpenClaw cron；推送目标改为 Daniel 私聊(8518085684)；超时提至 180s；19:00 前走估值避免陈旧数据 |
 | 2026-05-22 | v2.0.0 | 初始 Hermes cron 版本 |
 
@@ -94,6 +98,7 @@ FUNDS = [
 - **NAV 涨跌幅字段**：东方财富 lsjz API 的涨跌幅字段是 `JZZZL`（净值增长率），不是 `NAVCHGRT`。
 - **估值 API 返回 JSONP**：`fundgz.1234567.com.cn` 返回 `jsonpgz({...});` 格式，需正则提取 JSON。
 - **HTTP 请求头**：两个 API 都需要 `Referer: https://fund.eastmoney.com/` 和 `User-Agent`，否则可能 403。
-- **20:30 净值可能未更新**：部分基金净值延迟到 22:00 后才更新，QDII 基金（如广发纳斯达克100）更晚。19:00 前先用估值模式兜底。
+- **NAV 发布时间不均**：多数基金 21:00-22:30 才陆续发布 NAV（QDII 滞后 1 天），脚本已升级为「今日过滤 + QDII 标记 🌏 + HTTP 重试 2 次」。未发布基金显示「⏳ 待发布 (上次: 日期)」，不混进平均。
+- **早期 20:30 触发坑**：v2.1.0 之前用 20:30 跑 nav 会拿到 4-5 天前的旧数据（脚本只取 items[0] 不过滤日期），已升级为今日过滤。
 - **QDII 基金估值时间**：广发纳斯达克100联接的估值时间显示为 04:00（美股收盘时间），非 A 股 15:00。
 - **周末/节假日**：cron `1-5` 仅排除周末，中国法定节假日仍会触发（产出的是上一交易日数据）。

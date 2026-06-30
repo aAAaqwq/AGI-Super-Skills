@@ -1,0 +1,78 @@
+{
+  "text": {
+    "min_body_len": 80,
+    "blocked_link_tlds": [
+      "com",
+      "cn",
+      "net",
+      "org",
+      "io",
+      "me",
+      "co",
+      "app",
+      "dev"
+    ],
+    "hard_block_phrases": [
+      "100%不被识别",
+      "100% undetectable",
+      "稳赚不赔",
+      "保本保收益",
+      "包治百病",
+      "私信领取",
+      "加微信",
+      "vx:",
+      "vx："
+    ],
+    "high_risk_patterns": [
+      "(治愈|根治|包治|药到病除)",
+      "(保证收益|稳赚|翻倍|保本)",
+      "(兼职|刷单|返利|薅羊毛教程)",
+      "(加微|加v|私聊我|私信我领取)"
+    ],
+    "medium_risk_keywords": [
+      "最强",
+      "必买",
+      "立刻下单",
+      "免费领",
+      "内幕",
+      "黑科技",
+      "秒过",
+      "保姆级"
+    ]
+  },
+  "source": {
+    "min_evidence_snippet_len": 16,
+    "min_key_facts_count": 2
+  },
+  "ai": {
+    "provider": "auto",
+    "base_url": "https://api.openai.com/v1",
+    "model": "gpt-4o-mini",
+    "temperature": 0,
+    "timeout_ms": 30000,
+    "max_images": 3,
+    "max_inline_image_bytes": 1200000,
+    "send_images": true
+  },
+  "decision": {
+    "pass_max_risk_score": 28,
+    "block_min_risk_score": 70,
+    "block_on_review": true,
+    "block_on_ai_error": true,
+    "review_queue": {
+      "enabled": true,
+      "name": "xhs_manual_review",
+      "owner": "content_safety",
+      "default_priority": "P2",
+      "block_priority": "P1",
+      "review_priority": "P2",
+      "sla_minutes": 60
+    },
+    "max_hits": 12,
+    "severity_score": {
+      "low": 8,
+      "medium": 20,
+      "high": 45
+    }
+  }
+}
