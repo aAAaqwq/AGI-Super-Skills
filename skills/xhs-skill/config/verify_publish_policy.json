@@ -1,0 +1,107 @@
+{
+  "topic": {
+    "min_len": 4
+  },
+  "post": {
+    "title_min_len": 8,
+    "title_max_len": 20,
+    "body_min_len": 80
+  },
+  "tags": {
+    "min_count": 3,
+    "max_count": 8,
+    "placeholder_patterns": [
+      "^#?(标签|话题|测试|示例|模板)$",
+      "^#?(test|tag|demo|sample|xxx)$"
+    ]
+  },
+  "real_topics": {
+    "min_count": 3,
+    "max_count": 8,
+    "placeholder_patterns": [
+      "^#?(标签|话题|测试|示例|模板)$",
+      "^#?(test|tag|demo|sample|xxx)$"
+    ]
+  },
+  "tag_registry": {
+    "fresh_within_days": 7,
+    "required_platform": "xiaohongshu"
+  },
+  "source": {
+    "evidence_snippet_min_len": 16,
+    "evidence_snippet_max_len": 180,
+    "key_facts_min_count": 2,
+    "key_facts_max_count": 5,
+    "key_fact_min_len": 8,
+    "key_fact_max_len": 80
+  },
+  "media": {
+    "min_count": 1,
+    "screenshot_keywords": [
+      "screenshot",
+      "screen_shot",
+      "xhs_login",
+      "login_qr",
+      "after_click"
+    ],
+    "ratio_target": 0.75,
+    "ratio_tolerance": 0.02,
+    "preferred_sizes": [
+      {
+        "width": 1242,
+        "height": 1660
+      }
+    ],
+    "max_detail_items": 12
+  },
+  "anti_ai": {
+    "template_phrases": [
+      "总的来说",
+      "综上所述",
+      "不难看出",
+      "值得注意的是",
+      "随着人工智能的发展",
+      "随着ai的发展",
+      "未来可期",
+      "首先",
+      "其次",
+      "最后"
+    ],
+    "personal_voice_keywords": [
+      "我",
+      "我们",
+      "我觉得",
+      "我观察",
+      "我测了",
+      "我试了",
+      "我踩坑",
+      "我自己",
+      "这周我"
+    ],
+    "week_keywords": [
+      "这周",
+      "本周",
+      "今天",
+      "昨日",
+      "刚刚"
+    ],
+    "strict_min_digit_count": 2,
+    "strict_min_signal_count": 2
+  },
+  "link_detection": {
+    "blocked_tlds": [
+      "com",
+      "cn",
+      "net",
+      "org",
+      "io",
+      "me",
+      "co",
+      "app",
+      "dev"
+    ]
+  },
+  "hot_mode": {
+    "source_date_must_be_today": true
+  }
+}

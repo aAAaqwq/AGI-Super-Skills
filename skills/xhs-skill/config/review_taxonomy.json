@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0",
+  "paths": [
+    {
+      "id": "content.diversion.link",
+      "label": "链接导流",
+      "path": ["content", "diversion", "link"],
+      "rule_hit_ids": ["link_or_source_url_violation"],
+      "keywords": ["http://", "https://", "www.", "加微信", "私信", "vx"],
+      "categories": ["link", "diversion", "引流"]
+    },
+    {
+      "id": "content.marketing.false_promise",
+      "label": "虚假承诺营销",
+      "path": ["content", "marketing", "false_promise"],
+      "rule_hit_ids": ["hard_block_phrases", "high_risk_pattern"],
+      "keywords": ["稳赚", "保本", "包治", "根治", "翻倍", "免费领"],
+      "categories": ["false_promise", "marketing", "虚假营销"]
+    },
+    {
+      "id": "content.marketing.suspicious_phrase",
+      "label": "可疑营销话术",
+      "path": ["content", "marketing", "suspicious_phrase"],
+      "rule_hit_ids": ["medium_risk_keywords"],
+      "keywords": ["最强", "必买", "黑科技", "保姆级"],
+      "categories": ["suspicious", "promotion", "营销"]
+    },
+    {
+      "id": "content.authenticity.traceability",
+      "label": "来源追溯不足",
+      "path": ["content", "authenticity", "traceability"],
+      "rule_hit_ids": ["source_traceability_weak"],
+      "keywords": ["来源", "信源", "证据", "事实"],
+      "categories": ["traceability", "authenticity", "可追溯"]
+    },
+    {
+      "id": "content.quality.low_information",
+      "label": "信息量不足",
+      "path": ["content", "quality", "low_information"],
+      "rule_hit_ids": ["body_too_short"],
+      "keywords": ["太短", "空泛"],
+      "categories": ["quality", "low_information", "低质"]
+    }
+  ]
+}

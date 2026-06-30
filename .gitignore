@@ -92,3 +92,24 @@ skills/qingyun-api/docs/api-*.md
 *.pyc
 skills/mediaclaw/
 skills/openssf-security/
+
+# Browser profiles / Chrome cache (security: cookies, history, login data)
+**/browser-profile/
+**/chrome-user-data/
+**/chrome-profiles/
+**/Default/Cookies
+**/Default/History
+**/Default/Login Data
+**/Default/Network Persistent State
+**/Default/Secure Preferences
+**/BrowserMetrics-*
+**/*.ldb
+**/*.log.lock
+**/Service Worker/CacheStorage
+**/Code Cache/
+
+# XHS / social-media auto-publish transient data
+skills/*/data/
+skills/xhs-skill/data/
+skills/*/login_page.png
+skills/*/xhs_login_qr*.png

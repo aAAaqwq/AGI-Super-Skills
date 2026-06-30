@@ -1,0 +1,18 @@
+{
+  "name": "xhs-skill",
+  "version": "1.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Local CLI helpers for xhs-skill (QR decode + cookies utils)",
+  "bin": {
+    "xhs-skill": "./bin/xhs-skill.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "jsqr": "^1.4.0",
+    "pngjs": "^7.0.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
