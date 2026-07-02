@@ -2,6 +2,8 @@
 
 Thank you for your interest in contributing! This guide covers how to add skills, agents, and improvements.
 
+> **Harness-agnostic policy:** AGI Super Team works natively with **Claude Code, Codex, Cursor, and Hermes**. Skills and agents must stay harness-neutral — never hard-depend on a single tool's CLI (e.g. the discontinued `openclaw` CLI). Reference harness capabilities generically; if a skill needs a specific tool, document it as optional and provide an alternative path.
+
 ## Adding a Skill
 
 ### Directory Structure

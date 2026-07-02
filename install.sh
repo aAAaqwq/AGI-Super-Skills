@@ -9,6 +9,19 @@
 #   ./install.sh full-team             # Deploy all 12 agents
 #   ./install.sh ceo                   # Deploy single CEO agent
 #
+# ── 推荐方式 / Recommended ──────────────────────────────────────────
+# 现在首选 harness 原生安装（无需本脚本）：
+#   Claude Code (推荐): /plugin install aAAaqwq/AGI-Super-Team
+#   或直接 clone:
+#     git clone --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git ~/.agi-super-team
+#
+# 本脚本 (install.sh) 是多 harness 的通用部署器，仍可用于批量部署 starter
+# kit 到本地工作区。下文依赖 OpenClaw CLI 的步骤（openclaw config /
+# gateway restart 等）标注为 (legacy)，仅当你的环境仍运行 OpenClaw harness
+# 时需要；OpenClaw 已 discontinued，新用户请使用 Claude Code / Codex /
+# Cursor / Hermes 等 harness 原生方式。
+# ─────────────────────────────────────────────────────────────────────
+#
 set -euo pipefail
 
 REPO_RAW="https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main"
@@ -26,8 +39,13 @@ err()   { echo -e "${RED}[ERROR]${NC} $*"; exit 1; }
 # ── Prerequisites ──────────────────────────────────────────────
 check_prereqs() {
   command -v node &>/dev/null || err "Node.js not found. Install: https://nodejs.org/"
-  command -v openclaw &>/dev/null || err "OpenClaw not found. Install: npm install -g openclaw"
   command -v git &>/dev/null || err "git not found."
+  # (legacy) OpenClaw CLI is OPTIONAL — the script works with any harness
+  # (Claude Code / Codex / Cursor / Hermes). Only needed if your environment
+  # still runs the (discontinued) OpenClaw harness. Warn instead of failing.
+  if ! command -v openclaw &>/dev/null; then
+    warn "(legacy) openclaw CLI not found — OK for Claude Code / Codex / Cursor / Hermes. Only required for the discontinued OpenClaw harness."
+  fi
   info "Prerequisites ✓"
 }
 
@@ -174,9 +192,13 @@ deploy_starter_kit() {
   ok "════════════════════════════════════════"
   echo ""
   echo "Next steps:"
-  echo "  1. Configure your API keys:  openclaw config"
-  echo "  2. Restart the gateway:       openclaw gateway restart"
-  echo "  3. Start chatting with your agent!"
+  echo "  Recommended (harness-native, no extra tooling):"
+  echo "    Claude Code:  /plugin install aAAaqwq/AGI-Super-Team"
+  echo "    Or open ~/.openclaw/workspace-<agent>/ in your harness (Claude Code / Codex / Cursor / Hermes)"
+  echo "  (legacy, only if using the discontinued OpenClaw harness):"
+  echo "    1. Configure your API keys:  openclaw config"
+  echo "    2. Restart the gateway:       openclaw gateway restart"
+  echo "  Then start chatting with your agent!"
   echo ""
   echo "Deployed agents:"
   for a in "${agents[@]}"; do

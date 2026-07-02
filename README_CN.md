@@ -34,6 +34,20 @@
 
 **1,651 技能 · 14 个 Agent · 31 个思维框架 · 30 个工作流。** 零配置 — 复制、定制、发布。
 
+## ⚡ 安装
+
+> **原生支持 Claude Code、Cursor、Codex、Gemini。**
+
+```bash
+# Claude Code（推荐）
+/plugin install aAAaqwq/AGI-Super-Team
+
+# 或直接克隆
+git clone --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git ~/.agi-super-team
+```
+
+一键 kit 部署（solo-founder / quant-trader / content-creator 等）见下方[10 分钟你能做什么](#10-分钟你能做什么)。
+
 ## 🚀 10 分钟你能做什么
 
 三个杀手级用例 —— 每个都由仓库内置的实战 skill 支撑，绑定对应的传奇大脑。
@@ -87,6 +101,8 @@ curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.
 ```
 
 ## 🚀 快速开始
+
+> 推荐使用上方[安装](#安装)章节的原生 plugin 入口；下面的手动方式适合需要细粒度控制的用户。
 
 ```bash
 # 1. 克隆仓库

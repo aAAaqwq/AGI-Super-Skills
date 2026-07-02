@@ -11,12 +11,23 @@
 
 ## 🚀 Quick Deploy
 
+> **Recommended (harness-native, no extra tooling):**
+> ```bash
+> # Claude Code (recommended)
+> /plugin install aAAaqwq/AGI-Super-Team
+>
+> # Or clone directly for any harness (Claude Code / Codex / Cursor / Hermes)
+> git clone --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git ~/.agi-super-team
+> ```
+>
+> The OpenClaw CLI flow below is **(legacy)** — only needed if your environment still runs the (discontinued) OpenClaw harness. For a one-click multi-kit deploy, run `bash ~/.agi-super-team/install.sh <kit-name>`.
+
 ```bash
 # 1. Clone the repository
 git clone https://github.com/aAAaqwq/AGI-Super-Team.git
 cd AGI-Super-Team
 
-# 2. Install OpenClaw (if not already)
+# 2. (legacy) Install OpenClaw — only if using the OpenClaw harness
 npm install -g openclaw
 
 # 3. Deploy agent configs
@@ -27,10 +38,10 @@ cp -r skills/<skill-name> ~/.openclaw/skills/
 # Or symlink for easy updates:
 # ln -s $(pwd)/skills/<skill-name> ~/.openclaw/skills/
 
-# 5. Configure API keys
+# 5. (legacy) Configure API keys — other harnesses: set provider keys in-harness
 openclaw config
 
-# 6. Start the gateway
+# 6. (legacy) Start the gateway — other harnesses: just start a session
 openclaw gateway start
 ```
 
@@ -60,6 +71,14 @@ Each agent has:
 
 ## ✅ First Run Checklist
 
+**Harness-native (recommended — Claude Code / Codex / Cursor / Hermes):**
+- [ ] Plugin installed via `/plugin install aAAaqwq/AGI-Super-Team` (Claude Code), or repo cloned + `install.sh` run
+- [ ] Provider API key set in your harness settings
+- [ ] Agent workspace reviewed and customized
+- [ ] Skills available in workspace
+- [ ] Test message sent and received
+
+**(legacy, only if using the OpenClaw harness):**
 - [ ] OpenClaw installed (`openclaw --version`)
 - [ ] API Key configured (`openclaw config`)
 - [ ] Agent configs reviewed and customized
