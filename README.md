@@ -42,6 +42,39 @@ A **plug-and-play AI team template** — deploy a complete virtual C-Suite using
 
 **1,639 skills. 14 agents. 31 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
 
+## 🚀 What You Can Do in 10 Minutes
+
+Three killer use cases — each backed by battle-tested skills that ship in the box, bound to the right legendary mind.
+
+### 📈 Quant Trading — Jim Simons in your corner
+Deploy the **quant-trader kit** and the CQO agent (Jim Simons) immediately runs production strategies:
+- **`5minbtc`** — BTC 5-minute direction prediction (v5.7.3 engine, live-validated)
+- **`a-share-analysis`** — A-share quant analysis with a one-click daily script
+- **`a-fund-monitor`** — real-time fund NAV estimation + Telegram alerts
+
+```bash
+curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- quant-trader
+```
+
+### 📣 Viral Content — MrBeast's playbook
+Deploy the **content-creator kit** and the CCO agent (MrBeast) takes over:
+- **`xhs-content-creator`** / **`xhs-skill`** — Xiaohongshu (RED) content built for the algorithm
+- **`wechat-article-writer`** / **`wechat-ai-radar`** — WeChat MP articles + morning briefings
+- **`content-cover-gen`** — content-driven cover image generation
+
+```bash
+curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- content-creator
+```
+
+### 🏛️ Full C-Suite — your AI-native company
+All 14 executives, 1,639 skills, 31 thinking frameworks — one command:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- full-team
+```
+
+> Each kit drops the right skills into `~/.openclaw/workspace-{agent}/skills/` and binds them to the matching C-Suite agent. No manual wiring.
+
 ## 🏛️ Architecture
 
 ```

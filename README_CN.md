@@ -34,6 +34,39 @@
 
 **1,651 技能 · 14 个 Agent · 31 个思维框架 · 30 个工作流。** 零配置 — 复制、定制、发布。
 
+## 🚀 10 分钟你能做什么
+
+三个杀手级用例 —— 每个都由仓库内置的实战 skill 支撑，绑定对应的传奇大脑。
+
+### 📈 量化交易 —— Jim Simons 为你操盘
+部署 **quant-trader kit**，CQO（Jim Simons）立即开始运行实战策略：
+- **`5minbtc`** —— BTC 5 分钟方向预测（v5.7.3 引擎，实盘验证）
+- **`a-share-analysis`** —— A 股量化分析，一键每日脚本
+- **`a-fund-monitor`** —— 基金净值实时估算 + Telegram 推送
+
+```bash
+curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- quant-trader
+```
+
+### 📣 爆款内容 —— MrBeast 的玩法
+部署 **content-creator kit**，CCO（MrBeast）接管内容：
+- **`xhs-content-creator`** / **`xhs-skill`** —— 为小红书算法打造的内容
+- **`wechat-article-writer`** / **`wechat-ai-radar`** —— 公众号文章 + 每日情报
+- **`content-cover-gen`** —— 内容驱动的封面图生成
+
+```bash
+curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- content-creator
+```
+
+### 🏛️ 完整高管团队 —— 你的 AI 原生公司
+14 位高管、1,651 技能、31 套思维框架 —— 一行命令：
+
+```bash
+curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- full-team
+```
+
+> 每个 kit 会把对应的 skill 装进 `~/.openclaw/workspace-{agent}/skills/`，并绑定到匹配的高管 Agent。无需手动配置。
+
 ## 🏛️ 架构
 
 ```
