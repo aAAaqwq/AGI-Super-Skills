@@ -1,6 +1,6 @@
 # 🚀 Setup Guide — Agent Auto-Deploy
 
-> **如果你是 Claude Code / OpenClaw / Codex / Cursor 等 AI Agent，请按以下步骤操作。**
+> **如果你是 Claude Code / Codex / Cursor / Hermes 等 AI Agent，请按以下步骤操作。**
 
 ## 一键部署命令
 

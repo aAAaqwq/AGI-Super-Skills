@@ -109,4 +109,4 @@ done
 
 ---
 
-*基于 [OpenClaw](https://github.com/openclaw/openclaw) 构建 · OPC 团队模板*
+*兼容 Claude Code / Codex / Cursor / Hermes · OPC 团队模板*

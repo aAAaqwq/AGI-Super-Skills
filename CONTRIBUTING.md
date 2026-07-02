@@ -36,7 +36,7 @@ Concrete usage examples.
 - **Language**: English or Chinese, pick one per skill (don't mix)
 - **No credentials**: never include API keys, tokens, or passwords
 - **No binary files > 1MB**: use links to external assets instead
-- **Test locally**: verify the skill works with OpenClaw before submitting
+- **Test locally**: verify the skill works with your AI coding harness (Claude Code, Codex, Cursor, Hermes) before submitting
 
 ## Adding an Agent
 
@@ -60,7 +60,7 @@ agents/
 When reporting bugs, include:
 1. What you expected to happen
 2. What actually happened
-3. OpenClaw version and model you're using
+3. Your AI harness and model you're using
 4. Any relevant logs or error messages
 
 ## PR Process
