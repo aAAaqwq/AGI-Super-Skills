@@ -243,7 +243,7 @@ workspace/
 
 ## ⚖️ 分层管控（Governor）
 
-> 基于 openclaw-team 三省制优化，融合为单一治理角色
+> 基于团队三省制优化，融合为单一治理角色
 
 ### 治理官（Governor）
 

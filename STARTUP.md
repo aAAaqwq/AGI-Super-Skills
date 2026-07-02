@@ -5,7 +5,7 @@
 ## 📋 Prerequisites
 
 - [Node.js](https://nodejs.org/) v20+
-- [OpenClaw](https://github.com/openclaw/openclaw) installed globally
+- An AI coding harness installed globally (Claude Code, Codex, Cursor, or Hermes)
 - API keys for your preferred AI providers (Anthropic, OpenAI, Google, ZAI, etc.)
 - A Telegram account (for bot-based agents)
 
@@ -144,7 +144,7 @@ openclaw gateway start
 
 ## 📚 Learn More
 
-- [OpenClaw Documentation](https://github.com/openclaw/openclaw)
+- Works with Claude Code, Codex, Cursor, and Hermes
 - [Agent Configuration Guide](./agents/README.md)
 - [Skill Categories](./skills/categories/README.md)
 - [Knowledge Cookbooks](./cookbook/) — Multi-chapter learning resources

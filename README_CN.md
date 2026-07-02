@@ -5,14 +5,14 @@
 <h1 align="center">AGI Super Team</h1>
 
 <p align="center">
-  <strong>737 AI 技能 · 12 位 C-Suite Agent · 29 个思维框架</strong><br/>
-  几分钟内打造你的 AI 原生公司
+  <strong>部署一支由传奇大脑驱动的 AI 高管团队。</strong><br/>
+  让 Jim Simons 跑量化 · MrBeast 做爆款 · 巴菲特管钱。
 </p>
 
 <p align="center">
-  <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/Powered%20by-OpenClaw-blue?logo=github" alt="OpenClaw"></a>
+  <img src="https://img.shields.io/badge/Works%20with-Claude%20Code%20%7C%20Codex%20%7C%20Cursor-blueviolet" alt="Harness compatible">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Skills-737-blueviolet" alt="Skills">
+  <img src="https://img.shields.io/badge/Skills-1,651-blueviolet" alt="Skills">
   <img src="https://img.shields.io/badge/Agents-14-orange" alt="Agents">
   <img src="https://img.shields.io/badge/Frameworks-31-cyan" alt="Frameworks">
 </p>
@@ -30,9 +30,9 @@
 
 ## 💡 这是什么？
 
-一个**即插即用的 AI 团队模板** — 基于 [OpenClaw](https://github.com/openclaw/openclaw) 部署完整的虚拟 C-Suite。每个 Agent 都有**精神导师**（Elon Musk、Jensen Huang、Warren Buffett...）塑造其性格和决策方式。
+一个**即插即用的 AI 团队模板** — 兼容 Claude Code / Codex / Cursor 等 AI 编程助手，部署完整的虚拟 C-Suite。每个 Agent 都有**精神导师**（Elon Musk、Jensen Huang、Warren Buffett...）塑造其性格和决策方式。
 
-**727 技能 · 12 个 Agent · 29 个思维框架 · 30 个工作流。** 零配置 — 复制、定制、发布。
+**1,651 技能 · 14 个 Agent · 31 个思维框架 · 30 个工作流。** 零配置 — 复制、定制、发布。
 
 ## 🏛️ 架构
 
@@ -67,7 +67,7 @@ cp -r skills/thinking-elon-musk/ ~/.openclaw/workspace-ceo/skills/
 # 3. 给任何 Agent 添加技能
 cp -r skills/api-design/ ~/.openclaw/workspace-ceo/skills/
 
-# 4. 重启 OpenClaw — 完成！
+# 4. 重启你的 Agent harness — 完成！
 ```
 
 ## 🛠️ 技能分类
@@ -98,8 +98,8 @@ cp -r skills/api-design/ ~/.openclaw/workspace-ceo/skills/
 
 ```
 AGI-Super-Team/
-├── agents/           # 12 个 C-Suite Agent
-├── skills/           # 737 个技能（扁平结构）
+├── agents/           # 14 个 C-Suite Agent
+├── skills/           # 1,651 个技能（扁平结构）
 ├── workflows/        # 30 个标准工作流
 ├── cookbook/         # 5 个深度教程
 ├── CHARTER.md        # 团队宪章
@@ -125,5 +125,5 @@ AGI-Super-Team/
 ---
 
 <p align="center">
-  Built with ❤️ using <a href="https://github.com/openclaw/openclaw">OpenClaw</a>
+  兼容 Claude Code / Codex / Cursor / Hermes 等 AI 编程助手
 </p>

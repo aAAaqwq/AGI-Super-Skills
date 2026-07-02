@@ -5,16 +5,13 @@
 <h1 align="center">AGI Super Team</h1>
 
 <p align="center">
-  <strong>1,639 AI Skills · 14 C-Suite Agents · 31 Thinking Frameworks</strong><br/>
-  Build your AI-native company in minutes.
+  <strong>Deploy a virtual C-Suite of AI executives — each powered by a legendary mind.</strong><br/>
+  Let Jim Simons run your quant · MrBeast drive your content · Buffett guard your capital.
 </p>
 
 <p align="center">
-  <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/Powered%20by-OpenClaw-blue?logo=github" alt="OpenClaw"></a>
+  <img src="https://img.shields.io/badge/Works%20with-Claude%20Code%20%7C%20Codex%20%7C%20Cursor-blueviolet" alt="Harness compatible">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Skills-1,639-blueviolet" alt="Skills">
-  <img src="https://img.shields.io/badge/Agents-14-orange" alt="Agents">
-  <img src="https://img.shields.io/badge/Frameworks-31-cyan" alt="Frameworks">
 </p>
 
 <p align="center">
@@ -64,6 +61,12 @@ You (Founder / Chairman)
         ├── 💻 PE  — Production engineering, DevOps, delivery
         └── ⚖️ Governor — Quality assurance, delivery audit, escalation
 ```
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Skills-1,639-blueviolet" alt="Skills">
+  <img src="https://img.shields.io/badge/Agents-14-orange" alt="Agents">
+  <img src="https://img.shields.io/badge/Frameworks-31-cyan" alt="Frameworks">
+</p>
 
 ## 👥 Agents
 
@@ -235,5 +238,5 @@ Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 ---
 
 <p align="center">
-  Built with ❤️ using <a href="https://github.com/openclaw/openclaw">OpenClaw</a>
+  Compatible with Claude Code, Codex, Cursor, and Hermes
 </p>

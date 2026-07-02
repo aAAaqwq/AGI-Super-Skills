@@ -4,7 +4,7 @@
 
 ## Repository Overview
 
-AGI Super Team is a plug-and-play AI team template for [OpenClaw](https://github.com/openclaw/openclaw). It contains:
+AGI Super Team is a plug-and-play AI team template that works with Claude Code, Codex, Cursor, and Hermes. It contains:
 - **12 C-Suite agent personas** in `agents/` (CEO, CTO, PE, CCO, etc.)
 - **1,639+ skills** in `skills/` (each with SKILL.md)
 - **Starter kits** in `starter-kits/` for one-click deployment
