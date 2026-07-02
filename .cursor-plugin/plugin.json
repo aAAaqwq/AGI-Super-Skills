@@ -1,0 +1,6 @@
+{
+  "name": "agi-super-team",
+  "version": "1.0.0",
+  "description": "Virtual C-Suite of AI executives powered by legendary minds, with 1,651 skills",
+  "skillsDir": "./skills"
+}

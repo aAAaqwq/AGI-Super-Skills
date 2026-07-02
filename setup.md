@@ -20,6 +20,12 @@
 
 当用户要求安装 AGI Super Team 时，按以下步骤执行：
 
+> **推荐方式（harness 原生优先）**：
+> - **Claude Code（推荐）**：直接运行 `/plugin install aAAaqwq/AGI-Super-Team`，无需本脚本。
+> - **Codex / Cursor / Hermes 等**：使用下方 Step 1 的 `git clone` + `install.sh` 流程。
+> - 下方依赖 OpenClaw CLI 的步骤（`openclaw config` / `openclaw gateway restart`）标注为
+>   *(legacy)*，仅当你的环境仍运行（已 discontinued 的）OpenClaw harness 时需要。
+
 ### Step 1: Clone & Deploy
 
 ```bash
@@ -49,8 +55,10 @@ ls ~/.openclaw/workspace-cco/     # CCO (如部署)
 
 ### Step 3: Configure API Keys
 
+> *(legacy, if using OpenClaw harness)* — Claude Code / Codex / Cursor / Hermes 用户请在各 harness 的设置里直接配置 provider API key。
+
 ```bash
-# 引导用户配置 API key
+# 引导用户配置 API key (legacy, if using OpenClaw harness)
 openclaw config
 ```
 
@@ -61,7 +69,10 @@ openclaw config
 
 ### Step 4: Restart & Test
 
+> *(legacy, if using OpenClaw harness)* — 其他 harness（Claude Code / Codex / Cursor / Hermes）无需重启 gateway，直接在会话里使用即可。
+
 ```bash
+# (legacy, if using OpenClaw harness)
 openclaw gateway restart
 ```
 
@@ -99,7 +110,7 @@ bash ~/.agi-super-team/install.sh cqo        # CQO (量化)
 
 | 问题 | 解决 |
 |------|------|
-| `openclaw: command not found` | `npm install -g openclaw` |
+| `openclaw: command not found` | *(legacy)* OpenClaw 已 discontinued；改用 Claude Code / Codex / Cursor / Hermes。如确需 OpenClaw：`npm install -g openclaw` |
 | `Agent source not found` | 检查 clone 是否完整，重新 `git clone` |
 | workspace 为空 | 检查 `~/.agi-super-team/agents/` 目录是否存在 |
-| API key 无效 | 运行 `openclaw config` 重新配置 |
+| API key 无效 | *(legacy)* `openclaw config` 重新配置；或在对应 harness 设置里配置 provider API key |

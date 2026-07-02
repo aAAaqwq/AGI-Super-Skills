@@ -28,7 +28,7 @@
 
 ## 🤖 For AI Agents
 
-> **If you are Claude Code / OpenClaw / Codex / Cursor, read this file: [`setup.md`](./setup.md)**
+> **If you are Claude Code / Codex / Cursor (or any compatible AI harness), read this file: [`setup.md`](./setup.md)**
 >
 > Or just tell your Agent:
 > ```
@@ -38,9 +38,23 @@
 
 ## 💡 What Is This?
 
-A **plug-and-play AI team template** — deploy a complete virtual C-Suite using [OpenClaw](https://github.com/openclaw/openclaw). Each agent is shaped by a **spirit mentor** (Elon Musk, Jensen Huang, Warren Buffett, Richard Feynman...) that defines their personality, decision-making style, and cognitive framework.
+A **plug-and-play AI team template** — deploy a complete virtual C-Suite using Claude Code, Cursor, Codex, or Gemini. Each agent is shaped by a **spirit mentor** (Elon Musk, Jensen Huang, Warren Buffett, Richard Feynman...) that defines their personality, decision-making style, and cognitive framework.
 
 **1,639 skills. 14 agents. 31 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
+
+## ⚡ Install
+
+> **Works natively with Claude Code, Cursor, Codex, and Gemini.**
+
+```bash
+# Claude Code (recommended)
+/plugin install aAAaqwq/AGI-Super-Team
+
+# Or clone directly
+git clone --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git ~/.agi-super-team
+```
+
+For one-command kit deploys (solo-founder, quant-trader, content-creator…), jump to [What You Can Do in 10 Minutes](#what-you-can-do-in-10-minutes).
 
 ## 🚀 What You Can Do in 10 Minutes
 
@@ -145,7 +159,6 @@ done
 | 📝 Content & Writing | SEO, viral copy, anti-AI-slop, social media |
 | 🔧 Development | Backend, frontend, Docker, Git, TDD, API design, code review |
 | 💰 Trading & Finance | Crypto, Polymarket, DeFi, portfolio management, backtesting |
-| ⚙️ OpenClaw Tools | Config, auth, cron, MCP, token guard, agent orchestration |
 | 🤖 AI Agent Patterns | Multi-agent orchestration, parallel execution, sub-agents |
 | 📊 Data & Analytics | Web scraping, DuckDB, CSV pipelines, arXiv |
 | 📈 Marketing & SEO | SEO audits, GEO optimization, A/B testing, competitor analysis |
@@ -176,22 +189,7 @@ Each agent directory (e.g. `agents/cco/WORKFLOW.md`) contains role-specific and 
 
 ## ⚡ Quick Start
 
-### One-command deploy (recommended)
-
-```bash
-# Prerequisites: Node.js v20+ and OpenClaw
-npm install -g openclaw
-
-# Deploy a starter kit — pick your role:
-curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- solo-founder    # 🚀 Solo founder
-# curl ... | bash -s -- content-creator   # 🎨 Content creator
-# curl ... | bash -s -- quant-trader      # 📈 Quant trader
-# curl ... | bash -s -- full-team         # 🏛️ All 14 agents
-
-# Configure API keys, then restart
-openclaw config
-openclaw gateway restart
-```
+For the native plugin install, see [Install](#install) above. For one-command kit deploys, see [What You Can Do in 10 Minutes](#what-you-can-do-in-10-minutes).
 
 ### Starter Kits
 
