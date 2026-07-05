@@ -22,6 +22,7 @@ data/news-signals*
 # 本地环境 / 密钥（防止误提交）
 .env
 .env.*
+!.env.example
 *.local
 *.secret
 *.key
