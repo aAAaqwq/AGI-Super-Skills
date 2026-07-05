@@ -7,7 +7,7 @@
 ### 模式1: 数据源不可用导致 Dreaming 失败
 
 **现象**: Dreaming cron 输出以 `RuntimeError: Connection error` 结尾
-**根因**: 引擎 `5minbtc-engine.py` 无法获取 K线数据（当前: Binance API 451区域封禁）
+**根因**: 引擎 `5minbtc-engine-v5.7.py` 无法获取 K线数据 (历史故障: Binance API 451 区域封禁)
 **影响**: Dreaming 无法初始化因子计算和预测，整个分析报告为空
 
 **恢复步骤**:

@@ -4,11 +4,16 @@ import json, os, sys
 from datetime import datetime, timezone, timedelta
 
 LOG_DIR = os.path.dirname(os.path.abspath(__file__))
-LOG_FILE = os.path.join(LOG_DIR, "5minbtc-log.jsonl")
+LOGS_DIR = os.path.join(LOG_DIR, "logs")
+LOG_FILE = os.path.join(LOGS_DIR, "5minbtc-log.jsonl")
 CST = timezone(timedelta(hours=8))
+
+def _ensure_logs_dir():
+    os.makedirs(LOGS_DIR, exist_ok=True)
 
 def log_prediction(candle_start_iso, predicted_close, predicted_high, predicted_low, confidence, bias, news_sentiment, vol_pct):
     """记录预测（在K线进行中调用）"""
+    _ensure_logs_dir()
     entry = {
         "ts": datetime.now(CST).isoformat(timespec="seconds"),
         "candle": candle_start_iso,
@@ -30,6 +35,7 @@ def log_prediction(candle_start_iso, predicted_close, predicted_high, predicted_
 def settle_candle(candle_start_iso):
     """从Binance API获取已结算K线，填入actual值"""
     import urllib.request
+    _ensure_logs_dir()
     # Convert candle_start to epoch ms
     dt = datetime.fromisoformat(candle_start_iso)
     start_ms = int(dt.timestamp() * 1000)

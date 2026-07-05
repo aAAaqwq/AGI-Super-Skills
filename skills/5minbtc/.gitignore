@@ -1,0 +1,34 @@
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 运行时日志（预测/交易记录，运行时生成）
+*.jsonl
+*.jsonl.*
+*.gz
+5minbtc-log.jsonl*
+
+# 回测运行结果（运行产物，不入库）
+backtest/results/
+
+# 运行时数据缓存
+data/*.jsonl
+data/*.jsonl.*
+data/news-risk-level.json
+data/news-signals*
+
+# 本地环境 / 密钥（防止误提交）
+.env
+.env.*
+*.local
+*.secret
+*.key
+
+# 系统 / 编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
