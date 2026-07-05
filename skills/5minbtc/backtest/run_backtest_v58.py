@@ -28,7 +28,7 @@ from datetime import datetime, timezone, timedelta
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SKILL_DIR = os.path.dirname(SCRIPT_DIR)
 ENGINE_V57 = os.path.join(SKILL_DIR, "5minbtc-engine-v5.7.py")
-ENGINE_V56 = os.path.join(SKILL_DIR, "5minbtc-engine-v5.py")
+ENGINE_V56 = os.path.join(SKILL_DIR, "archive", "engines", "5minbtc-engine-v5.py")
 DATA_5M = os.path.join(SCRIPT_DIR, "data", "btcusdt_5m.json")
 DATA_1M = os.path.join(SCRIPT_DIR, "data", "btcusdt_1m.json")
 RESULTS_DIR = os.path.join(SCRIPT_DIR, "results")
