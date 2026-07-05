@@ -1,3 +1,16 @@
+---
+name: 5minbtc
+version: 5.7.4
+description: "BTC 5分钟K线实时方向预测。v5.7.3引擎HTTP并行化(4路ThreadPoolExecutor→~3s,原12-18s)。半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt Scaling+Bull惩罚。ATR乘数x0.55。黑天鹅防护: ATR spike+FNG<25过滤+新闻冲击熔断。v5.7.2冲突裁决: half_body vs imbalance/microprice(已验证2次实盘)+fatigue≥0.8均值回归预警。Binance端点双向故障切换。"
+triggers:
+  - 5minbtc
+  - 5min btc
+  - btc 5min
+tools:
+  - terminal
+  - web
+---
+
 # 5minbtc — BTC 5分钟实时预测 v5.7.4
 
 > BTC 单根 5min K线 方向 + 收盘价预测。引擎+LLM 混合架构。
@@ -35,7 +48,7 @@ python3 $SKILL_DIR/5minbtc-log.py log \
 
 ## 架构 (1 行/组件)
 - **引擎** `5minbtc-engine-v5.7.py`: 12 正交因子 + 半 K线策略 + 4路并行 HTTP (~3s)
-- **日志** `5minbtc-log.py`: jsonl 追加 + 增量 settle
+- **日志** `5minbtc-log.py`: jsonl 追加 + 增量 settle (写入 logs/)
 - **新闻** `5minbtc-news.py`: CoinDesk RSS (唯一稳定源, ~14min 延迟)
 - **LLM**: 因子打分基准 + LLM 综合裁决 + 模板输出
 
@@ -62,10 +75,11 @@ python3 $SKILL_DIR/5minbtc-log.py log \
 ## 📚 引用索引 (references/)
 
 ### 核心方法论
-- [lessons.md](references/lessons.md) — **22 条核心教训** (必读)
-- [pitfalls.md](references/pitfalls.md) — **22 条 pitfalls 集中索引** (必读)
+- [lessons.md](references/lessons.md) — **25 条核心教训** (必读, 含 2026-07-05 新增 23-25)
+- [pitfalls.md](references/pitfalls.md) — **17 条 pitfalls 集中索引** (必读, 含并行 max() 评估陷阱)
 - [changelog.md](references/changelog.md) — v5.0 ~ v5.7.4 详细变更
 - [architecture.md](references/architecture.md) — 引擎架构 + 因子模型 + v5.0 升级路线图
+- [skill-organization.md](references/skill-organization.md) — **Skill 文件结构模式 (可复用)** — SKILL.md INDEX + references/ 分专题
 
 ### 执行与输出
 - [execution.md](references/execution.md) — 完整执行步骤 + 铁律 + 宽窗口处理
@@ -139,7 +153,7 @@ backtest/
 ## 文件结构
 ```
 5minbtc/
-├── SKILL.md                      # 本文件 (~160 行 INDEX)
+├── SKILL.md                      # 本文件 (~170 行 INDEX)
 ├── 5minbtc-engine-v5.7.py        # 主引擎 (v5.7.4 规则, cron 调用)
 ├── 5minbtc-news.py               # 新闻扫描 (CoinDesk RSS, 唯一稳定源)
 ├── 5minbtc-log.py                # 日志记录 (写入 logs/)
@@ -154,12 +168,14 @@ backtest/
 │   ├── 2026-05/  (6 份)
 │   ├── 2026-06/  (15 份)
 │   └── 2026-07/  (2 份)
-├── references/                   # 24 份专项 ref
+├── references/                   # 26 份专项 ref (含 skill-organization 模式)
 ├── backtest/                     # 回测系统
 ├── data/                         # 运行时 (news-risk-level.json 等)
 ├── scripts/                      # 复盘/工具脚本
-└── reports/                      # 14 份蒸馏报告 (R01-R14)
-```
+14. 🔴 高延迟网络 — 引擎timeout临时修补 (2026-06-24)
+15. 🔴 Web搜索不可用时的降级策略
+16. 🔴 并行工具调用延迟评估 = max() not sum() (2026-07-05)
+17. 🔴 SKILL.md 维护: 定期重构为 INDEX 风格 (2026-07-05)
 
 ---
-最后更新: 2026-07-05 — 清理 news.py 死代码 (-54%) + SKILL.md 重构为 INDEX (-78%)
+最后更新: 2026-07-05 — 清理 news.py 死代码 (-54%) + SKILL.md 重构为 INDEX (-82%) + logs/reviews 归档 + 25 条教训

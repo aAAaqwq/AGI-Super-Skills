@@ -1,4 +1,4 @@
-# 5minbtc Pitfalls (22条)
+# 5minbtc Pitfalls (17条)
 
 > 全部 pitfalls 集中索引。每条给出: 触发条件 / 症状 / 修复规则。
 > 部分有专门 reference: 标 [→ refs/file.md]。
@@ -20,6 +20,8 @@
 13. 🔴 chainlink_offset 可使引擎 pred_close 与 bias 方向矛盾 (2026-07-05)
 14. 🔴 高延迟网络 — 引擎timeout临时修补 (2026-06-24)
 15. 🔴 Web搜索不可用时的降级策略
+16. 🔴 并行工具调用延迟评估 = max() not sum() (2026-07-05)
+17. 🔴 SKILL.md 维护: 定期重构为 INDEX 风格 (2026-07-05)
 
 ---
 
@@ -343,7 +345,7 @@ for j in jobs['jobs']:
 
 当ping 8.8.8.8 >250ms 时，两个Binance端点都可能返回HTTP 000（SSL握手超时），而非HTTP错误。此时端点切换无效——需要临时增加引擎内部`urlopen`的timeout参数。
 
-**症状**: `urllib.error.URLError: <urlopen error _ssl.c:999: The handshake operation timed out>`，但curl用`--connect-timeout 20`可通。
+**症状**: `urllib.error.URLError: <urlerror _ssl.c:999: The handshake operation timed out>`，但curl用`--connect-timeout 20`可通。
 
 **操作步骤**:
 ```bash
@@ -378,5 +380,18 @@ rm 5minbtc-engine-v5.7.py.bak-net
 3. 输出中注明"新闻搜索不可用（网络高延迟），已用引擎内置RSS扫描"
 4. **不要重试web_search超过2轮** — 第1轮初始搜索+第2轮上下文定制搜索后仍失败即放弃
 
+---
 
+## 2026-07-05 整理后新增 pitfall (会话内验证)
 
+### 🔴 SKILL.md 维护: 定期重构为 INDEX 风格 (2026-07-05)
+
+**症状**: SKILL.md 单文件膨胀, 涵盖 changelog + lessons + pitfalls + 复盘流程, 超过 300 行时触发用户"太长了"反馈。
+
+**规则**:
+1. **定期检查**: SKILL.md > 250 行应主动提议拆出 references/
+2. **拆分原则**: changelog/lessons/pitfalls/执行步骤/复盘流程/session 记录/数据源评估/Cron 配置, 每类一个 references/<topic>.md
+3. **SKILL.md 只保留**: 触发 + 何时用 + quick-start + 铁律 (3-7 条) + 关键规则 (5-7 条精简) + 性能快照 + references 索引
+4. **避免**: 把 7 个 changelog + 22 lessons + 22 pitfalls + 复盘流程全塞 SKILL.md
+
+**5minbtc 实战 (2026-07-05)**: 887 → 152 行 (-82%) 重构。详见 `references/skill-organization.md`。
