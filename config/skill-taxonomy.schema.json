@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aaaaqwq.github.io/AGI-Super-Team/schemas/skill-taxonomy.schema.json",
+  "title": "AGI Super Team skill taxonomy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "categories", "overrides", "riskLabels", "riskOverrides", "featured"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"const": 1},
+    "categories": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "description", "priority", "patterns"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "title": {"type": "string", "minLength": 3},
+          "description": {"type": "string", "minLength": 12},
+          "priority": {"type": "integer", "minimum": 0},
+          "patterns": {"type": "array", "items": {"type": "string"}},
+          "fallback": {"const": true}
+        }
+      }
+    },
+    "overrides": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "riskLabels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "title": {"type": "string", "minLength": 3}
+        }
+      }
+    },
+    "riskOverrides": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {"type": "string"},
+        "uniqueItems": true
+      }
+    },
+    "featured": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["skill", "category", "supportLevel", "reason"],
+        "properties": {
+          "skill": {"type": "string"},
+          "category": {"type": "string"},
+          "supportLevel": {"enum": ["curated", "pack-required", "catalog"]},
+          "reason": {"type": "string", "minLength": 12}
+        }
+      }
+    }
+  }
+}

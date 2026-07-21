@@ -30,8 +30,12 @@ class ReadmeContractTests(unittest.TestCase):
 
     def test_readmes_expose_repository_architecture_and_discovery(self) -> None:
         expected_headings = {
-            self.english: ("## Explore", "## Repository architecture", "## Team topology"),
-            self.chinese: ("## 探索仓库", "## 仓库架构", "## 团队拓扑"),
+            self.english: (
+                "## Browse skills by outcome",
+                "## Repository architecture",
+                "## Team topology",
+            ),
+            self.chinese: ("## 按成果浏览技能", "## 仓库架构", "## 团队拓扑"),
         }
         for readme, headings in expected_headings.items():
             for heading in headings:
@@ -42,6 +46,7 @@ class ReadmeContractTests(unittest.TestCase):
             self.assertIn("./docs/guides/", readme)
             self.assertIn("./agents/", readme)
             self.assertIn("./cookbook/", readme)
+            self.assertIn("./catalog/", readme)
 
     def test_readme_local_links_resolve(self) -> None:
         pattern = re.compile(r"\[[^]]+\]\(([^)]+)\)|<img[^>]+src=\"([^\"]+)\"")

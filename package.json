@@ -8,7 +8,9 @@
     "test:repository": "python3 -m unittest discover -s tests -p 'test_*.py'",
     "test:installer": "bash tests/installer/test_install.sh",
     "validate": "python3 scripts/validate_repository.py",
-    "validate:strict": "python3 scripts/validate_repository.py --warnings-as-errors"
+    "validate:strict": "python3 scripts/validate_repository.py --warnings-as-errors",
+    "build:skills": "python3 scripts/build_skill_catalog.py",
+    "check:skills": "python3 scripts/build_skill_catalog.py --check"
   },
   "keywords": [
     "claude-code",
