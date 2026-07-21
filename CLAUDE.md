@@ -5,8 +5,8 @@
 ## Repository Overview
 
 AGI Super Team is a plug-and-play AI team template that works with Claude Code, Codex, Cursor, and Hermes. It contains:
-- **12 C-Suite agent personas** in `agents/` (CEO, CTO, PE, CCO, etc.)
-- **1,639+ skills** in `skills/` (each with SKILL.md)
+- **14 agent personas** in `agents/` (CEO, CTO, PE, Governor, etc.)
+- **793 tracked physical skills** in `skills/` (each with `SKILL.md`)
 - **Starter kits** in `starter-kits/` for one-click deployment
 - **Cookbooks** in `cookbook/` for deep learning
 
