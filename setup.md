@@ -1,116 +1,93 @@
-# 🚀 Setup Guide — Agent Auto-Deploy
+# Setup, verification, and recovery
 
-> **如果你是 Claude Code / Codex / Cursor / Hermes 等 AI Agent，请按以下步骤操作。**
+This guide covers the generic workspace installer. The curated Codex-native package is separate; follow [`.codex/INDEX.md`](./.codex/INDEX.md) for that distribution.
 
-## 一键部署命令
+## Prerequisites
 
-告诉你的 Agent：
+- Bash and standard Unix tools.
+- Node.js for reading the canonical team manifest.
+- npm and Python 3 for repository tests and validation.
+- Git when the installer must fetch a repository. A local `--source` avoids that fetch.
+- Write permission for the selected `--destination`.
+- A supported AI harness configured separately. The installer does not configure models, credentials, or provider accounts.
 
-```
-帮我安装这个 starter kit：https://github.com/aAAaqwq/AGI-Super-Team
+OpenClaw CLI commands are legacy and optional. Codex, Claude Code, Cursor, Gemini, and Kimi have different extension models; repository metadata does not imply feature parity.
 
-选择一个：
-- solo-founder（一个人创业：CEO + PE + CCO）
-- content-creator（自媒体：CCO + CDO + CMO）
-- quant-trader（量化：CQO + CDO + CFO）
-- full-team（全部12个Agent）
-```
-
-## Agent 执行步骤
-
-当用户要求安装 AGI Super Team 时，按以下步骤执行：
-
-> **推荐方式（harness 原生优先）**：
-> - **Claude Code（推荐）**：直接运行 `/plugin install aAAaqwq/AGI-Super-Team`，无需本脚本。
-> - **Codex / Cursor / Hermes 等**：使用下方 Step 1 的 `git clone` + `install.sh` 流程。
-> - 下方依赖 OpenClaw CLI 的步骤（`openclaw config` / `openclaw gateway restart`）标注为
->   *(legacy)*，仅当你的环境仍运行（已 discontinued 的）OpenClaw harness 时需要。
-
-### Step 1: Clone & Deploy
+## 1. Inspect a trusted checkout
 
 ```bash
-# Clone 仓库
-git clone --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git ~/.agi-super-team
-
-# 运行安装脚本（选择对应 kit）
-bash ~/.agi-super-team/install.sh solo-founder
-# 可选：content-creator | quant-trader | full-team | ceo | pe | cco ...
+git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
+cd AGI-Super-Team
+git rev-parse HEAD
 ```
 
-### Step 2: Verify
+Record the revision, inspect `install.sh`, and review the selected agent and skill directories before applying changes.
+
+## 2. Preview
+
+Preview is the default. Use an explicit destination so the proposed write locations are easy to audit.
 
 ```bash
-# 检查 workspace 是否创建成功
-ls ~/.openclaw/workspace-ceo/    # CEO
-ls ~/.openclaw/workspace-pe/      # PE (如部署)
-ls ~/.openclaw/workspace-cco/     # CCO (如部署)
+./install.sh --source "$PWD" --destination /path/to/review-workspace solo-founder
 ```
 
-每个 workspace 应包含：
-- `SOUL.md` — 人格内核
-- `AGENTS.md` — 工作手册
-- `IDENTITY.md` — 身份档案
-- `BOOTSTRAP.md` — 启动引导
-- `skills/` — 精选技能
+Other selectors are `content-creator`, `quant-trader`, `full-team`, or one agent ID such as `ceo`. A second positional agent ID filters a starter kit.
 
-### Step 3: Configure API Keys
+Preview may print an optional legacy OpenClaw warning. It should list planned agents and finish by asking you to re-run with `--apply`.
 
-> *(legacy, if using OpenClaw harness)* — Claude Code / Codex / Cursor / Hermes 用户请在各 harness 的设置里直接配置 provider API key。
+## 3. Apply after review
 
 ```bash
-# 引导用户配置 API key (legacy, if using OpenClaw harness)
-openclaw config
+./install.sh --source "$PWD" --destination /path/to/review-workspace --apply solo-founder
 ```
 
-需要至少一个 LLM provider 的 API key：
-- Anthropic (Claude) — 推荐
-- OpenAI (GPT-4)
-- ZAI / Google / 其他
+The installer creates `workspace-<agent>/` directories beneath the destination. It copies supported persona files and selected skill directories without replacing existing paths.
 
-### Step 4: Restart & Test
+Because existing files are preserved, repeated runs are not an upgrade mechanism for modified files. Review differences and merge intentionally.
 
-> *(legacy, if using OpenClaw harness)* — 其他 harness（Claude Code / Codex / Cursor / Hermes）无需重启 gateway，直接在会话里使用即可。
+## 4. Verify
 
 ```bash
-# (legacy, if using OpenClaw harness)
-openclaw gateway restart
+find /path/to/review-workspace -maxdepth 2 -type f -name 'AGENTS.md' -print
+find /path/to/review-workspace -maxdepth 3 -type f -name 'SKILL.md' -print
+npm test
+npm run validate
 ```
 
-## 单 Agent 部署
+Expected kit workspaces:
 
-如果用户只想部署某一个 Agent：
+| Kit | Expected directories |
+|---|---|
+| `solo-founder` | `workspace-ceo`, `workspace-pe`, `workspace-cco` |
+| `content-creator` | `workspace-cco`, `workspace-cdo`, `workspace-cmo` |
+| `quant-trader` | `workspace-cqo`, `workspace-cdo`, `workspace-cfo` |
+
+Inspect the installed `SOUL.md`, `AGENTS.md`, `TOOLS.md`, and skills before trusting them. External recommendations are informational and are not bundled by the installer.
+
+## Codex-native package
+
+The Codex distribution is under `plugins/agi-super-team-codex/` and registered by `.agents/plugins/marketplace.json`. It does not use `install.sh` or the starter-kit mapping.
+
+Follow the commands and safe sync procedure in [the Codex package index](./.codex/INDEX.md). Agent sync previews first, backs up differing files, and requires explicit application.
+
+## Updates
+
+Fetch the `main` branch, inspect the diff, run repository checks, then preview the installer again:
 
 ```bash
-# 部署单个 agent（支持别名和 ID）
-bash ~/.agi-super-team/install.sh ceo        # CEO
-bash ~/.agi-super-team/install.sh pe         # PE (开发)
-bash ~/.agi-super-team/install.sh cco        # CCO (内容)
-bash ~/.agi-super-team/install.sh cto        # CTO (架构)
-bash ~/.agi-super-team/install.sh cqo        # CQO (量化)
-# ... 等等
+git fetch origin main
+git diff --stat HEAD..origin/main
+git diff HEAD..origin/main -- install.sh agents skills starter-kits
 ```
 
-## 自定义
+Do not blindly pull and apply when local workspace files contain customizations. The installer intentionally preserves those files.
 
-部署后用户可以自定义每个 Agent：
+## Recovery
 
-1. **改人格**：编辑 `~/.openclaw/workspace-{agent}/SOUL.md`
-2. **加技能**：从 727 个 skills 中选择，复制到 `~/.openclaw/workspace-{agent}/skills/`
-3. **改记忆**：编辑 `MEMORY.md` 注入领域知识
-4. **加工具**：在 `skills/` 目录添加新 SKILL.md
+If preview is wrong, stop and correct `--source`, `--destination`, or the kit selector; preview writes nothing.
 
-### 推荐技能（按场景）
+If an apply is interrupted, stop and inspect the destination before rerunning it. Confirm the exact destination and any staging or backup state, then move uncertain new workspaces aside for review.
 
-**独立开发者**：`thinking-elon-musk`, `thinking-linus-torvalds`, `api-design`, `docker-containerization`
-**自媒体**：`khazix-writer`, `xhs-publisher`, `douyin-publisher`, `seo-writing`
-**量化**：`backtesting-system`, `risk-management`, `data-pipeline`
-**研究**：`deep-research`, `web-search`, `scientific-method`
+If apply reports a missing required skill, do not substitute an unrelated skill. Confirm the checkout is complete and run `npm run validate` before retrying.
 
-## 故障排查
-
-| 问题 | 解决 |
-|------|------|
-| `openclaw: command not found` | *(legacy)* OpenClaw 已 discontinued；改用 Claude Code / Codex / Cursor / Hermes。如确需 OpenClaw：`npm install -g openclaw` |
-| `Agent source not found` | 检查 clone 是否完整，重新 `git clone` |
-| workspace 为空 | 检查 `~/.agi-super-team/agents/` 目录是否存在 |
-| API key 无效 | *(legacy)* `openclaw config` 重新配置；或在对应 harness 设置里配置 provider API key |
+Never paste credentials into repository files or command output. Configure providers through the chosen harness and keep secrets outside the project checkout.

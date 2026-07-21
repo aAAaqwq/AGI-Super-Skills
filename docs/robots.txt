@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aaaaqwq.github.io/AGI-Super-Team/sitemap.xml

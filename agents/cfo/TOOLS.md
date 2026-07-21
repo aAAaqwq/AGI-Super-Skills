@@ -4,11 +4,11 @@ _财务 · 仓库工具配置和笔记_
 
 ## Repo 路径说明
 
-所有路径均相对于 `agents/cfo/`，格式为 `../skills/<name>/`。
+所有路径均相对于 `agents/cfo/`，格式为 `../../skills/<name>/`。
 
 ## 推荐 Skills
 
-### 本地 Skills (../skills/)
+### 本地 Skills (../../skills/)
 - **token-guard**: Token 用量防护与限制
 - **token-reporter**: Token 消耗报告生成
 - **token-budget-advisor**: Token 预算顾问
