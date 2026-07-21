@@ -1,279 +1,123 @@
 <p align="center">
-  <img src="assets/logo.png" alt="AGI Super Team" width="120">
+  <img src="assets/banner.png" alt="AGI Super Team — Evidence-backed AI teams for real outcomes" width="100%">
 </p>
 
 <h1 align="center">AGI Super Team</h1>
 
-<p align="center">
-  <strong>Deploy a virtual C-Suite of AI executives — each powered by a legendary mind.</strong><br/>
-  Let Jim Simons run your quant · MrBeast drive your content · Buffett guard your capital.
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Works%20with-Claude%20Code%20%7C%20Codex%20%7C%20Cursor-blueviolet" alt="Harness compatible">
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-</p>
+<p align="center"><strong>Evidence-backed AI teams for real outcomes</strong></p>
 
 <p align="center">
   <a href="./README_CN.md">中文</a> ·
-  <a href="#quick-start">Quick Start</a> ·
-  <a href="./skills/README.md">All Skills</a> ·
-  <a href="./agents/README.md">Agents</a> ·
-  <a href="./cookbook/">Cookbooks</a> ·
-  <a href="./starter-kits/">Starter Kits</a> ·
-  <a href="./setup.md">Agent Setup Guide</a>
+  <a href="#safe-quick-start">Quick start</a> ·
+  <a href="./setup.md">Setup guide</a> ·
+  <a href="./CONTRIBUTING.md">Contribute</a>
 </p>
 
----
+## What this repository is
 
-## 🤖 For AI Agents
+AGI Super Team is a collection of agent personas, reusable skills, starter-kit manifests, and a curated Codex-native package. It helps people assemble reviewable AI workflows rather than promising autonomous business results.
 
-> **If you are Claude Code / Codex / Cursor (or any compatible AI harness), read this file: [`setup.md`](./setup.md)**
->
-> Or just tell your Agent:
-> ```
-> Install AGI Super Team for me: https://github.com/aAAaqwq/AGI-Super-Team
-> I want the solo-founder kit
-> ```
+Outputs still need human review. Trading, legal, security, medical, publishing, and deployment tasks require domain-specific validation and appropriate authorization.
 
-## 💡 What Is This?
+## Choose a distribution
 
-A **plug-and-play AI team template** — deploy a complete virtual C-Suite using Claude Code, Cursor, Codex, or Gemini. Each agent is shaped by a **spirit mentor** (Elon Musk, Jensen Huang, Warren Buffett, Richard Feynman...) that defines their personality, decision-making style, and cognitive framework.
+| Surface | Repository support | Install path | Notes |
+|---|---|---|---|
+| Generic/local workspace | Supported by `install.sh` | Preview, inspect, then apply | Copies selected personas and available skills without overwriting existing files |
+| Codex | Separate curated native package | See [`.codex/INDEX.md`](./.codex/INDEX.md) | Has its own manifest, selected skills, and opt-in agent sync |
+| Claude Code | Repository plugin manifest present | Review [`.claude-plugin/`](./.claude-plugin/) | Confirm your installed client supports the manifest before use |
+| Cursor, Gemini, Kimi | Metadata/manifests present | Review the corresponding manifest | Compatibility varies by client version; this repository does not claim feature parity |
 
-**1,639 skills. 14 agents. 31 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
+The generic starter kits and Codex package are separate products. Installing one does not install or synchronize the other.
 
-## ⚡ Install
+## Safe quick start
 
-> **Works natively with Claude Code, Cursor, Codex, and Gemini.**
-
-```bash
-# Claude Code (recommended)
-/plugin install aAAaqwq/AGI-Super-Team
-
-# OpenAI Codex — curated native swarms, memory, and 31 specialist agents
-codex plugin marketplace add aAAaqwq/AGI-Super-Team --ref main
-codex plugin add agi-super-team-codex@agi-super-team
-
-# Or clone directly
-git clone --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git ~/.agi-super-team
-```
-
-See the [Codex package index](./.codex/INDEX.md) for the agent catalog, safe synchronization workflow, update commands, and provenance.
-
-For one-command kit deploys (solo-founder, quant-trader, content-creator…), jump to [What You Can Do in 10 Minutes](#what-you-can-do-in-10-minutes).
-
-## 🚀 What You Can Do in 10 Minutes
-
-Three killer use cases — each backed by battle-tested skills that ship in the box, bound to the right legendary mind.
-
-### 📈 Quant Trading — Jim Simons in your corner
-Deploy the **quant-trader kit** and the CQO agent (Jim Simons) immediately runs production strategies:
-- **`5minbtc`** — BTC 5-minute direction prediction (v5.7.3 engine, live-validated)
-- **`a-share-analysis`** — A-share quant analysis with a one-click daily script
-- **`a-fund-monitor`** — real-time fund NAV estimation + Telegram alerts
+Clone a trusted revision and preview the local installer. Preview is read-only and is the default.
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- quant-trader
-```
-
-### 📣 Viral Content — MrBeast's playbook
-Deploy the **content-creator kit** and the CCO agent (MrBeast) takes over:
-- **`xhs-content-creator`** / **`xhs-skill`** — Xiaohongshu (RED) content built for the algorithm
-- **`wechat-article-writer`** / **`wechat-ai-radar`** — WeChat MP articles + morning briefings
-- **`content-cover-gen`** — content-driven cover image generation
-
-```bash
-curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- content-creator
-```
-
-### 🏛️ Full C-Suite — your AI-native company
-All 14 executives, 1,639 skills, 31 thinking frameworks — one command:
-
-```bash
-curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- full-team
-```
-
-> Each kit drops the right skills into `~/.openclaw/workspace-{agent}/skills/` and binds them to the matching C-Suite agent. No manual wiring.
-
-## 🏛️ Architecture
-
-```
-You (Founder / Chairman)
-  └── 👑 CEO — Strategy, coordination, quality gate
-        ├── ⚡ CTO — Architecture, technology strategy, R&D direction
-        ├── 🎨 CPO — Product design, UX, brand DNA
-        ├── 📈 CQO — Quant trading, algorithmic strategies
-        ├── 📣 CMO — Marketing, SEO, growth
-        ├── 💰 CFO — Finance, P&L, capital allocation
-        ├── 📊 CDO — Data pipelines, analytics, governance
-        ├── ✍️ CCO — Content creation, viral growth
-        ├── ⚖️ CLO — Legal, compliance, IP protection
-        ├── 🔬 CRO — Deep research, frontier intelligence
-        ├── 🤝 CSO — Sales, BD, revenue growth
-        ├── ⚙️ COO — Ops, OKRs, cross-team coordination
-        ├── 💻 PE  — Production engineering, DevOps, delivery
-        └── ⚖️ Governor — Quality assurance, delivery audit, escalation
-```
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Skills-1,639-blueviolet" alt="Skills">
-  <img src="https://img.shields.io/badge/Agents-14-orange" alt="Agents">
-  <img src="https://img.shields.io/badge/Frameworks-31-cyan" alt="Frameworks">
-</p>
-
-## 👥 Agents
-
-| Agent | Role | Spirit Mentor | Thinking |
-|-------|------|---------------|----------|
-| [`ceo`](./agents/ceo/) | 👑 CEO | Elon Musk | First Principles, Cross-Domain Synthesis |
-| [`cto`](./agents/cto/) | ⚡ CTO | Jensen Huang | Systems Thinking, Accelerated Computing |
-| [`cpo`](./agents/cpo/) | 🎨 CPO | Steve Jobs | Design Thinking, Radical Simplicity |
-| [`cqo`](./agents/cqo/) | 📈 CQO | Jim Simons | Mathematical Rigor, Probabilistic Thinking |
-| [`cmo`](./agents/cmo/) | 📣 CMO | David Ogilvy | Data-Driven Storytelling, Audience Psychology |
-| [`cfo`](./agents/cfo/) | 💰 CFO | Warren Buffett | Value Investing, Margin of Safety |
-| [`cdo`](./agents/cdo/) | 📊 CDO | Nate Silver | Bayesian Reasoning, Predictive Analytics |
-| [`cco`](./agents/cco/) | ✍️ CCO | MrBeast | Viral Mechanics, Platform Algorithms |
-| [`clo`](./agents/clo/) | ⚖️ CLO | Alan Dershowitz | Legal Reasoning, Risk Assessment |
-| [`cro`](./agents/cro/) | 🔬 CRO | Richard Feynman | Scientific Method, Feynman Technique |
-| [`cso`](./agents/cso/) | 🤝 CSO | Michael Dell | Solution Selling, Relationship Building |
-| [`coo`](./agents/coo/) | ⚙️ COO | Andy Grove | High Output Management, OKR Discipline |
-| [`pe`](./agents/pe/) | 💻 PE | Linus Torvalds, antirez, DHH | Pragmatic Engineering, Ship Over Talk |
-| [`governor`](./agents/governor/) | ⚖️ Governor | Zhuge Liang, Wang Yangming | Tri-Verification, Evidence-Based Audit |
-
-> Each agent folder contains `SOUL.md` (personality), `AGENTS.md` (operations), `TOOLS.md` (skill links). Fully customizable.
-
-## 🧠 Thinking Frameworks
-
-31 distilled thinking skills based on real-world mentors — mental models, decision frameworks, and classic quotes with sources:
-
-```bash
-# Inject a mentor's thinking into any agent
-cp -r skills/thinking-elon-musk/ ~/.openclaw/workspace-ceo/skills/
-
-# Or inject all frameworks to all workspaces
-for agent in ceo cto cpo cqo cmo cfo cdo cco clo cro cso coo pe; do
-  mkdir -p ~/.openclaw/workspace-${agent}/skills/
-  cp -r skills/thinking-* ~/.openclaw/workspace-${agent}/skills/
-done
-```
-
-## 🛠️ Skill Categories
-
-| Category | Highlights |
-|----------|-----------|
-| 🔌 SaaS Integrations | Notion, Airtable, HubSpot, Stripe, ActiveCampaign, 60+ more |
-| 📝 Content & Writing | SEO, viral copy, anti-AI-slop, social media |
-| 🔧 Development | Backend, frontend, Docker, Git, TDD, API design, code review |
-| 💰 Trading & Finance | Crypto, Polymarket, DeFi, portfolio management, backtesting |
-| 🤖 AI Agent Patterns | Multi-agent orchestration, parallel execution, sub-agents |
-| 📊 Data & Analytics | Web scraping, DuckDB, CSV pipelines, arXiv |
-| 📈 Marketing & SEO | SEO audits, GEO optimization, A/B testing, competitor analysis |
-| 🎨 Design & Media | Image generation, UI/UX, brand identity |
-| 🏢 Business & Strategy | SaaS launch, competitor teardown, financial modeling |
-| 📋 Project Management | PRD, roadmaps, Scrum, team coordination |
-| 💬 Communication | Email, Feishu, WeChat, Telegram, LinkedIn, cross-instance messaging |
-| 📱 Chinese Platforms | Xiaohongshu, Douyin, WeChat MP, Juejin, Zhihu |
-| ⚙️ DevOps & Infra | AWS, Docker, Linux, observability, deployment |
-| 🧬 Bioinformatics | Genome analysis, metagenomics, pharmacogenomics |
-| 🎬 Video & Digital Human | Video editing, digital human, storyboard, subtitle |
-| 🤖 Web3 & Autonomys | Decentralized storage, auto-deploy, auto-memory |
-
-👉 **[Skill-Agent Mapping Matrix →](./SKILL-AGENT-MATRIX.md)** — Each skill mapped to its C-Suite agent (PE, CTO, CQO, etc.)
-
-👉 **[Full skill catalog →](./skills/README.md)**
-
-## 🔄 Workflows
-
-30 production-ready workflows across all C-Suite roles:
-
-| Scope | Examples |
-|-------|---------|
-| **Shared** | Daily standup, weekly review, crisis escalation, cross-agent handoff |
-| **Per-Agent** | Content pipeline (CCO), market morning brief (CQO), P&L tracking (CFO), code review (PE), incident response (COO) |
-
-Each agent directory (e.g. `agents/cco/WORKFLOW.md`) contains role-specific and shared workflows.
-
-## ⚡ Quick Start
-
-For the native plugin install, see [Install](#install) above. For one-command kit deploys, see [What You Can Do in 10 Minutes](#what-you-can-do-in-10-minutes).
-
-### Starter Kits
-
-| Kit | Agents | Best for |
-|-----|--------|----------|
-| 🚀 [**Solo Founder**](./starter-kits/solo-founder/) | CEO + PE + CCO | Indie hackers, solo founders |
-| 🎨 [**Content Creator**](./starter-kits/content-creator/) | CCO + CDO + CMO | Content teams, self-media |
-| 📈 [**Quant Trader**](./starter-kits/quant-trader/) | CQO + CDO + CFO | Quant trading, investment |
-| 🏛️ **Full Team** | All 14 agents | Complete AI-native company |
-
-### Manual deploy
-
-```bash
-git clone https://github.com/aAAaqwq/AGI-Super-Team.git
+git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
 cd AGI-Super-Team
-./install.sh solo-founder    # or any kit / agent name
+./install.sh --source "$PWD" --destination /path/to/review-workspace solo-founder
 ```
 
-## 📚 Cookbooks
+Review the proposed agents, source, destination, and relevant files. Apply only after the preview matches your intent:
 
-In-depth learning guides in [`cookbook/`](./cookbook/):
-
-| Book | Description |
-|------|-------------|
-| [Self-Media Operations](./cookbook/self-media-operations-handbook/) | Complete handbook: XHS, Douyin, WeChat, content strategy |
-| [Quantitative Trading](./cookbook/quant-learning/) | Crypto trading, algorithmic strategies, risk management |
-| [Prompt Engineering](./cookbook/prompt-engineering-learning/) | Advanced prompt techniques and patterns |
-| [Knowledge Base](./cookbook/knowledge-book/) | Cross-domain knowledge distillation |
-| [Crypto Deep Dive](./cookbook/crypto-learning/) | Blockchain fundamentals and DeFi |
-
-## 📁 Repository Structure
-
-```
-AGI-Super-Team/
-├── agents/           # 14 C-Suite agent personas
-│   ├── ceo/          # SOUL.md · AGENTS.md · TOOLS.md · WORKFLOW.md
-│   ├── cto/          # ...
-│   ├── governor/     # Quality assurance & delivery audit
-│   └── README.md     # Architecture diagram & skill matrix
-├── skills/           # 2,659 skills (flat structure, each with SKILL.md)
-│   └── README.md     # Full catalog
-├── starter-kits/     # One-click deployment bundles
-│   ├── solo-founder/ # CEO + PE + CCO
-│   ├── content-creator/ # CCO + CDO + CMO
-│   └── quant-trader/ # CQO + CDO + CFO
-├── cookbook/         # 5 in-depth learning guides
-├── install.sh        # One-click deployer
-├── CHARTER.md        # Team constitution (12 principles)
-├── STARTUP.md        # Quick-start guide
-├── COLLABORATION.md  # Inter-agent collaboration network
+```bash
+./install.sh --source "$PWD" --destination /path/to/review-workspace --apply solo-founder
 ```
 
-## 🤝 Contributing
+The installer preserves existing persona files and skill directories. See [setup.md](./setup.md) for prerequisites, verification, updates, and recovery.
 
-Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+Avoid piping a remote script directly into a shell when you can inspect a pinned checkout first.
 
-1. Fork the repo
-2. Create your skill: `skills/your-skill/SKILL.md`
-3. Submit a PR
-
-## 📄 License
-
-[MIT](./LICENSE) — use freely, attribution appreciated.
-
----
-
-## ⭐ Star History
-
-<a href="https://star-history.com/#aAAaqwq/AGI-Super-Team&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date" />
- </picture>
-</a>
-
----
+### Preview → apply → verify
 
 <p align="center">
-  Compatible with Claude Code, Codex, Cursor, and Hermes
+  <img src="assets/demo-install.gif" alt="Terminal demo showing a read-only preview, explicit apply, and repository checks passing" width="760">
 </p>
+
+The animation uses sanitized project-relative paths. Read the [static transcript](./assets/demo-install.txt) or run the same commands in a clean checkout.
+
+## Packages and manifests
+
+- [Codex package index](./.codex/INDEX.md): curated Codex skills, specialist roles, sync behavior, provenance, and update policy.
+- [Codex marketplace manifest](./.agents/plugins/marketplace.json): points to the separate `plugins/agi-super-team-codex` package.
+- [Starter kits](./starter-kits/): small selections for a solo founder, content team, or quantitative research workflow.
+- [Agents](./agents/): persona and operating files for the generic workspace installer.
+- [Skills](./skills/): the cross-harness skill library. Its contents change; use the repository validator instead of a hard-coded count.
+
+## Starter kits
+
+| Kit | Agents | Intended use |
+|---|---|---|
+| [Solo Founder](./starter-kits/solo-founder/) | CEO, PE, CCO | Planning, engineering, and reviewed content drafts |
+| [Content Creator](./starter-kits/content-creator/) | CCO, CDO, CMO | Research, content drafts, and measurement plans |
+| [Quant Trader](./starter-kits/quant-trader/) | CQO, CDO, CFO | Research, backtesting, and risk review—not live trading |
+| `full-team` | All repository agents | Broad evaluation; start smaller when possible |
+
+Examples describe tasks the agents can assist with, not validated performance claims. External publishing, financial transactions, and production changes remain manual and human-authorized.
+
+## Evidence and verification
+
+Repository checks are the source of truth for catalog integrity:
+
+```bash
+npm test
+npm run validate
+```
+
+Do not publish exact catalog counts until the validator is green for the revision being described. When making a claim, link to reproducible inputs, record the revision, and distinguish tests from real-world validation.
+
+## Architecture
+
+```text
+Founder / operator
+└── CEO — coordination and quality gates
+    ├── CTO / PE — architecture and implementation
+    ├── CPO / CCO / CMO — product, content, and growth
+    ├── CQO / CFO / CDO — quantitative research, finance, and data
+    ├── CLO / CRO / CSO / COO — legal, research, sales, and operations
+    └── Governor — independent review and escalation
+```
+
+Each agent directory may contain persona, identity, workflow, and tool guidance. Treat mentor names as creative framing, not affiliation, endorsement, or an imitation guarantee.
+
+## Safety boundaries
+
+- Never place credentials, private user data, browser sessions, or production configuration in a skill or issue.
+- Review third-party commands and dependencies before execution.
+- Run financial workflows in research or paper-trading environments until independently validated; no bundled strategy is guaranteed profitable or production-ready.
+- Require explicit human approval for posts, messages, transactions, deployments, and destructive operations.
+- Report vulnerabilities privately through [GitHub Security Advisories](https://github.com/aAAaqwq/AGI-Super-Team/security/advisories/new), not a public issue.
+
+## Project links
+
+- [Setup and recovery](./setup.md)
+- [Contributing and provenance](./CONTRIBUTING.md)
+- [Security policy](./SECURITY.md)
+- [Growth playbooks](./growth/README.md)
+- [License](./LICENSE)
+
+## Star History
+
+![Star History](https://aaaaqwq.github.io/AGI-Super-Team/assets/star-history.svg)

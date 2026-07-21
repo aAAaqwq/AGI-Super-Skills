@@ -1,83 +1,52 @@
 # Contributing to AGI Super Team
 
-Thank you for your interest in contributing! This guide covers how to add skills, agents, and improvements.
+Contributions should be reviewable, attributable, safe to test, and honest about support. Do not include secrets, private data, unlicensed content, or claims that cannot be reproduced.
 
-> **Harness-agnostic policy:** AGI Super Team works natively with **Claude Code, Codex, Cursor, and Hermes**. Skills and agents must stay harness-neutral — never hard-depend on a single tool's CLI (e.g. the discontinued `openclaw` CLI). Reference harness capabilities generically; if a skill needs a specific tool, document it as optional and provide an alternative path.
+## Before opening a pull request
 
-## Adding a Skill
+1. Branch from `main` and keep the change focused.
+2. Search for an existing skill, agent, or issue before adding a duplicate.
+3. Record provenance for adapted material: upstream URL, revision or retrieval date, license, and what changed.
+4. Add or update tests for executable behavior. For documentation, run examples in an isolated temporary destination when safe.
+5. Run the repository checks:
 
-### Directory Structure
-```
-skills/
-└── your-skill-name/
-    └── SKILL.md          # Required: skill definition
-    └── scripts/          # Optional: helper scripts
-    └── assets/           # Optional: images, templates
-```
+   ```bash
+   npm test
+   npm run validate
+   ```
 
-### SKILL.md Format
-```markdown
-# Skill Name
+6. Review the diff for credentials, personal data, unsafe shell commands, generated artifacts, and unsupported claims.
 
-One-line description of what this skill does.
+## Skills
 
-## When to Use
-- Trigger condition 1
-- Trigger condition 2
+A skill lives at `skills/<name>/SKILL.md`. Keep one clear purpose, document triggers and boundaries, and place optional scripts or assets in the same skill directory.
 
-## Instructions
-Step-by-step guidance for the AI agent.
+Commands must state prerequisites, expected effects, and recovery. Destructive, external, production, or account-changing operations need explicit human confirmation. Never embed credentials or encourage users to pipe unreviewed remote code into a shell.
 
-## Examples
-Concrete usage examples.
-```
+## Agents
 
-### Guidelines
-- **One skill = one purpose** — keep it focused
-- **Concrete, not vague** — include specific commands, file paths, parameters
-- **Language**: English or Chinese, pick one per skill (don't mix)
-- **No credentials**: never include API keys, tokens, or passwords
-- **No binary files > 1MB**: use links to external assets instead
-- **Test locally**: verify the skill works with your AI coding harness (Claude Code, Codex, Cursor, Hermes) before submitting
+An agent lives at `agents/<id>/` and normally includes `SOUL.md` and `AGENTS.md`; other persona or workflow files are optional. Keep role boundaries clear and use mentor references only as creative framing, not affiliation or endorsement.
 
-## Adding an Agent
+## Provenance and licensing
 
-### Directory Structure
-```
-agents/
-└── your-agent-id/
-    ├── SOUL.md          # Required: personality, mentor, philosophy
-    ├── AGENTS.md        # Required: role, responsibilities, collaboration
-    └── TOOLS.md         # Optional: skill index with ../skills/ links
-```
+For copied or adapted content, include the source project, immutable revision where possible, source license, and adaptation summary in the relevant provenance file or pull-request description.
 
-### Guidelines
-- Each agent should have a distinct **spirit mentor** that shapes their thinking style
-- Include a 32-thinking framework skill if possible
-- Reference skills via relative paths (`../skills/skill-name/`)
-- Keep SOUL.md concise — personality, not documentation
+Confirm that the source license permits redistribution. Do not submit scraped private content, proprietary prompts, model outputs with unclear rights, or generated code copied from an unverified source.
 
-## Reporting Issues
+## Testing evidence
 
-When reporting bugs, include:
-1. What you expected to happen
-2. What actually happened
-3. Your AI harness and model you're using
-4. Any relevant logs or error messages
+The pull request must include:
 
-## PR Process
+- exact commands executed and their results;
+- the harness and relevant version used for manual checks;
+- fixtures or sanitized inputs needed to reproduce the result;
+- limitations, skipped checks, and untested environments;
+- screenshots only when they add evidence and contain no sensitive data.
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Commit with clear messages: `git commit -m "add: new skill for X"`
-4. Push and open a PR
-5. Respond to review feedback
+Do not claim “production-ready,” “live-validated,” profitable, secure, or universally compatible solely from unit tests or a local demo.
 
-## Code of Conduct
+## Pull request scope
 
-- Be respectful and constructive
-- Focus on the technical merit of contributions
-- No personal attacks or political content in skills
-- Keep skills vendor-neutral where possible
+Use `.github/PULL_REQUEST_TEMPLATE.md`. Describe behavior before and after, risk, rollback, provenance, and evidence. Maintainers may ask for a smaller change or reject additions that cannot be safely maintained.
 
-Thank you for making this project better! 🚀
+Report vulnerabilities privately as described in [SECURITY.md](./SECURITY.md). Follow [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) in all project spaces.
