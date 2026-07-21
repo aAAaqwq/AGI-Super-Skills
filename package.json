@@ -1,7 +1,7 @@
 {
   "name": "agi-super-team",
   "version": "1.0.0",
-  "description": "Virtual C-Suite of AI executives powered by legendary minds, with 793 physical skills",
+  "description": "Evidence-backed AI team packs with preview-first installation and repository contracts",
   "type": "module",
   "scripts": {
     "test": "npm run test:repository && npm run test:installer",

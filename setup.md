@@ -5,6 +5,8 @@ This guide covers the generic workspace installer. The curated Codex-native pack
 ## Prerequisites
 
 - Bash and standard Unix tools.
+- Node.js for reading the canonical team manifest.
+- npm and Python 3 for repository tests and validation.
 - Git when the installer must fetch a repository. A local `--source` avoids that fetch.
 - Write permission for the selected `--destination`.
 - A supported AI harness configured separately. The installer does not configure models, credentials, or provider accounts.
@@ -60,7 +62,7 @@ Expected kit workspaces:
 | `content-creator` | `workspace-cco`, `workspace-cdo`, `workspace-cmo` |
 | `quant-trader` | `workspace-cqo`, `workspace-cdo`, `workspace-cfo` |
 
-Inspect the installed `SOUL.md`, `AGENTS.md`, `TOOLS.md`, and skills before trusting them. Some optional skills named by the installer may not exist and are reported as warnings.
+Inspect the installed `SOUL.md`, `AGENTS.md`, `TOOLS.md`, and skills before trusting them. External recommendations are informational and are not bundled by the installer.
 
 ## Codex-native package
 
@@ -84,7 +86,7 @@ Do not blindly pull and apply when local workspace files contain customizations.
 
 If preview is wrong, stop and correct `--source`, `--destination`, or the kit selector; preview writes nothing.
 
-If an apply is interrupted, inspect the destination. Existing files were preserved, but newly created files may be partial. Move the newly created `workspace-<agent>` directory aside, confirm its exact path, then re-run preview and apply.
+If an apply is interrupted, stop and inspect the destination before rerunning it. Confirm the exact destination and any staging or backup state, then move uncertain new workspaces aside for review.
 
 If apply reports a missing required skill, do not substitute an unrelated skill. Confirm the checkout is complete and run `npm run validate` before retrying.
 
