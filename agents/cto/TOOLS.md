@@ -4,30 +4,30 @@ _技术架构 · 仓库技能配置和笔记_
 
 ## 仓库 Skills 索引
 
-所有技能路径均相对于本仓库根目录，格式：`../skills/<name>/`
+所有技能路径均相对于本仓库根目录，格式：`../../skills/<name>/`
 
 | 技能 | 说明 |
 |------|------|
-| `../skills/kubernetes-specialist/` | K8s 集群管理、Pod 编排、服务发现 |
-| `../skills/docker-essentials/` | Docker 基础容器化（替代 docker-containerization） |
-| `../skills/docker-development/` | Docker 开发环境容器化（替代 docker-containerization） |
-| `../skills/deployment-automation/` | CI/CD 自动化部署流水线 |
-| `../skills/api-provider-status/` | 监控 API 提供商状态 |
-| `../skills/model-fallback/` | 模型故障自动降级切换 |
-| `../skills/model-provider-manager/` | 多模型提供商管理 |
-| `../skills/token-guard/` | Token 用量防护与限制 |
-| `../skills/token-reporter/` | Token 消耗报告生成 |
-| `../skills/provider-key-manager/` | API Key 轮换与管理 |
-| `../skills/inference-optimizer/` | 推理性能优化 |
-| `../skills/browser-use/` | 浏览器自动化操作 |
-| `../skills/auth-manager/` | 认证与密钥管理 |
-| `../skills/browser-profile-guide/` | 浏览器 Profile 配置指南 |
-| `../skills/openclaw-workspace-audit/` | Workspace 配置审计 |
-| `../skills/github-automation/` | GitHub 工作流自动化 |
-| `../skills/sentry-automation/` | Sentry 错误监控自动化 |
-| `../skills/render-automation/` | Render 部署自动化 |
-| `../skills/vercel-automation/` | Vercel 部署自动化 |
-| `../skills/supabase-automation/` | Supabase 数据库自动化 |
+| `../../skills/kubernetes-specialist/` | K8s 集群管理、Pod 编排、服务发现 |
+| `../../skills/docker-essentials/` | Docker 基础容器化（替代 docker-containerization） |
+| `docker-development`（外部，仓库未提供） | Docker 开发环境容器化（替代 docker-containerization） |
+| `../../skills/deployment-automation/` | CI/CD 自动化部署流水线 |
+| `../../skills/api-provider-status/` | 监控 API 提供商状态 |
+| `../../skills/model-fallback/` | 模型故障自动降级切换 |
+| `../../skills/model-provider-manager/` | 多模型提供商管理 |
+| `token-guard`（外部，仓库未提供） | Token 用量防护与限制 |
+| `../../skills/token-reporter/` | Token 消耗报告生成 |
+| `../../skills/provider-key-manager/` | API Key 轮换与管理 |
+| `../../skills/inference-optimizer/` | 推理性能优化 |
+| `../../skills/browser-use/` | 浏览器自动化操作 |
+| `../../skills/auth-manager/` | 认证与密钥管理 |
+| `../../skills/browser-profile-guide/` | 浏览器 Profile 配置指南 |
+| `openclaw-workspace-audit`（外部，仓库未提供） | Workspace 配置审计 |
+| `../../skills/github-automation/` | GitHub 工作流自动化 |
+| `../../skills/sentry-automation/` | Sentry 错误监控自动化 |
+| `../../skills/render-automation/` | Render 部署自动化 |
+| `../../skills/vercel-automation/` | Vercel 部署自动化 |
+| `../../skills/supabase-automation/` | Supabase 数据库自动化 |
 
 ## 推荐 Skills 详解
 
@@ -61,4 +61,4 @@ _技术架构 · 仓库技能配置和笔记_
 
 ---
 
-*路径说明：`../skills/<name>/` 表示从 `agents/{id}/` 目录出发，上一级到 agents/，再上一级到仓库根目录下的 skills/ 目录。如仓库根目录为 `/home/aa/clawd/repos/AGI-Super-Team/`，则完整路径为 `/home/aa/clawd/repos/AGI-Super-Team/skills/<name>/`。*
+*路径说明：`../../skills/<name>/` 表示从 `agents/{id}/` 目录出发，向上两级到仓库根目录，再进入 `skills/<name>/`。*
