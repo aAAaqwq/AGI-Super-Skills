@@ -1,0 +1,26 @@
+{
+  "name": "agi-super-team-codex",
+  "version": "1.0.0",
+  "description": "Curated Codex-native swarm orchestration, project memory, context engineering, and specialist agents from AGI Super Team.",
+  "author": {
+    "name": "Daniel Li",
+    "url": "https://github.com/aAAaqwq/AGI-Super-Team"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AGI Super Team for Codex",
+    "shortDescription": "Native swarms, memory, context, and 31 specialist agents.",
+    "longDescription": "A security-reviewed Codex-native package for bounded parallel-agent orchestration, explicit project memory, iterative retrieval, context engineering, and opt-in installation of 31 specialist agent roles.",
+    "developerName": "Daniel Li",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Multi-agent orchestration",
+      "Project memory",
+      "Context engineering",
+      "Specialist agent installation"
+    ],
+    "defaultPrompt": [
+      "Use AGI Super Team to plan and run this work with the smallest useful set of specialist Codex agents."
+    ]
+  }
+}

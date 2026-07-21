@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Memory"
+  short_description: "Explicit local memory without background capture"
+  default_prompt: "Use $project-memory to save or recall durable project decisions safely."

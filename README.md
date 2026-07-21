@@ -50,9 +50,15 @@ A **plug-and-play AI team template** — deploy a complete virtual C-Suite using
 # Claude Code (recommended)
 /plugin install aAAaqwq/AGI-Super-Team
 
+# OpenAI Codex — curated native swarms, memory, and 31 specialist agents
+codex plugin marketplace add aAAaqwq/AGI-Super-Team --ref main
+codex plugin add agi-super-team-codex@agi-super-team
+
 # Or clone directly
 git clone --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git ~/.agi-super-team
 ```
+
+See the [Codex package index](./.codex/INDEX.md) for the agent catalog, safe synchronization workflow, update commands, and provenance.
 
 For one-command kit deploys (solo-founder, quant-trader, content-creator…), jump to [What You Can Do in 10 Minutes](#what-you-can-do-in-10-minutes).
 

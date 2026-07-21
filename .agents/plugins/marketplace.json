@@ -1,0 +1,20 @@
+{
+  "name": "agi-super-team",
+  "interface": {
+    "displayName": "AGI Super Team"
+  },
+  "plugins": [
+    {
+      "name": "agi-super-team-codex",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agi-super-team-codex"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

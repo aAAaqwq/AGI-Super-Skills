@@ -1,0 +1,4 @@
+interface:
+  display_name: "AGI Super Team Sync"
+  short_description: "Install bundled Codex specialist agents safely"
+  default_prompt: "Sync the bundled AGI Super Team Codex agents into my personal Codex setup with backups."
