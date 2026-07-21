@@ -16,7 +16,7 @@
   <a href="./CONTRIBUTING.md">Contribute</a>
 </p>
 
-## What this repository is
+## ✨ What this repository is
 
 AGI Super Team provides installable AI team packs, role instructions, and reusable skills for existing coding-agent harnesses.
 
@@ -30,7 +30,7 @@ Three constraints make the project different:
 
 Trading, legal, security, medical, publishing, and deployment work still requires qualified human review.
 
-## Safe quick start
+## 🚀 Safe quick start
 
 Using Codex? Start with the [curated native package](./.codex/INDEX.md). Evaluating generic workspace files? Continue below.
 
@@ -53,7 +53,7 @@ The installer preserves existing persona files and skill directories. It rejects
 
 Avoid piping a remote script into a shell when you can inspect a pinned checkout first. See [setup.md](./setup.md) for prerequisites, updates, and recovery.
 
-### Preview → apply → verify
+### 👀 Preview → apply → verify
 
 <p align="center">
   <img src="assets/demo-install.gif" alt="Terminal demo showing a read-only preview, explicit apply, and repository checks passing" width="760">
@@ -61,7 +61,7 @@ Avoid piping a remote script into a shell when you can inspect a pinned checkout
 
 The animation is an illustrative storyboard with sanitized paths, not runtime evidence. Read the [storyboard transcript](./assets/demo-install.txt), then use the receipt below for reproducible commands.
 
-## Five-minute installation receipt
+## 🧾 Five-minute installation receipt
 
 The repository currently verifies a safe installation outcome. It does not yet claim that an installed team has produced a validated business result.
 
@@ -96,7 +96,7 @@ The installer stops after copying inspectable files. It does not launch agents, 
 
 This receipt proves deterministic installation and repository integrity. Cross-harness task performance remains **Validation pending** until a public fixture is tied to the current `main` commit.
 
-## Browse skills by outcome
+## 🧭 Browse skills by outcome
 
 Start with a focused pack or guide. The complete catalog is a reference library, not the recommended onboarding path.
 
@@ -110,17 +110,17 @@ Start with a focused pack or guide. The complete catalog is a reference library,
 | [Skills overview](./skills/) | Support levels, bounded starting points, and discovery guidance |
 | [Generated skill catalog](./catalog/) | Task-oriented categories covering every canonical physical skill |
 
-### Skill categories
+### 🧩 Skill categories
 
 | Build and operate | Reach and create | Decide and automate |
 |---|---|---|
-| [AI Agents & Orchestration](./catalog/#ai-agents-orchestration) | [Marketing, SEO & Growth](./catalog/#marketing-seo-growth) | [Data, Analytics & Research](./catalog/#data-analytics-research) |
-| [Software Engineering](./catalog/#software-engineering) | [Content, Media & Publishing](./catalog/#content-media-publishing) | [Business Operations & Strategy](./catalog/#business-operations-strategy) |
-| [Cloud, DevOps & Reliability](./catalog/#cloud-devops-reliability) | [Sales, CRM & Customer Success](./catalog/#sales-crm-customer-success) | [Apps & Workflow Automation](./catalog/#apps-workflow-automation) |
-| [Security, Privacy & Legal](./catalog/#security-privacy-legal) | [Product, Design & UX](./catalog/#product-design-ux) | [Finance, Trading & Markets](./catalog/#finance-trading-markets) |
-| [Specialized Domains & Utilities](./catalog/#general-utilities) | [Chinese Platform Workflows](./catalog/#chinese-platform-workflows) | |
+| [🤖 AI Agents & Orchestration](./catalog/#ai-agents-orchestration) | [📈 Marketing, SEO & Growth](./catalog/#marketing-seo-growth) | [📊 Data, Analytics & Research](./catalog/#data-analytics-research) |
+| [💻 Software Engineering](./catalog/#software-engineering) | [✍️ Content, Media & Publishing](./catalog/#content-media-publishing) | [🧭 Business Operations & Strategy](./catalog/#business-operations-strategy) |
+| [☁️ Cloud, DevOps & Reliability](./catalog/#cloud-devops-reliability) | [🤝 Sales, CRM & Customer Success](./catalog/#sales-crm-customer-success) | [⚙️ Apps & Workflow Automation](./catalog/#apps-workflow-automation) |
+| [🛡️ Security, Privacy & Legal](./catalog/#security-privacy-legal) | [🎨 Product, Design & UX](./catalog/#product-design-ux) | [💹 Finance, Trading & Markets](./catalog/#finance-trading-markets) |
+| [🧰 Specialized Domains & Utilities](./catalog/#general-utilities) | [🇨🇳 Chinese Platform Workflows](./catalog/#chinese-platform-workflows) | |
 
-### Starter kits
+### 🎒 Starter kits
 
 | Kit | Agents | Intended use |
 |---|---|---|
@@ -129,7 +129,7 @@ Start with a focused pack or guide. The complete catalog is a reference library,
 | [Quant Trader](./starter-kits/quant-trader/) | CQO, CDO, CFO | Research, backtesting, and risk review—not live trading |
 | `full-team` | All manifest agents | Broad evaluation; start smaller when possible |
 
-## Choose a distribution
+## 🔌 Choose a distribution
 
 | Surface | Repository support | Install path | Evidence boundary |
 |---|---|---|---|
@@ -138,7 +138,7 @@ Start with a focused pack or guide. The complete catalog is a reference library,
 | Claude Code | Plugin manifest present | Review [`.claude-plugin/`](./.claude-plugin/) | Confirm support in the installed client version |
 | Cursor, Gemini, Kimi | Metadata or manifests present | Review the corresponding files | Presence does not establish feature parity |
 
-## Evidence and verification
+## ✅ Evidence and verification
 
 Repository contracts calculate catalog facts from tracked files and the canonical manifest:
 
@@ -152,7 +152,7 @@ A web page displays `Verified` only when its [verification receipt](./docs/data/
 
 When making an outcome claim, link the reproducible input, fixture, revision, result, limitations, and rollback path. Tests are evidence of repository behavior, not a guarantee of business performance.
 
-## Repository architecture
+## 🗂️ Repository architecture
 
 ```text
 AGI-Super-Team/
@@ -182,7 +182,7 @@ config/external-skill-sources.json
 
 README text is not an inventory source. See [the manifest](./config/team-manifest.json), [repository model](./scripts/repository_model.py), and [contribution policy](./CONTRIBUTING.md) for the contracts.
 
-## Team topology
+## 🧠 Team topology
 
 ```text
 Founder / operator
@@ -196,7 +196,7 @@ Founder / operator
 
 Mentor names are creative framing. They do not imply affiliation, endorsement, or guaranteed imitation.
 
-## Safety boundaries
+## 🛡️ Safety boundaries
 
 - Never place credentials, private user data, browser sessions, or production configuration in a skill or issue.
 - Review third-party commands and dependencies before execution.
@@ -204,7 +204,7 @@ Mentor names are creative framing. They do not imply affiliation, endorsement, o
 - Require explicit human approval for posts, messages, transactions, deployments, and destructive operations.
 - Report vulnerabilities privately through [GitHub Security Advisories](https://github.com/aAAaqwq/AGI-Super-Team/security/advisories/new).
 
-## Project links
+## 🔗 Project links
 
 - [Evidence First project site](https://aaaaqwq.github.io/AGI-Super-Team/)
 - [Practical guides](./docs/guides/)
@@ -214,6 +214,6 @@ Mentor names are creative framing. They do not imply affiliation, endorsement, o
 - [Growth playbooks](./growth/README.md)
 - [License](./LICENSE)
 
-## Star History
+## ⭐ Star History
 
 ![Star History](https://aaaaqwq.github.io/AGI-Super-Team/assets/star-history.svg)

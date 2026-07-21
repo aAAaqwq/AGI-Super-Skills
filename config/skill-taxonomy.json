@@ -4,6 +4,7 @@
   "categories": [
     {
       "id": "ai-agents-orchestration",
+      "emoji": "🤖",
       "title": "AI Agents & Orchestration",
       "description": "Coordinate agents, context, memory, models, prompts, and tool protocols.",
       "priority": 75,
@@ -11,6 +12,7 @@
     },
     {
       "id": "software-engineering",
+      "emoji": "💻",
       "title": "Software Engineering",
       "description": "Build, test, review, debug, and maintain applications and developer tooling.",
       "priority": 80,
@@ -18,6 +20,7 @@
     },
     {
       "id": "cloud-devops-reliability",
+      "emoji": "☁️",
       "title": "Cloud, DevOps & Reliability",
       "description": "Deploy, observe, troubleshoot, and operate cloud and local infrastructure.",
       "priority": 85,
@@ -25,6 +28,7 @@
     },
     {
       "id": "data-analytics-research",
+      "emoji": "📊",
       "title": "Data, Analytics & Research",
       "description": "Collect evidence, search sources, analyze data, and communicate findings.",
       "priority": 95,
@@ -32,6 +36,7 @@
     },
     {
       "id": "security-privacy-legal",
+      "emoji": "🛡️",
       "title": "Security, Privacy & Legal",
       "description": "Review security, privacy, compliance, permissions, contracts, and legal risk.",
       "priority": 115,
@@ -39,6 +44,7 @@
     },
     {
       "id": "product-design-ux",
+      "emoji": "🎨",
       "title": "Product, Design & UX",
       "description": "Shape product requirements, interfaces, design systems, and user experience.",
       "priority": 90,
@@ -46,6 +52,7 @@
     },
     {
       "id": "marketing-seo-growth",
+      "emoji": "📈",
       "title": "Marketing, SEO & Growth",
       "description": "Acquire audiences through positioning, campaigns, search, ads, and social growth.",
       "priority": 105,
@@ -53,6 +60,7 @@
     },
     {
       "id": "content-media-publishing",
+      "emoji": "✍️",
       "title": "Content, Media & Publishing",
       "description": "Create, edit, repurpose, and publish writing, images, audio, and video.",
       "priority": 100,
@@ -60,6 +68,7 @@
     },
     {
       "id": "sales-crm-customer-success",
+      "emoji": "🤝",
       "title": "Sales, CRM & Customer Success",
       "description": "Find, win, onboard, support, and retain customers with accountable workflows.",
       "priority": 110,
@@ -67,6 +76,7 @@
     },
     {
       "id": "finance-trading-markets",
+      "emoji": "💹",
       "title": "Finance, Trading & Markets",
       "description": "Analyze markets, backtest strategies, track portfolios, and review financial risk.",
       "priority": 120,
@@ -74,6 +84,7 @@
     },
     {
       "id": "business-operations-strategy",
+      "emoji": "🧭",
       "title": "Business Operations & Strategy",
       "description": "Plan work, make decisions, manage teams, and improve operating systems.",
       "priority": 65,
@@ -81,6 +92,7 @@
     },
     {
       "id": "apps-workflow-automation",
+      "emoji": "⚙️",
       "title": "Apps & Workflow Automation",
       "description": "Connect everyday apps, browsers, messaging systems, and repeatable workflows.",
       "priority": 70,
@@ -88,6 +100,7 @@
     },
     {
       "id": "chinese-platform-workflows",
+      "emoji": "🇨🇳",
       "title": "Chinese Platform Workflows",
       "description": "Create, analyze, and publish for major Chinese-language platforms and channels.",
       "priority": 130,
@@ -95,6 +108,7 @@
     },
     {
       "id": "general-utilities",
+      "emoji": "🧰",
       "title": "Specialized Domains & Utilities",
       "description": "Domain-specific helpers and cross-functional tools that need a dedicated review path.",
       "priority": 0,
