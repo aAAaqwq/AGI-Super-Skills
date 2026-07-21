@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Install AGI Super Team for Codex safely</title>
+  <meta name="description" content="Install the curated AGI Super Team Codex package, inspect its marketplace manifest, preview optional agent synchronization, and keep a clean rollback path.">
+  <link rel="canonical" href="https://aaaaqwq.github.io/AGI-Super-Team/guides/codex-install.html">
+  <meta name="theme-color" content="#070b18">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="shell header-inner"><a class="brand" href="../"><img src="../assets/logo-mark.png" width="36" height="36" alt=""><span>AGI Super Team</span></a><nav class="primary-nav guide-nav" aria-label="Primary"><a href="../">Home</a><a href="./">Guides</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">GitHub</a></nav><button class="icon-button" type="button" data-theme-button aria-label="Switch to light theme"><img class="theme-icon theme-icon-dark" src="../assets/icons/sun.svg" width="20" height="20" alt=""><img class="theme-icon theme-icon-light" src="../assets/icons/moon.svg" width="20" height="20" alt=""></button></div></header>
+  <main id="main-content" class="guide-main">
+    <article class="shell guide-article">
+      <header class="guide-hero">
+        <p class="kicker">Codex installation</p>
+        <h1>Install the focused Codex package, not the whole archive.</h1>
+        <p class="hero-lede">The Codex distribution is a separate curated package. Adding it does not copy the generic starter-kit workspaces, and syncing its optional agent roles is a second, preview-first action.</p>
+        <p class="guide-meta">Last reviewed: 2026-07-21 · Surface: Codex plugin marketplace</p>
+      </header>
+      <section>
+        <h2>Prerequisites</h2>
+        <ul>
+          <li>A current Codex installation with plugin marketplace commands available.</li>
+          <li>GitHub access to <code>aAAaqwq/AGI-Super-Team</code>.</li>
+          <li>Permission to add a user-level plugin and, only if desired, write agent TOML files under your Codex home.</li>
+        </ul>
+        <p>For a controlled review, clone the repository first and inspect <code>.agents/plugins/marketplace.json</code>, <code>.codex/INDEX.md</code>, and <code>plugins/agi-super-team-codex/.codex-plugin/plugin.json</code>.</p>
+      </section>
+      <section>
+        <h2>Install step by step</h2>
+        <ol class="guide-steps">
+          <li><strong>Inspect the package</strong><span>Confirm the repository revision, plugin source path, packaged skills, and requested permissions before adding the marketplace.</span></li>
+          <li><strong>Add the marketplace</strong><span>Register the repository and its <code>.agents/plugins/marketplace.json</code> entry with Codex.</span></li>
+          <li><strong>Add the plugin</strong><span>Install the named package, then start a new task so Codex can discover the newly available skills.</span></li>
+          <li><strong>Preview agent sync</strong><span>Invoke <code>$agi-super-team-sync</code> without applying. Review creates, updates, backups, and destination paths.</span></li>
+        </ol>
+        <pre><code>codex plugin marketplace add aAAaqwq/AGI-Super-Team --ref main
+codex plugin add agi-super-team-codex@agi-super-team</code></pre>
+        <p>For reproducibility, replace <code>main</code> with a reviewed tag or commit when your Codex version accepts that reference. Repository commands may evolve with the client; check <code>codex plugin --help</code> before scripting them.</p>
+      </section>
+      <section>
+        <h2>What the package changes</h2>
+        <p>The plugin exposes a small set of Codex-oriented workflows for bounded agent swarms, explicit project memory, iterative retrieval, context engineering, and optional agent synchronization. It does not install the repository's generic workspace kits, copy the full skills library, modify <code>~/.codex/config.toml</code>, or create a background memory service.</p>
+        <div class="callout"><strong>Sync remains optional</strong><p>The sync workflow should show its plan before writing. Differing installed agent files are backed up; unrelated files are not deletion targets.</p></div>
+      </section>
+      <section>
+        <h2>Check the result</h2>
+        <p>Start a new Codex task and confirm that the plugin's named skills appear. If you enabled agent sync, run it in preview mode again: unchanged destinations should no longer be proposed as fresh writes. Keep the repository revision and the plugin version in your evaluation notes.</p>
+        <pre><code>codex plugin --help
+git -C /path/to/AGI-Super-Team rev-parse HEAD
+git -C /path/to/AGI-Super-Team diff --check</code></pre>
+      </section>
+      <section>
+        <h2>Limitations</h2>
+        <p>The package is intentionally narrower than the generic repository. It does not establish that a business workflow, external integration, or generic starter kit produces the same outcome in Codex as in another harness. Plugin command names and cache behavior depend on the installed Codex release. Published outcome verification remains pending until a clean public fixture is tied to the served commit.</p>
+      </section>
+      <section>
+        <h2>Rollback and uninstall</h2>
+        <p>Use Codex's plugin management command for your installed version to remove <code>agi-super-team-codex@agi-super-team</code>, then remove the marketplace only if no other package uses it. If agent sync created or updated TOML files, consult the reported backup directory and restore only the files you intentionally replaced. Do not delete your entire Codex home.</p>
+      </section>
+      <footer class="guide-cta"><p>Review the package layout before installing it.</p><a class="button button-primary" href="https://github.com/aAAaqwq/AGI-Super-Team/blob/main/.codex/INDEX.md">Inspect the Codex package index</a></footer>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="shell footer-inner"><div><strong>AGI Super Team guides</strong><p>Evidence first, write access second.</p></div><nav aria-label="Footer"><a href="harness-compatibility.html">Compatibility</a><a href="../verification.html">Verification</a><a href="./">All guides</a></nav></div></footer>
+</body>
+</html>

@@ -1,249 +1,305 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AGI Super Team — 传奇大脑驱动的 AI 高管团队</title>
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, "PingFang SC", "Noto Sans SC", "SF Pro Text", "Helvetica Neue", sans-serif;
-      background: #0d0d0d;
-      color: #d4d4d4;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-    a { color: #6eb4ff; text-decoration: none; }
-    a:hover { color: #8fc7ff; text-decoration: underline; }
-    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-
-    /* Header */
-    header {
-      padding: 80px 0 48px;
-      border-bottom: 1px solid #1e1e1e;
-    }
-    header h1 {
-      font-size: 3rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: #f0f0f0;
-      margin-bottom: 12px;
-    }
-    header h1 span { background: linear-gradient(135deg, #6eb4ff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    header .subtitle {
-      font-size: 1.15rem;
-      color: #888;
-      max-width: 600px;
-    }
-    header .stats {
-      display: flex;
-      gap: 32px;
-      margin-top: 28px;
-      flex-wrap: wrap;
-    }
-    header .stat-item { display: flex; align-items: baseline; gap: 6px; }
-    header .stat-num {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #f0f0f0;
-      font-variant-numeric: tabular-nums;
-    }
-    header .stat-label { font-size: 0.9rem; color: #777; text-transform: uppercase; letter-spacing: 0.04em; }
-
-    /* Section */
-    section { padding: 56px 0; border-bottom: 1px solid #1a1a1a; }
-    section:last-of-type { border-bottom: none; }
-    h2 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: #f0f0f0;
-      margin-bottom: 24px;
-      letter-spacing: -0.01em;
-    }
-
-    /* Agent Grid */
-    .agent-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-    }
-    .agent-card {
-      background: #141414;
-      border: 1px solid #242424;
-      border-radius: 8px;
-      padding: 16px;
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .agent-card:hover { border-color: #444; background: #1a1a1a; }
-    .agent-card .emoji { font-size: 1.4rem; }
-    .agent-card .name {
-      font-weight: 600;
-      color: #f0f0f0;
-      font-size: 0.95rem;
-      margin: 4px 0 2px;
-    }
-    .agent-card .role {
-      font-size: 0.8rem;
-      color: #777;
-    }
-    .agent-card .skills-count {
-      font-size: 0.75rem;
-      color: #6eb4ff;
-      margin-top: 6px;
-    }
-
-    /* Feature list */
-    .feature-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
-    }
-    .feature-item {
-      background: #141414;
-      border: 1px solid #242424;
-      border-radius: 8px;
-      padding: 18px;
-    }
-    .feature-item h3 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #f0f0f0;
-      margin-bottom: 6px;
-    }
-    .feature-item p {
-      font-size: 0.85rem;
-      color: #888;
-    }
-
-    /* Links */
-    .link-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-top: 8px;
-    }
-    .link-list a {
-      display: inline-block;
-      padding: 10px 20px;
-      background: #141414;
-      border: 1px solid #2a2a2a;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #d4d4d4;
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .link-list a:hover {
-      background: #1e1e1e;
-      border-color: #6eb4ff;
-      text-decoration: none;
-    }
-
-    /* Footer */
-    footer {
-      padding: 32px 0;
-      text-align: center;
-      font-size: 0.8rem;
-      color: #555;
-    }
-    footer a { color: #888; }
-
-    @media (max-width: 600px) {
-      header { padding: 48px 0 32px; }
-      header h1 { font-size: 2.2rem; }
-      .agent-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-      header .stats { gap: 20px; }
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AGI Super Team — Evidence-backed AI teams for real outcomes</title>
+  <meta name="description" content="Install an open-source AI team safely, inspect every change before it lands, and verify real outcomes with reproducible repository checks.">
+  <link rel="canonical" href="https://aaaaqwq.github.io/AGI-Super-Team/">
+  <meta name="theme-color" content="#070b18">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AGI Super Team — Evidence-backed AI teams">
+  <meta property="og:description" content="Preview safely. Apply explicitly. Verify the outcome.">
+  <meta property="og:url" content="https://aaaaqwq.github.io/AGI-Super-Team/">
+  <meta property="og:image" content="https://aaaaqwq.github.io/AGI-Super-Team/assets/og-cover.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AGI Super Team — Evidence-backed AI teams">
+  <meta name="twitter:description" content="Preview safely. Apply explicitly. Verify the outcome.">
+  <meta name="twitter:image" content="https://aaaaqwq.github.io/AGI-Super-Team/assets/og-cover.png">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/site.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "name": "AGI Super Team",
+        "url": "https://aaaaqwq.github.io/AGI-Super-Team/",
+        "description": "Open-source AI teams with safe installation and reproducible repository checks."
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "name": "AGI Super Team",
+        "codeRepository": "https://github.com/aAAaqwq/AGI-Super-Team",
+        "programmingLanguage": ["Shell", "Python", "HTML", "JavaScript"],
+        "license": "https://github.com/aAAaqwq/AGI-Super-Team/blob/main/LICENSE",
+        "runtimePlatform": "Codex and manifest-based AI agent harnesses"
+      }
+    ]
+  }
+  </script>
+  <script src="assets/site.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
 
-<div class="container">
-
-  <!-- Header -->
-  <header>
-    <h1><span>AGI</span> Super Team</h1>
-    <p class="subtitle">部署一支由传奇大脑驱动的 AI 高管团队 —— 让 Jim Simons 跑量化 · MrBeast 做爆款 · 巴菲特管钱</p>
-    <div class="stats">
-      <div class="stat-item"><span class="stat-num">73</span><span class="stat-label">Stars</span></div>
-      <div class="stat-item"><span class="stat-num">16</span><span class="stat-label">Forks</span></div>
-      <div class="stat-item"><span class="stat-num">1,639</span><span class="stat-label">Skills</span></div>
-      <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">Agents</span></div>
-      <div class="stat-item"><span class="stat-num">31</span><span class="stat-label">Thinking Frameworks</span></div>
+  <header class="site-header" data-site-header>
+    <div class="shell header-inner">
+      <a class="brand" href="#top" aria-label="AGI Super Team home">
+        <img src="assets/logo-mark.png" width="36" height="36" alt="">
+        <span>AGI Super Team</span>
+      </a>
+      <button class="icon-button menu-button" type="button" aria-expanded="false" aria-controls="primary-nav" data-menu-button>
+        <img src="assets/icons/list.svg" width="22" height="22" alt="">
+        <span class="sr-only">Open navigation</span>
+      </button>
+      <nav id="primary-nav" class="primary-nav" aria-label="Primary" data-primary-nav>
+        <a href="#team">Team</a>
+        <a href="#workflow">How it works</a>
+        <a href="#verification">Verification</a>
+        <a href="guides/">Guides</a>
+        <a href="https://github.com/aAAaqwq/AGI-Super-Team/blob/main/CONTRIBUTING.md">Contribute</a>
+        <a href="#community">Community</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-button" type="button" data-theme-button aria-label="Switch to light theme">
+          <img class="theme-icon theme-icon-dark" src="assets/icons/sun.svg" width="20" height="20" alt="">
+          <img class="theme-icon theme-icon-light" src="assets/icons/moon.svg" width="20" height="20" alt="">
+        </button>
+        <a class="button button-quiet star-button" href="https://github.com/aAAaqwq/AGI-Super-Team" data-star-link>
+          <img src="assets/icons/star.svg" width="18" height="18" alt="">
+          <span>Star on GitHub</span>
+          <span class="stat-value" data-star-count hidden></span>
+        </a>
+      </div>
     </div>
   </header>
 
-  <!-- Agents -->
-  <section>
-    <h2>👥 14 个 Agent</h2>
-    <div class="agent-grid">
-      <div class="agent-card"><div class="emoji">👑</div><div class="name">CEO</div><div class="role">战略 · 协调 · 质量把关</div><div class="skills-count">28 skills</div></div>
-      <div class="agent-card"><div class="emoji">⚡</div><div class="name">CTO</div><div class="role">架构 · 技术战略 · 研发方向</div><div class="skills-count">20 skills</div></div>
-      <div class="agent-card"><div class="emoji">💻</div><div class="name">PE</div><div class="role">生产工程 · DevOps · 交付</div><div class="skills-count">325 skills</div></div>
-      <div class="agent-card"><div class="emoji">🎨</div><div class="name">CPO</div><div class="role">产品设计 · UX · 品牌 DNA</div><div class="skills-count">21 skills</div></div>
-      <div class="agent-card"><div class="emoji">📈</div><div class="name">CQO</div><div class="role">量化交易 · 算法策略</div><div class="skills-count">52 skills</div></div>
-      <div class="agent-card"><div class="emoji">📊</div><div class="name">CDO</div><div class="role">数据管道 · 分析 · 治理</div><div class="skills-count">23 skills</div></div>
-      <div class="agent-card"><div class="emoji">✍️</div><div class="name">CCO</div><div class="role">内容创作 · 病毒式增长</div><div class="skills-count">149 skills</div></div>
-      <div class="agent-card"><div class="emoji">📣</div><div class="name">CMO</div><div class="role">市场营销 · SEO · 增长</div><div class="skills-count">34 skills</div></div>
-      <div class="agent-card"><div class="emoji">💰</div><div class="name">CFO</div><div class="role">财务 · P&L · 资本配置</div><div class="skills-count">12 skills</div></div>
-      <div class="agent-card"><div class="emoji">🔬</div><div class="name">CRO</div><div class="role">深度研究 · 前沿智能</div><div class="skills-count">18 skills</div></div>
-      <div class="agent-card"><div class="emoji">⚖️</div><div class="name">CLO</div><div class="role">法务 · 合规 · IP 保护</div><div class="skills-count">28 skills</div></div>
-      <div class="agent-card"><div class="emoji">🤝</div><div class="name">CSO</div><div class="role">销售 · 商务拓展 · 营收增长</div><div class="skills-count">27 skills</div></div>
-      <div class="agent-card"><div class="emoji">⚙️</div><div class="name">COO</div><div class="role">运营 · OKR · 跨团队协同</div><div class="skills-count">15 skills</div></div>
-      <div class="agent-card"><div class="emoji">⚖️</div><div class="name">Governor</div><div class="role">质量保证 · 交付审计 · 升级</div><div class="skills-count">11 skills</div></div>
-    </div>
-  </section>
+  <main id="main-content">
+    <section id="top" class="hero">
+      <div class="shell hero-layout">
+        <div class="hero-copy">
+          <p class="eyebrow">Open source <span aria-hidden="true">•</span> Evidence-backed <span aria-hidden="true">•</span> Cross-harness</p>
+          <h1>Evidence-backed AI teams for real outcomes.</h1>
+          <p class="hero-lede">Install a focused team, inspect every file before it lands, and prove the result with reproducible checks—not a wall of unverified claims.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#quick-start">
+              <img src="assets/icons/download-simple.svg" width="20" height="20" alt="">
+              Install for Codex
+            </a>
+            <a class="button button-secondary" href="https://github.com/aAAaqwq/AGI-Super-Team">
+              <img src="assets/icons/github-logo.svg" width="20" height="20" alt="">
+              View GitHub
+            </a>
+          </div>
+          <dl class="proof-strip" aria-label="Project principles">
+            <div><dt>Deterministic</dt><dd>Repository checks</dd></div>
+            <div><dt>Safe by default</dt><dd>Preview before apply</dd></div>
+            <div><dt>Portable</dt><dd>No machine-local links</dd></div>
+          </dl>
+        </div>
 
-  <!-- Features -->
-  <section>
-    <h2>⚡ 核心特性</h2>
-    <div class="feature-list">
-      <div class="feature-item">
-        <h3>🔌 60+ SaaS 集成</h3>
-        <p>Notion, Airtable, HubSpot, Stripe, 飞书, Telegram 等开箱即用</p>
+        <aside id="verification" class="receipt-card" aria-labelledby="receipt-title">
+          <div class="receipt-heading">
+            <div>
+              <p class="kicker">Verification receipt</p>
+              <h2 id="receipt-title">Repository contract</h2>
+            </div>
+            <span class="status-chip status-pending" data-verification-status role="status" aria-live="polite" aria-atomic="true">
+              <img src="assets/icons/clock.svg" width="16" height="16" alt="">
+              Validation pending
+            </span>
+          </div>
+          <dl class="receipt-meta">
+            <div><dt>Pack</dt><dd>AGI Super Team 1.0.0</dd></div>
+            <div><dt>Harness</dt><dd>Codex</dd></div>
+            <div><dt>Receipt</dt><dd data-receipt-commit>Awaiting matching main commit</dd></div>
+          </dl>
+          <ul class="check-list" aria-label="Contract checks">
+            <li><img src="assets/icons/list-checks.svg" width="18" height="18" alt=""><span>Workflow permissions and events</span></li>
+            <li><img src="assets/icons/code.svg" width="18" height="18" alt=""><span>Structured JSON and TOML</span></li>
+            <li><img src="assets/icons/link-simple.svg" width="18" height="18" alt=""><span>Portable skill inventory</span></li>
+            <li><img src="assets/icons/shield-check.svg" width="18" height="18" alt=""><span>Agent references and manifest</span></li>
+          </ul>
+          <a class="text-link" href="verification.html">How verification works <img src="assets/icons/arrow-right.svg" width="16" height="16" alt=""></a>
+        </aside>
       </div>
-      <div class="feature-item">
-        <h3>🧠 31 种思维框架</h3>
-        <p>Elon Musk、Jensen Huang、Warren Buffett 等大师级思维模型注入</p>
-      </div>
-      <div class="feature-item">
-        <h3>🔄 30 个生产工作流</h3>
-        <p>每日站会、周报、危机升级、跨 Agent 协作，开箱即用</p>
-      </div>
-      <div class="feature-item">
-        <h3>📦 一键部署工具包</h3>
-        <p>Solo Founder、Content Creator、Quant Trader 等预设组合</p>
-      </div>
-      <div class="feature-item">
-        <h3>🏗️ 模块化技能体系</h3>
-        <p>1,639+ 独立 skill，按 Agent 自动分配，可灵活组合</p>
-      </div>
-      <div class="feature-item">
-        <h3>🤖 多 Agent 编排</h3>
-        <p>CEO 分配任务 → Agent 执行 → Governor 审计，闭环交付</p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Links -->
-  <section>
-    <h2>🔗 链接</h2>
-    <div class="link-list">
-      <a href="https://github.com/aAAaqwq/AGI-Super-Team" target="_blank" rel="noopener">📘 GitHub 仓库</a>
-      <a href="https://github.com/aAAaqwq/AGI-Super-Team/blob/master/README.md" target="_blank" rel="noopener">📖 README</a>
-      <a href="skills-matrix" target="_blank">📊 Skill-Agent 矩阵</a>
-      <a href="https://github.com/aAAaqwq/AGI-Super-Team/graphs/contributors" target="_blank" rel="noopener">👥 贡献者</a>
-      <a href="https://star-history.com/#aAAaqwq/AGI-Super-Team&Date" target="_blank" rel="noopener">⭐ Star 历史</a>
-      <a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener">⚡ 基于 OpenClaw</a>
-    </div>
-  </section>
+    <section id="quick-start" class="quick-start section-rule">
+      <div class="shell split-heading">
+        <div>
+          <p class="kicker">60-second safe start</p>
+          <h2>Preview first. Apply only when ready.</h2>
+        </div>
+        <p>No hidden write step: the installer shows the exact destination and file plan before changing your workspace.</p>
+      </div>
+      <div class="shell code-panel" aria-label="Installation commands">
+        <div class="code-topline">
+          <span>Terminal</span>
+          <button type="button" class="copy-button" data-copy-target="install-command">
+            <img src="assets/icons/copy.svg" width="17" height="17" alt="">
+            <span>Copy</span>
+          </button>
+          <span class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-copy-status></span>
+        </div>
+        <pre id="install-command"><code><span class="code-comment"># 1. Clone and inspect the repository</span>
+git clone https://github.com/aAAaqwq/AGI-Super-Team.git
+cd AGI-Super-Team
 
-  <!-- Footer -->
-  <footer>
-    <p><a href="https://github.com/aAAaqwq/AGI-Super-Team">AGI Super Team</a> — Built with ❤️ using <a href="https://github.com/openclaw/openclaw">OpenClaw</a></p>
+<span class="code-comment"># 2. Preview the Solo Founder starter kit</span>
+./install.sh solo-founder
+
+<span class="code-comment"># 3. Apply explicitly, then verify</span>
+./install.sh --apply solo-founder
+npm test &amp;&amp; npm run validate</code></pre>
+      </div>
+    </section>
+
+    <section id="team" class="featured-team section-rule">
+      <div class="shell">
+        <div class="section-heading centered-heading">
+          <p class="kicker">Featured team</p>
+          <h2>Solo Founder</h2>
+          <p>A compact operating team that turns one brief into an inspectable delivery trail.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-intro">
+            <span class="status-chip status-pending"><img src="assets/icons/clock.svg" width="16" height="16" alt="">Fixture pending</span>
+            <h3>From customer problem to release evidence</h3>
+            <p>CEO scopes the outcome, Product Engineer builds it, and Governor reviews the evidence. Public verification remains pending until the clean fixture is published.</p>
+            <a class="text-link" href="https://github.com/aAAaqwq/AGI-Super-Team/tree/main/starter-kits/solo-founder">Inspect the starter kit <img src="assets/icons/arrow-right.svg" width="16" height="16" alt=""></a>
+          </div>
+          <ol class="outcome-flow" aria-label="Solo Founder workflow">
+            <li><span>01</span><div><strong>Brief</strong><small>Define the user, constraint, and measurable outcome.</small></div></li>
+            <li><span>02</span><div><strong>Build</strong><small>Produce a focused change with a runnable check.</small></div></li>
+            <li><span>03</span><div><strong>Review</strong><small>Challenge risks, references, and acceptance evidence.</small></div></li>
+            <li><span>04</span><div><strong>Release</strong><small>Publish limits, receipt, and a rollback path.</small></div></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="evidence section-rule" aria-labelledby="evidence-title">
+      <div class="shell">
+        <div class="section-heading">
+          <p class="kicker">Evidence, not inventory theater</p>
+          <h2 id="evidence-title">Trust the checks you can run.</h2>
+        </div>
+        <div class="evidence-grid">
+          <article>
+            <img src="assets/icons/list-checks.svg" width="24" height="24" alt="">
+            <h3>Repository contracts</h3>
+            <p>A canonical manifest aligns agents, kits, local requirements, and external recommendations.</p>
+            <code>npm run validate</code>
+          </article>
+          <article>
+            <img src="assets/icons/shield-check.svg" width="24" height="24" alt="">
+            <h3>Installer safety</h3>
+            <p>Global preflight, explicit apply, existing-file protection, and failure without partial writes.</p>
+            <code>bash tests/installer/test_install.sh</code>
+          </article>
+          <article>
+            <img src="assets/icons/package.svg" width="24" height="24" alt="">
+            <h3>Versioned receipts</h3>
+            <p>Green checks are tied to a commit and fixture. A mismatched or stale receipt never displays as verified.</p>
+            <code>verification-receipt.json</code>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow" class="workflow section-rule">
+      <div class="shell workflow-layout">
+        <div class="section-heading">
+          <p class="kicker">How it works</p>
+          <h2>One brief. Clear ownership. Reviewable evidence.</h2>
+          <p>Start with the smallest useful team. The workflow makes responsibilities and handoffs explicit without pretending every harness is equally proven.</p>
+        </div>
+        <ol class="role-list">
+          <li><span class="role-number">01</span><div><h3>CEO · Scope</h3><p>Turns the request into an outcome, assigns roles, and defines the stop condition.</p></div></li>
+          <li><span class="role-number">02</span><div><h3>Specialists · Build</h3><p>Work in bounded areas and return runnable changes with direct evidence.</p></div></li>
+          <li><span class="role-number">03</span><div><h3>Governor · Challenge</h3><p>Reviews contracts, limitations, and regression risk before release.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="compatibility section-rule" aria-labelledby="compatibility-title">
+      <div class="shell">
+        <div class="split-heading">
+          <div><p class="kicker">Compatibility</p><h2 id="compatibility-title">Codex first. Other harnesses stay explicit.</h2></div>
+          <p>“Manifest available” is not the same as “fixture verified.” Status labels reflect that difference.</p>
+        </div>
+        <div class="compatibility-table" role="region" aria-label="Harness compatibility" tabindex="0">
+          <table>
+            <thead><tr><th scope="col">Harness</th><th scope="col">Distribution</th><th scope="col">Status</th><th scope="col">Evidence</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Codex</th><td>Native package</td><td><span class="table-status table-primary">Primary</span></td><td>Installer suite</td></tr>
+              <tr><th scope="row">Claude Code</th><td>Manifest</td><td><span class="table-status">Pending</span></td><td>Fixture not published</td></tr>
+              <tr><th scope="row">Cursor / Gemini</th><td>Manifest</td><td><span class="table-status">Pending</span></td><td>Fixture not published</td></tr>
+              <tr><th scope="row">OpenClaw</th><td>Legacy layout</td><td><span class="table-status">Legacy</span></td><td>Migration guidance</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="community" class="community section-rule">
+      <div class="shell community-layout">
+        <div>
+          <p class="kicker">Build in public</p>
+          <h2>Bring a failure, a fixture, or a better proof.</h2>
+          <p>Useful contributions make the team safer, more portable, or easier to verify. Every report should include a reproducible path.</p>
+        </div>
+        <div class="community-links">
+          <a href="https://github.com/aAAaqwq/AGI-Super-Team/issues"><img src="assets/icons/chat-circle-dots.svg" width="22" height="22" alt=""><span><strong>Report an issue</strong><small>Share a reproducible failure</small></span></a>
+          <a href="https://github.com/aAAaqwq/AGI-Super-Team/blob/main/CONTRIBUTING.md"><img src="assets/icons/users-three.svg" width="22" height="22" alt=""><span><strong>Contribute</strong><small>Read the evidence checklist</small></span></a>
+          <a href="https://github.com/aAAaqwq/AGI-Super-Team/blob/main/README_CN.md"><img src="assets/icons/book-open.svg" width="22" height="22" alt=""><span><strong>中文 README</strong><small>阅读中文安装指南</small></span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="star-history-section section-rule" aria-labelledby="history-title">
+      <div class="shell">
+        <div class="split-heading">
+          <div><p class="kicker">Community signal</p><h2 id="history-title">GitHub star history</h2></div>
+          <p><span data-stats-state role="status" aria-live="polite" aria-atomic="true">Cached data loads when available.</span> <span data-forks-count></span></p>
+        </div>
+        <figure class="history-figure">
+          <img class="star-history-chart" src="assets/star-history.svg" width="1200" height="420" alt="" loading="lazy">
+          <figcaption data-history-summary role="status" aria-live="polite" aria-atomic="true">Star history refresh pending. The current GitHub count appears above when available.</figcaption>
+        </figure>
+        <details class="history-details" data-history-details hidden>
+          <summary>View recent history values</summary>
+          <div class="compatibility-table">
+            <table>
+              <thead><tr><th scope="col">Date</th><th scope="col">Cumulative stars</th></tr></thead>
+              <tbody data-history-rows></tbody>
+            </table>
+          </div>
+        </details>
+        <p class="data-note">Built from GitHub’s current stargazer records. Unstars can revise earlier history. <a href="data/star-history.json">View JSON data</a>.</p>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="shell final-cta-inner">
+        <img src="assets/logo-mark.png" width="76" height="76" alt="">
+        <div><p class="kicker">Start with evidence</p><h2>Preview the Solo Founder team in your workspace.</h2></div>
+        <a class="button button-primary" href="#quick-start">Open quick start <img src="assets/icons/arrow-right.svg" width="18" height="18" alt=""></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <div><strong>AGI Super Team</strong><p>Evidence-backed AI teams for real outcomes.</p></div>
+      <nav aria-label="Footer"><a href="guides/">Guides</a><a href="verification.html">Verification</a><a href="https://github.com/aAAaqwq/AGI-Super-Team/blob/main/SECURITY.md">Security</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">GitHub</a></nav>
+    </div>
   </footer>
-
-</div>
-
 </body>
 </html>

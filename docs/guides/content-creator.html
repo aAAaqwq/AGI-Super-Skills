@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Content Creator AI workflow with human publishing</title>
+  <meta name="description" content="Evaluate the Content Creator kit by separating evidence research, drafting, positioning, and measurement while keeping every post human-reviewed.">
+  <link rel="canonical" href="https://aaaaqwq.github.io/AGI-Super-Team/guides/content-creator.html">
+  <meta name="theme-color" content="#070b18">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="shell header-inner"><a class="brand" href="../"><img src="../assets/logo-mark.png" width="36" height="36" alt=""><span>AGI Super Team</span></a><nav class="primary-nav guide-nav" aria-label="Primary"><a href="../">Home</a><a href="./">Guides</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">GitHub</a></nav><button class="icon-button" type="button" data-theme-button aria-label="Switch to light theme"><img class="theme-icon theme-icon-dark" src="../assets/icons/sun.svg" width="20" height="20" alt=""><img class="theme-icon theme-icon-light" src="../assets/icons/moon.svg" width="20" height="20" alt=""></button></div></header>
+  <main id="main-content" class="guide-main">
+    <article class="shell guide-article">
+      <header class="guide-hero">
+        <p class="kicker">Content Creator workflow</p>
+        <h1>Build an evidence pack before you draft the post.</h1>
+        <p class="hero-lede">The kit assigns research and measurement to CDO, drafting to CCO, and positioning to CMO. It creates reviewable content artifacts; it does not authorize posting, replies, direct messages, scraping, or account access.</p>
+        <p class="guide-meta">Last reviewed: 2026-07-21 · Kit: <code>content-creator</code></p>
+      </header>
+      <section>
+        <h2>Prerequisites</h2>
+        <ul>
+          <li>An approved topic, audience, platform, and single desired reader action.</li>
+          <li>Licensed or public source material with dates, attribution, and permission boundaries.</li>
+          <li>A named human editor who owns factual review, tone, disclosure, community rules, and publication.</li>
+          <li>A measurement window and a stop condition that do not depend on spam or coordinated engagement.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Preview the kit</h2>
+        <pre><code>git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
+cd AGI-Super-Team
+./install.sh --source "$PWD" --destination /path/to/review-workspace content-creator</code></pre>
+        <p>Confirm that the plan contains only the CCO, CDO, and CMO workspaces and their local requirements. Rerun with <code>--apply</code> only after reviewing all destination paths. Recommended external tools are not bundled dependencies and require their own security and license review.</p>
+      </section>
+      <section>
+        <h2>Run a five-artifact workflow</h2>
+        <ol class="guide-steps">
+          <li><strong>Source ledger</strong><span>CDO records each claim, source URL or file, publication date, license or usage basis, and confidence.</span></li>
+          <li><strong>Audience brief</strong><span>CMO defines the reader problem, channel norms, positioning, useful promise, and claims that must not be made.</span></li>
+          <li><strong>Draft set</strong><span>CCO produces channel-specific variants from the approved ledger and marks any sentence lacking support.</span></li>
+          <li><strong>Human review</strong><span>The editor checks facts, disclosure, tone, copyright, privacy, links, accessibility, and platform rules.</span></li>
+          <li><strong>Measurement note</strong><span>CDO records the hypothesis, observation window, meaningful response, and a reason to stop or revise.</span></li>
+        </ol>
+      </section>
+      <section>
+        <h2>A responsible launch brief</h2>
+        <pre><code>Topic: What changed in the preview-first installer.
+Audience: Maintainers evaluating AI agent repositories.
+Evidence: Diff, installer tests, known limitations, rollback steps.
+Channels: One X thread and one relevant Reddit discussion.
+Rules: Identify maintainer status; no automated posting or replies.
+Success: Qualified installation feedback, not raw impressions.
+Stop: Pause if factual errors or community objections appear.</code></pre>
+        <p>For Reddit, contribute context before linking and follow each community's self-promotion rules. For X, show the evidence and limitation before the call to action. A maintainer should manually adapt and publish each piece rather than sending identical copy across channels.</p>
+      </section>
+      <section>
+        <h2>Quality gate before publishing</h2>
+        <p>Every factual claim should map to the source ledger. Remove invented numbers, implied endorsements, absolute promises, and claims about compatibility that exceed the tested fixture. Include a maintainer disclosure where relevant, descriptive link text, image alt text, and a correction path. Never upload secrets, customer data, private conversations, or unlicensed source material to the workflow.</p>
+        <div class="callout"><strong>Human-controlled boundary</strong><p>Drafting can be delegated. Account login, final wording, publication timing, replies, moderation, and deletion stay with an authorized person.</p></div>
+      </section>
+      <section>
+        <h2>Limitations</h2>
+        <p>The kit does not guarantee reach, ranking, conversions, or platform acceptance. Research tools can miss context, and drafted citations can be wrong or stale. Platform rules change, so the editor must review current policies at publication time. Automated cross-posting and unsolicited outreach are outside this workflow.</p>
+      </section>
+      <section>
+        <h2>Rollback and uninstall</h2>
+        <p>Before publication, rollback means rejecting the draft and removing unsupported claims. After publication, follow the platform's correction or deletion process and preserve a correction note. To uninstall the local kit, archive approved artifacts, then remove only the new CCO, CDO, and CMO workspace directories listed in the installer preview.</p>
+      </section>
+      <footer class="guide-cta"><p>Review the role boundaries and sample prompts.</p><a class="button button-primary" href="https://github.com/aAAaqwq/AGI-Super-Team/tree/main/starter-kits/content-creator">Inspect the Content Creator kit</a></footer>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="shell footer-inner"><div><strong>AGI Super Team guides</strong><p>Research first, claims second, publishing last.</p></div><nav aria-label="Footer"><a href="choose-ai-team.html">Choose a team</a><a href="https://github.com/aAAaqwq/AGI-Super-Team/tree/main/growth">Growth playbooks</a><a href="./">All guides</a></nav></div></footer>
+</body>
+</html>
