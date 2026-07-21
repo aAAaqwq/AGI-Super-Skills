@@ -10,6 +10,7 @@
   <a href="./README_CN.md">中文</a> ·
   <a href="#safe-quick-start">Quick start</a> ·
   <a href="#five-minute-installation-receipt">Receipt</a> ·
+  <a href="#browse-skills-by-outcome">Skills</a> ·
   <a href="#repository-architecture">Architecture</a> ·
   <a href="./docs/guides/">Guides</a> ·
   <a href="./CONTRIBUTING.md">Contribute</a>
@@ -31,11 +32,14 @@ Trading, legal, security, medical, publishing, and deployment work still require
 
 ## Safe quick start
 
-Clone a trusted revision and preview the Solo Founder pack. The installer requires Bash and Node.js; repository verification also requires npm and Python 3.
+Using Codex? Start with the [curated native package](./.codex/INDEX.md). Evaluating generic workspace files? Continue below.
+
+Clone `main`, record the commit you reviewed, and preview the Solo Founder pack. The installer requires Bash and Node.js; repository verification also requires npm and Python 3.
 
 ```bash
 git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
 cd AGI-Super-Team
+git rev-parse HEAD
 ./install.sh --source "$PWD" --destination /path/to/review-workspace solo-founder
 ```
 
@@ -92,9 +96,9 @@ The installer stops after copying inspectable files. It does not launch agents, 
 
 This receipt proves deterministic installation and repository integrity. Cross-harness task performance remains **Validation pending** until a public fixture is tied to the current `main` commit.
 
-## Explore
+## Browse skills by outcome
 
-Start with a focused pack or guide instead of browsing the full skill inventory.
+Start with a focused pack or guide. The complete catalog is a reference library, not the recommended onboarding path.
 
 | Path | Use it for |
 |---|---|
@@ -103,7 +107,18 @@ Start with a focused pack or guide instead of browsing the full skill inventory.
 | [Practical guides](./docs/guides/) | Codex and Claude Code setup, compatibility, team choice, and workflow boundaries |
 | [Codex package](./.codex/INDEX.md) | A separately curated native package with its own manifest and sync policy |
 | [Cookbooks](./cookbook/) | Longer learning material for content, prompts, research, and quantitative workflows |
-| [Skills](./skills/) | The physical cross-harness library; use the validator rather than a hard-coded count |
+| [Skills overview](./skills/) | Support levels, bounded starting points, and discovery guidance |
+| [Generated skill catalog](./catalog/) | Task-oriented categories covering every canonical physical skill |
+
+### Skill categories
+
+| Build and operate | Reach and create | Decide and automate |
+|---|---|---|
+| [AI Agents & Orchestration](./catalog/#ai-agents-orchestration) | [Marketing, SEO & Growth](./catalog/#marketing-seo-growth) | [Data, Analytics & Research](./catalog/#data-analytics-research) |
+| [Software Engineering](./catalog/#software-engineering) | [Content, Media & Publishing](./catalog/#content-media-publishing) | [Business Operations & Strategy](./catalog/#business-operations-strategy) |
+| [Cloud, DevOps & Reliability](./catalog/#cloud-devops-reliability) | [Sales, CRM & Customer Success](./catalog/#sales-crm-customer-success) | [Apps & Workflow Automation](./catalog/#apps-workflow-automation) |
+| [Security, Privacy & Legal](./catalog/#security-privacy-legal) | [Product, Design & UX](./catalog/#product-design-ux) | [Finance, Trading & Markets](./catalog/#finance-trading-markets) |
+| [Specialized Domains & Utilities](./catalog/#general-utilities) | [Chinese Platform Workflows](./catalog/#chinese-platform-workflows) | |
 
 ### Starter kits
 
@@ -144,6 +159,7 @@ AGI-Super-Team/
 ├── config/          # Canonical team manifest, schema, and removed-link provenance
 ├── agents/          # Role, identity, workflow, and tool guidance
 ├── skills/          # Tracked physical skills; symlinks are forbidden
+├── catalog/         # Generated task taxonomy and machine-readable skill index
 ├── starter-kits/    # Focused team selections
 ├── install.sh       # Preview-first generic workspace installer
 ├── scripts/         # Repository model, validator, and Pages data builder
