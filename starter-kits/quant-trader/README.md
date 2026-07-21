@@ -1,17 +1,22 @@
-# 📈 Quant Trader Starter Kit
+# Quant Trader starter kit
 
-> 量化交易员的 AI 团队。策略研发 + 数据工程 + 风控，3 个 Agent 覆盖量化全流程。
+This kit selects CQO for quantitative research, CDO for data work, and CFO for risk and financial review. It is for research and paper-trading evaluation, not live execution or financial advice.
 
-## 包含的 Agents
-
-| Agent | 角色 | 精神导师 | 能做什么 |
-|-------|------|----------|---------|
-| 📈 CQO | 量化策略 + 交易 | Jim Simons | 策略开发、回测、风险管理、组合优化 |
-| 📊 CDO | 数据采集 + ETL | Nate Silver | 市场数据抓取、清洗、特征工程 |
-| 💰 CFO | 财务 + 风控 | Warren Buffett | 资金管理、P&L追踪、成本优化 |
-
-## 一键部署
+## Safe install
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- quant-trader
+./install.sh --source "$PWD" --destination /path/to/review-workspace quant-trader
+./install.sh --source "$PWD" --destination /path/to/review-workspace --apply quant-trader
 ```
+
+Run the first command as a preview. Apply only after reviewing the proposed `workspace-cqo`, `workspace-cdo`, and `workspace-cfo` paths. Existing files and skill directories are preserved.
+
+## Evaluation prompts
+
+- CDO: “Profile this licensed historical dataset for gaps, survivorship bias, leakage, and timestamp errors.”
+- CQO: “Design a reproducible backtest with costs, slippage, walk-forward evaluation, and failure criteria.”
+- CFO: “Review drawdown, concentration, liquidity, and operational risk. Do not recommend or place a trade.”
+
+No bundled strategy is represented as profitable, live-validated, or production-ready. Use isolated test data, independent review, and human-controlled paper-trading before considering any further use.
+
+See [the setup guide](../../setup.md) for verification and recovery.

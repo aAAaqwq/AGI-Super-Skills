@@ -1,0 +1,20 @@
+AGI Super Team installer demo transcript
+Duration: approximately 11 seconds
+Recorded behavior: preview, explicit apply, repository verification
+
+$ ./install.sh solo-founder
+[INFO] Prerequisites passed
+[INFO] Deploying kit: solo-founder (3 agents)
+[PREVIEW] CEO -> ./demo-workspace/workspace-ceo
+[PREVIEW] PE -> ./demo-workspace/workspace-pe
+[PREVIEW] CCO -> ./demo-workspace/workspace-cco
+[OK] PREVIEW complete. No files written.
+
+$ ./install.sh --apply solo-founder
+[INFO] Required files passed global preflight
+[INFO] Staging selected agents
+[OK] Installed 3 agents without overwriting existing files
+
+$ npm test && npm run validate -- --warnings-as-errors
+[OK] Repository and installer tests passed
+[OK] 0 errors / 0 warnings

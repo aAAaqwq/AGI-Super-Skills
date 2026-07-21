@@ -1,44 +1,30 @@
-# Security Policy
+# Security policy
 
-## ⚠️ This Repository is De-sensitized
+## Report a vulnerability privately
 
-All provider-specific API keys, tokens, secrets, and vendor names have been replaced with generic placeholders.
+Use [GitHub Security Advisories](https://github.com/aAAaqwq/AGI-Super-Team/security/advisories/new) to submit a private report. Do not open a public issue, discussion, or pull request for an undisclosed vulnerability.
 
-### Placeholder Conventions
-| Pattern | Meaning |
-|---------|---------|
-| `<provider>/<model>` | Replace with your provider/model ID |
-| `your-provider.example.com` | Replace with your API endpoint |
-| `YOUR_API_KEY` | Replace with your actual API key |
-| `pass show api/<service>` | Reference to local password store |
-| `Provider-A`, `Provider-B` | Generic provider names |
+Include the affected path and revision, impact, reproduction steps, prerequisites, and a suggested mitigation if available. Remove credentials, personal data, and production identifiers from evidence.
 
-### What is NOT in This Repo
-- ❌ Real API keys or tokens
-- ❌ `auth-profiles.json` (provider credentials)
-- ❌ `models.json` (model routing config)
-- ❌ `openclaw.json` (runtime config)
-- ❌ `.env` files
-- ❌ Private keys (`.key`, `.pem`)
-- ❌ Browser session data
+If private reporting is unavailable, do not publish exploit details. State only that the private channel is unavailable in a general repository discussion and wait for a maintainer-provided channel.
 
-### Pre-Push Security Protocol
-Before every push, run the three-layer scan:
+## Scope
 
-```bash
-# Layer 1: Critical key patterns
-grep -rE 'AIza[A-Za-z0-9_-]{35}|sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{36}|xoxb-|AKIA[A-Z0-9]{16}' \
-  --include='*.py' --include='*.js' --include='*.json' --include='*.md' --include='*.sh' -l .
+Reports may cover repository-owned installers, scripts, plugin manifests, bundled skills, agent instructions, or documentation that creates a concrete security risk.
 
-# Layer 2: Broader secret patterns
-grep -rE 'Bearer [A-Za-z0-9]{20,}|api[_-]?key.*=.*[A-Za-z0-9]{20,}' \
-  --include='*.py' --include='*.js' --include='*.json' --include='*.md' --include='*.sh' -l .
+Third-party services, harnesses, models, and upstream dependencies are outside this project's control. Report their vulnerabilities to the relevant vendor, while privately notifying this project if its integration also needs mitigation.
 
-# Layer 3: Git history check
-git log --all --diff-filter=A --name-only --pretty=format: | sort -u | grep -iE 'secret|token|key|auth|env'
-```
+## Response expectations
 
-All three layers must pass with zero real credentials before pushing.
+Maintainers will aim to acknowledge a report, assess severity, coordinate a fix, and publish remediation guidance. Response times are not guaranteed. Please allow reasonable time for remediation before disclosure.
 
-### Reporting
-If you discover a leaked credential in this repo, please open an issue immediately.
+## User safety
+
+- Inspect a pinned checkout before running scripts; use the installer's preview before `--apply`.
+- Keep API keys, tokens, private keys, browser sessions, and production configuration outside the repository.
+- Use least-privilege credentials and isolated test accounts.
+- Treat skills and agent output as untrusted instructions until reviewed.
+- Require human approval for external messages, publishing, transactions, deployments, and destructive actions.
+- Rotate and revoke an exposed credential immediately; deleting it from the latest revision is not sufficient because Git history may retain it.
+
+No automated scan proves the absence of secrets or vulnerabilities. Contributors must combine repository checks, diff review, provenance review, and appropriate domain testing.
