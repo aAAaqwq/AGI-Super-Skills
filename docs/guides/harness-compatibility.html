@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AGI Super Team compatibility: Codex, Claude Code and more</title>
+  <meta name="description" content="Compare AGI Super Team paths for Codex, Claude Code, Cursor, and Gemini without confusing a manifest or generic workspace with equivalent runtime support.">
+  <link rel="canonical" href="https://aaaaqwq.github.io/AGI-Super-Team/guides/harness-compatibility.html">
+  <meta name="theme-color" content="#070b18">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="shell header-inner"><a class="brand" href="../"><img src="../assets/logo-mark.png" width="36" height="36" alt=""><span>AGI Super Team</span></a><nav class="primary-nav guide-nav" aria-label="Primary"><a href="../">Home</a><a href="./">Guides</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">GitHub</a></nav><button class="icon-button" type="button" data-theme-button aria-label="Switch to light theme"><img class="theme-icon theme-icon-dark" src="../assets/icons/sun.svg" width="20" height="20" alt=""><img class="theme-icon theme-icon-light" src="../assets/icons/moon.svg" width="20" height="20" alt=""></button></div></header>
+  <main id="main-content" class="guide-main">
+    <article class="shell guide-article">
+      <header class="guide-hero">
+        <p class="kicker">Harness compatibility</p>
+        <h1>Package present does not mean behavior proven.</h1>
+        <p class="hero-lede">Use this matrix to choose an evaluation path. It describes repository surfaces, not equivalent outcomes, and it keeps Cursor and Gemini metadata distinct from native package support.</p>
+        <p class="guide-meta">Last reviewed: 2026-07-21 · Status language: primary, manifest, metadata, legacy</p>
+      </header>
+      <section>
+        <h2>Prerequisites</h2>
+        <p>Identify the exact harness and client version you plan to evaluate. Clone a reviewed revision, use a disposable project or destination, and decide which single outcome you will test. Record commands, loaded files, permissions, and rollback steps before comparing results across clients.</p>
+      </section>
+      <section>
+        <h2>What exists today</h2>
+        <div class="compatibility-table" role="region" aria-label="Harness distribution paths" tabindex="0">
+          <table>
+            <thead><tr><th>Harness</th><th>Repository surface</th><th>What it supports</th><th>Evidence boundary</th></tr></thead>
+            <tbody>
+              <tr><th>Codex</th><td>Curated native plugin</td><td>Focused workflow skills and optional agent sync</td><td>Public outcome fixture still pending</td></tr>
+              <tr><th>Claude Code</th><td>Marketplace and plugin manifests</td><td>Client-managed plugin loading from the repository</td><td>Confirm schema, scope, dependencies, and loaded surface locally</td></tr>
+              <tr><th>Cursor</th><td>Generic repository and workspace files</td><td>Manual project context and selected local files</td><td>No dedicated native package or parity fixture published</td></tr>
+              <tr><th>Gemini</th><td><code>gemini-extension.json</code> metadata</td><td>Repository context entry pointing to <code>CLAUDE.md</code></td><td>Metadata contains legacy claims and needs client-specific evaluation</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section>
+        <h2>A fair comparison method</h2>
+        <ol class="guide-steps">
+          <li><strong>Choose one fixture</strong><span>Use the same bounded input, expected files, forbidden actions, and acceptance checks in each harness.</span></li>
+          <li><strong>Record the environment</strong><span>Capture client version, model, plugin revision, permissions, and any manually copied context files.</span></li>
+          <li><strong>Run from clean state</strong><span>Use new destinations and avoid personal memory, existing rules, or credentials that would make results incomparable.</span></li>
+          <li><strong>Compare evidence</strong><span>Evaluate artifacts, checks, refusals, and rollback behavior—not prose style or an unrepeatable demo.</span></li>
+        </ol>
+      </section>
+      <section>
+        <h2>Cursor evaluation path</h2>
+        <p>No dedicated Cursor package is currently represented as equivalent to the Codex plugin. Start with a clone and the smallest relevant files: the starter-kit README, selected agent role documents, and only the skills required for your fixture. Keep project rules explicit and inspect every proposed command. The generic installer can preview separate <code>workspace-&lt;agent&gt;</code> directories, but Cursor loading behavior remains a client configuration decision.</p>
+      </section>
+      <section>
+        <h2>Gemini evaluation path</h2>
+        <p>The root <code>gemini-extension.json</code> points to <code>CLAUDE.md</code>. Both contain descriptive metadata that may lag the canonical manifest, so treat them as an evaluation input rather than a current inventory guarantee. Confirm that your Gemini client recognizes the file, what context it loads, and whether its permission prompts match the fixture. Do not infer support for generic installer destinations from the metadata alone.</p>
+      </section>
+      <section>
+        <h2>Limitations</h2>
+        <p>Model choice, context-window policy, tool permissions, plugin caching, and client updates can change the result even when the repository revision is fixed. This matrix does not claim equivalent feature coverage or output quality. A second harness should not move beyond pending status until it passes the same independently reproducible fixture.</p>
+      </section>
+      <section>
+        <h2>Rollback and uninstall</h2>
+        <p>For native plugins, use that client's scoped uninstall controls. For manually added project context, remove only files or settings introduced for the evaluation. For generic workspaces, use the installer preview record to identify new directories. Preserve evidence and configuration snapshots until the comparison is complete; never remove an entire user configuration directory as a shortcut.</p>
+      </section>
+      <footer class="guide-cta"><p>Need a controlled baseline for comparison?</p><a class="button button-primary" href="codex-install.html">Start with the Codex package guide</a></footer>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="shell footer-inner"><div><strong>AGI Super Team guides</strong><p>Distribution surfaces are not compatibility guarantees.</p></div><nav aria-label="Footer"><a href="claude-code-install.html">Claude Code</a><a href="../verification.html">Verification</a><a href="./">All guides</a></nav></div></footer>
+</body>
+</html>

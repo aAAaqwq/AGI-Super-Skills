@@ -1,6 +1,6 @@
 # SKILL-AGENT-MATRIX
 
-> 自动生成于 2026-06-17 | 819 skills × 14 agents
+> 库存口径更新于 2026-07-21 | 793 skills（tracked physical inventory）× 14 agents
 
 ## 总览
 

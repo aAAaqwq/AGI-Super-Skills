@@ -1,26 +1,22 @@
-# 🎨 Content Creator Starter Kit
+# Content Creator starter kit
 
-> 自媒体人的 AI 团队。内容创作 + 数据采集 + 营销增长，3 个 Agent 覆盖内容全链路。
+This kit selects CCO for drafting, CDO for research and measurement, and CMO for positioning. It does not install the separate Codex-native package or publish to external platforms.
 
-## 包含的 Agents
-
-| Agent | 角色 | 精神导师 | 能做什么 |
-|-------|------|----------|---------|
-| ✍️ CCO | 内容创作 + 病毒传播 | MrBeast, Jony Ive | 小红书/抖音/公众号内容创作与发布 |
-| 📊 CDO | 数据采集 + 分析 | Nate Silver | 竞品数据抓取、趋势分析、数据管线 |
-| 📣 CMO | 营销 + SEO + 增长 | David Ogilvy | SEO优化、营销策略、竞品分析 |
-
-## 一键部署
+## Safe install
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- content-creator
+./install.sh --source "$PWD" --destination /path/to/review-workspace content-creator
+./install.sh --source "$PWD" --destination /path/to/review-workspace --apply content-creator
 ```
 
-## 你能让他们做什么？
+Run the first command as a preview. Run the second only after reviewing the proposed `workspace-cco`, `workspace-cdo`, and `workspace-cmo` paths. Existing files and skill directories are preserved.
 
-```
-"抓取这个竞品账号最近30天的数据"     → CDO
-"把这篇内容同时发到小红书和抖音"       → CCO
-"分析这个关键词的SEO机会"             → CMO
-"帮我制定下周的内容日历"              → CCO + CMO 协作
-```
+## Evaluation prompts
+
+- CDO: “Summarize the supplied, licensed dataset and list missing evidence. Do not scrape private or restricted sources.”
+- CCO: “Draft a post from the approved evidence pack. Mark unsupported claims and do not publish.”
+- CMO: “Design a one-week ethical experiment with a hypothesis, audience, metric, stop condition, and manual review gate.”
+
+Respect platform rules, consent, attribution, and community norms. All posts and replies must be reviewed and sent manually by an authorized human.
+
+See [the setup guide](../../setup.md) and [growth playbooks](../../growth/README.md).

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to choose an AI agent team without coordination debt</title>
+  <meta name="description" content="Choose the smallest AGI Super Team configuration that can deliver and challenge a real outcome, with clear role boundaries, risk gates, and rollback.">
+  <link rel="canonical" href="https://aaaaqwq.github.io/AGI-Super-Team/guides/choose-ai-team.html">
+  <meta name="theme-color" content="#070b18">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="shell header-inner"><a class="brand" href="../"><img src="../assets/logo-mark.png" width="36" height="36" alt=""><span>AGI Super Team</span></a><nav class="primary-nav guide-nav" aria-label="Primary"><a href="../">Home</a><a href="./">Guides</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">GitHub</a></nav><button class="icon-button" type="button" data-theme-button aria-label="Switch to light theme"><img class="theme-icon theme-icon-dark" src="../assets/icons/sun.svg" width="20" height="20" alt=""><img class="theme-icon theme-icon-light" src="../assets/icons/moon.svg" width="20" height="20" alt=""></button></div></header>
+  <main id="main-content" class="guide-main">
+    <article class="shell guide-article">
+      <header class="guide-hero">
+        <p class="kicker">Team selection</p>
+        <h1>Choose roles from the risk and the handoff—not the org chart.</h1>
+        <p class="hero-lede">More agents create more context, review, and coordination cost. Start with one owner and add a second perspective only when it changes the evidence or catches a concrete failure mode.</p>
+        <p class="guide-meta">Last reviewed: 2026-07-21 · Decision rule: smallest sufficient team</p>
+      </header>
+      <section>
+        <h2>Prerequisites</h2>
+        <p>Before selecting a kit, write the intended artifact, acceptance checks, sensitive inputs, allowed tools, and external actions. Name the human who can approve the final result. If you cannot define the output or stop condition, team selection is premature.</p>
+      </section>
+      <section>
+        <h2>Start with the work shape</h2>
+        <div class="compatibility-table" role="region" aria-label="Starter kit selection" tabindex="0">
+          <table>
+            <thead><tr><th>Work shape</th><th>Starting kit</th><th>Useful separation</th><th>Do not delegate</th></tr></thead>
+            <tbody>
+              <tr><th>Product slice</th><td>Solo Founder</td><td>Scope, build, claim review</td><td>Release approval and credentials</td></tr>
+              <tr><th>Editorial campaign</th><td>Content Creator</td><td>Research, drafting, measurement</td><td>Publishing and community identity</td></tr>
+              <tr><th>Historical strategy study</th><td>Quant Trader</td><td>Data quality, backtest, risk</td><td>Capital allocation and order placement</td></tr>
+              <tr><th>Single specialist task</th><td>One agent ID</td><td>Focused execution</td><td>Independent acceptance decision</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section>
+        <h2>Use five selection steps</h2>
+        <ol class="guide-steps">
+          <li><strong>Define the artifact</strong><span>Choose one output that can be inspected: a memo, patch, content brief, dataset profile, or backtest report.</span></li>
+          <li><strong>Map failure modes</strong><span>List what could make the artifact wrong, unsafe, misleading, or impossible to roll back.</span></li>
+          <li><strong>Assign distinct roles</strong><span>Give each role a different responsibility and evidence requirement. Avoid duplicate generalists debating without new data.</span></li>
+          <li><strong>Set authority</strong><span>State which actions are read-only, which require human approval, and which are forbidden for the evaluation.</span></li>
+          <li><strong>Time-box the trial</strong><span>Run one fixture, score the artifact, and keep or remove the team based on observed value.</span></li>
+        </ol>
+      </section>
+      <section>
+        <h2>Preview a kit or one role</h2>
+        <pre><code># Preview a small starter kit
+./install.sh --source "$PWD" --destination /path/to/review-workspace solo-founder
+
+# Preview one specialist instead
+./install.sh --source "$PWD" --destination /path/to/review-workspace pe</code></pre>
+        <p>The default is preview. Compare the proposed footprint with the role you actually need. The <code>full-team</code> option is appropriate only when the evaluation genuinely needs all listed domains and you are prepared to review the larger install plan.</p>
+      </section>
+      <section>
+        <h2>Score observed value</h2>
+        <p>After one fixture, ask whether the team improved correctness, surfaced a risk, reduced rework, or produced evidence that a single-agent baseline missed. Also record coordination cost: repeated context, contradictory advice, latency, and review time. Keep a role only when its distinct contribution exceeds that cost.</p>
+        <div class="callout"><strong>Practical signal</strong><p>If two roles consistently produce interchangeable output, merge their responsibilities for the next trial rather than inventing more handoff process.</p></div>
+      </section>
+      <section>
+        <h2>Limitations</h2>
+        <p>Role names do not create organizational authority or professional accountability. The repository does not guarantee that a larger team is more accurate, and it does not remove the need for domain experts in legal, financial, security, medical, or operational decisions. Harness support and tool access also vary by client.</p>
+      </section>
+      <section>
+        <h2>Rollback and uninstall</h2>
+        <p>Keep the preview list and remove only newly created <code>workspace-&lt;agent&gt;</code> directories after the trial. If you installed a native harness plugin, uninstall it through that client's scoped package controls. Retain the fixture and scorecard so the next team configuration can be compared without repeating the same assumptions.</p>
+      </section>
+      <footer class="guide-cta"><p>Begin with the most compact cross-functional kit.</p><a class="button button-primary" href="solo-founder.html">Evaluate the Solo Founder workflow</a></footer>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="shell footer-inner"><div><strong>AGI Super Team guides</strong><p>Coordination must earn its cost.</p></div><nav aria-label="Footer"><a href="content-creator.html">Content workflow</a><a href="quant-research.html">Quant workflow</a><a href="./">All guides</a></nav></div></footer>
+</body>
+</html>

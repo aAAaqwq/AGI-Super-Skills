@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AGI Super Team guides — safe setup and focused workflows</title>
+  <meta name="description" content="Guides for installing AGI Super Team, choosing a focused AI team, comparing harness support, and evaluating founder, content, and quant workflows.">
+  <link rel="canonical" href="https://aaaaqwq.github.io/AGI-Super-Team/guides/">
+  <meta name="theme-color" content="#070b18">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="../"><img src="../assets/logo-mark.png" width="36" height="36" alt=""><span>AGI Super Team</span></a>
+      <nav class="primary-nav guide-nav" aria-label="Primary"><a href="../">Home</a><a href="./" aria-current="page">Guides</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">GitHub</a></nav>
+      <button class="icon-button" type="button" data-theme-button aria-label="Switch to light theme"><img class="theme-icon theme-icon-dark" src="../assets/icons/sun.svg" width="20" height="20" alt=""><img class="theme-icon theme-icon-light" src="../assets/icons/moon.svg" width="20" height="20" alt=""></button>
+    </div>
+  </header>
+  <main id="main-content" class="guide-main">
+    <article class="shell guide-article">
+      <header class="guide-hero">
+        <p class="kicker">Practical field guides</p>
+        <h1>Choose the smallest useful team—and keep the evidence.</h1>
+        <p class="hero-lede">These guides separate what the repository contains from what has been proven in a specific harness. Start with installation safety, then choose a workflow that matches the outcome and risk.</p>
+        <p class="guide-meta">Last reviewed: 2026-07-21 · Editorial scope: seven maintained guides</p>
+      </header>
+      <section>
+        <h2>Prerequisites</h2>
+        <p>You need a local Git client, a current Node.js runtime for the manifest-backed installer, and a workspace where you can review proposed files before applying them. Harness-specific pages list any additional client requirements. Use a disposable destination for the first run.</p>
+        <div class="callout"><strong>Current evidence boundary</strong><p>The repository is still completing its public fixture gate. A manifest or package being present does not establish parity across Codex, Claude Code, Cursor, or Gemini.</p></div>
+      </section>
+      <section>
+        <h2>Installation and compatibility</h2>
+        <ol class="guide-steps">
+          <li><strong><a href="codex-install.html">Install for Codex</a></strong><span>Review the curated native package, add its marketplace, and preview the optional agent sync.</span></li>
+          <li><strong><a href="claude-code-install.html">Install for Claude Code</a></strong><span>Inspect the repository marketplace, add it explicitly, and verify what the client actually loads.</span></li>
+          <li><strong><a href="harness-compatibility.html">Compare harness paths</a></strong><span>Understand the difference between native packaging, repository context, metadata, and a published outcome fixture.</span></li>
+        </ol>
+      </section>
+      <section>
+        <h2>Outcome-oriented workflows</h2>
+        <ol class="guide-steps">
+          <li><strong><a href="solo-founder.html">Solo Founder</a></strong><span>Turn one bounded brief into a build, review, and release evidence trail.</span></li>
+          <li><strong><a href="choose-ai-team.html">Choose an AI team</a></strong><span>Match task complexity and risk to the fewest roles that can challenge each other usefully.</span></li>
+          <li><strong><a href="content-creator.html">Content Creator</a></strong><span>Separate research, drafting, and measurement while keeping publishing human-controlled.</span></li>
+          <li><strong><a href="quant-research.html">Quant Research</a></strong><span>Use licensed historical data, paper evaluation, explicit costs, and an independent risk review.</span></li>
+        </ol>
+      </section>
+      <section>
+        <h2>A realistic first pass</h2>
+        <pre><code>git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
+cd AGI-Super-Team
+./install.sh --source "$PWD" --destination /path/to/review-workspace solo-founder
+npm test
+npm run validate</code></pre>
+        <p>The first installer command is a preview. Read the destination list and recommended external dependencies before deciding whether to rerun it with <code>--apply</code>.</p>
+      </section>
+      <section>
+        <h2>Limitations</h2>
+        <p>These pages do not benchmark model quality, guarantee business outcomes, or certify every harness version. The guides reflect repository state on the review date and can become stale when a client changes its plugin format or permission model. Inspect the pinned revision and client documentation before installation.</p>
+      </section>
+      <section>
+        <h2>Rollback and uninstall</h2>
+        <p>Record the preview output before applying. The generic installer protects existing files, so rollback means removing only the new <code>workspace-&lt;agent&gt;</code> directories listed in that output. Native harness packages have their own uninstall controls; use the relevant installation guide and preserve any backup created by the sync tool.</p>
+      </section>
+      <footer class="guide-cta"><p>Start with the distribution that has a focused native package.</p><a class="button button-primary" href="codex-install.html">Read the Codex install guide</a></footer>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="shell footer-inner"><div><strong>AGI Super Team guides</strong><p>Maintained installation and workflow notes.</p></div><nav aria-label="Footer"><a href="../verification.html">Verification</a><a href="https://github.com/aAAaqwq/AGI-Super-Team/blob/main/SECURITY.md">Security</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">Source</a></nav></div></footer>
+</body>
+</html>

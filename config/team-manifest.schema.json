@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aAAaqwq/AGI-Super-Team/config/team-manifest.schema.json",
+  "title": "AGI Super Team manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "inventory",
+    "agents",
+    "kits"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "./team-manifest.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agentCount",
+        "physicalSkillCount",
+        "skillEntrypoint",
+        "symlinkPolicy"
+      ],
+      "properties": {
+        "agentCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "physicalSkillCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skillEntrypoint": {
+          "const": "SKILL.md"
+        },
+        "symlinkPolicy": {
+          "const": "forbid"
+        }
+      }
+    },
+    "agents": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/agent"
+      }
+    },
+    "kits": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/kit"
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "skillList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/identifier"
+      }
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "path",
+        "skills"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^agents/[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "skills": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "required",
+            "optional",
+            "recommendedExternal"
+          ],
+          "properties": {
+            "required": {
+              "$ref": "#/$defs/skillList"
+            },
+            "optional": {
+              "$ref": "#/$defs/skillList"
+            },
+            "recommendedExternal": {
+              "$ref": "#/$defs/skillList"
+            }
+          }
+        }
+      }
+    },
+    "kit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "agents"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "agents": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        }
+      }
+    }
+  }
+}

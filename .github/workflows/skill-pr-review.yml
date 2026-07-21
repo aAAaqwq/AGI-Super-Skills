@@ -4,126 +4,133 @@ on:
   pull_request:
     types: [opened, synchronize]
     paths:
-      - 'skills/**'
-      - 'skills/**/SKILL.md'
-
+      - "skills/**"
   workflow_dispatch:
     inputs:
       pr_number:
-        description: 'PR number to review'
+        description: "PR number to review"
         required: true
         type: number
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   review-skill:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out pull request head
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Check out manually selected pull request head
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: refs/pull/${{ inputs.pr_number }}/head
+
+      - name: Validate deterministic repository contracts
+        run: python3 "$GITHUB_WORKSPACE/scripts/validate_repository.py"
 
       - name: Get changed skill files
         id: changed
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_PR_NUMBER: ${{ github.event.pull_request.number }}
+          INPUT_PR_NUMBER: ${{ inputs.pr_number }}
+          EVENT_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            PR_NUMBER=${{ inputs.pr_number }}
+          cd "$GITHUB_WORKSPACE"
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            PR_NUMBER="$INPUT_PR_NUMBER"
+            BASE_SHA=$(gh pr view "$PR_NUMBER" --json baseRefOid --jq .baseRefOid)
+            HEAD_SHA=$(gh pr view "$PR_NUMBER" --json headRefOid --jq .headRefOid)
+            git fetch origin "$HEAD_SHA"
+            git checkout --detach "$HEAD_SHA"
           else
-            PR_NUMBER=${{ github.event.pull_request.number }}
+            PR_NUMBER="$EVENT_PR_NUMBER"
+            BASE_SHA="$EVENT_BASE_SHA"
           fi
-          
-          # Get list of SKILL.md files changed in this PR
-          CHANGED_FILES=$(git diff origin/main...HEAD --name-only --diff-filter=AM \
+
+          CHANGED_FILES=$(git diff "$BASE_SHA...HEAD" --name-only --diff-filter=AM \
             | grep -E '^skills/[^/]+/SKILL\.md$' \
-            | head -10)
-          
-          if [ -z "$CHANGED_FILES" ]; then
+            | head -10 || true)
+
+          if [[ -z "$CHANGED_FILES" ]]; then
             echo "No skill SKILL.md files changed"
-            echo "files=" >> $GITHUB_OUTPUT
           else
             echo "Changed files:"
             echo "$CHANGED_FILES"
-            echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
           fi
+
+          {
+            echo "files<<__CHANGED_SKILLS__"
+            echo "$CHANGED_FILES"
+            echo "__CHANGED_SKILLS__"
+            echo "pr_number=$PR_NUMBER"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Review each changed skill
         if: steps.changed.outputs.files != ''
         env:
+          CHANGED_FILES: ${{ steps.changed.outputs.files }}
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.changed.outputs.pr_number }}
           ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO: ${{ github.repository }}
         run: |
-          cd /home/aa/clawd/repos/AGI-Super-Team
-          
-          # Get the repo name for the API
-          REPO_NAME=$(basename "$PWD")
-          
-          for file in ${{ steps.changed.outputs.files }}; do
+          cd "$GITHUB_WORKSPACE"
+          if [[ -z "$ZAI_API_KEY" ]]; then
+            echo "::warning::ZAI_API_KEY is unavailable; deterministic validation passed, external review skipped"
+            exit 0
+          fi
+
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
             echo "=== Reviewing: $file ==="
-            
-            # Extract skill name from path
-            SKILL_NAME=$(echo "$file" | cut -d'/' -f2)
-            
-            # Read the SKILL.md content (first 4000 chars to avoid token overflow)
+            SKILL_NAME=$(basename "$(dirname "$file")")
             CONTENT=$(head -c 4000 "$file")
-            
-            # Build prompt for review
             REVIEW_PROMPT="You are reviewing a skill submission for the AGI-Super-Team repository.
 
-## Skill: $SKILL_NAME
+          Skill: $SKILL_NAME
 
-Review this SKILL.md and provide a structured review with:
+          Score completeness, clarity, correctness, and overall usefulness from 1-5.
+          Then provide strengths, issues, and one recommendation: APPROVE, REQUEST_CHANGES, or REJECT.
 
-1. **Completeness** (1-5): Does it have all required sections (name, description, triggers, steps, output)?
-2. **Clarity** (1-5): Is the description clear? Are instructions actionable?
-3. **Correctness** (1-5): Are there any errors or anti-patterns?
-4. **Overall** (1-5): Would this skill be useful as-is?
+          SKILL.md content:
+          $CONTENT"
 
-Then provide:
-- **Strengths**: What's good about this skill?
-- **Issues**: What needs fixing?
-- **Recommendation**: APPROVE / REQUEST_CHANGES / REJECT
+            REQUEST_BODY=$(jq -n \
+              --arg model "glm-4" \
+              --arg content "$REVIEW_PROMPT" \
+              '{model: $model, max_tokens: 800, messages: [{role: "user", content: $content}]}')
 
-Be strict but fair. Focus on whether the skill is actually usable and follows best practices.
-
-## SKILL.md Content:
-$CONTENT"
-
-            # Call GLM API for review
-            RESPONSE=$(curl -s -X POST \
+            if ! RESPONSE=$(curl --fail --silent --show-error \
+              --request POST \
               "https://open.bigmodel.cn/api/coding/paas/v4/chat/completions" \
-              -H "Authorization: Bearer $ZAI_API_KEY" \
-              -H "Content-Type: application/json" \
-              -d "$(jq -n \
-                --arg model "glm-4" \
-                --argcontent "$REVIEW_PROMPT" \
-                '{
-                  model: $model,
-                  max_tokens: 800,
-                  messages: [{"role": "user", "content": $argcontent}]
-                }')")
-            
-            REVIEW_TEXT=$(echo "$RESPONSE" | jq -r '.choices[0].message.content // empty')
-            
-            if [ -n "$REVIEW_TEXT" ]; then
-              echo "Review for $SKILL_NAME:"
-              echo "$REVIEW_TEXT"
-              echo ""
-              
-              # Post review comment via GitHub CLI
-              gh pr comment $PR_NUMBER --body "## 🤖 Skill Review: $SKILL_NAME
-
-$REVIEW_TEXT
-
----
-*Auto-generated by skill-pr-review workflow*"
-            else
-              echo "Failed to get review for $SKILL_NAME"
-              echo "Response: $RESPONSE"
+              --header "Authorization: Bearer $ZAI_API_KEY" \
+              --header "Content-Type: application/json" \
+              --data "$REQUEST_BODY"); then
+              echo "::warning::External review request failed for $SKILL_NAME"
+              continue
             fi
-          done
+
+            REVIEW_TEXT=$(jq -r '.choices[0].message.content // empty' <<< "$RESPONSE")
+            if [[ -z "$REVIEW_TEXT" ]]; then
+              echo "::warning::External review returned no content for $SKILL_NAME"
+              continue
+            fi
+
+            COMMENT_BODY=$(printf '## Skill Review: %s\n\n%s\n\n---\n*Auto-generated by skill-pr-review workflow*' \
+              "$SKILL_NAME" "$REVIEW_TEXT")
+            gh pr comment "$PR_NUMBER" --body "$COMMENT_BODY"
+          done <<< "$CHANGED_FILES"
 
       - name: No skills changed message
         if: steps.changed.outputs.files == ''
-        run: |
-          echo "No SKILL.md files were changed in this PR."
+        run: echo "No SKILL.md files were changed in this PR."

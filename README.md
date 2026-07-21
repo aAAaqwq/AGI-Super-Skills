@@ -1,279 +1,203 @@
 <p align="center">
-  <img src="assets/logo.png" alt="AGI Super Team" width="120">
+  <img src="assets/banner.png" alt="AGI Super Team — Evidence-backed AI teams for real outcomes" width="100%">
 </p>
 
 <h1 align="center">AGI Super Team</h1>
 
-<p align="center">
-  <strong>Deploy a virtual C-Suite of AI executives — each powered by a legendary mind.</strong><br/>
-  Let Jim Simons run your quant · MrBeast drive your content · Buffett guard your capital.
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Works%20with-Claude%20Code%20%7C%20Codex%20%7C%20Cursor-blueviolet" alt="Harness compatible">
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-</p>
+<p align="center"><strong>Evidence-backed AI teams for real outcomes</strong></p>
 
 <p align="center">
   <a href="./README_CN.md">中文</a> ·
-  <a href="#quick-start">Quick Start</a> ·
-  <a href="./skills/README.md">All Skills</a> ·
-  <a href="./agents/README.md">Agents</a> ·
-  <a href="./cookbook/">Cookbooks</a> ·
-  <a href="./starter-kits/">Starter Kits</a> ·
-  <a href="./setup.md">Agent Setup Guide</a>
+  <a href="#safe-quick-start">Quick start</a> ·
+  <a href="#five-minute-installation-receipt">Receipt</a> ·
+  <a href="#repository-architecture">Architecture</a> ·
+  <a href="./docs/guides/">Guides</a> ·
+  <a href="./CONTRIBUTING.md">Contribute</a>
 </p>
 
----
+## What this repository is
 
-## 🤖 For AI Agents
+AGI Super Team provides installable AI team packs, role instructions, and reusable skills for existing coding-agent harnesses.
 
-> **If you are Claude Code / Codex / Cursor (or any compatible AI harness), read this file: [`setup.md`](./setup.md)**
->
-> Or just tell your Agent:
-> ```
-> Install AGI Super Team for me: https://github.com/aAAaqwq/AGI-Super-Team
-> I want the solo-founder kit
-> ```
+It is not a model or an agent runtime. It provides versioned workspace configurations that help people plan, build, review, and communicate with explicit human approval gates.
 
-## 💡 What Is This?
+Three constraints make the project different:
 
-A **plug-and-play AI team template** — deploy a complete virtual C-Suite using Claude Code, Cursor, Codex, or Gemini. Each agent is shaped by a **spirit mentor** (Elon Musk, Jensen Huang, Warren Buffett, Richard Feynman...) that defines their personality, decision-making style, and cognitive framework.
+- **Inspect before write:** the generic installer previews every destination and requires explicit `--apply`.
+- **One source of truth:** agents, kits, local requirements, and external recommendations come from a validated manifest.
+- **Evidence before claims:** compatibility and outcomes remain pending until a receipt matches the tested revision.
 
-**1,639 skills. 14 agents. 31 thinking frameworks. 30 workflows.** Zero boilerplate — copy, customize, ship.
+Trading, legal, security, medical, publishing, and deployment work still requires qualified human review.
 
-## ⚡ Install
+## Safe quick start
 
-> **Works natively with Claude Code, Cursor, Codex, and Gemini.**
+Clone a trusted revision and preview the Solo Founder pack. The installer requires Bash and Node.js; repository verification also requires npm and Python 3.
 
 ```bash
-# Claude Code (recommended)
-/plugin install aAAaqwq/AGI-Super-Team
-
-# OpenAI Codex — curated native swarms, memory, and 31 specialist agents
-codex plugin marketplace add aAAaqwq/AGI-Super-Team --ref main
-codex plugin add agi-super-team-codex@agi-super-team
-
-# Or clone directly
-git clone --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git ~/.agi-super-team
-```
-
-See the [Codex package index](./.codex/INDEX.md) for the agent catalog, safe synchronization workflow, update commands, and provenance.
-
-For one-command kit deploys (solo-founder, quant-trader, content-creator…), jump to [What You Can Do in 10 Minutes](#what-you-can-do-in-10-minutes).
-
-## 🚀 What You Can Do in 10 Minutes
-
-Three killer use cases — each backed by battle-tested skills that ship in the box, bound to the right legendary mind.
-
-### 📈 Quant Trading — Jim Simons in your corner
-Deploy the **quant-trader kit** and the CQO agent (Jim Simons) immediately runs production strategies:
-- **`5minbtc`** — BTC 5-minute direction prediction (v5.7.3 engine, live-validated)
-- **`a-share-analysis`** — A-share quant analysis with a one-click daily script
-- **`a-fund-monitor`** — real-time fund NAV estimation + Telegram alerts
-
-```bash
-curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- quant-trader
-```
-
-### 📣 Viral Content — MrBeast's playbook
-Deploy the **content-creator kit** and the CCO agent (MrBeast) takes over:
-- **`xhs-content-creator`** / **`xhs-skill`** — Xiaohongshu (RED) content built for the algorithm
-- **`wechat-article-writer`** / **`wechat-ai-radar`** — WeChat MP articles + morning briefings
-- **`content-cover-gen`** — content-driven cover image generation
-
-```bash
-curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- content-creator
-```
-
-### 🏛️ Full C-Suite — your AI-native company
-All 14 executives, 1,639 skills, 31 thinking frameworks — one command:
-
-```bash
-curl -sSL https://raw.githubusercontent.com/aAAaqwq/AGI-Super-Team/main/install.sh | bash -s -- full-team
-```
-
-> Each kit drops the right skills into `~/.openclaw/workspace-{agent}/skills/` and binds them to the matching C-Suite agent. No manual wiring.
-
-## 🏛️ Architecture
-
-```
-You (Founder / Chairman)
-  └── 👑 CEO — Strategy, coordination, quality gate
-        ├── ⚡ CTO — Architecture, technology strategy, R&D direction
-        ├── 🎨 CPO — Product design, UX, brand DNA
-        ├── 📈 CQO — Quant trading, algorithmic strategies
-        ├── 📣 CMO — Marketing, SEO, growth
-        ├── 💰 CFO — Finance, P&L, capital allocation
-        ├── 📊 CDO — Data pipelines, analytics, governance
-        ├── ✍️ CCO — Content creation, viral growth
-        ├── ⚖️ CLO — Legal, compliance, IP protection
-        ├── 🔬 CRO — Deep research, frontier intelligence
-        ├── 🤝 CSO — Sales, BD, revenue growth
-        ├── ⚙️ COO — Ops, OKRs, cross-team coordination
-        ├── 💻 PE  — Production engineering, DevOps, delivery
-        └── ⚖️ Governor — Quality assurance, delivery audit, escalation
-```
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Skills-1,639-blueviolet" alt="Skills">
-  <img src="https://img.shields.io/badge/Agents-14-orange" alt="Agents">
-  <img src="https://img.shields.io/badge/Frameworks-31-cyan" alt="Frameworks">
-</p>
-
-## 👥 Agents
-
-| Agent | Role | Spirit Mentor | Thinking |
-|-------|------|---------------|----------|
-| [`ceo`](./agents/ceo/) | 👑 CEO | Elon Musk | First Principles, Cross-Domain Synthesis |
-| [`cto`](./agents/cto/) | ⚡ CTO | Jensen Huang | Systems Thinking, Accelerated Computing |
-| [`cpo`](./agents/cpo/) | 🎨 CPO | Steve Jobs | Design Thinking, Radical Simplicity |
-| [`cqo`](./agents/cqo/) | 📈 CQO | Jim Simons | Mathematical Rigor, Probabilistic Thinking |
-| [`cmo`](./agents/cmo/) | 📣 CMO | David Ogilvy | Data-Driven Storytelling, Audience Psychology |
-| [`cfo`](./agents/cfo/) | 💰 CFO | Warren Buffett | Value Investing, Margin of Safety |
-| [`cdo`](./agents/cdo/) | 📊 CDO | Nate Silver | Bayesian Reasoning, Predictive Analytics |
-| [`cco`](./agents/cco/) | ✍️ CCO | MrBeast | Viral Mechanics, Platform Algorithms |
-| [`clo`](./agents/clo/) | ⚖️ CLO | Alan Dershowitz | Legal Reasoning, Risk Assessment |
-| [`cro`](./agents/cro/) | 🔬 CRO | Richard Feynman | Scientific Method, Feynman Technique |
-| [`cso`](./agents/cso/) | 🤝 CSO | Michael Dell | Solution Selling, Relationship Building |
-| [`coo`](./agents/coo/) | ⚙️ COO | Andy Grove | High Output Management, OKR Discipline |
-| [`pe`](./agents/pe/) | 💻 PE | Linus Torvalds, antirez, DHH | Pragmatic Engineering, Ship Over Talk |
-| [`governor`](./agents/governor/) | ⚖️ Governor | Zhuge Liang, Wang Yangming | Tri-Verification, Evidence-Based Audit |
-
-> Each agent folder contains `SOUL.md` (personality), `AGENTS.md` (operations), `TOOLS.md` (skill links). Fully customizable.
-
-## 🧠 Thinking Frameworks
-
-31 distilled thinking skills based on real-world mentors — mental models, decision frameworks, and classic quotes with sources:
-
-```bash
-# Inject a mentor's thinking into any agent
-cp -r skills/thinking-elon-musk/ ~/.openclaw/workspace-ceo/skills/
-
-# Or inject all frameworks to all workspaces
-for agent in ceo cto cpo cqo cmo cfo cdo cco clo cro cso coo pe; do
-  mkdir -p ~/.openclaw/workspace-${agent}/skills/
-  cp -r skills/thinking-* ~/.openclaw/workspace-${agent}/skills/
-done
-```
-
-## 🛠️ Skill Categories
-
-| Category | Highlights |
-|----------|-----------|
-| 🔌 SaaS Integrations | Notion, Airtable, HubSpot, Stripe, ActiveCampaign, 60+ more |
-| 📝 Content & Writing | SEO, viral copy, anti-AI-slop, social media |
-| 🔧 Development | Backend, frontend, Docker, Git, TDD, API design, code review |
-| 💰 Trading & Finance | Crypto, Polymarket, DeFi, portfolio management, backtesting |
-| 🤖 AI Agent Patterns | Multi-agent orchestration, parallel execution, sub-agents |
-| 📊 Data & Analytics | Web scraping, DuckDB, CSV pipelines, arXiv |
-| 📈 Marketing & SEO | SEO audits, GEO optimization, A/B testing, competitor analysis |
-| 🎨 Design & Media | Image generation, UI/UX, brand identity |
-| 🏢 Business & Strategy | SaaS launch, competitor teardown, financial modeling |
-| 📋 Project Management | PRD, roadmaps, Scrum, team coordination |
-| 💬 Communication | Email, Feishu, WeChat, Telegram, LinkedIn, cross-instance messaging |
-| 📱 Chinese Platforms | Xiaohongshu, Douyin, WeChat MP, Juejin, Zhihu |
-| ⚙️ DevOps & Infra | AWS, Docker, Linux, observability, deployment |
-| 🧬 Bioinformatics | Genome analysis, metagenomics, pharmacogenomics |
-| 🎬 Video & Digital Human | Video editing, digital human, storyboard, subtitle |
-| 🤖 Web3 & Autonomys | Decentralized storage, auto-deploy, auto-memory |
-
-👉 **[Skill-Agent Mapping Matrix →](./SKILL-AGENT-MATRIX.md)** — Each skill mapped to its C-Suite agent (PE, CTO, CQO, etc.)
-
-👉 **[Full skill catalog →](./skills/README.md)**
-
-## 🔄 Workflows
-
-30 production-ready workflows across all C-Suite roles:
-
-| Scope | Examples |
-|-------|---------|
-| **Shared** | Daily standup, weekly review, crisis escalation, cross-agent handoff |
-| **Per-Agent** | Content pipeline (CCO), market morning brief (CQO), P&L tracking (CFO), code review (PE), incident response (COO) |
-
-Each agent directory (e.g. `agents/cco/WORKFLOW.md`) contains role-specific and shared workflows.
-
-## ⚡ Quick Start
-
-For the native plugin install, see [Install](#install) above. For one-command kit deploys, see [What You Can Do in 10 Minutes](#what-you-can-do-in-10-minutes).
-
-### Starter Kits
-
-| Kit | Agents | Best for |
-|-----|--------|----------|
-| 🚀 [**Solo Founder**](./starter-kits/solo-founder/) | CEO + PE + CCO | Indie hackers, solo founders |
-| 🎨 [**Content Creator**](./starter-kits/content-creator/) | CCO + CDO + CMO | Content teams, self-media |
-| 📈 [**Quant Trader**](./starter-kits/quant-trader/) | CQO + CDO + CFO | Quant trading, investment |
-| 🏛️ **Full Team** | All 14 agents | Complete AI-native company |
-
-### Manual deploy
-
-```bash
-git clone https://github.com/aAAaqwq/AGI-Super-Team.git
+git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
 cd AGI-Super-Team
-./install.sh solo-founder    # or any kit / agent name
+./install.sh --source "$PWD" --destination /path/to/review-workspace solo-founder
 ```
 
-## 📚 Cookbooks
+Review the source, destination, selected agents, and planned files. Apply only when the preview matches your intent:
 
-In-depth learning guides in [`cookbook/`](./cookbook/):
-
-| Book | Description |
-|------|-------------|
-| [Self-Media Operations](./cookbook/self-media-operations-handbook/) | Complete handbook: XHS, Douyin, WeChat, content strategy |
-| [Quantitative Trading](./cookbook/quant-learning/) | Crypto trading, algorithmic strategies, risk management |
-| [Prompt Engineering](./cookbook/prompt-engineering-learning/) | Advanced prompt techniques and patterns |
-| [Knowledge Base](./cookbook/knowledge-book/) | Cross-domain knowledge distillation |
-| [Crypto Deep Dive](./cookbook/crypto-learning/) | Blockchain fundamentals and DeFi |
-
-## 📁 Repository Structure
-
-```
-AGI-Super-Team/
-├── agents/           # 14 C-Suite agent personas
-│   ├── ceo/          # SOUL.md · AGENTS.md · TOOLS.md · WORKFLOW.md
-│   ├── cto/          # ...
-│   ├── governor/     # Quality assurance & delivery audit
-│   └── README.md     # Architecture diagram & skill matrix
-├── skills/           # 2,659 skills (flat structure, each with SKILL.md)
-│   └── README.md     # Full catalog
-├── starter-kits/     # One-click deployment bundles
-│   ├── solo-founder/ # CEO + PE + CCO
-│   ├── content-creator/ # CCO + CDO + CMO
-│   └── quant-trader/ # CQO + CDO + CFO
-├── cookbook/         # 5 in-depth learning guides
-├── install.sh        # One-click deployer
-├── CHARTER.md        # Team constitution (12 principles)
-├── STARTUP.md        # Quick-start guide
-├── COLLABORATION.md  # Inter-agent collaboration network
+```bash
+./install.sh --source "$PWD" --destination /path/to/review-workspace --apply solo-founder
 ```
 
-## 🤝 Contributing
+The installer preserves existing persona files and skill directories. It rejects missing required skills, source symlinks, and destination symlinks before publishing staged files.
 
-Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+Avoid piping a remote script into a shell when you can inspect a pinned checkout first. See [setup.md](./setup.md) for prerequisites, updates, and recovery.
 
-1. Fork the repo
-2. Create your skill: `skills/your-skill/SKILL.md`
-3. Submit a PR
-
-## 📄 License
-
-[MIT](./LICENSE) — use freely, attribution appreciated.
-
----
-
-## ⭐ Star History
-
-<a href="https://star-history.com/#aAAaqwq/AGI-Super-Team&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&type=Date" />
- </picture>
-</a>
-
----
+### Preview → apply → verify
 
 <p align="center">
-  Compatible with Claude Code, Codex, Cursor, and Hermes
+  <img src="assets/demo-install.gif" alt="Terminal demo showing a read-only preview, explicit apply, and repository checks passing" width="760">
 </p>
+
+The animation is an illustrative storyboard with sanitized paths, not runtime evidence. Read the [storyboard transcript](./assets/demo-install.txt), then use the receipt below for reproducible commands.
+
+## Five-minute installation receipt
+
+The repository currently verifies a safe installation outcome. It does not yet claim that an installed team has produced a validated business result.
+
+“Five-minute” describes the walkthrough scope, not a speed guarantee. This path evaluates the generic file installer; it does not configure a model or make a harness load generated workspaces automatically.
+
+Create a disposable destination, prove preview wrote nothing, apply, then confirm the three expected role workspaces:
+
+```bash
+AGI_SOLO_DEST="$(mktemp -d "${TMPDIR:-/tmp}/agi-solo-founder.XXXXXX")"
+
+./install.sh --source "$PWD" --destination "$AGI_SOLO_DEST" solo-founder
+test -z "$(find "$AGI_SOLO_DEST" -mindepth 1 -print -quit)"
+
+./install.sh --source "$PWD" --destination "$AGI_SOLO_DEST" --apply solo-founder
+test -f "$AGI_SOLO_DEST/workspace-ceo/SOUL.md"
+test -f "$AGI_SOLO_DEST/workspace-pe/SOUL.md"
+test -f "$AGI_SOLO_DEST/workspace-cco/SOUL.md"
+
+npm test
+npm run validate -- --warnings-as-errors
+```
+
+Print and inspect `$AGI_SOLO_DEST` before moving or removing anything. A real customized destination requires its own backup and review; repeated apply is not an upgrade or rollback mechanism.
+
+The installer stops after copying inspectable files. It does not launch agents, orchestrate roles, or create the outputs below. Use these only as optional manual prompts in a separately configured harness.
+
+| Workspace | Responsibility | Optional evaluation prompt |
+|---|---|---|
+| `workspace-ceo` | Planning and quality gates | Draft a decision memo with assumptions, alternatives, evidence gaps, and a human approval gate. |
+| `workspace-pe` | Engineering and delivery | Propose a test-first implementation plan. Do not deploy or change production systems. |
+| `workspace-cco` | Launch communication | Draft three launch-post variants with claim placeholders and a manual publishing checklist. |
+
+This receipt proves deterministic installation and repository integrity. Cross-harness task performance remains **Validation pending** until a public fixture is tied to the current `main` commit.
+
+## Explore
+
+Start with a focused pack or guide instead of browsing the full skill inventory.
+
+| Path | Use it for |
+|---|---|
+| [Starter kits](./starter-kits/) | Small role combinations for a founder, content workflow, or quantitative research |
+| [Agents](./agents/) | Persona, identity, workflow, and tool guidance for the generic installer |
+| [Practical guides](./docs/guides/) | Codex and Claude Code setup, compatibility, team choice, and workflow boundaries |
+| [Codex package](./.codex/INDEX.md) | A separately curated native package with its own manifest and sync policy |
+| [Cookbooks](./cookbook/) | Longer learning material for content, prompts, research, and quantitative workflows |
+| [Skills](./skills/) | The physical cross-harness library; use the validator rather than a hard-coded count |
+
+### Starter kits
+
+| Kit | Agents | Intended use |
+|---|---|---|
+| [Solo Founder](./starter-kits/solo-founder/) | CEO, PE, CCO | Planning, engineering, and reviewed content drafts |
+| [Content Creator](./starter-kits/content-creator/) | CCO, CDO, CMO | Research, content drafts, and measurement plans |
+| [Quant Trader](./starter-kits/quant-trader/) | CQO, CDO, CFO | Research, backtesting, and risk review—not live trading |
+| `full-team` | All manifest agents | Broad evaluation; start smaller when possible |
+
+## Choose a distribution
+
+| Surface | Repository support | Install path | Evidence boundary |
+|---|---|---|---|
+| Generic/local workspace | Supported by `install.sh` | Preview, inspect, then apply | Installer behavior is covered by integration tests |
+| Codex | Separate curated native package | See [`.codex/INDEX.md`](./.codex/INDEX.md) | Native package and generic kits are separate distributions |
+| Claude Code | Plugin manifest present | Review [`.claude-plugin/`](./.claude-plugin/) | Confirm support in the installed client version |
+| Cursor, Gemini, Kimi | Metadata or manifests present | Review the corresponding files | Presence does not establish feature parity |
+
+## Evidence and verification
+
+Repository contracts calculate catalog facts from tracked files and the canonical manifest:
+
+```bash
+npm test
+npm run validate
+npm run validate -- --warnings-as-errors
+```
+
+A web page displays `Verified` only when its [verification receipt](./docs/data/verification-receipt.json) matches the current `main` commit and every recorded check passes.
+
+When making an outcome claim, link the reproducible input, fixture, revision, result, limitations, and rollback path. Tests are evidence of repository behavior, not a guarantee of business performance.
+
+## Repository architecture
+
+```text
+AGI-Super-Team/
+├── config/          # Canonical team manifest, schema, and removed-link provenance
+├── agents/          # Role, identity, workflow, and tool guidance
+├── skills/          # Tracked physical skills; symlinks are forbidden
+├── starter-kits/    # Focused team selections
+├── install.sh       # Preview-first generic workspace installer
+├── scripts/         # Repository model, validator, and Pages data builder
+├── tests/           # Repository, installer, site-data, and SEO contracts
+├── docs/            # Evidence First Pages site and editorial guides
+├── growth/          # Human-reviewed launch and measurement playbooks
+└── assets/          # README, social preview, logo, and demo assets
+```
+
+The control flow is:
+
+```text
+config/team-manifest.json
+  → scripts/repository_model.py
+  → install.sh + validator + tests
+
+config/external-skill-sources.json
+  → portable provenance for removed machine-local links
+```
+
+README text is not an inventory source. See [the manifest](./config/team-manifest.json), [repository model](./scripts/repository_model.py), and [contribution policy](./CONTRIBUTING.md) for the contracts.
+
+## Team topology
+
+```text
+Founder / operator
+└── CEO — coordination and quality gates
+    ├── CTO / PE — architecture and implementation
+    ├── CPO / CCO / CMO — product, content, and growth
+    ├── CQO / CFO / CDO — quantitative research, finance, and data
+    ├── CLO / CRO / CSO / COO — legal, research, sales, and operations
+    └── Governor — independent review and escalation
+```
+
+Mentor names are creative framing. They do not imply affiliation, endorsement, or guaranteed imitation.
+
+## Safety boundaries
+
+- Never place credentials, private user data, browser sessions, or production configuration in a skill or issue.
+- Review third-party commands and dependencies before execution.
+- Keep financial workflows in research or paper-trading environments until independently validated.
+- Require explicit human approval for posts, messages, transactions, deployments, and destructive operations.
+- Report vulnerabilities privately through [GitHub Security Advisories](https://github.com/aAAaqwq/AGI-Super-Team/security/advisories/new).
+
+## Project links
+
+- [Evidence First project site](https://aaaaqwq.github.io/AGI-Super-Team/)
+- [Practical guides](./docs/guides/)
+- [Setup and recovery](./setup.md)
+- [Contributing and provenance](./CONTRIBUTING.md)
+- [Security policy](./SECURITY.md)
+- [Growth playbooks](./growth/README.md)
+- [License](./LICENSE)
+
+## Star History
+
+![Star History](https://aaaaqwq.github.io/AGI-Super-Team/assets/star-history.svg)

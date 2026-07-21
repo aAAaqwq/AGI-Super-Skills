@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1200 420">
+  <title id="title">AGI Super Team star history</title>
+  <desc id="desc">aAAaqwq/AGI-Super-Team. Latest count: 78 stars. Reconstructed from current GitHub stargazers.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#070b1d" />
+      <stop offset="1" stop-color="#0b1422" />
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4cc9f0" />
+      <stop offset="1" stop-color="#8b5cf6" />
+    </linearGradient>
+    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.32" />
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="420" rx="28" fill="url(#bg)" />
+  <text x="78" y="38" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="22" font-weight="700">GitHub star history</text>
+  <text x="1158" y="38" fill="#a5b4fc" text-anchor="end" font-family="ui-monospace, monospace" font-size="18">78 stars</text>
+  <line x1="78" y1="348" x2="1158" y2="348" stroke="#263449" />
+  <line x1="78" y1="58" x2="78" y2="348" stroke="#263449" />
+  <line x1="78" y1="203.0" x2="1158" y2="203.0" stroke="#263449" stroke-dasharray="6 10" />
+
+  <text x="78" y="386" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="16">History refresh pending</text>
+  <text x="1158" y="386" fill="#94a3b8" text-anchor="end" font-family="system-ui, sans-serif" font-size="16">History refresh pending</text>
+</svg>

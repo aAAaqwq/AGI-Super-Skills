@@ -6,7 +6,7 @@ _法务 · 本地工具配置和笔记_
 
 | 路径 | 说明 |
 |------|------|
-| ../skills/ | AGI Super Team 技能库 |
+| ../../skills/ | AGI Super Team 技能库 |
 | ~/openclaw/scripts/ | 工具脚本（newsbot_send.py, model-health-check.sh 等）|
 | ~/openclaw/workspace/content-pipeline/ | 内容管线（drafts, hotpool, topics）|
 | ~/openclaw/projects/ | 项目（MediaClaw, super-quant-claw）|
@@ -16,7 +16,7 @@ _法务 · 本地工具配置和笔记_
 
 ## 推荐 Skills
 
-### ../skills/ (仓库)
+### ../../skills/ (仓库)
 
 - **contract-review**: Legal contract analysis using CUAD dataset (41 risk categories). Supports NDA, SaaS, M&A, employment, payment/merchant, and finder/broker agreements.
 - **gdpr-dsgvo-expert**: GDPR and German DSGVO compliance automation. Scans codebases for privacy risks, generates DPIA documentation, tracks data subject rights requests.

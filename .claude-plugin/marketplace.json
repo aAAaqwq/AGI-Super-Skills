@@ -1,13 +1,13 @@
 {
   "name": "agi-super-team",
-  "description": "AI Super Team — 14 AI executives powered by legendary minds, with 1,651 skills",
+  "description": "Evidence-backed AI team packs for reviewable workflows",
   "owner": {
     "name": "Daniel Li"
   },
   "plugins": [
     {
       "name": "agi-super-team",
-      "description": "Virtual C-Suite of AI executives powered by legendary minds (Musk/Buffett/Simons/Feynman). Skills for quant trading, viral content, and full company ops.",
+      "description": "Evidence-backed role packs and reusable skills with explicit installation and review boundaries.",
       "version": "1.0.0",
       "source": "./"
     }

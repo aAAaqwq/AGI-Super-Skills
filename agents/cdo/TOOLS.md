@@ -6,13 +6,13 @@
 
 | Skill | 路径 | 说明 |
 |-------|------|------|
-| API Gateway | [api-gateway](../skills/api-gateway/) | 统一 API 网关，支持 100+ 第三方服务对接 |
+| API Gateway | [api-gateway](../../skills/api-gateway/) | 统一 API 网关，支持 100+ 第三方服务对接 |
 
 ## 📄 文档提取
 
 | Skill | 路径 | 说明 |
 |-------|------|------|
-| MinerU 提取 | [mineru-extract](../skills/mineru-extract/) | PDF/图片文档智能提取与结构化 |
+| MinerU 提取 | `mineru-extract`（外部，仓库未提供） | PDF/图片文档智能提取与结构化 |
 
 ---
 

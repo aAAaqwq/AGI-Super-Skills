@@ -6,9 +6,9 @@
 
 | Skill | 路径 | 说明 |
 |-------|------|------|
-| 品牌标识 | [brand-identity](../skills/brand-identity/) | 品牌视觉标识设计 |
-| 前端设计 | [frontend-design-ultimate](../skills/frontend-design-ultimate/) | 前端 UI/UX 设计 |
-| 自我进化 | [self-improving](../skills/self-improving/) | 产品流程自我优化 |
+| 品牌标识 | [brand-identity](../../skills/brand-identity/) | 品牌视觉标识设计 |
+| 前端设计 | [frontend-design-ultimate](../../skills/frontend-design-ultimate/) | 前端 UI/UX 设计 |
+| 自我进化 | [self-improving](../../skills/self-improving/) | 产品流程自我优化 |
 
 ---
 

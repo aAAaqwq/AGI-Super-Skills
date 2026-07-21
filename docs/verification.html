@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What verified means — AGI Super Team</title>
+  <meta name="description" content="Learn how AGI Super Team ties repository checks, installation fixtures, commit identity, limitations, and rollback instructions into a verification receipt.">
+  <link rel="canonical" href="https://aaaaqwq.github.io/AGI-Super-Team/verification.html">
+  <meta name="theme-color" content="#070b18">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="./"><img src="assets/logo-mark.png" width="36" height="36" alt=""><span>AGI Super Team</span></a>
+      <nav class="primary-nav guide-nav" aria-label="Primary"><a href="./">Home</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">GitHub</a><a href="https://github.com/aAAaqwq/AGI-Super-Team/blob/main/SECURITY.md">Security</a></nav>
+      <button class="icon-button" type="button" data-theme-button aria-label="Switch to light theme"><img class="theme-icon theme-icon-dark" src="assets/icons/sun.svg" width="20" height="20" alt=""><img class="theme-icon theme-icon-light" src="assets/icons/moon.svg" width="20" height="20" alt=""></button>
+    </div>
+  </header>
+  <main id="main-content" class="guide-main">
+    <article class="shell guide-article">
+      <header class="guide-hero">
+        <p class="kicker">Verification standard</p>
+        <h1>“Verified” is a receipt, not a slogan.</h1>
+        <p class="hero-lede">A claim is verified only when its checks pass, its fixture is public, and its receipt matches the commit served by the site.</p>
+        <p class="guide-meta">Last reviewed: 2026-07-21 · Scope: repository and installer contracts</p>
+      </header>
+      <section>
+        <h2>The four required links</h2>
+        <ol class="guide-steps">
+          <li><strong>Commit identity</strong><span>The receipt records the exact source commit and site commit. They must match.</span></li>
+          <li><strong>Named fixture</strong><span>The scenario, harness, pack version, inputs, and expected outputs are public.</span></li>
+          <li><strong>Passing checks</strong><span>Repository, installer, reference, and outcome checks all report pass without a hidden baseline.</span></li>
+          <li><strong>Limits and rollback</strong><span>The receipt states what was not tested and how to remove the installed files safely.</span></li>
+        </ol>
+      </section>
+      <section>
+        <h2>Current status</h2>
+        <div class="callout callout-pending"><strong>Validation pending</strong><p>The public site remains pending until the full repository gate and an outcome fixture pass on the same main commit. Local improvements alone do not turn this label green.</p></div>
+      </section>
+      <section>
+        <h2>Receipt contract</h2>
+        <pre><code>{
+  "commit": "full Git commit SHA",
+  "siteCommit": "commit used for this Pages artifact",
+  "pack": "starter kit and version",
+  "harness": "tested runtime and version",
+  "fixture": "public fixture identifier",
+  "checks": [{ "name": "repository", "result": "pass" }],
+  "result": "pass",
+  "limitations": ["explicit untested conditions"]
+}</code></pre>
+      </section>
+      <section>
+        <h2>Run the repository evidence yourself</h2>
+        <pre><code>npm test
+npm run validate
+npm run validate -- --warnings-as-errors
+bash -n install.sh
+git diff --check</code></pre>
+        <p>Run these commands from a clean checkout. A public receipt can still become stale when main changes, so the site checks receipt identity before showing a verified state.</p>
+      </section>
+      <section>
+        <h2>Rollback</h2>
+        <p>The installer never overwrites existing personas, user files, or skills. Review the preview output, keep the listed destination paths, and remove only files introduced by the selected kit. If a step fails before publish, the staged directory is discarded and the destination stays unchanged.</p>
+      </section>
+      <footer class="guide-cta"><p>Found a claim that lacks evidence?</p><a class="button button-primary" href="https://github.com/aAAaqwq/AGI-Super-Team/issues/new/choose">Open a reproducible issue</a></footer>
+    </article>
+  </main>
+</body>
+</html>
