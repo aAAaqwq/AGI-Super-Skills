@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Install AGI Super Team in Claude Code with a review gate</title>
+  <meta name="description" content="Review and install the AGI Super Team Claude Code marketplace entry, confirm the loaded plugin surface, understand current limitations, and uninstall cleanly.">
+  <link rel="canonical" href="https://aaaaqwq.github.io/AGI-Super-Team/guides/claude-code-install.html">
+  <meta name="theme-color" content="#070b18">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="shell header-inner"><a class="brand" href="../"><img src="../assets/logo-mark.png" width="36" height="36" alt=""><span>AGI Super Team</span></a><nav class="primary-nav guide-nav" aria-label="Primary"><a href="../">Home</a><a href="./">Guides</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">GitHub</a></nav><button class="icon-button" type="button" data-theme-button aria-label="Switch to light theme"><img class="theme-icon theme-icon-dark" src="../assets/icons/sun.svg" width="20" height="20" alt=""><img class="theme-icon theme-icon-light" src="../assets/icons/moon.svg" width="20" height="20" alt=""></button></div></header>
+  <main id="main-content" class="guide-main">
+    <article class="shell guide-article">
+      <header class="guide-hero">
+        <p class="kicker">Claude Code installation</p>
+        <h1>Add the marketplace only after you inspect its contents.</h1>
+        <p class="hero-lede">Claude Code treats third-party plugins as trusted code. AGI Super Team includes a marketplace manifest, but a present manifest is not evidence that every repository workflow has passed the same public fixture.</p>
+        <p class="guide-meta">Last reviewed: 2026-07-21 · Surface: Claude Code plugin marketplace</p>
+      </header>
+      <section>
+        <h2>Prerequisites</h2>
+        <ul>
+          <li>A current Claude Code release where <code>/plugin</code> is available.</li>
+          <li>Git access to the public repository and permission to install a user- or project-scoped plugin.</li>
+          <li>A review of <code>.claude-plugin/marketplace.json</code> and <code>.claude-plugin/plugin.json</code> at the revision you intend to use.</li>
+        </ul>
+        <p>If <code>/plugin</code> is not recognized, update Claude Code and consult the official plugin documentation before changing local settings.</p>
+      </section>
+      <section>
+        <h2>Install step by step</h2>
+        <ol class="guide-steps">
+          <li><strong>Clone and inspect</strong><span>Read the marketplace entry, plugin root, skills path, and recent repository changes. Do not pipe an unreviewed installer into a shell.</span></li>
+          <li><strong>Add the marketplace</strong><span>From Claude Code, register the GitHub repository. This exposes its catalog but does not install the plugin yet.</span></li>
+          <li><strong>Install explicitly</strong><span>Install the plugin by its plugin and marketplace names. Choose a scope that matches who should receive it.</span></li>
+          <li><strong>Reload and inspect</strong><span>Reload plugins, review any reported errors, and confirm only the intended skills and context appear.</span></li>
+        </ol>
+        <pre><code>/plugin marketplace add aAAaqwq/AGI-Super-Team
+/plugin install agi-super-team@agi-super-team
+/reload-plugins</code></pre>
+        <p>The marketplace and plugin names come from the repository's current manifests. If the client reports a schema or path error, stop there and record the client version; do not work around it by copying arbitrary directories into your global Claude configuration.</p>
+      </section>
+      <section>
+        <h2>Alternative: inspect the generic installer</h2>
+        <p>The generic <code>install.sh</code> creates separate local workspaces and is not the same product as the Claude Code plugin. It defaults to preview and can be useful for evaluating a starter kit in an isolated destination.</p>
+        <pre><code>git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
+cd AGI-Super-Team
+./install.sh --source "$PWD" --destination /path/to/review-workspace solo-founder</code></pre>
+        <p>Do not assume those generic workspace files are automatically loaded as Claude Code plugin skills. Treat plugin installation and generic workspace installation as separate decisions.</p>
+      </section>
+      <section>
+        <h2>Check the result</h2>
+        <p>Open <code>/plugin</code>, inspect the Installed and Errors views, and note the exact installed scope. Run a harmless documentation-only prompt first. Require a manual approval gate before allowing publishing, deployment, transactions, private-data access, or destructive operations.</p>
+      </section>
+      <section>
+        <h2>Limitations</h2>
+        <p>The repository plugin metadata still represents a broad cross-harness archive and may lag the stricter curated Codex package. The presence of a skill file does not prove its dependency, permission, or output behavior under your Claude Code release. Compatibility parity with Codex, Cursor, or Gemini is not claimed.</p>
+      </section>
+      <section>
+        <h2>Rollback and uninstall</h2>
+        <p>Run <code>/plugin uninstall agi-super-team@agi-super-team</code> for the scope where you installed it. Remove the marketplace with <code>/plugin marketplace remove agi-super-team</code> only when no installed plugin depends on that catalog. If you also ran the generic installer, separately remove only the new workspace directories listed by its preview; uninstalling the plugin does not remove those files.</p>
+      </section>
+      <footer class="guide-cta"><p>Inspect the marketplace before trusting it.</p><a class="button button-primary" href="https://github.com/aAAaqwq/AGI-Super-Team/tree/main/.claude-plugin">Review the Claude Code manifests</a></footer>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="shell footer-inner"><div><strong>AGI Super Team guides</strong><p>Inspect third-party plugins before installation.</p></div><nav aria-label="Footer"><a href="harness-compatibility.html">Compatibility</a><a href="../verification.html">Verification</a><a href="./">All guides</a></nav></div></footer>
+</body>
+</html>

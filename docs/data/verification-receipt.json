@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "commit": null,
+  "siteCommit": null,
+  "pack": "solo-founder",
+  "harness": "codex",
+  "fixture": null,
+  "checks": [],
+  "result": "pending",
+  "limitations": [
+    "A public outcome fixture has not yet passed on the current main commit."
+  ]
+}

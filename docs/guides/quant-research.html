@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quant research AI workflow for reproducible evaluation</title>
+  <meta name="description" content="Evaluate the quant research kit with licensed data, leakage controls, realistic costs, walk-forward testing, independent risk review, and no live trading.">
+  <link rel="canonical" href="https://aaaaqwq.github.io/AGI-Super-Team/guides/quant-research.html">
+  <meta name="theme-color" content="#070b18">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="shell header-inner"><a class="brand" href="../"><img src="../assets/logo-mark.png" width="36" height="36" alt=""><span>AGI Super Team</span></a><nav class="primary-nav guide-nav" aria-label="Primary"><a href="../">Home</a><a href="./">Guides</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">GitHub</a></nav><button class="icon-button" type="button" data-theme-button aria-label="Switch to light theme"><img class="theme-icon theme-icon-dark" src="../assets/icons/sun.svg" width="20" height="20" alt=""><img class="theme-icon theme-icon-light" src="../assets/icons/moon.svg" width="20" height="20" alt=""></button></div></header>
+  <main id="main-content" class="guide-main">
+    <article class="shell guide-article">
+      <header class="guide-hero">
+        <p class="kicker">Quant research workflow</p>
+        <h1>Test the data and the failure modes before the strategy story.</h1>
+        <p class="hero-lede">The kit separates data review, quantitative evaluation, and financial risk review across CDO, CQO, and CFO. It is intended for research and paper evaluation—not investment advice, brokerage access, or live orders.</p>
+        <p class="guide-meta">Last reviewed: 2026-07-21 · Kit: <code>quant-trader</code></p>
+      </header>
+      <section>
+        <h2>Prerequisites</h2>
+        <ul>
+          <li>A lawfully obtained historical dataset with a data dictionary, timezone, corporate-action policy, and license terms.</li>
+          <li>A research hypothesis written before testing, including universe, signal timing, holding period, benchmark, and failure criteria.</li>
+          <li>An isolated environment with no broker credentials, order routes, or production market-data secrets.</li>
+          <li>A qualified human reviewer for the relevant market, regulation, tax, and risk context.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Preview the research kit</h2>
+        <pre><code>git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
+cd AGI-Super-Team
+./install.sh --source "$PWD" --destination /path/to/review-workspace quant-trader</code></pre>
+        <p>Verify that the preview proposes the CQO, CDO, and CFO workspaces. Apply to a disposable destination only after inspecting required local content. Do not add exchange keys, brokerage credentials, or private account statements to these workspaces.</p>
+      </section>
+      <section>
+        <h2>Use a reproducible research sequence</h2>
+        <ol class="guide-steps">
+          <li><strong>Profile the data</strong><span>CDO checks missingness, duplicate timestamps, survivorship bias, point-in-time availability, corporate actions, and licensing constraints.</span></li>
+          <li><strong>Freeze the hypothesis</strong><span>Record the signal and failure criteria before exploring parameter combinations. Separate discovery data from evaluation data.</span></li>
+          <li><strong>Backtest honestly</strong><span>CQO includes fees, spread, slippage, latency, turnover, liquidity, and a walk-forward or held-out evaluation.</span></li>
+          <li><strong>Stress the result</strong><span>Test regime changes, parameter sensitivity, concentration, stale prices, capacity, and the effect of removing the best periods.</span></li>
+          <li><strong>Review risk</strong><span>CFO challenges drawdown, leverage, financing, liquidity, operational controls, and whether the evidence supports any next step.</span></li>
+        </ol>
+      </section>
+      <section>
+        <h2>Minimum research receipt</h2>
+        <pre><code>dataset: identifier, license, retrieval date, immutable hash
+universe: inclusion rules and point-in-time membership
+signal: formula, timestamp, availability lag, parameters
+execution: fees, spread, slippage, latency, position limits
+evaluation: train/test split, benchmark, sensitivity, failures
+result: returns and drawdowns with uncertainty and caveats
+next_step: reject, revise, or human-approved paper evaluation</code></pre>
+        <p>Keep code, configuration, and the immutable input hash together. A chart without the dataset contract and execution assumptions is not enough to reproduce the result.</p>
+      </section>
+      <section>
+        <h2>Red flags that stop the study</h2>
+        <p>Stop when the data license is unclear, timestamps allow future information, delisted assets disappear from history, transaction costs are omitted, results depend on one narrow parameter, or the only evidence is an in-sample equity curve. Do not repair a failed hypothesis by repeatedly changing it against the held-out period.</p>
+        <div class="callout"><strong>No capital action</strong><p>The workflow ends at a reviewed research report or an isolated paper-evaluation proposal. It must not place, recommend, or automate a live trade.</p></div>
+      </section>
+      <section>
+        <h2>Limitations</h2>
+        <p>Historical simulation cannot establish future returns. Market structure, liquidity, regulation, taxes, borrow availability, and execution quality can change. AI-generated analysis can contain mathematical, coding, or data errors. Independent reproduction and professional review are required before any decision involving real money.</p>
+      </section>
+      <section>
+        <h2>Rollback and uninstall</h2>
+        <p>Revoke any temporary data access, delete derived data when its license requires it, and preserve only permitted research receipts. Remove the newly created CQO, CDO, and CFO workspace directories listed in the preview. If credentials were added despite this guide, rotate them immediately rather than relying on file deletion.</p>
+      </section>
+      <footer class="guide-cta"><p>Review the kit's research-only boundary.</p><a class="button button-primary" href="https://github.com/aAAaqwq/AGI-Super-Team/tree/main/starter-kits/quant-trader">Inspect the Quant Trader kit</a></footer>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="shell footer-inner"><div><strong>AGI Super Team guides</strong><p>Research evidence is not a promise of returns.</p></div><nav aria-label="Footer"><a href="choose-ai-team.html">Choose a team</a><a href="../verification.html">Verification</a><a href="./">All guides</a></nav></div></footer>
+</body>
+</html>

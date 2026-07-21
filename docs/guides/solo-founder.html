@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solo Founder AI workflow: brief, build, review and release</title>
+  <meta name="description" content="Evaluate the Solo Founder starter kit with a bounded brief, distinct planning, engineering, and content roles, reproducible checks, and safe rollback.">
+  <link rel="canonical" href="https://aaaaqwq.github.io/AGI-Super-Team/guides/solo-founder.html">
+  <meta name="theme-color" content="#070b18">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="shell header-inner"><a class="brand" href="../"><img src="../assets/logo-mark.png" width="36" height="36" alt=""><span>AGI Super Team</span></a><nav class="primary-nav guide-nav" aria-label="Primary"><a href="../">Home</a><a href="./">Guides</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">GitHub</a></nav><button class="icon-button" type="button" data-theme-button aria-label="Switch to light theme"><img class="theme-icon theme-icon-dark" src="../assets/icons/sun.svg" width="20" height="20" alt=""><img class="theme-icon theme-icon-light" src="../assets/icons/moon.svg" width="20" height="20" alt=""></button></div></header>
+  <main id="main-content" class="guide-main">
+    <article class="shell guide-article">
+      <header class="guide-hero">
+        <p class="kicker">Solo Founder workflow</p>
+        <h1>Turn one founder brief into a reviewable delivery trail.</h1>
+        <p class="hero-lede">The starter kit assigns planning to CEO, implementation to PE, and content drafting to CCO. The founder still owns product judgment, credentials, releases, and every external action.</p>
+        <p class="guide-meta">Last reviewed: 2026-07-21 · Kit: <code>solo-founder</code></p>
+      </header>
+      <section>
+        <h2>Prerequisites</h2>
+        <ul>
+          <li>A reviewed checkout, Git, Node.js, and an isolated destination directory.</li>
+          <li>A brief with one user, one problem, a narrow deliverable, acceptance checks, and a deadline.</li>
+          <li>A human owner who can reject work and personally approve deployment, publishing, credentials, and spending.</li>
+        </ul>
+        <p>This kit is most useful for a bounded product slice or decision memo. It is a poor fit for an undefined company strategy, unattended operations, or work that requires licensed professional judgment.</p>
+      </section>
+      <section>
+        <h2>Preview and apply</h2>
+        <pre><code>git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
+cd AGI-Super-Team
+./install.sh --source "$PWD" --destination /path/to/review-workspace solo-founder
+./install.sh --source "$PWD" --destination /path/to/review-workspace --apply solo-founder</code></pre>
+        <p>Run the first installer command and stop. Confirm that it proposes only <code>workspace-ceo</code>, <code>workspace-pe</code>, and <code>workspace-cco</code>, plus their required local files. Apply only when those paths are correct and do not overlap an existing workspace.</p>
+      </section>
+      <section>
+        <h2>Use a four-stage operating loop</h2>
+        <ol class="guide-steps">
+          <li><strong>Brief</strong><span>Give CEO the customer, constraint, non-goals, acceptance checks, evidence gaps, and decisions reserved for the founder.</span></li>
+          <li><strong>Build</strong><span>Give PE one approved slice and require tests or a runnable check before implementation is described as complete.</span></li>
+          <li><strong>Review</strong><span>Challenge unsupported claims, scope drift, security risk, missing edge cases, and any external action that lacks authorization.</span></li>
+          <li><strong>Release</strong><span>Record the revision, checks, limitations, and rollback procedure. The founder performs or explicitly authorizes the release.</span></li>
+        </ol>
+      </section>
+      <section>
+        <h2>A realistic evaluation brief</h2>
+        <pre><code>Outcome: Add a read-only onboarding checklist to the demo site.
+User: First-time maintainer evaluating the repository locally.
+Constraints: Static HTML/CSS only; no analytics; no deployment.
+Evidence: One focused test, mobile screenshot, keyboard pass, diff check.
+Non-goals: Authentication, billing, production claims, external posts.
+Approval gate: Founder reviews the diff and runs every command.</code></pre>
+        <p>Ask CEO to convert this into a decision memo, PE to propose a test-first change, and CCO to draft a release note that includes limitations. Compare the three artifacts for consistent scope rather than asking all roles to solve the same task independently.</p>
+      </section>
+      <section>
+        <h2>Evidence to keep</h2>
+        <p>Retain the original brief, role assignments, final diff, test output, known limitations, and rollback instructions. If the team recommends a new dependency, record its license, maintenance state, and why the existing stack cannot meet the requirement. A polished narrative without a runnable artifact is not a completed outcome.</p>
+        <div class="callout"><strong>Stop condition</strong><p>Stop when the acceptance checks pass and the known limitations are documented. Do not expand the task merely because unused roles or tools are available.</p></div>
+      </section>
+      <section>
+        <h2>Limitations</h2>
+        <p>The three roles are instruction bundles, not accountable executives or independent legal entities. Mentor names are creative framing and do not imply affiliation. Results vary with model, context, permissions, and the quality of the brief. The kit does not independently deploy software, validate market demand, or make a release safe.</p>
+      </section>
+      <section>
+        <h2>Rollback and uninstall</h2>
+        <p>Use the preview record to identify the three new workspace directories. Archive any evaluation artifacts you need, then remove only those directories if they were newly created by this run. Existing persona and skill files are protected rather than overwritten; if the installer reports a conflict, resolve it manually instead of deleting the destination wholesale.</p>
+      </section>
+      <footer class="guide-cta"><p>Inspect the kit's current scope before applying it.</p><a class="button button-primary" href="https://github.com/aAAaqwq/AGI-Super-Team/tree/main/starter-kits/solo-founder">Review the Solo Founder kit</a></footer>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="shell footer-inner"><div><strong>AGI Super Team guides</strong><p>Small teams, explicit ownership, reviewable artifacts.</p></div><nav aria-label="Footer"><a href="choose-ai-team.html">Choose a team</a><a href="../verification.html">Verification</a><a href="./">All guides</a></nav></div></footer>
+</body>
+</html>
