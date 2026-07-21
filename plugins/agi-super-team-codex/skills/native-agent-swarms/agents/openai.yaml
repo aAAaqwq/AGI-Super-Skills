@@ -1,0 +1,4 @@
+interface:
+  display_name: "Native Agent Swarms"
+  short_description: "Coordinate safe parallel Codex agent teams"
+  default_prompt: "Use $native-agent-swarms to split this task across specialized Codex agents safely."

@@ -42,9 +42,15 @@
 # Claude Code（推荐）
 /plugin install aAAaqwq/AGI-Super-Team
 
+# OpenAI Codex —— 精选原生 Swarm、记忆能力与 31 个专业 Agent
+codex plugin marketplace add aAAaqwq/AGI-Super-Team --ref main
+codex plugin add agi-super-team-codex@agi-super-team
+
 # 或直接克隆
 git clone --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git ~/.agi-super-team
 ```
+
+完整 Agent 清单、安全同步流程、更新命令与来源说明见 [Codex 包索引](./.codex/INDEX.md)。
 
 一键 kit 部署（solo-founder / quant-trader / content-creator 等）见下方[10 分钟你能做什么](#10-分钟你能做什么)。
 
