@@ -6,8 +6,8 @@
 
 | Skill | 路径 | 说明 |
 |-------|------|------|
-| 市场研究 | [market-research](../skills/market-research/) | 市场分析与竞品研究 |
-| 竞品替代方案 | [competitor-alternatives](../skills/competitor-alternatives/) | 竞品替代方案分析 |
+| 市场研究 | [market-research](../../skills/market-research/) | 市场分析与竞品研究 |
+| 竞品替代方案 | [competitor-alternatives](../../skills/competitor-alternatives/) | 竞品替代方案分析 |
 
 ---
 

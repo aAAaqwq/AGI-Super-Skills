@@ -6,9 +6,9 @@
 
 | Skill | 路径 | 说明 |
 |-------|------|------|
-| 竞品替代方案 | [competitor-alternatives](../skills/competitor-alternatives/) | 竞品分析 |
-| 自我进化 | [self-improving](../skills/self-improving/) | 流程自我优化 |
-| 技能搜索器 | [skill-finder-cn](../skills/skill-finder-cn/) | 中文技能搜索 |
+| 竞品替代方案 | [competitor-alternatives](../../skills/competitor-alternatives/) | 竞品分析 |
+| 自我进化 | [self-improving](../../skills/self-improving/) | 流程自我优化 |
+| 技能搜索器 | [skill-finder-cn](../../skills/skill-finder-cn/) | 中文技能搜索 |
 
 ---
 
