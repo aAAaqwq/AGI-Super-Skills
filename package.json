@@ -1,8 +1,15 @@
 {
   "name": "agi-super-team",
   "version": "1.0.0",
-  "description": "Virtual C-Suite of AI executives powered by legendary minds, with 1,651 skills",
+  "description": "Virtual C-Suite of AI executives powered by legendary minds, with 793 physical skills",
   "type": "module",
+  "scripts": {
+    "test": "npm run test:repository && npm run test:installer",
+    "test:repository": "python3 -m unittest discover -s tests -p 'test_*.py'",
+    "test:installer": "bash tests/installer/test_install.sh",
+    "validate": "python3 scripts/validate_repository.py",
+    "validate:strict": "python3 scripts/validate_repository.py --warnings-as-errors"
+  },
   "keywords": [
     "claude-code",
     "codex",
