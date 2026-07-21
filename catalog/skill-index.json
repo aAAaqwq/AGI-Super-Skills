@@ -3,84 +3,98 @@
     {
       "count": 76,
       "description": "Coordinate agents, context, memory, models, prompts, and tool protocols.",
+      "emoji": "🤖",
       "id": "ai-agents-orchestration",
       "title": "AI Agents & Orchestration"
     },
     {
       "count": 80,
       "description": "Build, test, review, debug, and maintain applications and developer tooling.",
+      "emoji": "💻",
       "id": "software-engineering",
       "title": "Software Engineering"
     },
     {
       "count": 29,
       "description": "Deploy, observe, troubleshoot, and operate cloud and local infrastructure.",
+      "emoji": "☁️",
       "id": "cloud-devops-reliability",
       "title": "Cloud, DevOps & Reliability"
     },
     {
       "count": 74,
       "description": "Collect evidence, search sources, analyze data, and communicate findings.",
+      "emoji": "📊",
       "id": "data-analytics-research",
       "title": "Data, Analytics & Research"
     },
     {
       "count": 34,
       "description": "Review security, privacy, compliance, permissions, contracts, and legal risk.",
+      "emoji": "🛡️",
       "id": "security-privacy-legal",
       "title": "Security, Privacy & Legal"
     },
     {
       "count": 26,
       "description": "Shape product requirements, interfaces, design systems, and user experience.",
+      "emoji": "🎨",
       "id": "product-design-ux",
       "title": "Product, Design & UX"
     },
     {
       "count": 51,
       "description": "Acquire audiences through positioning, campaigns, search, ads, and social growth.",
+      "emoji": "📈",
       "id": "marketing-seo-growth",
       "title": "Marketing, SEO & Growth"
     },
     {
       "count": 78,
       "description": "Create, edit, repurpose, and publish writing, images, audio, and video.",
+      "emoji": "✍️",
       "id": "content-media-publishing",
       "title": "Content, Media & Publishing"
     },
     {
       "count": 36,
       "description": "Find, win, onboard, support, and retain customers with accountable workflows.",
+      "emoji": "🤝",
       "id": "sales-crm-customer-success",
       "title": "Sales, CRM & Customer Success"
     },
     {
       "count": 65,
       "description": "Analyze markets, backtest strategies, track portfolios, and review financial risk.",
+      "emoji": "💹",
       "id": "finance-trading-markets",
       "title": "Finance, Trading & Markets"
     },
     {
       "count": 72,
       "description": "Plan work, make decisions, manage teams, and improve operating systems.",
+      "emoji": "🧭",
       "id": "business-operations-strategy",
       "title": "Business Operations & Strategy"
     },
     {
       "count": 88,
       "description": "Connect everyday apps, browsers, messaging systems, and repeatable workflows.",
+      "emoji": "⚙️",
       "id": "apps-workflow-automation",
       "title": "Apps & Workflow Automation"
     },
     {
       "count": 39,
       "description": "Create, analyze, and publish for major Chinese-language platforms and channels.",
+      "emoji": "🇨🇳",
       "id": "chinese-platform-workflows",
       "title": "Chinese Platform Workflows"
     },
     {
       "count": 45,
       "description": "Domain-specific helpers and cross-functional tools that need a dedicated review path.",
+      "emoji": "🧰",
       "id": "general-utilities",
       "title": "Specialized Domains & Utilities"
     }

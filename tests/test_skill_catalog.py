@@ -44,6 +44,9 @@ class SkillCatalogTests(unittest.TestCase):
         self.assertTrue(all("fallback" not in item for item in categories[:-1]))
         priorities = [category["priority"] for category in categories]
         self.assertEqual(len(priorities), len(set(priorities)))
+        emojis = [category["emoji"] for category in categories]
+        self.assertTrue(all(emoji.strip() for emoji in emojis))
+        self.assertEqual(len(emojis), len(set(emojis)))
         for category in categories:
             for pattern in category["patterns"]:
                 re.compile(pattern)
@@ -134,6 +137,7 @@ class SkillCatalogTests(unittest.TestCase):
             sum(category["count"] for category in index["categories"]),
             len(self.entries),
         )
+        self.assertTrue(all(category["emoji"] for category in index["categories"]))
         self.assertTrue(
             all(item["path"] == f"skills/{item['skill_id']}/SKILL.md" for item in index["skills"])
         )

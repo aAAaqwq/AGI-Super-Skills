@@ -19,8 +19,8 @@ class ReadmeContractTests(unittest.TestCase):
         self.assertIn("不是模型或 Agent 运行时", self.chinese)
 
     def test_readmes_include_a_truthful_installation_receipt(self) -> None:
-        self.assertIn("## Five-minute installation receipt", self.english)
-        self.assertIn("## 五分钟安装凭据", self.chinese)
+        self.assertIn("## 🧾 Five-minute installation receipt", self.english)
+        self.assertIn("## 🧾 五分钟安装凭据", self.chinese)
         for readme in (self.english, self.chinese):
             self.assertIn("workspace-ceo/SOUL.md", readme)
             self.assertIn("workspace-pe/SOUL.md", readme)
@@ -31,11 +31,15 @@ class ReadmeContractTests(unittest.TestCase):
     def test_readmes_expose_repository_architecture_and_discovery(self) -> None:
         expected_headings = {
             self.english: (
-                "## Browse skills by outcome",
-                "## Repository architecture",
-                "## Team topology",
+                "## 🧭 Browse skills by outcome",
+                "## 🗂️ Repository architecture",
+                "## 🧠 Team topology",
             ),
-            self.chinese: ("## 按成果浏览技能", "## 仓库架构", "## 团队拓扑"),
+            self.chinese: (
+                "## 🧭 按成果浏览技能",
+                "## 🗂️ 仓库架构",
+                "## 🧠 团队拓扑",
+            ),
         }
         for readme, headings in expected_headings.items():
             for heading in headings:

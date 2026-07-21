@@ -14,9 +14,10 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "title", "description", "priority", "patterns"],
+        "required": ["id", "emoji", "title", "description", "priority", "patterns"],
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "emoji": {"type": "string", "minLength": 1, "maxLength": 4},
           "title": {"type": "string", "minLength": 3},
           "description": {"type": "string", "minLength": 12},
           "priority": {"type": "integer", "minimum": 0},
