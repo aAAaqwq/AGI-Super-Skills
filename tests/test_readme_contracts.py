@@ -153,42 +153,17 @@ class ReadmeContractTests(unittest.TestCase):
             site,
         )
 
-    def test_star_history_uses_a_repository_owned_theme_aware_picture(self) -> None:
+    def test_stars_link_to_github_without_an_unofficial_history_chart(self) -> None:
         for readme in (self.english, self.chinese):
-            self.assertIn('<picture>', readme)
-            self.assertIn(
-                'media="(prefers-color-scheme: dark)"', readme
-            )
-            self.assertIn(
-                'srcset="./docs/assets/star-history-dark.svg"', readme
-            )
-            self.assertIn(
-                'src="./docs/assets/star-history-light.svg"', readme
-            )
             self.assertIn(
                 "https://github.com/aAAaqwq/AGI-Super-Team/stargazers",
                 readme,
             )
-            self.assertNotIn("api.star-history.com", readme.lower())
+            self.assertNotIn("docs/assets/star-history", readme)
             self.assertNotIn(
                 "aaaaqwq.github.io/AGI-Super-Team/assets/star-history.svg",
                 readme.lower(),
             )
-
-    def test_pages_workflow_refreshes_readme_chart_without_empty_commits(self) -> None:
-        workflow = (
-            ROOT / ".github" / "workflows" / "pages.yml"
-        ).read_text(encoding="utf-8")
-        self.assertIn("contents: write", workflow)
-        self.assertIn("docs/assets/star-history-dark.svg", workflow)
-        self.assertIn("docs/assets/star-history-light.svg", workflow)
-        self.assertIn(
-            "git add docs/data/repo-stats.json docs/data/star-history.json",
-            workflow,
-        )
-        self.assertIn("git diff --cached --quiet", workflow)
-        self.assertIn("git push origin HEAD:main", workflow)
-        self.assertIn("[skip ci]", workflow)
 
 
 if __name__ == "__main__":
