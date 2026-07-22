@@ -14,6 +14,7 @@ from scripts.build_site_data import (
     build_repository_stats,
     fetch_github_data,
     render_star_history_svg,
+    resolve_star_history,
     write_site_data,
 )
 
@@ -292,6 +293,26 @@ class SiteDataTests(unittest.TestCase):
         self.assertIn("owner/&lt;unsafe&gt;&amp;repo", svg)
         self.assertNotIn("owner/<unsafe>&repo", svg)
 
+    def test_svg_supports_distinct_light_and_dark_readme_themes(self) -> None:
+        history = {
+            "repository": "aAAaqwq/AGI-Super-Team",
+            "generatedAt": "2026-07-21T00:00:00Z",
+            "latestStars": 2,
+            "points": [
+                {"date": "2026-07-19", "stars": 1},
+                {"date": "2026-07-20", "stars": 2},
+            ],
+        }
+
+        dark = render_star_history_svg(history, theme="dark")
+        light = render_star_history_svg(history, theme="light")
+
+        self.assertIn('data-theme="dark"', dark)
+        self.assertIn('fill="#080d1a"', dark)
+        self.assertIn('data-theme="light"', light)
+        self.assertIn('fill="#ffffff"', light)
+        self.assertNotEqual(dark, light)
+
     def test_svg_marks_history_refresh_pending_when_only_current_count_exists(self) -> None:
         svg = render_star_history_svg(
             {
@@ -328,6 +349,12 @@ class SiteDataTests(unittest.TestCase):
             stats = json.loads((docs_directory / "data/repo-stats.json").read_text())
             history = json.loads((docs_directory / "data/star-history.json").read_text())
             svg = (docs_directory / "assets/star-history.svg").read_text()
+            dark_svg = (
+                docs_directory / "assets/star-history-dark.svg"
+            ).read_text()
+            light_svg = (
+                docs_directory / "assets/star-history-light.svg"
+            ).read_text()
 
         self.assertEqual(stats["schemaVersion"], 1)
         self.assertEqual(stats["stars"], 78)
@@ -335,6 +362,35 @@ class SiteDataTests(unittest.TestCase):
         self.assertEqual(history["schemaVersion"], 1)
         self.assertEqual(history["latestStars"], 78)
         self.assertIn("Latest count: 78 stars", svg)
+        self.assertEqual(svg, dark_svg)
+        self.assertIn('data-theme="light"', light_svg)
+
+    def test_cached_history_survives_a_transient_stargazer_failure(self) -> None:
+        cached = {
+            "schemaVersion": 1,
+            "repository": "aAAaqwq/AGI-Super-Team",
+            "generatedAt": "2026-07-20T00:00:00Z",
+            "source": "github-current-stargazers",
+            "semantics": "cached test fixture",
+            "latestStars": 77,
+            "points": [
+                {"date": "2026-07-19", "stars": 70},
+                {"date": "2026-07-20", "stars": 77},
+            ],
+        }
+
+        history = resolve_star_history(
+            "aAAaqwq/AGI-Super-Team",
+            [],
+            datetime(2026, 7, 21, tzinfo=timezone.utc),
+            current_stars=78,
+            cached_history=cached,
+        )
+
+        self.assertEqual(history["points"], cached["points"])
+        self.assertEqual(history["latestStars"], 78)
+        self.assertEqual(history["status"], "cached")
+        self.assertEqual(history["source"], "repository-cache+github-current-count")
 
 
 if __name__ == "__main__":
