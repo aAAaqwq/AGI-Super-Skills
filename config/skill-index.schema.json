@@ -69,11 +69,11 @@
       "additionalProperties": false,
       "required": ["method", "winner", "matched_signals", "runner_ups", "resolution_status", "review_state"],
       "properties": {
-        "method": {"enum": ["slug", "description", "override", "fallback"]},
+        "method": {"enum": ["outcome", "slug", "description", "override", "fallback"]},
         "winner": {"$ref": "#/$defs/winner"},
         "matched_signals": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
         "runner_ups": {"type": "array", "items": {"$ref": "#/$defs/candidate"}},
-        "base_method": {"enum": ["slug", "description", "fallback"]},
+        "base_method": {"enum": ["outcome", "slug", "description", "fallback"]},
         "base_candidates": {"type": "array", "items": {"$ref": "#/$defs/candidate"}},
         "rationale": {"type": "string", "minLength": 20},
         "resolution_status": {"enum": ["rule-match", "priority-tie", "override", "fallback"]},
@@ -125,7 +125,7 @@
           }
         },
         {
-          "if": {"properties": {"method": {"enum": ["slug", "description"]}}, "required": ["method"]},
+          "if": {"properties": {"method": {"enum": ["outcome", "slug", "description"]}}, "required": ["method"]},
           "then": {
             "properties": {
               "resolution_status": {"enum": ["rule-match", "priority-tie"]},

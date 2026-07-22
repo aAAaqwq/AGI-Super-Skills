@@ -1,0 +1,377 @@
+{
+  "$schema": "../config/skill-taxonomy-evaluation.schema.json",
+  "annotationMode": "independent-agent-manual-review",
+  "categoryCount": 14,
+  "errors": [
+    {
+      "expected_category": "apps-workflow-automation",
+      "predicted_category": "data-analytics-research",
+      "skill_id": "documents",
+      "split": "validation"
+    },
+    {
+      "expected_category": "business-operations-strategy",
+      "predicted_category": "apps-workflow-automation",
+      "skill_id": "hr-automation",
+      "split": "validation"
+    },
+    {
+      "expected_category": "data-analytics-research",
+      "predicted_category": "content-media-publishing",
+      "skill_id": "image-scraper",
+      "split": "validation"
+    },
+    {
+      "expected_category": "finance-trading-markets",
+      "predicted_category": "general-utilities",
+      "skill_id": "polyclaw",
+      "split": "validation"
+    },
+    {
+      "expected_category": "product-design-ux",
+      "predicted_category": "business-operations-strategy",
+      "skill_id": "thinking-steve-jobs",
+      "split": "validation"
+    }
+  ],
+  "gates": {
+    "accuracyAtLeast80": true,
+    "allCategoriesRepresented": true,
+    "macroF1AtLeast80": true,
+    "passed": true,
+    "sampleAtLeast140": true,
+    "validationAccuracyAtLeast75": true,
+    "validationAllCategoriesRepresented": true,
+    "validationMacroF1AtLeast75": true
+  },
+  "goldSetSha256": "73dfedf806ba9b8a0c3b1b336209ad825312af6ede51c993ce03199352058933",
+  "humanApproved": false,
+  "metrics": {
+    "accuracy": 0.9642857142857143,
+    "accuracyWilsonLower95": 0.919123,
+    "correct": 135,
+    "macro_f1": 0.956325222396651,
+    "per_category": {
+      "ai-agents-orchestration": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "predicted": 15,
+        "recall": 1.0,
+        "support": 15
+      },
+      "apps-workflow-automation": {
+        "f1": 0.9,
+        "precision": 0.9,
+        "predicted": 10,
+        "recall": 0.9,
+        "support": 10
+      },
+      "business-operations-strategy": {
+        "f1": 0.875,
+        "precision": 0.875,
+        "predicted": 8,
+        "recall": 0.875,
+        "support": 8
+      },
+      "chinese-platform-workflows": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "predicted": 10,
+        "recall": 1.0,
+        "support": 10
+      },
+      "cloud-devops-reliability": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "predicted": 13,
+        "recall": 1.0,
+        "support": 13
+      },
+      "content-media-publishing": {
+        "f1": 0.952381,
+        "precision": 0.909091,
+        "predicted": 11,
+        "recall": 1.0,
+        "support": 10
+      },
+      "data-analytics-research": {
+        "f1": 0.928571,
+        "precision": 0.928571,
+        "predicted": 14,
+        "recall": 0.928571,
+        "support": 14
+      },
+      "finance-trading-markets": {
+        "f1": 0.952381,
+        "precision": 1.0,
+        "predicted": 10,
+        "recall": 0.909091,
+        "support": 11
+      },
+      "general-utilities": {
+        "f1": 0.923077,
+        "precision": 0.857143,
+        "predicted": 7,
+        "recall": 1.0,
+        "support": 6
+      },
+      "marketing-seo-growth": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "predicted": 6,
+        "recall": 1.0,
+        "support": 6
+      },
+      "product-design-ux": {
+        "f1": 0.857143,
+        "precision": 1.0,
+        "predicted": 3,
+        "recall": 0.75,
+        "support": 4
+      },
+      "sales-crm-customer-success": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "predicted": 13,
+        "recall": 1.0,
+        "support": 13
+      },
+      "security-privacy-legal": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "predicted": 9,
+        "recall": 1.0,
+        "support": 9
+      },
+      "software-engineering": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "predicted": 11,
+        "recall": 1.0,
+        "support": 11
+      }
+    },
+    "total": 140
+  },
+  "reviewedSetAgreementScore": 95,
+  "runtimeEvidenceIncluded": false,
+  "sampleSize": 140,
+  "schemaVersion": 1,
+  "scoreSemantics": "floored minimum of exact accuracy and macro-F1 on the fixed, manually reviewed Gold Set; not an inventory-wide confidence interval",
+  "splits": {
+    "development": {
+      "accuracy": 1.0,
+      "accuracyWilsonLower95": 0.966839,
+      "correct": 112,
+      "macro_f1": 1.0,
+      "per_category": {
+        "ai-agents-orchestration": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 1.0,
+          "support": 11
+        },
+        "apps-workflow-automation": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 9,
+          "recall": 1.0,
+          "support": 9
+        },
+        "business-operations-strategy": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 6,
+          "recall": 1.0,
+          "support": 6
+        },
+        "chinese-platform-workflows": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 8,
+          "recall": 1.0,
+          "support": 8
+        },
+        "cloud-devops-reliability": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 10,
+          "recall": 1.0,
+          "support": 10
+        },
+        "content-media-publishing": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 9,
+          "recall": 1.0,
+          "support": 9
+        },
+        "data-analytics-research": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 12,
+          "recall": 1.0,
+          "support": 12
+        },
+        "finance-trading-markets": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 8,
+          "recall": 1.0,
+          "support": 8
+        },
+        "general-utilities": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 5,
+          "recall": 1.0,
+          "support": 5
+        },
+        "marketing-seo-growth": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 4,
+          "recall": 1.0,
+          "support": 4
+        },
+        "product-design-ux": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 2,
+          "recall": 1.0,
+          "support": 2
+        },
+        "sales-crm-customer-success": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 1.0,
+          "support": 11
+        },
+        "security-privacy-legal": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 8,
+          "recall": 1.0,
+          "support": 8
+        },
+        "software-engineering": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 9,
+          "recall": 1.0,
+          "support": 9
+        }
+      },
+      "total": 112
+    },
+    "validation": {
+      "accuracy": 0.8214285714285714,
+      "accuracyWilsonLower95": 0.644086,
+      "correct": 23,
+      "macro_f1": 0.7714285714285715,
+      "per_category": {
+        "ai-agents-orchestration": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 4,
+          "recall": 1.0,
+          "support": 4
+        },
+        "apps-workflow-automation": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 1,
+          "recall": 0.0,
+          "support": 1
+        },
+        "business-operations-strategy": {
+          "f1": 0.5,
+          "precision": 0.5,
+          "predicted": 2,
+          "recall": 0.5,
+          "support": 2
+        },
+        "chinese-platform-workflows": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 2,
+          "recall": 1.0,
+          "support": 2
+        },
+        "cloud-devops-reliability": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 3,
+          "recall": 1.0,
+          "support": 3
+        },
+        "content-media-publishing": {
+          "f1": 0.666667,
+          "precision": 0.5,
+          "predicted": 2,
+          "recall": 1.0,
+          "support": 1
+        },
+        "data-analytics-research": {
+          "f1": 0.5,
+          "precision": 0.5,
+          "predicted": 2,
+          "recall": 0.5,
+          "support": 2
+        },
+        "finance-trading-markets": {
+          "f1": 0.8,
+          "precision": 1.0,
+          "predicted": 2,
+          "recall": 0.666667,
+          "support": 3
+        },
+        "general-utilities": {
+          "f1": 0.666667,
+          "precision": 0.5,
+          "predicted": 2,
+          "recall": 1.0,
+          "support": 1
+        },
+        "marketing-seo-growth": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 2,
+          "recall": 1.0,
+          "support": 2
+        },
+        "product-design-ux": {
+          "f1": 0.666667,
+          "precision": 1.0,
+          "predicted": 1,
+          "recall": 0.5,
+          "support": 2
+        },
+        "sales-crm-customer-success": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 2,
+          "recall": 1.0,
+          "support": 2
+        },
+        "security-privacy-legal": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 1,
+          "recall": 1.0,
+          "support": 1
+        },
+        "software-engineering": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 2,
+          "recall": 1.0,
+          "support": 2
+        }
+      },
+      "total": 28
+    }
+  }
+}

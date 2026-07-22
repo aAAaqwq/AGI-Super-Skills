@@ -52,6 +52,7 @@ flowchart LR
 
 - Team and kit membership: [`config/team-manifest.json`](./config/team-manifest.json)
 - Skill category and candidate risk signals: [`config/skill-taxonomy.json`](./config/skill-taxonomy.json)
+- Reviewed classification labels and fixed sample membership: [`config/skill-taxonomy-gold.json`](./config/skill-taxonomy-gold.json)
 - Canonical physical skill inventory: tracked `skills/*/SKILL.md` files interpreted by [`scripts/repository_model.py`](./scripts/repository_model.py)
 - Removed machine-local link tombstones: [`config/external-skill-sources.json`](./config/external-skill-sources.json); nullable source fields are not provenance
 - Generated catalog: [`catalog/`](./catalog/) is an output, never a source
@@ -65,7 +66,7 @@ README counts, badges, plugin manifests, and generated JSON must not override th
 | Canonical skill library | tracked physical `skills/<id>/SKILL.md` | `skills/` | Foundational; consumed by every pack and catalog |
 | Team composition | `config/team-manifest.json` | `agents/`, `starter-kits/` | Composed; one roster drives installer and validation |
 | Safe installation | `./install.sh … <kit-or-agent>` | `install.sh`, installer fixtures | Composed; one safety boundary protects every deployment |
-| Catalog discovery | taxonomy in; Markdown/JSON index out | taxonomy, builder, `catalog/` | Composed; one rule set serves human and machine discovery |
+| Catalog discovery | taxonomy + fixed reviewed labels in; Markdown/JSON index + agreement report out | taxonomy, Gold Set, builders, `catalog/` | Composed; one rule set serves human and machine discovery with a separate semantic regression contract |
 | Distribution Adapters | harness manifests and curated packages | `.codex/`, plugin manifests, `plugins/` | Boundary; isolates harness conventions from canonical content |
 | Verification evidence | `npm test`, `npm run validate:strict` | `scripts/`, `tests/`, CI | Foundational; prevents drift across public surfaces |
 | Public navigation | README routes and maintained Pages | README files, `docs/`, `cookbook/`, `assets/` | Boundary; keeps copied claims out of source authority |
@@ -78,6 +79,7 @@ The registry also records each primary path role: `authored-authority`, `authore
 - `team-manifest portability class → install.sh selection → workspace Skills + generated TOOLS.md` is the generic-install Seam; only `required` and `optional` cross it.
 - `team-manifest assignments → catalog builder → skill-index assignments + portability_class` is the human/machine classification Seam.
 - `skill-taxonomy → catalog builder → catalog/` is a generated discovery Seam.
+- `fixed Gold labels + generated skill index → taxonomy evaluator → reviewed-set agreement report` is a semantic-regression Seam. It measures label agreement, not runtime quality.
 - Root full-library harness manifests are legacy or manifest-only Adapters.
 - `plugins/agi-super-team-codex/` is an independently curated Codex Adapter; it remains manifest-only until a matching client receipt exists.
 - `CHARTER.md` and `COLLABORATION.md` are required shared generic-workspace inputs. Installed role packs use relative links to them.
@@ -104,6 +106,7 @@ Legacy root documents may remain as stable routing paths. They must not duplicat
 |---|---|---|
 | `config/team-manifest.json` | Installer, catalog usage, and validator must fail before writes | High-Depth authority Interface |
 | `config/skill-taxonomy.json` | Catalog build/check must fail | Authored classification authority |
+| `config/skill-taxonomy-gold.json` | Semantic evaluation must fail closed | Reviewed, fixed-membership evaluation authority |
 | `catalog/` | `npm run build:skills` recreates discovery outputs; `npm run build:skill-quality` recreates the quality report | Generated outputs, never authority |
 | One distribution Adapter | Only that harness surface is lost | Adapter boundary is local |
 | `CHARTER.md` or `COLLABORATION.md` | Installer preflight must fail with zero writes | Required shared installation Seam |
@@ -114,7 +117,7 @@ Legacy root documents may remain as stable routing paths. They must not duplicat
 | When changing | Update | Verify |
 |---|---|---|
 | Agent or kit membership | `config/team-manifest.json`, referenced Agent files | `npm run validate -- --warnings-as-errors` |
-| Skill metadata or taxonomy | Skill `SKILL.md`, taxonomy if needed | `npm run check:skills` and `npm run check:skill-quality` |
+| Skill metadata or taxonomy | Skill `SKILL.md`, taxonomy, and reviewed label only when its source changed | `npm run check:skills`, `npm run check:skill-quality`, and `npm run check:taxonomy-evaluation` |
 | Generic installer behavior | `install.sh` and installer fixtures | `npm run test:installer` |
 | Curated Codex package | `plugins/agi-super-team-codex/` and its index | Repository tests plus client receipt when available |
 | Site data or SEO | `docs/`, data builder, site contracts | `npm run test:repository` |
@@ -122,7 +125,7 @@ Legacy root documents may remain as stable routing paths. They must not duplicat
 
 ## Contract score boundary
 
-`npm run check:architecture` measures automated architecture-classification contracts: path ownership, authority separation, generated lineage, Adapter status, navigation, decision memory, and taxonomy debt ceilings. It does **not** measure semantic category accuracy, clean harness installs, fixture outcomes, or external beta evidence. Those remain separate scorecards.
+`npm run check:architecture` measures automated architecture-classification contracts: path ownership, authority separation, generated lineage, Adapter status, navigation, decision memory, and taxonomy debt ceilings. `npm run check:taxonomy-evaluation` separately measures agreement with the fixed reviewed Gold Set. Neither score proves Skill quality, safety, clean harness installs, fixture outcomes, or external beta evidence.
 
 ## Current deepening candidates
 
