@@ -11,8 +11,9 @@ Contributions should be reviewable, attributable, safe to test, and honest about
 5. Run the repository checks:
 
    ```bash
+   npm run build:skills
    npm test
-   npm run validate
+   npm run validate -- --warnings-as-errors
    ```
 
 6. Review the diff for credentials, personal data, unsafe shell commands, generated artifacts, and unsupported claims.
@@ -20,6 +21,10 @@ Contributions should be reviewable, attributable, safe to test, and honest about
 ## Skills
 
 A skill lives at `skills/<name>/SKILL.md`. Keep one clear purpose, document triggers and boundaries, and place optional scripts or assets in the same skill directory.
+
+Run `npm run build:skills` after adding, renaming, or recategorizing a skill. If the deterministic rule chooses the wrong primary category, add the narrowest rule or an explicit override to [`config/skill-taxonomy.json`](./config/skill-taxonomy.json).
+
+Do not submit placeholders, bulk-generated duplicates, unsupported compatibility claims, or instructions with no maintainable purpose. A catalog entry is not automatically curated, tested, or portable across harnesses.
 
 Commands must state prerequisites, expected effects, and recovery. Destructive, external, production, or account-changing operations need explicit human confirmation. Never embed credentials or encourage users to pipe unreviewed remote code into a shell.
 

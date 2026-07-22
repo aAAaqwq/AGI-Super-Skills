@@ -1,0 +1,177 @@
+{
+  "$schema": "./skill-taxonomy.schema.json",
+  "schemaVersion": 1,
+  "categories": [
+    {
+      "id": "ai-agents-orchestration",
+      "emoji": "🤖",
+      "title": "AI Agents & Orchestration",
+      "description": "Coordinate agents, context, memory, models, prompts, and tool protocols.",
+      "priority": 75,
+      "patterns": ["(?:^|-)agent(?:-|$)", "orchestrat", "multi-agent", "subagent", "dispatcher", "memory", "context", "prompt", "\\bllm\\b", "\\bmcp\\b", "claude", "codex", "(?:^|-)model(?:-|$)", "(?:^|-)skills?(?:-|$)", "ruflo", "openclaw", "clawrouter"]
+    },
+    {
+      "id": "software-engineering",
+      "emoji": "💻",
+      "title": "Software Engineering",
+      "description": "Build, test, review, debug, and maintain applications and developer tooling.",
+      "priority": 80,
+      "patterns": ["code", "developer", "development", "frontend", "backend", "react", "tailwind", "\\bcss\\b", "\\bapi\\b", "database", "postgres", "redis", "\\bsql\\b", "testing", "test-", "tdd", "debug", "architecture", "git-", "github", "gitlab", "commit", "(?:^|-)cli(?:-|$)|\\bcli\\b", "electron", "supabase", "webapp"]
+    },
+    {
+      "id": "cloud-devops-reliability",
+      "emoji": "☁️",
+      "title": "Cloud, DevOps & Reliability",
+      "description": "Deploy, observe, troubleshoot, and operate cloud and local infrastructure.",
+      "priority": 85,
+      "patterns": ["deploy", "devops", "cloud", "\\baws\\b", "kubernetes", "docker", "nginx", "observability", "monitoring", "healthcheck", "incident", "linux", "sysadmin", "sentry", "datadog", "grafana", "vercel", "cloudflare", "render-", "ssh", "tailscale", "proxmox", "distributed-tracing", "runbook"]
+    },
+    {
+      "id": "data-analytics-research",
+      "emoji": "📊",
+      "title": "Data, Analytics & Research",
+      "description": "Collect evidence, search sources, analyze data, and communicate findings.",
+      "priority": 95,
+      "patterns": ["research", "data", "analytics", "analysis", "search", "scrap", "crawl", "arxiv", "\\bcsv\\b", "\\betl\\b", "duckdb", "business-intelligence", "dashboard", "metrics", "rag", "vector", "knowledge", "news", "genome", "bio-", "synthesizer", "experiment"]
+    },
+    {
+      "id": "security-privacy-legal",
+      "emoji": "🛡️",
+      "title": "Security, Privacy & Legal",
+      "description": "Review security, privacy, compliance, permissions, contracts, and legal risk.",
+      "priority": 115,
+      "patterns": ["security", "privacy", "compliance", "gdpr", "legal", "contract", "auth-", "secret", "permission", "key-rotation", "audit", "pci", "customs", "employment-contract"]
+    },
+    {
+      "id": "product-design-ux",
+      "emoji": "🎨",
+      "title": "Product, Design & UX",
+      "description": "Shape product requirements, interfaces, design systems, and user experience.",
+      "priority": 90,
+      "patterns": ["(?:^|-)product(?:-|$)|\\bproduct\\b", "\\bprd\\b", "design", "\\bux\\b", "\\bui\\b", "figma", "canvas", "roadmap", "user-story", "requirements", "prioritization", "feature-", "style-guide", "web-artifacts", "accessibility"]
+    },
+    {
+      "id": "marketing-seo-growth",
+      "emoji": "📈",
+      "title": "Marketing, SEO & Growth",
+      "description": "Acquire audiences through positioning, campaigns, search, ads, and social growth.",
+      "priority": 105,
+      "patterns": ["marketing", "\\bseo\\b", "growth", "\\bads?\\b", "campaign", "social", "influencer", "traffic", "viral", "brand", "competitor", "competitive", "domain-name", "geo-content", "serp", "acquisition", "postbridge"]
+    },
+    {
+      "id": "content-media-publishing",
+      "emoji": "✍️",
+      "title": "Content, Media & Publishing",
+      "description": "Create, edit, repurpose, and publish writing, images, audio, and video.",
+      "priority": 100,
+      "patterns": ["content", "writing", "writer", "article", "copywriting", "copy-edit", "video", "image", "media", "publish", "podcast", "slide", "pptx", "docx", "\\bpdf\\b", "youtube", "subtitle", "lyrics", "infographic", "typography", "ffmpeg", "suno"]
+    },
+    {
+      "id": "sales-crm-customer-success",
+      "emoji": "🤝",
+      "title": "Sales, CRM & Customer Success",
+      "description": "Find, win, onboard, support, and retain customers with accountable workflows.",
+      "priority": 110,
+      "patterns": ["sales", "lead", "\\bcrm\\b", "customer", "account-executive", "outreach", "cold-email", "hubspot", "salesforce", "pipedrive", "close-automation", "intercom", "freshdesk", "freshservice", "zendesk", "spin-selling", "sandler", "negotiation", "after-sales", "helpdesk", "client-"]
+    },
+    {
+      "id": "finance-trading-markets",
+      "emoji": "💹",
+      "title": "Finance, Trading & Markets",
+      "description": "Analyze markets, backtest strategies, track portfolios, and review financial risk.",
+      "priority": 120,
+      "patterns": ["financ", "trading", "trade-", "crypto", "\\bbtc\\b", "fund", "stock", "portfolio", "backtest", "quant", "investment", "equity", "polymarket", "defi", "payment", "billing", "invoice", "bookkeeping", "expense", "stripe", "bankr", "alpha101", "options-flow", "whale", "market-movers", "market-price", "market-sentiment", "technical-analysis"]
+    },
+    {
+      "id": "business-operations-strategy",
+      "emoji": "🧭",
+      "title": "Business Operations & Strategy",
+      "description": "Plan work, make decisions, manage teams, and improve operating systems.",
+      "priority": 65,
+      "patterns": ["business", "strategy", "\\bceo\\b", "\\bokr\\b", "\\bkpi\\b", "project", "task", "planning", "priorit", "team", "company", "startup", "process", "operations", "delegat", "meeting", "daily-", "weekly-", "\\bhr\\b", "culture", "resume", "first-principles", "thinking-", "brainstorm", "decision", "scrum", "kanban"]
+    },
+    {
+      "id": "apps-workflow-automation",
+      "emoji": "⚙️",
+      "title": "Apps & Workflow Automation",
+      "description": "Connect everyday apps, browsers, messaging systems, and repeatable workflows.",
+      "priority": 70,
+      "patterns": ["automation", "workflow", "browser", "airtable", "asana", "basecamp", "box-", "calendly", "clickup", "coda", "confluence", "discord", "docusign", "dropbox", "gmail", "google-drive", "jira", "linear", "monday", "notion", "slack", "telegram", "trello", "whatsapp", "zoom", "make-automation", "email-", "calendar", "one-drive", "outlook"]
+    },
+    {
+      "id": "chinese-platform-workflows",
+      "emoji": "🇨🇳",
+      "title": "Chinese Platform Workflows",
+      "description": "Create, analyze, and publish for major Chinese-language platforms and channels.",
+      "priority": 130,
+      "patterns": ["baidu", "douyin", "xhs", "xiaohongshu", "wechat", "weixin", "weibo", "juejin", "zsxq", "wemp", "wecom", "tianyancha", "feishu", "humanize-zh", "redbook", "binance-square", "baoyu-xhs", "md2wechat", "gzh", "ziliu"]
+    },
+    {
+      "id": "general-utilities",
+      "emoji": "🧰",
+      "title": "Specialized Domains & Utilities",
+      "description": "Domain-specific helpers and cross-functional tools that need a dedicated review path.",
+      "priority": 0,
+      "patterns": [],
+      "fallback": true
+    }
+  ],
+  "overrides": {
+    "ads-agent": "marketing-seo-growth",
+    "ai-trader-arena": "finance-trading-markets",
+    "backtest-expert": "finance-trading-markets",
+    "backtesting-frameworks": "finance-trading-markets",
+    "bash-pro": "software-engineering",
+    "bazi-fortune": "general-utilities",
+    "clanker": "finance-trading-markets",
+    "competitive-analysis": "marketing-seo-growth",
+    "content-ops-toolkit": "content-media-publishing",
+    "crypto-bd-agent": "finance-trading-markets",
+    "deep-research": "data-analytics-research",
+    "dispatching-parallel-agents": "ai-agents-orchestration",
+    "duckdb-cli-ai-skills": "data-analytics-research",
+    "frontend-design-ultimate": "product-design-ux",
+    "geo-agent": "marketing-seo-growth",
+    "github-automation": "apps-workflow-automation",
+    "invoice-generator-agent": "finance-trading-markets",
+    "security-audit": "security-privacy-legal",
+    "seo-audit": "marketing-seo-growth",
+    "tdd-workflow": "software-engineering",
+    "xiaohongshu-growth": "chinese-platform-workflows"
+  },
+  "riskLabels": [
+    {"id": "credentials", "title": "credentials"},
+    {"id": "external-write", "title": "external write"},
+    {"id": "financial-action", "title": "financial action"},
+    {"id": "personal-data", "title": "personal data"},
+    {"id": "system-change", "title": "system change"}
+  ],
+  "riskOverrides": {
+    "clanker": ["external-write", "financial-action"],
+    "douyin-publisher": ["credentials", "external-write"],
+    "email-send-bulk": ["credentials", "external-write", "personal-data"],
+    "email-send-direct": ["credentials", "external-write", "personal-data"],
+    "github-automation": ["credentials", "external-write", "system-change"],
+    "juejin-publisher-custom": ["credentials", "external-write"],
+    "openhr": ["credentials", "external-write", "personal-data"],
+    "relayer-trade": ["credentials", "external-write", "financial-action"],
+    "security-audit": ["system-change"],
+    "social-media-poster": ["credentials", "external-write"],
+    "telegram-send": ["credentials", "external-write", "personal-data"],
+    "weixin-channels-publish": ["credentials", "external-write"],
+    "whatsapp-send": ["credentials", "external-write", "personal-data"],
+    "xhs-publisher": ["credentials", "external-write"],
+    "ziliu-publisher": ["credentials", "external-write"]
+  },
+  "featured": [
+    {"skill": "dispatching-parallel-agents", "category": "ai-agents-orchestration", "supportLevel": "pack-required", "reason": "Break independent work into bounded parallel tasks."},
+    {"skill": "tdd-workflow", "category": "software-engineering", "supportLevel": "pack-required", "reason": "Drive implementation through a test-first loop."},
+    {"skill": "deep-research", "category": "data-analytics-research", "supportLevel": "pack-required", "reason": "Turn a question into an evidence-oriented research process."},
+    {"skill": "seo-audit", "category": "marketing-seo-growth", "supportLevel": "pack-required", "reason": "Review search discoverability with explicit checks."},
+    {"skill": "content-ops-toolkit", "category": "content-media-publishing", "supportLevel": "pack-required", "reason": "Move from a bounded content brief to a reviewable draft."},
+    {"skill": "security-audit", "category": "security-privacy-legal", "supportLevel": "pack-required", "reason": "Inspect code and configuration for security risk."},
+    {"skill": "backtest-expert", "category": "finance-trading-markets", "supportLevel": "pack-required", "reason": "Review backtests without implying live-trading safety."},
+    {"skill": "frontend-design-ultimate", "category": "product-design-ux", "supportLevel": "pack-required", "reason": "Create a concrete interface direction and implementation."},
+    {"skill": "github-automation", "category": "apps-workflow-automation", "supportLevel": "pack-required", "reason": "Work with GitHub through an explicit automation boundary."}
+  ]
+}

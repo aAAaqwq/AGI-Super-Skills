@@ -157,6 +157,12 @@ def _physical_skill_names(root: Path) -> set[str]:
     }
 
 
+def physical_skill_names(root: Path) -> set[str]:
+    """Return canonical tracked, physical, top-level skill identifiers."""
+
+    return _physical_skill_names(root)
+
+
 def _agent_names(root: Path) -> set[str]:
     entries = _git_index(root, ("agents",))
     if entries is not None:
