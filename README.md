@@ -259,6 +259,12 @@ AGI Super Team is not a model, autonomous orchestrator, or agent runtime. Instal
 
 ## ⭐ Star History
 
-![Star History](./docs/assets/star-history.svg)
+<a href="https://github.com/aAAaqwq/AGI-Super-Team/stargazers">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/star-history-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="./docs/assets/star-history-light.svg">
+    <img alt="AGI Super Team GitHub star history" src="./docs/assets/star-history-light.svg" width="1200">
+  </picture>
+</a>
 
-The chart is repository-owned, so README rendering does not depend on GitHub Pages. Historical refresh may show a cached or pending state when GitHub's stargazer API is unavailable.
+Generated from GitHub's repository API every six hours by this repository's workflow. If a refresh is unavailable, the last successful history remains visible. Click the chart to inspect the current stargazers.
