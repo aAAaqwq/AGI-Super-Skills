@@ -13,20 +13,41 @@ class ReadmeContractTests(unittest.TestCase):
         cls.chinese = (ROOT / "README_CN.md").read_text(encoding="utf-8")
 
     def test_readmes_define_the_product_and_its_boundary(self) -> None:
-        self.assertIn("installable AI team packs", self.english)
-        self.assertIn("not a model or an agent runtime", self.english)
-        self.assertIn("可安装的 AI 团队包", self.chinese)
-        self.assertIn("不是模型或 Agent 运行时", self.chinese)
+        self.assertIn("Composable skills. Specialist agents. Reviewable team workflows.", self.english)
+        self.assertIn("not a model, autonomous orchestrator, or agent runtime", self.english)
+        self.assertIn("可组合 Skills · 专业 Agents · 可审查团队 Workflows", self.chinese)
+        self.assertIn("不是模型、自治编排器或 Agent 运行时", self.chinese)
+
+    def test_readmes_lead_with_value_before_boundaries(self) -> None:
+        for readme, value_heading, boundary_heading, flow_marker in (
+            (
+                self.english,
+                "## 🧠 The system in one minute",
+                "## 🛡️ Boundaries and human approval",
+                "Coordinator scopes",
+            ),
+            (
+                self.chinese,
+                "## 🧠 一分钟理解整个系统",
+                "## 🛡️ 边界与人工批准",
+                "协调者界定范围",
+            ),
+        ):
+            self.assertLess(readme.index(value_heading), readme.index(boundary_heading))
+            self.assertNotIn("Three constraints make the project different", readme)
+            self.assertNotIn("项目有三项核心约束", readme)
+            self.assertIn(flow_marker, readme)
 
     def test_readmes_include_a_truthful_installation_receipt(self) -> None:
-        self.assertIn("## 🧾 Five-minute installation receipt", self.english)
-        self.assertIn("## 🧾 五分钟安装凭据", self.chinese)
+        self.assertIn("## 🧾 Reproducible installation receipt", self.english)
+        self.assertIn("## 🧾 可复现安装凭据", self.chinese)
         for readme in (self.english, self.chinese):
             self.assertIn("workspace-ceo/SOUL.md", readme)
             self.assertIn("workspace-pe/SOUL.md", readme)
             self.assertIn("workspace-cco/SOUL.md", readme)
             self.assertIn("Validation pending", readme)
             self.assertIn("mktemp -d", readme)
+            self.assertIn("npm run check:skills", readme)
 
     def test_readmes_expose_repository_architecture_and_discovery(self) -> None:
         expected_headings = {
@@ -108,6 +129,14 @@ class ReadmeContractTests(unittest.TestCase):
             "CEO scopes the outcome, Product Engineer builds it, and Governor",
             site,
         )
+
+    def test_star_history_is_repository_owned_and_pages_independent(self) -> None:
+        for readme in (self.english, self.chinese):
+            self.assertIn("![Star History](./docs/assets/star-history.svg)", readme)
+            self.assertNotIn(
+                "aaaaqwq.github.io/AGI-Super-Team/assets/star-history.svg",
+                readme.lower(),
+            )
 
 
 if __name__ == "__main__":
