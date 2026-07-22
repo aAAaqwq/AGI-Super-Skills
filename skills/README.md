@@ -32,14 +32,20 @@ rg -n '^description:' skills -g SKILL.md
 npm run check:skills
 ```
 
-## 🏷️ Support levels
+## 🏷️ Support and portability
 
 - **Curated:** reviewed and versioned in a named distribution with its own sync policy.
 - **Pack-required:** referenced by an active Agent and covered by repository structure checks.
 - **Catalog:** tracked with a physical `SKILL.md`; behavior, dependencies, license, and harness support may still require review.
 - **External:** recommended by the manifest but not bundled here.
 
-These levels are not quality rankings. Inspect each skill's permissions, dependencies, provenance, and license before use.
+Portability is a separate axis:
+
+- **Portable required / optional:** copied by the generic installer and scanned for known host paths and runtime-only commands.
+- **Harness-specific:** assigned to an Agent but skipped by the generic installer because it assumes a named runtime or tool.
+- **Catalog-only:** discoverable source with no active Agent assignment.
+
+Neither axis is a quality ranking or runtime guarantee. Inspect each skill's permissions, dependencies, provenance, and license before use.
 
 ## 🔬 Structural quality evidence
 

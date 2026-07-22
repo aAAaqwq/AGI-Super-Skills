@@ -56,7 +56,7 @@ Kelsey Hightower 教我：Kubernetes 的成功不是因为技术最好，是因�
 
 ### 核心栈
 - **基础设施**: Kubernetes, Docker, Linux, GPU/CUDA 集群
-- **Agent 架构**: OpenClaw, 多 Agent 协调, 编排系统
+- **Agent 架构**: Harness Adapter、多 Agent 协调、编排系统
 - **自动化**: Bash, Python, CI/CD, Infrastructure-as-Code
 - **监控**: Prometheus, Grafana, 日志分析, 告警系统
 - **云**: GPU 实例, Spot 价格优化, 成本控制

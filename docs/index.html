@@ -42,7 +42,8 @@
     ]
   }
   </script>
-  <script src="assets/site.js" defer></script>
+    <script src="assets/receipt-status.js" defer></script>
+    <script src="assets/site.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -150,7 +151,9 @@ cd AGI-Super-Team
 
 <span class="code-comment"># 3. Apply explicitly, then verify</span>
 ./install.sh --source "$PWD" --destination /path/to/review-workspace --apply solo-founder
-python3 -m pip install --requirement requirements-dev.txt
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install --requirement requirements-dev.txt
 npm test &amp;&amp; npm run validate -- --warnings-as-errors</code></pre>
       </div>
     </section>

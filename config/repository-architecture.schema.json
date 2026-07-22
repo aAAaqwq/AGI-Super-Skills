@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aaaaqwq.github.io/AGI-Super-Team/schemas/repository-architecture.schema.json",
+  "title": "AGI Super Team repository architecture contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "vocabulary", "modules", "pathOwnership", "qualityGates"],
+  "properties": {
+    "$schema": {"const": "./repository-architecture.schema.json"},
+    "schemaVersion": {"const": 1},
+    "vocabulary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["Module", "Interface", "Implementation", "Depth", "Seam", "Adapter", "Leverage", "Locality"],
+      "properties": {
+        "Module": {"type": "string", "minLength": 24},
+        "Interface": {"type": "string", "minLength": 24},
+        "Implementation": {"type": "string", "minLength": 24},
+        "Depth": {"type": "string", "minLength": 24},
+        "Seam": {"type": "string", "minLength": 24},
+        "Adapter": {"type": "string", "minLength": 24},
+        "Leverage": {"type": "string", "minLength": 24},
+        "Locality": {"type": "string", "minLength": 24}
+      }
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "interface", "implementations", "ownershipPrefixes", "depth", "seams", "leverage", "locality"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "title": {"type": "string", "minLength": 8},
+          "interface": {"type": "string", "minLength": 24},
+          "implementations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+          "ownershipPrefixes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "depth": {"enum": ["foundational", "composed", "boundary"]},
+          "seams": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+          "leverage": {"type": "string", "minLength": 24},
+          "locality": {"type": "string", "minLength": 24}
+        }
+      }
+    },
+    "pathOwnership": {
+      "type": "array",
+      "minItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "role", "module", "authority"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "role": {"enum": ["authored-authority", "authored-source", "generated-output", "distribution-adapter", "implementation", "evidence", "public-navigation", "governance"]},
+          "module": {"type": "string"},
+          "authority": {"type": "boolean"},
+          "generatedBy": {"type": "string"},
+          "verify": {"type": "string"},
+          "evidenceStatus": {"enum": ["manifest", "pending", "legacy"]},
+          "recommendation": {"enum": ["recommended", "available", "legacy"]}
+        }
+      }
+    },
+    "qualityGates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["taxonomy", "requiredEntrypoints", "requiredDecisions"],
+      "properties": {
+        "taxonomy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["maxFallbackRatio", "maxOverrideRatio", "maxMultipleCategoryMatchRatio", "maxPriorityResolvedTieRatio", "maxNeedsReviewRatio"],
+          "properties": {
+            "maxFallbackRatio": {"type": "number", "minimum": 0, "maximum": 1},
+            "maxOverrideRatio": {"type": "number", "minimum": 0, "maximum": 1},
+            "maxMultipleCategoryMatchRatio": {"type": "number", "minimum": 0, "maximum": 1},
+            "maxPriorityResolvedTieRatio": {"type": "number", "minimum": 0, "maximum": 1},
+            "maxNeedsReviewRatio": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        },
+        "requiredEntrypoints": {"type": "array", "minItems": 6, "uniqueItems": true, "items": {"type": "string"}},
+        "requiredDecisions": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"type": "string"}}
+      }
+    }
+  }
+}

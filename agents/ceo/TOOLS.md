@@ -1,73 +1,20 @@
-# TOOLS.md — ceo (小a)
+# CEO tool and Skill notes
 
-_CEO · 仓库 skills 路径引用_
+The canonical CEO Skill assignment is [`config/team-manifest.json`](../../config/team-manifest.json). This file intentionally does not duplicate counts or the full list.
 
-## CEO 可引用 Skills
+## How to choose
 
-以下 skills 路径均相对于 `agents/ceo/`，格式 `../../skills/<name>/`。
+1. Start from the requested outcome and inspect the local `skills/` directory after installation.
+2. Prefer the smallest relevant Skill; do not load every assigned Skill into one task.
+3. Treat catalog inclusion and manifest assignment as structural evidence only.
+4. Ask for human approval before external writes, publishing, credentials, deployment, money, or destructive changes.
+5. Record the selected Skill, artifact, verification, and limitations in the handoff.
 
-### 核心 10 Skills
+Useful bounded starting points include:
 
-| Skill | 路径 |
-|-------|------|
-| brainstorming | `../../skills/brainstorming/` |
-| roadmap-planning | `../../skills/roadmap-planning/` |
-| planning-with-files | `planning-with-files`（外部，仓库未提供） |
-| startup-metrics-framework | `../../skills/startup-metrics-framework/` |
-| feature-requirements-clarification | `../../skills/feature-requirements-clarification/` |
-| user-story | `../../skills/user-story/` |
-| okr | `../../skills/okr/` |
-| office-hours | `office-hours`（外部，仓库未提供） |
-| prioritization-funnel | `../../skills/prioritization-funnel/` |
-| meeting-insights-analyzer | `../../skills/meeting-insights-analyzer/` |
+- [`brainstorming`](../../skills/brainstorming/) for framing options;
+- [`project-planner`](../../skills/project-planner/) for scoped execution plans;
+- [`dispatching-parallel-agents`](../../skills/dispatching-parallel-agents/) when work is genuinely independent;
+- [`verification-before-completion`](../../skills/verification-before-completion/) before claiming completion.
 
-> **注意**: `interview-me` 在仓库 `skills/` 中不存在对应的 `SKILL.md`，暂未引用。
-
----
-
-## 团队 Skills 总览
-
-| Agent | # | 核心 Skill 路径 |
-|-------|---|-----------------|
-| PE | 16 | `../../skills/react-expert/`, `../../skills/tdd-workflow/`, `../../skills/systematic-debugging/`, `../../skills/e2e-testing/` |
-| CTO | 10 | `../../skills/kubernetes-specialist/`, `docker-containerization`（外部）, `../../skills/deployment-automation/` |
-| CEO | 10 | `../../skills/executing-plans/`, `../../skills/brainstorming/`, `../../skills/dispatching-parallel-agents/` |
-| CCO | 10 | `../../skills/content-ops-toolkit/`, `../../skills/writing-skills/`, `xiaohongshu-viral-copy`（外部） |
-| CMO | 12 | `../../skills/traffic-acquisition/`, `../../skills/ads/`, `../../skills/video-marketing/`, `../../skills/xiaohongshu-growth/` |
-| CQO | 9 | `generating-trading-signals`（外部）, `../../skills/backtest-expert/`, `../../skills/polymarket-api/` |
-| CRO | 8 | `../../skills/deep-research/`, `../../skills/competitive-analysis/`, `../../skills/lead-intelligence/` |
-| CPO | 8 | `../../skills/prd-development/`, `../../skills/user-story/`, `../../skills/roadmap-planning/` |
-| CFO | 7 | `../../skills/token-budget-advisor/`, `../../skills/financial-analyst/`, `../../skills/polymarket-api/` |
-| CLO | 7 | `../../skills/contract-review/`, `../../skills/gdpr-dsgvo-expert/`, `../../skills/legal-risk-assessment/` |
-| CDO | 6 | `../../skills/postgresql-database-engineering/`, `../../skills/google-analytics/`, `../../skills/dashboard-builder/` |
-| batch | 5 | `../../skills/executing-plans/`, `../../skills/dispatching-parallel-agents/` |
-| CSO | 4 | `../../skills/lead-intelligence/`, `../../skills/cold-email-sequence-generator/` |
-| COO | 4 | `taskflow`（外部）, `../../skills/healthcheck/`, `../../skills/verification-before-completion/` |
-| claude | 0 | ACP运行时，不配 skill |
-
----
-
-## 仓库内 Skills 索引
-
-位置：`../../skills/<name>/SKILL.md`
-
-| Skill | 用途 |
-|-------|------|
-| team-foreman | 团队监工巡检 |
-| model-hierarchy-skill | 模型层级调度 |
-| openclaw-master-skills | OpenClaw主控 |
-| orchestration-workflow | Agent编排 |
-| token-guard | Token用量防护 |
-| token-reporter | Token消耗报告 |
-| daily-douyin-content | 抖音日更 |
-| daily-xhs-content | XHS日更 |
-| daily-gzh-content | 公众号日更 |
-| gzh-publisher-skill | 公众号发布 |
-| douyin-smart-publish | 抖音智能发布 |
-| xhs-publisher | XHS发布 |
-| content-repurposing-engine | 一稿多平台 |
-| entropy-manager | 系统减熵 |
-
----
-
-_最后更新: 2026-06-17 | 改为仓库 skills/ 路径引用格式_
+For discovery across the complete physical inventory, use the generated [Skill catalog](../../catalog/).

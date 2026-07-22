@@ -8,6 +8,8 @@ PUBLIC_MARKDOWN = (
     "README.md",
     "README_CN.md",
     "ARCHITECTURE.md",
+    "CONTEXT.md",
+    "AGENTS.md",
     "STARTUP.md",
     "CLAUDE.md",
     "skills/README.md",
@@ -17,8 +19,13 @@ PUBLIC_MARKDOWN = (
     "plugins/agi-super-team-codex/README.md",
     "growth/README.md",
     "growth/quality-iterations-2026-07-21.md",
+    "config/README.md",
+    "scripts/README.md",
+    "tests/README.md",
+    "docs/README.md",
+    "docs/adr/README.md",
 )
-MARKDOWN_LINK = re.compile(r"(?<!!)\[[^]]+\]\(([^)]+)\)")
+MARKDOWN_LINK = re.compile(r"!?\[[^]]*\]\(([^)]+)\)")
 
 
 class NavigationContractTests(unittest.TestCase):
@@ -30,9 +37,14 @@ class NavigationContractTests(unittest.TestCase):
                 target = target.strip().split(maxsplit=1)[0].strip("<>")
                 if not target or target.startswith(("#", "http://", "https://", "mailto:")):
                     continue
-                path = (source.parent / target.split("#", 1)[0]).resolve()
+                route, _, fragment = target.partition("#")
+                path = (source.parent / route).resolve()
                 with self.subTest(source=relative, target=target):
                     self.assertTrue(path.exists())
+                    if fragment:
+                        index = path / "README.md" if path.is_dir() else path
+                        content = index.read_text(encoding="utf-8")
+                        self.assertIn(f'id="{fragment}"', content)
 
     def test_language_and_distribution_routes_are_bidirectional(self) -> None:
         english = (ROOT / "README.md").read_text(encoding="utf-8")

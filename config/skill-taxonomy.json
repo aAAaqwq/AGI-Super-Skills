@@ -139,6 +139,29 @@
     "tdd-workflow": "software-engineering",
     "xiaohongshu-growth": "chinese-platform-workflows"
   },
+  "overrideRationales": {
+    "ads-agent": "Its primary user outcome is campaign acquisition, not general agent orchestration.",
+    "ai-trader-arena": "The core outcome is market strategy evaluation despite the generic agent suffix.",
+    "backtest-expert": "Backtesting is a finance and market-risk workflow in this repository.",
+    "backtesting-frameworks": "The entrypoint is organized around trading strategy evaluation and market risk.",
+    "bash-pro": "The skill teaches shell implementation and developer tooling rather than generic utilities.",
+    "bazi-fortune": "This specialized cultural domain has no narrower supported outcome category.",
+    "clanker": "The skill performs token and market actions, so finance risk is the primary route.",
+    "competitive-analysis": "Its intended outcome is market positioning and growth research.",
+    "content-ops-toolkit": "The workflow produces and operates editorial content rather than business operations generally.",
+    "crypto-bd-agent": "Crypto market context and financial risk dominate the business-development framing.",
+    "deep-research": "Evidence collection and synthesis are the primary outcomes.",
+    "dispatching-parallel-agents": "The skill coordinates bounded agent work and therefore belongs in orchestration.",
+    "duckdb-cli-ai-skills": "DuckDB analysis and data exploration dominate the CLI and agent keywords.",
+    "frontend-design-ultimate": "The primary deliverable is interface and user-experience design.",
+    "geo-agent": "GEO here means generative-engine optimization for audience acquisition.",
+    "github-automation": "The primary behavior is repeatable GitHub workflow automation across an external app boundary.",
+    "invoice-generator-agent": "Invoice generation is a financial operations outcome despite the agent suffix.",
+    "security-audit": "Security risk review is the explicit purpose and must outrank generic audit wording.",
+    "seo-audit": "Search acquisition is the explicit outcome and must outrank generic audit wording.",
+    "tdd-workflow": "The workflow exists to implement and verify software changes.",
+    "xiaohongshu-growth": "The platform-specific publishing and growth workflow belongs with Chinese platforms."
+  },
   "riskLabels": [
     {"id": "credentials", "title": "credentials"},
     {"id": "external-write", "title": "external write"},
@@ -165,14 +188,14 @@
     "ziliu-publisher": ["credentials", "external-write"]
   },
   "featured": [
-    {"skill": "dispatching-parallel-agents", "category": "ai-agents-orchestration", "supportLevel": "pack-required", "reason": "Break independent work into bounded parallel tasks."},
-    {"skill": "tdd-workflow", "category": "software-engineering", "supportLevel": "pack-required", "reason": "Drive implementation through a test-first loop."},
-    {"skill": "deep-research", "category": "data-analytics-research", "supportLevel": "pack-required", "reason": "Turn a question into an evidence-oriented research process."},
-    {"skill": "seo-audit", "category": "marketing-seo-growth", "supportLevel": "pack-required", "reason": "Review search discoverability with explicit checks."},
-    {"skill": "content-ops-toolkit", "category": "content-media-publishing", "supportLevel": "pack-required", "reason": "Move from a bounded content brief to a reviewable draft."},
-    {"skill": "security-audit", "category": "security-privacy-legal", "supportLevel": "pack-required", "reason": "Inspect code and configuration for security risk."},
-    {"skill": "backtest-expert", "category": "finance-trading-markets", "supportLevel": "pack-required", "reason": "Review backtests without implying live-trading safety."},
-    {"skill": "frontend-design-ultimate", "category": "product-design-ux", "supportLevel": "pack-required", "reason": "Create a concrete interface direction and implementation."},
-    {"skill": "github-automation", "category": "apps-workflow-automation", "supportLevel": "pack-required", "reason": "Work with GitHub through an explicit automation boundary."}
+    {"skill": "dispatching-parallel-agents", "category": "ai-agents-orchestration", "reason": "Break independent work into bounded parallel tasks."},
+    {"skill": "tdd-workflow", "category": "software-engineering", "reason": "Drive implementation through a test-first loop."},
+    {"skill": "deep-research", "category": "data-analytics-research", "reason": "Turn a question into an evidence-oriented research process."},
+    {"skill": "seo-audit", "category": "marketing-seo-growth", "reason": "Review search discoverability with explicit checks."},
+    {"skill": "writing-skills", "category": "content-media-publishing", "reason": "Move from a bounded writing brief to a reviewable draft."},
+    {"skill": "security-audit", "category": "security-privacy-legal", "reason": "Inspect code and configuration for security risk."},
+    {"skill": "backtest-expert", "category": "finance-trading-markets", "reason": "Review backtests without implying live-trading safety."},
+    {"skill": "frontend-design-ultimate", "category": "product-design-ux", "reason": "Create a concrete interface direction and implementation."},
+    {"skill": "github-automation", "category": "apps-workflow-automation", "reason": "Work with GitHub through an explicit automation boundary."}
   ]
 }

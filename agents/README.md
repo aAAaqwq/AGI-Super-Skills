@@ -34,14 +34,15 @@ agents/<id>/
 ├── AGENTS.md       # Operating rules and role boundaries
 ├── SOUL.md         # Persona and communication style
 ├── IDENTITY.md     # Role identity and purpose
-├── BOOTSTRAP.md    # Startup reading order
-├── MEMORY.md       # Versioned memory guidance
+├── MEMORY.md       # Legacy source history; not distributed by the generic installer
 ├── USER.md         # User-context template
-├── WORKFLOW.md     # Role workflow and handoffs
-└── TOOLS.md        # Active skill references
+└── TOOLS.md        # Repository-only, non-authoritative usage notes
+
+agents/BOOTSTRAP.md # Shared portable startup order
+agents/WORKFLOW.md  # Shared capability-detecting workflow
 ```
 
-`TOOLS.md` references must resolve to tracked physical skills and match the manifest. The repository validator rejects broken or machine-local references.
+Source `TOOLS.md` files are non-exhaustive usage guidance. The generic installer replaces them with a portable list generated from [`config/team-manifest.json`](../config/team-manifest.json), which alone owns Skill assignment and portability class. Harness-specific Skills remain searchable in the catalog but are not copied into generic workspaces.
 
 ## Install safely
 

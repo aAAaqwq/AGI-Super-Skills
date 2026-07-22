@@ -73,6 +73,8 @@ git rev-parse HEAD
 
 通用安装器会在发布暂存工作区前验证全部必需文件。它会保留已有的人格和技能文件，并拒绝危险的来源或目标符号链接。依赖、更新和恢复方法见 [setup.md](./setup.md)。
 
+Manifest 会把可移植的 `required`/`optional` Skills、仅适用于特定 Harness 的 `harnessSpecific` 目录项，以及未内置的外部推荐明确分开。通用安装只复制通过当前 portability contract 的类别，并扫描完整 payload 中已知的宿主路径与运行时专用命令。
+
 **成功标准：** 预览不写入任何文件；应用会创建三个可检查的角色工作区，并且不覆盖已有文件。
 
 ## 🧭 按成果浏览技能
@@ -97,6 +99,7 @@ git rev-parse HEAD
 | [实用指南](./docs/guides/) | Codex、Claude Code、兼容性、团队选择和工作边界 |
 | [专题手册](./cookbook/) | 内容、提示词、研究和量化工作流的深入材料 |
 | [架构地图](./ARCHITECTURE.md) | 事实来源、生成产物、公开入口和变更责任 |
+| [统一术语](./CONTEXT.md) | Module、Interface、Adapter、证据与产品术语 |
 
 ### 🔎 查找高质量 Skill 来源
 
@@ -137,10 +140,13 @@ test -f "$AGI_SOLO_DEST/workspace-ceo/SOUL.md"
 test -f "$AGI_SOLO_DEST/workspace-pe/SOUL.md"
 test -f "$AGI_SOLO_DEST/workspace-cco/SOUL.md"
 
-python3 -m pip install --requirement requirements-dev.txt
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install --requirement requirements-dev.txt
 npm test
 npm run validate -- --warnings-as-errors
 npm run check:skills
+npm run check:architecture
 ```
 
 这份凭据证明当前 checkout 和目标状态下的 manifest 选择、预览安全、暂存复制和仓库完整性。它不能证明工具加载、任务质量或商业成果。
@@ -201,8 +207,9 @@ flowchart LR
 
 | 文件或目录 | 职责 |
 |---|---|
-| [`config/team-manifest.json`](./config/team-manifest.json) | Agents、团队包、必需与外部 Skills 的事实源 |
-| [`agents/`](./agents/) 与 [`skills/`](./skills/) | 安装到通用工作区的人工编写、版本化输入 |
+| [`config/team-manifest.json`](./config/team-manifest.json) | Agents、团队包，以及可移植、Harness 专用和外部 Skill assignment 的事实源 |
+| [`config/repository-architecture.json`](./config/repository-architecture.json) | 机器可读的 Modules、路径责任、生成 lineage 与 Adapter 状态 |
+| [`agents/`](./agents/) 与 [`skills/`](./skills/) | 人工编写、版本化输入；只有 manifest 标记为可移植的 payload 会进入通用工作区 |
 | [`.codex/INDEX.md`](./.codex/INDEX.md) | 安装指南和 Codex 包索引 |
 | [`plugins/agi-super-team-codex/`](./plugins/agi-super-team-codex/) | 实际的 Codex 插件、Skills 和内置 Agent 角色 |
 | [`install.sh`](./install.sh) | 默认预览、选择、预检、暂存和 no-clobber 发布 |
@@ -211,9 +218,9 @@ flowchart LR
 | [`tests/`](./tests/) | 仓库、安装器、站点数据和 SEO 契约 |
 | [`docs/`](./docs/) | 项目站、验证数据和人工编辑指南 |
 
-关于 authored input、generated output、分发和证据边界，请阅读完整的[仓库架构地图](./ARCHITECTURE.md)。
+关于 authored input、generated output、分发和证据边界，请阅读完整的[仓库架构地图](./ARCHITECTURE.md)、[统一术语](./CONTEXT.md)与[决策记录](./docs/adr/)。
 
-[`config/external-skill-sources.json`](./config/external-skill-sources.json) 记录已删除机器本地链接的可移植来源。README 文案和自动生成目录都不是库存事实源。
+[`config/external-skill-sources.json`](./config/external-skill-sources.json) 记录已删除机器本地链接的 tombstones，其中也包括尚未解析的来源字段。README 文案和自动生成目录都不是库存事实源。
 
 ## 🧠 团队拓扑
 

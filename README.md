@@ -73,6 +73,8 @@ Inspect the selected Agents and destinations. Apply only when they match your in
 
 The generic installer validates every required file before publishing staged workspaces. It preserves existing persona and skill files and rejects dangerous source or destination symlinks. See [setup.md](./setup.md) for prerequisites, updates, and recovery.
 
+The manifest separates portable `required`/`optional` Skills from `harnessSpecific` catalog entries and unbundled external recommendations. Generic installs copy only classes that pass the current portability contract; the complete copied payload is scanned for known host paths and runtime-only commands.
+
 **Success:** the preview writes nothing; apply creates three inspectable role workspaces without overwriting existing files.
 
 ## 🧭 Browse skills by outcome
@@ -97,6 +99,7 @@ Explore the repository by depth:
 | [Practical guides](./docs/guides/) | Codex, Claude Code, compatibility, team choice, and workflow boundaries |
 | [Cookbooks](./cookbook/) | Longer material for content, prompts, research, and quantitative workflows |
 | [Architecture map](./ARCHITECTURE.md) | Sources of truth, generated outputs, public entry points, and change ownership |
+| [Shared language](./CONTEXT.md) | Module, Interface, Adapter, evidence, and product terminology |
 
 ### 🔎 Find high-quality skill sources
 
@@ -137,10 +140,13 @@ test -f "$AGI_SOLO_DEST/workspace-ceo/SOUL.md"
 test -f "$AGI_SOLO_DEST/workspace-pe/SOUL.md"
 test -f "$AGI_SOLO_DEST/workspace-cco/SOUL.md"
 
-python3 -m pip install --requirement requirements-dev.txt
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install --requirement requirements-dev.txt
 npm test
 npm run validate -- --warnings-as-errors
 npm run check:skills
+npm run check:architecture
 ```
 
 This receipt proves manifest-driven selection, preview safety, staged copying, and repository integrity for the inspected checkout and destination state. It does not prove harness loading, task quality, or business outcomes.
@@ -201,8 +207,9 @@ flowchart LR
 
 | File or directory | Responsibility |
 |---|---|
-| [`config/team-manifest.json`](./config/team-manifest.json) | Source of truth for Agents, kits, and required or external skills |
-| [`agents/`](./agents/) and [`skills/`](./skills/) | Authored, versioned inputs installed into generic workspaces |
+| [`config/team-manifest.json`](./config/team-manifest.json) | Source of truth for Agents, kits, and portable, harness-specific, or external Skill assignments |
+| [`config/repository-architecture.json`](./config/repository-architecture.json) | Machine-readable Modules, path owners, generated lineage, and Adapter status |
+| [`agents/`](./agents/) and [`skills/`](./skills/) | Authored, versioned inputs; only manifest-classified portable payloads enter generic workspaces |
 | [`.codex/INDEX.md`](./.codex/INDEX.md) | Installation guide and Codex package index |
 | [`plugins/agi-super-team-codex/`](./plugins/agi-super-team-codex/) | Actual curated Codex plugin, skills, and bundled agent roles |
 | [`install.sh`](./install.sh) | Preview-first selection, preflight, staging, and no-clobber publishing |
@@ -211,9 +218,9 @@ flowchart LR
 | [`tests/`](./tests/) | Repository, installer, site-data, and SEO contracts |
 | [`docs/`](./docs/) | Project site, verification data, and editorial guides |
 
-For the authored-input, generated-output, distribution, and evidence boundaries, read the full [repository architecture map](./ARCHITECTURE.md).
+For the authored-input, generated-output, distribution, and evidence boundaries, read the full [repository architecture map](./ARCHITECTURE.md), [shared language](./CONTEXT.md), and [decision records](./docs/adr/).
 
-[`config/external-skill-sources.json`](./config/external-skill-sources.json) records portable provenance for removed machine-local links. README text and generated catalog files are not inventory sources.
+[`config/external-skill-sources.json`](./config/external-skill-sources.json) records tombstones for removed machine-local links, including unresolved provenance fields. README text and generated catalog files are not inventory sources.
 
 ## 🧠 Team topology
 

@@ -555,32 +555,34 @@ def validate_manifest(root: Path) -> ValidationReport:
         if not _expect_exact_keys(
             report,
             skills,
-            {"required", "optional", "recommendedExternal"},
+            {"required", "optional", "harnessSpecific", "recommendedExternal"},
             f"{location}:skills",
         ):
             continue
         categories: dict[str, list[str]] = {}
-        for category in ("required", "optional", "recommendedExternal"):
+        skill_categories = (
+            "required", "optional", "harnessSpecific", "recommendedExternal"
+        )
+        for category in skill_categories:
             parsed = _validate_skill_list(
                 report, skills.get(category), f"{location}:skills.{category}"
             )
             if parsed is not None:
                 categories[category] = parsed
-        for left, right in (
-            ("required", "optional"),
-            ("required", "recommendedExternal"),
-            ("optional", "recommendedExternal"),
-        ):
-            overlap = sorted(set(categories.get(left, [])) & set(categories.get(right, [])))
-            if overlap:
-                report.add(
-                    "error",
-                    "manifest",
-                    "manifest.skill_category_overlap",
-                    f"{left} and {right} overlap: {', '.join(overlap)}",
-                    f"{location}:skills",
+        for left_index, left in enumerate(skill_categories):
+            for right in skill_categories[left_index + 1 :]:
+                overlap = sorted(
+                    set(categories.get(left, [])) & set(categories.get(right, []))
                 )
-        for category in ("required", "optional"):
+                if overlap:
+                    report.add(
+                        "error",
+                        "manifest",
+                        "manifest.skill_category_overlap",
+                        f"{left} and {right} overlap: {', '.join(overlap)}",
+                        f"{location}:skills",
+                    )
+        for category in ("required", "optional", "harnessSpecific"):
             for skill in categories.get(category, []):
                 if skill not in physical_skills:
                     report.add(
