@@ -11,6 +11,9 @@ Contributions should be reviewable, attributable, safe to test, and honest about
 5. Run the repository checks:
 
    ```bash
+   python3 -m venv .venv
+   . .venv/bin/activate
+   python -m pip install --requirement requirements-dev.txt
    npm run build:skills
    npm test
    npm run validate -- --warnings-as-errors

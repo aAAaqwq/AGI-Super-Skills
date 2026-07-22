@@ -98,6 +98,7 @@
           "required": [
             "required",
             "optional",
+            "harnessSpecific",
             "recommendedExternal"
           ],
           "properties": {
@@ -105,6 +106,9 @@
               "$ref": "#/$defs/skillList"
             },
             "optional": {
+              "$ref": "#/$defs/skillList"
+            },
+            "harnessSpecific": {
               "$ref": "#/$defs/skillList"
             },
             "recommendedExternal": {

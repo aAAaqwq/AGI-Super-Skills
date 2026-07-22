@@ -1,6 +1,6 @@
 # TOOLS.md — CFO (Buffett)
 
-_财务 · 仓库工具配置和笔记_
+_非穷尽使用笔记；`config/team-manifest.json` 是 assignment authority。_
 
 ## Repo 路径说明
 

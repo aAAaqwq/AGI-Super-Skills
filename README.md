@@ -1,40 +1,62 @@
+<p align="right"><a href="./README_CN.md">中文</a></p>
+
 <p align="center">
-  <img src="assets/banner.png" alt="AGI Super Team — Evidence-backed AI teams for real outcomes" width="100%">
+  <img src="assets/banner-v2.png" alt="AGI Super Team: composable skills, specialist agents, and reviewable workflows" width="760">
 </p>
 
 <h1 align="center">AGI Super Team</h1>
 
-<p align="center"><strong>Evidence-backed AI teams for real outcomes</strong></p>
+<p align="center"><strong>Composable skills for specialist agents and reviewable team workflows.</strong></p>
 
 <p align="center">
-  <a href="./README_CN.md">中文</a> ·
-  <a href="#safe-quick-start">Quick start</a> ·
-  <a href="#five-minute-installation-receipt">Receipt</a> ·
-  <a href="#browse-skills-by-outcome">Skills</a> ·
-  <a href="#repository-architecture">Architecture</a> ·
-  <a href="./docs/guides/">Guides</a> ·
-  <a href="./CONTRIBUTING.md">Contribute</a>
+  Use one brief to structure scoped work, specialist tasks, independent review, and an explicit human approval gate.
 </p>
 
-## ✨ What this repository is
+AGI Super Team is a versioned library of **AI agent skills, specialist role packs, and human-in-the-loop team workflows** for Codex and local coding-agent workspaces.
 
-AGI Super Team provides installable AI team packs, role instructions, and reusable skills for existing coding-agent harnesses.
+<p align="center">
+  <a href="#try-it-safely"><strong>Preview Solo Founder</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="./.codex/INDEX.md">Inspect Codex package</a>
+</p>
 
-It is not a model or an agent runtime. It provides versioned workspace configurations that help people plan, build, review, and communicate with explicit human approval gates.
+## 🧠 The system in one minute
 
-Three constraints make the project different:
+| Layer | What you get | Why it matters |
+|---|---|---|
+| **🧩 Skills** | Canonical physical `SKILL.md` files grouped into 14 outcome categories | Reuse focused playbooks instead of rebuilding instructions for every task |
+| **🤖 Agents** | 14 inspectable role packs with persona, workflow, and tool guidance | Give planning, engineering, content, research, and review clear ownership |
+| **🔁 Team packs** | 4 manifest-driven combinations, including 3 focused starter kits | Start with a small team for one outcome instead of loading everything |
 
-- **Inspect before write:** the generic installer previews every destination and requires explicit `--apply`.
-- **One source of truth:** agents, kits, local requirements, and external recommendations come from a validated manifest.
-- **Evidence before claims:** compatibility and outcomes remain pending until a receipt matches the tested revision.
+<p>
+  <a href="https://github.com/aAAaqwq/AGI-Super-Team/actions/workflows/validate-repository.yml"><img src="https://github.com/aAAaqwq/AGI-Super-Team/actions/workflows/validate-repository.yml/badge.svg" alt="Repository contracts"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-2563eb" alt="MIT license"></a>
+  <img src="https://img.shields.io/badge/outcome%20fixture-validation%20pending-64748b" alt="Outcome fixture validation pending">
+</p>
 
-Trading, legal, security, medical, publishing, and deployment work still requires qualified human review.
+The packs are designed for this review loop:
 
-## 🚀 Safe quick start
+```mermaid
+flowchart LR
+  B["Brief"] --> C["Coordinator scopes"] --> S["Specialists execute with skills"] --> R["Reviewer challenges"] --> H["Human approves"]
+```
 
-Using Codex? Start with the [curated native package](./.codex/INDEX.md). Evaluating generic workspace files? Continue below.
+AGI Super Team owns the versioned content, selection rules, safe copying, and repository checks. Your configured coding-agent harness owns the model, credentials, tools, execution, and final task output.
 
-Clone `main`, record the commit you reviewed, and preview the Solo Founder pack. The installer requires Bash and Node.js; repository verification also requires npm and Python 3.
+## 🎯 Start with an outcome
+
+| Starter kit | Give it | Intended evaluation outputs | Team |
+|---|---|---|---|
+| [🚀 Solo Founder](./starter-kits/solo-founder/) | A product or launch brief | Decision memo, test-first implementation plan, launch drafts | CEO, PE, CCO |
+| [✍️ Content Creator](./starter-kits/content-creator/) | Source material and an audience | Research notes, content drafts, measurement plan | CCO, CDO, CMO |
+| [📊 Quant Research](./starter-kits/quant-trader/) | A research question and historical data | Research memo, backtest plan, risk review; never a live trade | CQO, CDO, CFO |
+
+Need wider coverage? `full-team` selects all 14 manifest Agents. Start with a focused kit unless your evaluation genuinely needs every role.
+
+## ⚡ Try it safely
+
+Using Codex? Inspect the [separately packaged Codex distribution](./.codex/INDEX.md). Its repository structure is tested; installation and loading in a current Codex client remain **Validation pending**.
+
+To evaluate the generic workspace path, clone `main` and preview Solo Founder. Preview is the default and writes nothing:
 
 ```bash
 git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
@@ -43,31 +65,69 @@ git rev-parse HEAD
 ./install.sh --source "$PWD" --destination /path/to/review-workspace solo-founder
 ```
 
-Review the source, destination, selected agents, and planned files. Apply only when the preview matches your intent:
+Inspect the selected Agents and destinations. Apply only when they match your intent:
 
 ```bash
 ./install.sh --source "$PWD" --destination /path/to/review-workspace --apply solo-founder
 ```
 
-The installer preserves existing persona files and skill directories. It rejects missing required skills, source symlinks, and destination symlinks before publishing staged files.
+The generic installer validates every required file before publishing staged workspaces. It preserves existing persona and skill files and rejects dangerous source or destination symlinks. See [setup.md](./setup.md) for prerequisites, updates, and recovery.
 
-Avoid piping a remote script into a shell when you can inspect a pinned checkout first. See [setup.md](./setup.md) for prerequisites, updates, and recovery.
+The manifest separates portable `required`/`optional` Skills from `harnessSpecific` catalog entries and unbundled external recommendations. Generic installs copy only classes that pass the current portability contract; the complete copied payload is scanned for known host paths and runtime-only commands.
 
-### 👀 Preview → apply → verify
+**Success:** the preview writes nothing; apply creates three inspectable role workspaces without overwriting existing files.
 
-<p align="center">
-  <img src="assets/demo-install.gif" alt="Terminal demo showing a read-only preview, explicit apply, and repository checks passing" width="760">
-</p>
+## 🧭 Browse skills by outcome
 
-The animation is an illustrative storyboard with sanitized paths, not runtime evidence. Read the [storyboard transcript](./assets/demo-install.txt), then use the receipt below for reproducible commands.
+The root README stays curated. Use the generated catalog when you need the complete, searchable inventory.
 
-## 🧾 Five-minute installation receipt
+| Build and operate | Reach and create | Decide and automate |
+|---|---|---|
+| [🤖 AI Agents & Orchestration](./catalog/#ai-agents-orchestration) | [📈 Marketing, SEO & Growth](./catalog/#marketing-seo-growth) | [📊 Data, Analytics & Research](./catalog/#data-analytics-research) |
+| [💻 Software Engineering](./catalog/#software-engineering) | [✍️ Content, Media & Publishing](./catalog/#content-media-publishing) | [🧭 Business Operations & Strategy](./catalog/#business-operations-strategy) |
+| [☁️ Cloud, DevOps & Reliability](./catalog/#cloud-devops-reliability) | [🤝 Sales, CRM & Customer Success](./catalog/#sales-crm-customer-success) | [⚙️ Apps & Workflow Automation](./catalog/#apps-workflow-automation) |
+| [🛡️ Security, Privacy & Legal](./catalog/#security-privacy-legal) | [🎨 Product, Design & UX](./catalog/#product-design-ux) | [💹 Finance, Trading & Markets](./catalog/#finance-trading-markets) |
+| [🧰 Specialized Domains & Utilities](./catalog/#general-utilities) | [🇨🇳 Chinese Platform Workflows](./catalog/#chinese-platform-workflows) | |
 
-The repository currently verifies a safe installation outcome. It does not yet claim that an installed team has produced a validated business result.
+Explore the repository by depth:
 
-“Five-minute” describes the walkthrough scope, not a speed guarantee. This path evaluates the generic file installer; it does not configure a model or make a harness load generated workspaces automatically.
+| Path | Best for |
+|---|---|
+| [Skills overview](./skills/) | Support levels, bounded starting points, and discovery guidance |
+| [Generated skill catalog](./catalog/) | Every canonical physical skill grouped by task outcome |
+| [Agents](./agents/) | Persona, identity, workflow, and tool guidance |
+| [Practical guides](./docs/guides/) | Codex, Claude Code, compatibility, team choice, and workflow boundaries |
+| [Cookbooks](./cookbook/) | Longer material for content, prompts, research, and quantitative workflows |
+| [Architecture map](./ARCHITECTURE.md) | Sources of truth, generated outputs, public entry points, and change ownership |
+| [Shared language](./CONTEXT.md) | Module, Interface, Adapter, evidence, and product terminology |
 
-Create a disposable destination, prove preview wrote nothing, apply, then confirm the three expected role workspaces:
+### 🔎 Find high-quality skill sources
+
+[`agent-skill-repository-index`](./skills/agent-skill-repository-index/) turns Daniel's reviewed source list into a safe selection workflow. Compare one candidate, inspect its permissions and provenance, then install or remove it without globally activating entire repositories.
+
+| Need | Maintained reference |
+|---|---|
+| Compare reviewed sources | [Source matrix](./skills/agent-skill-repository-index/references/repositories.md) |
+| Inspect the dated popularity signal | [Star snapshot](./skills/agent-skill-repository-index/references/star-snapshot.md) |
+| Install one candidate safely | [Installation workflow](./skills/agent-skill-repository-index/references/installing.md) |
+
+Stars help with discovery, not trust. The matrix records `DAILY`, `LIBRARY`, and `QUARANTINE` boundaries; catalogs and runtimes are never bulk-installed.
+
+## ✅ What is useful today
+
+You can already browse a deterministic skill catalog, inspect every Agent instruction, preview a manifest-selected team, and assemble local role workspaces without overwriting existing files.
+
+| Claim | Evidence | Status |
+|---|---|---|
+| Repository inventory, counts, and references | `npm run validate -- --warnings-as-errors` | **Verified in this checkout** |
+| Generic installer preview, preflight, no-clobber, and staging | `npm test` | **Verified in this checkout** |
+| Generated catalog covers the canonical inventory | `npm run check:skills` | **Verified in this checkout** |
+| Current-client harness installation and loading | Revision-matched harness receipt | **Validation pending** |
+| Task quality or business outcome | Public fixture, baseline, rubric, and artifacts | **Validation pending** |
+
+## 🧾 Reproducible installation receipt
+
+Create a disposable destination, prove preview wrote nothing, apply, and verify the three expected Solo Founder workspaces:
 
 ```bash
 AGI_SOLO_DEST="$(mktemp -d "${TMPDIR:-/tmp}/agi-solo-founder.XXXXXX")"
@@ -80,140 +140,123 @@ test -f "$AGI_SOLO_DEST/workspace-ceo/SOUL.md"
 test -f "$AGI_SOLO_DEST/workspace-pe/SOUL.md"
 test -f "$AGI_SOLO_DEST/workspace-cco/SOUL.md"
 
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install --requirement requirements-dev.txt
 npm test
 npm run validate -- --warnings-as-errors
+npm run check:skills
+npm run check:architecture
 ```
 
-Print and inspect `$AGI_SOLO_DEST` before moving or removing anything. A real customized destination requires its own backup and review; repeated apply is not an upgrade or rollback mechanism.
+This receipt proves manifest-driven selection, preview safety, staged copying, and repository integrity for the inspected checkout and destination state. It does not prove harness loading, task quality, or business outcomes.
 
-The installer stops after copying inspectable files. It does not launch agents, orchestrate roles, or create the outputs below. Use these only as optional manual prompts in a separately configured harness.
+<details>
+<summary><strong>👀 See the preview → apply → verify storyboard</strong></summary>
 
-| Workspace | Responsibility | Optional evaluation prompt |
-|---|---|---|
-| `workspace-ceo` | Planning and quality gates | Draft a decision memo with assumptions, alternatives, evidence gaps, and a human approval gate. |
-| `workspace-pe` | Engineering and delivery | Propose a test-first implementation plan. Do not deploy or change production systems. |
-| `workspace-cco` | Launch communication | Draft three launch-post variants with claim placeholders and a manual publishing checklist. |
+<p align="center">
+  <img src="assets/demo-install.gif" alt="Terminal storyboard showing a read-only preview, explicit apply, and repository checks" width="760">
+</p>
 
-This receipt proves deterministic installation and repository integrity. Cross-harness task performance remains **Validation pending** until a public fixture is tied to the current `main` commit.
+The animation uses sanitized paths and is illustrative, not runtime evidence. Read the [storyboard transcript](./assets/demo-install.txt).
 
-## 🧭 Browse skills by outcome
+</details>
 
-Start with a focused pack or guide. The complete catalog is a reference library, not the recommended onboarding path.
-
-| Path | Use it for |
-|---|---|
-| [Starter kits](./starter-kits/) | Small role combinations for a founder, content workflow, or quantitative research |
-| [Agents](./agents/) | Persona, identity, workflow, and tool guidance for the generic installer |
-| [Practical guides](./docs/guides/) | Codex and Claude Code setup, compatibility, team choice, and workflow boundaries |
-| [Codex package](./.codex/INDEX.md) | A separately curated native package with its own manifest and sync policy |
-| [Cookbooks](./cookbook/) | Longer learning material for content, prompts, research, and quantitative workflows |
-| [Skills overview](./skills/) | Support levels, bounded starting points, and discovery guidance |
-| [Generated skill catalog](./catalog/) | Task-oriented categories covering every canonical physical skill |
-
-### 🧩 Skill categories
-
-| Build and operate | Reach and create | Decide and automate |
-|---|---|---|
-| [🤖 AI Agents & Orchestration](./catalog/#ai-agents-orchestration) | [📈 Marketing, SEO & Growth](./catalog/#marketing-seo-growth) | [📊 Data, Analytics & Research](./catalog/#data-analytics-research) |
-| [💻 Software Engineering](./catalog/#software-engineering) | [✍️ Content, Media & Publishing](./catalog/#content-media-publishing) | [🧭 Business Operations & Strategy](./catalog/#business-operations-strategy) |
-| [☁️ Cloud, DevOps & Reliability](./catalog/#cloud-devops-reliability) | [🤝 Sales, CRM & Customer Success](./catalog/#sales-crm-customer-success) | [⚙️ Apps & Workflow Automation](./catalog/#apps-workflow-automation) |
-| [🛡️ Security, Privacy & Legal](./catalog/#security-privacy-legal) | [🎨 Product, Design & UX](./catalog/#product-design-ux) | [💹 Finance, Trading & Markets](./catalog/#finance-trading-markets) |
-| [🧰 Specialized Domains & Utilities](./catalog/#general-utilities) | [🇨🇳 Chinese Platform Workflows](./catalog/#chinese-platform-workflows) | |
-
-### 🎒 Starter kits
-
-| Kit | Agents | Intended use |
-|---|---|---|
-| [Solo Founder](./starter-kits/solo-founder/) | CEO, PE, CCO | Planning, engineering, and reviewed content drafts |
-| [Content Creator](./starter-kits/content-creator/) | CCO, CDO, CMO | Research, content drafts, and measurement plans |
-| [Quant Trader](./starter-kits/quant-trader/) | CQO, CDO, CFO | Research, backtesting, and risk review—not live trading |
-| `full-team` | All manifest agents | Broad evaluation; start smaller when possible |
+Did the preview-first workflow help? [Star the repository](https://github.com/aAAaqwq/AGI-Super-Team) so you can find the verified path again.
 
 ## 🔌 Choose a distribution
 
-| Surface | Repository support | Install path | Evidence boundary |
+| Surface | Repository support | Start here | Evidence boundary |
 |---|---|---|---|
-| Generic/local workspace | Supported by `install.sh` | Preview, inspect, then apply | Installer behavior is covered by integration tests |
-| Codex | Separate curated native package | See [`.codex/INDEX.md`](./.codex/INDEX.md) | Native package and generic kits are separate distributions |
-| Claude Code | Plugin manifest present | Review [`.claude-plugin/`](./.claude-plugin/) | Confirm support in the installed client version |
-| Cursor, Gemini, Kimi | Metadata or manifests present | Review the corresponding files | Presence does not establish feature parity |
+| Generic/local workspace | Preview-first `install.sh` | Use the quick start above | Installer behavior is integration-tested |
+| Codex | Separate curated package | [`.codex/INDEX.md`](./.codex/INDEX.md) | Package structure is tested; current-client load receipt pending |
+| Claude Code | Plugin manifest present | [Claude Code guide](./docs/guides/claude-code-install.html) | Confirm support in the installed client version |
+| Cursor, Gemini, Kimi | Metadata or manifests present | [Harness compatibility](./docs/guides/harness-compatibility.html) | Presence does not establish feature parity |
 
-## ✅ Evidence and verification
-
-Repository contracts calculate catalog facts from tracked files and the canonical manifest:
-
-```bash
-npm test
-npm run validate
-npm run validate -- --warnings-as-errors
-```
-
-A web page displays `Verified` only when its [verification receipt](./docs/data/verification-receipt.json) matches the current `main` commit and every recorded check passes.
-
-When making an outcome claim, link the reproducible input, fixture, revision, result, limitations, and rollback path. Tests are evidence of repository behavior, not a guarantee of business performance.
+The generic path requires Bash and Node.js; repository verification also requires npm and Python 3. Exact operating-system and client-version support remains bounded by CI and published receipts.
 
 ## 🗂️ Repository architecture
 
-```text
-AGI-Super-Team/
-├── config/          # Canonical team manifest, schema, and removed-link provenance
-├── agents/          # Role, identity, workflow, and tool guidance
-├── skills/          # Tracked physical skills; symlinks are forbidden
-├── catalog/         # Generated task taxonomy and machine-readable skill index
-├── starter-kits/    # Focused team selections
-├── install.sh       # Preview-first generic workspace installer
-├── scripts/         # Repository model, validator, and Pages data builder
-├── tests/           # Repository, installer, site-data, and SEO contracts
-├── docs/            # Evidence First Pages site and editorial guides
-├── growth/          # Human-reviewed launch and measurement playbooks
-└── assets/          # README, social preview, logo, and demo assets
+```mermaid
+flowchart LR
+  subgraph R["AGI Super Team repository: versioned content, not a runtime"]
+    S["skills/<br/>reusable playbooks"]
+    A["agents/<br/>14 role packs"]
+    M["team-manifest.json<br/>4 kits + skill mappings"]
+    C["plugins/agi-super-team-codex/<br/>curated Codex package"]
+  end
+
+  S --> I["install.sh<br/>preview → preflight → staged copy"]
+  A --> I
+  M --> I
+  I --> W["workspace-agent<br/>inspectable local files"]
+  W --> H["External harness<br/>model + tools + execution"]
+  C --> H
+  H --> O["Task artifacts<br/>behavioral evidence pending"]
+
+  S --> G["Catalog generator"]
+  M --> G
+  G --> K["catalog/<br/>generated discovery index"]
+
+  S --> V["Validator + tests"]
+  A --> V
+  M --> V
+  I --> V
+  V --> E["Repository receipt<br/>structure + install safety"]
 ```
 
-The control flow is:
+| File or directory | Responsibility |
+|---|---|
+| [`config/team-manifest.json`](./config/team-manifest.json) | Source of truth for Agents, kits, and portable, harness-specific, or external Skill assignments |
+| [`config/repository-architecture.json`](./config/repository-architecture.json) | Machine-readable Modules, path owners, generated lineage, and Adapter status |
+| [`agents/`](./agents/) and [`skills/`](./skills/) | Authored, versioned inputs; only manifest-classified portable payloads enter generic workspaces |
+| [`.codex/INDEX.md`](./.codex/INDEX.md) | Installation guide and Codex package index |
+| [`plugins/agi-super-team-codex/`](./plugins/agi-super-team-codex/) | Actual curated Codex plugin, skills, and bundled agent roles |
+| [`install.sh`](./install.sh) | Preview-first selection, preflight, staging, and no-clobber publishing |
+| [`scripts/repository_model.py`](./scripts/repository_model.py) | Shared inventory and manifest model used by validation and generation |
+| [`catalog/`](./catalog/) | Generated discovery output; never an inventory source |
+| [`tests/`](./tests/) | Repository, installer, site-data, and SEO contracts |
+| [`docs/`](./docs/) | Project site, verification data, and editorial guides |
 
-```text
-config/team-manifest.json
-  → scripts/repository_model.py
-  → install.sh + validator + tests
+For the authored-input, generated-output, distribution, and evidence boundaries, read the full [repository architecture map](./ARCHITECTURE.md), [shared language](./CONTEXT.md), and [decision records](./docs/adr/).
 
-config/external-skill-sources.json
-  → portable provenance for removed machine-local links
-```
-
-README text is not an inventory source. See [the manifest](./config/team-manifest.json), [repository model](./scripts/repository_model.py), and [contribution policy](./CONTRIBUTING.md) for the contracts.
+[`config/external-skill-sources.json`](./config/external-skill-sources.json) records tombstones for removed machine-local links, including unresolved provenance fields. README text and generated catalog files are not inventory sources.
 
 ## 🧠 Team topology
 
 ```text
 Founder / operator
-└── CEO — coordination and quality gates
-    ├── CTO / PE — architecture and implementation
-    ├── CPO / CCO / CMO — product, content, and growth
-    ├── CQO / CFO / CDO — quantitative research, finance, and data
-    ├── CLO / CRO / CSO / COO — legal, research, sales, and operations
-    └── Governor — independent review and escalation
+└── CEO: coordination and quality gates
+    ├── CTO / PE: architecture and implementation
+    ├── CPO / CCO / CMO: product, content, and growth
+    ├── CQO / CFO / CDO: quantitative research, finance, and data
+    ├── CLO / CRO / CSO / COO: legal, research, sales, and operations
+    └── Governor: independent review and escalation
 ```
 
 Mentor names are creative framing. They do not imply affiliation, endorsement, or guaranteed imitation.
 
-## 🛡️ Safety boundaries
+## 🛡️ Boundaries and human approval
 
-- Never place credentials, private user data, browser sessions, or production configuration in a skill or issue.
-- Review third-party commands and dependencies before execution.
+AGI Super Team is not a model, autonomous orchestrator, or agent runtime. Installing files does not make a harness load or execute them automatically.
+
+- Inspect third-party commands and dependencies before execution.
+- Never place credentials, private data, browser sessions, or production configuration in a skill or issue.
 - Keep financial workflows in research or paper-trading environments until independently validated.
 - Require explicit human approval for posts, messages, transactions, deployments, and destructive operations.
 - Report vulnerabilities privately through [GitHub Security Advisories](https://github.com/aAAaqwq/AGI-Super-Team/security/advisories/new).
 
-## 🔗 Project links
+## 🤝 Contribute and get help
 
-- [Evidence First project site](https://aaaaqwq.github.io/AGI-Super-Team/)
-- [Practical guides](./docs/guides/)
-- [Setup and recovery](./setup.md)
+- [Report a reproducible issue](https://github.com/aAAaqwq/AGI-Super-Team/issues/new/choose)
 - [Contributing and provenance](./CONTRIBUTING.md)
+- [Setup and recovery](./setup.md)
 - [Security policy](./SECURITY.md)
 - [Growth playbooks](./growth/README.md)
-- [License](./LICENSE)
+- [MIT License](./LICENSE)
 
 ## ⭐ Star History
 
-![Star History](https://aaaaqwq.github.io/AGI-Super-Team/assets/star-history.svg)
+![Star History](./docs/assets/star-history.svg)
+
+The chart is repository-owned, so README rendering does not depend on GitHub Pages. Historical refresh may show a cached or pending state when GitHub's stargazer API is unavailable.

@@ -17,19 +17,19 @@
 ## 五大核心职责
 ### 1. 基础设施管理
 - 服务器运维（Linux/macOS）、Docker 容器编排
-- OpenClaw Gateway 健康监控与重启
+- 已选 Harness 的健康检查与显式恢复步骤
 - Tailscale 网络连通性维护
 - 磁盘/内存/CPU 告警与清理
 
 ### 2. 监控与告警
 - API 健康检查（模型提供商、外部服务）
-- Cron 任务执行状态追踪
+- scheduler 任务执行状态追踪
 - 进程残留检测（Chrome/Node 僵尸进程）
 - 日志分析与异常检测
 
 ### 3. 部署与发布
 - Agent 配置部署、Skill 安装验证
-- OpenClaw 版本升级、配置变更
+- 已选 Harness 的版本升级与配置变更
 - 跨机器部署（Mac Mini/Linux 服务器）
 
 ### 4. 安全与备份

@@ -1,6 +1,6 @@
 # TOOLS.md — CDO 工具索引
 
-> CDO 的所有技能工具。链接指向仓库 `skills/` 目录。
+> 非穷尽使用笔记。`config/team-manifest.json` 是 assignment authority；通用安装器只复制其中 portable 的 required/optional Skills。
 
 ## 🔌 API 与集成
 

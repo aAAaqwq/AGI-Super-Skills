@@ -31,5 +31,6 @@ For this repository, a suitable MVTA is a starter-kit preview and isolated apply
 - [`measurement-spec.md`](./measurement-spec.md): event, metric, and privacy rules.
 - [`draft-posts.md`](./draft-posts.md): editable drafts with claim placeholders.
 - [`evidence-and-feedback.md`](./evidence-and-feedback.md): claim ledger and learning log.
+- [`quality-iterations-2026-07-21.md`](./quality-iterations-2026-07-21.md): ten-round repository quality scorecard and reproducible final gate.
 
 No file in this directory is a posting script. A human must review context, edit the draft, and post manually through an authorized account.

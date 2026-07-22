@@ -1,6 +1,6 @@
 # TOOLS.md — CTO (Jensen)
 
-_技术架构 · 仓库技能配置和笔记_
+_非穷尽使用笔记；`config/team-manifest.json` 是 assignment authority。_
 
 ## 仓库 Skills 索引
 
