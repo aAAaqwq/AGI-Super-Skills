@@ -122,6 +122,7 @@ Star 只用于发现，不等于可信。矩阵记录 `DAILY`、`LIBRARY` 和 `Q
 | 仓库库存、数量和引用 | `npm run validate -- --warnings-as-errors` | **当前 checkout 已验证** |
 | 通用安装器的预览、预检、no-clobber 和暂存 | `npm test` | **当前 checkout 已验证** |
 | 自动生成目录覆盖权威库存 | `npm run check:skills` | **当前 checkout 已验证** |
+| 主成果分类与固定独立复核集一致 | [Gold Set 方法](./docs/skill-taxonomy-gold-set.md) + [生成报告](./catalog/skill-taxonomy-evaluation.json) | **当前 checkout 的复核集门禁已通过** |
 | 当前客户端中的工具安装与加载 | 与版本匹配的 harness receipt | **Validation pending** |
 | 任务质量或商业成果 | 公开 fixture、基线、评估规则和产物 | **Validation pending** |
 
@@ -146,6 +147,7 @@ python -m pip install --requirement requirements-dev.txt
 npm test
 npm run validate -- --warnings-as-errors
 npm run check:skills
+npm run check:taxonomy-evaluation
 npm run check:architecture
 ```
 

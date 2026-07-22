@@ -60,6 +60,8 @@ class SkillCatalogTests(unittest.TestCase):
         for category in categories:
             for pattern in category["patterns"]:
                 re.compile(pattern)
+            for pattern in category["outcomePatterns"]:
+                re.compile(pattern)
         known_categories = set(identifiers)
         self.assertTrue(set(self.taxonomy["overrides"].values()) <= known_categories)
         self.assertEqual(
@@ -129,6 +131,39 @@ class SkillCatalogTests(unittest.TestCase):
             with self.subTest(skill=skill_id):
                 self.assertIn(signal, by_id[skill_id].review_signals)
 
+    def test_primary_outcome_routes_beat_incidental_tokens(self) -> None:
+        by_id = {entry.skill_id: entry for entry in self.entries}
+        expected_categories = {
+            "agent-browser": "apps-workflow-automation",
+            "ai-marketing-videos": "content-media-publishing",
+            "api-design-patterns": "software-engineering",
+            "business-analyst": "data-analytics-research",
+            "datadog-automation": "cloud-devops-reliability",
+            "deepwork-tracker": "general-utilities",
+            "evomap": "ai-agents-orchestration",
+            "file-organizer": "general-utilities",
+            "linkedin-cdp": "sales-crm-customer-success",
+            "microservices-patterns": "cloud-devops-reliability",
+            "provider-key-manager": "security-privacy-legal",
+            "quality-convergence-engine": "general-utilities",
+            "static-code-analysis": "software-engineering",
+            "subagent-driven-development": "ai-agents-orchestration",
+            "vcf-annotator": "data-analytics-research",
+        }
+        for skill_id, category_id in expected_categories.items():
+            with self.subTest(skill=skill_id):
+                self.assertEqual(by_id[skill_id].category_id, category_id)
+
+    def test_outcome_phrases_precede_weak_slug_tokens(self) -> None:
+        category_id, method, details = self.builder._classify(
+            "thinking-example",
+            "Apply quantitative trading and portfolio risk principles.",
+            self.taxonomy,
+        )
+        self.assertEqual(category_id, "finance-trading-markets")
+        self.assertTrue(method.startswith("outcome:"))
+        self.assertEqual(details["method"], "outcome")
+
     def test_generated_catalog_is_current_and_uses_portable_links(self) -> None:
         result = subprocess.run(
             [sys.executable, str(BUILDER_PATH), "--root", str(ROOT), "--check"],
@@ -176,7 +211,7 @@ class SkillCatalogTests(unittest.TestCase):
         for item in index["skills"]:
             decision = item["classification_details"]
             winner = decision["winner"]
-            self.assertIn(decision["method"], {"slug", "description", "override", "fallback"})
+            self.assertIn(decision["method"], {"outcome", "slug", "description", "override", "fallback"})
             self.assertIn(decision["resolution_status"], {"rule-match", "priority-tie", "override", "fallback"})
             self.assertEqual(decision["review_state"], "unreviewed")
             self.assertEqual(winner["category_id"], item["category_id"])
@@ -210,7 +245,7 @@ class SkillCatalogTests(unittest.TestCase):
                 self.assertFalse(winner["tie_detected"])
             if decision["method"] == "override":
                 self.assertGreaterEqual(len(decision["rationale"]), 20)
-                self.assertIn(decision["base_method"], {"slug", "description", "fallback"})
+                self.assertIn(decision["base_method"], {"outcome", "slug", "description", "fallback"})
                 self.assertIsInstance(decision["base_candidates"], list)
 
             assignments = {
@@ -233,12 +268,9 @@ class SkillCatalogTests(unittest.TestCase):
 
         by_id = {item["skill_id"]: item for item in index["skills"]}
         api_design = by_id["api-design"]["classification_details"]
-        self.assertEqual(api_design["resolution_status"], "priority-tie")
-        self.assertTrue(
-            any(
-                item["category_id"] == "software-engineering" and item["tied_for_first"]
-                for item in api_design["runner_ups"]
-            )
+        self.assertEqual(api_design["method"], "outcome")
+        self.assertEqual(
+            api_design["winner"]["category_id"], "software-engineering"
         )
         fallback = next(
             item for item in index["skills"]

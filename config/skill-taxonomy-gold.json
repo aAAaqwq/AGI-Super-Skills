@@ -1,0 +1,2190 @@
+{
+  "$schema": "./skill-taxonomy-gold.schema.json",
+  "schemaVersion": 1,
+  "annotation": {
+    "mode": "independent-agent-manual-review",
+    "humanApproved": false,
+    "rubric": "../docs/skill-taxonomy-gold-set.md",
+    "labelSetSha256": "78e6b44843fc60d08d1a9cc3fb728fdfec2eccfc35b812064b53342559ba7da1"
+  },
+  "sampling": {
+    "method": "predicted-category-balanced-difficulty-first-stable-hash",
+    "seed": "semantic-gold-v1",
+    "perPredictedCategory": 10,
+    "baseCommit": "de505e1ea95d564f80541d7ad796883da5e9a350",
+    "baseCatalogSha256": "b3669c200fc349f792ad07d352f1f81f54a2c01b72c217da14f588a0bb2de0ee",
+    "candidateSetSha256": "7765f415e2be2d7b93341dc8192837a06bebb5a9c8fea17ab5c06d8326473267"
+  },
+  "labels": [
+    {
+      "skill_id": "agent-browser",
+      "expected_category": "apps-workflow-automation",
+      "baseline_predicted_category": "ai-agents-orchestration",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Its command loop navigates pages, fills forms, and drives repeatable browser workflows.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "04afeeb53a8b6ab953974311ec7ed60e0d66c532341ca21933625320f28b01c6"
+    },
+    {
+      "skill_id": "meta-cognition",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "ai-agents-orchestration",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "核心产物是多 Agent 的路由、风险门控与闭环执行协议，而非一般企业战略建议。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "686412338738f1039ebafc5e9366856ed04c9b5806124062912931eef1d3ad8d"
+    },
+    {
+      "skill_id": "internal-comms",
+      "expected_category": "content-media-publishing",
+      "baseline_predicted_category": "ai-agents-orchestration",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Produces newsletters, status updates, FAQs, and other internal written artifacts.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "067b7587a344a928fc6534ef66b1bcd591fc7c26d207ea7ca3334aeb678d6475"
+    },
+    {
+      "skill_id": "agent-task-confirm",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "ai-agents-orchestration",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "核心结果是确认已派发 Agent 的送达、活跃与超时状态，属于 Agent 调度闭环。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "146616e547f69b4076c306a6d4676f6038754afc558de7b7e15aac6662c010f7"
+    },
+    {
+      "skill_id": "vcf-annotator",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "ai-agents-orchestration",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It annotates VCFs with VEP, ClinVar, and gnomAD, then produces ranked variant reports.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "3bbfb00254fbf4d46534f24133e7d7b029ddc84cd4d0b35cc9d0c1bc94520dc9"
+    },
+    {
+      "skill_id": "kanbanflow-skill",
+      "expected_category": "apps-workflow-automation",
+      "baseline_predicted_category": "ai-agents-orchestration",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "直接操作 KanbanFlow 这一具体 SaaS 的看板与任务，主要结果是应用工作流自动化。",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "37fa362a68be4721887c97713cce6eb17526abf8ae9705c7715fe11a05104134"
+    },
+    {
+      "skill_id": "file-organizer",
+      "expected_category": "general-utilities",
+      "baseline_predicted_category": "ai-agents-orchestration",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Organizes local files, detects duplicates, and cleans folders as a general desktop utility.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "a8b91952bab7f73511db68149c4a54672b40699903a8e35ed5044c3e3039ded5"
+    },
+    {
+      "skill_id": "dispatching-parallel-agents",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "ai-agents-orchestration",
+      "baseline_resolution_status": "override",
+      "split": "validation",
+      "rationale": "主要指导如何拆分独立任务并并发派发专业 Agent，再审查和整合结果。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "76806091c7f923ba2596546b19cccd98a08e57a68745df77c3a7b998fe838e2b"
+    },
+    {
+      "skill_id": "context-recovery",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "ai-agents-orchestration",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "It restores compacted agent context from channel history, session logs, and shared memory.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "13297b10889d57eeca467a4c16168081e3bf2a580adc66977591604204093f44"
+    },
+    {
+      "skill_id": "clawrouter",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "ai-agents-orchestration",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "按请求复杂度在多个 LLM 间路由并控制推理成本，属于模型编排与选择。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "ac56e6c5625f557bdd0026928414a05da981708b1827343f15142e3db241a2a5"
+    },
+    {
+      "skill_id": "sp-subagent-driven-development",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "software-engineering",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Coordinates fresh subagents and review gates; orchestration defines the user workflow.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "33a23679d7a7353cb598f16ad86631dfe25b8800145d380573e9500c22956438"
+    },
+    {
+      "skill_id": "git-workflow",
+      "expected_category": "software-engineering",
+      "baseline_predicted_category": "software-engineering",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "直接处理 Git 状态、提交、推送、冲突和分支，是典型开发者工具工作流。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "f79b57a0359d63ebd29e55ecda73ceac5932bfd92aa68a8b121dc6dace3685b1"
+    },
+    {
+      "skill_id": "gitlab-automation",
+      "expected_category": "apps-workflow-automation",
+      "baseline_predicted_category": "software-engineering",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It performs repeatable GitLab issue, merge-request, pipeline, and branch operations.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "ee8116c37964ddb7f700a9e670e4179fefbb1da4dcfb5a891746d2f74540b254"
+    },
+    {
+      "skill_id": "liuyao-yijing",
+      "expected_category": "general-utilities",
+      "baseline_predicted_category": "software-engineering",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "提供六爻起卦与传统易学解读，属于未设专类的垂直领域辅助工具。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "e7d94ceb4ed26c83c1bb245b2713137bc70749cbca4fe5c6aafecd1835058aeb"
+    },
+    {
+      "skill_id": "deepwork-tracker",
+      "expected_category": "general-utilities",
+      "baseline_predicted_category": "software-engineering",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Tracks personal focus sessions and renders activity reports as a specialized local utility.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "7ecb04afa361e0a4a5f8adb4a7b932d2991f5983e95f53e979a8b5110be06fcc"
+    },
+    {
+      "skill_id": "claude-code-runner",
+      "expected_category": "software-engineering",
+      "baseline_predicted_category": "software-engineering",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "最终用户结果是以 PTY 执行代码审查、重构、修复和功能开发等编程任务。",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "6fb465cf17f31e87b3df944aa6a399ff4834489d8d7005941d6f170d14fffd10"
+    },
+    {
+      "skill_id": "elite-github-skills-hub",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "software-engineering",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It discovers, compares, and installs capability packs for Claude, Codex, and other agents.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "0dad782c259fbb20739a66005f012df4839547feb8231a650ea322e898b969cc"
+    },
+    {
+      "skill_id": "subagent-driven-development",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "software-engineering",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "核心方法是调度独立子 Agent 并组织两阶段审查，开发只是该编排协议的应用场景。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "081ad3869e55c80bf8f890b4768a90c0e8057daf94b1b6fadebfc85ea5b8304a"
+    },
+    {
+      "skill_id": "provider-key-manager",
+      "expected_category": "security-privacy-legal",
+      "baseline_predicted_category": "software-engineering",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Rotates and audits API credentials, making secret hygiene and key management the primary outcome.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "bd730395fd1673be4113e28914c5e60a4549b308751ff0d277962cca646772d3"
+    },
+    {
+      "skill_id": "codex-cc-guide",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "software-engineering",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "核心是通过 ACP sessions_spawn 创建、限制和管理 Claude Code 或 Codex 会话。",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "9a83932498081fa6caf2c5c6033efec3d8c2309a5fd44803e82eb96494eec4aa"
+    },
+    {
+      "skill_id": "render-automation",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "cloud-devops-reliability",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It lists Render services, triggers deployments, and monitors asynchronous deployment state.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "d746d0e41d4a964bb0501e7153a89af24137f4e55d68744f41ffa70f2e8343fb"
+    },
+    {
+      "skill_id": "vercel-automation",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "cloud-devops-reliability",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "管理 Vercel 部署、域名、DNS、环境变量和项目，直接服务云部署与运行维护。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "08c35e0fa4ca6b763842fcb48c7e55878c36a6e25fac9bda7f188c5e63170a9f"
+    },
+    {
+      "skill_id": "proxmox-ops-skill",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "cloud-devops-reliability",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Operates Proxmox infrastructure, including VM control, monitoring, storage, backups, and recovery.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "7b51fe23e4fd9459458ec21813b69ee4b93a5e4fcd2f829133258cd768761363"
+    },
+    {
+      "skill_id": "deployment-automation",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "cloud-devops-reliability",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "交付 Docker、CI/CD、Kubernetes 和云平台部署方案，主要结果是基础设施发布。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "542d86db666473699645cd921ddc37f0e9927de839af0401968be0d0a254e9b4"
+    },
+    {
+      "skill_id": "ml-engineer",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "cloud-devops-reliability",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Its core deliverable is production ML serving, deployment, monitoring, and MLOps infrastructure.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "cdd4ff5d9ed06a6f9db95c1be6a32eca303396644f51bf864ea9f85d13e469c2"
+    },
+    {
+      "skill_id": "model-usage-linux",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "cloud-devops-reliability",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "解析会话数据并汇总模型 Token、成本和使用分布，主要用户结果是用量分析报告。",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "a432eaf5d392ce6c38f62524edc71a45d4765e403dc46cdbfcf59af174cb44de"
+    },
+    {
+      "skill_id": "sentry-automation",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "cloud-devops-reliability",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Investigates production errors and manages alerts, releases, monitors, and observability workflows.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "ed7f09932461c77f3542bd7acd9309fb8c71a666da616b936c861e9b2afd837b"
+    },
+    {
+      "skill_id": "kubernetes-deployment",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "cloud-devops-reliability",
+      "baseline_resolution_status": "rule-match",
+      "split": "validation",
+      "rationale": "完整流程围绕容器、Helm、服务网格、安全、可观测性和集群发布展开。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "0adc0eb8df8a743470e5afc44447a9f19408a3f1d780d7e85c8d957946582f38"
+    },
+    {
+      "skill_id": "nginx-configuration",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "cloud-devops-reliability",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "It configures production reverse proxies, load balancing, TLS, caching, and API gateways.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "67357722522217369983a0376d0a59b1b5f5464c5ca7f62bf22ff8c16685e9a2"
+    },
+    {
+      "skill_id": "incident-response-incident-response",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "cloud-devops-reliability",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "覆盖事故分级、排障、缓解、恢复和复盘，是典型的 SRE 事故响应运行手册。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "75b23dfebf23c6f0e8d6f7ca59596a9bbc4642c2008e8023184822dd47459c73"
+    },
+    {
+      "skill_id": "startup-metrics-framework",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "data-analytics-research",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Calculates and interprets startup performance metrics, unit economics, and operating evidence.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "eaac30ac41b5effd1057bfc98b800816534c81fa74d29ff4ea926163f837f6c6"
+    },
+    {
+      "skill_id": "bio-orchestrator",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "data-analytics-research",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "虽然采用编排形式，最终产物是生物信息分析、研究报告和可复现证据包。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "c5f118cbc042c61282238a39d1f4b314755679769466e643f6ff31bfcb000f58"
+    },
+    {
+      "skill_id": "datadog-automation",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "data-analytics-research",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It operates monitors, logs, traces, dashboards, events, and maintenance downtimes in Datadog.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "61c620482c80bff0969e9331f98f660002ce9a9088b069ab5a531a7d00421865"
+    },
+    {
+      "skill_id": "ai-radar",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "data-analytics-research",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "从公开数据源检索、过滤并综合最新 AI 资讯，核心是证据采集与研究简报。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "386bb5d95c228e9508c6b57fd77a44bbdbf247582a5c331ff7af4db469271ccc"
+    },
+    {
+      "skill_id": "documents",
+      "expected_category": "apps-workflow-automation",
+      "baseline_predicted_category": "data-analytics-research",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "Retrieves, organizes, uploads, and sends documents through local storage, Drive, and email workflows.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "6c0a2beb4b3a19259a9af410778cb435c465f327f23f713f91719f6ac9406e87"
+    },
+    {
+      "skill_id": "wiki-qa",
+      "expected_category": "software-engineering",
+      "baseline_predicted_category": "data-analytics-research",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "主要帮助开发者基于源码理解仓库组件、定位定义和导航代码，而非通用研究。",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "c0faf1c9819ce3dc080643294e5ce5173b2b84a10474c7d5ddba49594a6e7aed"
+    },
+    {
+      "skill_id": "business-intelligence",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "data-analytics-research",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It defines KPI contracts, metric trees, dashboards, and evidence-backed decision briefings.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "5cf7fac4dbfae89ea34000a733bb1d4de3677a529a1156e4d78c8c5283d07365"
+    },
+    {
+      "skill_id": "kpi-dashboard-design",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "data-analytics-research",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "指导 KPI 选择、计算、可视化和实时监测，主要结果是数据指标分析与沟通。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "68cbf33113de7767500c7420c25c47bf7d7542dc7426f688e16a9db49fde3c4e"
+    },
+    {
+      "skill_id": "static-code-analysis",
+      "expected_category": "software-engineering",
+      "baseline_predicted_category": "data-analytics-research",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Configures developer tooling that detects code defects, security issues, and style violations.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "02c7a649fcbabdd57a8dfecc4b1b259fa2e6fe462f5519ebdcfae5d750cd723f"
+    },
+    {
+      "skill_id": "google-analytics-automation",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "data-analytics-research",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "主要结果是查询 GA4 指标、漏斗、透视表和关键事件并分析网站数据。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "9cfc4857f70887dd70827d8460af7e9479265649c385d3a19e95837671acdaa9"
+    },
+    {
+      "skill_id": "contract-and-proposal-writer",
+      "expected_category": "security-privacy-legal",
+      "baseline_predicted_category": "security-privacy-legal",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It drafts jurisdiction-aware NDAs, MSAs, SOWs, contracts, and GDPR processing clauses.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "0441fd90696398b503913a77b848e42e7c621f380820da7008305aa0267f9d62"
+    },
+    {
+      "skill_id": "performing-security-code-review",
+      "expected_category": "security-privacy-legal",
+      "baseline_predicted_category": "security-privacy-legal",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "专门审查注入、XSS、认证缺陷和依赖风险，交付物是安全代码审计结论。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "c0713ebfe3ae3d194f30f6292fed4269669c798da24e8050964654bf780f4243"
+    },
+    {
+      "skill_id": "vibe-code-auditor",
+      "expected_category": "software-engineering",
+      "baseline_predicted_category": "security-privacy-legal",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Reviews generated code for architecture, robustness, maintainability, and production readiness.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "78139c215eabc9c06181beac1bd61f2a9f2ee1c1ca31a3dc98cf012d6e3422c9"
+    },
+    {
+      "skill_id": "inference-optimizer",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "security-privacy-legal",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "It audits token context and manages OpenClaw agent sessions; no cloud infrastructure is deployed or operated.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3",
+        "reviewer-root"
+      ],
+      "review_status": "adjudicated",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "a2897e77cbdafa8518c4f36dbe211783a40524674a33f6ec5a66cbb2e547bb15"
+    },
+    {
+      "skill_id": "security-audit",
+      "expected_category": "security-privacy-legal",
+      "baseline_predicted_category": "security-privacy-legal",
+      "baseline_resolution_status": "override",
+      "split": "development",
+      "rationale": "It audits credentials, ports, permissions, Docker settings, and vulnerable configurations.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "7ed4a7bd3811fbf405703886f4ce53c4953803af3f4e3705da95a8ae83e69dd5"
+    },
+    {
+      "skill_id": "skill-security-auditor",
+      "expected_category": "security-privacy-legal",
+      "baseline_predicted_category": "security-privacy-legal",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "安装前扫描 Agent Skill 的恶意代码、提示注入与供应链风险，属于安全门禁。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "d546d0edcd0fb0eafa3f81eb1f42a7fabb9994facda37e3a31009a8f9530eedf"
+    },
+    {
+      "skill_id": "china-contract-review",
+      "expected_category": "security-privacy-legal",
+      "baseline_predicted_category": "security-privacy-legal",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "Reviews Chinese contracts for legal risk, compliance gaps, and safer clause revisions.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "f46d5f73fc7c6270d47341f4bcc0020460788b33802d7ab07a00139f646bdb52"
+    },
+    {
+      "skill_id": "dependency-auditor",
+      "expected_category": "security-privacy-legal",
+      "baseline_predicted_category": "security-privacy-legal",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "主要识别依赖漏洞、许可证冲突、供应链风险及合规问题并生成审计报告。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "008aa72387404d9be64a00ac3f289d1f44be71a6db472f985e0c260f6bb3815c"
+    },
+    {
+      "skill_id": "pci-compliance",
+      "expected_category": "security-privacy-legal",
+      "baseline_predicted_category": "security-privacy-legal",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "It implements PCI DSS controls for card data, encryption, access, auditing, and scope reduction.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "327d0197e57bdc1bfb7f546d2f5bcaa40693c9e5ec80b3af33dd75ed36a75f2e"
+    },
+    {
+      "skill_id": "auth-manager",
+      "expected_category": "security-privacy-legal",
+      "baseline_predicted_category": "security-privacy-legal",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "统一维护网页登录态、授权与会话有效性，核心责任是认证和访问状态管理。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "1cc404bd3fc158ffc6fd3975b06429bfd31bdd43493bd7c1d36b1037cd1370ce"
+    },
+    {
+      "skill_id": "prioritization-funnel",
+      "expected_category": "business-operations-strategy",
+      "baseline_predicted_category": "product-design-ux",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Ranks strategic opportunities and allocates capital, people, and time through decision gates.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "a6bbd634a825181803c604711a2f20a224c120627ce763383d1216d5b44a7ccb"
+    },
+    {
+      "skill_id": "roadmap-planning",
+      "expected_category": "product-design-ux",
+      "baseline_predicted_category": "product-design-ux",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "将客户问题、产品需求和优先级转化为结果导向的产品路线图与 Epic。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "0c6d1cbcfadffc4befe7cfc22a0ca735172f24853605ac056282fb91a34ebff1"
+    },
+    {
+      "skill_id": "prd-development",
+      "expected_category": "product-design-ux",
+      "baseline_predicted_category": "product-design-ux",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It turns product problems, users, requirements, scope, and success criteria into a complete PRD.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "77e5ebabc9c917256ec91141365bddcd492c6f5aa6e12dbff22be0eb59337ff4"
+    },
+    {
+      "skill_id": "api-design-patterns",
+      "expected_category": "software-engineering",
+      "baseline_predicted_category": "product-design-ux",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "提供 REST、GraphQL、gRPC、版本化和认证的 API 工程设计模式，属于软件架构实践。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "1d89932bee15231fbf357ebc3573ea3eb877b01aa926a53f5b9c5dd5b53b7725"
+    },
+    {
+      "skill_id": "software-architecture-design",
+      "expected_category": "software-engineering",
+      "baseline_predicted_category": "product-design-ux",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Designs software system boundaries, architecture patterns, data strategy, and migration plans.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "bfd5c57076412707d800608b58995d05e06003fa4658520a8c211af24ec86a6f"
+    },
+    {
+      "skill_id": "figma-automation",
+      "expected_category": "product-design-ux",
+      "baseline_predicted_category": "product-design-ux",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "核心产物是 Figma 组件、设计令牌、样式、评论和视觉资产的设计操作。",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "cb399ce260b15277e281267dac1384c8a4426d22404e3b37af828924ffbe8e22"
+    },
+    {
+      "skill_id": "cua-driver",
+      "expected_category": "apps-workflow-automation",
+      "baseline_predicted_category": "product-design-ux",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It drives native GUI applications through snapshot, click, type, scroll, and verification loops.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "22a3825ea5538b0cda07923d5d3e8123dd2da503f124976681c5969bf7d88a24"
+    },
+    {
+      "skill_id": "senior-architect",
+      "expected_category": "software-engineering",
+      "baseline_predicted_category": "product-design-ux",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "完成系统架构、技术栈、依赖、数据库和扩展性决策，主要服务软件系统设计。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "469ef270e5752425be0a1779ee42d683c43a342c196bc5f5fe1092bce93cb214"
+    },
+    {
+      "skill_id": "api-design",
+      "expected_category": "software-engineering",
+      "baseline_predicted_category": "product-design-ux",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "Defines production REST API contracts, pagination, errors, authentication, and versioning.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "d2b090c4319e030fddb576950400724ff12ccb285083a540b6afb62431185d25"
+    },
+    {
+      "skill_id": "observability-designer",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "product-design-ux",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "明确设计 SLI/SLO、指标、日志、追踪、告警和运行手册以保障生产可靠性。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "bd68d04d7586a2bd8bc2dcc15594cf95d2e16b8a0f0ef6888a89fd646a250842"
+    },
+    {
+      "skill_id": "skill-amazon-ads",
+      "expected_category": "marketing-seo-growth",
+      "baseline_predicted_category": "marketing-seo-growth",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It manages Amazon Sponsored Products campaigns, advertiser profiles, budgets, and performance.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "5d6deb377be8399e8227be1993d677d91a837b1b9acc0adf160fd0e67eef8b52"
+    },
+    {
+      "skill_id": "social-content",
+      "expected_category": "marketing-seo-growth",
+      "baseline_predicted_category": "marketing-seo-growth",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "以品牌认知、获客、流量和互动为目标制定社媒内容与增长策略，重点是受众增长。",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "ee0181c7916d8f21ff5d778f8401f9e3686364af731eb30e06066f8197a4a146"
+    },
+    {
+      "skill_id": "microservices-patterns",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "marketing-seo-growth",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Operates production microservices with Istio, Kubernetes, resilience, traffic, and observability controls.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "c2626388b336f11e208f8434d55ad832f0f1350ebd238d77fb1c7f518a69d1f7"
+    },
+    {
+      "skill_id": "seo-strategy",
+      "expected_category": "marketing-seo-growth",
+      "baseline_predicted_category": "marketing-seo-growth",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "用户结果是通过关键词、内容、技术 SEO 和外链获取持续自然搜索流量。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "f939c34d81e0bfe966c392217047bdc8ee45597330a05c932f60981e997ce422"
+    },
+    {
+      "skill_id": "activecampaign-automation",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "marketing-seo-growth",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It manages CRM contacts, subscriptions, tags, follow-up tasks, and automation enrollment.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "79130c7386edc790f017466009d7de8a9940e932dc345296d8bf7c6cde1840f1"
+    },
+    {
+      "skill_id": "ai-marketing-videos",
+      "expected_category": "content-media-publishing",
+      "baseline_predicted_category": "marketing-seo-growth",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "实际工作流生成镜头、旁白并合并为广告或演示视频；营销是用途，直接交付物是视频媒体资产。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1",
+        "reviewer-root"
+      ],
+      "review_status": "adjudicated",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "ef3272d34fe7658c78bba4612223bfc93fda0e7761361f9c3e5920bd5a5b8896"
+    },
+    {
+      "skill_id": "geo-content-optimizer",
+      "expected_category": "marketing-seo-growth",
+      "baseline_predicted_category": "marketing-seo-growth",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Optimizes content visibility and citations across AI answer engines and organic search surfaces.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "dd09dda1007965e1ed99b5ca161816b698c0e80caea8b6811e9010960909bb29"
+    },
+    {
+      "skill_id": "ai-viral-team-script-writing",
+      "expected_category": "content-media-publishing",
+      "baseline_predicted_category": "marketing-seo-growth",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "主要交付短视频脚本、分镜、台词、镜头提示词和视频生成配置，属于内容生产。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "655e5fcd13f2efedfa80640af58679b2b5edaae70d6a915c2f640a285268d3bf"
+    },
+    {
+      "skill_id": "create-viral-content",
+      "expected_category": "marketing-seo-growth",
+      "baseline_predicted_category": "marketing-seo-growth",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "It optimizes public content hooks, titles, thumbnails, and platform formats for audience reach.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "0de78f1a54dd692f28cbdc5d5ee48bd70bf4efbd719300edc1129100681f45af"
+    },
+    {
+      "skill_id": "domain-name-brainstormer",
+      "expected_category": "marketing-seo-growth",
+      "baseline_predicted_category": "marketing-seo-growth",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "生成并筛选品牌域名、TLD 和竞争性命名方案，核心是品牌定位与市场识别。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "495707739b354f81d1e28c6188dd55b97fdf5c64ae3e3c182ba6f092b2ab782b"
+    },
+    {
+      "skill_id": "code-to-image",
+      "expected_category": "content-media-publishing",
+      "baseline_predicted_category": "content-media-publishing",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Creates reusable image assets and publication covers by rendering coded visual compositions.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "20ea099cff9d2e524119929d1fe211e8b1abd64fedf10aebeb352362637898f4"
+    },
+    {
+      "skill_id": "mv-production-standard",
+      "expected_category": "content-media-publishing",
+      "baseline_predicted_category": "content-media-publishing",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "定义从素材、分镜、剪辑、字幕、口型同步到最终 MV 交付的媒体制作流程。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "71c71993508da8d72ba4e1dc32532ab23d2820b9877f765e3727aa3221e03923"
+    },
+    {
+      "skill_id": "youtube-knowledge-extractor",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "content-media-publishing",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It extracts transcripts and frames, synchronizes evidence, and analyzes what a video teaches.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "a91a82e5403c1e39419dde813e962ff97364b54e434e910f774cc7ad4b57d3df"
+    },
+    {
+      "skill_id": "writing-skills",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "content-media-publishing",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "创建、测试和优化供 Agent 触发执行的 Skill 契约，属于 Agent 能力与上下文工程。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "d83a09d6a1c6976f6cc2f40addeae653a4a6eb5903097ebc365d90242e00e379"
+    },
+    {
+      "skill_id": "image-scraper",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "content-media-publishing",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "Collects image resources from web pages through scraping, extraction, and local download.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "5c4531484b2225d98fcb42d52ee12bf86b300fcf8b82b83aa94d94083edce129"
+    },
+    {
+      "skill_id": "heygen-avatar-lite",
+      "expected_category": "content-media-publishing",
+      "baseline_predicted_category": "content-media-publishing",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "通过 HeyGen 生成多语言数字人视频，最终结果是可发布的视频媒体资产。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "7e614c931d8302bd22bc8c81c99e022a00f3639c689cd2045a0ee29cb68d7cfd"
+    },
+    {
+      "skill_id": "evomap",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "content-media-publishing",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It connects agents to an A2A marketplace for shared capabilities, bounties, and swarm tasks.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "b8862b0fa6d8621f5fc42547fde4c14cfb6c1ac9e0e8fd4bb5caa614f7bfcc41"
+    },
+    {
+      "skill_id": "suno-skills",
+      "expected_category": "content-media-publishing",
+      "baseline_predicted_category": "content-media-publishing",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "自动操作 Suno 生成歌曲、歌词和音频文件，主要产物是可下载的音乐内容。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "41b4466e1c452c659903ca726b85b4f3132cd0dc5d5e78cdda8756b33ecb8473"
+    },
+    {
+      "skill_id": "virtual-singer-mv-script",
+      "expected_category": "content-media-publishing",
+      "baseline_predicted_category": "content-media-publishing",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Transforms audio and lyrics into synchronized video storyboards and production-ready MV scripts.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "7d0fae36b001b0630b13014e66714ee1b32e36c21f8eb39edff7bbd944b1c68e"
+    },
+    {
+      "skill_id": "vectornode-image-gen",
+      "expected_category": "content-media-publishing",
+      "baseline_predicted_category": "content-media-publishing",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "直接生成或编辑图片并保存视觉文件，主要结果是图像内容资产。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "51489c1cc1f52b170f1ede36aa15d652f4e630059f2c156e74271bbc75094106"
+    },
+    {
+      "skill_id": "watchers-run",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "sales-crm-customer-success",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It monitors prospect and competitor sites, then emits lead and outreach-trigger alerts.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "290b10eaac2096b9d7980c2472113a98576233ab5054dbe9654a209baa553292"
+    },
+    {
+      "skill_id": "email-outreach-run",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "sales-crm-customer-success",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "执行带审批、限速和 CRM 记录的邮件拓展活动，直接服务线索触达与销售转化。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "f965f3efb31ab5b1291296b4d0637c58c58eebe46ae64b313b0913a715ed4cbb"
+    },
+    {
+      "skill_id": "pipedrive-automation",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "sales-crm-customer-success",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Runs Pipedrive deal, contact, activity, note, and sales-pipeline management workflows.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "f594c20b259986a02a0937fca720b068ac6648e029bab75d5506cf7f62b0c6c5"
+    },
+    {
+      "skill_id": "close-automation",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "sales-crm-customer-success",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "围绕 Close 中的线索、联系人、电话、短信和跟进任务管理销售活动。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "298f9ed5af5eda1f9dcea34eb6ac9d68edf262c4eb601de340fe210ac714f504"
+    },
+    {
+      "skill_id": "cold-email-sequence-generator",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "sales-crm-customer-success",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It builds personalized multi-touch outbound sequences for lead generation and sales replies.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "89082db5e31f995f969c332a425a33cbc85ae44f20848ff60bb2ee925cbd6583"
+    },
+    {
+      "skill_id": "zoho-crm-automation",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "sales-crm-customer-success",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "在 Zoho CRM 中检索联系人、管理线索并完成线索转化，属于销售 CRM 流程。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "6b305325a4c860dd0f8e0d233bf11a8c10d0b5d8d6b73c2d55a7c032bd996736"
+    },
+    {
+      "skill_id": "hubspot-automation",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "sales-crm-customer-success",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Runs HubSpot contact, company, deal, ticket, and CRM property management workflows.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "9574e7cf96e6424f86c995a3f9812b0db58039b7ac1210f28b611bd88963cac0"
+    },
+    {
+      "skill_id": "crm-automation",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "sales-crm-customer-success",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "主要完成线索捕获、评分、分配、成交阶段推进和多 CRM 销售管道同步。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "b3c9f124b28b87d90ea6471595e33941a6cf67d0043007f642562500abd4209a"
+    },
+    {
+      "skill_id": "zendesk-automation",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "sales-crm-customer-success",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "It manages support tickets, customer replies, users, organizations, and ticket lifecycles.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "91835c0b1beaa420365da18d5ad090c9b0e7b09e9051e6d02649e1d7b2b9b0aa"
+    },
+    {
+      "skill_id": "helpdesk-automation",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "sales-crm-customer-success",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "浏览和处理工单、视图、快捷回复及自定义字段，直接服务客户支持工作流。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "d8a64a0a3a4d5e30db051f2b8ca481cae0446f0d52acb9301fd4a42df9a74a80"
+    },
+    {
+      "skill_id": "daily-portfolio",
+      "expected_category": "finance-trading-markets",
+      "baseline_predicted_category": "finance-trading-markets",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "Tracks market prices, balances, prediction-market positions, returns, and portfolio actions.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "66065de257d80daa398d204cd4f41fdfefaf0d0cb84a6a57e8c863d46bcbffa8"
+    },
+    {
+      "skill_id": "quality-convergence-engine",
+      "expected_category": "general-utilities",
+      "baseline_predicted_category": "finance-trading-markets",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "它跨领域定义红线和验收标准，不产生某一垂直领域结果，符合通用审查工具。",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "3d0ea290cb256d0027f2914110875042b7108be153665f982bcb48c285bf5f94"
+    },
+    {
+      "skill_id": "pine-visualizer",
+      "expected_category": "finance-trading-markets",
+      "baseline_predicted_category": "finance-trading-markets",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It decomposes trading strategies into Pine indicators, entry rules, exits, and risk logic.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "edf60b330701efb2bd4785483ed130aa4d64f656ac28dd3d9d1817c25e969b9e"
+    },
+    {
+      "skill_id": "technical-analysis",
+      "expected_category": "finance-trading-markets",
+      "baseline_predicted_category": "finance-trading-markets",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "使用价格行为、技术指标与图表形态识别交易机会，明确属于市场和交易分析。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "885764b2e375cfffeb38a48c016d9eb5d0d900a645def556f68567377fff0601"
+    },
+    {
+      "skill_id": "repro-enforcer",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "finance-trading-markets",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Packages bioinformatics analyses into reproducible environments, pipelines, checksums, and instructions.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "6d260d38f624c6d71694e52d331e24d638552012fd6997196a99fd97b107d570"
+    },
+    {
+      "skill_id": "llm-stock-analyzer",
+      "expected_category": "finance-trading-markets",
+      "baseline_predicted_category": "finance-trading-markets",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "采集股票行情、基本面和情绪，输出交易点位、风险纪律与历史回测评价。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "b0333c168cdfaba79c8dd0a89818ffb0da03ac28a06e7c98c1872b4580e766cf"
+    },
+    {
+      "skill_id": "setting-okrs-goals",
+      "expected_category": "business-operations-strategy",
+      "baseline_predicted_category": "finance-trading-markets",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It aligns company and team objectives with measurable key results and operating systems.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "ed39ed1153337573b64f70d5a8ea1576e1a3aaa2835df87959a2731674508aa9"
+    },
+    {
+      "skill_id": "startup-financial-modeling",
+      "expected_category": "finance-trading-markets",
+      "baseline_predicted_category": "finance-trading-markets",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "建立收入、成本、现金流、烧钱速度和跑道预测，核心产物是创业财务模型。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "92f875c51cd3fbb3ebffecc9b20e33c1ff9f8c177f44edd418c77ff5c36b6f2a"
+    },
+    {
+      "skill_id": "billing-automation",
+      "expected_category": "finance-trading-markets",
+      "baseline_predicted_category": "finance-trading-markets",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Implements subscription billing, payments, invoicing, taxes, renewals, and failed-payment recovery.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "08d64fa3e67c9c379d89a218278caa35125bbd2ba84f27a2c7c88feb124938a8"
+    },
+    {
+      "skill_id": "cost-optimization",
+      "expected_category": "cloud-devops-reliability",
+      "baseline_predicted_category": "finance-trading-markets",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "目标是通过云资源调整、标签、预留实例和存储策略优化基础设施成本。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "d3cc6b5ad7d4bf6864ec21e6a2f9526afc99517037e0ad2e3597ac36117a39fa"
+    },
+    {
+      "skill_id": "company-analyzer",
+      "expected_category": "finance-trading-markets",
+      "baseline_predicted_category": "business-operations-strategy",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "It analyzes listed companies through fundamentals, valuation, technicals, and competitive position.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "5566a8b68e7dde9380bd4706b1198c2ca0e71b74603bf1f01c98a06483a0f511"
+    },
+    {
+      "skill_id": "todo-tracker",
+      "expected_category": "business-operations-strategy",
+      "baseline_predicted_category": "business-operations-strategy",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "跨会话记录、排序和完成待办事项，主要结果是持续的任务计划与工作管理。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "a8f163d2665037a5f12c22ed9cacf9e5c9598950c8a203ba3fa8654c3680649e"
+    },
+    {
+      "skill_id": "meeting-notes",
+      "expected_category": "business-operations-strategy",
+      "baseline_predicted_category": "business-operations-strategy",
+      "baseline_resolution_status": "rule-match",
+      "split": "validation",
+      "rationale": "Turns meetings into accountable decisions, action items, owners, risks, and operating records.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "3a23090aa07a7ce102eae2b389efd71a73eef6d9f052a85b32b7f5f8202fbf9b"
+    },
+    {
+      "skill_id": "daily-reflection",
+      "expected_category": "finance-trading-markets",
+      "baseline_predicted_category": "business-operations-strategy",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "每日复盘账户 P&L、逐笔交易、胜率、仓位和风控，属于交易绩效审查。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "6e2a48daec8b18b94975574cadf900c5a5ac7e6ac886f11e0146313c1ea1ea9e"
+    },
+    {
+      "skill_id": "startup-business-analyst-business-case",
+      "expected_category": "business-operations-strategy",
+      "baseline_predicted_category": "business-operations-strategy",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "It creates investor-ready business cases spanning market, strategy, team, risks, and funding.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "ea60f89ad32e1b95f2af0a14c6f3d32f8bc72bff1772816692752b94ee5852e9"
+    },
+    {
+      "skill_id": "cto-advisor",
+      "expected_category": "business-operations-strategy",
+      "baseline_predicted_category": "business-operations-strategy",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "指导技术战略、团队扩张、技术债和工程指标，核心是 CTO 经营与组织决策。",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "e8eeedffcb90f63c0a5635abe18fd5574e7bd7363791dcb4bcae69d40e4e9f5e"
+    },
+    {
+      "skill_id": "thinking-simon",
+      "expected_category": "finance-trading-markets",
+      "baseline_predicted_category": "business-operations-strategy",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "Guides quantitative trading decisions through backtests, portfolio risk, and statistical edge.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "3bfe6bde4411a1b2261c5607c746379174f037c901f4beb2adb29c204ce4ab89"
+    },
+    {
+      "skill_id": "thinking-steve-jobs",
+      "expected_category": "product-design-ux",
+      "baseline_predicted_category": "business-operations-strategy",
+      "baseline_resolution_status": "rule-match",
+      "split": "validation",
+      "rationale": "主要框架服务于产品取舍、极简设计、端到端体验和用户感受的决策。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "a16f9741e6d475fe8043a9476a001b04b8fdb795a24fad859766414d30b233c0"
+    },
+    {
+      "skill_id": "business-analyst",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "business-operations-strategy",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "It turns business data into KPI models, dashboards, forecasts, experiments, and recommendations.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "99acef5c31762cddc2c8eb66652f520f3212606314b763861b902144aefbdcb0"
+    },
+    {
+      "skill_id": "task-supervisor",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "business-operations-strategy",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "巡检 Agent 会话、识别卡住或中止任务并触发催办，属于 Agent 运行编排与监督。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "51145f242a7e4f1bfe1329dda18b67a30516ad0fbe07c2eac13af8a525802da7"
+    },
+    {
+      "skill_id": "outbound-email-strategy",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "apps-workflow-automation",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Builds B2B prospecting sequences that generate replies, discovery calls, and sales opportunities.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "2f997ca27622384a107e740ec11be7797d75a1c61e16aa03d33b20b4d82c942f"
+    },
+    {
+      "skill_id": "doc-coauthoring",
+      "expected_category": "content-media-publishing",
+      "baseline_predicted_category": "apps-workflow-automation",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "核心产物是技术文档、提案、规范和指南，并通过迭代改善写作质量。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "93ac256e2c9783b41aa2150bbbe4e4c8cda3ca8143af60fc891d9b316031dc44"
+    },
+    {
+      "skill_id": "hr-automation",
+      "expected_category": "business-operations-strategy",
+      "baseline_predicted_category": "apps-workflow-automation",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "It operates recruiting, onboarding, performance, time-off, and employee offboarding processes.",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "be0b35c34651d86bfa8b60abd38035dc6e0e602c54688cd5fbb05a5a616cdccf"
+    },
+    {
+      "skill_id": "microsoft-teams-automation",
+      "expected_category": "apps-workflow-automation",
+      "baseline_predicted_category": "apps-workflow-automation",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "自动完成 Teams 消息、聊天、频道和会议操作，是具体协作应用的工作流自动化。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "24a40d2420982e6fa71c2b95ef16152be322299282962f9efa35bc713b67980f"
+    },
+    {
+      "skill_id": "github-automation",
+      "expected_category": "apps-workflow-automation",
+      "baseline_predicted_category": "apps-workflow-automation",
+      "baseline_resolution_status": "override",
+      "split": "development",
+      "rationale": "Automates repeatable GitHub repository, pull request, issue, branch, and release operations.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "c0405d657014f40876e2c86149b169e23b7b9b47caed192360b70f35c28674f1"
+    },
+    {
+      "skill_id": "fabric-pattern",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "apps-workflow-automation",
+      "baseline_resolution_status": "rule-match",
+      "split": "validation",
+      "rationale": "Selecting and applying Fabric system-prompt patterns is the core behavior; CLI retrieval only supports it.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3",
+        "reviewer-root"
+      ],
+      "review_status": "adjudicated",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "c8732e4757c2ca8634a25caba07080f006988350bcb0b4907419cd753aaaa9d5"
+    },
+    {
+      "skill_id": "docusign-automation",
+      "expected_category": "apps-workflow-automation",
+      "baseline_predicted_category": "apps-workflow-automation",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "It selects DocuSign templates, sends envelopes, tracks status, and manages envelope lifecycles.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "0b4ebcf594b27bfe93143814f11914b82dd71e5ad01a726e231134aea907cb0d"
+    },
+    {
+      "skill_id": "linkedin-cdp",
+      "expected_category": "sales-crm-customer-success",
+      "baseline_predicted_category": "apps-workflow-automation",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "完整闭环是搜索潜客、查看档案、发连接或消息，并强制把外联原文记录到 CRM。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1",
+        "reviewer-root"
+      ],
+      "review_status": "adjudicated",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "a05e5cc786bc12fbc64f407b9cb96fabed43907701f8efd2f7cf7c29b3f9a25d"
+    },
+    {
+      "skill_id": "email-read",
+      "expected_category": "apps-workflow-automation",
+      "baseline_predicted_category": "apps-workflow-automation",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "Reads and searches Gmail folders and conversation threads through a repeatable app workflow.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "9383a484d1ec02fb9f9a5fd89c92e300ad43fd26a064e844770f1545c74410ef"
+    },
+    {
+      "skill_id": "outlook-automation",
+      "expected_category": "apps-workflow-automation",
+      "baseline_predicted_category": "apps-workflow-automation",
+      "baseline_resolution_status": "rule-match",
+      "split": "development",
+      "rationale": "通过 Outlook 外部应用接口自动化邮件、日历、联系人、文件夹和附件操作。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "42a8741a7780feb32a8f869be6a32cbb546ef1ecb3a2a858b0fd1ee4869df52d"
+    },
+    {
+      "skill_id": "juejin-publisher-custom",
+      "expected_category": "chinese-platform-workflows",
+      "baseline_predicted_category": "chinese-platform-workflows",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Its planned outcome is formatting, tagging, and publishing Markdown articles on Juejin.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "73a6794fa1cce8a895f0c15f4c53e0ad22b1e4aa27e4bc964be2f34a5fbc3a03"
+    },
+    {
+      "skill_id": "wecom-cs-automation",
+      "expected_category": "chinese-platform-workflows",
+      "baseline_predicted_category": "chinese-platform-workflows",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "围绕企业微信实现好友、问答和人工转接，是面向中国平台的专用客服工作流。",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "ce23d353314126f50cd8efef1c03a63485f8f0ba6afcc034dce9422f25d19a50"
+    },
+    {
+      "skill_id": "xhs-content-creator",
+      "expected_category": "chinese-platform-workflows",
+      "baseline_predicted_category": "chinese-platform-workflows",
+      "baseline_resolution_status": "priority-tie",
+      "split": "validation",
+      "rationale": "Creates algorithm-aware, compliant posts specifically for Xiaohongshu's Chinese platform format.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "bbb5d4a9a05e195afdd46254989337de64a6eb1ba73c937881cfb33665e7a692"
+    },
+    {
+      "skill_id": "douyin-smart-publish",
+      "expected_category": "chinese-platform-workflows",
+      "baseline_predicted_category": "chinese-platform-workflows",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "专门适配抖音创作者平台的素材、标题、话题、封面、草稿和发布流程。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "e10d44f35a986de24c5f789b72ca4371cbbd0a5a4a0619c5f2495809efa2708d"
+    },
+    {
+      "skill_id": "xhs-skill",
+      "expected_category": "chinese-platform-workflows",
+      "baseline_predicted_category": "chinese-platform-workflows",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It logs into Xiaohongshu, validates posts, publishes notes, and exports creator data.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "daea5c04a1e6dc93b07772c0ba733f29cde137391d4a7b48d790031112624678"
+    },
+    {
+      "skill_id": "xhs-writing-coach",
+      "expected_category": "chinese-platform-workflows",
+      "baseline_predicted_category": "chinese-platform-workflows",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "专门生成和优化小红书标题、正文、标签与互动结构，具有明确的平台专属性。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "f12e96eb4a59275a15a9a110352da3443c7b7f46f23e1e4dc41d3b89de3263e3"
+    },
+    {
+      "skill_id": "daily-douyin-content",
+      "expected_category": "chinese-platform-workflows",
+      "baseline_predicted_category": "chinese-platform-workflows",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "Produces, validates, saves, and prepares daily short-form content specifically for Douyin.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "7bc007ccef91ac20bcdd64fcb2d098fe67bd0a18b0fe8cf8d23b760caf21ed55"
+    },
+    {
+      "skill_id": "zsxq-smart-publish",
+      "expected_category": "chinese-platform-workflows",
+      "baseline_predicted_category": "chinese-platform-workflows",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "专门完成知识星球话题、问答、长文、文件和精华内容的管理与发布。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "ffbf528c5e9caf119f76cf97b27fc20867c00c26aa3620867061ddeffe4607f4"
+    },
+    {
+      "skill_id": "weixin-channels-publish",
+      "expected_category": "chinese-platform-workflows",
+      "baseline_predicted_category": "chinese-platform-workflows",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "It automates Weixin Channels login, video upload, metadata entry, review, and publishing.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "8b2842a34b7e00796e9baf4507a483d93a9f7f32ec135dfb96c688ceb246010a"
+    },
+    {
+      "skill_id": "douyin-video-analyst",
+      "expected_category": "chinese-platform-workflows",
+      "baseline_predicted_category": "chinese-platform-workflows",
+      "baseline_resolution_status": "priority-tie",
+      "split": "development",
+      "rationale": "采集抖音视频、提取文案并汇总账号内容，是抖音平台特定的分析工作流。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "2acc5381c0e825f26d6342392e1a7ba5a0310ba300f74058eac41b53ed8032e1"
+    },
+    {
+      "skill_id": "bazi-fortune",
+      "expected_category": "general-utilities",
+      "baseline_predicted_category": "general-utilities",
+      "baseline_resolution_status": "override",
+      "split": "development",
+      "rationale": "Provides a specialized Four Pillars fortune-analysis utility outside the repository's core domains.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "456fc7afe1564e5358b54d114b2eff1a1637d43a5dae9461b2fd8d8e9ae44f76"
+    },
+    {
+      "skill_id": "binance-trending",
+      "expected_category": "finance-trading-markets",
+      "baseline_predicted_category": "general-utilities",
+      "baseline_resolution_status": "fallback",
+      "split": "validation",
+      "rationale": "聚合币价、恐惧贪婪、新闻和热度并输出交易信号，结果直接服务加密交易。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "e324165ee84a4c969d1ed2272f1cb2b121dcdee93247cd72b1d9ae0f7141fe80"
+    },
+    {
+      "skill_id": "polyclaw",
+      "expected_category": "finance-trading-markets",
+      "baseline_predicted_category": "general-utilities",
+      "baseline_resolution_status": "fallback",
+      "split": "validation",
+      "rationale": "It executes Polymarket CLOB strategies using order books, wallets, contracts, and positions.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "94551671cc898ad1ebb933dab6c1683c6cbac48c013d293ce25b73782d19f15f"
+    },
+    {
+      "skill_id": "soushen-hunter",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "general-utilities",
+      "baseline_resolution_status": "fallback",
+      "split": "development",
+      "rationale": "执行 Bing 搜索、网页深度提取和结构化结果整理，核心结果是资料检索与研究。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "ef82f99cd93a9ac1e569452c343ad6284f43ddd8e2ac1f5314cb50be50367bef"
+    },
+    {
+      "skill_id": "market-intelligence",
+      "expected_category": "data-analytics-research",
+      "baseline_predicted_category": "general-utilities",
+      "baseline_resolution_status": "fallback",
+      "split": "development",
+      "rationale": "Collects and analyzes cross-platform market evidence to report trends, competitors, risks, and opportunities.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3",
+        "reviewer-2"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "8b8654d00298ccf04739274ffb0c88b1d63dd956492ee90889a49b7ee50a3d64"
+    },
+    {
+      "skill_id": "sp-simplification-cascades",
+      "expected_category": "software-engineering",
+      "baseline_predicted_category": "general-utilities",
+      "baseline_resolution_status": "fallback",
+      "split": "development",
+      "rationale": "针对重复实现、特殊分支和架构复杂度寻找统一抽象，主要用于代码重构。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "57417c2d46934c2214b3698823b7b1098c84fc2bcd5dea372ea2ba9fc00f4c32"
+    },
+    {
+      "skill_id": "sp-condition-based-waiting",
+      "expected_category": "software-engineering",
+      "baseline_predicted_category": "general-utilities",
+      "baseline_resolution_status": "fallback",
+      "split": "development",
+      "rationale": "It replaces fixed sleeps with condition polling to make asynchronous software tests reliable.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-1",
+        "reviewer-4"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "d6b45c913a6e3c2b175792e06a1ebec3e21bd4e6bd8e53eb2226b5704cd550b6"
+    },
+    {
+      "skill_id": "vp-cpo-readiness-advisor",
+      "expected_category": "business-operations-strategy",
+      "baseline_predicted_category": "general-utilities",
+      "baseline_resolution_status": "fallback",
+      "split": "development",
+      "rationale": "辅导 VP/CPO 的组织、战略、经营语言和高管协作，主要服务领导力与经营决策。",
+      "confidence": "medium",
+      "reviewers": [
+        "reviewer-2",
+        "reviewer-1"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "3cafc9255fc541726fe1e3870077e9ee5a67a337611444f05f7be6ae066001b5"
+    },
+    {
+      "skill_id": "timezone",
+      "expected_category": "general-utilities",
+      "baseline_predicted_category": "general-utilities",
+      "baseline_resolution_status": "fallback",
+      "split": "development",
+      "rationale": "Detects local time and performs reliable timezone conversion as a focused cross-functional utility.",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-3"
+      ],
+      "review_status": "primary",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "da3702d5758419004a8abb53065d172340feb458570a50aa5c7f7ba74c0e475c"
+    },
+    {
+      "skill_id": "using-superpowers",
+      "expected_category": "ai-agents-orchestration",
+      "baseline_predicted_category": "general-utilities",
+      "baseline_resolution_status": "fallback",
+      "split": "development",
+      "rationale": "规定 Agent 如何发现、调用和排序 Skills，是 Agent 工具协议与执行治理。",
+      "confidence": "high",
+      "reviewers": [
+        "reviewer-4",
+        "reviewer-3"
+      ],
+      "review_status": "cross-reviewed",
+      "reviewed_at": "2026-07-21",
+      "source_sha256": "07d73726944e38fac59b9c90d876e0f714e395308b357973ae77b1321fc75067"
+    }
+  ]
+}

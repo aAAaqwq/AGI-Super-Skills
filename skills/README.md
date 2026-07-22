@@ -60,7 +60,7 @@ The checked [debt baseline](../config/skill-quality-baseline.json) allows findin
 
 ## 📦 Inventory contract
 
-The canonical rules and active requirements live in [`config/team-manifest.json`](../config/team-manifest.json). Taxonomy rules live in [`config/skill-taxonomy.json`](../config/skill-taxonomy.json); generated counts are not maintained by hand.
+The canonical rules and active requirements live in [`config/team-manifest.json`](../config/team-manifest.json). Taxonomy rules live in [`config/skill-taxonomy.json`](../config/skill-taxonomy.json); generated counts are not maintained by hand. Primary-outcome classification is checked against a fixed [reviewed Gold Set](../docs/skill-taxonomy-gold-set.md) with a machine-readable [agreement report](../catalog/skill-taxonomy-evaluation.json). That score does not measure Skill quality, safety, or runtime success.
 
 The validator counts only skills that are tracked by Git, physical rather than symlinked, present in the working tree, and backed by a top-level `SKILL.md`.
 

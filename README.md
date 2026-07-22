@@ -122,6 +122,7 @@ You can already browse a deterministic skill catalog, inspect every Agent instru
 | Repository inventory, counts, and references | `npm run validate -- --warnings-as-errors` | **Verified in this checkout** |
 | Generic installer preview, preflight, no-clobber, and staging | `npm test` | **Verified in this checkout** |
 | Generated catalog covers the canonical inventory | `npm run check:skills` | **Verified in this checkout** |
+| Primary-outcome classification agrees with the fixed reviewed set | [Gold Set method](./docs/skill-taxonomy-gold-set.md) + [generated report](./catalog/skill-taxonomy-evaluation.json) | **Reviewed-set gate passed in this checkout** |
 | Current-client harness installation and loading | Revision-matched harness receipt | **Validation pending** |
 | Task quality or business outcome | Public fixture, baseline, rubric, and artifacts | **Validation pending** |
 
@@ -146,6 +147,7 @@ python -m pip install --requirement requirements-dev.txt
 npm test
 npm run validate -- --warnings-as-errors
 npm run check:skills
+npm run check:taxonomy-evaluation
 npm run check:architecture
 ```
 

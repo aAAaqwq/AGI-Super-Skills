@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aaaaqwq.github.io/AGI-Super-Team/schemas/skill-taxonomy-evaluation.schema.json",
+  "title": "Generated Skill taxonomy reviewed-set agreement evaluation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "sampleSize", "categoryCount", "goldSetSha256", "annotationMode", "humanApproved", "metrics", "splits", "gates", "reviewedSetAgreementScore", "scoreSemantics", "runtimeEvidenceIncluded", "errors"],
+  "properties": {
+    "$schema": {"const": "../config/skill-taxonomy-evaluation.schema.json"},
+    "schemaVersion": {"const": 1},
+    "sampleSize": {"const": 140},
+    "categoryCount": {"const": 14},
+    "goldSetSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "annotationMode": {"const": "independent-agent-manual-review"},
+    "humanApproved": {"const": false},
+    "metrics": {"$ref": "#/$defs/metrics"},
+    "splits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["development", "validation"],
+      "properties": {
+        "development": {
+          "allOf": [
+            {"$ref": "#/$defs/splitMetrics"},
+            {"properties": {"total": {"const": 112}}}
+          ]
+        },
+        "validation": {
+          "allOf": [
+            {"$ref": "#/$defs/splitMetrics"},
+            {"properties": {"total": {"const": 28}}}
+          ]
+        }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sampleAtLeast140", "accuracyAtLeast80", "macroF1AtLeast80", "allCategoriesRepresented", "validationAccuracyAtLeast75", "validationMacroF1AtLeast75", "validationAllCategoriesRepresented", "passed"],
+      "properties": {
+        "sampleAtLeast140": {"type": "boolean"},
+        "accuracyAtLeast80": {"type": "boolean"},
+        "macroF1AtLeast80": {"type": "boolean"},
+        "allCategoriesRepresented": {"type": "boolean"},
+        "validationAccuracyAtLeast75": {"type": "boolean"},
+        "validationMacroF1AtLeast75": {"type": "boolean"},
+        "validationAllCategoriesRepresented": {"type": "boolean"},
+        "passed": {"type": "boolean"}
+      }
+    },
+    "reviewedSetAgreementScore": {"type": "integer", "minimum": 0, "maximum": 100},
+    "scoreSemantics": {"type": "string", "minLength": 30},
+    "runtimeEvidenceIncluded": {"const": false},
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["skill_id", "expected_category", "predicted_category", "split"],
+        "properties": {
+          "skill_id": {"type": "string"},
+          "expected_category": {"type": "string"},
+          "predicted_category": {"type": "string"}
+          ,"split": {"enum": ["development", "validation"]}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "categoryMetrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["precision", "recall", "f1", "support", "predicted"],
+      "properties": {
+        "precision": {"type": "number", "minimum": 0, "maximum": 1},
+        "recall": {"type": "number", "minimum": 0, "maximum": 1},
+        "f1": {"type": "number", "minimum": 0, "maximum": 1},
+        "support": {"type": "integer", "minimum": 0},
+        "predicted": {"type": "integer", "minimum": 0}
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total", "correct", "accuracy", "macro_f1", "accuracyWilsonLower95", "per_category"],
+      "properties": {
+        "total": {"const": 140},
+        "correct": {"type": "integer", "minimum": 0},
+        "accuracy": {"type": "number", "minimum": 0, "maximum": 1},
+        "macro_f1": {"type": "number", "minimum": 0, "maximum": 1},
+        "accuracyWilsonLower95": {"type": "number", "minimum": 0, "maximum": 1},
+        "per_category": {
+          "type": "object",
+          "minProperties": 14,
+          "additionalProperties": {"$ref": "#/$defs/categoryMetrics"}
+        }
+      }
+    },
+    "splitMetrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total", "correct", "accuracy", "macro_f1", "accuracyWilsonLower95", "per_category"],
+      "properties": {
+        "total": {"type": "integer", "minimum": 1},
+        "correct": {"type": "integer", "minimum": 0},
+        "accuracy": {"type": "number", "minimum": 0, "maximum": 1},
+        "macro_f1": {"type": "number", "minimum": 0, "maximum": 1},
+        "accuracyWilsonLower95": {"type": "number", "minimum": 0, "maximum": 1},
+        "per_category": {
+          "type": "object",
+          "minProperties": 14,
+          "additionalProperties": {"$ref": "#/$defs/categoryMetrics"}
+        }
+      }
+    }
+  }
+}

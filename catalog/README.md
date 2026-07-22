@@ -4,6 +4,8 @@
 
 Find a skill by the outcome you need. This index is generated from tracked, physical `SKILL.md` entrypoints; catalog inclusion proves structure, not behavior or cross-harness compatibility.
 
+**Classification evidence:** inspect the fixed [Gold Set methodology](../docs/skill-taxonomy-gold-set.md) and the machine-readable [reviewed-set agreement report](./skill-taxonomy-evaluation.json). The score measures agreement on reviewed primary-outcome labels; it is not a Skill quality or runtime-success score.
+
 ## 🚀 Suggested starting points
 
 For a first run, prefer a [starter kit](../starter-kits/) or the [Codex package](../.codex/INDEX.md). These are navigation aids, not claims of behavioral verification or a ranking of the full library.
@@ -14,7 +16,7 @@ For a first run, prefer a [starter kit](../starter-kits/) or the [Codex package]
 | 💻 Software Engineering | [`tdd-workflow`](../skills/tdd-workflow/) | Portable required assignment · structure checked | Drive implementation through a test-first loop. |
 | 📊 Data, Analytics & Research | [`deep-research`](../skills/deep-research/) | Harness-specific assignment · generic installer skips | Turn a question into an evidence-oriented research process. |
 | 📈 Marketing, SEO & Growth | [`seo-audit`](../skills/seo-audit/) | Portable required assignment · structure checked | Review search discoverability with explicit checks. |
-| ✍️ Content, Media & Publishing | [`writing-skills`](../skills/writing-skills/) | Portable required assignment · structure checked | Move from a bounded writing brief to a reviewable draft. |
+| 🤖 AI Agents & Orchestration | [`writing-skills`](../skills/writing-skills/) | Portable required assignment · structure checked | Create and maintain reusable agent Skill instructions with a reviewable workflow. |
 | 🛡️ Security, Privacy & Legal | [`security-audit`](../skills/security-audit/) | Portable required assignment · structure checked · review: system-change | Inspect code and configuration for security risk. |
 | 💹 Finance, Trading & Markets | [`backtest-expert`](../skills/backtest-expert/) | Portable required assignment · structure checked | Review backtests without implying live-trading safety. |
 | 🎨 Product, Design & UX | [`frontend-design-ultimate`](../skills/frontend-design-ultimate/) | Harness-specific assignment · generic installer skips | Create a concrete interface direction and implementation. |
@@ -26,20 +28,20 @@ This revision contains 794 canonical catalog entries. The number is generated he
 
 | Category | Use it for | Entries |
 |---|---|---:|
-| [🤖 AI Agents & Orchestration](#ai-agents-orchestration) | Coordinate agents, context, memory, models, prompts, and tool protocols. | 77 |
-| [💻 Software Engineering](#software-engineering) | Build, test, review, debug, and maintain applications and developer tooling. | 80 |
-| [☁️ Cloud, DevOps & Reliability](#cloud-devops-reliability) | Deploy, observe, troubleshoot, and operate cloud and local infrastructure. | 29 |
-| [📊 Data, Analytics & Research](#data-analytics-research) | Collect evidence, search sources, analyze data, and communicate findings. | 75 |
-| [🛡️ Security, Privacy & Legal](#security-privacy-legal) | Review security, privacy, compliance, permissions, contracts, and legal risk. | 34 |
-| [🎨 Product, Design & UX](#product-design-ux) | Shape product requirements, interfaces, design systems, and user experience. | 26 |
-| [📈 Marketing, SEO & Growth](#marketing-seo-growth) | Acquire audiences through positioning, campaigns, search, ads, and social growth. | 51 |
-| [✍️ Content, Media & Publishing](#content-media-publishing) | Create, edit, repurpose, and publish writing, images, audio, and video. | 78 |
-| [🤝 Sales, CRM & Customer Success](#sales-crm-customer-success) | Find, win, onboard, support, and retain customers with accountable workflows. | 36 |
-| [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 64 |
-| [🧭 Business Operations & Strategy](#business-operations-strategy) | Plan work, make decisions, manage teams, and improve operating systems. | 72 |
+| [🤖 AI Agents & Orchestration](#ai-agents-orchestration) | Coordinate agents, context, memory, models, prompts, and tool protocols. | 78 |
+| [💻 Software Engineering](#software-engineering) | Build, test, review, debug, and maintain applications and developer tooling. | 81 |
+| [☁️ Cloud, DevOps & Reliability](#cloud-devops-reliability) | Deploy, observe, troubleshoot, and operate cloud and local infrastructure. | 32 |
+| [📊 Data, Analytics & Research](#data-analytics-research) | Collect evidence, search sources, analyze data, and communicate findings. | 78 |
+| [🛡️ Security, Privacy & Legal](#security-privacy-legal) | Review security, privacy, compliance, permissions, contracts, and legal risk. | 32 |
+| [🎨 Product, Design & UX](#product-design-ux) | Shape product requirements, interfaces, design systems, and user experience. | 20 |
+| [📈 Marketing, SEO & Growth](#marketing-seo-growth) | Acquire audiences through positioning, campaigns, search, ads, and social growth. | 47 |
+| [✍️ Content, Media & Publishing](#content-media-publishing) | Create, edit, repurpose, and publish writing, images, audio, and video. | 82 |
+| [🤝 Sales, CRM & Customer Success](#sales-crm-customer-success) | Find, win, onboard, support, and retain customers with accountable workflows. | 39 |
+| [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 65 |
+| [🧭 Business Operations & Strategy](#business-operations-strategy) | Plan work, make decisions, manage teams, and improve operating systems. | 71 |
 | [⚙️ Apps & Workflow Automation](#apps-workflow-automation) | Connect everyday apps, browsers, messaging systems, and repeatable workflows. | 88 |
 | [🇨🇳 Chinese Platform Workflows](#chinese-platform-workflows) | Create, analyze, and publish for major Chinese-language platforms and channels. | 39 |
-| [🧰 Specialized Domains & Utilities](#general-utilities) | Domain-specific helpers and cross-functional tools that need a dedicated review path. | 45 |
+| [🧰 Specialized Domains & Utilities](#general-utilities) | Domain-specific helpers and cross-functional tools that need a dedicated review path. | 42 |
 
 <a id="ai-agents-orchestration"></a>
 ## 🤖 AI Agents & Orchestration
@@ -48,7 +50,6 @@ Coordinate agents, context, memory, models, prompts, and tool protocols.
 
 | Skill | What it helps with | Support / review signals |
 |---|---|---|
-| [`agent-browser`](../skills/agent-browser/) | A fast Rust-based headless browser automation CLI with Node.js fallback that enables AI agents to navigate, click, type, and snapshot pages via structured commands. | Catalog only |
 | [`agent-builder`](../skills/agent-builder/) | Build agent from spec: code, skill, config, launchd | Catalog only |
 | [`agent-capacity-modeler`](../skills/agent-capacity-modeler/) | 为每个Agent建立"技能-经验-价值观"三维动态模型，超越简单技能列表，实现真正的硅基人才画像。 | Catalog only |
 | [`agent-contacts`](../skills/agent-contacts/) | AI agent contacts — add, list, remove MCP contacts. Use when someone gives an agent URL, or when you need to view/remove contacts. | Catalog only |
@@ -66,6 +67,7 @@ Coordinate agents, context, memory, models, prompts, and tool protocols.
 | [`auto-memory`](../skills/auto-memory/) | Description needs review; inspect source. | Catalog only |
 | [`auto-respawn`](../skills/auto-respawn/) | Description needs review; inspect source. | Catalog only |
 | [`clawrouter`](../skills/clawrouter/) | Description needs review; inspect source. | Catalog only |
+| [`codex-cc-guide`](../skills/codex-cc-guide/) | 如何用 ACP sessions_spawn 调用 Claude Code / Codex 写代码 — 小code 团队编码任务指南 | Harness-specific assignment · generic installer skips · PE |
 | [`coding-agent-backup`](../skills/coding-agent-backup/) | Delegate coding tasks to Codex, Claude Code, or Pi agents via background process. Use when: (1) building/creating new features or apps, (2) reviewing PRs (spawn in temp dir), (3)… | Harness-specific assignment · generic installer skips · PE |
 | [`coding-agent-orchestrator`](../skills/coding-agent-orchestrator/) | coding-agent-orchestrator | Catalog only |
 | [`command-registry-integration`](../skills/command-registry-integration/) | Integrate new chat commands into OpenClaw's formal command registry | Catalog only |
@@ -77,15 +79,15 @@ Coordinate agents, context, memory, models, prompts, and tool protocols.
 | [`cross-instance-comm`](../skills/cross-instance-comm/) | Use when sending messages or tasks between multiple OpenClaw instances over Tailscale Gateway, such as asking another machine to execute work or sync context. | Catalog only |
 | [`dispatcher`](../skills/dispatcher/) | Route complex multi-step tasks, multi-skill orchestration, post-execution checklist | Catalog only |
 | [`dispatching-parallel-agents`](../skills/dispatching-parallel-agents/) | Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies | Harness-specific assignment · generic installer skips · CEO |
+| [`elite-github-skills-hub`](../skills/elite-github-skills-hub/) | Curated hub of the highest-value GitHub skills/repos for Claude Code, Cursor, Codex, Gemini CLI, and OpenClaw. Links to 20+ elite repos organized by tier. Use when discovering,… | Catalog only |
 | [`elite-longterm-memory`](../skills/elite-longterm-memory/) | Ultimate AI agent memory system for Cursor, Claude, ChatGPT &amp; Copilot. WAL protocol + vector search + git-notes + cloud backup. Never lose context again. Vibe-coding ready. | Catalog only |
 | [`env-setup`](../skills/env-setup/) | Claude Code 环境一键同步工具。从 GitHub 仓库同步所有配置到本地：output-styles 风格、CLAUDE.md 全局提示词、MCP 服务器配置、Agent 配置、Plugin 配置。适用于多设备统一环境、换电脑恢复、团队共享配置等场景。当用户需要从 GitHub 仓库同步 Claude Code/OpenClaw… | Catalog only |
-| [`file-organizer`](../skills/file-organizer/) | Intelligently organizes your files and folders across your computer by understanding context, finding duplicates, suggesting better structures, and automating cleanup tasks.… | Catalog only |
+| [`evomap`](../skills/evomap/) | Connect to the EvoMap collaborative evolution marketplace. Publish Gene+Capsule bundles, fetch promoted assets, claim bounty tasks, and earn credits via the GEP-A2A protocol. Use… | Catalog only |
+| [`fabric-pattern`](../skills/fabric-pattern/) | Description needs review; inspect source. | Catalog only |
 | [`find-skills`](../skills/find-skills/) | Helps users discover and install agent skills when they ask questions like "how do I do X", "find a skill for X", "is there a skill that can...", or express interest in extending… | Catalog only |
 | [`firm-orchestration`](../skills/firm-orchestration/) | Pyramid multi-agent orchestration for OpenClaw: routes objectives from a CEO agent down through departments, services and employees via sessions_send / sessions_spawn, collects… | Catalog only |
 | [`greenhelix-agent-workforce-orchestration`](../skills/greenhelix-agent-workforce-orchestration/) | Agent Workforce Orchestration: Hybrid Human+AI Teams. Build agent-led workforce orchestration: capability matching, escrow-based payments for AI agents and human gig workers,… | Catalog only |
-| [`internal-comms`](../skills/internal-comms/) | A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write… | Catalog only |
-| [`kanbanflow-skill`](../skills/kanbanflow-skill/) | Manage KanbanFlow boards, columns, and tasks for lightweight workflow | Catalog only |
-| [`last30days-skill`](../skills/last30days-skill/) | Research a topic from the last 30 days. Also triggered by 'last30'. Sources: Reddit, X, YouTube, Hacker News, Polymarket, web. Become an expert and write copy-paste-ready prompts. | Catalog only |
+| [`inference-optimizer`](../skills/inference-optimizer/) | Audit OpenClaw token usage, purge stale sessions, and optimize inference speed. Use when the user sends /optimize, /audit, asks to purge sessions, or wants a token/workspace audit. | Harness-specific assignment · generic installer skips · CTO |
 | [`mcp-agent-connect`](../skills/mcp-agent-connect/) | Connect to an AI agent via MCP using their mcp_url from CRM. Discovers capabilities via agent.json, registers MCP server, and enables tool-based communication. | Catalog only |
 | [`mcp-builder`](../skills/mcp-builder/) | Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP… | Catalog only |
 | [`mcp-installer`](../skills/mcp-installer/) | 从GitHub搜索并自动安装配置MCP(Model Context Protocol)服务器工具到Claude配置文件。当用户需要安装MCP工具时触发此技能。工作流程：搜索GitHub上的MCP项目 -&gt; 提取npx配置 -&gt; 添加到~/.claude.json -&gt; 处理API密钥（如有）。 | Catalog only |
@@ -97,7 +99,6 @@ Coordinate agents, context, memory, models, prompts, and tool protocols.
 | [`model-fallback`](../skills/model-fallback/) | 模型自动降级与故障切换。当主模型请求失败、超时、达到速率限制或配额耗尽时，自动切换到备用模型，确保服务连续性。支持多供应商、多优先级的智能模型选择，提供健康监控、自动重试和错误恢复机制。 | Harness-specific assignment · generic installer skips · CTO |
 | [`model-health-check`](../skills/model-health-check/) | 检查已配置模型供应商的连通性、延迟和可用性，用于快速诊断模型侧故障。 | Catalog only |
 | [`model-provider-manager`](../skills/model-provider-manager/) | Unified LLM provider and model configuration, health monitoring, and key management | Harness-specific assignment · generic installer skips · CTO |
-| [`model-usage`](../skills/model-usage/) | Use CodexBar CLI local cost usage to summarize per-model usage for Codex | Catalog only |
 | [`multi-agent-architecture`](../skills/multi-agent-architecture/) | 多 Agent 架构设计与智能 Spawn 系统。当需要设计多 Agent 系统、配置专业化 Agent、实现智能任务分发、或优化并发处理能力时使用此技能。 | Catalog only |
 | [`multi-agent-trading`](../skills/multi-agent-trading/) | multi-agent trading, 交易团队, analyst team, trading debate, bull bear debate, 协作交易, agent trading framework | Catalog only |
 | [`parallel-agents`](../skills/parallel-agents/) | Multi-agent orchestration patterns. Use when multiple independent tasks can run with different domain expertise or when comprehensive analysis requires multiple perspectives. | Catalog only |
@@ -110,20 +111,22 @@ Coordinate agents, context, memory, models, prompts, and tool protocols.
 | [`skill-config-checker`](../skills/skill-config-checker/) | 扫描本地所有 skills，检测需要配置的 API keys、tokens、secrets 等，生成配置需求清单和操作指南。 | Catalog only |
 | [`skill-creator`](../skills/skill-creator/) | Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with… | Catalog only |
 | [`skill-finder-cn`](../skills/skill-finder-cn/) | Skill 查找器 \| Skill Finder. 帮助发现和安装 ClawHub Skills \| Discover and install ClawHub Skills. 回答'有什么技能可以X'、'找一个技能' \| Answers 'what skill can X', 'find a skill'. 触发词：找 skill、find… | Harness-specific assignment · generic installer skips · CSO |
-| [`skill-gap-analyzer`](../skills/skill-gap-analyzer/) | 将军团战略蓝图与现有Agent能力矩阵进行对比，自动识别"能力鸿沟"，并发起招聘（硅基/碳基猎取）或培训（进化路径）需求。 | Catalog only |
-| [`slidev-agent-skill`](../skills/slidev-agent-skill/) | Create, edit, theme, build, and export Slidev presentations using a script-first workflow with detailed local references. Use when working on Slidev decks, themes, layouts,… | Catalog only |
 | [`sp-dispatching-parallel-agents`](../skills/sp-dispatching-parallel-agents/) | Use multiple Claude agents to investigate and fix independent problems concurrently | Catalog only |
 | [`sp-preserving-productive-tensions`](../skills/sp-preserving-productive-tensions/) | Recognize when disagreements reveal valuable context, preserve multiple valid approaches instead of forcing premature resolution | Catalog only |
 | [`sp-remembering-conversations`](../skills/sp-remembering-conversations/) | Search previous Claude Code conversations for facts, patterns, decisions, and context using semantic or text search | Catalog only |
+| [`sp-subagent-driven-development`](../skills/sp-subagent-driven-development/) | Execute implementation plan by dispatching fresh subagent for each task, with code review between tasks | Portable required assignment · structure checked · PE |
 | [`sp-using-skills`](../skills/sp-using-skills/) | Skills wiki intro - mandatory workflows, search tool, brainstorming triggers | Catalog only |
 | [`strategic-orchestration`](../skills/strategic-orchestration/) | Coordinate agents toward a unified objective; assign roles, sequence work, prevent conflicts, and define success criteria. | Catalog only |
+| [`subagent-driven-development`](../skills/subagent-driven-development/) | Use when executing implementation plans with independent tasks in the current session | Catalog only |
+| [`task-supervisor`](../skills/task-supervisor/) | 定时巡检 agent 任务执行状态，识别卡住、abort、无产出等异常并触发催促或告警。 | Catalog only |
 | [`tessl-skill-review`](../skills/tessl-skill-review/) | Evaluate, score, and review an Agent Skill or SKILL.md using Tessl as the primary evaluator. Use when asked to measure skill quality, score a skill, review a skill against best… | Catalog only |
 | [`token-budget-advisor`](../skills/token-budget-advisor/) | Intercept the response flow to offer the user a choice about response depth **before** Claude answers | Portable required assignment · structure checked · CEO |
 | [`token-reporter`](../skills/token-reporter/) | 每日自动统计 OpenClaw 实例 Token 消耗和工作产出，上报到飞书多维表格。扫描 JSONL 日志按模型聚合 token，收集各 | Harness-specific assignment · generic installer skips · CTO |
 | [`trailofbits-skills`](../skills/trailofbits-skills/) | Description needs review; inspect source. | Catalog only |
-| [`vcf-annotator`](../skills/vcf-annotator/) | Annotate VCF variants with VEP, ClinVar, gnomAD frequencies, and ancestry-aware context. Generates prioritised variant reports. | Catalog only |
+| [`using-superpowers`](../skills/using-superpowers/) | Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions | Catalog only |
 | [`work-to-skill`](../skills/work-to-skill/) | 工作即技能：每次完成一项有复用价值的工作后，自动评估并封装为可复用 Skill。让团队在工作中持续进化。 | Catalog only |
 | [`workspace-directory-manager`](../skills/workspace-directory-manager/) | Workspace directory manager — maintain cleanliness of ~/.openclaw/ and ~/clawd/ | Catalog only |
+| [`writing-skills`](../skills/writing-skills/) | Use when creating new skills, editing existing skills, or verifying skills work before deployment | Portable required assignment · structure checked · CEO |
 | [`xiaomo-assistant-template`](../skills/xiaomo-assistant-template/) | 小a助手配置模板。基于 xiaomo-starter-kit 改编，提供预配置的 OpenClaw 助手框架文件。当用户需要快速配置新助手、设置助手身份、创建助手配置文件时使用此技能。 | Catalog only |
 
 <a id="software-engineering"></a>
@@ -133,6 +136,8 @@ Build, test, review, debug, and maintain applications and developer tooling.
 
 | Skill | What it helps with | Support / review signals |
 |---|---|---|
+| [`api-design`](../skills/api-design/) | REST API design patterns including resource naming, status codes, pagination, filtering, error responses, versioning, and rate limiting for production APIs. | Portable required assignment · structure checked · CTO, PE |
+| [`api-design-patterns`](../skills/api-design-patterns/) | Comprehensive API design patterns covering REST, GraphQL, gRPC, versioning, authentication, and modern API best practices | Portable required assignment · structure checked · CTO |
 | [`api-gateway`](../skills/api-gateway/) | Description needs review; inspect source. | Portable required assignment · structure checked · CDO |
 | [`api-provider-setup`](../skills/api-provider-setup/) | 添加和配置第三方 API 中转站供应商到 OpenClaw。当用户需要添加新的 API 供应商、配置中转站、设置自定义模型端点时使用此技能。支持 Anthropic 兼容和 OpenAI 兼容的 API 格式。 | Catalog only |
 | [`api-provider-status`](../skills/api-provider-status/) | 查询 API 供应商的余额、用量与可用状态，支持多供应商监控与定时汇报。 | Harness-specific assignment · generic installer skips · CTO |
@@ -149,18 +154,15 @@ Build, test, review, debug, and maintain applications and developer tooling.
 | [`code-material-gen`](../skills/code-material-gen/) | Description needs review; inspect source. | Catalog only |
 | [`code-review`](../skills/code-review/) | AI code review for PR or local changes | Catalog only |
 | [`code-review-quality`](../skills/code-review-quality/) | Conduct context-driven code reviews focusing on quality, testability, and maintainability. Use when reviewing code, providing feedback, or establishing review practices. | Harness-specific assignment · generic installer skips · PE |
-| [`codex-cc-guide`](../skills/codex-cc-guide/) | 如何用 ACP sessions_spawn 调用 Claude Code / Codex 写代码 — 小code 团队编码任务指南 | Harness-specific assignment · generic installer skips · PE |
 | [`collaboration`](../skills/collaboration/) | Guide for collaborating on GitHub projects. This skill should be used when contributing to projects, creating PRs, reviewing code, or managing issues on GitHub. | Catalog only |
 | [`commit-analyzer`](../skills/commit-analyzer/) | Analyze git commit frequency, categories, and timing patterns to diagnose | Catalog only |
 | [`conventional-commits`](../skills/conventional-commits/) | Format commit messages using the Conventional Commits specification. Use when creating commits, writing commit messages, or when the user mentions commits, git commits, or commit… | Catalog only |
 | [`css-ninja`](../skills/css-ninja/) | Master CSS with Tailwind, CSS-in-JS, responsive layouts, animations, and modern styling patterns. Use when: (1) responsive design implementation, (2) Tailwind CSS setup and… | Portable required assignment · structure checked · PE |
 | [`db-migrator`](../skills/db-migrator/) | Database schema migration, versioning, and rollback management for SQL and NoSQL databases. Use when: (1) creating database migrations, (2) modifying table schemas, (3)… | Portable required assignment · structure checked · PE |
-| [`deepwork-tracker`](../skills/deepwork-tracker/) | Track deep work sessions locally (start/stop/status) and generate a GitHub-contribution-graph style minutes-per-day heatmap for sharing (e.g., via Telegram). Use when the user… | Catalog only |
 | [`digital-human-api`](../skills/digital-human-api/) | Digital human video generation via Qingyun API — avatar-based talking head videos | Catalog only |
 | [`e2e-testing`](../skills/e2e-testing/) | Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies. | Portable required assignment · structure checked · CEO, PE |
 | [`e2e-testing-patterns`](../skills/e2e-testing-patterns/) | Master end-to-end testing with Playwright and Cypress to build reliable test suites that catch bugs, improve confidence, and enable fast deployment. Use when implementing E2E… | Catalog only |
 | [`electron-app-dev`](../skills/electron-app-dev/) | 老王我搞Electron好多年了，这玩意儿写跨平台应用真tm香！ | Catalog only |
-| [`elite-github-skills-hub`](../skills/elite-github-skills-hub/) | Curated hub of the highest-value GitHub skills/repos for Claude Code, Cursor, Codex, Gemini CLI, and OpenClaw. Links to 20+ elite repos organized by tier. Use when discovering,… | Catalog only |
 | [`entropy-manager`](../skills/entropy-manager/) | Entropy scanner for codebases — detect disorder and suggest cleanup actions | Catalog only |
 | [`eval-harness`](../skills/eval-harness/) | Formal evaluation framework for Claude Code sessions implementing eval-driven development (EDD) principles | Catalog only |
 | [`expo-tailwind-setup`](../skills/expo-tailwind-setup/) | Set up Tailwind CSS v4 in Expo with react-native-css and NativeWind v5 for universal styling | Catalog only |
@@ -169,9 +171,7 @@ Build, test, review, debug, and maintain applications and developer tooling.
 | [`ghost-scan-code`](../skills/ghost-scan-code/) | Ghost Security - SAST code scanner. Finds security vulnerabilities in source code by planning and executing targeted scans for issues like SQL injection, XSS, BOLA, BFLA, SSRF,… | Portable required assignment · structure checked · PE |
 | [`git-workflow`](../skills/git-workflow/) | OpenClaw Git 工作流技能。 当用户提及以下任务时使用： - 提交代码或文档 - 推送到远程仓库 - 管理多个 Git 仓库 - 查看 Git 状态 核心能力: - 自动检测文件变更 - 自动生成提交信息 - 自动推送到远程仓库 - 多仓库管理 | Catalog only |
 | [`github`](../skills/github/) | Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries. | Portable required assignment · structure checked · PE |
-| [`gitlab-automation`](../skills/gitlab-automation/) | Automate GitLab project management, issues, merge requests, pipelines, branches, and user operations via Rube MCP (Composio). Always search tools first for current schemas. | Catalog only |
 | [`langsmith-fetch`](../skills/langsmith-fetch/) | Debug LangChain and LangGraph agents by fetching execution traces from LangSmith Studio. Use when debugging agent behavior, investigating errors, analyzing tool calls, checking… | Catalog only |
-| [`liuyao-yijing`](../skills/liuyao-yijing/) | 六爻易经占卜器，基于京房纳甲体系，模拟铜钱起卦，完成纳甲装卦（天干地支、世应、六亲、六神）， 通过用神旺衰和生克制化断卦。当用户提及「六爻」「易经占卜」「铜钱起卦」「纳甲」「帮我起一卦」 「六爻预测」时触发。装卦为确定性计算 + LLM 综合断卦，无外部 API 依赖。 不适用于：梅花易数、奇门遁甲、星座运势、塔罗占卜、八字命理等其他领域 → 建议使用… | Catalog only |
 | [`market-ab-test-setup`](../skills/market-ab-test-setup/) | When the user wants to plan, design, or implement an A/B test or experiment. Also use when the user mentions "A/B test," "split test," "experiment," "test this change," "variant… | Catalog only |
 | [`micro-saas-launcher`](../skills/micro-saas-launcher/) | Expert in launching small, focused SaaS products fast - the indie hacker approach to building profitable software. Covers idea validation, MVP development, pricing, launch… | Catalog only |
 | [`minimax-tts`](../skills/minimax-tts/) | Text-to-speech synthesis via MiniMax WebSocket API | Catalog only |
@@ -179,7 +179,6 @@ Build, test, review, debug, and maintain applications and developer tooling.
 | [`openrouter-usage`](../skills/openrouter-usage/) | Track OpenRouter API spending — credit balance, per-model cost breakdown, | Catalog only |
 | [`pine-developer`](../skills/pine-developer/) | Writes production-quality Pine Script v6 code following TradingView guidelines and best practices. Use when implementing indicators, strategies, or any Pine Script code. Triggers… | Catalog only |
 | [`postgresql-database-engineering`](../skills/postgresql-database-engineering/) | Comprehensive PostgreSQL database engineering skill covering indexing strategies, query optimization, performance tuning, partitioning, replication, backup and recovery, high… | Portable required assignment · structure checked · CEO |
-| [`provider-key-manager`](../skills/provider-key-manager/) | Provider key manager — rotate and sync API keys across multi-agent workspaces | Harness-specific assignment · generic installer skips · CTO |
 | [`python-performance-optimization`](../skills/python-performance-optimization/) | Profile and optimize Python code using cProfile, memory profilers, and performance best practices. Use when debugging slow Python code, optimizing bottlenecks, or improving… | Catalog only |
 | [`qingyun-api`](../skills/qingyun-api/) | 青云聚合API多模态调用 Skill — 覆盖生图、生视频、语音、Embedding 等能力。 | Catalog only |
 | [`qmd-extended`](../skills/qmd-extended/) | Extended QMD knowledge base with multi-backend embedding (Google AI Studio / Ollama / local). Use when managing QMD embeddings, switching backends, testing embedding quality,… | Catalog only |
@@ -190,15 +189,18 @@ Build, test, review, debug, and maintain applications and developer tooling.
 | [`receiving-code-review`](../skills/receiving-code-review/) | Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and… | Portable required assignment · structure checked · PE |
 | [`redis-inspect`](../skills/redis-inspect/) | Inspect Redis cache keys, values, and TTLs for debugging. Supports both main cache and system cache. Use for debugging cache issues, checking cached values, and monitoring cache… | Portable required assignment · structure checked · PE |
 | [`requesting-code-review`](../skills/requesting-code-review/) | Use when completing tasks, implementing major features, or before merging to verify work meets requirements | Portable required assignment · structure checked · PE |
+| [`senior-architect`](../skills/senior-architect/) | This skill should be used when the user asks to "design system architecture", "evaluate microservices vs monolith", "create architecture diagrams", "analyze dependencies",… | Catalog only |
 | [`shell-expert`](../skills/shell-expert/) | Shell scripting expertise, command-line tools, automation, and cross-platform scripting best practices. Covers shell script development, CLI tool usage, and system automation… | Catalog only |
-| [`sp-subagent-driven-development`](../skills/sp-subagent-driven-development/) | Execute implementation plan by dispatching fresh subagent for each task, with code review between tasks | Portable required assignment · structure checked · PE |
+| [`software-architecture-design`](../skills/software-architecture-design/) | Designs system structure across monolith/microservices/serverless. Use when structuring systems, scaling, decomposing monoliths, or choosing patterns. | Catalog only |
+| [`sp-condition-based-waiting`](../skills/sp-condition-based-waiting/) | Replace arbitrary timeouts with condition polling for reliable async tests | Portable required assignment · structure checked · PE |
+| [`sp-simplification-cascades`](../skills/sp-simplification-cascades/) | Find one insight that eliminates multiple components - "if this is true, we don't need X, Y, or Z" | Catalog only |
 | [`sp-systematic-debugging`](../skills/sp-systematic-debugging/) | Four-phase debugging framework that ensures root cause investigation before attempting fixes. Never jump to solutions. | Harness-specific assignment · generic installer skips · COO |
 | [`sp-test-driven-development`](../skills/sp-test-driven-development/) | Write the test first, watch it fail, write minimal code to pass | Portable required assignment · structure checked · PE |
 | [`sp-testing-anti-patterns`](../skills/sp-testing-anti-patterns/) | Never test mock behavior. Never add test-only methods to production classes. Understand dependencies before mocking. | Portable required assignment · structure checked · PE |
 | [`sp-using-git-worktrees`](../skills/sp-using-git-worktrees/) | Create isolated git worktrees with smart directory selection and safety verification | Harness-specific assignment · generic installer skips · PE |
 | [`sql-optimization`](../skills/sql-optimization/) | Universal SQL performance optimization assistant for comprehensive query tuning, indexing strategies, and database performance analysis across all SQL databases (MySQL,… | Portable required assignment · structure checked · PE |
 | [`sql-pro`](../skills/sql-pro/) | Master modern SQL with cloud-native databases, OLTP/OLAP optimization, and advanced query techniques. Expert in performance tuning, data modeling, and hybrid analytical systems.… | Catalog only |
-| [`subagent-driven-development`](../skills/subagent-driven-development/) | Use when executing implementation plans with independent tasks in the current session | Catalog only |
+| [`static-code-analysis`](../skills/static-code-analysis/) | Implement static code analysis with linters, formatters, and security scanners to catch bugs early. Use when enforcing code standards, detecting security vulnerabilities, or… | Catalog only |
 | [`supabase`](../skills/supabase/) | Use when doing ANY task involving Supabase. Triggers: Supabase products (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues); client libraries and SSR… | Catalog only |
 | [`supabase-automation`](../skills/supabase-automation/) | Automate Supabase database queries, table management, project administration, storage, edge functions, and SQL execution via Rube MCP (Composio). Always search tools first for… | Portable required assignment · structure checked · CTO |
 | [`supabase-postgres-best-practices`](../skills/supabase-postgres-best-practices/) | Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database… | Catalog only |
@@ -211,8 +213,10 @@ Build, test, review, debug, and maintain applications and developer tooling.
 | [`test-driven-development`](../skills/test-driven-development/) | Use when implementing any feature or bugfix, before writing implementation code | Catalog only |
 | [`using-git-worktrees`](../skills/using-git-worktrees/) | Use when starting feature work that needs isolation from current workspace or before executing implementation plans - creates isolated git worktrees with smart directory… | Catalog only |
 | [`verification-before-completion`](../skills/verification-before-completion/) | Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any… | Portable required assignment · structure checked · CEO, PE |
+| [`vibe-code-auditor`](../skills/vibe-code-auditor/) | Audit rapidly generated or AI-produced code for structural flaws, fragility, and production risks. | Catalog only |
 | [`vitest`](../skills/vitest/) | Vitest testing framework patterns for test setup, async testing, mocking with vi.*, snapshots, and test performance (formerly test-vitest). This skill should be used when writing… | Catalog only |
 | [`webapp-testing`](../skills/webapp-testing/) | Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots,… | Catalog only |
+| [`wiki-qa`](../skills/wiki-qa/) | Answers questions about a code repository using source file analysis. Use when the user asks a question about how something works, wants to understand a component, or needs help… | Catalog only |
 
 <a id="cloud-devops-reliability"></a>
 ## ☁️ Cloud, DevOps & Reliability
@@ -223,6 +227,8 @@ Deploy, observe, troubleshoot, and operate cloud and local infrastructure.
 |---|---|---|
 | [`aws-cost-cleanup`](../skills/aws-cost-cleanup/) | Automated cleanup of unused AWS resources to reduce costs | Catalog only |
 | [`cloudflare-pages`](../skills/cloudflare-pages/) | Deploy static sites to Cloudflare Pages with custom domains and CI/CD. Use when the user wants to deploy a site to Cloudflare Pages, add a custom domain to a Pages project, set… | Catalog only |
+| [`cost-optimization`](../skills/cost-optimization/) | Optimize cloud costs through resource rightsizing, tagging strategies, reserved instances, and spending analysis. Use when reducing cloud expenses, analyzing infrastructure… | Portable required assignment · structure checked · COO |
+| [`datadog-automation`](../skills/datadog-automation/) | Automate Datadog tasks via Rube MCP (Composio): query metrics, search logs, manage monitors/dashboards, create events and downtimes. Always search tools first for current schemas. | Catalog only |
 | [`deploy-website`](../skills/deploy-website/) | Website deployment via GitHub PR + Cloud Build | Catalog only |
 | [`deployment-automation`](../skills/deployment-automation/) | Automate application deployment to cloud platforms and servers. Use when setting up CI/CD pipelines, deploying to Docker/Kubernetes, or configuring cloud infrastructure. Handles… | Portable required assignment · structure checked · CEO, CTO, PE |
 | [`distributed-tracing`](../skills/distributed-tracing/) | Implement distributed tracing with Jaeger and Tempo for request flow visibility across microservices. | Catalog only |
@@ -235,10 +241,11 @@ Deploy, observe, troubleshoot, and operate cloud and local infrastructure.
 | [`kubernetes-specialist`](../skills/kubernetes-specialist/) | Use when deploying or managing Kubernetes workloads. Invoke to create deployment manifests, configure pod security policies, set up service accounts, define network isolation… | Portable required assignment · structure checked · CEO, CTO, PE |
 | [`linux-service-triage`](../skills/linux-service-triage/) | Diagnoses common Linux service issues using logs, systemd/PM2, file permissions, Nginx reverse proxy checks, and DNS sanity checks. Use when a server app is failing, unreachable,… | Catalog only |
 | [`linux-troubleshooting`](../skills/linux-troubleshooting/) | Linux system troubleshooting workflow for diagnosing and resolving system issues, performance problems, and service failures. | Catalog only |
+| [`microservices-patterns`](../skills/microservices-patterns/) | Comprehensive microservices patterns skill covering service mesh, traffic management, circuit breakers, resilience patterns, Istio, and production microservices architecture | Catalog only |
 | [`ml-engineer`](../skills/ml-engineer/) | Build production ML systems with PyTorch 2.x, TensorFlow, and modern ML frameworks. Implements model serving, feature engineering, A/B testing, and monitoring. Use PROACTIVELY… | Catalog only |
-| [`model-usage-linux`](../skills/model-usage-linux/) | Track OpenClaw AI token usage and cost per model on Linux by parsing session JSONL files. Use when asked about: token usage, API cost, how much has been spent, which model was… | Catalog only |
 | [`nginx`](../skills/nginx/) | Configure Nginx for reverse proxy, load balancing, SSL termination, and high-performance static serving. | Catalog only |
 | [`nginx-configuration`](../skills/nginx-configuration/) | Description needs review; inspect source. | Portable required assignment · structure checked · CTO |
+| [`observability-designer`](../skills/observability-designer/) | Design production observability strategies covering SLI/SLOs, metrics, | Catalog only |
 | [`op0-altar`](../skills/op0-altar/) | Create and manage self-rewarding meme coins on Solana via the OP0 Altar protocol. Deploy pump.fun tokens where holders automatically receive rewards in 129 payout token options… | Catalog only |
 | [`proxmox-ops-skill`](../skills/proxmox-ops-skill/) | Create a credential file at `~/.proxmox-credentials` | Catalog only |
 | [`remote-access`](../skills/remote-access/) | ttyd + Tailscale for mobile terminal access | Catalog only |
@@ -258,7 +265,6 @@ Collect evidence, search sources, analyze data, and communicate findings.
 
 | Skill | What it helps with | Support / review signals |
 |---|---|---|
-| [`a-share-analysis`](../skills/a-share-analysis/) | 此Skill实现了三层分析体系： 1. 情报采集层 — 7路并发多源新闻采集，自动匹配板块和个股 2. 盘面阅读层 — 美股映射 + 大盘多空判断 + 实时主线(&gt;9%题材分析) 3. 个股精选层 — 产业逻辑 + 形态8分类 + 盘口分析 + 题材排名 + 综合评分 4. 原始新闻浏览 (news.py) — 分类展示影响股票的新闻，源信息不做任何修改 | Catalog only |
 | [`ai-radar`](../skills/ai-radar/) | 雷达Skill（AI Radar）——零API、零Key、零服务器的中文AI资讯查询。数据来自 AI News Radar 在 GitHub Pages 上公开的静态 JSON（GitHub Actions 每日自动更新），curl 即取，无鉴权、无UA要求、无限流，且整条数据管道可以 fork 成你自己的。 当用户想知道"今天 AI… | Catalog only |
 | [`analytics-tracking`](../skills/analytics-tracking/) | Design, audit, and improve analytics tracking systems that produce reliable, decision-ready data. Use when the user wants to set up, fix, or evaluate analytics tracking (GA4,… | Catalog only |
 | [`apify-ultimate-scraper`](../skills/apify-ultimate-scraper/) | Universal AI-powered web scraper for any platform. Scrape data from Instagram, Facebook, TikTok, YouTube, LinkedIn, X/Twitter, Google Maps, Google Search, Google Trends, Reddit,… | Portable required assignment · structure checked · CDO |
@@ -266,6 +272,7 @@ Collect evidence, search sources, analyze data, and communicate findings.
 | [`arxiv-automation`](../skills/arxiv-automation/) | Search and monitor arXiv papers. Query by topic, author, or category. Track new papers, download PDFs, and summarize abstracts for research workflows. | Catalog only |
 | [`auto-drive`](../skills/auto-drive/) | --- name: auto-drive description: Upload and download files to Autonomys Network permanent decentralized storage via Auto-Drive. Save memories as a linked-list chain for… | Catalog only |
 | [`bio-orchestrator`](../skills/bio-orchestrator/) | Meta-agent that routes bioinformatics requests to specialised sub-skills. Handles file type detection, analysis planning, report generation, and reproducibility export. | Catalog only |
+| [`business-analyst`](../skills/business-analyst/) | Build KPI frameworks, predictive models, real-time dashboards, and strategic recommendations using modern BI tools and AI-powered analytics. Use when the user needs business… | Catalog only |
 | [`business-intelligence`](../skills/business-intelligence/) | Model business performance, define KPIs, and turn data into decision-ready dashboards, briefings, and operating cadences for teams and executives. | Catalog only |
 | [`call-prep`](../skills/call-prep/) | Call preparation: research, CRM, talking points, PDF | Catalog only |
 | [`claw-ancestry-pca`](../skills/claw-ancestry-pca/) | Ancestry decomposition PCA against the Simons Genome Diversity Project | Catalog only |
@@ -273,11 +280,11 @@ Collect evidence, search sources, analyze data, and communicate findings.
 | [`company-investment-research`](../skills/company-investment-research/) | Structured, multi-dimensional company investment research framework for AI agents and human analysts. Provides a 10-part checklist (moat, tech, market, customers, growth,… | Catalog only |
 | [`csv-pipeline`](../skills/csv-pipeline/) | Process, transform, analyze, and report on CSV and JSON data files. Use when the user needs to filter rows, join datasets, compute aggregates, convert formats, deduplicate, or… | Catalog only |
 | [`ct-monitor`](../skills/ct-monitor/) | Research crypto news, public market data, and monitored accounts with CT Monitor. Use for attributed briefings, watchlists, narrative review, and paper-only signal analysis. | Catalog only · review: credentials, external-write, financial-action |
+| [`daily-trending`](../skills/daily-trending/) | 获取今日热榜，从tophub.today抓取各平台热搜榜单。当用户询问"今天有什么热搜"、"热榜"、"微博热搜"时触发。 | Catalog only |
 | [`dashboard-builder`](../skills/dashboard-builder/) | Build monitoring dashboards that answer real operator questions for Grafana, SigNoz, and similar platforms. Use when turning metrics into a working dashboard instead of a vanity… | Portable required assignment · structure checked · CEO |
 | [`data-analyst`](../skills/data-analyst/) | Data visualization, report generation, SQL queries, and spreadsheet automation. Transform your AI agent into a data-savvy analyst that turns raw data into actionable insights. | Catalog only |
 | [`data-engineering-data-pipeline`](../skills/data-engineering-data-pipeline/) | You are a data pipeline architecture expert specializing in scalable, reliable, and cost-effective data pipelines for batch and streaming data processing. | Catalog only |
 | [`data-storytelling`](../skills/data-storytelling/) | Transform data into compelling narratives using visualization, context, and persuasive structure. Use when presenting analytics to stakeholders, creating data reports, or… | Catalog only |
-| [`datadog-automation`](../skills/datadog-automation/) | Automate Datadog tasks via Rube MCP (Composio): query metrics, search logs, manage monitors/dashboards, create events and downtimes. Always search tools first for current schemas. | Catalog only |
 | [`deep-research`](../skills/deep-research/) | Multi-source deep research using firecrawl and exa MCPs. Searches the web, synthesizes findings, and delivers cited reports with source attribution. Use when the user wants… | Harness-specific assignment · generic installer skips · CEO, CQO, CRO |
 | [`documents`](../skills/documents/) | Manage company &amp; personal documents — rekvizity, passport, INN, bank details, scans. Store locally + Google Drive. Send data blocks on request. | Catalog only |
 | [`duckdb-cli-ai-skills`](../skills/duckdb-cli-ai-skills/) | DuckDB CLI specialist for SQL analysis, data processing and file conversion. Use for SQL queries, CSV/Parquet/JSON analysis, database queries, or data conversion. Triggers on… | Catalog only |
@@ -293,22 +300,25 @@ Collect evidence, search sources, analyze data, and communicate findings.
 | [`infra-facebook-cdp`](../skills/infra-facebook-cdp/) | Facebook CDP automation: comments, data collection | Catalog only |
 | [`investment-research`](../skills/investment-research/) | Perform structured investment research (投研分析) for a company/stock/ETF/sector using a repeatable framework: fundamentals (basic/财务报表与商业模式), technical analysis (技术指标与关键价位),… | Catalog only |
 | [`kpi-dashboard-design`](../skills/kpi-dashboard-design/) | Design effective KPI dashboards with metrics selection, visualization best practices, and real-time monitoring patterns. Use when building business dashboards, selecting metrics,… | Portable required assignment · structure checked · GOVERNOR |
+| [`last30days-skill`](../skills/last30days-skill/) | Research a topic from the last 30 days. Also triggered by 'last30'. Sources: Reddit, X, YouTube, Hacker News, Polymarket, web. Become an expert and write copy-paste-ready prompts. | Catalog only |
 | [`lead-research-assistant`](../skills/lead-research-assistant/) | Identifies high-quality leads for your product or service by analyzing your business, searching for target companies, and providing actionable contact strategies. Perfect for… | Catalog only |
 | [`lit-synthesizer`](../skills/lit-synthesizer/) | Search PubMed and bioRxiv, summarise papers with LLM, build citation graphs, and generate literature review sections. | Catalog only |
 | [`log-activity`](../skills/log-activity/) | Log activity to activities.csv | Catalog only |
-| [`market-nightly-evolution`](../skills/market-nightly-evolution/) | Nightly market evolution report — overnight market analysis and strategy prep | Catalog only |
+| [`market-intelligence`](../skills/market-intelligence/) | Description needs review; inspect source. | Catalog only |
 | [`market-research`](../skills/market-research/) | Size markets, analyze competitors, and validate opportunities with practical frameworks and free data sources. | Portable required assignment · structure checked · CMO |
 | [`market-sizing-analysis`](../skills/market-sizing-analysis/) | Use when the user asks to calculate TAM, determine SAM, estimate SOM, size a market, calculate market opportunity, ask for total addressable market, or do market sizing for a… | Catalog only |
 | [`metrics-review`](../skills/metrics-review/) | Review and analyze product metrics with trend analysis and actionable insights. Use when running a weekly, monthly, or quarterly metrics review, investigating a sudden spike or… | Catalog only |
+| [`model-usage`](../skills/model-usage/) | Use CodexBar CLI local cost usage to summarize per-model usage for Codex | Catalog only |
+| [`model-usage-linux`](../skills/model-usage-linux/) | Track OpenClaw AI token usage and cost per model on Linux by parsing session JSONL files. Use when asked about: token usage, API cost, how much has been spent, which model was… | Catalog only |
 | [`multi-search-engine`](../skills/multi-search-engine/) | Description needs review; inspect source. | Catalog only |
 | [`news-aggregation`](../skills/news-aggregation/) | Aggregate and deduplicate recent news from multiple sources into concise topic summaries. | Catalog only |
 | [`news-predictor`](../skills/news-predictor/) | 你是Quant的新闻风控层。目标：在约120-180秒内完成新闻风险更新，输出人能直接看懂的结构化简报。 | Catalog only |
 | [`pharmgx-reporter`](../skills/pharmgx-reporter/) | Pharmacogenomic report from DTC genetic data (23andMe/AncestryDNA) | Catalog only |
 | [`qmd`](../skills/qmd/) | Local search/indexing CLI (BM25 + vectors + rerank) with MCP mode. | Catalog only |
 | [`ragflow-opencaio`](../skills/ragflow-opencaio/) | RAGFlow OpenCAIO 知识库文档上传与管理。当需要将文档上传到鲲界公司 OpenCAIO 知识库、检索知识库内容、或管理 RAGFlow 数据集时使用此 skill。 | Catalog only |
+| [`repro-enforcer`](../skills/repro-enforcer/) | Export any bioinformatics analysis as a reproducible bundle with Conda environment, Singularity container definition, and Nextflow pipeline. | Catalog only |
 | [`research-engineer`](../skills/research-engineer/) | An uncompromising Academic Research Engineer. Operates with absolute scientific rigor, objective criticism, and zero flair. Focuses on theoretical correctness, formal… | Catalog only |
 | [`risk-metrics-calculation`](../skills/risk-metrics-calculation/) | Calculate portfolio risk metrics including VaR, CVaR, Sharpe, Sortino, and drawdown analysis. Use when measuring portfolio risk, implementing risk limits, or building risk… | Catalog only |
-| [`roi-analysis`](../skills/roi-analysis/) | Use when calculating marketing ROI on Xiaohongshu, measuring campaign return on investment, analyzing cost per acquisition, evaluating marketing spend efficiency, or proving… | Catalog only |
 | [`saas-metrics-coach`](../skills/saas-metrics-coach/) | This skill should be used when the user asks to "calculate MRR", "analyze churn", "compute SaaS metrics", "do cohort retention analysis", "calculate LTV or CAC", "evaluate unit… | Catalog only |
 | [`search-first`](../skills/search-first/) | Research-before-coding workflow. Search for existing tools, libraries, and patterns before writing custom code. Invokes the researcher agent. | Catalog only |
 | [`search-layer`](../skills/search-layer/) | 四源同级：Brave (`web_search`) + Exa + Tavily + Grok。按意图自动选策略、调权重、做合成。 | Catalog only |
@@ -318,21 +328,21 @@ Collect evidence, search sources, analyze data, and communicate findings.
 | [`session-logs`](../skills/session-logs/) | Search and analyze your own session logs (older/parent conversations) using jq. | Catalog only |
 | [`show-today`](../skills/show-today/) | Priority tasks for today — checks live sources (email, calendar) before showing stale CSV data | Catalog only |
 | [`skill-search-optimizer`](../skills/skill-search-optimizer/) | Optimize agent skills for discoverability on ClawdHub/MoltHub. Use when improving search ranking, writing descriptions for semantic search, understanding how the registry indexes… | Catalog only |
-| [`skillforge`](../skills/skillforge/) | Intelligent skill router and creator. Analyzes ANY input to recommend existing skills, improve them, or create new ones. Uses deep iterative analysis with 11 thinking models,… | Catalog only |
 | [`skills-search`](../skills/skills-search/) | Search skills.sh registry from CLI. Find and discover agent skills from the skills.sh ecosystem. | Catalog only |
+| [`soushen-hunter`](../skills/soushen-hunter/) | Description needs review; inspect source. | Catalog only |
 | [`sp-defense-in-depth`](../skills/sp-defense-in-depth/) | Validate at every layer data passes through to make bugs impossible | Portable required assignment · structure checked · COO |
 | [`sp-tracing-knowledge-lineages`](../skills/sp-tracing-knowledge-lineages/) | Understand how ideas evolved over time to find old solutions for new problems and avoid repeating past failures | Portable required assignment · structure checked · CRO |
 | [`startup-metrics-framework`](../skills/startup-metrics-framework/) | Description needs review; inspect source. | Portable required assignment · structure checked · CEO |
-| [`static-code-analysis`](../skills/static-code-analysis/) | Implement static code analysis with linters, formatters, and security scanners to catch bugs early. Use when enforcing code standards, detecting security vulnerabilities, or… | Catalog only |
 | [`synthetic-market-research`](../skills/synthetic-market-research/) | You are an expert market researcher who uses LLM-generated synthetic survey responses and Semantic Similarity Rating (SSR) to produce fast, cheap, dir | Catalog only |
 | [`tavily-search`](../skills/tavily-search/) | AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents. | Portable required assignment · structure checked · CRO |
 | [`tech-selection-research`](../skills/tech-selection-research/) | Use when the user wants to research, compare, or evaluate a technology, framework, platform, or engineering tool for product R&amp;D decision-making, such as "调研 FastAPI", "技术选型",… | Catalog only |
 | [`telegram-scrape`](../skills/telegram-scrape/) | Search Telegram channels, read posts, ad contacts | Catalog only |
 | [`telegram-scraper-run`](../skills/telegram-scraper-run/) | Automatic Telegram scraping | Catalog only |
+| [`vcf-annotator`](../skills/vcf-annotator/) | Annotate VCF variants with VEP, ClinVar, gnomAD frequencies, and ancestry-aware context. Generates prioritised variant reports. | Catalog only |
 | [`web-scraping-automation`](../skills/web-scraping-automation/) | 自动化爬取网站数据和 API 接口。当用户需要抓取网页内容、调用 API、解析数据或创建爬虫脚本时使用此技能。 | Catalog only |
 | [`web-search`](../skills/web-search/) | 网络搜索与网页内容获取。当用户需要搜索互联网信息、获取网页内容、查找实时数据、进行 websearch 时使用此技能。支持多种搜索工具：WebFetch、Firecrawl skill、Tavily skill。 | Harness-specific assignment · generic installer skips · CDO, CEO, CRO |
-| [`wiki-qa`](../skills/wiki-qa/) | Answers questions about a code repository using source file analysis. Use when the user asks a question about how something works, wants to understand a component, or needs help… | Catalog only |
 | [`xlsx`](../skills/xlsx/) | Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets… | Catalog only |
+| [`youtube-knowledge-extractor`](../skills/youtube-knowledge-extractor/) | This skill performs deep analysis of YouTube videos through **both information channels** | Catalog only |
 
 <a id="security-privacy-legal"></a>
 ## 🛡️ Security, Privacy & Legal
@@ -341,7 +351,6 @@ Review security, privacy, compliance, permissions, contracts, and legal risk.
 
 | Skill | What it helps with | Support / review signals |
 |---|---|---|
-| [`accessibility-compliance-accessibility-audit`](../skills/accessibility-compliance-accessibility-audit/) | You are an accessibility expert specializing in WCAG compliance, inclusive design, and assistive technology compatibility. Conduct audits, identify barriers, and provide… | Catalog only |
 | [`afrexai-compliance-audit`](../skills/afrexai-compliance-audit/) | Run internal compliance audits against major governance and security | Catalog only |
 | [`afrexai-compliance-engine`](../skills/afrexai-compliance-engine/) | Your AI compliance officer. Guides startups and scale-ups through SOC 2, ISO 27001, GDPR, HIPAA, and PCI DSS — from zero to audit-ready. No consultants needed. | Catalog only |
 | [`agentic-security-audit`](../skills/agentic-security-audit/) | Audit codebases, infrastructure, AND agentic AI systems for security issues. Covers traditional security (dependencies, secrets, OWASP web top 10, SSL/TLS, file permissions) PLUS… | Catalog only |
@@ -356,7 +365,6 @@ Review security, privacy, compliance, permissions, contracts, and legal risk.
 | [`employment-contract-templates`](../skills/employment-contract-templates/) | Create employment contracts, offer letters, and HR policy documents following legal best practices. Use when drafting employment agreements, creating HR policies, or… | Catalog only |
 | [`gdpr-compliance`](../skills/gdpr-compliance/) | Generate UK/EU GDPR compliance documents — privacy policies, cookie policies, DPIAs, ROPA, DSAR responses, data breach notifications, and consent forms. Use when a business needs… | Catalog only |
 | [`gdpr-dsgvo-expert`](../skills/gdpr-dsgvo-expert/) | GDPR and German DSGVO compliance automation. Scans codebases for privacy risks, generates DPIA documentation, tracks data subject rights requests. Use for GDPR compliance… | Portable required assignment · structure checked · CEO |
-| [`inference-optimizer`](../skills/inference-optimizer/) | Audit OpenClaw token usage, purge stale sessions, and optimize inference speed. Use when the user sends /optimize, /audit, asks to purge sessions, or wants a token/workspace audit. | Harness-specific assignment · generic installer skips · CTO |
 | [`key-rotation`](../skills/key-rotation/) | API key rotation manager — rotate provider keys across all agent workspaces | Catalog only |
 | [`legal-advisor`](../skills/legal-advisor/) | Draft privacy policies, terms of service, disclaimers, and legal notices. Creates GDPR-compliant texts, cookie policies, and data processing agreements. | Catalog only |
 | [`legal-cog`](../skills/legal-cog/) | Legal demands two things: frontier-level reasoning and precision document generation. CellCog delivers both. #1 on DeepResearch Bench (Feb 2026) for the intelligence that legal… | Catalog only |
@@ -368,13 +376,13 @@ Review security, privacy, compliance, permissions, contracts, and legal risk.
 | [`permission-manager`](../skills/permission-manager/) | 管理Claude Code的全局工具权限配置，自动将MCP命令或其他工具添加到allowedTools中，避免每次使用时都需要手动批准。工作流程：确认用户需要添加的命令 | Catalog only |
 | [`pre-push-security-scan`](../skills/pre-push-security-scan/) | 【铁律】Git push 前必须执行的安全扫描。防止 API keys、tokens、passwords、私钥等敏感信息被推送到远程仓库。适用于所有 git push、gh pr create、代码同步等场景。 | Catalog only |
 | [`privacy-compliance`](../skills/privacy-compliance/) | Multi-regulation privacy compliance navigator. Use for GDPR, CCPA, LGPD, POPIA, PIPEDA, PDPA, Privacy Act, PIPL, UK GDPR compliance assessments, DPA reviews, and data subject… | Catalog only |
+| [`provider-key-manager`](../skills/provider-key-manager/) | Provider key manager — rotate and sync API keys across multi-agent workspaces | Harness-specific assignment · generic installer skips · CTO |
 | [`security-audit`](../skills/security-audit/) | Comprehensive security auditing for Clawdbot deployments. Scans for exposed credentials, open ports, weak configs, and vulnerabilities. Auto-fix mode included. | Portable required assignment · structure checked · GOVERNOR, PE · review: system-change |
 | [`security-audit-toolkit`](../skills/security-audit-toolkit/) | Audit codebases and infrastructure for security issues. Use when scanning dependencies for vulnerabilities, detecting hardcoded secrets, checking OWASP top 10 issues, verifying… | Catalog only |
 | [`security-compliance-compliance-check`](../skills/security-compliance-compliance-check/) | You are a compliance expert specializing in regulatory requirements for software systems including GDPR, HIPAA, SOC2, PCI-DSS, and other industry standards. Perform compliance… | Catalog only |
 | [`self-improving-legal`](../skills/self-improving-legal/) | Captures clause risks, compliance gaps, precedent shifts, contract deviations, regulatory changes, and litigation exposure to enable continuous legal operations improvement. Use… | Catalog only |
 | [`skill-security-audit-v2`](../skills/skill-security-audit-v2/) | 已安装 Skills 的安全审计工具。用于批量审计 Skills 的安全性，包括命令执行、网络访问、文件访问、数据泄露、依赖风险、提示词越权和触发条件检查。适用于用户提供 Skills 列表和文件内容时进行安全扫描、护栏审查、提示词越权审查或强化建议。 | Catalog only |
 | [`skill-security-auditor`](../skills/skill-security-auditor/) | Description needs review; inspect source. | Catalog only |
-| [`vibe-code-auditor`](../skills/vibe-code-auditor/) | Audit rapidly generated or AI-produced code for structural flaws, fragility, and production risks. | Catalog only |
 
 <a id="product-design-ux"></a>
 ## 🎨 Product, Design & UX
@@ -383,25 +391,19 @@ Shape product requirements, interfaces, design systems, and user experience.
 
 | Skill | What it helps with | Support / review signals |
 |---|---|---|
+| [`accessibility-compliance-accessibility-audit`](../skills/accessibility-compliance-accessibility-audit/) | You are an accessibility expert specializing in WCAG compliance, inclusive design, and assistive technology compatibility. Conduct audits, identify barriers, and provide… | Catalog only |
 | [`afrexai-prd-engine`](../skills/afrexai-prd-engine/) | Complete product requirements methodology: from idea to spec to shipped feature. Not just a JSON template — a full system for writing PRDs that developers actually follow and… | Catalog only |
-| [`api-design`](../skills/api-design/) | REST API design patterns including resource naming, status codes, pagination, filtering, error responses, versioning, and rate limiting for production APIs. | Portable required assignment · structure checked · CTO, PE |
-| [`api-design-patterns`](../skills/api-design-patterns/) | Comprehensive API design patterns covering REST, GraphQL, gRPC, versioning, authentication, and modern API best practices | Portable required assignment · structure checked · CTO |
 | [`canvas-design`](../skills/canvas-design/) | Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other… | Catalog only |
-| [`cua-driver`](../skills/cua-driver/) | Drive a native GUI app (macOS, Windows, Linux) via the cua-driver CLI (default) or MCP server — snapshot its accessibility tree, click/type/scroll by element_index or pixel… | Catalog only |
 | [`design-thinking`](../skills/design-thinking/) | Design Thinking methodology for human-centered innovation. Covers the 5-phase IDEO/Stanford d.school approach (Empathize, Define, Ideate, Prototype, Test) with workshop… | Catalog only |
 | [`feature-requirements-clarification`](../skills/feature-requirements-clarification/) | 在任何创意性工作前必须使用：创建功能、构建组件、增加能力或修改行为。通过自然对话挖掘需求，产出高质量验收标准（AC），为后续 TDD 开发提供测试依据。当用户说'我想做一个XX功能'、'帮我想想XX怎么做'、'我需要加一个XX'等模糊需求描述时触发。 | Portable required assignment · structure checked · CEO |
 | [`figma-automation`](../skills/figma-automation/) | Automate Figma tasks via Rube MCP (Composio): files, components, design tokens, comments, exports. Always search tools first for current schemas. | Catalog only |
 | [`figma-implement-design`](../skills/figma-implement-design/) | Description needs review; inspect source. | Catalog only |
 | [`frontend-design-ultimate`](../skills/frontend-design-ultimate/) | Create distinctive, production-grade static sites with React, Tailwind CSS, and shadcn/ui — no mockups needed. Generates bold, memorable designs from plain text requirements with… | Harness-specific assignment · generic installer skips · CPO |
 | [`market-churn-prevention`](../skills/market-churn-prevention/) | Reduce voluntary and involuntary churn through cancel flow design, save offers, exit surveys, and dunning sequences. Use when designing or optimizing a cancel flow, building save… | Catalog only |
-| [`observability-designer`](../skills/observability-designer/) | Design production observability strategies covering SLI/SLOs, metrics, | Catalog only |
 | [`poster-design-generation`](../skills/poster-design-generation/) | Generate professional poster designs using each::sense AI. Create movie posters, event posters, motivational posters, product launch visuals, vintage designs, travel posters, and… | Catalog only |
 | [`prd-development`](../skills/prd-development/) | Guide product managers through structured PRD (Product Requirements Document) creation by orchestrating problem framing, user research synthesis, solution definition, and success… | Portable required assignment · structure checked · CEO, CPO |
 | [`prd-generator`](../skills/prd-generator/) | 专业级产品需求文档（PRD）生成器。自动生成包含 UML 用例模型、详细用例规格说明、数据字典、交互设计、UI 规范的完整 PRD。 Use when: 用户提到写PRD、写产品需求文档、产品设计、产品规划、新功能需求分析、用例分析、用例建模时触发。 NOT for: 已有完整需求文档的润色、代码生成、技术架构设计、数据分析报告。 | Catalog only |
-| [`prioritization-funnel`](../skills/prioritization-funnel/) | Evaluate and prioritize opportunities through a structured filtering process. Use for resource allocation, strategic decision support, and project management. | Portable required assignment · structure checked · CEO |
 | [`roadmap-planning`](../skills/roadmap-planning/) | Guide product managers through strategic roadmap planning by orchestrating prioritization, epic definition, stakeholder alignment, and release sequencing skills into a structured… | Portable required assignment · structure checked · CEO |
-| [`senior-architect`](../skills/senior-architect/) | This skill should be used when the user asks to "design system architecture", "evaluate microservices vs monolith", "create architecture diagrams", "analyze dependencies",… | Catalog only |
-| [`software-architecture-design`](../skills/software-architecture-design/) | Designs system structure across monolith/microservices/serverless. Use when structuring systems, scaling, decomposing monoliths, or choosing patterns. | Catalog only |
 | [`style-guide-generator`](../skills/style-guide-generator/) | Generate comprehensive website style guides and design systems from URLs, screenshots, and existing documentation. Use this skill when users ask to create a style guide, design… | Catalog only |
 | [`ui-ux-pro-max`](../skills/ui-ux-pro-max/) | UI/UX design intelligence. 50 styles, 21 palettes, 50 font pairings, 20 charts, 9 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui).… | Catalog only |
 | [`uml-diagram-design`](../skills/uml-diagram-design/) | UML 图表设计和绘制。当用户需要创建系统架构图、类图、时序图、用例图或其他 UML 图表时使用此技能。 | Catalog only |
@@ -417,12 +419,8 @@ Acquire audiences through positioning, campaigns, search, ads, and social growth
 
 | Skill | What it helps with | Support / review signals |
 |---|---|---|
-| [`activecampaign-automation`](../skills/activecampaign-automation/) | Automate ActiveCampaign tasks via Rube MCP (Composio): manage contacts, tags, list subscriptions, automation enrollment, and tasks. Always search tools first for current schemas. | Catalog only |
 | [`ads`](../skills/ads/) | Comprehensive ad account analysis across all major platforms (Google, Meta | Portable required assignment · structure checked · CEO |
 | [`ads-agent`](../skills/ads-agent/) | AI-агент для управления Facebook рекламой. Вызывай для анализа, оптимизации, создания кампаний и отчётов. | Catalog only |
-| [`ai-marketing-videos`](../skills/ai-marketing-videos/) | Create AI marketing videos for ads, promos, product launches, and brand content. Models: Veo, Seedance, Wan, FLUX for visuals, Kokoro for voiceover. Types: product demos,… | Portable required assignment · structure checked · CCO |
-| [`ai-viral-team-script-writing`](../skills/ai-viral-team-script-writing/) | 脚本创作 - 短视频脚本撰写与分镜设计 职责：根据爆款模板生产内容、设计黄金3秒开头方案（3种以上）、撰写分镜脚本（包含镜头语言/场景氛围/角色动作/台词/BGM）、设计槽点埋梗与情绪钩子、规划结尾引导、自动推荐Vidu视频生成配置（模型版本/生成方式/时长/比例）、确保人物形象一致性、向视频生成(Leo)传递完整的分镜信息 适用场景：(1)… | Catalog only |
-| [`ai-viral-team-video-generation`](../skills/ai-viral-team-video-generation/) | 视频生成 - AI视频生成与后期剪辑制作 职责：调用Vidu生成视频、模型选择、Prompt调优、视频拼接、质量检测 | Catalog only |
 | [`apify-competitor-intelligence`](../skills/apify-competitor-intelligence/) | Analyze competitor strategies, content, pricing, ads, and market positioning across Google Maps, Booking.com, Facebook, Instagram, YouTube, and TikTok. | Catalog only |
 | [`b2b-saas-marketing`](../skills/b2b-saas-marketing/) | Эксперт по B2B SaaS маркетингу. Используй для стратегий генерации спроса, growth-маркетинга, PLG, расчёта CAC/LTV, оптимизации воронки и маркетинговых операций. | Catalog only |
 | [`brand-guidelines`](../skills/brand-guidelines/) | Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel. Use it when brand colors or style… | Catalog only |
@@ -448,12 +446,12 @@ Acquire audiences through positioning, campaigns, search, ads, and social growth
 | [`influencer-analyzer`](../skills/influencer-analyzer/) | 分析抖音/小红书/B站博主的主页、内容风格、爆款规律。可根据链接、博主名、主题三种方式触发。输出结构化的博主画像和内容风格报告，为内容创作者提供可复制的对标参考。触发词：分析博主、分析网红、对标博主、博主风格、起号分析、博主推荐。 | Catalog only |
 | [`marketing-ideas`](../skills/marketing-ideas/) | Provide proven marketing strategies and growth ideas for SaaS and software products, prioritized using a marketing feasibility scoring system. | Catalog only |
 | [`marketing-psychology`](../skills/marketing-psychology/) | When the user wants to apply psychological principles, mental models, or behavioral science to marketing. Also use when the user mentions 'psychology,' 'mental models,'… | Catalog only |
-| [`microservices-patterns`](../skills/microservices-patterns/) | Comprehensive microservices patterns skill covering service mesh, traffic management, circuit breakers, resilience patterns, Istio, and production microservices architecture | Catalog only |
 | [`moltbook-interact`](../skills/moltbook-interact/) | Interact with Moltbook social network for AI agents. Post, reply, browse, and analyze engagement. Use when the user wants to engage with Moltbook, check their feed, reply to… | Catalog only |
 | [`paid-ads`](../skills/paid-ads/) | When the user wants help with paid advertising campaigns on Google Ads, Meta (Facebook/Instagram), LinkedIn, Twitter/X, or other ad platforms. Also use when the user mentions… | Catalog only |
 | [`pm-competitive-teardown`](../skills/pm-competitive-teardown/) | Run structured competitive teardowns using pricing, reviews, positioning, | Catalog only |
 | [`postbridge-social-growth`](../skills/postbridge-social-growth/) | Organic social media growth coach using the Post Bridge methodology (500M+ views, 132K+ downloads, $33K+ revenue). Act as a personalized growth coach for apps, products, and… | Catalog only |
 | [`programmatic-seo`](../skills/programmatic-seo/) | You are an expert in **programmatic SEO strategy**—designing systems that generate | Catalog only |
+| [`roi-analysis`](../skills/roi-analysis/) | Use when calculating marketing ROI on Xiaohongshu, measuring campaign return on investment, analyzing cost per acquisition, evaluating marketing spend efficiency, or proving… | Catalog only |
 | [`seo-audit`](../skills/seo-audit/) | Diagnose and audit SEO issues affecting crawlability, indexation, rankings, and organic performance. Use when the user asks for an SEO audit, technical SEO review, ranking… | Portable required assignment · structure checked · CMO |
 | [`seo-competitor-analysis`](../skills/seo-competitor-analysis/) | Deep SEO competitor analysis — keyword mapping, backlink profiling, content strategy audit, SERP share analysis, and technical SEO comparison. Use when user asks to 'analyze… | Catalog only |
 | [`seo-geo`](../skills/seo-geo/) | SEO &amp; GEO (Generative Engine Optimization) for websites. Analyze keywords, generate schema markup, optimize for AI search engines (ChatGPT, Perplexity, Gemini, Copilot, Claude)… | Catalog only |
@@ -477,7 +475,10 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | Skill | What it helps with | Support / review signals |
 |---|---|---|
 | [`ai-image-generation`](../skills/ai-image-generation/) | Generate images using ModelScope Z-Image-Turbo API. Use when user asks to generate, create, or make images, pictures, or illustrations. | Catalog only |
+| [`ai-marketing-videos`](../skills/ai-marketing-videos/) | Create AI marketing videos for ads, promos, product launches, and brand content. Models: Veo, Seedance, Wan, FLUX for visuals, Kokoro for voiceover. Types: product demos,… | Portable required assignment · structure checked · CCO |
 | [`ai-video-gen`](../skills/ai-video-gen/) | End-to-end AI video generation - create videos from text prompts using image generation, video synthesis, voice-over, and editing. Supports OpenAI DALL-E, Replicate models,… | Catalog only |
+| [`ai-viral-team-script-writing`](../skills/ai-viral-team-script-writing/) | 脚本创作 - 短视频脚本撰写与分镜设计 职责：根据爆款模板生产内容、设计黄金3秒开头方案（3种以上）、撰写分镜脚本（包含镜头语言/场景氛围/角色动作/台词/BGM）、设计槽点埋梗与情绪钩子、规划结尾引导、自动推荐Vidu视频生成配置（模型版本/生成方式/时长/比例）、确保人物形象一致性、向视频生成(Leo)传递完整的分镜信息 适用场景：(1)… | Catalog only |
+| [`ai-viral-team-video-generation`](../skills/ai-viral-team-video-generation/) | 视频生成 - AI视频生成与后期剪辑制作 职责：调用Vidu生成视频、模型选择、Prompt调优、视频拼接、质量检测 | Catalog only |
 | [`arch-video-cut`](../skills/arch-video-cut/) | Automatic architecture video editing workflow with self-learning preferences | Catalog only |
 | [`article-material-collect`](../skills/article-material-collect/) | 上层编排 Skill，通过 **Brave Search 发现 → 智能选择浏览器截图** 完成结构化素材采集。 | Catalog only |
 | [`article-to-infographic`](../skills/article-to-infographic/) | 长文/测评文章 → 知识视觉笔记套图（3-5张）。自动提炼核心逻辑、规划分镜、生成高阶图像Prompt（4模块结构）。支持手写笔记/思维导图/架构图/对比矩阵四种风格。Use when: 文章转知识笔记、知识笔记图片、思维导图、视觉笔记、长文转图、知识卡片、文章可视化、article to infographic、knowledge… | Catalog only |
@@ -499,9 +500,9 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`copy-editing`](../skills/copy-editing/) | When the user wants to edit, review, or improve existing marketing copy. Also use when the user mentions 'edit this copy,' 'review my copy,' 'copy feedback,' 'proofread,' 'polish… | Catalog only |
 | [`copywriting`](../skills/copywriting/) | Write, rewrite, or improve marketing copy for homepages, landing pages, pricing pages, feature pages, and about pages. Use when the user needs conversion-focused copy with clear… | Catalog only |
 | [`cross-platform-poster`](../skills/cross-platform-poster/) | Publish one piece of content across MoltX, Twitter/X, Discord, and Telegram | Catalog only |
+| [`doc-coauthoring`](../skills/doc-coauthoring/) | Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar… | Catalog only |
 | [`docx`](../skills/docx/) | Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with… | Catalog only |
 | [`docx-perfect`](../skills/docx-perfect/) | Word文档美化与格式化专家。专门用于将Word文档中的文本内容转换为专业表格格式，应用一致的样式（深蓝色表头、斑马纹数据行、边框），支持版本化迭代管理。当用户需要美化Word文档、创建专业表格、或递增式优化文档章节时使用此技能。 | Catalog only |
-| [`evomap`](../skills/evomap/) | Connect to the EvoMap collaborative evolution marketplace. Publish Gene+Capsule bundles, fetch promoted assets, claim bounty tasks, and earn credits via the GEP-A2A protocol. Use… | Catalog only |
 | [`ffmpeg-video-editor`](../skills/ffmpeg-video-editor/) | Generate FFmpeg commands from natural language video editing requests - cut, trim, convert, compress, change aspect ratio, extract audio, and more. | Catalog only |
 | [`frontend-slides`](../skills/frontend-slides/) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files. Use when the user wants to build a presentation, convert a PPT/PPTX to web, or… | Catalog only |
 | [`heygen-avatar-lite`](../skills/heygen-avatar-lite/) | Create AI digital human videos with HeyGen API. Free starter guide. | Catalog only |
@@ -509,6 +510,8 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`image-enhancer`](../skills/image-enhancer/) | Improves the quality of images, especially screenshots, by enhancing resolution, sharpness, and clarity. Perfect for preparing images for presentations, documentation, or social… | Catalog only |
 | [`image-scraper`](../skills/image-scraper/) | Scrape and download all images from a given URL. Takes a URL, extracts image URLs from the page, and downloads them. Uses python3/curl as primary method, falls back to browser… | Catalog only |
 | [`image-vision`](../skills/image-vision/) | Image analysis using multimodal vision models. Use when user needs to: (1) Describe what's in an image, (2) Extract text from images (OCR), (3) Analyze visual content, (4)… | Catalog only |
+| [`internal-comms`](../skills/internal-comms/) | A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write… | Catalog only |
+| [`jimeng-storyboard`](../skills/jimeng-storyboard/) | 将口播视频剧本拆解为即梦AI数字人平台的分镜头脚本。输出格式为每个镜头的角色说（台词）和动作描述（镜头语言/数字人动作），适配即梦 jimeng.jianying.com 数字人视频生成界面。触发场景：用户需要生成口播视频分镜、数字人视频剧本拆解、即梦分镜脚本、短视频口播脚本分镜、数字人台词加动作拆分。 | Portable required assignment · structure checked · CCO |
 | [`longform-visual-notes`](../skills/longform-visual-notes/) | MediaClaw内容生产的核心配图skill。当有长篇文章需要转化为可传播的视觉笔记时调用。 | Catalog only |
 | [`lyrics-video-sync`](../skills/lyrics-video-sync/) | 歌词-视频精准匹配引擎。将MP3中的歌词片段按时间轴精准匹配到对应视频clip，支持歌词提取、时间轴对齐、情绪映射、字幕烧录、音频分段混合。触发词：歌词匹配、lyrics sync、歌词卡点、音频对齐、字幕视频、lyrics video、歌词视频、音乐视频字幕 | Catalog only |
 | [`mv-generator`](../skills/mv-generator/) | MediaClaw 内置的音乐视频端到端生成技能。 | Catalog only |
@@ -523,6 +526,7 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`relay-video-gen`](../skills/relay-video-gen/) | Multi-provider video generation with async polling and automatic model fallback | Catalog only |
 | [`seo-content-writer`](../skills/seo-content-writer/) | Write SEO blog posts, articles, landing pages with keyword integration, header optimization, and snippet targeting. SEO文章写作/内容优化 | Catalog only |
 | [`showcase-video-builder`](../skills/showcase-video-builder/) | Build polished showcase and demo videos from screenshots, avatars, and text overlays using ffmpeg. Use when creating demo reels, hackathon presentations, product walkthroughs, or… | Catalog only |
+| [`slidev-agent-skill`](../skills/slidev-agent-skill/) | Create, edit, theme, build, and export Slidev presentations using a script-first workflow with detailed local references. Use when working on Slidev decks, themes, layouts,… | Catalog only |
 | [`sp-writing-plans`](../skills/sp-writing-plans/) | Create detailed implementation plans with bite-sized tasks for engineers with zero codebase context | Catalog only |
 | [`summarize`](../skills/summarize/) | Summarize URLs or files with the summarize CLI (web, PDFs, images, audio, YouTube). | Catalog only |
 | [`suno-create`](../skills/suno-create/) | Create songs on Suno.com with custom lyrics and style. Use when user wants to (1) generate AI music on Suno with specific lyrics or theme, (2) create a song in a specific… | Catalog only |
@@ -549,11 +553,9 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`wechat-article-writer`](../skills/wechat-article-writer/) | 公众号文章自动化写作流程。支持资料搜索、文章撰写、爆款标题生成、排版优化。当用户提到写公众号、微信文章、自媒体写作、爆款文章、内容创作时使用此 | Catalog only |
 | [`wiki-page-writer`](../skills/wiki-page-writer/) | Generates rich technical documentation pages with dark-mode Mermaid diagrams, source code citations, and first-principles depth. Use when writing documentation, generating wiki… | Catalog only |
 | [`writing-plans`](../skills/writing-plans/) | Use when you have a spec or requirements for a multi-step task, before touching code | Catalog only |
-| [`writing-skills`](../skills/writing-skills/) | Use when creating new skills, editing existing skills, or verifying skills work before deployment | Portable required assignment · structure checked · CEO |
 | [`x-articles`](../skills/x-articles/) | Publish viral X (Twitter) Articles with AI. Long-form content that gets engagement. Proven hook patterns, browser automation. Works with Claude, Cursor, OpenClaw. | Portable required assignment · structure checked · CCO |
 | [`youtube-automation`](../skills/youtube-automation/) | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools first for current schemas. | Catalog only |
 | [`youtube-factory`](../skills/youtube-factory/) | Description needs review; inspect source. | Catalog only |
-| [`youtube-knowledge-extractor`](../skills/youtube-knowledge-extractor/) | This skill performs deep analysis of YouTube videos through **both information channels** | Catalog only |
 
 <a id="sales-crm-customer-success"></a>
 ## 🤝 Sales, CRM & Customer Success
@@ -564,6 +566,7 @@ Find, win, onboard, support, and retain customers with accountable workflows.
 |---|---|---|
 | [`abm-sales-enablement`](../skills/abm-sales-enablement/) | When the user wants to create sales collateral, pitch decks, one-pagers, objection handling docs, or demo scripts. Also use when the user mentions 'sales deck,' 'pitch deck,'… | Catalog only |
 | [`account-executive`](../skills/account-executive/) | Expert sales execution covering pipeline management, discovery, demos, negotiation, and deal closing. Use when qualifying opportunities, running MEDDIC discovery, building… | Catalog only |
+| [`activecampaign-automation`](../skills/activecampaign-automation/) | Automate ActiveCampaign tasks via Rube MCP (Composio): manage contacts, tags, list subscriptions, automation enrollment, and tasks. Always search tools first for current schemas. | Catalog only |
 | [`add-lead`](../skills/add-lead/) | Add company/person/relationship to CRM | Catalog only |
 | [`after-sales`](../skills/after-sales/) | Use when managing post-purchase experience, building customer loyalty, or increasing repeat purchases | Catalog only |
 | [`change-review`](../skills/change-review/) | Validate CRM/PM changes before PR | Catalog only |
@@ -584,8 +587,10 @@ Find, win, onboard, support, and retain customers with accountable workflows.
 | [`hubspot-automation`](../skills/hubspot-automation/) | Automate HubSpot CRM operations (contacts, companies, deals, tickets, properties) via Rube MCP using Composio integration. | Catalog only |
 | [`intercom-automation`](../skills/intercom-automation/) | Automate Intercom tasks via Rube MCP (Composio): conversations, contacts, companies, segments, admins. Always search tools first for current schemas. | Catalog only |
 | [`lead-intelligence`](../skills/lead-intelligence/) | AI-native lead intelligence and outreach pipeline. Replaces Apollo, Clay, and ZoomInfo with agent-powered signal scoring, mutual ranking, warm path discovery, source-derived… | Portable required assignment · structure checked · CEO |
+| [`linkedin-cdp`](../skills/linkedin-cdp/) | LinkedIn CDP: Input-only automation (mouse, keyboard, screenshots). Zero DOM access. | Catalog only |
 | [`mass-outreach`](../skills/mass-outreach/) | Multi-channel outreach via Telegram/Email/WhatsApp | Catalog only |
 | [`negotiation`](../skills/negotiation/) | Tactical negotiation framework based on Chris Voss's "Never Split the Difference." Use when preparing for negotiations, during live negotiation scenarios, analyzing counterpart… | Catalog only |
+| [`outbound-email-strategy`](../skills/outbound-email-strategy/) | Comprehensive outbound email strategy skill for cold outreach, email sequences, and multi-channel campaigns. Use when writing cold emails, creating outreach sequences, optimizing… | Catalog only |
 | [`outbound-optimizer`](../skills/outbound-optimizer/) | Use this skill when users need to improve cold outreach, optimize cold emails or DMs, increase response rates, or turn outbound from spam into revenue. Activates for cold… | Catalog only |
 | [`pipedrive-automation`](../skills/pipedrive-automation/) | Automate Pipedrive CRM operations including deals, contacts, organizations, activities, notes, and pipeline management via Rube MCP (Composio). Always search tools first for… | Catalog only |
 | [`query-leads`](../skills/query-leads/) | Search, filter, reports on CRM data | Catalog only |
@@ -608,6 +613,7 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 |---|---|---|
 | [`5minbtc`](../skills/5minbtc/) | BTC 5分钟K线实时方向预测。v5.7.3引擎HTTP并行化(4路ThreadPoolExecutor→~3s,原12-18s)。半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt… | Catalog only |
 | [`a-fund-monitor`](../skills/a-fund-monitor/) | A股基金净值监控：盘中实时估值 + 盘后实际净值，定时推送到 Telegram。 | Catalog only |
+| [`a-share-analysis`](../skills/a-share-analysis/) | 此Skill实现了三层分析体系： 1. 情报采集层 — 7路并发多源新闻采集，自动匹配板块和个股 2. 盘面阅读层 — 美股映射 + 大盘多空判断 + 实时主线(&gt;9%题材分析) 3. 个股精选层 — 产业逻辑 + 形态8分类 + 盘口分析 + 题材排名 + 综合评分 4. 原始新闻浏览 (news.py) — 分类展示影响股票的新闻，源信息不做任何修改 | Catalog only |
 | [`afrexai-personal-finance`](../skills/afrexai-personal-finance/) | Complete personal finance system — budgeting, debt payoff, investing, tax optimization, net worth tracking, and financial independence planning. Use when managing money, building… | Catalog only |
 | [`ai-trader-arena`](../skills/ai-trader-arena/) | AI trading arena, 模型竞技, 多模型交易, trading competition, historical replay, MCP trading, ai4trade | Catalog only |
 | [`alpha101`](../skills/alpha101/) | WorldQuant 101 Formulaic Alphas — 因子计算、IC测试、回测一体化工具包。 基于Kakushadze (2015) 论文，提供101个价量/波动率/相关性因子的Python/Pandas实现。 Use when: "alpha101", "101因子", "formulaic alphas", "因子回测",… | Catalog only |
@@ -617,10 +623,11 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 | [`bankr`](../skills/bankr/) | AI-powered crypto trading agent and LLM gateway via natural language. Use when the user wants to trade crypto, check portfolio balances, view token prices, transfer crypto,… | Catalog only |
 | [`bankr-signals`](../skills/bankr-signals/) | Transaction-verified trading signals on Base blockchain. Agents publish trades | Catalog only |
 | [`billing-automation`](../skills/billing-automation/) | Build automated billing systems for recurring payments, invoicing, subscription lifecycle, and dunning management. Use when implementing subscription billing, automating… | Catalog only |
+| [`binance-trending`](../skills/binance-trending/) | Description needs review; inspect source. | Catalog only |
 | [`bookkeeping-basics`](../skills/bookkeeping-basics/) | Set up and maintain basic bookkeeping for a solopreneur business. Use when tracking income and expenses, preparing for taxes, managing invoices and receipts, understanding cash… | Catalog only |
 | [`btc-5min-scalper`](../skills/btc-5min-scalper/) | BTC 5-minute Up/Down paper trading on Polymarket. Scans Binance 1m candles for momentum/mean-reversion/volume signals, makes virtual trades on Polymarket 5-min markets, tracks… | Catalog only |
 | [`clanker`](../skills/clanker/) | Plan and review ERC20 deployment with the Clanker SDK. Use for token configuration, vesting, airdrops, rewards, metadata, and transaction preparation on supported EVM chains. | Catalog only · review: external-write, financial-action |
-| [`cost-optimization`](../skills/cost-optimization/) | Optimize cloud costs through resource rightsizing, tagging strategies, reserved instances, and spending analysis. Use when reducing cloud expenses, analyzing infrastructure… | Portable required assignment · structure checked · COO |
+| [`company-analyzer`](../skills/company-analyzer/) | Description needs review; inspect source. | Catalog only |
 | [`crypto-bd-agent`](../skills/crypto-bd-agent/) | This skill teaches AI agents systematic crypto business development: discover | Catalog only |
 | [`crypto-derivatives-tracker`](../skills/crypto-derivatives-tracker/) | Comprehensive derivatives market analysis across centralized and decentralized exchanges. This skill aggregates funding rates, open interest, liquidat | Catalog only |
 | [`crypto-hunt`](../skills/crypto-hunt/) | 版本: 6.0 \| 日期: 2026-05-03 \| 风格: 稳健 + 风投双层 | Catalog only |
@@ -628,6 +635,7 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 | [`crypto-portfolio-tracker`](../skills/crypto-portfolio-tracker/) | Description needs review; inspect source. | Catalog only |
 | [`crypto-signal-generator`](../skills/crypto-signal-generator/) | Multi-indicator signal generation system that analyzes price action using 7 technical indicators and produces composite BUY/SELL signals with confiden | Catalog only |
 | [`daily-portfolio`](../skills/daily-portfolio/) | Description needs review; inspect source. | Catalog only |
+| [`daily-reflection`](../skills/daily-reflection/) | Description needs review; inspect source. | Catalog only |
 | [`defi-risk-assessment`](../skills/defi-risk-assessment/) | Framework for evaluating DeFi protocol risk — smart contract audits, TVL analysis, governance structure, oracle dependencies, and token economics. Use when helping users assess… | Catalog only |
 | [`elon-tweets`](../skills/elon-tweets/) | 你是Quant。独立策略，不受全局新闻风险等级约束。 先用 scanelonmarkets.py 自动发现活跃盘，按结算时间决定分析深度。 | Catalog only |
 | [`equity`](../skills/equity/) | Model cap tables, dilution scenarios, and vesting schedules for startups. Use when planning fundraising, pricing options, or tracking equity. | Catalog only |
@@ -655,18 +663,16 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 | [`polymarket-profit`](../skills/polymarket-profit/) | 围绕 Polymarket 预测市场执行小资金量化交易与收益跟踪策略。 | Harness-specific assignment · generic installer skips · CQO |
 | [`portfolio-manager`](../skills/portfolio-manager/) | Comprehensive portfolio analysis using Alpaca MCP Server integration to fetch holdings and positions, then analyze asset allocation, risk metrics, individual stock positions,… | Catalog only |
 | [`position-monitor`](../skills/position-monitor/) | 你是Quant。每小时检查持仓，执行止盈止损/Claim结算。 | Catalog only |
-| [`quality-convergence-engine`](../skills/quality-convergence-engine/) | Multi-dimensional Quality Acceptance and Problem Convergence Engine - Deeply deconstruct requirements, eliminate extreme defects, define absolutely objective acceptance and… | Portable required assignment · structure checked · GOVERNOR |
 | [`quant-analyst`](../skills/quant-analyst/) | Build financial models, backtest trading strategies, and analyze market data. Implements risk metrics, portfolio optimization, and statistical arbitrage. Use PROACTIVELY for… | Catalog only |
 | [`relayer-trade`](../skills/relayer-trade/) | Polymarket链上交易skill。通过Relayer v2 API绕过CLOB geo-block，执行buy(split)/sell(merge+transfer)/redeem/claim。零CLOB依赖，纯链上gasless。Triggers: 'relayer buy', 'relayer sell', 'relayer claim',… | Catalog only · review: credentials, external-write, financial-action |
-| [`repro-enforcer`](../skills/repro-enforcer/) | Export any bioinformatics analysis as a reproducible bundle with Conda environment, Singularity container definition, and Nextflow pipeline. | Catalog only |
 | [`senior-pm`](../skills/senior-pm/) | Senior Project Manager for enterprise software, SaaS, and digital transformation projects. Specializes in portfolio management, quantitative risk analysis, resource optimization,… | Catalog only |
-| [`setting-okrs-goals`](../skills/setting-okrs-goals/) | Help users set effective OKRs and goals. Use when someone is creating quarterly objectives, defining key results, setting team goals, planning annual targets, or struggling with… | Catalog only |
 | [`sp-scale-game`](../skills/sp-scale-game/) | Test at extremes (1000x bigger/smaller, instant/year-long) to expose fundamental truths hidden at normal scales | Catalog only |
 | [`sperax-defi-guide`](../skills/sperax-defi-guide/) | Comprehensive guide to DeFi yield farming strategies — lending, liquidity provision, auto-compounding, stablecoin yield, and risk management. Use when helping users find yield,… | Catalog only |
 | [`startup-financial-modeling`](../skills/startup-financial-modeling/) | Use when the user asks to create financial projections, build a financial model, forecast revenue, calculate burn rate, estimate runway, model cash flow, or do 3-5 year startup… | Catalog only |
 | [`stripe-automation`](../skills/stripe-automation/) | Automate Stripe tasks via Rube MCP (Composio): customers, charges, subscriptions, invoices, products, refunds. Always search tools first for current schemas. | Catalog only |
 | [`stripe-webhook`](../skills/stripe-webhook/) | Manage AI Kitchen Pro Stripe webhook — deploy, test, switch test/prod, view logs | Catalog only |
 | [`technical-analysis`](../skills/technical-analysis/) | Master of price action, chart patterns, and technical indicators - combining classical Wyckoff/Dow theory with modern quantitative validation for edge identificationUse when… | Catalog only |
+| [`thinking-simon`](../skills/thinking-simon/) | 蒸馏 Jim Simons（文艺复兴科技）思维模式的实用框架：量化思维、大量小交易、数学即优势 | Catalog only |
 | [`trade-prediction-markets`](../skills/trade-prediction-markets/) | Build and test Polymarket prediction market trading strategies for YES/NO token trading. Provides 6 tools: get_all_prediction_events (browse markets, $0.001),… | Portable required assignment · structure checked · CQO |
 | [`trading-strategy-backtester`](../skills/trading-strategy-backtester/) | Validate trading strategies against historical data before risking real capital. This skill provides a complete backtesting framework with 8 built-in | Catalog only |
 | [`whale-alert-monitor`](../skills/whale-alert-monitor/) | Track large cryptocurrency transactions and whale wallet movements across multiple blockchains. Monitor exchange inflows/outflows, manage watchlists, | Catalog only |
@@ -680,24 +686,22 @@ Plan work, make decisions, manage teams, and improve operating systems.
 |---|---|---|
 | [`blue-blood-culture-codifier`](../skills/blue-blood-culture-codifier/) | 将"蓝血文化"从抽象理念具象化为可传播的故事、仪式、符号和内部语言，让每个成员（硅基/碳基）都能感知、认同并践行。 | Catalog only |
 | [`brainstorming`](../skills/brainstorming/) | You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design… | Portable required assignment · structure checked · CEO |
-| [`business-analyst`](../skills/business-analyst/) | Build KPI frameworks, predictive models, real-time dashboards, and strategic recommendations using modern BI tools and AI-powered analytics. Use when the user needs business… | Catalog only |
 | [`ceo-delegation`](../skills/ceo-delegation/) | CEO式任务委派工作流程。当收到任何任务时使用此流程：不亲自执行，而是派发子代理执行、监控进度、汇报、验收。适用于需要高效并行处理多任务的场景。 | Catalog only |
-| [`company-analyzer`](../skills/company-analyzer/) | Description needs review; inspect source. | Catalog only |
 | [`company-wiki`](../skills/company-wiki/) | Company knowledge base — domains, services, infrastructure, accounts, credentials locations, architecture decisions | Catalog only |
 | [`create-project`](../skills/create-project/) | Create new project with breakdown | Catalog only |
 | [`cross-team-comm`](../skills/cross-team-comm/) | 通过 Tailscale、SSH、Gateway API 与 sessions_send 实现跨团队、跨实例的 OpenClaw 协作通信。 | Catalog only |
 | [`cto-advisor`](../skills/cto-advisor/) | Technical leadership guidance for engineering teams, architecture decisions, and technology strategy. Includes tech debt analyzer, team scaling calculator, engineering metrics… | Catalog only |
 | [`daily-briefing`](../skills/daily-briefing/) | Morning briefing: tasks + email + follow-ups | Catalog only |
-| [`daily-reflection`](../skills/daily-reflection/) | Description needs review; inspect source. | Catalog only |
-| [`daily-trending`](../skills/daily-trending/) | 获取今日热榜，从tophub.today抓取各平台热搜榜单。当用户询问"今天有什么热搜"、"热榜"、"微博热搜"时触发。 | Catalog only |
 | [`delegation`](../skills/delegation/) | Architecture-first workflow for delegating complex projects to AI coding agents. Ensures code fits the system before it's written. | Catalog only |
 | [`first-principles-thinking`](../skills/first-principles-thinking/) | Socratic coach for breaking down problems to fundamental truths. Use when users want to think through a problem deeply, challenge assumptions, or find innovative solutions.… | Catalog only |
 | [`linkedin-inbound-run`](../skills/linkedin-inbound-run/) | Automatic inbound LinkedIn message processing | Catalog only |
+| [`market-nightly-evolution`](../skills/market-nightly-evolution/) | Nightly market evolution report — overnight market analysis and strategy prep | Catalog only |
 | [`meeting-insights-analyzer`](../skills/meeting-insights-analyzer/) | Analyzes meeting transcripts and recordings to uncover behavioral patterns, communication insights, and actionable feedback. Identifies when you avoid conflict, use filler words,… | Portable required assignment · structure checked · CEO |
 | [`meeting-notes`](../skills/meeting-notes/) | Description needs review; inspect source. | Catalog only |
 | [`okr`](../skills/okr/) | 基于流行 OKR 体系管理智能体目标（O）与关键结果（KR）。当用户提到目标管理、季度计划、OKR、关键结果、复盘、评分、经验沉淀时使用，并将信息维护到 memory/okr.md。 | Harness-specific assignment · generic installer skips · CEO, GOVERNOR |
 | [`pm-done`](../skills/pm-done/) | Mark task done + schedule follow-up | Catalog only |
 | [`pricing-strategy`](../skills/pricing-strategy/) | When the user wants help with pricing decisions, packaging, or monetization strategy. Also use when the user mentions 'pricing,' 'pricing tiers,' 'freemium,' 'free trial,'… | Catalog only |
+| [`prioritization-funnel`](../skills/prioritization-funnel/) | Evaluate and prioritize opportunities through a structured filtering process. Use for resource allocation, strategic decision support, and project management. | Portable required assignment · structure checked · CEO |
 | [`process-analyst`](../skills/process-analyst/) | Process analysis, gap finding, human dialogue, spec generation | Catalog only |
 | [`project-autoloop`](../skills/project-autoloop/) | Project autoloop engine — cron-driven automated project iteration with CEO coordination | Catalog only |
 | [`project-management`](../skills/project-management/) | 项目管理和产品需求分析。当用户需要制定项目计划、编写 PRD 文档、管理任务或进行需求分析时使用此技能。 | Catalog only |
@@ -705,6 +709,8 @@ Plan work, make decisions, manage teams, and improve operating systems.
 | [`ralph-ceo-loop`](../skills/ralph-ceo-loop/) | 以持续计划-执行-检查-重试循环驱动项目推进，直到开发、部署与验收目标完成。 | Catalog only |
 | [`scrum-master`](../skills/scrum-master/) | Advanced Scrum Master with data-driven team health analysis, velocity forecasting, retrospective insights, and team development expertise. Features comprehensive sprint health… | Catalog only |
 | [`seq-wrangler`](../skills/seq-wrangler/) | Sequence QC, alignment, and BAM processing. Wraps FastQC, BWA/Bowtie2, SAMtools for automated read-to-BAM pipelines. | Catalog only |
+| [`setting-okrs-goals`](../skills/setting-okrs-goals/) | Help users set effective OKRs and goals. Use when someone is creating quarterly objectives, defining key results, setting team goals, planning annual targets, or struggling with… | Catalog only |
+| [`skill-gap-analyzer`](../skills/skill-gap-analyzer/) | 将军团战略蓝图与现有Agent能力矩阵进行对比，自动识别"能力鸿沟"，并发起招聘（硅基/碳基猎取）或培训（进化路径）需求。 | Catalog only |
 | [`sp-brainstorming`](../skills/sp-brainstorming/) | Interactive idea refinement using Socratic method to develop fully-formed designs | Catalog only |
 | [`startup-analyst`](../skills/startup-analyst/) | Expert startup business analysis for market sizing, financial modeling, competitive analysis, and strategic planning. Use PROACTIVELY when the user asks about TAM/SAM/SOM,… | Catalog only |
 | [`startup-business-analyst-business-case`](../skills/startup-business-analyst-business-case/) | Description needs review; inspect source. | Catalog only |
@@ -712,7 +718,6 @@ Plan work, make decisions, manage teams, and improve operating systems.
 | [`tailored-resume-generator`](../skills/tailored-resume-generator/) | Analyzes job descriptions and generates tailored resumes that highlight relevant experience, skills, and achievements to maximize interview chances | Catalog only |
 | [`task-prioritization`](../skills/task-prioritization/) | Task prioritization and scoring | Catalog only |
 | [`task-status`](../skills/task-status/) | Send short status descriptions in chat for long-running tasks. Use when you need to provide periodic updates during multi-step operations, confirm task completion, or notify of… | Catalog only |
-| [`task-supervisor`](../skills/task-supervisor/) | 定时巡检 agent 任务执行状态，识别卡住、abort、无产出等异常并触发催促或告警。 | Catalog only |
 | [`team-coordinator`](../skills/team-coordinator/) | 团队协调与智能任务分配。作为高管，将用户任务拆解并分配给最合适的员工 agent 执行，协调多 agent 并行协作，汇总审核产出。 | Harness-specific assignment · generic installer skips · CEO |
 | [`team-daily-report`](../skills/team-daily-report/) | 自动汇总团队内 agent、cron、skill 进展与关键事件，生成并推送结构化日报。 | Catalog only |
 | [`team-foreman`](../skills/team-foreman/) | 问题：每次巡检信息不同步，重复催促已完成的任务。 方案：以 git log + progress 文件 + CEO memory 为进度真相源。 | Catalog only |
@@ -744,11 +749,11 @@ Plan work, make decisions, manage teams, and improve operating systems.
 | [`thinking-ogilvy`](../skills/thinking-ogilvy/) | 蒸馏David Ogilvy思维模式的实用框架——广告教父、调研驱动、大创意、品牌形象 | Catalog only |
 | [`thinking-ray-dalio`](../skills/thinking-ray-dalio/) | 蒸馏Ray Dalio思维模式的实用框架——原则体系、经济机器、极度透明 | Catalog only |
 | [`thinking-seth-godin`](../skills/thinking-seth-godin/) | 蒸馏Seth Godin思维模式的实用框架——紫牛法则、许可营销、最小可行受众 | Catalog only |
-| [`thinking-simon`](../skills/thinking-simon/) | 蒸馏 Jim Simons（文艺复兴科技）思维模式的实用框架：量化思维、大量小交易、数学即优势 | Catalog only |
 | [`thinking-steve-jobs`](../skills/thinking-steve-jobs/) | 蒸馏Steve Jobs思维模式的实用框架。当需要极简设计、用户体验偏执、产品哲学式思考时激活。 | Catalog only |
 | [`thinking-warren-buffett`](../skills/thinking-warren-buffett/) | 蒸馏Warren Buffett思维模式的实用框架——价值投资、能力圈、护城河、安全边际、反向思考 | Catalog only |
 | [`thinking-yingshi-juufeng`](../skills/thinking-yingshi-juufeng/) | 蒸馏影视飓风Tim思维模式的实用框架——视觉叙事、技术科普平民化、B站爆款方法论 | Catalog only |
 | [`todo-tracker`](../skills/todo-tracker/) | Description needs review; inspect source. | Catalog only |
+| [`vp-cpo-readiness-advisor`](../skills/vp-cpo-readiness-advisor/) | Coaches Directors and executives through the transition to VP or CPO across four situations: preparing, interviewing, newly landed, or recalibrating at executive level. | Catalog only |
 | [`weekly-review`](../skills/weekly-review/) | 你是Quant。每周一做周度绩效统计和策略调整。 | Catalog only |
 
 <a id="apps-workflow-automation"></a>
@@ -758,6 +763,7 @@ Connect everyday apps, browsers, messaging systems, and repeatable workflows.
 
 | Skill | What it helps with | Support / review signals |
 |---|---|---|
+| [`agent-browser`](../skills/agent-browser/) | A fast Rust-based headless browser automation CLI with Node.js fallback that enables AI agents to navigate, click, type, and snapshot pages via structured commands. | Catalog only |
 | [`airtable-automation`](../skills/airtable-automation/) | Automate Airtable tasks via Rube MCP (Composio): records, bases, tables, fields, views. Always search tools first for current schemas. | Catalog only |
 | [`amplitude-automation`](../skills/amplitude-automation/) | Automate Amplitude tasks via Rube MCP (Composio): events, user activity, cohorts, user identification. Always search tools first for current schemas. | Catalog only |
 | [`asana-automation`](../skills/asana-automation/) | Automate Asana tasks via Rube MCP (Composio): tasks, projects, sections, teams, workspaces. Always search tools first for current schemas. | Catalog only |
@@ -778,8 +784,8 @@ Connect everyday apps, browsers, messaging systems, and repeatable workflows.
 | [`coda-automation`](../skills/coda-automation/) | Automate Coda tasks via Rube MCP (Composio): manage docs, pages, tables, rows, formulas, permissions, and publishing. Always search tools first for current schemas. | Catalog only |
 | [`confluence-automation`](../skills/confluence-automation/) | Automate Confluence page creation, content search, space management, labels, and hierarchy navigation via Rube MCP (Composio). Always search tools first for current schemas. | Catalog only |
 | [`convertkit-automation`](../skills/convertkit-automation/) | Automate ConvertKit (Kit) tasks via Rube MCP (Composio): manage subscribers, tags, broadcasts, and broadcast stats. Always search tools first for current schemas. | Catalog only |
+| [`cua-driver`](../skills/cua-driver/) | Drive a native GUI app (macOS, Windows, Linux) via the cua-driver CLI (default) or MCP server — snapshot its accessibility tree, click/type/scroll by element_index or pixel… | Catalog only |
 | [`discord-automation`](../skills/discord-automation/) | Automate Discord tasks via Rube MCP (Composio): messages, channels, roles, webhooks, reactions. Always search tools first for current schemas. | Catalog only |
-| [`doc-coauthoring`](../skills/doc-coauthoring/) | Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar… | Catalog only |
 | [`docusign-automation`](../skills/docusign-automation/) | Automate DocuSign tasks via Rube MCP (Composio): templates, envelopes, signatures, document management. Always search tools first for current schemas. | Catalog only |
 | [`dropbox-automation`](../skills/dropbox-automation/) | Automate Dropbox file management, sharing, search, uploads, downloads, and folder operations via Rube MCP (Composio). Always search tools first for current schemas. | Catalog only |
 | [`email-automation`](../skills/email-automation/) | 邮箱自动化：读取、搜索、草拟和发送邮件，支持 Gmail API 以及通用 IMAP/SMTP 流程。 | Catalog only |
@@ -788,10 +794,10 @@ Connect everyday apps, browsers, messaging systems, and repeatable workflows.
 | [`email-read`](../skills/email-read/) | Read inbox and sent via Gmail API | Catalog only |
 | [`email-send-bulk`](../skills/email-send-bulk/) | Gmail API bulk email sending | Catalog only · review: credentials, external-write, personal-data |
 | [`email-send-direct`](../skills/email-send-direct/) | Single email: dry-run, reply, attachments | Catalog only · review: credentials, external-write, personal-data |
-| [`fabric-pattern`](../skills/fabric-pattern/) | Description needs review; inspect source. | Catalog only |
 | [`facebook-automation`](../skills/facebook-automation/) | Automate Facebook tasks via Rube MCP (Composio): pages, posts, insights, comments, and ad accounts. Always search tools first for current schemas. | Catalog only |
 | [`fast-browser-use`](../skills/fast-browser-use/) | Use when the user wants extremely fast browser automation via fast-browser-use / fbu, especially for DOM-heavy pages, fast extraction, or browser tasks on macOS/Linux with Chrome… | Catalog only |
 | [`github-automation`](../skills/github-automation/) | 自动化 GitHub 操作。当用户需要推送代码到 GitHub、管理仓库、创建 PR、处理 Issue、git push 失败时使用此技能。优先使用 mcporter call github.push_files 而不是 git push。 | Portable required assignment · structure checked · CTO · review: credentials, external-write, system-change |
+| [`gitlab-automation`](../skills/gitlab-automation/) | Automate GitLab project management, issues, merge requests, pipelines, branches, and user operations via Rube MCP (Composio). Always search tools first for current schemas. | Catalog only |
 | [`gmail-automation`](../skills/gmail-automation/) | Automate Gmail tasks via Rube MCP (Composio): send/reply, search, labels, drafts, attachments. Always search tools first for current schemas. | Catalog only |
 | [`google-calendar-automation`](../skills/google-calendar-automation/) | Automate Google Calendar events, scheduling, availability checks, and attendee management via Rube MCP (Composio). Create events, find free slots, manage attendees, and list… | Catalog only |
 | [`google-drive`](../skills/google-drive/) | Upload files, create folders, list and search Google Drive via CLI | Catalog only |
@@ -800,10 +806,10 @@ Connect everyday apps, browsers, messaging systems, and repeatable workflows.
 | [`hr-automation`](../skills/hr-automation/) | HR workflow automation - recruiting, onboarding, employee management, and offboarding processes | Catalog only |
 | [`instagram-automation`](../skills/instagram-automation/) | Automate Instagram tasks via Rube MCP (Composio): create posts, carousels, manage media, get insights, and publishing limits. Always search tools first for current schemas. | Catalog only |
 | [`jira-automation`](../skills/jira-automation/) | Automate Jira tasks via Rube MCP (Composio): issues, projects, sprints, boards, comments, users. Always search tools first for current schemas. | Catalog only |
+| [`kanbanflow-skill`](../skills/kanbanflow-skill/) | Manage KanbanFlow boards, columns, and tasks for lightweight workflow | Catalog only |
 | [`klaviyo-automation`](../skills/klaviyo-automation/) | Automate Klaviyo tasks via Rube MCP (Composio): manage email/SMS campaigns, inspect campaign messages, track tags, and monitor send jobs. Always search tools first for current… | Catalog only |
 | [`linear-automation`](../skills/linear-automation/) | Automate Linear tasks via Rube MCP (Composio): issues, projects, cycles, teams, labels. Always search tools first for current schemas. | Catalog only |
 | [`linkedin-automation`](../skills/linkedin-automation/) | Automate LinkedIn tasks via Rube MCP (Composio): create posts, manage profile, company info, comments, and image uploads. Always search tools first for current schemas. | Catalog only |
-| [`linkedin-cdp`](../skills/linkedin-cdp/) | LinkedIn CDP: Input-only automation (mouse, keyboard, screenshots). Zero DOM access. | Catalog only |
 | [`mailchimp-automation`](../skills/mailchimp-automation/) | Automate Mailchimp email marketing including campaigns, audiences, subscribers, segments, and analytics via Rube MCP (Composio). Always search tools first for current schemas. | Catalog only |
 | [`make-automation`](../skills/make-automation/) | Automate Make (Integromat) tasks via Rube MCP (Composio): operations, enums, language and timezone lookups. Always search tools first for current schemas. | Catalog only |
 | [`microsoft-teams-automation`](../skills/microsoft-teams-automation/) | Automate Microsoft Teams tasks via Rube MCP (Composio): send messages, manage channels, create meetings, handle chats, and search messages. Always search tools first for current… | Catalog only |
@@ -812,7 +818,6 @@ Connect everyday apps, browsers, messaging systems, and repeatable workflows.
 | [`monday-automation`](../skills/monday-automation/) | Automate Monday.com work management including boards, items, columns, groups, subitems, and updates via Rube MCP (Composio). Always search tools first for current schemas. | Catalog only |
 | [`notion-automation`](../skills/notion-automation/) | 自动化 Notion 操作。当用户需要管理 Notion 页面、数据库、块内容、项目跟踪或进行内容组织和搜索时使用此技能。 | Catalog only |
 | [`one-drive-automation`](../skills/one-drive-automation/) | Automate OneDrive file management, search, uploads, downloads, sharing, permissions, and folder operations via Rube MCP (Composio). Always search tools first for current schemas. | Catalog only |
-| [`outbound-email-strategy`](../skills/outbound-email-strategy/) | Comprehensive outbound email strategy skill for cold outreach, email sequences, and multi-channel campaigns. Use when writing cold emails, creating outreach sequences, optimizing… | Catalog only |
 | [`outlook-automation`](../skills/outlook-automation/) | Automate Outlook tasks via Rube MCP (Composio): emails, calendar, contacts, folders, attachments. Always search tools first for current schemas. | Catalog only |
 | [`pagerduty-automation`](../skills/pagerduty-automation/) | Automate PagerDuty tasks via Rube MCP (Composio): manage incidents, services, schedules, escalation policies, and on-call rotations. Always search tools first for current schemas. | Catalog only |
 | [`playwright-automation`](../skills/playwright-automation/) | Playwright 浏览器自动化。用于自动化爬虫、数据采集、表单填写、UI 测试等需要浏览器自动化的场景。无需人工干预，适合 cron 定时任务。 | Catalog only |
@@ -903,48 +908,45 @@ Domain-specific helpers and cross-functional tools that need a dedicated review 
 |---|---|---|
 | [`bat-cat`](../skills/bat-cat/) | A cat clone with syntax highlighting, line numbers, and Git integration - a modern replacement for cat. | Catalog only |
 | [`bazi-fortune`](../skills/bazi-fortune/) | 八字四柱命理分析工具，属于 fortune-telling-skills 运势测算套件。基于子平真诠体系， 通过出生年月日时推算四柱八字、十神关系、五行旺衰、大运流年，揭示命局格局和人生走向。 排盘为确定性计算 + LLM 综合解读，无外部 API 依赖。 触发词：八字、四柱、命理、生辰八字、bazi、八字排盘、五行、命局分析。… | Catalog only |
-| [`binance-trending`](../skills/binance-trending/) | Description needs review; inspect source. | Catalog only |
 | [`channel-truth-run`](../skills/channel-truth-run/) | Automatic channel and contact synchronization | Catalog only |
 | [`claw-metagenomics`](../skills/claw-metagenomics/) | Shotgun metagenomics profiling — taxonomy, resistome, and functional pathways | Catalog only |
 | [`composio-sdk`](../skills/composio-sdk/) | Build AI agents and apps with Composio - access 200+ external tools with Tool Router or direct execution | Catalog only |
 | [`continuous-learning-v2`](../skills/continuous-learning-v2/) | Instinct-based learning system that observes sessions via hooks, creates atomic instincts with confidence scoring, and evolves them into skills/commands/agents. v2.1 adds… | Catalog only |
+| [`deepwork-tracker`](../skills/deepwork-tracker/) | Track deep work sessions locally (start/stop/status) and generate a GitHub-contribution-graph style minutes-per-day heatmap for sharing (e.g., via Telegram). Use when the user… | Catalog only |
 | [`erc-8004`](../skills/erc-8004/) | Register AI agents on Ethereum mainnet using ERC-8004 (Trustless Agents). Use when the user wants to register their agent identity on-chain, create an agent profile, claim an… | Catalog only |
 | [`executing-plans`](../skills/executing-plans/) | Use when you have a written implementation plan to execute in a separate session with review checkpoints | Portable required assignment · structure checked · CEO |
+| [`file-organizer`](../skills/file-organizer/) | Intelligently organizes your files and folders across your computer by understanding context, finding duplicates, suggesting better structures, and automating cleanup tasks.… | Catalog only |
 | [`google-auth`](../skills/google-auth/) | Google OAuth setup, refresh tokens | Catalog only |
 | [`healthcare-monitor`](../skills/healthcare-monitor/) | 医疗行业企业融资监控系统。实时监控医疗健康企业的工商变更，识别融资信号，自动推送告警。支持天眼查/企查查数据采集、AI融资判断、多渠道推送。 | Catalog only |
 | [`hookify-rules`](../skills/hookify-rules/) | This skill should be used when the user asks to create a hookify rule, write a hook rule, configure hookify, add a hookify rule, or needs guidance on hookify rule syntax and… | Catalog only |
 | [`jimeng-digital-human`](../skills/jimeng-digital-human/) | 即梦AI数字人视频生成全流程自动化。通过浏览器自动化操控 jimeng.jianying.com 数字人界面，完成角色上传、音色选择、台词填入、视频生成和下载。触发场景：用户需要生成数字人视频、即梦数字人、AI数字人口播视频、数字人视频制作。依赖 jimeng-login skill 处理登录。 | Harness-specific assignment · generic installer skips · CCO |
 | [`jimeng-login`](../skills/jimeng-login/) | 即梦AI平台(jimeng.jianying.com)浏览器登录。当需要操作即梦数字人、视频生成等功能前检测到未登录时触发。处理协议同意、抖音OAuth扫码、登录态持久化。 | Harness-specific assignment · generic installer skips · CCO |
-| [`jimeng-storyboard`](../skills/jimeng-storyboard/) | 将口播视频剧本拆解为即梦AI数字人平台的分镜头脚本。输出格式为每个镜头的角色说（台词）和动作描述（镜头语言/数字人动作），适配即梦 jimeng.jianying.com 数字人视频生成界面。触发场景：用户需要生成口播视频分镜、数字人视频剧本拆解、即梦分镜脚本、短视频口播脚本分镜、数字人台词加动作拆分。 | Portable required assignment · structure checked · CCO |
 | [`kanxiang`](../skills/kanxiang/) | 看相分析技能。通过用户上传的人体部位图片，识别图片类型（面相/手相/体相/骨相），调用相应的相术规则知识库，结合图片内容进行专业分析。支持面相（五官、三庭、十二宫）、手相（掌线、指形、掌丘）、骨相（头骨、体骨、九骨）、体相（体型、体态、气质）的综合分析。基于《麻衣神相》《柳庄相法》《神相全编》《水镜神相》《冰鉴》等经典相书整理。 | Catalog only |
 | [`liuyao`](../skills/liuyao/) | 六爻铜钱卦占卜技能。核心理念："解一卦就是传一道，说一言就是传一智"。支持真实/虚拟起卦，集成儒道哲学。 | Catalog only |
-| [`market-intelligence`](../skills/market-intelligence/) | Description needs review; inspect source. | Catalog only |
+| [`liuyao-yijing`](../skills/liuyao-yijing/) | 六爻易经占卜器，基于京房纳甲体系，模拟铜钱起卦，完成纳甲装卦（天干地支、世应、六亲、六神）， 通过用神旺衰和生克制化断卦。当用户提及「六爻」「易经占卜」「铜钱起卦」「纳甲」「帮我起一卦」 「六爻预测」时触发。装卦为确定性计算 + LLM 综合断卦，无外部 API 依赖。 不适用于：梅花易数、奇门遁甲、星座运势、塔罗占卜、八字命理等其他领域 → 建议使用… | Catalog only |
 | [`mcstatus`](../skills/mcstatus/) | 生成 Agent 与 Cron 的模型配置状态报告，展示主模型、fallback 链和任务分配情况。 | Catalog only |
 | [`multimodal-gen`](../skills/multimodal-gen/) | 多模态内容生成（图片、视频）。当用户需要生成图片、生成图像、生成视频、AI绘画、AI作图、画一张图、做个视频、文生图、文生视频时使用此技能。自动调用 multimodal-agent 进行生成。 | Catalog only |
 | [`nutrigx_advisor`](../skills/nutrigx_advisor/) | Nutrigenomics advisor — personalized nutrition guidance based on genetic profiles | Catalog only |
 | [`openhr`](../skills/openhr/) | Boss直聘全流程AI自动化招聘智能体。自动登录、筛选候选人、个性化打招呼、智能聊天跟进、简历解析、飞书同步。触发词：启动招聘、自动打招呼、boss greet、openhr、简历解析、上传飞书。 | Catalog only · review: credentials, external-write, personal-data |
 | [`polyclaw`](../skills/polyclaw/) | Description needs review; inspect source. | Catalog only |
+| [`quality-convergence-engine`](../skills/quality-convergence-engine/) | Multi-dimensional Quality Acceptance and Problem Convergence Engine - Deeply deconstruct requirements, eliminate extreme defects, define absolutely objective acceptance and… | Portable required assignment · structure checked · GOVERNOR |
 | [`raffle-winner-picker`](../skills/raffle-winner-picker/) | Picks random winners from lists, spreadsheets, or Google Sheets for giveaways, raffles, and contests. Ensures fair, unbiased selection with transparency. | Catalog only |
 | [`ralph`](../skills/ralph/) | Use when the user explicitly asks to use Ralph mode for persistent plan-execute-check-retry loops that keep going until the target outcome is achieved. | Catalog only |
 | [`remote-ollama-gpu-scheduler`](../skills/remote-ollama-gpu-scheduler/) | 调度远程 Ollama GPU 资源执行批量 embedding 或推理任务，提升多机环境下的算力利用率。 | Catalog only |
 | [`shrimp-coach`](../skills/shrimp-coach/) | 训练垂直领域 agent 的教练型 skill，用于按宪章、手册和复盘机制持续提升 agent 能力。 | Catalog only |
 | [`silicon-performance-reviewer`](../skills/silicon-performance-reviewer/) | Quarterly Silicon Agent performance evaluation with ByteDance-style calibration, forced distribution ranking, dual-track (technical/management) assessment, and automated score… | Harness-specific assignment · generic installer skips · GOVERNOR |
-| [`soushen-hunter`](../skills/soushen-hunter/) | Description needs review; inspect source. | Catalog only |
+| [`skillforge`](../skills/skillforge/) | Intelligent skill router and creator. Analyzes ANY input to recommend existing skills, improve them, or create new ones. Uses deep iterative analysis with 11 thinking models,… | Catalog only |
 | [`sp-collision-zone-thinking`](../skills/sp-collision-zone-thinking/) | Force unrelated concepts together to discover emergent properties - "What if we treated X like Y?" | Catalog only |
-| [`sp-condition-based-waiting`](../skills/sp-condition-based-waiting/) | Replace arbitrary timeouts with condition polling for reliable async tests | Portable required assignment · structure checked · PE |
 | [`sp-executing-plans`](../skills/sp-executing-plans/) | Execute detailed plans in batches with review checkpoints | Catalog only |
 | [`sp-inversion-exercise`](../skills/sp-inversion-exercise/) | Flip core assumptions to reveal hidden constraints and alternative approaches - "what if the opposite were true?" | Catalog only |
 | [`sp-meta-pattern-recognition`](../skills/sp-meta-pattern-recognition/) | Spot patterns appearing in 3+ domains to find universal principles | Catalog only |
 | [`sp-root-cause-tracing`](../skills/sp-root-cause-tracing/) | Systematically trace bugs backward through call stack to find original trigger | Harness-specific assignment · generic installer skips · COO |
-| [`sp-simplification-cascades`](../skills/sp-simplification-cascades/) | Find one insight that eliminates multiple components - "if this is true, we don't need X, Y, or Z" | Catalog only |
 | [`sp-verification-before-completion`](../skills/sp-verification-before-completion/) | Run verification commands and confirm output before claiming success | Portable required assignment · structure checked · COO |
 | [`sp-when-stuck`](../skills/sp-when-stuck/) | Dispatch to the right problem-solving technique based on how you're stuck | Catalog only |
 | [`struct-predictor`](../skills/struct-predictor/) | Local protein structure prediction with AlphaFold, Boltz, or Chai. Compare predicted structures, compute RMSD, visualise 3D models. | Catalog only |
 | [`tcm-meridian-inference`](../skills/tcm-meridian-inference/) | TCM meridian inference engine — health scoring from 6-meridian measurements | Catalog only |
 | [`timezone`](../skills/timezone/) | Local time detection, timezone conversion | Catalog only |
 | [`twitter-algorithm-optimizer`](../skills/twitter-algorithm-optimizer/) | Analyze and optimize tweets for maximum reach using Twitter's open-source algorithm insights. Rewrite and edit user tweets to improve engagement and visibility based on how the… | Catalog only |
-| [`using-superpowers`](../skills/using-superpowers/) | Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions | Catalog only |
-| [`vp-cpo-readiness-advisor`](../skills/vp-cpo-readiness-advisor/) | Coaches Directors and executives through the transition to VP or CPO across four situations: preparing, interviewing, newly landed, or recalibrating at executive level. | Catalog only |
 | [`yijing-divination`](../skills/yijing-divination/) | 易经占卜系统。支持铜钱法、蓍草法起卦，生成本卦、互卦、变卦，提供Oracle Voice诠释。当用户请求占卜、问卦、易经解读、或寻求决策指引时使用。 | Catalog only |
 
 ## 🛡️ Support, portability, and evidence boundary
