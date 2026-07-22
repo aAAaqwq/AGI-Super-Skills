@@ -1,0 +1,23 @@
+{
+  "$schema": "./skill-quality-baseline.schema.json",
+  "schemaVersion": 1,
+  "scope": "ratchet-current-structural-debt-without-claiming-semantic-verification",
+  "structureInvalid": 177,
+  "disclosureWarnings": 569,
+  "executionReviewRequired": 174,
+  "issueCounts": {
+    "description-missing-trigger": 263,
+    "description-over-180": 293,
+    "invalid-frontmatter-yaml": 35,
+    "link-outside-repository": 5,
+    "missing-frontmatter": 38,
+    "name-folder-mismatch": 71,
+    "over-500-lines": 55,
+    "personal-absolute-path": 50,
+    "scripts-without-test-evidence": 173,
+    "unmentioned-assets": 11,
+    "unmentioned-references": 54,
+    "unmentioned-scripts": 75,
+    "unresolved-local-link": 35
+  }
+}

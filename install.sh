@@ -107,6 +107,7 @@ switch (query) {
     break;
   case 'required':
   case 'optional':
+  case 'harnessSpecific':
   case 'recommendedExternal':
     if (!agent) process.exit(2);
     process.stdout.write(agent.skills[query].map(String).join('\n'));
@@ -136,9 +137,61 @@ load_team_manifest() {
   if [[ -n "$repo_dir" && -f "$candidate" ]]; then
     command -v node &>/dev/null || err "Node.js is required to read $candidate"
     MANIFEST_PATH="$candidate"
-    node -e 'const m=require(process.argv[1]); if(m.schemaVersion!==1 || !Array.isArray(m.agents) || !Array.isArray(m.kits)) process.exit(1)' "$MANIFEST_PATH" \
-      || err "Invalid team manifest: $MANIFEST_PATH"
+    if ! node - "$MANIFEST_PATH" <<'NODE'
+const fs = require('fs');
+const manifestPath = process.argv[2];
+const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const identifier = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const exactKeys = (value, expected) => value && typeof value === 'object'
+  && !Array.isArray(value)
+  && Object.keys(value).sort().join('\0') === [...expected].sort().join('\0');
+const validIds = value => Array.isArray(value)
+  && value.every(item => typeof item === 'string' && identifier.test(item))
+  && new Set(value).size === value.length;
+if (manifest.$schema !== './team-manifest.schema.json' || manifest.schemaVersion !== 1) process.exit(1);
+if (!exactKeys(manifest, ['$schema', 'schemaVersion', 'inventory', 'agents', 'kits'])) process.exit(1);
+if (!Array.isArray(manifest.agents) || !Array.isArray(manifest.kits)
+    || !manifest.agents.length || !manifest.kits.length) process.exit(1);
+if (!exactKeys(manifest.inventory, ['agentCount', 'physicalSkillCount', 'skillEntrypoint', 'symlinkPolicy'])) process.exit(1);
+if (!Number.isInteger(manifest.inventory.agentCount) || manifest.inventory.agentCount < 1
+    || manifest.inventory.agentCount !== manifest.agents.length
+    || !Number.isInteger(manifest.inventory.physicalSkillCount)
+    || manifest.inventory.physicalSkillCount < 0
+    || manifest.inventory.skillEntrypoint !== 'SKILL.md'
+    || manifest.inventory.symlinkPolicy !== 'forbid') process.exit(1);
+const agentIds = manifest.agents.map(agent => agent && agent.id);
+if (!validIds(agentIds)) process.exit(1);
+const knownAgents = new Set(agentIds);
+for (const agent of manifest.agents) {
+  if (!exactKeys(agent, ['id', 'name', 'path', 'skills'])) process.exit(1);
+  if (typeof agent.name !== 'string' || !agent.name.trim()) process.exit(1);
+  if (agent.path !== `agents/${agent.id}`) process.exit(1);
+  if (!exactKeys(agent.skills, ['required', 'optional', 'harnessSpecific', 'recommendedExternal'])) process.exit(1);
+  if (!agent.skills || !validIds(agent.skills.required) || !validIds(agent.skills.optional)
+      || !validIds(agent.skills.harnessSpecific)
+      || !validIds(agent.skills.recommendedExternal)) process.exit(1);
+  const allSkills = [
+    ...agent.skills.required,
+    ...agent.skills.optional,
+    ...agent.skills.harnessSpecific,
+    ...agent.skills.recommendedExternal,
+  ];
+  if (new Set(allSkills).size !== allSkills.length) process.exit(1);
+}
+const kitIds = manifest.kits.map(kit => kit && kit.id);
+if (!validIds(kitIds)) process.exit(1);
+for (const kit of manifest.kits) {
+  if (!exactKeys(kit, ['id', 'agents'])) process.exit(1);
+  if (!validIds(kit.agents) || !kit.agents.length
+      || kit.agents.some(agent => !knownAgents.has(agent))) process.exit(1);
+}
+NODE
+    then
+      err "Invalid team manifest: $MANIFEST_PATH"
+    fi
     info "Using team manifest: $MANIFEST_PATH"
+  elif [[ -n "$repo_dir" ]]; then
+    err "Required team manifest unavailable: $candidate"
   fi
 }
 
@@ -212,6 +265,14 @@ agent_optional_skills() {
   fi
 }
 
+agent_harness_specific_skills() {
+  if [[ -n "$MANIFEST_PATH" ]]; then
+    manifest_query harnessSpecific "$1"
+  else
+    printf '\n'
+  fi
+}
+
 agent_source_path() {
   if [[ -n "$MANIFEST_PATH" ]]; then
     manifest_query agent-path "$1"
@@ -221,14 +282,20 @@ agent_source_path() {
 }
 
 report_recommended_external_skills() {
-  local agent_key skill count=0
+  local agent_key skill count=0 harness_count=0
   for agent_key in "$@"; do
     for skill in $(agent_recommended_external_skills "$agent_key"); do
       count=$((count + 1))
     done
+    for skill in $(agent_harness_specific_skills "$agent_key"); do
+      harness_count=$((harness_count + 1))
+    done
   done
   if [[ "$count" -gt 0 ]]; then
     info "${count} recommended external skill(s) are not bundled; see the team manifest for details."
+  fi
+  if [[ "$harness_count" -gt 0 ]]; then
+    info "${harness_count} harness-specific skill assignment(s) stay catalog-only and are not copied by the generic installer."
   fi
 }
 
@@ -238,11 +305,16 @@ preflight_agents() {
   local agent_key src skill skill_list optional_skill_list source_name source_file linked_entry
 
   [[ -n "$repo_dir" ]] || return 0
+  for source_name in CHARTER.md COLLABORATION.md agents/BOOTSTRAP.md agents/WORKFLOW.md; do
+    source_file="${repo_dir}/${source_name}"
+    [[ ( -e "$source_file" || -L "$source_file" ) && -f "$source_file" && ! -L "$source_file" ]] \
+      || err "Required shared workspace file unavailable: $source_name"
+  done
   for agent_key in "$@"; do
     src="${repo_dir}/$(agent_source_path "$agent_key")"
     [[ ( -e "$src" || -L "$src" ) && -d "$src" && ! -L "$src" ]] \
       || err "Agent source must be a real directory: $src"
-    for source_name in SOUL.md AGENTS.md IDENTITY.md BOOTSTRAP.md MEMORY.md USER.md TOOLS.md WORKFLOW.md; do
+    for source_name in SOUL.md AGENTS.md IDENTITY.md USER.md TOOLS.md; do
       source_file="${src}/${source_name}"
       if [[ -e "$source_file" || -L "$source_file" ]]; then
         [[ -f "$source_file" && ! -L "$source_file" ]] \
@@ -289,7 +361,7 @@ validate_install_paths() {
       linked_entry=$(find "$workspace" -type l -print -quit)
       [[ -z "$linked_entry" ]] || err "Destination workspace contains a symlink: $linked_entry"
     fi
-    for destination_entry in skills SOUL.md AGENTS.md IDENTITY.md BOOTSTRAP.md MEMORY.md USER.md TOOLS.md WORKFLOW.md; do
+    for destination_entry in skills SOUL.md AGENTS.md IDENTITY.md BOOTSTRAP.md USER.md TOOLS.md WORKFLOW.md; do
       destination_entry="${workspace}/${destination_entry}"
       [[ ! -L "$destination_entry" ]] \
         || err "Destination entry must not be a symlink: $destination_entry"
@@ -317,6 +389,33 @@ copy_file_no_clobber() {
   else
     cp "$source_file" "$destination_file"
   fi
+}
+
+write_manifest_tools_no_clobber() {
+  local destination_dir="$1"
+  local agent_key="$2"
+  local destination_file="${destination_dir}/TOOLS.md"
+  local skill
+  if [[ -L "$destination_file" ]]; then
+    err "Destination file must not be a symlink: ${destination_file}"
+  elif [[ -e "$destination_file" ]]; then
+    warn "Preserved existing file: ${destination_file}"
+    return
+  fi
+  {
+    printf '# Skill assignment\n\n'
+    printf 'Generated from the canonical team manifest for `%s`. This list contains only portable Skills copied by the generic installer.\n\n' "$agent_key"
+    printf '## Required\n\n'
+    for skill in $(agent_skills "$agent_key"); do
+      printf -- '- [`%s`](skills/%s/)\n' "$skill" "$skill"
+    done
+    if [[ -n "$(agent_optional_skills "$agent_key")" ]]; then
+      printf '\n## Optional\n\n'
+      for skill in $(agent_optional_skills "$agent_key"); do
+        printf -- '- [`%s`](skills/%s/)\n' "$skill" "$skill"
+      done
+    fi
+  } > "$destination_file"
 }
 
 copy_skill_no_clobber() {
@@ -377,6 +476,7 @@ publish_stage() {
   local -a components=(agents)
   local -a published=()
   local index published_component published_final published_backup
+  local restore_failed=0 recovery_path
   for agent_key in "$@"; do
     components+=("workspace-${agent_key}")
   done
@@ -396,31 +496,51 @@ publish_stage() {
     backup_component="${INSTALL_STAGE}/backup/${component}"
     if [[ -e "$final_component" || -L "$final_component" ]]; then
       if ! mv "$final_component" "$backup_component"; then
+        restore_failed=0
         for ((index=${#published[@]} - 1; index >= 0; index--)); do
           published_component="${published[$index]}"
           published_final="${OPENCLAW_DIR}/${published_component}"
           published_backup="${INSTALL_STAGE}/backup/${published_component}"
-          rm -rf -- "$published_final"
+          if ! rm -rf -- "$published_final"; then
+            restore_failed=1
+            continue
+          fi
           if [[ -e "$published_backup" || -L "$published_backup" ]]; then
-            mv "$published_backup" "$published_final" || true
+            mv "$published_backup" "$published_final" || restore_failed=1
           fi
         done
+        if [[ "$restore_failed" -ne 0 ]]; then
+          recovery_path="$INSTALL_STAGE"
+          INSTALL_STAGE=""
+          trap - EXIT HUP INT TERM
+          err "Atomic publish failed; automatic restore is incomplete. Recovery transaction preserved at: $recovery_path"
+        fi
         err "Atomic publish failed; restored the previous destination state"
       fi
     fi
     if ! mv "$staged_component" "$final_component"; then
+      restore_failed=0
       if [[ -e "$backup_component" || -L "$backup_component" ]]; then
-        mv "$backup_component" "$final_component" || true
+        mv "$backup_component" "$final_component" || restore_failed=1
       fi
       for ((index=${#published[@]} - 1; index >= 0; index--)); do
         published_component="${published[$index]}"
         published_final="${OPENCLAW_DIR}/${published_component}"
         published_backup="${INSTALL_STAGE}/backup/${published_component}"
-        rm -rf -- "$published_final"
+        if ! rm -rf -- "$published_final"; then
+          restore_failed=1
+          continue
+        fi
         if [[ -e "$published_backup" || -L "$published_backup" ]]; then
-          mv "$published_backup" "$published_final" || true
+          mv "$published_backup" "$published_final" || restore_failed=1
         fi
       done
+      if [[ "$restore_failed" -ne 0 ]]; then
+        recovery_path="$INSTALL_STAGE"
+        INSTALL_STAGE=""
+        trap - EXIT HUP INT TERM
+        err "Atomic publish failed; automatic restore is incomplete. Recovery transaction preserved at: $recovery_path"
+      fi
       err "Atomic publish failed; restored the previous destination state"
     fi
     published+=("$component")
@@ -464,9 +584,12 @@ deploy_agent() {
   mkdir -p "${ws}/skills" "${ws}/memory"
 
   # Copy persona files
-  for f in SOUL.md AGENTS.md IDENTITY.md BOOTSTRAP.md MEMORY.md USER.md TOOLS.md WORKFLOW.md; do
+  for f in SOUL.md AGENTS.md IDENTITY.md USER.md; do
     [[ -f "${src}/${f}" ]] && copy_file_no_clobber "${src}/${f}" "${ws}"
   done
+  write_manifest_tools_no_clobber "$ws" "$agent_key"
+  copy_file_no_clobber "${repo_dir}/agents/BOOTSTRAP.md" "${ws}"
+  copy_file_no_clobber "${repo_dir}/agents/WORKFLOW.md" "${ws}"
 
   # Copy curated skills
   if [[ -n "$skill_list" ]]; then
@@ -566,11 +689,8 @@ deploy_starter_kit() {
   echo "Next steps:"
   echo "  Recommended (harness-native, no extra tooling):"
   echo "    Claude Code:  /plugin install aAAaqwq/AGI-Super-Team"
-  echo "    Or open ~/.openclaw/workspace-<agent>/ in your harness (Claude Code / Codex / Cursor / Hermes)"
-  echo "  (legacy, only if using the discontinued OpenClaw harness):"
-  echo "    1. Configure your API keys:  openclaw config"
-  echo "    2. Restart the gateway:       openclaw gateway restart"
-  echo "  Then start chatting with your agent!"
+  echo "    Or open ${OPENCLAW_DIR}/workspace-<agent>/ in your harness."
+  echo "  Inspect the installed role and skills before granting tools or credentials."
   echo ""
   if [[ "$APPLY" -eq 1 ]]; then
     echo "Deployed agents:"
@@ -598,7 +718,7 @@ main() {
   echo ""
   echo "╔══════════════════════════════════════╗"
   echo "║     🏛️  AGI Super Team Deployer      ║"
-  echo "║     793 Skills · 14 Agents            ║"
+  echo "║     Preview-first role workspaces     ║"
   echo "╚══════════════════════════════════════╝"
   echo ""
 

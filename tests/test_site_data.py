@@ -63,8 +63,114 @@ class SiteDataTests(unittest.TestCase):
 
         self.assertEqual(urlopen.call_count, 1)
 
-    @mock.patch("scripts.build_site_data._request_json")
+    @mock.patch("scripts.build_site_data.time.sleep", return_value=None)
+    @mock.patch("scripts.build_site_data.urllib.request.urlopen")
     def test_unauthenticated_history_failure_keeps_repository_stats(
+        self, urlopen: mock.Mock, _sleep: mock.Mock
+    ) -> None:
+        repository = {
+            "full_name": "aAAaqwq/AGI-Super-Team",
+            "stargazers_count": 78,
+            "forks_count": 18,
+        }
+        history_url = (
+            "https://api.github.com/repos/aAAaqwq/AGI-Super-Team/"
+            "stargazers?per_page=100"
+        )
+        urlopen.side_effect = [
+            FakeResponse(repository),
+            urllib.error.HTTPError(
+                history_url, 401, "authentication required", None, None
+            ),
+        ]
+
+        payload, stargazers = fetch_github_data("aAAaqwq/AGI-Super-Team", None)
+
+        self.assertEqual(payload, repository)
+        self.assertEqual(stargazers, [])
+
+    @mock.patch("scripts.build_site_data.time.sleep", return_value=None)
+    @mock.patch("scripts.build_site_data.urllib.request.urlopen")
+    def test_authenticated_history_http_unavailability_keeps_repository_stats(
+        self, urlopen: mock.Mock, _sleep: mock.Mock
+    ) -> None:
+        repository = {
+            "full_name": "aAAaqwq/AGI-Super-Team",
+            "stargazers_count": 78,
+            "forks_count": 18,
+        }
+        history_url = (
+            "https://api.github.com/repos/aAAaqwq/AGI-Super-Team/"
+            "stargazers?per_page=100"
+        )
+
+        for status_code in (401, 403, 429, 500, 503):
+            with self.subTest(status_code=status_code):
+                urlopen.reset_mock()
+                failure_count = 3 if status_code == 429 or status_code >= 500 else 1
+                failures = [
+                    urllib.error.HTTPError(
+                        history_url, status_code, "history unavailable", None, None
+                    )
+                    for _ in range(failure_count)
+                ]
+                urlopen.side_effect = [FakeResponse(repository), *failures]
+
+                payload, stargazers = fetch_github_data(
+                    "aAAaqwq/AGI-Super-Team", "workflow-token"
+                )
+
+                self.assertEqual(payload, repository)
+                self.assertEqual(stargazers, [])
+
+    @mock.patch("scripts.build_site_data.time.sleep", return_value=None)
+    @mock.patch("scripts.build_site_data.urllib.request.urlopen")
+    def test_unexpected_history_http_error_is_not_silenced(
+        self, urlopen: mock.Mock, _sleep: mock.Mock
+    ) -> None:
+        repository = {
+            "full_name": "aAAaqwq/AGI-Super-Team",
+            "stargazers_count": 78,
+            "forks_count": 18,
+        }
+        history_url = (
+            "https://api.github.com/repos/aAAaqwq/AGI-Super-Team/"
+            "stargazers?per_page=100"
+        )
+        urlopen.side_effect = [
+            FakeResponse(repository),
+            urllib.error.HTTPError(history_url, 404, "not found", None, None),
+        ]
+
+        with self.assertRaisesRegex(RuntimeError, "HTTP 404"):
+            fetch_github_data("aAAaqwq/AGI-Super-Team", "workflow-token")
+
+    @mock.patch("scripts.build_site_data.time.sleep", return_value=None)
+    @mock.patch("scripts.build_site_data.urllib.request.urlopen")
+    def test_authenticated_transient_history_failure_keeps_repository_stats(
+        self, urlopen: mock.Mock, _sleep: mock.Mock
+    ) -> None:
+        repository = {
+            "full_name": "aAAaqwq/AGI-Super-Team",
+            "stargazers_count": 78,
+            "forks_count": 18,
+        }
+        urlopen.side_effect = [
+            FakeResponse(repository),
+            http.client.RemoteDisconnected("transient"),
+            http.client.RemoteDisconnected("transient"),
+            http.client.RemoteDisconnected("transient"),
+        ]
+
+        payload, stargazers = fetch_github_data(
+            "aAAaqwq/AGI-Super-Team", "workflow-token"
+        )
+
+        self.assertEqual(payload, repository)
+        self.assertEqual(stargazers, [])
+
+    @mock.patch("scripts.build_site_data._request_json")
+    def test_malformed_authenticated_history_is_not_silenced(
         self, request_json: mock.Mock
     ) -> None:
         repository = {
@@ -74,31 +180,27 @@ class SiteDataTests(unittest.TestCase):
         }
         request_json.side_effect = [
             (repository, {}),
-            RuntimeError("stargazer history requires authentication"),
+            RuntimeError("GitHub API returned invalid JSON"),
         ]
 
-        payload, stargazers = fetch_github_data("aAAaqwq/AGI-Super-Team", None)
-
-        self.assertEqual(payload, repository)
-        self.assertEqual(stargazers, [])
+        with self.assertRaisesRegex(RuntimeError, "invalid JSON"):
+            fetch_github_data("aAAaqwq/AGI-Super-Team", "workflow-token")
 
     @mock.patch("scripts.build_site_data._request_json")
-    def test_authenticated_history_failure_is_not_silenced(
+    def test_malformed_stargazer_payload_is_not_silenced(
         self, request_json: mock.Mock
     ) -> None:
+        repository = {
+            "full_name": "aAAaqwq/AGI-Super-Team",
+            "stargazers_count": 78,
+            "forks_count": 18,
+        }
         request_json.side_effect = [
-            (
-                {
-                    "full_name": "aAAaqwq/AGI-Super-Team",
-                    "stargazers_count": 78,
-                    "forks_count": 18,
-                },
-                {},
-            ),
-            RuntimeError("history failed"),
+            (repository, {}),
+            ({"unexpected": "object"}, {}),
         ]
 
-        with self.assertRaisesRegex(RuntimeError, "history failed"):
+        with self.assertRaisesRegex(RuntimeError, "was not a list"):
             fetch_github_data("aAAaqwq/AGI-Super-Team", "workflow-token")
 
     @mock.patch("scripts.build_site_data.time.sleep", return_value=None)

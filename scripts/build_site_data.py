@@ -22,6 +22,22 @@ from typing import Any, Iterable
 API_VERSION = "2022-11-28"
 DEFAULT_REPOSITORY = "aAAaqwq/AGI-Super-Team"
 USER_AGENT = "agi-super-team-site-data/1.0"
+HISTORY_UNAVAILABLE_STATUS_CODES = frozenset({401, 403, 429})
+
+
+class GitHubRequestError(RuntimeError):
+    """A transport or HTTP failure with enough context for scoped fallback."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        status_code: int | None = None,
+        transient: bool = False,
+    ) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.transient = transient
 
 
 def isoformat_utc(value: datetime) -> str:
@@ -211,10 +227,24 @@ def _request_json(url: str, token: str | None, accept: str) -> tuple[Any, dict[s
             raise RuntimeError(
                 f"GitHub API returned invalid JSON for {url}: {error}"
             ) from error
+        except urllib.error.HTTPError as error:
+            status_code = error.code
+            reason = error.reason
+            error.close()
+            transient = status_code == 429 or 500 <= status_code < 600
+            if transient and attempt < 2:
+                time.sleep(0.5 * (2**attempt))
+                continue
+            raise GitHubRequestError(
+                f"GitHub API request failed for {url}: HTTP {status_code} {reason}",
+                status_code=status_code,
+                transient=transient,
+            ) from error
         except transient_errors as error:
             if attempt == 2:
-                raise RuntimeError(
-                    f"GitHub API request failed for {url}: {error}"
+                raise GitHubRequestError(
+                    f"GitHub API request failed for {url}: {error}",
+                    transient=True,
                 ) from error
             time.sleep(0.5 * (2**attempt))
 
@@ -241,12 +271,15 @@ def fetch_github_data(repository: str, token: str | None) -> tuple[dict[str, Any
             page, headers = _request_json(
                 next_url, token, "application/vnd.github.star+json"
             )
-        except RuntimeError:
-            if token:
+        except GitHubRequestError as error:
+            if (
+                error.status_code not in HISTORY_UNAVAILABLE_STATUS_CODES
+                and not error.transient
+            ):
                 raise
             print(
-                "GitHub star history requires authentication; writing a current-count "
-                "placeholder until the Pages workflow refreshes it.",
+                "GitHub star history is temporarily unavailable; writing a current-count "
+                "placeholder so the site can still deploy.",
                 file=sys.stderr,
             )
             return repository_payload, []

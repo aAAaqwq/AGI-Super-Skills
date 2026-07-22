@@ -125,7 +125,7 @@
     if (statsState) {
       const age = Date.now() - Date.parse(stats.fetchedAt);
       const label = source === "live" && age <= fifteenMinutes ? "Live" : "Cached";
-      const stale = age > oneDay ? " · older than 24 hours" : "";
+      const stale = age > oneDay ? ". Older than 24 hours" : "";
       statsState.textContent = `${label} GitHub data${stale}.`;
     }
     return true;
@@ -209,10 +209,7 @@
   async function loadVerificationReceipt() {
     try {
       const receipt = await fetchJson("data/verification-receipt.json");
-      const checks = Array.isArray(receipt.checks) ? receipt.checks : [];
-      const allPassed = checks.length > 0 && checks.every((check) => check.result === "pass");
-      const matchesSite = receipt.commit && receipt.commit === receipt.siteCommit;
-      if (receipt.result !== "pass" || !allPassed || !matchesSite) return;
+      if (!window.AGISuperTeamReceipt?.isVerifiedReceipt(receipt)) return;
       if (verificationStatus) {
         verificationStatus.textContent = "Verified";
         verificationStatus.classList.remove("status-pending");

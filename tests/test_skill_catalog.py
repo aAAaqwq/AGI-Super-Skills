@@ -1,18 +1,25 @@
+import copy
 import importlib.util
 import json
 import os
 import re
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
+
+from jsonschema import Draft202012Validator
 
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILDER_PATH = ROOT / "scripts" / "build_skill_catalog.py"
 TAXONOMY_PATH = ROOT / "config" / "skill-taxonomy.json"
+TAXONOMY_SCHEMA_PATH = ROOT / "config" / "skill-taxonomy.schema.json"
 CATALOG_PATH = ROOT / "catalog" / "README.md"
 INDEX_PATH = ROOT / "catalog" / "skill-index.json"
+INDEX_SCHEMA_PATH = ROOT / "config" / "skill-index.schema.json"
 
 
 def load_builder():
@@ -36,6 +43,9 @@ class SkillCatalogTests(unittest.TestCase):
         cls.entries = cls.builder.build_entries(ROOT, cls.taxonomy)
 
     def test_taxonomy_has_unique_ordered_categories_and_final_fallback(self) -> None:
+        schema = json.loads(TAXONOMY_SCHEMA_PATH.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        Draft202012Validator(schema).validate(self.taxonomy)
         categories = self.taxonomy["categories"]
         identifiers = [category["id"] for category in categories]
         self.assertGreaterEqual(len(categories), 8)
@@ -52,6 +62,10 @@ class SkillCatalogTests(unittest.TestCase):
                 re.compile(pattern)
         known_categories = set(identifiers)
         self.assertTrue(set(self.taxonomy["overrides"].values()) <= known_categories)
+        self.assertEqual(
+            set(self.taxonomy["overrideRationales"]),
+            set(self.taxonomy["overrides"]),
+        )
         known_risks = {item["id"] for item in self.taxonomy["riskLabels"]}
         for signals in self.taxonomy["riskOverrides"].values():
             self.assertTrue(set(signals) <= known_risks)
@@ -61,6 +75,12 @@ class SkillCatalogTests(unittest.TestCase):
         actual = [entry.skill_id for entry in self.entries]
         self.assertEqual(len(actual), len(set(actual)))
         self.assertEqual(set(actual), expected)
+
+    def test_portability_class_covers_every_manifest_assignment_level(self) -> None:
+        self.assertEqual(self.builder._portability_class({"required"}), "portable-required")
+        self.assertEqual(self.builder._portability_class({"optional"}), "portable-optional")
+        self.assertEqual(self.builder._portability_class({"harnessSpecific"}), "harness-specific")
+        self.assertEqual(self.builder._portability_class(set()), "catalog-only")
 
     def test_every_category_is_used_and_counts_sum_to_inventory(self) -> None:
         counts = self.builder.category_counts(self.entries, self.taxonomy)
@@ -79,8 +99,6 @@ class SkillCatalogTests(unittest.TestCase):
             with self.subTest(skill=item["skill"]):
                 self.assertIn(item["skill"], by_id)
                 self.assertEqual(item["category"], by_id[item["skill"]].category_id)
-                self.assertEqual(item["supportLevel"], by_id[item["skill"]].support_level)
-                self.assertIn(item["supportLevel"], {"curated", "pack-required", "catalog"})
         serialized = json.dumps(featured).lower()
         self.assertNotIn("verified", serialized)
         self.assertNotIn("production-ready", serialized)
@@ -130,6 +148,20 @@ class SkillCatalogTests(unittest.TestCase):
 
     def test_machine_index_matches_markdown_membership_and_runtime_counts(self) -> None:
         index = json.loads(INDEX_PATH.read_text(encoding="utf-8"))
+        schema = json.loads(INDEX_SCHEMA_PATH.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        Draft202012Validator(schema).validate(index)
+        known_categories = {
+            category["id"]: category for category in self.taxonomy["categories"]
+        }
+        manifest = self.builder.load_manifest(ROOT)
+        expected_assignments = {}
+        for agent in manifest["agents"]:
+            for level in ("required", "optional", "harnessSpecific"):
+                for skill_id in agent["skills"].get(level, []):
+                    expected_assignments.setdefault(skill_id, set()).add(
+                        (agent["id"].upper(), level)
+                    )
         indexed_ids = [item["skill_id"] for item in index["skills"]]
         self.assertEqual(index["inventoryCount"], len(self.entries))
         self.assertEqual(indexed_ids, [entry.skill_id for entry in self.entries])
@@ -141,6 +173,78 @@ class SkillCatalogTests(unittest.TestCase):
         self.assertTrue(
             all(item["path"] == f"skills/{item['skill_id']}/SKILL.md" for item in index["skills"])
         )
+        for item in index["skills"]:
+            decision = item["classification_details"]
+            winner = decision["winner"]
+            self.assertIn(decision["method"], {"slug", "description", "override", "fallback"})
+            self.assertIn(decision["resolution_status"], {"rule-match", "priority-tie", "override", "fallback"})
+            self.assertEqual(decision["review_state"], "unreviewed")
+            self.assertEqual(winner["category_id"], item["category_id"])
+            self.assertEqual(winner["match_count"], len(winner["matched_signals"]))
+            self.assertEqual(winner["matched_signals"], decision["matched_signals"])
+            self.assertIsInstance(winner["priority"], int)
+            self.assertIsInstance(decision["matched_signals"], list)
+            self.assertIsInstance(decision["runner_ups"], list)
+            runner_ids = [runner["category_id"] for runner in decision["runner_ups"]]
+            self.assertEqual(len(runner_ids), len(set(runner_ids)))
+            self.assertNotIn(item["category_id"], runner_ids)
+            for runner_up in decision["runner_ups"]:
+                self.assertEqual(
+                    set(runner_up),
+                    {"category_id", "match_count", "matched_signals", "priority", "tied_for_first"},
+                )
+                self.assertEqual(
+                    runner_up["match_count"], len(runner_up["matched_signals"])
+                )
+                self.assertIn(runner_up["category_id"], known_categories)
+                self.assertEqual(
+                    runner_up["priority"],
+                    known_categories[runner_up["category_id"]]["priority"],
+                )
+            tied_runners = [runner for runner in decision["runner_ups"] if runner["tied_for_first"]]
+            if decision["resolution_status"] == "priority-tie":
+                self.assertTrue(tied_runners)
+                self.assertTrue(winner["tie_detected"])
+            elif decision["resolution_status"] == "rule-match":
+                self.assertFalse(tied_runners)
+                self.assertFalse(winner["tie_detected"])
+            if decision["method"] == "override":
+                self.assertGreaterEqual(len(decision["rationale"]), 20)
+                self.assertIn(decision["base_method"], {"slug", "description", "fallback"})
+                self.assertIsInstance(decision["base_candidates"], list)
+
+            assignments = {
+                (assignment["agent"], assignment["level"])
+                for assignment in item["assignments"]
+            }
+            self.assertEqual(assignments, expected_assignments.get(item["skill_id"], set()))
+            levels = {level for _agent, level in assignments}
+            expected_portability = (
+                "portable-required" if "required" in levels
+                else "portable-optional" if "optional" in levels
+                else "harness-specific" if "harnessSpecific" in levels
+                else "catalog-only"
+            )
+            self.assertEqual(item["portability_class"], expected_portability)
+            self.assertEqual(
+                item["support_level"],
+                "pack-required" if "required" in levels else "catalog",
+            )
+
+        by_id = {item["skill_id"]: item for item in index["skills"]}
+        api_design = by_id["api-design"]["classification_details"]
+        self.assertEqual(api_design["resolution_status"], "priority-tie")
+        self.assertTrue(
+            any(
+                item["category_id"] == "software-engineering" and item["tied_for_first"]
+                for item in api_design["runner_ups"]
+            )
+        )
+        fallback = next(
+            item for item in index["skills"]
+            if item["classification_details"]["method"] == "fallback"
+        )
+        self.assertEqual(fallback["classification_details"]["resolution_status"], "fallback")
 
     def test_rendering_is_stable_across_hash_seed_and_timezone(self) -> None:
         script = """
@@ -168,6 +272,58 @@ print(hashlib.sha256(payload.encode()).hexdigest())
             )
             hashes.append(result.stdout.strip())
         self.assertEqual(hashes[0], hashes[1])
+
+    def test_generated_write_failure_preserves_previous_complete_file(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "catalog.json"
+            target.write_text("previous-complete-content\n", encoding="utf-8")
+            with mock.patch.object(
+                self.builder.os, "replace", side_effect=OSError("simulated publish failure")
+            ):
+                with self.assertRaises(OSError):
+                    self.builder._write_or_check(target, "new-content\n", check=False)
+            self.assertEqual(
+                target.read_text(encoding="utf-8"), "previous-complete-content\n"
+            )
+            self.assertEqual(list(Path(directory).glob(".*.tmp")), [])
+
+    def test_index_schema_rejects_cross_field_semantic_contradictions(self) -> None:
+        index = json.loads(INDEX_PATH.read_text(encoding="utf-8"))
+        schema = json.loads(INDEX_SCHEMA_PATH.read_text(encoding="utf-8"))
+        validator = Draft202012Validator(schema)
+
+        override = next(
+            item for item in index["skills"]
+            if item["classification_details"]["method"] == "override"
+        )
+        fallback = next(
+            item for item in index["skills"]
+            if item["classification_details"]["method"] == "fallback"
+        )
+        assigned = next(item for item in index["skills"] if item["assignments"])
+
+        mutations = []
+        forged_override = copy.deepcopy(index)
+        forged_override["skills"][index["skills"].index(override)]["classification_details"]["winner"]["tie_detected"] = True
+        mutations.append(forged_override)
+
+        forged_fallback = copy.deepcopy(index)
+        fallback_details = forged_fallback["skills"][index["skills"].index(fallback)]["classification_details"]
+        fallback_details["winner"]["match_count"] = 1
+        fallback_details["winner"]["matched_signals"] = ["fabricated"]
+        fallback_details["matched_signals"] = ["fabricated"]
+        mutations.append(forged_fallback)
+
+        forged_portability = copy.deepcopy(index)
+        forged_item = forged_portability["skills"][index["skills"].index(assigned)]
+        forged_item["assignments"] = []
+        forged_item["portability_class"] = "portable-required"
+        forged_item["support_level"] = "pack-required"
+        mutations.append(forged_portability)
+
+        for mutation in mutations:
+            with self.subTest(skill=assigned["skill_id"]):
+                self.assertTrue(list(validator.iter_errors(mutation)))
 
     def test_readmes_route_users_to_outcomes_and_the_generated_catalog(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")

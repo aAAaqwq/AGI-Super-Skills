@@ -6,8 +6,10 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import os
 import re
 import sys
+import tempfile
 from collections import OrderedDict, defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -35,15 +37,24 @@ DESCRIPTION_REVIEW_PATTERN = re.compile(
 
 
 @dataclass(frozen=True)
+class SkillAssignment:
+    agent: str
+    level: str
+
+
+@dataclass(frozen=True)
 class SkillEntry:
     skill_id: str
     category_id: str
     description: str
     support_level: str
     used_by: tuple[str, ...]
+    assignments: tuple[SkillAssignment, ...]
+    portability_class: str
     review_signals: tuple[str, ...]
     description_status: str
     classification: str
+    classification_details: dict[str, Any]
 
 
 def _normalize(value: str) -> str:
@@ -150,52 +161,137 @@ def _classification_text(skill_id: str, description: str) -> tuple[str, str]:
     return slug, f"{slug} {slug.replace('-', ' ')} {description.lower()}"
 
 
+def _rule_candidates(
+    source: str, text: str, taxonomy: dict[str, Any]
+) -> list[tuple[int, int, str, list[str]]]:
+    candidates: list[tuple[int, int, str, list[str]]] = []
+    for category in taxonomy["categories"]:
+        if category.get("fallback"):
+            continue
+        matched = [
+            pattern
+            for pattern in category["patterns"]
+            if not (source == "description" and pattern in DESCRIPTION_EXCLUDED_PATTERNS)
+            and re.search(pattern, text, re.IGNORECASE)
+        ]
+        if matched:
+            candidates.append(
+                (len(matched), category["priority"], category["id"], matched)
+            )
+    return sorted(candidates, key=lambda item: (-item[0], -item[1], item[2]))
+
+
+def _candidate_document(
+    candidate: tuple[int, int, str, list[str]], best_score: int
+) -> dict[str, Any]:
+    match_count, priority, category_id, matched_signals = candidate
+    return {
+        "category_id": category_id,
+        "match_count": match_count,
+        "matched_signals": matched_signals,
+        "priority": priority,
+        "tied_for_first": match_count == best_score,
+    }
+
+
 def _classify(
     skill_id: str, description: str, taxonomy: dict[str, Any]
-) -> tuple[str, str]:
+) -> tuple[str, str, dict[str, Any]]:
+    priorities = {item["id"]: item["priority"] for item in taxonomy["categories"]}
+    slug, combined = _classification_text(skill_id, description)
     overrides = taxonomy.get("overrides", {})
     if skill_id in overrides:
-        return str(overrides[skill_id]), "override"
+        category_id = str(overrides[skill_id])
+        base_source = "fallback"
+        base_candidates: list[tuple[int, int, str, list[str]]] = []
+        for source, text in (("slug", slug), ("description", combined)):
+            base_candidates = _rule_candidates(source, text, taxonomy)
+            if base_candidates:
+                base_source = source
+                break
+        best_score = base_candidates[0][0] if base_candidates else 0
+        return category_id, "override", {
+            "method": "override",
+            "winner": {
+                "category_id": category_id,
+                "match_count": 0,
+                "matched_signals": [],
+                "priority": priorities[category_id],
+                "tie_detected": False,
+            },
+            "matched_signals": [],
+            "runner_ups": [],
+            "base_method": base_source,
+            "base_candidates": [
+                _candidate_document(candidate, best_score)
+                for candidate in base_candidates
+            ],
+            "rationale": taxonomy["overrideRationales"][skill_id],
+            "resolution_status": "override",
+            "review_state": "unreviewed",
+        }
 
-    slug, combined = _classification_text(skill_id, description)
     for source, text in (("slug", slug), ("description", combined)):
-        best_category = ""
-        best_score = 0
-        best_priority = -1
-        best_patterns: list[str] = []
-        for category in taxonomy["categories"]:
-            if category.get("fallback"):
-                continue
-            matched = [
-                pattern
-                for pattern in category["patterns"]
-                if not (source == "description" and pattern in DESCRIPTION_EXCLUDED_PATTERNS)
-                and re.search(pattern, text, re.IGNORECASE)
-            ]
-            score = len(matched)
-            priority = category["priority"]
-            if score and (score, priority) > (best_score, best_priority):
-                best_score = score
-                best_priority = priority
-                best_category = category["id"]
-                best_patterns = matched
-        if best_category:
-            return best_category, f"{source}:" + ",".join(best_patterns)
+        candidates = _rule_candidates(source, text, taxonomy)
+        if candidates:
+            best_score, best_priority, best_category, best_patterns = candidates[0]
+            tied = any(item[0] == best_score for item in candidates[1:])
+            return best_category, f"{source}:" + ",".join(best_patterns), {
+                "method": source,
+                "winner": {
+                    "category_id": best_category,
+                    "match_count": best_score,
+                    "matched_signals": best_patterns,
+                    "priority": best_priority,
+                    "tie_detected": tied,
+                },
+                "matched_signals": best_patterns,
+                "runner_ups": [
+                    _candidate_document(item, best_score)
+                    for item in candidates[1:]
+                ],
+                "resolution_status": "priority-tie" if tied else "rule-match",
+                "review_state": "unreviewed",
+            }
     fallback = next(item["id"] for item in taxonomy["categories"] if item.get("fallback"))
-    return fallback, "fallback"
+    return fallback, "fallback", {
+        "method": "fallback",
+        "winner": {
+            "category_id": fallback,
+            "match_count": 0,
+            "matched_signals": [],
+            "priority": priorities[fallback],
+            "tie_detected": False,
+        },
+        "matched_signals": [],
+        "runner_ups": [],
+        "resolution_status": "fallback",
+        "review_state": "unreviewed",
+    }
 
 
-def _agent_usage(root: Path) -> tuple[dict[str, set[str]], set[str]]:
+def _agent_usage(
+    root: Path,
+) -> tuple[dict[str, set[tuple[str, str]]], dict[str, set[str]]]:
     manifest = load_manifest(root)
-    usage: dict[str, set[str]] = defaultdict(set)
-    required: set[str] = set()
+    usage: dict[str, set[tuple[str, str]]] = defaultdict(set)
+    levels: dict[str, set[str]] = defaultdict(set)
     for agent in manifest["agents"]:
-        for skill in agent["skills"]["required"]:
-            usage[skill].add(agent["id"].upper())
-            required.add(skill)
-        for skill in agent["skills"].get("optional", []):
-            usage[skill].add(agent["id"].upper())
-    return usage, required
+        for level in ("required", "optional", "harnessSpecific"):
+            for skill in agent["skills"].get(level, []):
+                usage[skill].add((agent["id"].upper(), level))
+                levels[skill].add(level)
+    return usage, levels
+
+
+def _portability_class(levels: set[str]) -> str:
+    if "required" in levels:
+        return "portable-required"
+    if "optional" in levels:
+        return "portable-optional"
+    if "harnessSpecific" in levels:
+        return "harness-specific"
+    return "catalog-only"
 
 
 def _validate_taxonomy(taxonomy: dict[str, Any], skill_names: set[str]) -> None:
@@ -225,6 +321,11 @@ def _validate_taxonomy(taxonomy: dict[str, Any], skill_names: set[str]) -> None:
         raise ValueError(f"taxonomy overrides reference missing skills: {sorted(set(overrides) - skill_names)}")
     if set(overrides.values()) - known_categories:
         raise ValueError("taxonomy overrides reference unknown categories")
+    override_rationales = taxonomy.get("overrideRationales", {})
+    if set(override_rationales) != set(overrides):
+        raise ValueError("taxonomy override rationales must exactly match overrides")
+    if any(not isinstance(value, str) or len(value.strip()) < 20 for value in override_rationales.values()):
+        raise ValueError("taxonomy override rationales must be descriptive strings")
 
     risk_labels = [item["id"] for item in taxonomy.get("riskLabels", [])]
     if len(risk_labels) != len(set(risk_labels)):
@@ -246,14 +347,16 @@ def _validate_taxonomy(taxonomy: dict[str, Any], skill_names: set[str]) -> None:
 def build_entries(root: Path, taxonomy: dict[str, Any]) -> list[SkillEntry]:
     skill_names = physical_skill_names(root)
     _validate_taxonomy(taxonomy, skill_names)
-    usage, required = _agent_usage(root)
+    usage, levels_by_skill = _agent_usage(root)
     known_risks = {item["id"] for item in taxonomy.get("riskLabels", [])}
     entries: list[SkillEntry] = []
     for skill_id in sorted(skill_names):
         description, metadata_source = _display_description(
             root / "skills" / skill_id / "SKILL.md", skill_id
         )
-        category_id, classification = _classify(skill_id, description, taxonomy)
+        category_id, classification, classification_details = _classify(
+            skill_id, description, taxonomy
+        )
         review_signals = tuple(sorted(taxonomy.get("riskOverrides", {}).get(skill_id, [])))
         unknown_risks = set(review_signals) - known_risks
         if unknown_risks:
@@ -263,11 +366,25 @@ def build_entries(root: Path, taxonomy: dict[str, Any]) -> list[SkillEntry]:
                 skill_id=skill_id,
                 category_id=category_id,
                 description=description,
-                support_level="pack-required" if skill_id in required else "catalog",
-                used_by=tuple(sorted(usage.get(skill_id, set()))),
+                support_level=(
+                    "pack-required"
+                    if "required" in levels_by_skill.get(skill_id, set())
+                    else "catalog"
+                ),
+                used_by=tuple(
+                    sorted({agent for agent, _level in usage.get(skill_id, set())})
+                ),
+                assignments=tuple(
+                    SkillAssignment(agent=agent, level=level)
+                    for agent, level in sorted(usage.get(skill_id, set()))
+                ),
+                portability_class=_portability_class(
+                    levels_by_skill.get(skill_id, set())
+                ),
                 review_signals=review_signals,
                 description_status=_description_status(description),
                 classification=f"{classification};metadata:{metadata_source}",
+                classification_details=classification_details,
             )
         )
     return entries
@@ -288,6 +405,16 @@ def _escape_markdown(value: str) -> str:
 
 def _category_label(category: dict[str, Any]) -> str:
     return f"{category['emoji']} {category['title']}"
+
+
+def _support_label(entry: SkillEntry) -> str:
+    labels = {
+        "portable-required": "Portable required assignment · structure checked",
+        "portable-optional": "Portable optional assignment · structure checked",
+        "harness-specific": "Harness-specific assignment · generic installer skips",
+        "catalog-only": "Catalog only",
+    }
+    return labels[entry.portability_class]
 
 
 def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
@@ -314,11 +441,7 @@ def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
     ]
     for item in taxonomy["featured"]:
         entry = by_id[item["skill"]]
-        support = (
-            "Referenced by active Agent · structure checked"
-            if entry.support_level == "pack-required"
-            else "Catalog only"
-        )
+        support = _support_label(entry)
         if entry.review_signals:
             support += " · review: " + ", ".join(entry.review_signals)
         lines.append(
@@ -360,11 +483,7 @@ def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
         )
         for entry in by_category[category_id]:
             roles = ", ".join(entry.used_by)
-            support = (
-                "Referenced by active Agent · structure checked"
-                if entry.support_level == "pack-required"
-                else "Catalog only"
-            )
+            support = _support_label(entry)
             if roles:
                 support += f" · {roles}"
             if entry.review_signals:
@@ -382,10 +501,12 @@ def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "## 🛡️ Support levels and evidence boundary",
+            "## 🛡️ Support, portability, and evidence boundary",
             "",
             "- **Curated:** reviewed and versioned inside a named distribution with its own sync policy.",
             "- **Pack-required:** referenced by an active Agent and covered by repository structure checks.",
+            "- **Portable optional:** assigned to an Agent but not required for installation.",
+            "- **Harness-specific:** assigned to an Agent but deliberately excluded from the generic installer because it assumes a named runtime or tool.",
             "- **Catalog:** tracked with a physical `SKILL.md`; behavior, dependencies, license, and harness support may still require review.",
             "- **External:** recommended by the manifest but not bundled in this repository.",
             "",
@@ -401,6 +522,7 @@ def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
 def render_json(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
     counts = category_counts(entries, taxonomy)
     document = {
+        "$schema": "../config/skill-index.schema.json",
         "schemaVersion": 1,
         "inventorySemantics": "tracked physical top-level directories with SKILL.md",
         "inventoryCount": len(entries),
@@ -418,6 +540,7 @@ def render_json(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
             {
                 **asdict(entry),
                 "used_by": list(entry.used_by),
+                "assignments": [asdict(item) for item in entry.assignments],
                 "review_signals": list(entry.review_signals),
                 "path": f"skills/{entry.skill_id}/SKILL.md",
             }
@@ -434,7 +557,24 @@ def _write_or_check(path: Path, content: str, check: bool) -> bool:
             return False
         return True
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as handle:
+            handle.write(content)
+            handle.flush()
+            os.fsync(handle.fileno())
+            temporary_path = Path(handle.name)
+        os.replace(temporary_path, path)
+    finally:
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
     print(f"WROTE {path}")
     return True
 
