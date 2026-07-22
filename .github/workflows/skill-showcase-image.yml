@@ -17,7 +17,7 @@ jobs:
   update-showcase:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Validate deterministic repository contracts
         run: python3 "$GITHUB_WORKSPACE/scripts/validate_repository.py"
