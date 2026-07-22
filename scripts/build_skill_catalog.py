@@ -27,6 +27,8 @@ DESCRIPTION_EXCLUDED_PATTERNS = {
     "(?:^|-)skills?(?:-|$)",
     "(?:^|-)model(?:-|$)",
     "team",
+    "permission",
+    "secret",
 }
 DESCRIPTION_REVIEW_PATTERN = re.compile(
     r"(?i)(?:\bnever lost\b|\bguaranteed\b|\bproduction[- ]ready\b|"
@@ -162,16 +164,25 @@ def _classification_text(skill_id: str, description: str) -> tuple[str, str]:
 
 
 def _rule_candidates(
-    source: str, text: str, taxonomy: dict[str, Any]
+    source: str,
+    text: str,
+    taxonomy: dict[str, Any],
+    *,
+    pattern_field: str = "patterns",
 ) -> list[tuple[int, int, str, list[str]]]:
     candidates: list[tuple[int, int, str, list[str]]] = []
     for category in taxonomy["categories"]:
-        if category.get("fallback"):
+        patterns = category.get(pattern_field, [])
+        if category.get("fallback") and not patterns:
             continue
         matched = [
             pattern
-            for pattern in category["patterns"]
-            if not (source == "description" and pattern in DESCRIPTION_EXCLUDED_PATTERNS)
+            for pattern in patterns
+            if not (
+                pattern_field == "patterns"
+                and source == "description"
+                and pattern in DESCRIPTION_EXCLUDED_PATTERNS
+            )
             and re.search(pattern, text, re.IGNORECASE)
         ]
         if matched:
@@ -204,8 +215,14 @@ def _classify(
         category_id = str(overrides[skill_id])
         base_source = "fallback"
         base_candidates: list[tuple[int, int, str, list[str]]] = []
-        for source, text in (("slug", slug), ("description", combined)):
-            base_candidates = _rule_candidates(source, text, taxonomy)
+        for source, text, pattern_field in (
+            ("outcome", description.lower(), "outcomePatterns"),
+            ("slug", slug, "patterns"),
+            ("description", combined, "patterns"),
+        ):
+            base_candidates = _rule_candidates(
+                source, text, taxonomy, pattern_field=pattern_field
+            )
             if base_candidates:
                 base_source = source
                 break
@@ -231,28 +248,50 @@ def _classify(
             "review_state": "unreviewed",
         }
 
-    for source, text in (("slug", slug), ("description", combined)):
-        candidates = _rule_candidates(source, text, taxonomy)
-        if candidates:
-            best_score, best_priority, best_category, best_patterns = candidates[0]
-            tied = any(item[0] == best_score for item in candidates[1:])
-            return best_category, f"{source}:" + ",".join(best_patterns), {
-                "method": source,
-                "winner": {
-                    "category_id": best_category,
-                    "match_count": best_score,
-                    "matched_signals": best_patterns,
-                    "priority": best_priority,
-                    "tie_detected": tied,
-                },
+    outcome_candidates = _rule_candidates(
+        "outcome",
+        description.lower(),
+        taxonomy,
+        pattern_field="outcomePatterns",
+    )
+    slug_candidates = _rule_candidates("slug", slug, taxonomy)
+    selected: tuple[str, list[tuple[int, int, str, list[str]]]] | None = None
+    if outcome_candidates and (
+        not slug_candidates
+        or outcome_candidates[0][2] == slug_candidates[0][2]
+        or outcome_candidates[0][0] >= 2
+    ):
+        selected = ("outcome", outcome_candidates)
+    elif slug_candidates:
+        selected = ("slug", slug_candidates)
+    else:
+        description_candidates = _rule_candidates(
+            "description", combined, taxonomy
+        )
+        if description_candidates:
+            selected = ("description", description_candidates)
+
+    if selected:
+        source, candidates = selected
+        best_score, best_priority, best_category, best_patterns = candidates[0]
+        tied = any(item[0] == best_score for item in candidates[1:])
+        return best_category, f"{source}:" + ",".join(best_patterns), {
+            "method": source,
+            "winner": {
+                "category_id": best_category,
+                "match_count": best_score,
                 "matched_signals": best_patterns,
-                "runner_ups": [
-                    _candidate_document(item, best_score)
-                    for item in candidates[1:]
-                ],
-                "resolution_status": "priority-tie" if tied else "rule-match",
-                "review_state": "unreviewed",
-            }
+                "priority": best_priority,
+                "tie_detected": tied,
+            },
+            "matched_signals": best_patterns,
+            "runner_ups": [
+                _candidate_document(item, best_score)
+                for item in candidates[1:]
+            ],
+            "resolution_status": "priority-tie" if tied else "rule-match",
+            "review_state": "unreviewed",
+        }
     fallback = next(item["id"] for item in taxonomy["categories"] if item.get("fallback"))
     return fallback, "fallback", {
         "method": "fallback",
@@ -297,8 +336,8 @@ def _portability_class(levels: set[str]) -> str:
 def _validate_taxonomy(taxonomy: dict[str, Any], skill_names: set[str]) -> None:
     if taxonomy.get("$schema") != "./skill-taxonomy.schema.json":
         raise ValueError("taxonomy must reference ./skill-taxonomy.schema.json")
-    if taxonomy.get("schemaVersion") != 1:
-        raise ValueError("taxonomy schemaVersion must be 1")
+    if taxonomy.get("schemaVersion") != 2:
+        raise ValueError("taxonomy schemaVersion must be 2")
 
     categories = taxonomy.get("categories", [])
     category_ids = [item["id"] for item in categories]
@@ -310,7 +349,7 @@ def _validate_taxonomy(taxonomy: dict[str, Any], skill_names: set[str]) -> None:
     if sum(bool(item.get("fallback")) for item in categories) != 1:
         raise ValueError("taxonomy must define exactly one fallback category")
     for category in categories:
-        for pattern in category["patterns"]:
+        for pattern in category["patterns"] + category["outcomePatterns"]:
             if not pattern:
                 raise ValueError(f"empty pattern in category {category['id']}")
             re.compile(pattern)
@@ -431,6 +470,8 @@ def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
         "# 🧭 Skill catalog",
         "",
         "Find a skill by the outcome you need. This index is generated from tracked, physical `SKILL.md` entrypoints; catalog inclusion proves structure, not behavior or cross-harness compatibility.",
+        "",
+        "**Classification evidence:** inspect the fixed [Gold Set methodology](../docs/skill-taxonomy-gold-set.md) and the machine-readable [reviewed-set agreement report](./skill-taxonomy-evaluation.json). The score measures agreement on reviewed primary-outcome labels; it is not a Skill quality or runtime-success score.",
         "",
         "## 🚀 Suggested starting points",
         "",

@@ -7,14 +7,14 @@
   "required": ["schemaVersion", "categories", "overrides", "overrideRationales", "riskLabels", "riskOverrides", "featured"],
   "properties": {
     "$schema": {"type": "string"},
-    "schemaVersion": {"const": 1},
+    "schemaVersion": {"const": 2},
     "categories": {
       "type": "array",
       "minItems": 8,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "emoji", "title", "description", "priority", "patterns"],
+        "required": ["id", "emoji", "title", "description", "priority", "patterns", "outcomePatterns"],
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
           "emoji": {"type": "string", "minLength": 1, "maxLength": 4},
@@ -22,6 +22,7 @@
           "description": {"type": "string", "minLength": 12},
           "priority": {"type": "integer", "minimum": 0},
           "patterns": {"type": "array", "items": {"type": "string"}},
+          "outcomePatterns": {"type": "array", "items": {"type": "string"}},
           "fallback": {"const": true}
         }
       }

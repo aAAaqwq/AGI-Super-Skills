@@ -48,9 +48,9 @@
     {
       "id": "catalog-discovery",
       "title": "Skill taxonomy and discovery catalog",
-      "interface": "config/skill-taxonomy.json in; catalog/README.md and catalog/skill-index.json out.",
-      "implementations": ["scripts/build_skill_catalog.py", "config/skill-taxonomy.json", "catalog"],
-      "ownershipPrefixes": ["catalog", "config/skill-taxonomy.json", "config/skill-index.schema.json", "scripts/build_skill_catalog.py"],
+      "interface": "Taxonomy and reviewed Gold labels in; catalog indexes and semantic evaluation evidence out.",
+      "implementations": ["scripts/build_skill_catalog.py", "scripts/build_skill_taxonomy_evaluation.py", "config/skill-taxonomy.json", "config/skill-taxonomy-gold.json", "catalog"],
+      "ownershipPrefixes": ["catalog", "config/skill-taxonomy.json", "config/skill-taxonomy-gold.json", "config/skill-taxonomy-gold.schema.json", "config/skill-taxonomy-evaluation.schema.json", "config/skill-index.schema.json", "docs/skill-taxonomy-gold-set.md", "scripts/build_skill_catalog.py", "scripts/build_skill_taxonomy_evaluation.py"],
       "depth": "composed",
       "seams": ["skill-library", "public-navigation", "verification-evidence"],
       "leverage": "A single classification rule improves human browsing and machine discovery.",
@@ -128,10 +128,14 @@
     {"path": "agents", "role": "authored-source", "module": "team-composition", "authority": false},
     {"path": "assets", "role": "public-navigation", "module": "public-navigation", "authority": false},
     {"path": "catalog", "role": "generated-output", "module": "catalog-discovery", "authority": false, "generatedBy": "scripts/build_skill_catalog.py", "verify": "npm run check:skills"},
+    {"path": "catalog/skill-taxonomy-evaluation.json", "role": "generated-output", "module": "catalog-discovery", "authority": false, "generatedBy": "scripts/build_skill_taxonomy_evaluation.py", "verify": "npm run check:taxonomy-evaluation"},
     {"path": "catalog/skill-quality.json", "role": "generated-output", "module": "verification-evidence", "authority": false, "generatedBy": "scripts/audit_skill_quality.py", "verify": "npm run check:skill-quality"},
     {"path": "config", "role": "governance", "module": "governance-memory", "authority": false},
     {"path": "config/external-skill-sources.json", "role": "authored-authority", "module": "governance-memory", "authority": true},
     {"path": "config/skill-index.schema.json", "role": "authored-source", "module": "catalog-discovery", "authority": false},
+    {"path": "config/skill-taxonomy-evaluation.schema.json", "role": "authored-source", "module": "catalog-discovery", "authority": false},
+    {"path": "config/skill-taxonomy-gold.json", "role": "authored-authority", "module": "catalog-discovery", "authority": true},
+    {"path": "config/skill-taxonomy-gold.schema.json", "role": "authored-source", "module": "catalog-discovery", "authority": false},
     {"path": "config/repository-architecture.json", "role": "authored-authority", "module": "governance-memory", "authority": true},
     {"path": "config/skill-quality-baseline.json", "role": "authored-authority", "module": "verification-evidence", "authority": true},
     {"path": "config/skill-taxonomy.json", "role": "authored-authority", "module": "catalog-discovery", "authority": true},
@@ -139,6 +143,7 @@
     {"path": "cookbook", "role": "public-navigation", "module": "public-navigation", "authority": false},
     {"path": "design-qa.md", "role": "evidence", "module": "verification-evidence", "authority": false},
     {"path": "docs", "role": "public-navigation", "module": "public-navigation", "authority": false},
+    {"path": "docs/skill-taxonomy-gold-set.md", "role": "authored-source", "module": "catalog-discovery", "authority": false},
     {"path": "docs/adr", "role": "governance", "module": "governance-memory", "authority": false},
     {"path": "docs/assets/star-history.svg", "role": "generated-output", "module": "public-navigation", "authority": false, "generatedBy": "scripts/build_site_data.py", "verify": "npm run test:repository"},
     {"path": "docs/data/repo-stats.json", "role": "generated-output", "module": "public-navigation", "authority": false, "generatedBy": "scripts/build_site_data.py", "verify": "npm run test:repository"},
@@ -154,6 +159,7 @@
     {"path": "requirements-dev.txt", "role": "implementation", "module": "verification-evidence", "authority": false},
     {"path": "scripts", "role": "implementation", "module": "verification-evidence", "authority": false},
     {"path": "scripts/build_skill_catalog.py", "role": "implementation", "module": "catalog-discovery", "authority": false},
+    {"path": "scripts/build_skill_taxonomy_evaluation.py", "role": "implementation", "module": "catalog-discovery", "authority": false},
     {"path": "setup.md", "role": "public-navigation", "module": "safe-installation", "authority": false},
     {"path": "skills", "role": "authored-authority", "module": "skill-library", "authority": true},
     {"path": "starter-kits", "role": "authored-source", "module": "team-composition", "authority": false},
@@ -183,7 +189,8 @@
     "requiredDecisions": [
       "docs/adr/0001-canonical-inventory-and-generated-outputs.md",
       "docs/adr/0002-generic-workspace-and-curated-distributions.md",
-      "docs/adr/0003-structural-evidence-and-runtime-receipts.md"
+      "docs/adr/0003-structural-evidence-and-runtime-receipts.md",
+      "docs/adr/0004-reviewed-skill-taxonomy-evaluation.md"
     ]
   }
 }

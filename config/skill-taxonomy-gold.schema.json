@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aaaaqwq.github.io/AGI-Super-Team/schemas/skill-taxonomy-gold.schema.json",
+  "title": "Reviewed Skill taxonomy Gold Set",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "annotation", "sampling", "labels"],
+  "properties": {
+    "$schema": {"const": "./skill-taxonomy-gold.schema.json"},
+    "schemaVersion": {"const": 1},
+    "annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "humanApproved", "rubric", "labelSetSha256"],
+      "properties": {
+        "mode": {"const": "independent-agent-manual-review"},
+        "humanApproved": {"const": false},
+        "rubric": {"const": "../docs/skill-taxonomy-gold-set.md"},
+        "labelSetSha256": {"const": "78e6b44843fc60d08d1a9cc3fb728fdfec2eccfc35b812064b53342559ba7da1"}
+      }
+    },
+    "sampling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "seed", "perPredictedCategory", "baseCommit", "baseCatalogSha256", "candidateSetSha256"],
+      "properties": {
+        "method": {"const": "predicted-category-balanced-difficulty-first-stable-hash"},
+        "seed": {"const": "semantic-gold-v1"},
+        "perPredictedCategory": {"const": 10},
+        "baseCommit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "baseCatalogSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "candidateSetSha256": {"const": "7765f415e2be2d7b93341dc8192837a06bebb5a9c8fea17ab5c06d8326473267"}
+      }
+    },
+    "labels": {
+      "type": "array",
+      "minItems": 140,
+      "maxItems": 140,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/label"}
+    }
+  },
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"},
+    "category": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "label": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skill_id", "expected_category", "baseline_predicted_category", "baseline_resolution_status", "split", "rationale", "confidence", "reviewers", "review_status", "reviewed_at", "source_sha256"],
+      "properties": {
+        "skill_id": {"$ref": "#/$defs/identifier"},
+        "expected_category": {"$ref": "#/$defs/category"},
+        "baseline_predicted_category": {"$ref": "#/$defs/category"},
+        "baseline_resolution_status": {"enum": ["rule-match", "priority-tie", "override", "fallback"]},
+        "split": {"enum": ["development", "validation"]},
+        "rationale": {"type": "string", "minLength": 20, "maxLength": 240},
+        "confidence": {"enum": ["high", "medium", "low"]},
+        "reviewers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^reviewer-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        },
+        "review_status": {"enum": ["primary", "cross-reviewed", "adjudicated"]},
+        "reviewed_at": {"type": "string", "format": "date"},
+        "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

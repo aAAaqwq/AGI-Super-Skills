@@ -1,6 +1,6 @@
 {
   "$schema": "./skill-taxonomy.schema.json",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "categories": [
     {
       "id": "ai-agents-orchestration",
@@ -8,7 +8,8 @@
       "title": "AI Agents & Orchestration",
       "description": "Coordinate agents, context, memory, models, prompts, and tool protocols.",
       "priority": 75,
-      "patterns": ["(?:^|-)agent(?:-|$)", "orchestrat", "multi-agent", "subagent", "dispatcher", "memory", "context", "prompt", "\\bllm\\b", "\\bmcp\\b", "claude", "codex", "(?:^|-)model(?:-|$)", "(?:^|-)skills?(?:-|$)", "ruflo", "openclaw", "clawrouter"]
+      "patterns": ["(?:^|-)agent(?:-|$)", "orchestrat", "multi-agent", "subagent", "dispatcher", "memory", "context", "prompt", "\\bllm\\b", "\\bmcp\\b", "claude", "codex", "(?:^|-)model(?:-|$)", "(?:^|-)skills(?:-|$)", "ruflo", "openclaw", "clawrouter", "(?:^|-)subagent-driven(?:-|$)", "(?:^|-)codex-(?:cc|cli|guide)(?:-|$)", "(?:^|-)task-(?:supervisor|dispatcher)(?:-|$)", "(?:^|-)(?:creating|writing|authoring|testing)-skills(?:-|$)", "(?:^|-)using-superpowers(?:-|$)", "(?:^|-)skills-(?:hub|repository|index|library)(?:-|$)", "(?:^|-)(?:skill-(?:authoring|creation|review|quality|evaluation|config|configuration)|work-to-skill)(?:-|$)", "\\bgep-a2a\\b", "\\ba2a protocol\\b", "collaborative evolution marketplace"],
+      "outcomePatterns": ["(?:dispatch|spawn|coordinate|orchestrate).{0,24}(?:agents?|subagents?)", "\\bsubagent-driven\\b", "(?:invoke|discover|install|author|write|create).{0,24}(?:agent )?skills?", "(?:evaluate|score|review|package|encapsulate).{0,24}(?:agent )?skills?", "(?:评估|评分|审查|封装|创建).{0,16}(?:Skill|技能)", "\\b(?:a2a|agent-to-agent) protocol\\b", "\\bfabric patterns?\\b", "(?:agent|model|inference|session).{0,24}(?:context|routing|orchestration|optimization)"]
     },
     {
       "id": "software-engineering",
@@ -16,7 +17,8 @@
       "title": "Software Engineering",
       "description": "Build, test, review, debug, and maintain applications and developer tooling.",
       "priority": 80,
-      "patterns": ["code", "developer", "development", "frontend", "backend", "react", "tailwind", "\\bcss\\b", "\\bapi\\b", "database", "postgres", "redis", "\\bsql\\b", "testing", "test-", "tdd", "debug", "architecture", "git-", "github", "gitlab", "commit", "(?:^|-)cli(?:-|$)|\\bcli\\b", "electron", "supabase", "webapp"]
+      "patterns": ["(?:^|-)code(?:-|$)|\\bcode\\b", "\\bcodebases?\\b", "developer", "development", "frontend", "backend", "react", "tailwind", "\\bcss\\b", "\\bapi\\b", "database", "postgres", "redis", "\\bsql\\b", "testing", "test-", "tdd", "debug", "architecture", "git-", "(?:^|-)github-(?:actions?|api|app|cli|integration|issues?|pr|pull-request|releases?|repos?|workflows?)(?:-|$)", "gitlab", "commit", "(?:^|-)cli(?:-|$)|\\bcli\\b", "electron", "supabase", "webapp", "(?:^|-)api-design(?:-|$)", "(?:^|-)(?:software|system)-architecture(?:-|$)", "(?:^|-)static-code(?:-|$)", "(?:^|-)condition-based-waiting(?:-|$)", "(?:^|-)simplification-cascades(?:-|$)", "(?:^|-)(?:senior-)?architect(?:-|$)", "code repository|source code"],
+      "outcomePatterns": ["\\b(?:api|rest|graphql|grpc) design\\b", "\\b(?:software|system) architecture\\b", "\\b(?:static|source) code analysis\\b", "\\bcode (?:repository|review|testing|debugging)\\b", "(?:async|flaky).{0,20}tests?", "(?:github )?issues?.{0,48}(?:implement fixes|fix bugs)", "open (?:pull requests?|prs?)"]
     },
     {
       "id": "cloud-devops-reliability",
@@ -24,7 +26,8 @@
       "title": "Cloud, DevOps & Reliability",
       "description": "Deploy, observe, troubleshoot, and operate cloud and local infrastructure.",
       "priority": 85,
-      "patterns": ["deploy", "devops", "cloud", "\\baws\\b", "kubernetes", "docker", "nginx", "observability", "monitoring", "healthcheck", "incident", "linux", "sysadmin", "sentry", "datadog", "grafana", "vercel", "cloudflare", "render-", "ssh", "tailscale", "proxmox", "distributed-tracing", "runbook"]
+      "patterns": ["deploy", "devops", "cloud", "\\baws\\b", "kubernetes", "docker", "nginx", "observability", "monitoring", "healthcheck", "incident", "linux", "sysadmin", "sentry", "datadog", "grafana", "vercel", "cloudflare", "render-", "ssh", "tailscale", "proxmox", "distributed-tracing", "runbook", "(?:^|-)microservices?(?:-|$)", "(?:^|-)observability-(?:design|designer|strategy)(?:-|$)"],
+      "outcomePatterns": ["\\b(?:service mesh|observability|distributed tracing|sli|slo)\\b", "\\b(?:datadog|grafana|kubernetes|docker)\\b", "(?:cloud|infrastructure).{0,32}(?:cost|spend|expense|rightsizing|optimization)", "(?:incident|reliability).{0,24}(?:response|runbook|operations)"]
     },
     {
       "id": "data-analytics-research",
@@ -32,7 +35,8 @@
       "title": "Data, Analytics & Research",
       "description": "Collect evidence, search sources, analyze data, and communicate findings.",
       "priority": 95,
-      "patterns": ["research", "data", "analytics", "analysis", "search", "scrap", "crawl", "arxiv", "\\bcsv\\b", "\\betl\\b", "duckdb", "business-intelligence", "dashboard", "metrics", "rag", "vector", "knowledge", "news", "genome", "bio-", "synthesizer", "experiment"]
+      "patterns": ["research", "(?:^|-)data(?:-|$)|\\bdata\\b", "analytics", "(?:^|-)(?:data|statistical|cohort|source|evidence|market-sizing)-analysis(?:-|$)|\\b(?:data|statistical|cohort|source|evidence|market sizing) analysis\\b", "search", "scrap", "crawl", "arxiv", "\\bcsv\\b", "\\betl\\b", "duckdb", "business-intelligence", "dashboard", "metrics", "rag", "vector", "knowledge", "news", "genome", "bio-", "synthesizer", "experiment", "(?:^|-)business-(?:analyst|analytics|intelligence)(?:-|$)", "(?:^|-)(?:daily|today)-trending(?:-|$)|热榜|热搜", "(?:^|-)market-intelligence(?:-|$)", "(?:^|-)model-usage(?:-|$)", "(?:^|-)knowledge-extract(?:or)?(?:-|$)", "(?:^|-)vcf(?:-|$)|\\bvcf\\b"],
+      "outcomePatterns": ["\\b(?:business|market) intelligence\\b", "\\bresearch (?:a|any|the) topic\\b", "\\b(?:vcf|clinvar|gnomad|bioinformatics)\\b", "(?:scrape|extract|crawl|collect).{0,28}(?:data|images?|web|urls?|evidence)", "(?:analy[sz]e|measure).{0,24}(?:data|usage|metrics|evidence)"]
     },
     {
       "id": "security-privacy-legal",
@@ -40,7 +44,8 @@
       "title": "Security, Privacy & Legal",
       "description": "Review security, privacy, compliance, permissions, contracts, and legal risk.",
       "priority": 115,
-      "patterns": ["security", "privacy", "compliance", "gdpr", "legal", "contract", "auth-", "secret", "permission", "key-rotation", "audit", "pci", "customs", "employment-contract"]
+      "patterns": ["security", "privacy", "compliance", "gdpr", "legal", "contract", "auth-", "secret", "permission", "key-rotation", "(?:security|privacy|compliance|legal)-audit|audit-(?:security|privacy|compliance|legal)", "pci", "customs", "employment-contract", "(?:^|-)(?:provider|api)-key-(?:manager|rotation|sync)(?:-|$)", "(?:^|-)dependency-auditor(?:-|$)"],
+      "outcomePatterns": ["(?:audit|rotate|manage|sync).{0,24}(?:api keys?|credentials?|secrets?)", "(?:security|privacy|compliance|legal).{0,24}(?:audit|review|risk|assessment)", "\\b(?:gdpr|pci dss|threat model)\\b"]
     },
     {
       "id": "product-design-ux",
@@ -48,7 +53,8 @@
       "title": "Product, Design & UX",
       "description": "Shape product requirements, interfaces, design systems, and user experience.",
       "priority": 90,
-      "patterns": ["(?:^|-)product(?:-|$)|\\bproduct\\b", "\\bprd\\b", "design", "\\bux\\b", "\\bui\\b", "figma", "canvas", "roadmap", "user-story", "requirements", "prioritization", "feature-", "style-guide", "web-artifacts", "accessibility"]
+      "patterns": ["(?:^|-)product(?:-|$)|\\bproduct\\b", "\\bprd\\b", "design", "\\bux\\b", "\\bui\\b", "figma", "canvas", "roadmap", "user-story", "requirements", "prioritization", "feature-", "style-guide", "web-artifacts", "accessibility"],
+      "outcomePatterns": ["\\b(?:product|ux|ui|visual) (?:design|vision|strategy)\\b", "\\buser experience\\b", "(?:design|build).{0,24}(?:interface|design system|prototype)", "\\bfigma\\b|(?:audit|design|test).{0,20}(?:accessibility|wcag)", "\\bwcag\\b", "(?:wcag|accessibility).{0,28}(?:audit|testing|barrier|remediation|inclusive)"]
     },
     {
       "id": "marketing-seo-growth",
@@ -56,7 +62,8 @@
       "title": "Marketing, SEO & Growth",
       "description": "Acquire audiences through positioning, campaigns, search, ads, and social growth.",
       "priority": 105,
-      "patterns": ["marketing", "\\bseo\\b", "growth", "\\bads?\\b", "campaign", "social", "influencer", "traffic", "viral", "brand", "competitor", "competitive", "domain-name", "geo-content", "serp", "acquisition", "postbridge"]
+      "patterns": ["marketing", "\\bseo\\b", "growth", "\\bads?\\b", "(?:^|-)campaigns?(?:-|$)|\\bcampaigns?\\b", "social", "influencer", "(?:^|-)(?:traffic-(?:growth|acquisition|seo)|(?:web|site|organic|search|social|paid)-traffic)(?:-|$)|\\b(?:web|site|organic|search|social|paid) traffic\\b", "(?:^|-)viral-(?:content|campaign|growth)(?:-|$)|\\bviral (?:content|campaign|growth)\\b", "brand", "competitor", "competitive", "domain-name", "geo-content", "serp", "acquisition", "postbridge"],
+      "outcomePatterns": ["(?:optimize|grow|acquire).{0,24}(?:search traffic|audience|customers|conversions)", "\\b(?:seo|search acquisition|ad campaign|brand positioning)\\b", "(?:launch|manage).{0,20}(?:campaigns?|ads?)"]
     },
     {
       "id": "content-media-publishing",
@@ -64,7 +71,8 @@
       "title": "Content, Media & Publishing",
       "description": "Create, edit, repurpose, and publish writing, images, audio, and video.",
       "priority": 100,
-      "patterns": ["content", "writing", "writer", "article", "copywriting", "copy-edit", "video", "image", "media", "publish", "podcast", "slide", "pptx", "docx", "\\bpdf\\b", "youtube", "subtitle", "lyrics", "infographic", "typography", "ffmpeg", "suno"]
+      "patterns": ["content", "writing", "writer", "article", "copywriting", "copy-edit", "video", "image", "media", "publish", "podcast", "slide", "pptx", "docx", "\\bpdf\\b", "youtube", "subtitle", "lyrics", "infographic", "typography", "ffmpeg", "suno", "(?:^|-)(?:marketing-videos?|video-(?:ad|creative|production)|script-writing|video-script|storyboard|doc-coauthor(?:ing)?|internal-comms)(?:-|$)"],
+      "outcomePatterns": ["(?:write|create|produce|edit).{0,28}(?:video|script|storyboard|article|newsletter|content|media)", "(?:record|edit|transcode).{0,24}(?:audio|video|podcast)", "(?:publish|repurpose).{0,24}(?:article|video|content|media)"]
     },
     {
       "id": "sales-crm-customer-success",
@@ -72,7 +80,8 @@
       "title": "Sales, CRM & Customer Success",
       "description": "Find, win, onboard, support, and retain customers with accountable workflows.",
       "priority": 110,
-      "patterns": ["sales", "lead", "\\bcrm\\b", "customer", "account-executive", "outreach", "cold-email", "hubspot", "salesforce", "pipedrive", "close-automation", "intercom", "freshdesk", "freshservice", "zendesk", "spin-selling", "sandler", "negotiation", "after-sales", "helpdesk", "client-"]
+      "patterns": ["sales", "lead", "\\bcrm\\b", "customer", "account-executive", "outreach", "cold-email", "hubspot", "salesforce", "pipedrive", "close-automation", "intercom", "freshdesk", "freshservice", "zendesk", "spin-selling", "sandler", "negotiation", "after-sales", "helpdesk", "client-", "(?:^|-)activecampaign(?:-|$)", "(?:^|-)outbound-email(?:-|$)", "(?:^|-)linkedin-(?:cdp|outreach|lead|sales|connect)(?:-|$)"],
+      "outcomePatterns": ["(?:manage|qualify|enrich|convert).{0,24}(?:leads?|prospects?|customers?|crm)", "(?:cold|outbound).{0,16}(?:email|outreach|sales)", "\\b(?:sales pipeline|customer success|crm contacts?)\\b"]
     },
     {
       "id": "finance-trading-markets",
@@ -80,7 +89,8 @@
       "title": "Finance, Trading & Markets",
       "description": "Analyze markets, backtest strategies, track portfolios, and review financial risk.",
       "priority": 120,
-      "patterns": ["financ", "trading", "trade-", "crypto", "\\bbtc\\b", "fund", "stock", "portfolio", "backtest", "quant", "investment", "equity", "polymarket", "defi", "payment", "billing", "invoice", "bookkeeping", "expense", "stripe", "bankr", "alpha101", "options-flow", "whale", "market-movers", "market-price", "market-sentiment", "technical-analysis"]
+      "patterns": ["financ", "trading", "trade-", "crypto", "\\bbtc\\b", "fund", "stock", "portfolio", "backtest", "quant", "investment", "equity", "polymarket", "(?:^|-)binance(?:-|$)", "(?:^|-)(?:a-share|stock|equity)(?:-|$).{0,24}(?:analysis|screening)|A股|个股|选股", "(?:^|-)defi(?:-|$)|\\bdecentralized finance\\b", "payment", "billing", "invoice", "bookkeeping", "expense", "stripe", "bankr", "alpha101", "options-flow", "whale", "market-movers", "market-price", "market-sentiment", "technical-analysis", "(?:^|-)company-(?:analy[sz]er|valuation|fundamentals)(?:-|$)", "\\bp&l\\b|量化|交易|投资组合|风控"],
+      "outcomePatterns": ["(?:quantitative|algorithmic).{0,20}(?:trading|finance|investment)", "\\b(?:portfolio risk|company valuation)\\b", "(?:trade|execute|backtest|price|monitor).{0,24}(?:prediction markets?|binance|polymarket)", "量化思维", "大量小交易|投资组合|估值|交易风控"]
     },
     {
       "id": "business-operations-strategy",
@@ -88,7 +98,8 @@
       "title": "Business Operations & Strategy",
       "description": "Plan work, make decisions, manage teams, and improve operating systems.",
       "priority": 65,
-      "patterns": ["business", "strategy", "\\bceo\\b", "\\bokr\\b", "\\bkpi\\b", "project", "task", "planning", "priorit", "team", "company", "startup", "process", "operations", "delegat", "meeting", "daily-", "weekly-", "\\bhr\\b", "culture", "resume", "first-principles", "thinking-", "brainstorm", "decision", "scrum", "kanban"]
+      "patterns": ["business", "strategy", "\\bceo\\b", "\\bokr\\b", "\\bkpi\\b", "project", "task", "planning", "priorit", "team", "company", "startup", "process", "operations", "delegat", "meeting", "daily-(?:brief|planning|standup|operations|review)", "weekly-", "\\bhr\\b", "culture", "resume", "first-principles", "thinking-", "brainstorm", "decision", "scrum", "kanban", "(?:^|-)prioritization-funnel(?:-|$)", "(?:^|-)okrs?(?:-|$)", "(?:^|-)(?:vp|cpo|cto|coo|cfo|chro|cmo)-(?:readiness|advisor|operating)(?:-|$)"],
+      "outcomePatterns": ["\\bobjectives and key results\\b", "(?:recruiting|onboarding|employee management|offboarding)", "(?:prioritize|allocate).{0,24}(?:resources?|projects?|opportunities)", "(?:strategic|strategy).{0,24}(?:capability|skills?) gaps?", "战略.{0,20}能力.{0,12}(?:缺口|鸿沟)|能力.{0,12}(?:招聘|培训)", "(?:executive|leadership).{0,20}(?:operations|readiness|decision)"]
     },
     {
       "id": "apps-workflow-automation",
@@ -96,7 +107,8 @@
       "title": "Apps & Workflow Automation",
       "description": "Connect everyday apps, browsers, messaging systems, and repeatable workflows.",
       "priority": 70,
-      "patterns": ["automation", "workflow", "browser", "airtable", "asana", "basecamp", "box-", "calendly", "clickup", "coda", "confluence", "discord", "docusign", "dropbox", "gmail", "google-drive", "jira", "linear", "monday", "notion", "slack", "telegram", "trello", "whatsapp", "zoom", "make-automation", "email-", "calendar", "one-drive", "outlook"]
+      "patterns": ["automation", "workflow", "browser", "airtable", "asana", "basecamp", "box-", "calendly", "clickup", "coda", "confluence", "discord", "docusign", "dropbox", "gmail", "google-drive", "jira", "linear", "monday", "notion", "slack", "telegram", "trello", "whatsapp", "zoom", "make-automation", "email-", "calendar", "one-drive", "outlook", "(?:^|-)(?:agent-browser|browser-driver|computer-use|cua)(?:-|$)", "(?:^|-)(?:github|gitlab)-automation(?:-|$)", "(?:^|-)kanbanflow(?:-|$)"],
+      "outcomePatterns": ["(?:browser|web page).{0,28}(?:navigate|click|type|snapshot|fill forms?)", "(?:native gui|accessibility tree).{0,36}(?:snapshot|click|type|scroll)", "(?:manage|store|send).{0,36}(?:documents?|files?).{0,36}(?:google drive|locally|folders?)", "(?:operate|automate|update).{0,24}(?:jira|slack|notion|github|gitlab|trello)"]
     },
     {
       "id": "chinese-platform-workflows",
@@ -104,7 +116,8 @@
       "title": "Chinese Platform Workflows",
       "description": "Create, analyze, and publish for major Chinese-language platforms and channels.",
       "priority": 130,
-      "patterns": ["baidu", "douyin", "xhs", "xiaohongshu", "wechat", "weixin", "weibo", "juejin", "zsxq", "wemp", "wecom", "tianyancha", "feishu", "humanize-zh", "redbook", "binance-square", "baoyu-xhs", "md2wechat", "gzh", "ziliu"]
+      "patterns": ["baidu", "douyin", "xhs", "xiaohongshu", "wechat", "weixin", "weibo", "juejin", "zsxq", "wemp", "wecom", "tianyancha", "feishu", "humanize-zh", "redbook", "binance-square", "baoyu-xhs", "md2wechat", "gzh", "ziliu"],
+      "outcomePatterns": ["(?:\\b(?:douyin|xiaohongshu|wechat|weixin|weibo|juejin|feishu|zsxq|binance square)\\b|小红书|微信|微博|抖音|飞书|知识星球).{0,20}(?:publish|post|发布|运营|增长)"]
     },
     {
       "id": "general-utilities",
@@ -112,7 +125,8 @@
       "title": "Specialized Domains & Utilities",
       "description": "Domain-specific helpers and cross-functional tools that need a dedicated review path.",
       "priority": 0,
-      "patterns": [],
+      "patterns": ["(?:^|-)deep-?work(?:-|$)", "(?:^|-)file-(?:organizer|cleanup|deduplicator)(?:-|$)", "(?:^|-)quality-(?:convergence|acceptance)(?:-|$)|(?:^|-)acceptance-engine(?:-|$)"],
+      "outcomePatterns": ["\\b(?:yijing|liuyao|divination|fortune telling)\\b|易经|六爻|占卜", "(?:organize|deduplicate|clean up).{0,24}(?:local )?(?:files|folders)", "(?:deep work|focus sessions?)"],
       "fallback": true
     }
   ],
@@ -136,6 +150,7 @@
     "invoice-generator-agent": "finance-trading-markets",
     "security-audit": "security-privacy-legal",
     "seo-audit": "marketing-seo-growth",
+    "soushen-hunter": "data-analytics-research",
     "tdd-workflow": "software-engineering",
     "xiaohongshu-growth": "chinese-platform-workflows"
   },
@@ -159,6 +174,7 @@
     "invoice-generator-agent": "Invoice generation is a financial operations outcome despite the agent suffix.",
     "security-audit": "Security risk review is the explicit purpose and must outrank generic audit wording.",
     "seo-audit": "Search acquisition is the explicit outcome and must outrank generic audit wording.",
+    "soushen-hunter": "The opaque product name hides a Bing search and deep webpage extraction workflow whose primary output is structured research evidence.",
     "tdd-workflow": "The workflow exists to implement and verify software changes.",
     "xiaohongshu-growth": "The platform-specific publishing and growth workflow belongs with Chinese platforms."
   },
@@ -192,7 +208,7 @@
     {"skill": "tdd-workflow", "category": "software-engineering", "reason": "Drive implementation through a test-first loop."},
     {"skill": "deep-research", "category": "data-analytics-research", "reason": "Turn a question into an evidence-oriented research process."},
     {"skill": "seo-audit", "category": "marketing-seo-growth", "reason": "Review search discoverability with explicit checks."},
-    {"skill": "writing-skills", "category": "content-media-publishing", "reason": "Move from a bounded writing brief to a reviewable draft."},
+    {"skill": "writing-skills", "category": "ai-agents-orchestration", "reason": "Create and maintain reusable agent Skill instructions with a reviewable workflow."},
     {"skill": "security-audit", "category": "security-privacy-legal", "reason": "Inspect code and configuration for security risk."},
     {"skill": "backtest-expert", "category": "finance-trading-markets", "reason": "Review backtests without implying live-trading safety."},
     {"skill": "frontend-design-ultimate", "category": "product-design-ux", "reason": "Create a concrete interface direction and implementation."},

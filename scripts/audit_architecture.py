@@ -40,14 +40,21 @@ HARD_REQUIRED_DECISIONS = {
     "docs/adr/0001-canonical-inventory-and-generated-outputs.md",
     "docs/adr/0002-generic-workspace-and-curated-distributions.md",
     "docs/adr/0003-structural-evidence-and-runtime-receipts.md",
+    "docs/adr/0004-reviewed-skill-taxonomy-evaluation.md",
 }
 CRITICAL_PATH_CONTRACTS: dict[str, dict[str, Any]] = {
     "skills": {"role": "authored-authority", "module": "skill-library", "authority": True},
     "config/team-manifest.json": {"role": "authored-authority", "module": "team-composition", "authority": True},
     "config/skill-taxonomy.json": {"role": "authored-authority", "module": "catalog-discovery", "authority": True},
+    "config/skill-taxonomy-gold.json": {"role": "authored-authority", "module": "catalog-discovery", "authority": True},
+    "config/skill-taxonomy-gold.schema.json": {"role": "authored-source", "module": "catalog-discovery", "authority": False},
+    "config/skill-taxonomy-evaluation.schema.json": {"role": "authored-source", "module": "catalog-discovery", "authority": False},
+    "docs/skill-taxonomy-gold-set.md": {"role": "authored-source", "module": "catalog-discovery", "authority": False},
+    "scripts/build_skill_taxonomy_evaluation.py": {"role": "implementation", "module": "catalog-discovery", "authority": False},
     "config/repository-architecture.json": {"role": "authored-authority", "module": "governance-memory", "authority": True},
     "install.sh": {"role": "implementation", "module": "safe-installation", "authority": False},
     "catalog": {"role": "generated-output", "module": "catalog-discovery", "authority": False, "generatedBy": "scripts/build_skill_catalog.py", "verify": "npm run check:skills"},
+    "catalog/skill-taxonomy-evaluation.json": {"role": "generated-output", "module": "catalog-discovery", "authority": False, "generatedBy": "scripts/build_skill_taxonomy_evaluation.py", "verify": "npm run check:taxonomy-evaluation"},
     "catalog/skill-quality.json": {"role": "generated-output", "module": "verification-evidence", "authority": False, "generatedBy": "scripts/audit_skill_quality.py", "verify": "npm run check:skill-quality"},
     "docs/data/repo-stats.json": {"role": "generated-output", "module": "public-navigation", "authority": False, "generatedBy": "scripts/build_site_data.py", "verify": "npm run test:repository"},
     "docs/data/star-history.json": {"role": "generated-output", "module": "public-navigation", "authority": False, "generatedBy": "scripts/build_site_data.py", "verify": "npm run test:repository"},
@@ -298,15 +305,24 @@ def taxonomy_metrics(root: Path) -> dict[str, Any]:
 
         source = classification_source.split(":", 1)[0]
         slug, combined = builder._classification_text(entry.skill_id, entry.description)
-        text = slug if source == "slug" else combined
+        text = (
+            slug
+            if source == "slug"
+            else entry.description.lower()
+            if source == "outcome"
+            else combined
+        )
+        pattern_field = "outcomePatterns" if source == "outcome" else "patterns"
         scores: list[tuple[int, int, str]] = []
         for category in taxonomy["categories"]:
-            if category.get("fallback"):
+            patterns = category.get(pattern_field, [])
+            if category.get("fallback") and not patterns:
                 continue
             matched = [
-                pattern for pattern in category["patterns"]
+                pattern for pattern in patterns
                 if not (
-                    source == "description"
+                    pattern_field == "patterns"
+                    and source == "description"
                     and pattern in builder.DESCRIPTION_EXCLUDED_PATTERNS
                 )
                 and re.search(pattern, text, re.IGNORECASE)
