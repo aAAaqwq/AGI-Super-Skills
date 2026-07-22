@@ -22,20 +22,20 @@ For a first run, prefer a [starter kit](../starter-kits/) or the [Codex package]
 
 ## 🗂️ Browse by outcome
 
-This revision contains 793 canonical catalog entries. The number is generated here rather than used as a product claim.
+This revision contains 794 canonical catalog entries. The number is generated here rather than used as a product claim.
 
 | Category | Use it for | Entries |
 |---|---|---:|
-| [🤖 AI Agents & Orchestration](#ai-agents-orchestration) | Coordinate agents, context, memory, models, prompts, and tool protocols. | 76 |
+| [🤖 AI Agents & Orchestration](#ai-agents-orchestration) | Coordinate agents, context, memory, models, prompts, and tool protocols. | 77 |
 | [💻 Software Engineering](#software-engineering) | Build, test, review, debug, and maintain applications and developer tooling. | 80 |
 | [☁️ Cloud, DevOps & Reliability](#cloud-devops-reliability) | Deploy, observe, troubleshoot, and operate cloud and local infrastructure. | 29 |
-| [📊 Data, Analytics & Research](#data-analytics-research) | Collect evidence, search sources, analyze data, and communicate findings. | 74 |
+| [📊 Data, Analytics & Research](#data-analytics-research) | Collect evidence, search sources, analyze data, and communicate findings. | 75 |
 | [🛡️ Security, Privacy & Legal](#security-privacy-legal) | Review security, privacy, compliance, permissions, contracts, and legal risk. | 34 |
 | [🎨 Product, Design & UX](#product-design-ux) | Shape product requirements, interfaces, design systems, and user experience. | 26 |
 | [📈 Marketing, SEO & Growth](#marketing-seo-growth) | Acquire audiences through positioning, campaigns, search, ads, and social growth. | 51 |
 | [✍️ Content, Media & Publishing](#content-media-publishing) | Create, edit, repurpose, and publish writing, images, audio, and video. | 78 |
 | [🤝 Sales, CRM & Customer Success](#sales-crm-customer-success) | Find, win, onboard, support, and retain customers with accountable workflows. | 36 |
-| [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 65 |
+| [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 64 |
 | [🧭 Business Operations & Strategy](#business-operations-strategy) | Plan work, make decisions, manage teams, and improve operating systems. | 72 |
 | [⚙️ Apps & Workflow Automation](#apps-workflow-automation) | Connect everyday apps, browsers, messaging systems, and repeatable workflows. | 88 |
 | [🇨🇳 Chinese Platform Workflows](#chinese-platform-workflows) | Create, analyze, and publish for major Chinese-language platforms and channels. | 39 |
@@ -56,6 +56,7 @@ Coordinate agents, context, memory, models, prompts, and tool protocols.
 | [`agent-network`](../skills/agent-network/) | Multi-Agent group chat collaboration system inspired by DingTalk/Lark. Enables AI agents to chat in groups, @mention each other, assign tasks, make decisions via voting, and… | Catalog only |
 | [`agent-orchestration-multi-agent-optimize`](../skills/agent-orchestration-multi-agent-optimize/) | Optimize multi-agent systems with coordinated profiling, workload distribution, and cost-aware orchestration. Use when improving agent performance, throughput, or reliability. | Catalog only |
 | [`agent-patterns`](../skills/agent-patterns/) | Format SPAWN REQUEST messages to launch parallel agents, generate structured agent status reports, and define communication protocols within the sprint system. Use when the user… | Catalog only |
+| [`agent-skill-repository-index`](../skills/agent-skill-repository-index/) | Find and compare Daniel's reviewed GitHub skill sources. Use for high-star skill discovery, link checks, or safe installation, update, and removal of one selected skill. | Catalog only |
 | [`agent-skills-audit`](../skills/agent-skills-audit/) | Run a two-pass, multidisciplinary code audit led by a tie-breaker lead, combining security, performance, UX, DX, and edge-case analysis into one prioritized report with concrete… | Referenced by active Agent · structure checked · GOVERNOR |
 | [`agent-task-confirm`](../skills/agent-task-confirm/) | Use when confirming whether a dispatched agent task was actually received, activated, and progressing after sessions_send or other task handoff actions. | Catalog only |
 | [`agent-team-orchestration`](../skills/agent-team-orchestration/) | Orchestrate multi-agent teams with defined roles, task lifecycles, handoff protocols, and review workflows. Use when: (1) Setting up a team of 2+ agents with different… | Catalog only |
@@ -271,6 +272,7 @@ Collect evidence, search sources, analyze data, and communicate findings.
 | [`claw-semantic-sim`](../skills/claw-semantic-sim/) | Semantic Similarity Index for disease research literature using PubMedBERT embeddings | Catalog only |
 | [`company-investment-research`](../skills/company-investment-research/) | Structured, multi-dimensional company investment research framework for AI agents and human analysts. Provides a 10-part checklist (moat, tech, market, customers, growth,… | Catalog only |
 | [`csv-pipeline`](../skills/csv-pipeline/) | Process, transform, analyze, and report on CSV and JSON data files. Use when the user needs to filter rows, join datasets, compute aggregates, convert formats, deduplicate, or… | Catalog only |
+| [`ct-monitor`](../skills/ct-monitor/) | Research crypto news, public market data, and monitored accounts with CT Monitor. Use for attributed briefings, watchlists, narrative review, and paper-only signal analysis. | Catalog only · review: credentials, external-write, financial-action |
 | [`dashboard-builder`](../skills/dashboard-builder/) | Build monitoring dashboards that answer real operator questions for Grafana, SigNoz, and similar platforms. Use when turning metrics into a working dashboard instead of a vanity… | Referenced by active Agent · structure checked · CEO |
 | [`data-analyst`](../skills/data-analyst/) | Data visualization, report generation, SQL queries, and spreadsheet automation. Transform your AI agent into a data-savvy analyst that turns raw data into actionable insights. | Catalog only |
 | [`data-engineering-data-pipeline`](../skills/data-engineering-data-pipeline/) | You are a data pipeline architecture expert specializing in scalable, reliable, and cost-effective data pipelines for batch and streaming data processing. | Catalog only |
@@ -487,7 +489,7 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`content-factory`](../skills/content-factory/) | Description needs review; inspect source. | Catalog only |
 | [`content-illustration-strategy`](../skills/content-illustration-strategy/) | 文章配图决策 skill：根据文章内容判断该配什么图、图从哪里来、什么时候该用 Telegram 真实对话截图，什么时候该用工具界面图、官网图、生成插图或流程图。 适用于公众号、小红书长图文、知识星球、掘金、博客等内容配图。触发词包括：'配图'、'插图'、'素材图'、'这篇文章该配什么图'、'截图进素材库'、'给这篇稿子补图'、'根据内容选图'。 | Catalog only |
 | [`content-marketer`](../skills/content-marketer/) | You are an elite content marketing strategist specializing in AI-powered content creation, omnichannel marketing, and data-driven content optimization | Catalog only |
-| [`content-ops-toolkit`](../skills/content-ops-toolkit/) | Description needs review; inspect source. | Referenced by active Agent · structure checked · CEO |
+| [`content-ops-toolkit`](../skills/content-ops-toolkit/) | Analyze topics, score headlines, adapt drafts across platforms, and review content performance. Use for 选题分析、标题优化、多平台适配、内容复盘, or content review. | Referenced by active Agent · structure checked · CEO |
 | [`content-repurposing`](../skills/content-repurposing/) | Content atomization — turn one piece of content into many formats. Covers blog-to-thread, blog-to-carousel, podcast-to-blog, video-to-quotes, and more. Use for: content… | Catalog only |
 | [`content-repurposing-engine`](../skills/content-repurposing-engine/) | Turn one piece of content into 10+ formats. Transform blog posts, podcasts, videos, or talks into tweets, LinkedIn posts, newsletters, carousels, and more. | Catalog only |
 | [`content-research-writer`](../skills/content-research-writer/) | Assists in writing high-quality content by conducting research, adding citations, improving hooks, iterating on outlines, and providing real-time feedback on each section.… | Catalog only |
@@ -617,7 +619,7 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 | [`billing-automation`](../skills/billing-automation/) | Build automated billing systems for recurring payments, invoicing, subscription lifecycle, and dunning management. Use when implementing subscription billing, automating… | Catalog only |
 | [`bookkeeping-basics`](../skills/bookkeeping-basics/) | Set up and maintain basic bookkeeping for a solopreneur business. Use when tracking income and expenses, preparing for taxes, managing invoices and receipts, understanding cash… | Catalog only |
 | [`btc-5min-scalper`](../skills/btc-5min-scalper/) | BTC 5-minute Up/Down paper trading on Polymarket. Scans Binance 1m candles for momentum/mean-reversion/volume signals, makes virtual trades on Polymarket 5-min markets, tracks… | Catalog only |
-| [`clanker`](../skills/clanker/) | Deploy ERC20 tokens on Base, Ethereum, Arbitrum, and other EVM chains using the Clanker SDK. Use when the user wants to deploy a new token, create a memecoin, set up token… | Catalog only · review: external-write, financial-action |
+| [`clanker`](../skills/clanker/) | Plan and review ERC20 deployment with the Clanker SDK. Use for token configuration, vesting, airdrops, rewards, metadata, and transaction preparation on supported EVM chains. | Catalog only · review: external-write, financial-action |
 | [`cost-optimization`](../skills/cost-optimization/) | Optimize cloud costs through resource rightsizing, tagging strategies, reserved instances, and spending analysis. Use when reducing cloud expenses, analyzing infrastructure… | Referenced by active Agent · structure checked · COO |
 | [`crypto-bd-agent`](../skills/crypto-bd-agent/) | This skill teaches AI agents systematic crypto business development: discover | Catalog only |
 | [`crypto-derivatives-tracker`](../skills/crypto-derivatives-tracker/) | Comprehensive derivatives market analysis across centralized and decentralized exchanges. This skill aggregates funding rates, open interest, liquidat | Catalog only |
@@ -625,7 +627,6 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 | [`crypto-portfolio-management`](../skills/crypto-portfolio-management/) | Guide to cryptocurrency portfolio management — asset allocation, rebalancing strategies, risk-adjusted returns, benchmarking, and tax-loss harvesting. Use when helping users… | Catalog only |
 | [`crypto-portfolio-tracker`](../skills/crypto-portfolio-tracker/) | Description needs review; inspect source. | Catalog only |
 | [`crypto-signal-generator`](../skills/crypto-signal-generator/) | Multi-indicator signal generation system that analyzes price action using 7 technical indicators and produces composite BUY/SELL signals with confiden | Catalog only |
-| [`ct-monitor`](../skills/ct-monitor/) | CT Monitor — Crypto Intelligence Analyst. Monitors 5000+ KOL tweets, real-time news, RSS feeds &amp; real-time prices (Binance + DexScreener). Integrates Binance Web3 APIs for smart… | Catalog only |
 | [`daily-portfolio`](../skills/daily-portfolio/) | Description needs review; inspect source. | Catalog only |
 | [`defi-risk-assessment`](../skills/defi-risk-assessment/) | Framework for evaluating DeFi protocol risk — smart contract audits, TVL analysis, governance structure, oracle dependencies, and token economics. Use when helping users assess… | Catalog only |
 | [`elon-tweets`](../skills/elon-tweets/) | 你是Quant。独立策略，不受全局新闻风险等级约束。 先用 scanelonmarkets.py 自动发现活跃盘，按结算时间决定分析深度。 | Catalog only |

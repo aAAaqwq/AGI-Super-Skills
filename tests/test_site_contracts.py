@@ -107,6 +107,15 @@ class SiteContractTests(unittest.TestCase):
         self.assertNotRegex(self.html, r">\s*73\s*<")
         self.assertNotRegex(self.html, r">\s*16\s*<")
         self.assertNotIn("verified outcome", lowered)
+        self.assertNotIn("real outcomes", lowered)
+        self.assertNotIn("Install for Codex", self.html)
+        self.assertIn("--destination /path/to/review-workspace", self.html)
+
+    def test_homepage_copy_uses_disciplined_punctuation_and_labels(self) -> None:
+        self.assertNotRegex(self.html, r"[—–•]")
+        self.assertNotIn("60-second", self.html)
+        self.assertIn("Preview Solo Founder", self.html)
+        self.assertIn("Inspect Codex package", self.html)
 
     def test_site_routes_and_sitemap_are_present(self) -> None:
         required = [
@@ -199,7 +208,7 @@ class SiteContractTests(unittest.TestCase):
         self.assertIn("textContent", script)
         self.assertIn("localStorage", script)
         self.assertIn("fifteenMinutes", script)
-        self.assertIn("older than 24 hours", script)
+        self.assertIn("Older than 24 hours", script)
         self.assertNotRegex(script, r"stargazers_count\s*\|\|\s*0")
         self.assertIn('root.classList.add("js")', script)
         stylesheet = (DOCS / "assets/site.css").read_text(encoding="utf-8")

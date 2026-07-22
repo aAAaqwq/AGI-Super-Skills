@@ -35,7 +35,7 @@
               <tr><th>Codex</th><td>Curated native plugin</td><td>Focused workflow skills and optional agent sync</td><td>Public outcome fixture still pending</td></tr>
               <tr><th>Claude Code</th><td>Marketplace and plugin manifests</td><td>Client-managed plugin loading from the repository</td><td>Confirm schema, scope, dependencies, and loaded surface locally</td></tr>
               <tr><th>Cursor</th><td>Generic repository and workspace files</td><td>Manual project context and selected local files</td><td>No dedicated native package or parity fixture published</td></tr>
-              <tr><th>Gemini</th><td><code>gemini-extension.json</code> metadata</td><td>Repository context entry pointing to <code>CLAUDE.md</code></td><td>Metadata contains legacy claims and needs client-specific evaluation</td></tr>
+              <tr><th>Gemini</th><td><code>gemini-extension.json</code> metadata</td><td>Repository context entry pointing to <code>CLAUDE.md</code></td><td>Repository context is current; client loading still needs evaluation</td></tr>
             </tbody>
           </table>
         </div>
@@ -55,7 +55,7 @@
       </section>
       <section>
         <h2>Gemini evaluation path</h2>
-        <p>The root <code>gemini-extension.json</code> points to <code>CLAUDE.md</code>. Both contain descriptive metadata that may lag the canonical manifest, so treat them as an evaluation input rather than a current inventory guarantee. Confirm that your Gemini client recognizes the file, what context it loads, and whether its permission prompts match the fixture. Do not infer support for generic installer destinations from the metadata alone.</p>
+        <p>The root <code>gemini-extension.json</code> points to <code>CLAUDE.md</code>. Treat that context as an evaluation input rather than a runtime guarantee. Confirm that your Gemini client recognizes the file, what context it loads, and whether its permission prompts match the fixture. Do not infer support for generic installer destinations from the metadata alone.</p>
       </section>
       <section>
         <h2>Limitations</h2>

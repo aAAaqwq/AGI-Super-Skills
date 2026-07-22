@@ -4,13 +4,15 @@
   "description": "Evidence-backed AI team packs with preview-first installation and repository contracts",
   "type": "module",
   "scripts": {
-    "test": "npm run test:repository && npm run test:installer",
+    "test": "npm run test:repository && npm run test:installer && npm run check:skill-quality",
     "test:repository": "python3 -m unittest discover -s tests -p 'test_*.py'",
     "test:installer": "bash tests/installer/test_install.sh",
     "validate": "python3 scripts/validate_repository.py",
     "validate:strict": "python3 scripts/validate_repository.py --warnings-as-errors",
     "build:skills": "python3 scripts/build_skill_catalog.py",
-    "check:skills": "python3 scripts/build_skill_catalog.py --check"
+    "check:skills": "python3 scripts/build_skill_catalog.py --check",
+    "build:skill-quality": "python3 scripts/audit_skill_quality.py",
+    "check:skill-quality": "python3 scripts/audit_skill_quality.py --check"
   },
   "keywords": [
     "claude-code",

@@ -1,11 +1,20 @@
 ---
 name: clanker
-description: Deploy ERC20 tokens on Base, Ethereum, Arbitrum, and other EVM chains using the Clanker SDK. Use when the user wants to deploy a new token, create a memecoin, set up token vesting, configure airdrops, manage token rewards, claim LP fees, or update token metadata. Supports V4 deployment with vaults, airdrops, dev buys, custom market caps, vanity addresses, and multi-chain deployment.
+description: "Plan and review ERC20 deployment with the Clanker SDK. Use for token configuration, vesting, airdrops, rewards, metadata, and transaction preparation on supported EVM chains."
 ---
 
 # Clanker SDK
 
-Deploy production-ready ERC20 tokens with built-in liquidity pools using the official Clanker TypeScript SDK.
+Plan and review ERC20 token deployments with built-in liquidity pools using the Clanker TypeScript SDK.
+
+## Safety and transaction approval
+
+Token deployment is an irreversible financial action. Default to read-only planning and testnet simulation.
+
+- Never ask the user to paste a private key into chat, source files, examples, or logs. Use the harness secret store or an untracked local environment file.
+- Confirm the chain ID, token parameters, administrator and reward addresses, expected fees, slippage assumptions, and contract source before preparing a transaction.
+- Show the final transaction payload and estimated cost. Require explicit human approval immediately before signing or broadcasting.
+- Never claim profitability, liquidity, safety, or audit status. Preserve the transaction hash and verified explorer link in the receipt.
 
 ## Overview
 
@@ -25,7 +34,7 @@ pnpm add clanker-sdk viem
 
 ### Environment Setup
 
-Create a `.env` file with your private key:
+Configure the signing key through the harness secret store. If local environment variables are unavoidable, use an untracked `.env` file with restrictive permissions and never display its contents:
 
 ```bash
 PRIVATE_KEY=0x...your_private_key_here

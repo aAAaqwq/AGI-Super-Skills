@@ -598,7 +598,7 @@ main() {
   echo ""
   echo "╔══════════════════════════════════════╗"
   echo "║     🏛️  AGI Super Team Deployer      ║"
-  echo "║     793 Skills · 14 Agents            ║"
+  echo "║     794 Skills : 14 Agents            ║"
   echo "╚══════════════════════════════════════╝"
   echo ""
 

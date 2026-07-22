@@ -13,9 +13,9 @@ class ReadmeContractTests(unittest.TestCase):
         cls.chinese = (ROOT / "README_CN.md").read_text(encoding="utf-8")
 
     def test_readmes_define_the_product_and_its_boundary(self) -> None:
-        self.assertIn("Composable skills. Specialist agents. Reviewable team workflows.", self.english)
+        self.assertIn("Composable skills for specialist agents and reviewable team workflows.", self.english)
         self.assertIn("not a model, autonomous orchestrator, or agent runtime", self.english)
-        self.assertIn("可组合 Skills · 专业 Agents · 可审查团队 Workflows", self.chinese)
+        self.assertIn("可组合 Skills。专业 Agents。可审查的团队 Workflows。", self.chinese)
         self.assertIn("不是模型、自治编排器或 Agent 运行时", self.chinese)
 
     def test_readmes_lead_with_value_before_boundaries(self) -> None:
@@ -72,6 +72,29 @@ class ReadmeContractTests(unittest.TestCase):
             self.assertIn("./agents/", readme)
             self.assertIn("./cookbook/", readme)
             self.assertIn("./catalog/", readme)
+            self.assertIn("./ARCHITECTURE.md", readme)
+
+    def test_legacy_entrypoints_route_to_current_authorities(self) -> None:
+        startup = (ROOT / "STARTUP.md").read_text(encoding="utf-8")
+        agent_context = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+        for text in (startup, agent_context):
+            self.assertIn("setup.md", text)
+            self.assertIn(".codex/INDEX.md", text)
+            self.assertNotIn("openclaw gateway start", text)
+            self.assertNotIn("cp -r skills/", text)
+            self.assertNotIn("skills/categories/README.md", text)
+        self.assertIn("ARCHITECTURE.md", agent_context)
+
+    def test_public_directory_indexes_exist(self) -> None:
+        for relative in (
+            "ARCHITECTURE.md",
+            "starter-kits/README.md",
+            "cookbook/README.md",
+            "plugins/README.md",
+            "plugins/agi-super-team-codex/README.md",
+        ):
+            with self.subTest(path=relative):
+                self.assertTrue((ROOT / relative).is_file())
 
     def test_readme_local_links_resolve(self) -> None:
         pattern = re.compile(r"\[[^]]+\]\(([^)]+)\)|<img[^>]+src=\"([^\"]+)\"")

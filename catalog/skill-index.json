@@ -1,7 +1,7 @@
 {
   "categories": [
     {
-      "count": 76,
+      "count": 77,
       "description": "Coordinate agents, context, memory, models, prompts, and tool protocols.",
       "emoji": "🤖",
       "id": "ai-agents-orchestration",
@@ -22,7 +22,7 @@
       "title": "Cloud, DevOps & Reliability"
     },
     {
-      "count": 74,
+      "count": 75,
       "description": "Collect evidence, search sources, analyze data, and communicate findings.",
       "emoji": "📊",
       "id": "data-analytics-research",
@@ -64,7 +64,7 @@
       "title": "Sales, CRM & Customer Success"
     },
     {
-      "count": 65,
+      "count": 64,
       "description": "Analyze markets, backtest strategies, track portfolios, and review financial risk.",
       "emoji": "💹",
       "id": "finance-trading-markets",
@@ -99,7 +99,7 @@
       "title": "Specialized Domains & Utilities"
     }
   ],
-  "inventoryCount": 793,
+  "inventoryCount": 794,
   "inventorySemantics": "tracked physical top-level directories with SKILL.md",
   "schemaVersion": 1,
   "skills": [
@@ -355,6 +355,17 @@
       "path": "skills/agent-patterns/SKILL.md",
       "review_signals": [],
       "skill_id": "agent-patterns",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "category_id": "ai-agents-orchestration",
+      "classification": "slug:(?:^|-)agent(?:-|$),(?:^|-)skills?(?:-|$);metadata:frontmatter",
+      "description": "Find and compare Daniel's reviewed GitHub skill sources. Use for high-star skill discovery, link checks, or safe installation, update, and removal of one selected skill.",
+      "description_status": "source-text",
+      "path": "skills/agent-skill-repository-index/SKILL.md",
+      "review_signals": [],
+      "skill_id": "agent-skill-repository-index",
       "support_level": "catalog",
       "used_by": []
     },
@@ -1386,7 +1397,7 @@
     {
       "category_id": "finance-trading-markets",
       "classification": "override;metadata:frontmatter",
-      "description": "Deploy ERC20 tokens on Base, Ethereum, Arbitrum, and other EVM chains using the Clanker SDK. Use when the user wants to deploy a new token, create a memecoin, set up token…",
+      "description": "Plan and review ERC20 deployment with the Clanker SDK. Use for token configuration, vesting, airdrops, rewards, metadata, and transaction preparation on supported EVM chains.",
       "description_status": "source-text",
       "path": "skills/clanker/SKILL.md",
       "review_signals": [
@@ -1881,8 +1892,8 @@
     {
       "category_id": "content-media-publishing",
       "classification": "override;metadata:frontmatter",
-      "description": "**先跑通，再精修。不要一上来追求完美。**",
-      "description_status": "needs-review",
+      "description": "Analyze topics, score headlines, adapt drafts across platforms, and review content performance. Use for 选题分析、标题优化、多平台适配、内容复盘, or content review.",
+      "description_status": "source-text",
       "path": "skills/content-ops-toolkit/SKILL.md",
       "review_signals": [],
       "skill_id": "content-ops-toolkit",
@@ -2276,12 +2287,16 @@
       "used_by": []
     },
     {
-      "category_id": "finance-trading-markets",
-      "classification": "description:crypto;metadata:frontmatter",
-      "description": "CT Monitor — Crypto Intelligence Analyst. Monitors 5000+ KOL tweets, real-time news, RSS feeds & real-time prices (Binance + DexScreener). Integrates Binance Web3 APIs for smart…",
+      "category_id": "data-analytics-research",
+      "classification": "description:research,data,analysis,search,news;metadata:frontmatter",
+      "description": "Research crypto news, public market data, and monitored accounts with CT Monitor. Use for attributed briefings, watchlists, narrative review, and paper-only signal analysis.",
       "description_status": "source-text",
       "path": "skills/ct-monitor/SKILL.md",
-      "review_signals": [],
+      "review_signals": [
+        "credentials",
+        "external-write",
+        "financial-action"
+      ],
       "skill_id": "ct-monitor",
       "support_level": "catalog",
       "used_by": []

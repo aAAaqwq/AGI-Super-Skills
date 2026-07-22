@@ -41,6 +41,17 @@ npm run check:skills
 
 These levels are not quality rankings. Inspect each skill's permissions, dependencies, provenance, and license before use.
 
+## 🔬 Structural quality evidence
+
+[`catalog/skill-quality.json`](../catalog/skill-quality.json) publishes deterministic structural findings for every canonical entrypoint. It separates hard structure failures, progressive-disclosure warnings, and script evidence requiring review.
+
+```bash
+npm run build:skill-quality
+npm run check:skill-quality
+```
+
+The checked [debt baseline](../config/skill-quality-baseline.json) allows findings to improve but fails CI when known issue counts regress. This evidence does not score semantic usefulness, safety, or harness behavior.
+
 ## 📦 Inventory contract
 
 The canonical rules and active requirements live in [`config/team-manifest.json`](../config/team-manifest.json). Taxonomy rules live in [`config/skill-taxonomy.json`](../config/skill-taxonomy.json); generated counts are not maintained by hand.

@@ -148,6 +148,7 @@
   ],
   "riskOverrides": {
     "clanker": ["external-write", "financial-action"],
+    "ct-monitor": ["credentials", "external-write", "financial-action"],
     "douyin-publisher": ["credentials", "external-write"],
     "email-send-bulk": ["credentials", "external-write", "personal-data"],
     "email-send-direct": ["credentials", "external-write", "personal-data"],

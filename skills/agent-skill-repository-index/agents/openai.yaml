@@ -1,0 +1,4 @@
+interface:
+  display_name: "Daniel's High-Star GitHub Skills"
+  short_description: "Discover and safely install Daniel's GitHub skill picks"
+  default_prompt: "Use $agent-skill-repository-index to choose, verify, and safely install the best-fit skill from Daniel’s recommended GitHub repositories."

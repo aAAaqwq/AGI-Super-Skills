@@ -50,6 +50,7 @@ Because existing files are preserved, repeated runs are not an upgrade mechanism
 ```bash
 find /path/to/review-workspace -maxdepth 2 -type f -name 'AGENTS.md' -print
 find /path/to/review-workspace -maxdepth 3 -type f -name 'SKILL.md' -print
+python3 -m pip install --requirement requirements-dev.txt
 npm test
 npm run validate
 ```

@@ -1,35 +1,35 @@
-# CLAUDE.md — AGI Super Team
+# CLAUDE.md: AGI Super Team
 
-> This file is auto-loaded by Claude Code when working in this repository.
+This file is repository context for coding agents. It is not an installation script or proof of harness compatibility.
 
-## Repository Overview
+## Product model
 
-AGI Super Team is a plug-and-play AI team template that works with Claude Code, Codex, Cursor, and Hermes. It contains:
-- **14 agent personas** in `agents/` (CEO, CTO, PE, Governor, etc.)
-- **793 tracked physical skills** in `skills/` (each with `SKILL.md`)
-- **Starter kits** in `starter-kits/` for one-click deployment
-- **Cookbooks** in `cookbook/` for deep learning
+- `skills/` contains canonical physical skill entrypoints. Catalog inclusion proves structure, not behavior.
+- `agents/` contains generic role packs defined by `config/team-manifest.json`.
+- `starter-kits/` selects small, outcome-oriented combinations of those roles.
+- `plugins/agi-super-team-codex/` is a separately curated Codex distribution.
+- `catalog/` is generated discovery output and never an inventory source.
 
-## When User Says "Install AGI Super Team"
+Read [ARCHITECTURE.md](./ARCHITECTURE.md) before changing boundaries or sources of truth.
 
-Follow the steps in [`setup.md`](./setup.md):
+## Installation requests
 
-1. `git clone --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git ~/.agi-super-team`
-2. `bash ~/.agi-super-team/install.sh <kit-name>`
-3. Verify workspace files exist
-4. Guide user through `openclaw config` and `openclaw gateway restart`
+Route users to the maintained guide for their surface:
 
-Kit options: `solo-founder` | `content-creator` | `quant-trader` | `full-team` | or any agent ID (ceo, pe, cco, cto...)
+- Generic workspace: [setup.md](./setup.md)
+- Codex package: [.codex/INDEX.md](./.codex/INDEX.md)
+- Other manifests: [harness compatibility](./docs/guides/harness-compatibility.html)
 
-## File Conventions
+Never run legacy OpenClaw commands, restart gateways, write credentials, or install the full skills library merely because the user says “install.” Preview is the default; `--apply` must be explicit.
 
-- `agents/{id}/SOUL.md` — Agent personality (mandatory)
-- `agents/{id}/AGENTS.md` — Role definition and operations
-- `agents/{id}/IDENTITY.md` — Detailed identity profile
-- `agents/{id}/BOOTSTRAP.md` — Startup sequence
-- `skills/{name}/SKILL.md` — Skill definition with YAML frontmatter
-- `starter-kits/{name}/README.md` — Kit description and usage
+## Repository contracts
 
-## Agent IDs
+```bash
+npm test
+npm run validate -- --warnings-as-errors
+npm run check:skills
+npm run check:skill-quality
+git diff --check
+```
 
-`ceo`(CEO), `cto`, `pe`, `cpo`, `cqo`, `cmo`, `cfo`, `cdo`, `cco`, `clo`, `cro`, `cso`, `coo`
+Preserve user changes, avoid machine-local paths and skill symlinks, and do not promote a distribution or outcome to Verified without a revision-matched receipt.

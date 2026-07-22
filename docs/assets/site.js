@@ -125,7 +125,7 @@
     if (statsState) {
       const age = Date.now() - Date.parse(stats.fetchedAt);
       const label = source === "live" && age <= fifteenMinutes ? "Live" : "Cached";
-      const stale = age > oneDay ? " · older than 24 hours" : "";
+      const stale = age > oneDay ? ". Older than 24 hours" : "";
       statsState.textContent = `${label} GitHub data${stale}.`;
     }
     return true;

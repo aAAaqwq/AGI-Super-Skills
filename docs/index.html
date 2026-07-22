@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AGI Super Team — Evidence-backed AI teams for real outcomes</title>
-  <meta name="description" content="Install an open-source AI team safely, inspect every change before it lands, and verify real outcomes with reproducible repository checks.">
+  <title>AGI Super Team: composable skills and reviewable AI teams</title>
+  <meta name="description" content="Browse composable agent skills, assemble focused specialist teams, preview every file change, and verify repository and installer contracts.">
   <link rel="canonical" href="https://aaaaqwq.github.io/AGI-Super-Team/">
   <meta name="theme-color" content="#070b18">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="AGI Super Team — Evidence-backed AI teams">
-  <meta property="og:description" content="Preview safely. Apply explicitly. Verify the outcome.">
+  <meta property="og:title" content="AGI Super Team: composable skills and specialist agents">
+  <meta property="og:description" content="Choose skills, assemble a focused team, preview safely, and inspect the evidence.">
   <meta property="og:url" content="https://aaaaqwq.github.io/AGI-Super-Team/">
   <meta property="og:image" content="https://aaaaqwq.github.io/AGI-Super-Team/assets/og-cover.png">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AGI Super Team — Evidence-backed AI teams">
-  <meta name="twitter:description" content="Preview safely. Apply explicitly. Verify the outcome.">
+  <meta name="twitter:title" content="AGI Super Team: composable skills and specialist agents">
+  <meta name="twitter:description" content="Choose skills, assemble a focused team, preview safely, and inspect the evidence.">
   <meta name="twitter:image" content="https://aaaaqwq.github.io/AGI-Super-Team/assets/og-cover.png">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -29,7 +29,7 @@
         "@type": "WebSite",
         "name": "AGI Super Team",
         "url": "https://aaaaqwq.github.io/AGI-Super-Team/",
-        "description": "Open-source AI teams with safe installation and reproducible repository checks."
+        "description": "Composable agent skills and specialist team packs with safe installation and reproducible repository checks."
       },
       {
         "@type": "SoftwareSourceCode",
@@ -83,30 +83,24 @@
     <section id="top" class="hero">
       <div class="shell hero-layout">
         <div class="hero-copy">
-          <p class="eyebrow">Open source <span aria-hidden="true">•</span> Evidence-backed <span aria-hidden="true">•</span> Cross-harness</p>
-          <h1>Evidence-backed AI teams for real outcomes.</h1>
-          <p class="hero-lede">Install a focused team, inspect every file before it lands, and prove the result with reproducible checks—not a wall of unverified claims.</p>
+          <h1>Build a focused AI team from inspectable skills.</h1>
+          <p class="hero-lede">Choose a small team pack, preview every file, and keep specialist work behind an explicit review gate.</p>
           <div class="hero-actions">
             <a class="button button-primary" href="#quick-start">
-              <img src="assets/icons/download-simple.svg" width="20" height="20" alt="">
-              Install for Codex
+              <img src="assets/icons/play.svg" width="20" height="20" alt="">
+              Preview Solo Founder
             </a>
-            <a class="button button-secondary" href="https://github.com/aAAaqwq/AGI-Super-Team">
-              <img src="assets/icons/github-logo.svg" width="20" height="20" alt="">
-              View GitHub
+            <a class="button button-secondary" href="https://github.com/aAAaqwq/AGI-Super-Team/blob/main/.codex/INDEX.md">
+              <img src="assets/icons/package.svg" width="20" height="20" alt="">
+              Inspect Codex package
             </a>
           </div>
-          <dl class="proof-strip" aria-label="Project principles">
-            <div><dt>Deterministic</dt><dd>Repository checks</dd></div>
-            <div><dt>Safe by default</dt><dd>Preview before apply</dd></div>
-            <div><dt>Portable</dt><dd>No machine-local links</dd></div>
-          </dl>
         </div>
 
         <aside id="verification" class="receipt-card" aria-labelledby="receipt-title">
           <div class="receipt-heading">
             <div>
-              <p class="kicker">Verification receipt</p>
+              <p class="card-label">Verification receipt</p>
               <h2 id="receipt-title">Repository contract</h2>
             </div>
             <span class="status-chip status-pending" data-verification-status role="status" aria-live="polite" aria-atomic="true">
@@ -133,7 +127,7 @@
     <section id="quick-start" class="quick-start section-rule">
       <div class="shell split-heading">
         <div>
-          <p class="kicker">60-second safe start</p>
+          <p class="kicker">Safe quick start</p>
           <h2>Preview first. Apply only when ready.</h2>
         </div>
         <p>No hidden write step: the installer shows the exact destination and file plan before changing your workspace.</p>
@@ -148,23 +142,23 @@
           <span class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-copy-status></span>
         </div>
         <pre id="install-command"><code><span class="code-comment"># 1. Clone and inspect the repository</span>
-git clone https://github.com/aAAaqwq/AGI-Super-Team.git
+git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
 cd AGI-Super-Team
 
 <span class="code-comment"># 2. Preview the Solo Founder starter kit</span>
-./install.sh solo-founder
+./install.sh --source "$PWD" --destination /path/to/review-workspace solo-founder
 
 <span class="code-comment"># 3. Apply explicitly, then verify</span>
-./install.sh --apply solo-founder
-npm test &amp;&amp; npm run validate</code></pre>
+./install.sh --source "$PWD" --destination /path/to/review-workspace --apply solo-founder
+python3 -m pip install --requirement requirements-dev.txt
+npm test &amp;&amp; npm run validate -- --warnings-as-errors</code></pre>
       </div>
     </section>
 
     <section id="team" class="featured-team section-rule">
       <div class="shell">
         <div class="section-heading centered-heading">
-          <p class="kicker">Featured team</p>
-          <h2>Solo Founder</h2>
+          <h2>Solo Founder starter team</h2>
           <p>A compact operating team that turns one brief into an inspectable delivery trail.</p>
         </div>
         <div class="outcome-card">
@@ -175,10 +169,10 @@ npm test &amp;&amp; npm run validate</code></pre>
             <a class="text-link" href="https://github.com/aAAaqwq/AGI-Super-Team/tree/main/starter-kits/solo-founder">Inspect the starter kit <img src="assets/icons/arrow-right.svg" width="16" height="16" alt=""></a>
           </div>
           <ol class="outcome-flow" aria-label="Solo Founder workflow">
-            <li><span>01</span><div><strong>Brief</strong><small>Define the user, constraint, and measurable outcome.</small></div></li>
-            <li><span>02</span><div><strong>Build</strong><small>Produce a focused change with a runnable check.</small></div></li>
-            <li><span>03</span><div><strong>Review</strong><small>Challenge risks, references, and acceptance evidence.</small></div></li>
-            <li><span>04</span><div><strong>Release</strong><small>Publish limits, receipt, and a rollback path.</small></div></li>
+            <li><div><strong>Brief</strong><small>Define the user, constraint, and measurable outcome.</small></div></li>
+            <li><div><strong>Build</strong><small>Produce a focused change with a runnable check.</small></div></li>
+            <li><div><strong>Review</strong><small>Challenge risks, references, and acceptance evidence.</small></div></li>
+            <li><div><strong>Release</strong><small>Publish limits, receipt, and a rollback path.</small></div></li>
           </ol>
         </div>
       </div>
@@ -187,7 +181,6 @@ npm test &amp;&amp; npm run validate</code></pre>
     <section class="evidence section-rule" aria-labelledby="evidence-title">
       <div class="shell">
         <div class="section-heading">
-          <p class="kicker">Evidence, not inventory theater</p>
           <h2 id="evidence-title">Trust the checks you can run.</h2>
         </div>
         <div class="evidence-grid">
@@ -221,9 +214,9 @@ npm test &amp;&amp; npm run validate</code></pre>
           <p>Start with the smallest useful team. The workflow makes responsibilities and handoffs explicit without pretending every harness is equally proven.</p>
         </div>
         <ol class="role-list">
-          <li><span class="role-number">01</span><div><h3>CEO · Scope</h3><p>Turns the request into an outcome, assigns roles, and defines the stop condition.</p></div></li>
-          <li><span class="role-number">02</span><div><h3>Specialists · Build</h3><p>Work in bounded areas and return runnable changes with direct evidence.</p></div></li>
-          <li><span class="role-number">03</span><div><h3>Governor · Challenge</h3><p>Reviews contracts, limitations, and regression risk before release.</p></div></li>
+          <li><div><h3>CEO: Scope</h3><p>Turns the request into an outcome, assigns roles, and defines the stop condition.</p></div></li>
+          <li><div><h3>Specialists: Build</h3><p>Work in bounded areas and return runnable changes with direct evidence.</p></div></li>
+          <li><div><h3>Governor: Challenge</h3><p>Reviews contracts, limitations, and regression risk before release.</p></div></li>
         </ol>
       </div>
     </section>
@@ -231,14 +224,14 @@ npm test &amp;&amp; npm run validate</code></pre>
     <section class="compatibility section-rule" aria-labelledby="compatibility-title">
       <div class="shell">
         <div class="split-heading">
-          <div><p class="kicker">Compatibility</p><h2 id="compatibility-title">Codex first. Other harnesses stay explicit.</h2></div>
+          <div><h2 id="compatibility-title">Compatibility: Codex first</h2></div>
           <p>“Manifest available” is not the same as “fixture verified.” Status labels reflect that difference.</p>
         </div>
         <div class="compatibility-table" role="region" aria-label="Harness compatibility" tabindex="0">
           <table>
             <thead><tr><th scope="col">Harness</th><th scope="col">Distribution</th><th scope="col">Status</th><th scope="col">Evidence</th></tr></thead>
             <tbody>
-              <tr><th scope="row">Codex</th><td>Native package</td><td><span class="table-status table-primary">Primary</span></td><td>Installer suite</td></tr>
+              <tr><th scope="row">Codex</th><td>Native package</td><td><span class="table-status table-primary">Primary</span></td><td>Package structure tested; client load receipt pending</td></tr>
               <tr><th scope="row">Claude Code</th><td>Manifest</td><td><span class="table-status">Pending</span></td><td>Fixture not published</td></tr>
               <tr><th scope="row">Cursor / Gemini</th><td>Manifest</td><td><span class="table-status">Pending</span></td><td>Fixture not published</td></tr>
               <tr><th scope="row">OpenClaw</th><td>Legacy layout</td><td><span class="table-status">Legacy</span></td><td>Migration guidance</td></tr>
@@ -251,7 +244,7 @@ npm test &amp;&amp; npm run validate</code></pre>
     <section id="community" class="community section-rule">
       <div class="shell community-layout">
         <div>
-          <p class="kicker">Build in public</p>
+          <p class="kicker">Contribute</p>
           <h2>Bring a failure, a fixture, or a better proof.</h2>
           <p>Useful contributions make the team safer, more portable, or easier to verify. Every report should include a reproducible path.</p>
         </div>
@@ -266,7 +259,7 @@ npm test &amp;&amp; npm run validate</code></pre>
     <section class="star-history-section section-rule" aria-labelledby="history-title">
       <div class="shell">
         <div class="split-heading">
-          <div><p class="kicker">Community signal</p><h2 id="history-title">GitHub star history</h2></div>
+          <div><h2 id="history-title">GitHub star history</h2></div>
           <p><span data-stats-state role="status" aria-live="polite" aria-atomic="true">Cached data loads when available.</span> <span data-forks-count></span></p>
         </div>
         <figure class="history-figure">
@@ -289,15 +282,15 @@ npm test &amp;&amp; npm run validate</code></pre>
     <section class="final-cta">
       <div class="shell final-cta-inner">
         <img src="assets/logo-mark.png" width="76" height="76" alt="">
-        <div><p class="kicker">Start with evidence</p><h2>Preview the Solo Founder team in your workspace.</h2></div>
-        <a class="button button-primary" href="#quick-start">Open quick start <img src="assets/icons/arrow-right.svg" width="18" height="18" alt=""></a>
+        <div><h2>Inspect what the repository proves today.</h2></div>
+        <a class="button button-primary" href="verification.html">View verification <img src="assets/icons/arrow-right.svg" width="18" height="18" alt=""></a>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="shell footer-inner">
-      <div><strong>AGI Super Team</strong><p>Evidence-backed AI teams for real outcomes.</p></div>
+      <div><strong>AGI Super Team</strong><p>Composable skills for reviewable AI team workflows.</p></div>
       <nav aria-label="Footer"><a href="guides/">Guides</a><a href="verification.html">Verification</a><a href="https://github.com/aAAaqwq/AGI-Super-Team/blob/main/SECURITY.md">Security</a><a href="https://github.com/aAAaqwq/AGI-Super-Team">GitHub</a></nav>
     </div>
   </footer>

@@ -1,46 +1,37 @@
+<p align="right"><a href="./README_CN.md">中文</a></p>
+
 <p align="center">
-  <img src="assets/banner-v2.png" alt="AGI Super Team — composable skills, specialist agents, and reviewable workflows" width="760">
+  <img src="assets/banner-v2.png" alt="AGI Super Team: composable skills, specialist agents, and reviewable workflows" width="760">
 </p>
 
 <h1 align="center">AGI Super Team</h1>
 
-<p align="center"><strong>Composable skills. Specialist agents. Reviewable team workflows.</strong></p>
+<p align="center"><strong>Composable skills for specialist agents and reviewable team workflows.</strong></p>
 
 <p align="center">
   Use one brief to structure scoped work, specialist tasks, independent review, and an explicit human approval gate.
 </p>
 
-<p align="center">
-  <a href="./README_CN.md">中文</a> ·
-  <a href="#the-system-in-one-minute">How it works</a> ·
-  <a href="#start-with-an-outcome">Starter kits</a> ·
-  <a href="#try-it-safely">Quick start</a> ·
-  <a href="#browse-skills-by-outcome">Skills</a> ·
-  <a href="#repository-architecture">Architecture</a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/aAAaqwq/AGI-Super-Team/actions/workflows/validate-repository.yml"><img src="https://github.com/aAAaqwq/AGI-Super-Team/actions/workflows/validate-repository.yml/badge.svg" alt="Repository contracts"></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-2563eb" alt="MIT license"></a>
-  <img src="https://img.shields.io/badge/outcome%20fixture-validation%20pending-64748b" alt="Outcome fixture validation pending">
-</p>
-
 AGI Super Team is a versioned library of **AI agent skills, specialist role packs, and human-in-the-loop team workflows** for Codex and local coding-agent workspaces.
 
 <p align="center">
-  <a href="#try-it-safely"><strong>Preview Solo Founder</strong></a> ·
-  <a href="./.codex/INDEX.md">Inspect the Codex package</a> ·
-  <a href="#browse-skills-by-outcome">Browse skills</a><br>
-  <sub>Generic preview requires Bash + Node.js</sub>
+  <a href="#try-it-safely"><strong>Preview Solo Founder</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="./.codex/INDEX.md">Inspect Codex package</a>
 </p>
 
 ## 🧠 The system in one minute
 
 | Layer | What you get | Why it matters |
 |---|---|---|
-| **🧩 Skills** | 793 canonical physical `SKILL.md` files grouped into 14 outcome categories | Reuse focused playbooks instead of rebuilding instructions for every task |
+| **🧩 Skills** | Canonical physical `SKILL.md` files grouped into 14 outcome categories | Reuse focused playbooks instead of rebuilding instructions for every task |
 | **🤖 Agents** | 14 inspectable role packs with persona, workflow, and tool guidance | Give planning, engineering, content, research, and review clear ownership |
 | **🔁 Team packs** | 4 manifest-driven combinations, including 3 focused starter kits | Start with a small team for one outcome instead of loading everything |
+
+<p>
+  <a href="https://github.com/aAAaqwq/AGI-Super-Team/actions/workflows/validate-repository.yml"><img src="https://github.com/aAAaqwq/AGI-Super-Team/actions/workflows/validate-repository.yml/badge.svg" alt="Repository contracts"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-2563eb" alt="MIT license"></a>
+  <img src="https://img.shields.io/badge/outcome%20fixture-validation%20pending-64748b" alt="Outcome fixture validation pending">
+</p>
 
 The packs are designed for this review loop:
 
@@ -55,9 +46,9 @@ AGI Super Team owns the versioned content, selection rules, safe copying, and re
 
 | Starter kit | Give it | Intended evaluation outputs | Team |
 |---|---|---|---|
-| [🚀 Solo Founder](./starter-kits/solo-founder/) | A product or launch brief | Decision memo, test-first implementation plan, launch drafts | CEO · PE · CCO |
-| [✍️ Content Creator](./starter-kits/content-creator/) | Source material and an audience | Research notes, content drafts, measurement plan | CCO · CDO · CMO |
-| [📊 Quant Research](./starter-kits/quant-trader/) | A research question and historical data | Research memo, backtest plan, risk review—never a live trade | CQO · CDO · CFO |
+| [🚀 Solo Founder](./starter-kits/solo-founder/) | A product or launch brief | Decision memo, test-first implementation plan, launch drafts | CEO, PE, CCO |
+| [✍️ Content Creator](./starter-kits/content-creator/) | Source material and an audience | Research notes, content drafts, measurement plan | CCO, CDO, CMO |
+| [📊 Quant Research](./starter-kits/quant-trader/) | A research question and historical data | Research memo, backtest plan, risk review; never a live trade | CQO, CDO, CFO |
 
 Need wider coverage? `full-team` selects all 14 manifest Agents. Start with a focused kit unless your evaluation genuinely needs every role.
 
@@ -105,6 +96,19 @@ Explore the repository by depth:
 | [Agents](./agents/) | Persona, identity, workflow, and tool guidance |
 | [Practical guides](./docs/guides/) | Codex, Claude Code, compatibility, team choice, and workflow boundaries |
 | [Cookbooks](./cookbook/) | Longer material for content, prompts, research, and quantitative workflows |
+| [Architecture map](./ARCHITECTURE.md) | Sources of truth, generated outputs, public entry points, and change ownership |
+
+### 🔎 Find high-quality skill sources
+
+[`agent-skill-repository-index`](./skills/agent-skill-repository-index/) turns Daniel's reviewed source list into a safe selection workflow. Compare one candidate, inspect its permissions and provenance, then install or remove it without globally activating entire repositories.
+
+| Need | Maintained reference |
+|---|---|
+| Compare reviewed sources | [Source matrix](./skills/agent-skill-repository-index/references/repositories.md) |
+| Inspect the dated popularity signal | [Star snapshot](./skills/agent-skill-repository-index/references/star-snapshot.md) |
+| Install one candidate safely | [Installation workflow](./skills/agent-skill-repository-index/references/installing.md) |
+
+Stars help with discovery, not trust. The matrix records `DAILY`, `LIBRARY`, and `QUARANTINE` boundaries; catalogs and runtimes are never bulk-installed.
 
 ## ✅ What is useful today
 
@@ -133,6 +137,7 @@ test -f "$AGI_SOLO_DEST/workspace-ceo/SOUL.md"
 test -f "$AGI_SOLO_DEST/workspace-pe/SOUL.md"
 test -f "$AGI_SOLO_DEST/workspace-cco/SOUL.md"
 
+python3 -m pip install --requirement requirements-dev.txt
 npm test
 npm run validate -- --warnings-as-errors
 npm run check:skills
@@ -147,7 +152,7 @@ This receipt proves manifest-driven selection, preview safety, staged copying, a
   <img src="assets/demo-install.gif" alt="Terminal storyboard showing a read-only preview, explicit apply, and repository checks" width="760">
 </p>
 
-The animation uses sanitized paths and is illustrative—not runtime evidence. Read the [storyboard transcript](./assets/demo-install.txt).
+The animation uses sanitized paths and is illustrative, not runtime evidence. Read the [storyboard transcript](./assets/demo-install.txt).
 
 </details>
 
@@ -159,8 +164,8 @@ Did the preview-first workflow help? [Star the repository](https://github.com/aA
 |---|---|---|---|
 | Generic/local workspace | Preview-first `install.sh` | Use the quick start above | Installer behavior is integration-tested |
 | Codex | Separate curated package | [`.codex/INDEX.md`](./.codex/INDEX.md) | Package structure is tested; current-client load receipt pending |
-| Claude Code | Plugin manifest present | [`.claude-plugin/`](./.claude-plugin/) | Confirm support in the installed client version |
-| Cursor, Gemini, Kimi | Metadata or manifests present | Review the corresponding package files | Presence does not establish feature parity |
+| Claude Code | Plugin manifest present | [Claude Code guide](./docs/guides/claude-code-install.html) | Confirm support in the installed client version |
+| Cursor, Gemini, Kimi | Metadata or manifests present | [Harness compatibility](./docs/guides/harness-compatibility.html) | Presence does not establish feature parity |
 
 The generic path requires Bash and Node.js; repository verification also requires npm and Python 3. Exact operating-system and client-version support remains bounded by CI and published receipts.
 
@@ -168,7 +173,7 @@ The generic path requires Bash and Node.js; repository verification also require
 
 ```mermaid
 flowchart LR
-  subgraph R["AGI Super Team repository — versioned content, not a runtime"]
+  subgraph R["AGI Super Team repository: versioned content, not a runtime"]
     S["skills/<br/>reusable playbooks"]
     A["agents/<br/>14 role packs"]
     M["team-manifest.json<br/>4 kits + skill mappings"]
@@ -206,18 +211,20 @@ flowchart LR
 | [`tests/`](./tests/) | Repository, installer, site-data, and SEO contracts |
 | [`docs/`](./docs/) | Project site, verification data, and editorial guides |
 
+For the authored-input, generated-output, distribution, and evidence boundaries, read the full [repository architecture map](./ARCHITECTURE.md).
+
 [`config/external-skill-sources.json`](./config/external-skill-sources.json) records portable provenance for removed machine-local links. README text and generated catalog files are not inventory sources.
 
 ## 🧠 Team topology
 
 ```text
 Founder / operator
-└── CEO — coordination and quality gates
-    ├── CTO / PE — architecture and implementation
-    ├── CPO / CCO / CMO — product, content, and growth
-    ├── CQO / CFO / CDO — quantitative research, finance, and data
-    ├── CLO / CRO / CSO / COO — legal, research, sales, and operations
-    └── Governor — independent review and escalation
+└── CEO: coordination and quality gates
+    ├── CTO / PE: architecture and implementation
+    ├── CPO / CCO / CMO: product, content, and growth
+    ├── CQO / CFO / CDO: quantitative research, finance, and data
+    ├── CLO / CRO / CSO / COO: legal, research, sales, and operations
+    └── Governor: independent review and escalation
 ```
 
 Mentor names are creative framing. They do not imply affiliation, endorsement, or guaranteed imitation.
