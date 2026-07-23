@@ -100,7 +100,11 @@ class SiteContractTests(unittest.TestCase):
         script = (DOCS / "assets/site.js").read_text(encoding="utf-8")
         site_source = self.html + script
         self.assertIn("data/repo-stats.json", site_source)
-        self.assertIn("data/star-history.json", site_source)
+        self.assertNotIn("data/star-history.json", site_source)
+        self.assertIn(
+            "https://github.com/aAAaqwq/AGI-Super-Team/stargazers",
+            self.html,
+        )
         lowered = site_source.lower()
         self.assertNotIn("api.star-history.com", lowered)
         self.assertNotIn("blob/master", lowered)
