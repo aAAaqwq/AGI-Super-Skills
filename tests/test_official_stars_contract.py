@@ -26,6 +26,22 @@ class OfficialStarsContractTests(unittest.TestCase):
         self.assertIn("persist-credentials: false", workflow)
         self.assertNotIn("git push origin HEAD:main", workflow)
 
+    def test_homepage_shows_current_github_signal_instead_of_an_empty_history(self) -> None:
+        homepage = (ROOT / "docs/index.html").read_text(encoding="utf-8")
+        script = (ROOT / "docs/assets/site.js").read_text(encoding="utf-8")
+
+        self.assertIn("GitHub repository signal", homepage)
+        self.assertIn(
+            "https://github.com/aAAaqwq/AGI-Super-Team/stargazers",
+            homepage,
+        )
+        self.assertIn('data-star-count', homepage)
+        self.assertIn('querySelectorAll("[data-star-count]")', script)
+        self.assertRegex(homepage, r'assets/site\.css\?v=\d+')
+        self.assertRegex(homepage, r'assets/site\.js\?v=\d+')
+        self.assertNotIn("star-history-chart", homepage)
+        self.assertNotIn("data/star-history.json", script)
+
 
 if __name__ == "__main__":
     unittest.main()

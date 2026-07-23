@@ -6,7 +6,7 @@
   const menuButton = document.querySelector("[data-menu-button]");
   const primaryNav = document.querySelector("[data-primary-nav]");
   const themeButton = document.querySelector("[data-theme-button]");
-  const starCount = document.querySelector("[data-star-count]");
+  const starCounts = document.querySelectorAll("[data-star-count]");
   const statsState = document.querySelector("[data-stats-state]");
   const forksCount = document.querySelector("[data-forks-count]");
   const verificationStatus = document.querySelector("[data-verification-status]");
@@ -115,12 +115,12 @@
 
   function renderStats(stats, source) {
     if (!isRepositoryStats(stats)) return false;
-    if (starCount) {
+    starCounts.forEach((starCount) => {
       starCount.textContent = new Intl.NumberFormat().format(stats.stars);
       starCount.hidden = false;
-    }
+    });
     if (forksCount) {
-      forksCount.textContent = `${new Intl.NumberFormat().format(stats.forks)} forks.`;
+      forksCount.textContent = new Intl.NumberFormat().format(stats.forks);
     }
     if (statsState) {
       const age = Date.now() - Date.parse(stats.fetchedAt);
@@ -221,40 +221,6 @@
     }
   }
 
-  async function loadStarHistorySummary() {
-    try {
-      const history = await fetchJson("data/star-history.json");
-      const points = Array.isArray(history.points) ? history.points : [];
-      const summary = document.querySelector("[data-history-summary]");
-      if (!summary || !Number.isInteger(history.latestStars)) return;
-      if (points.length < 2) {
-        summary.textContent = `${history.latestStars} current stars. Historical values will appear after the authenticated Pages refresh.`;
-        return;
-      }
-      const first = points[0];
-      const last = points[points.length - 1];
-      summary.textContent = `${history.latestStars} current stars. The reconstructed series runs from ${first.date} to ${last.date}; unstars can revise earlier values.`;
-
-      const rows = document.querySelector("[data-history-rows]");
-      const details = document.querySelector("[data-history-details]");
-      if (!rows || !details) return;
-      points.slice(-5).forEach((point) => {
-        const row = document.createElement("tr");
-        const date = document.createElement("th");
-        const stars = document.createElement("td");
-        date.scope = "row";
-        date.textContent = point.date;
-        stars.textContent = new Intl.NumberFormat().format(point.stars);
-        row.append(date, stars);
-        rows.append(row);
-      });
-      details.hidden = false;
-    } catch (_error) {
-      // The visible pending explanation remains available without JavaScript data.
-    }
-  }
-
   loadRepositoryStats();
   loadVerificationReceipt();
-  loadStarHistorySummary();
 })();

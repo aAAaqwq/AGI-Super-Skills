@@ -20,7 +20,7 @@
   <meta name="twitter:image" content="https://aaaaqwq.github.io/AGI-Super-Team/assets/og-cover.png">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/site.css?v=20260722">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -43,7 +43,7 @@
   }
   </script>
     <script src="assets/receipt-status.js" defer></script>
-    <script src="assets/site.js" defer></script>
+    <script src="assets/site.js?v=20260722" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -259,26 +259,36 @@ npm test &amp;&amp; npm run validate -- --warnings-as-errors</code></pre>
       </div>
     </section>
 
-    <section class="star-history-section section-rule" aria-labelledby="history-title">
+    <section class="repository-signal section-rule" aria-labelledby="repository-signal-title">
       <div class="shell">
         <div class="split-heading">
-          <div><h2 id="history-title">GitHub star history</h2></div>
-          <p><span data-stats-state role="status" aria-live="polite" aria-atomic="true">Cached data loads when available.</span> <span data-forks-count></span></p>
-        </div>
-        <figure class="history-figure">
-          <img class="star-history-chart" src="assets/star-history.svg" width="1200" height="420" alt="" loading="lazy">
-          <figcaption data-history-summary role="status" aria-live="polite" aria-atomic="true">Star history refresh pending. The current GitHub count appears above when available.</figcaption>
-        </figure>
-        <details class="history-details" data-history-details hidden>
-          <summary>View recent history values</summary>
-          <div class="compatibility-table">
-            <table>
-              <thead><tr><th scope="col">Date</th><th scope="col">Cumulative stars</th></tr></thead>
-              <tbody data-history-rows></tbody>
-            </table>
+          <div>
+            <p class="kicker">GitHub repository signal</p>
+            <h2 id="repository-signal-title">Current community signal.</h2>
           </div>
-        </details>
-        <p class="data-note">Built from GitHub’s current stargazer records. Unstars can revise earlier history. <a href="data/star-history.json">View JSON data</a>.</p>
+          <p>Current counts come from GitHub's repository API. No third-party or reconstructed Star History is presented as official.</p>
+        </div>
+        <div class="repository-signal-grid">
+          <article class="repository-metric-card">
+            <span class="card-label">Current stars</span>
+            <strong class="repository-metric" data-star-count aria-live="polite">...</strong>
+            <span class="repository-metric-note" data-stats-state role="status" aria-live="polite" aria-atomic="true">Loading current GitHub data.</span>
+          </article>
+          <article class="repository-metric-card">
+            <span class="card-label">Public forks</span>
+            <strong class="repository-metric" data-forks-count aria-live="polite">...</strong>
+            <span class="repository-metric-note">Current repository state</span>
+          </article>
+          <a class="repository-source-card" href="https://github.com/aAAaqwq/AGI-Super-Team/stargazers">
+            <img src="assets/icons/star.svg" width="28" height="28" alt="">
+            <span>
+              <small>Source of truth</small>
+              <strong>View Stargazers on GitHub</strong>
+              <small>Current GitHub records, no reconstructed timeline</small>
+            </span>
+            <img src="assets/icons/arrow-right.svg" width="20" height="20" alt="">
+          </a>
+        </div>
       </div>
     </section>
 
