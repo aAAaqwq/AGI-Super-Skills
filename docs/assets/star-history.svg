@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" data-theme="dark" viewBox="0 0 1200 420">
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1200 420">
   <title id="title">AGI Super Team star history</title>
   <desc id="desc">aAAaqwq/AGI-Super-Team. Latest count: 78 stars. Reconstructed from current GitHub stargazers.</desc>
   <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#070b1d" />
+      <stop offset="1" stop-color="#0b1422" />
+    </linearGradient>
     <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#22d3ee" />
+      <stop offset="0" stop-color="#4cc9f0" />
       <stop offset="1" stop-color="#8b5cf6" />
     </linearGradient>
     <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.28" />
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.32" />
       <stop offset="1" stop-color="#8b5cf6" stop-opacity="0" />
     </linearGradient>
   </defs>
-  <rect width="1200" height="420" rx="28" fill="#080d1a" />
-  <rect x="22" y="22" width="1156" height="376" rx="20" fill="none" stroke="#263449" />
-  <text x="82" y="52" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="24" font-weight="700">GitHub star history</text>
-  <text x="82" y="77" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14">aAAaqwq / AGI-Super-Team</text>
-  <rect x="1022" y="39" width="132" height="38" rx="19" fill="#111827" stroke="#263449" />
-  <text x="1088" y="64" fill="#f8fafc" text-anchor="middle" font-family="ui-monospace, monospace" font-size="17" font-weight="700">★ 78</text>
-  <line x1="82" y1="350" x2="1154" y2="350" stroke="#263449" />
-  <line x1="82" y1="92" x2="82" y2="350" stroke="#263449" />
-  <line x1="82" y1="221.0" x2="1154" y2="221.0" stroke="#263449" stroke-dasharray="6 10" />
-    <polygon points="82,350 82.0,346.7 100.8,343.4 119.6,340.1 138.4,336.8 157.2,333.5 176.0,330.2 194.8,326.8 213.6,323.5 232.5,320.2 251.3,316.9 270.1,310.3 288.9,307.0 307.7,303.7 326.5,293.8 345.3,290.5 364.1,287.2 382.9,283.8 401.7,280.5 420.5,273.9 439.3,270.6 458.1,264.0 476.9,260.7 495.8,254.1 514.6,250.8 533.4,247.5 552.2,244.2 571.0,237.5 589.8,227.6 608.6,224.3 627.4,221.0 646.2,214.4 665.0,211.1 683.8,201.2 702.6,197.8 721.4,191.2 740.2,187.9 759.1,184.6 777.9,178.0 796.7,174.7 815.5,168.1 834.3,164.8 853.1,158.2 871.9,154.8 890.7,151.5 909.5,148.2 928.3,144.9 947.1,141.6 965.9,138.3 984.7,135.0 1003.5,131.7 1022.4,121.8 1041.2,118.5 1060.0,111.8 1078.8,108.5 1097.6,105.2 1116.4,101.9 1135.2,95.3 1154.0,92.0 1154,350" fill="url(#area)" />
-    <polyline points="82.0,346.7 100.8,343.4 119.6,340.1 138.4,336.8 157.2,333.5 176.0,330.2 194.8,326.8 213.6,323.5 232.5,320.2 251.3,316.9 270.1,310.3 288.9,307.0 307.7,303.7 326.5,293.8 345.3,290.5 364.1,287.2 382.9,283.8 401.7,280.5 420.5,273.9 439.3,270.6 458.1,264.0 476.9,260.7 495.8,254.1 514.6,250.8 533.4,247.5 552.2,244.2 571.0,237.5 589.8,227.6 608.6,224.3 627.4,221.0 646.2,214.4 665.0,211.1 683.8,201.2 702.6,197.8 721.4,191.2 740.2,187.9 759.1,184.6 777.9,178.0 796.7,174.7 815.5,168.1 834.3,164.8 853.1,158.2 871.9,154.8 890.7,151.5 909.5,148.2 928.3,144.9 947.1,141.6 965.9,138.3 984.7,135.0 1003.5,131.7 1022.4,121.8 1041.2,118.5 1060.0,111.8 1078.8,108.5 1097.6,105.2 1116.4,101.9 1135.2,95.3 1154.0,92.0" fill="none" stroke="url(#line)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
-    <circle cx="1154.0" cy="92.0" r="7" fill="#f8fafc" stroke="#8b5cf6" stroke-width="5" />
-  <text x="68" y="97" fill="#94a3b8" text-anchor="end" font-family="ui-monospace, monospace" font-size="13">78</text>
-  <text x="68" y="355" fill="#94a3b8" text-anchor="end" font-family="ui-monospace, monospace" font-size="13">0</text>
-  <text x="82" y="382" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="15">2026-01-30</text>
-  <text x="1154" y="382" fill="#94a3b8" text-anchor="end" font-family="system-ui, sans-serif" font-size="15">2026-07-19</text>
+  <rect width="1200" height="420" rx="28" fill="url(#bg)" />
+  <text x="78" y="38" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="22" font-weight="700">GitHub star history</text>
+  <text x="1158" y="38" fill="#a5b4fc" text-anchor="end" font-family="ui-monospace, monospace" font-size="18">78 stars</text>
+  <line x1="78" y1="348" x2="1158" y2="348" stroke="#263449" />
+  <line x1="78" y1="58" x2="78" y2="348" stroke="#263449" />
+  <line x1="78" y1="203.0" x2="1158" y2="203.0" stroke="#263449" stroke-dasharray="6 10" />
+
+  <text x="78" y="386" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="16">History refresh pending</text>
+  <text x="1158" y="386" fill="#94a3b8" text-anchor="end" font-family="system-ui, sans-serif" font-size="16">History refresh pending</text>
 </svg>
