@@ -257,14 +257,10 @@ AGI Super Team is not a model, autonomous orchestrator, or agent runtime. Instal
 - [Growth playbooks](./growth/README.md)
 - [MIT License](./LICENSE)
 
-## ⭐ Star History
+## ⭐ GitHub Stars
 
-<a href="https://github.com/aAAaqwq/AGI-Super-Team/stargazers">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/star-history-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="./docs/assets/star-history-light.svg">
-    <img alt="AGI Super Team GitHub star history" src="./docs/assets/star-history-light.svg" width="1200">
-  </picture>
-</a>
+GitHub does not provide an official embeddable Star History chart. To avoid presenting third-party or reconstructed data as authoritative, this README links directly to GitHub's own Stargazers page.
 
-Generated from GitHub's repository API every six hours by this repository's workflow. If a refresh is unavailable, the last successful history remains visible. Click the chart to inspect the current stargazers.
+<p align="center">
+  <a href="https://github.com/aAAaqwq/AGI-Super-Team/stargazers"><strong>⭐ View official Stargazers on GitHub</strong></a>
+</p>

@@ -257,14 +257,10 @@ AGI Super Team 不是模型、自治编排器或 Agent 运行时。安装文件�
 - [增长手册](./growth/README.md)
 - [MIT 许可证](./LICENSE)
 
-## ⭐ Star History
+## ⭐ GitHub Stars
 
-<a href="https://github.com/aAAaqwq/AGI-Super-Team/stargazers">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/star-history-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="./docs/assets/star-history-light.svg">
-    <img alt="AGI Super Team GitHub Star 历史" src="./docs/assets/star-history-light.svg" width="1200">
-  </picture>
-</a>
+GitHub 没有提供官方、可嵌入 README 的 Star History 图。为避免把第三方或重建数据包装成官方事实，这里只链接 GitHub 自己的 Stargazers 页面。
 
-仓库工作流每六小时从 GitHub API 生成一次图表；刷新失败时保留最后一次成功的历史，不会退化成空图。点击图表可查看当前 Stargazers。
+<p align="center">
+  <a href="https://github.com/aAAaqwq/AGI-Super-Team/stargazers"><strong>⭐ 在 GitHub 查看官方 Stargazers</strong></a>
+</p>
