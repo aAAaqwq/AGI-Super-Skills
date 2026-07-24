@@ -153,16 +153,15 @@ class ReadmeContractTests(unittest.TestCase):
             site,
         )
 
-    def test_stars_link_to_github_without_an_unofficial_history_chart(self) -> None:
+    def test_readmes_embed_the_interactive_star_history_chart(self) -> None:
         for readme in (self.english, self.chinese):
             self.assertIn(
-                "https://github.com/aAAaqwq/AGI-Super-Team/stargazers",
+                "https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&amp;type=Date&amp;legend=top-left",
                 readme,
             )
-            self.assertNotIn("docs/assets/star-history", readme)
-            self.assertNotIn(
-                "aaaaqwq.github.io/AGI-Super-Team/assets/star-history.svg",
-                readme.lower(),
+            self.assertIn(
+                "https://www.star-history.com/?type=date&amp;legend=top-left&amp;repos=aAAaqwq%2FAGI-Super-Team",
+                readme,
             )
 
 
