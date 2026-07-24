@@ -259,8 +259,12 @@ AGI Super Team is not a model, autonomous orchestrator, or agent runtime. Instal
 
 ## ⭐ GitHub Stars
 
-GitHub does not provide an official embeddable Star History chart. To avoid presenting third-party or reconstructed data as authoritative, this README links directly to GitHub's own Stargazers page.
+Track AGI Super Team's public growth over time. The live visualization is provided by Star History; click the chart to inspect the interactive timeline.
 
 <p align="center">
-  <a href="https://github.com/aAAaqwq/AGI-Super-Team/stargazers"><strong>⭐ View official Stargazers on GitHub</strong></a>
+  <a href="https://www.star-history.com/?type=date&amp;legend=top-left&amp;repos=aAAaqwq%2FAGI-Super-Team">
+    <img src="https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&amp;type=Date&amp;legend=top-left" alt="AGI Super Team Star History chart">
+  </a>
+  <br>
+  <sub>Live chart by Star History · <a href="https://github.com/aAAaqwq/AGI-Super-Team/stargazers">View Stargazers on GitHub</a></sub>
 </p>
