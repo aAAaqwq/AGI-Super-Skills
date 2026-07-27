@@ -1,0 +1,4 @@
+interface:
+  display_name: "软件知识产权材料"
+  short_description: "基于冻结代码、测试与时间线证据准备专利及软件著作权申报材料"
+  default_prompt: "使用 $prepare-software-ip-filings 从代码证据准备知识产权申报材料。"

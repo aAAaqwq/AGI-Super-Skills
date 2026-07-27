@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tauri Python Sidecar 发布"
+  short_description: "构建、验收并发布 Tauri 与 Python sidecar 桌面应用"
+  default_prompt: "使用 $ship-tauri-python-sidecar 设计并验证桌面应用的构建发布链。"

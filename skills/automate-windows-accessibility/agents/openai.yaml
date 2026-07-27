@@ -1,0 +1,4 @@
+interface:
+  display_name: "Windows 可访问性自动化"
+  short_description: "使用原生 UIA、Win32 输入与 CDP 证据构建稳定自动化"
+  default_prompt: "使用 $automate-windows-accessibility 设计可验证的 Windows 浏览器自动化。"

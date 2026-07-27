@@ -1,0 +1,4 @@
+interface:
+  display_name: "macOS cua-driver 自动化"
+  short_description: "使用 cua-driver、AX 与前台输入构建可验证的 macOS 自动化"
+  default_prompt: "使用 $automate-macos-cua-driver 实现并验证 macOS 应用自动化。"

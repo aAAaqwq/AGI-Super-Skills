@@ -24,22 +24,22 @@ For a first run, prefer a [starter kit](../starter-kits/) or the [Codex package]
 
 ## 🗂️ Browse by outcome
 
-This revision contains 794 canonical catalog entries. The number is generated here rather than used as a product claim.
+This revision contains 802 canonical catalog entries. The number is generated here rather than used as a product claim.
 
 | Category | Use it for | Entries |
 |---|---|---:|
-| [🤖 AI Agents & Orchestration](#ai-agents-orchestration) | Coordinate agents, context, memory, models, prompts, and tool protocols. | 78 |
-| [💻 Software Engineering](#software-engineering) | Build, test, review, debug, and maintain applications and developer tooling. | 81 |
+| [🤖 AI Agents & Orchestration](#ai-agents-orchestration) | Coordinate agents, context, memory, models, prompts, and tool protocols. | 79 |
+| [💻 Software Engineering](#software-engineering) | Build, test, review, debug, and maintain applications and developer tooling. | 82 |
 | [☁️ Cloud, DevOps & Reliability](#cloud-devops-reliability) | Deploy, observe, troubleshoot, and operate cloud and local infrastructure. | 32 |
-| [📊 Data, Analytics & Research](#data-analytics-research) | Collect evidence, search sources, analyze data, and communicate findings. | 78 |
+| [📊 Data, Analytics & Research](#data-analytics-research) | Collect evidence, search sources, analyze data, and communicate findings. | 79 |
 | [🛡️ Security, Privacy & Legal](#security-privacy-legal) | Review security, privacy, compliance, permissions, contracts, and legal risk. | 32 |
-| [🎨 Product, Design & UX](#product-design-ux) | Shape product requirements, interfaces, design systems, and user experience. | 20 |
+| [🎨 Product, Design & UX](#product-design-ux) | Shape product requirements, interfaces, design systems, and user experience. | 23 |
 | [📈 Marketing, SEO & Growth](#marketing-seo-growth) | Acquire audiences through positioning, campaigns, search, ads, and social growth. | 47 |
 | [✍️ Content, Media & Publishing](#content-media-publishing) | Create, edit, repurpose, and publish writing, images, audio, and video. | 82 |
 | [🤝 Sales, CRM & Customer Success](#sales-crm-customer-success) | Find, win, onboard, support, and retain customers with accountable workflows. | 39 |
 | [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 65 |
-| [🧭 Business Operations & Strategy](#business-operations-strategy) | Plan work, make decisions, manage teams, and improve operating systems. | 71 |
-| [⚙️ Apps & Workflow Automation](#apps-workflow-automation) | Connect everyday apps, browsers, messaging systems, and repeatable workflows. | 88 |
+| [🧭 Business Operations & Strategy](#business-operations-strategy) | Plan work, make decisions, manage teams, and improve operating systems. | 72 |
+| [⚙️ Apps & Workflow Automation](#apps-workflow-automation) | Connect everyday apps, browsers, messaging systems, and repeatable workflows. | 89 |
 | [🇨🇳 Chinese Platform Workflows](#chinese-platform-workflows) | Create, analyze, and publish for major Chinese-language platforms and channels. | 39 |
 | [🧰 Specialized Domains & Utilities](#general-utilities) | Domain-specific helpers and cross-functional tools that need a dedicated review path. | 42 |
 
@@ -64,6 +64,7 @@ Coordinate agents, context, memory, models, prompts, and tool protocols.
 | [`agent-tester`](../skills/agent-tester/) | Test agent: dry-run, unit, integration, compatibility | Catalog only |
 | [`agent-values-alignment-detector`](../skills/agent-values-alignment-detector/) | 与明镜联合扫描Agent日志，检测其决策模式是否长期偏离"创造幸福"的核心价值观，早期发现，防患于未然。 | Catalog only |
 | [`aigc-director`](../skills/aigc-director/) | AI 视频生成全流程：通过 6 个阶段（剧本→角色/场景设计→分镜→参考图→视频生成→后期剪辑）将用户想法转化为完整视频。支持临时工作台（单独调用 LLM、VLM、文生图、图生图、视频生成）。触发词：视频生成、AI视频、AIGC、创作视频、制作视频、AI画图。 | Catalog only |
+| [`author-agent-suite`](../skills/author-agent-suite/) | Create, restructure, or audit a repository's Agent Markdown suite, including AGENTS.md or host-specific AGENT.md, SKILL.md, IDENTITY.md, SOUL.md, TOOLS.md, references, templates,… | Catalog only |
 | [`auto-memory`](../skills/auto-memory/) | Description needs review; inspect source. | Catalog only |
 | [`auto-respawn`](../skills/auto-respawn/) | Description needs review; inspect source. | Catalog only |
 | [`clawrouter`](../skills/clawrouter/) | Description needs review; inspect source. | Catalog only |
@@ -179,6 +180,7 @@ Build, test, review, debug, and maintain applications and developer tooling.
 | [`openrouter-usage`](../skills/openrouter-usage/) | Track OpenRouter API spending — credit balance, per-model cost breakdown, | Catalog only |
 | [`pine-developer`](../skills/pine-developer/) | Writes production-quality Pine Script v6 code following TradingView guidelines and best practices. Use when implementing indicators, strategies, or any Pine Script code. Triggers… | Catalog only |
 | [`postgresql-database-engineering`](../skills/postgresql-database-engineering/) | Comprehensive PostgreSQL database engineering skill covering indexing strategies, query optimization, performance tuning, partitioning, replication, backup and recovery, high… | Portable required assignment · structure checked · CEO |
+| [`prepare-software-ip-filings`](../skills/prepare-software-ip-filings/) | Prepare evidence-backed software intellectual-property materials from a frozen code baseline, including invention disclosures, patent claim packages, drawings, code-to-claim… | Catalog only |
 | [`python-performance-optimization`](../skills/python-performance-optimization/) | Profile and optimize Python code using cProfile, memory profilers, and performance best practices. Use when debugging slow Python code, optimizing bottlenecks, or improving… | Catalog only |
 | [`qingyun-api`](../skills/qingyun-api/) | 青云聚合API多模态调用 Skill — 覆盖生图、生视频、语音、Embedding 等能力。 | Catalog only |
 | [`qmd-extended`](../skills/qmd-extended/) | Extended QMD knowledge base with multi-backend embedding (Google AI Studio / Ollama / local). Use when managing QMD embeddings, switching backends, testing embedding quality,… | Catalog only |
@@ -286,6 +288,7 @@ Collect evidence, search sources, analyze data, and communicate findings.
 | [`data-engineering-data-pipeline`](../skills/data-engineering-data-pipeline/) | You are a data pipeline architecture expert specializing in scalable, reliable, and cost-effective data pipelines for batch and streaming data processing. | Catalog only |
 | [`data-storytelling`](../skills/data-storytelling/) | Transform data into compelling narratives using visualization, context, and persuasive structure. Use when presenting analytics to stakeholders, creating data reports, or… | Catalog only |
 | [`deep-research`](../skills/deep-research/) | Multi-source deep research using firecrawl and exa MCPs. Searches the web, synthesizes findings, and delivers cited reports with source attribution. Use when the user wants… | Harness-specific assignment · generic installer skips · CEO, CQO, CRO |
+| [`design-secure-data-architecture`](../skills/design-secure-data-architecture/) | Design and review secure application data architecture across local databases, files, cloud projections, multi-tenant services, AI processing, backups, and synchronization. Use… | Catalog only |
 | [`documents`](../skills/documents/) | Manage company &amp; personal documents — rekvizity, passport, INN, bank details, scans. Store locally + Google Drive. Send data blocks on request. | Catalog only |
 | [`duckdb-cli-ai-skills`](../skills/duckdb-cli-ai-skills/) | DuckDB CLI specialist for SQL analysis, data processing and file conversion. Use for SQL queries, CSV/Parquet/JSON analysis, database queries, or data conversion. Triggers on… | Catalog only |
 | [`etl-pipeline`](../skills/etl-pipeline/) | Design and automate Extract, Transform, Load data pipelines for data integration and analytics | Catalog only |
@@ -393,6 +396,7 @@ Shape product requirements, interfaces, design systems, and user experience.
 |---|---|---|
 | [`accessibility-compliance-accessibility-audit`](../skills/accessibility-compliance-accessibility-audit/) | You are an accessibility expert specializing in WCAG compliance, inclusive design, and assistive technology compatibility. Conduct audits, identify barriers, and provide… | Catalog only |
 | [`afrexai-prd-engine`](../skills/afrexai-prd-engine/) | Complete product requirements methodology: from idea to spec to shipped feature. Not just a JSON template — a full system for writing PRDs that developers actually follow and… | Catalog only |
+| [`automate-windows-accessibility`](../skills/automate-windows-accessibility/) | Design, implement, diagnose, and validate Windows desktop or browser automation using native UI Automation, Win32 input, and optional CDP evidence. Use when locating… | Catalog only |
 | [`canvas-design`](../skills/canvas-design/) | Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other… | Catalog only |
 | [`design-thinking`](../skills/design-thinking/) | Design Thinking methodology for human-centered innovation. Covers the 5-phase IDEO/Stanford d.school approach (Empathize, Define, Ideate, Prototype, Test) with workshop… | Catalog only |
 | [`feature-requirements-clarification`](../skills/feature-requirements-clarification/) | 在任何创意性工作前必须使用：创建功能、构建组件、增加能力或修改行为。通过自然对话挖掘需求，产出高质量验收标准（AC），为后续 TDD 开发提供测试依据。当用户说'我想做一个XX功能'、'帮我想想XX怎么做'、'我需要加一个XX'等模糊需求描述时触发。 | Portable required assignment · structure checked · CEO |
@@ -404,6 +408,7 @@ Shape product requirements, interfaces, design systems, and user experience.
 | [`prd-development`](../skills/prd-development/) | Guide product managers through structured PRD (Product Requirements Document) creation by orchestrating problem framing, user research synthesis, solution definition, and success… | Portable required assignment · structure checked · CEO, CPO |
 | [`prd-generator`](../skills/prd-generator/) | 专业级产品需求文档（PRD）生成器。自动生成包含 UML 用例模型、详细用例规格说明、数据字典、交互设计、UI 规范的完整 PRD。 Use when: 用户提到写PRD、写产品需求文档、产品设计、产品规划、新功能需求分析、用例分析、用例建模时触发。 NOT for: 已有完整需求文档的润色、代码生成、技术架构设计、数据分析报告。 | Catalog only |
 | [`roadmap-planning`](../skills/roadmap-planning/) | Guide product managers through strategic roadmap planning by orchestrating prioritization, epic definition, stakeholder alignment, and release sequencing skills into a structured… | Portable required assignment · structure checked · CEO |
+| [`ship-tauri-python-sidecar`](../skills/ship-tauri-python-sidecar/) | Build, package, validate, and release Tauri desktop applications that launch a Python sidecar. Use when designing a Tauri/WebView shell, bundling a PyInstaller executable,… | Catalog only |
 | [`style-guide-generator`](../skills/style-guide-generator/) | Generate comprehensive website style guides and design systems from URLs, screenshots, and existing documentation. Use this skill when users ask to create a style guide, design… | Catalog only |
 | [`ui-ux-pro-max`](../skills/ui-ux-pro-max/) | UI/UX design intelligence. 50 styles, 21 palettes, 50 font pairings, 20 charts, 9 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui).… | Catalog only |
 | [`uml-diagram-design`](../skills/uml-diagram-design/) | UML 图表设计和绘制。当用户需要创建系统架构图、类图、时序图、用例图或其他 UML 图表时使用此技能。 | Catalog only |
@@ -411,6 +416,7 @@ Shape product requirements, interfaces, design systems, and user experience.
 | [`ux-heuristics`](../skills/ux-heuristics/) | Evaluate and improve interface usability using heuristic analysis. Use when the user mentions "usability audit", "UX review", "users are confused", "heuristic evaluation", "form… | Catalog only |
 | [`web-artifacts-builder`](../skills/web-artifacts-builder/) | Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts… | Catalog only |
 | [`web-design-guidelines`](../skills/web-design-guidelines/) | Review UI code for Web Interface Guidelines compliance. Use when asked to "review my UI", "check accessibility", "audit design", "review UX", or "check my site against best… | Catalog only |
+| [`write-product-documentation`](../skills/write-product-documentation/) | Create and maintain a fact-based product documentation system from source code, tests, UI, configuration, and release evidence. Use when writing a product description, full user… | Catalog only |
 
 <a id="marketing-seo-growth"></a>
 ## 📈 Marketing, SEO & Growth
@@ -698,6 +704,7 @@ Plan work, make decisions, manage teams, and improve operating systems.
 | [`market-nightly-evolution`](../skills/market-nightly-evolution/) | Nightly market evolution report — overnight market analysis and strategy prep | Catalog only |
 | [`meeting-insights-analyzer`](../skills/meeting-insights-analyzer/) | Analyzes meeting transcripts and recordings to uncover behavioral patterns, communication insights, and actionable feedback. Identifies when you avoid conflict, use filler words,… | Portable required assignment · structure checked · CEO |
 | [`meeting-notes`](../skills/meeting-notes/) | Description needs review; inspect source. | Catalog only |
+| [`model-business-processes`](../skills/model-business-processes/) | Discover, model, document, and validate executable business processes from product requirements, code, tests, logs, and operator behavior. Use when creating process… | Catalog only |
 | [`okr`](../skills/okr/) | 基于流行 OKR 体系管理智能体目标（O）与关键结果（KR）。当用户提到目标管理、季度计划、OKR、关键结果、复盘、评分、经验沉淀时使用，并将信息维护到 memory/okr.md。 | Harness-specific assignment · generic installer skips · CEO, GOVERNOR |
 | [`pm-done`](../skills/pm-done/) | Mark task done + schedule follow-up | Catalog only |
 | [`pricing-strategy`](../skills/pricing-strategy/) | When the user wants help with pricing decisions, packaging, or monetization strategy. Also use when the user mentions 'pricing,' 'pricing tiers,' 'freemium,' 'free trial,'… | Catalog only |
@@ -767,6 +774,7 @@ Connect everyday apps, browsers, messaging systems, and repeatable workflows.
 | [`airtable-automation`](../skills/airtable-automation/) | Automate Airtable tasks via Rube MCP (Composio): records, bases, tables, fields, views. Always search tools first for current schemas. | Catalog only |
 | [`amplitude-automation`](../skills/amplitude-automation/) | Automate Amplitude tasks via Rube MCP (Composio): events, user activity, cohorts, user identification. Always search tools first for current schemas. | Catalog only |
 | [`asana-automation`](../skills/asana-automation/) | Automate Asana tasks via Rube MCP (Composio): tasks, projects, sections, teams, workspaces. Always search tools first for current schemas. | Catalog only |
+| [`automate-macos-cua-driver`](../skills/automate-macos-cua-driver/) | Design, implement, diagnose, and validate macOS GUI or browser automation built on cua-driver, Accessibility AX trees, page bridges, and foreground input. Use when starting or… | Catalog only |
 | [`av-sync-workflow`](../skills/av-sync-workflow/) | Audio-to-video synchronization workflow: analyze audio (beats, tempo, emotion, mood), find/match video clips to match scene and feeling, sync cuts to music beats, generate… | Catalog only |
 | [`basecamp-automation`](../skills/basecamp-automation/) | Automate Basecamp project management, to-dos, messages, people, and to-do list organization via Rube MCP (Composio). Always search tools first for current schemas. | Catalog only |
 | [`bb-browser`](../skills/bb-browser/) | AI agent browser automation via CDP. Use when you need to access websites that require login, scrape data from platforms (Twitter/X, Reddit, GitHub, Xueqiu, Bilibili, etc.),… | Catalog only |

@@ -1,0 +1,4 @@
+interface:
+  display_name: "安全数据架构设计"
+  short_description: "设计本地真源、多租户同步、不可变证据链与隐私安全数据架构"
+  default_prompt: "使用 $design-secure-data-architecture 评审并设计安全的数据架构。"
