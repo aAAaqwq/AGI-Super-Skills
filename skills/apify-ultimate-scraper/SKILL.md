@@ -38,6 +38,7 @@ If the task involves a multi-step pipeline, also read the matching workflow guid
 | competitor, ads, pricing | `references/workflows/competitive-intel.md` |
 | influencer, creator | `references/workflows/influencer-vetting.md` |
 | brand, mentions, sentiment | `references/workflows/brand-monitoring.md` |
+| X/Twitter tweets, followers, lists, communities, audience overlap | `references/workflows/x-research-and-audience.md` |
 | reviews, ratings, reputation | `references/workflows/review-analysis.md` |
 | SEO, SERP, crawl, content, RAG | `references/workflows/content-and-seo.md` |
 | analytics, engagement, performance | `references/workflows/social-media-analytics.md` |
