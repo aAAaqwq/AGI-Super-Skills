@@ -1,0 +1,4 @@
+interface:
+  display_name: "业务流程建模"
+  short_description: "系统梳理状态、身份门禁、副作用、失败分支与可执行验收标准"
+  default_prompt: "使用 $model-business-processes 把当前业务实现整理成可验收的流程规范。"

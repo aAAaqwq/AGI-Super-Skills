@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent 套件文档规范"
+  short_description: "设计职责清晰、可继承、可验证的 Agent Markdown 套件"
+  default_prompt: "使用 $author-agent-suite 为当前项目创建或审查完整的 Agent 文档套件。"
