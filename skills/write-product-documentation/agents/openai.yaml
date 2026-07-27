@@ -1,0 +1,4 @@
+interface:
+  display_name: "产品文档体系写作"
+  short_description: "从代码事实编写产品说明书、用户手册、日常手册与正式验收材料"
+  default_prompt: "使用 $write-product-documentation 为当前产品建立事实一致的文档体系。"
