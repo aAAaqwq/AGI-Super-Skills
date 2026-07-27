@@ -1,0 +1,4 @@
+interface:
+  display_name: "{{DISPLAY_NAME}}"
+  short_description: "{{SHORT_DESCRIPTION_25_TO_64_CHARACTERS}}"
+  default_prompt: "使用 $verb-domain-task 完成 {{CONCRETE_TASK}}。"

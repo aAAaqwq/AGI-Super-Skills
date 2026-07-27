@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "scope": "deterministic-structural-evidence-not-semantic-verification",
   "summary": {
-    "inventoryCount": 794,
-    "structureInvalid": 177,
-    "disclosureWarnings": 569,
+    "inventoryCount": 802,
+    "structureInvalid": 178,
+    "disclosureWarnings": 577,
     "executionReviewRequired": 174,
     "issueCounts": {
       "description-missing-trigger": 263,
-      "description-over-180": 293,
+      "description-over-180": 301,
       "invalid-frontmatter-yaml": 35,
       "link-outside-repository": 5,
       "missing-frontmatter": 38,
@@ -16,10 +16,10 @@
       "over-500-lines": 55,
       "personal-absolute-path": 50,
       "scripts-without-test-evidence": 173,
-      "unmentioned-assets": 11,
+      "unmentioned-assets": 12,
       "unmentioned-references": 54,
       "unmentioned-scripts": 75,
-      "unresolved-local-link": 35
+      "unresolved-local-link": 36
     }
   },
   "skills": [
@@ -599,6 +599,18 @@
       ]
     },
     {
+      "skill_id": "author-agent-suite",
+      "path": "skills/author-agent-suite/SKILL.md",
+      "structure_status": "invalid",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180",
+        "unmentioned-assets",
+        "unresolved-local-link"
+      ]
+    },
+    {
       "skill_id": "auto-drive",
       "path": "skills/auto-drive/SKILL.md",
       "structure_status": "invalid",
@@ -635,6 +647,26 @@
         "description-missing-trigger",
         "description-over-180",
         "unmentioned-references"
+      ]
+    },
+    {
+      "skill_id": "automate-macos-cua-driver",
+      "path": "skills/automate-macos-cua-driver/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
+      ]
+    },
+    {
+      "skill_id": "automate-windows-accessibility",
+      "path": "skills/automate-windows-accessibility/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
       ]
     },
     {
@@ -1964,6 +1996,16 @@
         "description-over-180",
         "over-500-lines",
         "unresolved-local-link"
+      ]
+    },
+    {
+      "skill_id": "design-secure-data-architecture",
+      "path": "skills/design-secure-data-architecture/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
       ]
     },
     {
@@ -3570,6 +3612,16 @@
       ]
     },
     {
+      "skill_id": "model-business-processes",
+      "path": "skills/model-business-processes/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
+      ]
+    },
+    {
       "skill_id": "model-fallback",
       "path": "skills/model-fallback/SKILL.md",
       "structure_status": "invalid",
@@ -4212,6 +4264,16 @@
       "execution_status": "not-applicable",
       "issues": [
         "unmentioned-references"
+      ]
+    },
+    {
+      "skill_id": "prepare-software-ip-filings",
+      "path": "skills/prepare-software-ip-filings/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
       ]
     },
     {
@@ -4922,6 +4984,16 @@
     {
       "skill_id": "shell-expert",
       "path": "skills/shell-expert/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
+      ]
+    },
+    {
+      "skill_id": "ship-tauri-python-sidecar",
+      "path": "skills/ship-tauri-python-sidecar/SKILL.md",
       "structure_status": "pass",
       "disclosure_status": "warn",
       "execution_status": "not-applicable",
@@ -6929,6 +7001,16 @@
       "issues": [
         "description-missing-trigger",
         "scripts-without-test-evidence"
+      ]
+    },
+    {
+      "skill_id": "write-product-documentation",
+      "path": "skills/write-product-documentation/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
       ]
     },
     {

@@ -2,14 +2,14 @@
   "$schema": "../config/skill-index.schema.json",
   "categories": [
     {
-      "count": 78,
+      "count": 79,
       "description": "Coordinate agents, context, memory, models, prompts, and tool protocols.",
       "emoji": "🤖",
       "id": "ai-agents-orchestration",
       "title": "AI Agents & Orchestration"
     },
     {
-      "count": 81,
+      "count": 82,
       "description": "Build, test, review, debug, and maintain applications and developer tooling.",
       "emoji": "💻",
       "id": "software-engineering",
@@ -23,7 +23,7 @@
       "title": "Cloud, DevOps & Reliability"
     },
     {
-      "count": 78,
+      "count": 79,
       "description": "Collect evidence, search sources, analyze data, and communicate findings.",
       "emoji": "📊",
       "id": "data-analytics-research",
@@ -37,7 +37,7 @@
       "title": "Security, Privacy & Legal"
     },
     {
-      "count": 20,
+      "count": 23,
       "description": "Shape product requirements, interfaces, design systems, and user experience.",
       "emoji": "🎨",
       "id": "product-design-ux",
@@ -72,14 +72,14 @@
       "title": "Finance, Trading & Markets"
     },
     {
-      "count": 71,
+      "count": 72,
       "description": "Plan work, make decisions, manage teams, and improve operating systems.",
       "emoji": "🧭",
       "id": "business-operations-strategy",
       "title": "Business Operations & Strategy"
     },
     {
-      "count": 88,
+      "count": 89,
       "description": "Connect everyday apps, browsers, messaging systems, and repeatable workflows.",
       "emoji": "⚙️",
       "id": "apps-workflow-automation",
@@ -100,7 +100,7 @@
       "title": "Specialized Domains & Utilities"
     }
   ],
-  "inventoryCount": 794,
+  "inventoryCount": 802,
   "inventorySemantics": "tracked physical top-level directories with SKILL.md",
   "schemaVersion": 1,
   "skills": [
@@ -2279,6 +2279,37 @@
     },
     {
       "assignments": [],
+      "category_id": "ai-agents-orchestration",
+      "classification": "slug:(?:^|-)agent(?:-|$);metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "(?:^|-)agent(?:-|$)"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "ai-agents-orchestration",
+          "match_count": 1,
+          "matched_signals": [
+            "(?:^|-)agent(?:-|$)"
+          ],
+          "priority": 75,
+          "tie_detected": false
+        }
+      },
+      "description": "Create, restructure, or audit a repository's Agent Markdown suite, including AGENTS.md or host-specific AGENT.md, SKILL.md, IDENTITY.md, SOUL.md, TOOLS.md, references, templates,…",
+      "description_status": "source-text",
+      "path": "skills/author-agent-suite/SKILL.md",
+      "portability_class": "catalog-only",
+      "review_signals": [],
+      "skill_id": "author-agent-suite",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
       "category_id": "data-analytics-research",
       "classification": "description:rag;metadata:fallback",
       "classification_details": {
@@ -2367,6 +2398,68 @@
       "portability_class": "catalog-only",
       "review_signals": [],
       "skill_id": "auto-respawn",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "apps-workflow-automation",
+      "classification": "slug:(?:^|-)(?:agent-browser|browser-driver|computer-use|cua)(?:-|$);metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "(?:^|-)(?:agent-browser|browser-driver|computer-use|cua)(?:-|$)"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "apps-workflow-automation",
+          "match_count": 1,
+          "matched_signals": [
+            "(?:^|-)(?:agent-browser|browser-driver|computer-use|cua)(?:-|$)"
+          ],
+          "priority": 70,
+          "tie_detected": false
+        }
+      },
+      "description": "Design, implement, diagnose, and validate macOS GUI or browser automation built on cua-driver, Accessibility AX trees, page bridges, and foreground input. Use when starting or…",
+      "description_status": "source-text",
+      "path": "skills/automate-macos-cua-driver/SKILL.md",
+      "portability_class": "catalog-only",
+      "review_signals": [],
+      "skill_id": "automate-macos-cua-driver",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "product-design-ux",
+      "classification": "slug:accessibility;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "accessibility"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "product-design-ux",
+          "match_count": 1,
+          "matched_signals": [
+            "accessibility"
+          ],
+          "priority": 90,
+          "tie_detected": false
+        }
+      },
+      "description": "Design, implement, diagnose, and validate Windows desktop or browser automation using native UI Automation, Win32 input, and optional CDP evidence. Use when locating…",
+      "description_status": "source-text",
+      "path": "skills/automate-windows-accessibility/SKILL.md",
+      "portability_class": "catalog-only",
+      "review_signals": [],
+      "skill_id": "automate-windows-accessibility",
       "support_level": "catalog",
       "used_by": []
     },
@@ -7769,6 +7862,56 @@
         "CTO",
         "PE"
       ]
+    },
+    {
+      "assignments": [],
+      "category_id": "data-analytics-research",
+      "classification": "slug:(?:^|-)data(?:-|$)|\\bdata\\b;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "(?:^|-)data(?:-|$)|\\bdata\\b"
+        ],
+        "method": "slug",
+        "resolution_status": "priority-tie",
+        "review_state": "unreviewed",
+        "runner_ups": [
+          {
+            "category_id": "product-design-ux",
+            "match_count": 1,
+            "matched_signals": [
+              "design"
+            ],
+            "priority": 90,
+            "tied_for_first": true
+          },
+          {
+            "category_id": "software-engineering",
+            "match_count": 1,
+            "matched_signals": [
+              "architecture"
+            ],
+            "priority": 80,
+            "tied_for_first": true
+          }
+        ],
+        "winner": {
+          "category_id": "data-analytics-research",
+          "match_count": 1,
+          "matched_signals": [
+            "(?:^|-)data(?:-|$)|\\bdata\\b"
+          ],
+          "priority": 95,
+          "tie_detected": true
+        }
+      },
+      "description": "Design and review secure application data architecture across local databases, files, cloud projections, multi-tenant services, AI processing, backups, and synchronization. Use…",
+      "description_status": "source-text",
+      "path": "skills/design-secure-data-architecture/SKILL.md",
+      "portability_class": "catalog-only",
+      "review_signals": [],
+      "skill_id": "design-secure-data-architecture",
+      "support_level": "catalog",
+      "used_by": []
     },
     {
       "assignments": [],
@@ -14421,6 +14564,49 @@
       "used_by": []
     },
     {
+      "assignments": [],
+      "category_id": "business-operations-strategy",
+      "classification": "slug:business,process;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "business",
+          "process"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [
+          {
+            "category_id": "ai-agents-orchestration",
+            "match_count": 1,
+            "matched_signals": [
+              "(?:^|-)model(?:-|$)"
+            ],
+            "priority": 75,
+            "tied_for_first": false
+          }
+        ],
+        "winner": {
+          "category_id": "business-operations-strategy",
+          "match_count": 2,
+          "matched_signals": [
+            "business",
+            "process"
+          ],
+          "priority": 65,
+          "tie_detected": false
+        }
+      },
+      "description": "Discover, model, document, and validate executable business processes from product requirements, code, tests, logs, and operator behavior. Use when creating process…",
+      "description_status": "source-text",
+      "path": "skills/model-business-processes/SKILL.md",
+      "portability_class": "catalog-only",
+      "review_signals": [],
+      "skill_id": "model-business-processes",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
       "assignments": [
         {
           "agent": "CTO",
@@ -16724,6 +16910,37 @@
       "portability_class": "catalog-only",
       "review_signals": [],
       "skill_id": "pre-push-security-scan",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "software-engineering",
+      "classification": "description:(?:^|-)code(?:-|$)|\\bcode\\b;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "(?:^|-)code(?:-|$)|\\bcode\\b"
+        ],
+        "method": "description",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "software-engineering",
+          "match_count": 1,
+          "matched_signals": [
+            "(?:^|-)code(?:-|$)|\\bcode\\b"
+          ],
+          "priority": 80,
+          "tie_detected": false
+        }
+      },
+      "description": "Prepare evidence-backed software intellectual-property materials from a frozen code baseline, including invention disclosures, patent claim packages, drawings, code-to-claim…",
+      "description_status": "source-text",
+      "path": "skills/prepare-software-ip-filings/SKILL.md",
+      "portability_class": "catalog-only",
+      "review_signals": [],
+      "skill_id": "prepare-software-ip-filings",
       "support_level": "catalog",
       "used_by": []
     },
@@ -19554,6 +19771,37 @@
       "portability_class": "catalog-only",
       "review_signals": [],
       "skill_id": "shell-expert",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "product-design-ux",
+      "classification": "description:design;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "design"
+        ],
+        "method": "description",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "product-design-ux",
+          "match_count": 1,
+          "matched_signals": [
+            "design"
+          ],
+          "priority": 90,
+          "tie_detected": false
+        }
+      },
+      "description": "Build, package, validate, and release Tauri desktop applications that launch a Python sidecar. Use when designing a Tauri/WebView shell, bundling a PyInstaller executable,…",
+      "description_status": "source-text",
+      "path": "skills/ship-tauri-python-sidecar/SKILL.md",
+      "portability_class": "catalog-only",
+      "review_signals": [],
+      "skill_id": "ship-tauri-python-sidecar",
       "support_level": "catalog",
       "used_by": []
     },
@@ -26756,6 +27004,37 @@
       "portability_class": "catalog-only",
       "review_signals": [],
       "skill_id": "workspace-directory-manager",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "product-design-ux",
+      "classification": "slug:(?:^|-)product(?:-|$)|\\bproduct\\b;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "(?:^|-)product(?:-|$)|\\bproduct\\b"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "product-design-ux",
+          "match_count": 1,
+          "matched_signals": [
+            "(?:^|-)product(?:-|$)|\\bproduct\\b"
+          ],
+          "priority": 90,
+          "tie_detected": false
+        }
+      },
+      "description": "Create and maintain a fact-based product documentation system from source code, tests, UI, configuration, and release evidence. Use when writing a product description, full user…",
+      "description_status": "source-text",
+      "path": "skills/write-product-documentation/SKILL.md",
+      "portability_class": "catalog-only",
+      "review_signals": [],
+      "skill_id": "write-product-documentation",
       "support_level": "catalog",
       "used_by": []
     },
