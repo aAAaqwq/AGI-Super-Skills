@@ -83,6 +83,8 @@ Tiers: `apify` = Apify-maintained (always prefer), `community` = community-maint
 | apidojo/twitter-user-scraper | community | user profiles |
 | apidojo/twitter-profile-scraper | community | profiles + recent tweets |
 | apidojo/twitter-list-scraper | community | tweets from lists |
+| [xquik/x-follower-scraper](https://apify.com/xquik/x-follower-scraper) | community | followers, following, lists, communities, and audience overlap |
+| [xquik/x-tweet-scraper](https://apify.com/xquik/x-tweet-scraper) | community | tweet search, profiles, lists, threads, replies, quotes, and articles |
 
 ## LinkedIn
 
