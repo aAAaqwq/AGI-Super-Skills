@@ -1,6 +1,6 @@
 ---
 name: model-business-processes
-description: Discover, model, document, and validate executable business processes from product requirements, code, tests, logs, and operator behavior. Use when creating process documentation, workflow maps, state machines, pipeline orchestration, limit semantics, identity gates, dry-run rules, side-effect policies, failure handling, observability, handoffs, or acceptance criteria for multi-step automated or human-in-the-loop operations.
+description: Model and validate executable business processes. Use for workflow maps, state machines, orchestration, identity gates, dry-run rules, side effects, failures, or handoffs.
 ---
 
 # Model Business Processes

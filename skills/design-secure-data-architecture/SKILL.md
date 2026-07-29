@@ -1,6 +1,6 @@
 ---
 name: design-secure-data-architecture
-description: Design and review secure application data architecture across local databases, files, cloud projections, multi-tenant services, AI processing, backups, and synchronization. Use when defining data ownership, PII classification, local source-of-truth models, RLS isolation, credential boundaries, provenance chains, transactions, outbox delivery, idempotency, conflict resolution, retention, migration, or security acceptance tests.
+description: Design secure application data architecture. Use for data ownership, PII, source-of-truth models, tenant isolation, provenance, transactions, sync, retention, or migrations.
 ---
 
 # Design Secure Data Architecture

@@ -1,6 +1,6 @@
 ---
 name: author-agent-suite
-description: Create, restructure, or audit a repository's Agent Markdown suite, including AGENTS.md or host-specific AGENT.md, SKILL.md, IDENTITY.md, SOUL.md, TOOLS.md, references, templates, and skill UI metadata. Use when defining agent identity, personality, repository instructions, tool contracts, reusable workflows, instruction precedence, nested scope, safety boundaries, documentation loading, or consistency and acceptance rules for an AI-agent-enabled project.
+description: Create or audit an Agent Markdown suite. Use when defining AGENTS.md, identity, behavior, tools, reusable Skills, instruction precedence, safety boundaries, or loading rules.
 ---
 
 # Author Agent Suite
@@ -32,6 +32,8 @@ Build an instruction system whose files have one owner, one purpose, and an expl
 ## Deliverables
 
 Produce a file responsibility map, load/precedence graph, the requested Markdown suite, a conflict log, and a validation report. Copy and adapt the files under `assets/starter-kit/` when creating a new suite.
+
+The starter kit contains `AGENT.md`, `AGENTS.md`, `IDENTITY.md`, `SOUL.md`, `TOOLS.md`, `SKILL.md`, and `agents/openai.yaml`; copy only the files required by the target runtime.
 
 ## References
 

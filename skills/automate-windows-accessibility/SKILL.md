@@ -1,6 +1,6 @@
 ---
 name: automate-windows-accessibility
-description: Design, implement, diagnose, and validate Windows desktop or browser automation using native UI Automation, Win32 input, and optional CDP evidence. Use when locating accessibility elements, clicking virtualized lists, handling DPI or multiple monitors, controlling real Chrome sessions, preventing stale-element or stale-panel errors, downloading authenticated files, or replacing an unstable cross-platform automation driver on Windows.
+description: Build and validate Windows UI automation with UIA, Win32 input, and CDP evidence. Use for accessibility elements, DPI, Chrome sessions, stale state, or downloads.
 ---
 
 # Automate Windows Accessibility

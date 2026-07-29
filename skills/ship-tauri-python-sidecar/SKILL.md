@@ -1,6 +1,6 @@
 ---
 name: ship-tauri-python-sidecar
-description: Build, package, validate, and release Tauri desktop applications that launch a Python sidecar. Use when designing a Tauri/WebView shell, bundling a PyInstaller executable, synchronizing versions, producing NSIS or platform installers, creating CI release workflows, diagnosing sidecar startup or shutdown, or defining signing and update-channel gates.
+description: Build and release Tauri apps with a Python sidecar. Use for WebView shells, PyInstaller bundles, version sync, installers, CI releases, lifecycle bugs, signing, or updates.
 ---
 
 # Ship Tauri Python Sidecar
