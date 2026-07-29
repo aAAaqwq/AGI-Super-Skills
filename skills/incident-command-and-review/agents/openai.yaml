@@ -1,0 +1,4 @@
+interface:
+  display_name: "事件指挥与复盘"
+  short_description: "在不执行生产动作的前提下组织事件响应、恢复判断与复盘改进"
+  default_prompt: "使用 $incident-command-and-review 建立事件态势、指挥节奏、恢复标准和复盘计划。"

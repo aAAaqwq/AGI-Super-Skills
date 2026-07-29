@@ -1,0 +1,4 @@
+interface:
+  display_name: "高管决策系统"
+  short_description: "把公司级议题转成可追溯、可执行并可复查的战略决策记录"
+  default_prompt: "使用 $executive-decision-system 比较战略选项并形成决策备忘录。"

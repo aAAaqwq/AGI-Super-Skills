@@ -1,0 +1,4 @@
+interface:
+  display_name: "销售机会治理"
+  short_description: "销售机会治理：从发现资格到预测、谈判与客户成功交接闭环"
+  default_prompt: "使用 $revenue-opportunity-governance 审查这个销售机会，并给出资格、预测、谈判和交接建议。"

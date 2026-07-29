@@ -1,0 +1,4 @@
+interface:
+  display_name: "产品发现与组合治理"
+  short_description: "产品发现与组合治理：从用户证据到阶段门、组合取舍与学习闭环"
+  default_prompt: "使用 $product-discovery-portfolio-governance 审查这个产品机会，并给出阶段门、组合取舍和下一验证。"
