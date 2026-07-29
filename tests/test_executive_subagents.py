@@ -10,6 +10,20 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "config"
 PAYLOAD = ROOT / "plugins" / "agi-super-team-codex" / "payload" / "agents"
+EXPECTED_COUNTS = {
+    "cto": 22,
+    "cpo": 3,
+    "cco": 19,
+    "cfo": 8,
+    "cdo": 5,
+    "cqo": 4,
+    "cmo": 7,
+    "cro": 6,
+    "cso": 8,
+    "coo": 4,
+    "clo": 6,
+}
+EXPECTED_SPECIALISTS = sum(EXPECTED_COUNTS.values())
 
 
 class ExecutiveSubagentTests(unittest.TestCase):
@@ -33,17 +47,17 @@ class ExecutiveSubagentTests(unittest.TestCase):
                 Draft202012Validator(routing_schema).validate(registry)
 
     def test_pyramid_has_exact_requested_shape_and_pe_is_a_reference(self) -> None:
-        expected = {"cco": 19, "cto": 22, "cpo": 3}
         self.assertEqual(
             {manager: len(settings["subagents"]) for manager, settings in self.hierarchy["managers"].items()},
-            expected,
+            EXPECTED_COUNTS,
         )
         self.assertEqual(self.hierarchy["managers"]["cto"]["roleRefs"], ["pe"])
         self.assertFalse((ROOT / "agents/cto/subagents/pe").exists())
         self.assertEqual(self.hierarchy["requiredMaxDepth"], 2)
         self.assertTrue(all(item["maxConcurrentChildren"] == 2 for item in self.hierarchy["managers"].values()))
+        self.assertTrue({"ceo", "pe", "governor"}.isdisjoint(self.hierarchy["managers"]))
 
-    def test_hierarchy_routing_and_source_lock_cover_the_same_forty_four_roles(self) -> None:
+    def test_hierarchy_routing_and_source_lock_cover_the_same_roles(self) -> None:
         hierarchy_roles = {
             f"{manager}/{role}"
             for manager, settings in self.hierarchy["managers"].items()
@@ -55,9 +69,13 @@ class ExecutiveSubagentTests(unittest.TestCase):
             for item in registry["specialists"]
         }
         source_roles = {f"{item['manager']}/{item['id']}" for item in self.source_lock["entries"]}
-        self.assertEqual(len(hierarchy_roles), 44)
+        self.assertEqual(len(hierarchy_roles), EXPECTED_SPECIALISTS)
         self.assertEqual(hierarchy_roles, routing_roles)
         self.assertEqual(hierarchy_roles, source_roles)
+        self.assertEqual(
+            len({item["sourcePath"] for item in self.source_lock["entries"]}),
+            EXPECTED_SPECIALISTS,
+        )
 
     def test_every_vendored_agent_is_verbatim_locked_and_not_a_symlink(self) -> None:
         for entry in self.source_lock["entries"]:

@@ -100,6 +100,126 @@
         "content-illustration-planner": "ast-cco-content-illustration-planner"
       },
       "roleRefs": {}
+    },
+    "cfo": {
+      "agent": "ast-cfo",
+      "requiredMaxDepth": 2,
+      "maxConcurrentChildren": 2,
+      "fallbackMode": "parent-flat",
+      "delegates": {
+        "bookkeeper-controller": "ast-cfo-bookkeeper-controller",
+        "fpa-analyst": "ast-cfo-fpa-analyst",
+        "financial-forecaster": "ast-cfo-financial-forecaster",
+        "financial-analyst": "ast-cfo-financial-analyst",
+        "invoice-manager": "ast-cfo-invoice-manager",
+        "tax-strategist": "ast-cfo-tax-strategist",
+        "fraud-detector": "ast-cfo-fraud-detector",
+        "pricing-analyst": "ast-cfo-pricing-analyst"
+      },
+      "roleRefs": {}
+    },
+    "cdo": {
+      "agent": "ast-cdo",
+      "requiredMaxDepth": 2,
+      "maxConcurrentChildren": 2,
+      "fallbackMode": "parent-flat",
+      "delegates": {
+        "ai-data-remediation-engineer": "ast-cdo-ai-data-remediation-engineer",
+        "email-intelligence-engineer": "ast-cdo-email-intelligence-engineer",
+        "data-consolidator": "ast-cdo-data-consolidator",
+        "sales-data-extractor": "ast-cdo-sales-data-extractor",
+        "identity-graph-operator": "ast-cdo-identity-graph-operator"
+      },
+      "roleRefs": {}
+    },
+    "cqo": {
+      "agent": "ast-cqo",
+      "requiredMaxDepth": 2,
+      "maxConcurrentChildren": 2,
+      "fallbackMode": "parent-flat",
+      "delegates": {
+        "investment-researcher": "ast-cqo-investment-researcher",
+        "model-qa-specialist": "ast-cqo-model-qa-specialist",
+        "experiment-tracker": "ast-cqo-experiment-tracker",
+        "spatial-data-scientist": "ast-cqo-spatial-data-scientist"
+      },
+      "roleRefs": {}
+    },
+    "cmo": {
+      "agent": "ast-cmo",
+      "requiredMaxDepth": 2,
+      "maxConcurrentChildren": 2,
+      "fallbackMode": "parent-flat",
+      "delegates": {
+        "brand-guardian": "ast-cmo-brand-guardian",
+        "china-market-localization-strategist": "ast-cmo-china-market-localization-strategist",
+        "pr-communications-manager": "ast-cmo-pr-communications-manager",
+        "email-strategist": "ast-cmo-email-strategist",
+        "paid-social-strategist": "ast-cmo-paid-social-strategist",
+        "ppc-strategist": "ast-cmo-ppc-strategist",
+        "tracking-attribution-specialist": "ast-cmo-tracking-attribution-specialist"
+      },
+      "roleRefs": {}
+    },
+    "cro": {
+      "agent": "ast-cro",
+      "requiredMaxDepth": 2,
+      "maxConcurrentChildren": 2,
+      "fallbackMode": "parent-flat",
+      "delegates": {
+        "trend-researcher": "ast-cro-trend-researcher",
+        "feedback-analyst": "ast-cro-feedback-analyst",
+        "x-twitter-intelligence-analyst": "ast-cro-x-twitter-intelligence-analyst",
+        "news-intelligence-officer": "ast-cro-news-intelligence-officer",
+        "search-query-analyst": "ast-cro-search-query-analyst",
+        "evidence-collector": "ast-cro-evidence-collector"
+      },
+      "roleRefs": {}
+    },
+    "cso": {
+      "agent": "ast-cso",
+      "requiredMaxDepth": 2,
+      "maxConcurrentChildren": 2,
+      "fallbackMode": "parent-flat",
+      "delegates": {
+        "discovery-coach": "ast-cso-discovery-coach",
+        "outbound-strategist": "ast-cso-outbound-strategist",
+        "sales-engineer": "ast-cso-sales-engineer",
+        "deal-strategist": "ast-cso-deal-strategist",
+        "proposal-strategist": "ast-cso-proposal-strategist",
+        "pipeline-analyst": "ast-cso-pipeline-analyst",
+        "customer-success-manager": "ast-cso-customer-success-manager",
+        "account-strategist": "ast-cso-account-strategist"
+      },
+      "roleRefs": {}
+    },
+    "coo": {
+      "agent": "ast-coo",
+      "requiredMaxDepth": 2,
+      "maxConcurrentChildren": 2,
+      "fallbackMode": "parent-flat",
+      "delegates": {
+        "operations-manager": "ast-coo-operations-manager",
+        "project-shepherd": "ast-coo-project-shepherd",
+        "change-management-consultant": "ast-coo-change-management-consultant",
+        "meeting-notes-specialist": "ast-coo-meeting-notes-specialist"
+      },
+      "roleRefs": {}
+    },
+    "clo": {
+      "agent": "ast-clo",
+      "requiredMaxDepth": 2,
+      "maxConcurrentChildren": 2,
+      "fallbackMode": "parent-flat",
+      "delegates": {
+        "contract-reviewer": "ast-clo-contract-reviewer",
+        "legal-policy-writer": "ast-clo-legal-policy-writer",
+        "data-privacy-officer": "ast-clo-data-privacy-officer",
+        "legal-document-reviewer": "ast-clo-legal-document-reviewer",
+        "ai-governance-policy-specialist": "ast-clo-ai-governance-policy-specialist",
+        "healthcare-marketing-compliance": "ast-clo-healthcare-marketing-compliance"
+      },
+      "roleRefs": {}
     }
   }
 }

@@ -1,0 +1,112 @@
+{
+  "$schema": "./specialist-routing.schema.json",
+  "schemaVersion": 1,
+  "parent": "cfo",
+  "requiredMaxDepth": 2,
+  "maxConcurrentLeaves": 2,
+  "source": {
+    "repository": "https://github.com/jnMetaCode/agency-agents-zh",
+    "commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977",
+    "license": "MIT",
+    "notice": "上游角色原文逐字复制并由 config/agent-sources.lock.json 锁定；本文件只维护本地路由与安全边界。"
+  },
+  "roleRoutes": [],
+  "specialists": [
+    {
+      "id": "bookkeeper-controller",
+      "name": "簿记与财务总监",
+      "sourcePath": "finance/finance-bookkeeper-controller.md",
+      "trigger": "需要记账口径、月结、科目对账、三表底稿或内部控制证据。",
+      "doNotUseWhen": "核心任务是预测、预算、税务意见，或要求实际过账、付款、访问账户。",
+      "requiredInputs": ["总账或流水导出", "会计期间", "科目表", "支持凭证", "适用会计口径"],
+      "outputs": ["结账清单", "对账表", "调整建议", "控制例外与底稿索引"],
+      "acceptance": ["余额可勾稽", "差异有解释", "分录有凭证", "口径和未审计状态明确"],
+      "partners": ["financial-analyst", "invoice-manager", "cdo", "clo"],
+      "boundary": "只准备和复核材料；不得实际过账、付款，也不得宣称报表已审计或已符合特定准则。"
+    },
+    {
+      "id": "fpa-analyst",
+      "name": "FP&A 分析师",
+      "sourcePath": "finance/finance-fpa-analyst.md",
+      "trigger": "需要年度预算、滚动规划、部门预算归属或实际与预算差异分析。",
+      "doNotUseWhen": "核心问题是账务准确性、短期现金预测或单项重大投资估值。",
+      "requiredInputs": ["战略目标", "历史实际", "业务驱动", "部门计划", "预算上限"],
+      "outputs": ["预算模型", "滚动计划", "差异桥接", "责任归属与纠偏建议"],
+      "acceptance": ["预算绑定驱动和负责人", "差异分解到量价组合", "情景与停止条件齐全"],
+      "partners": ["financial-forecaster", "bookkeeper-controller", "coo", "cpo", "cto"],
+      "boundary": "不批准预算或招聘，不把单点预测包装为承诺，不代替业务负责人确认运营假设。"
+    },
+    {
+      "id": "financial-forecaster",
+      "name": "财务预测分析师",
+      "sourcePath": "finance/finance-financial-forecaster.md",
+      "trigger": "需要收入、现金、烧钱率、Runway 或融资失败情景的多情景预测。",
+      "doNotUseWhen": "只需年度预算、历史差异解释、账务结算或证券研究。",
+      "requiredInputs": ["现金余额", "回款付款计划", "收入管线", "成本计划", "融资假设"],
+      "outputs": ["短期现金预测", "Runway 区间", "上下行情景", "敏感性与预警阈值"],
+      "acceptance": ["现金时点可复算", "假设有来源", "预测与实际可回溯", "下行情景明确"],
+      "partners": ["fpa-analyst", "financial-analyst", "cso", "cdo"],
+      "boundary": "不保证融资或收入，不访问银行账户，不把融资计划当作已经到账的现金。"
+    },
+    {
+      "id": "financial-analyst",
+      "name": "财务分析师",
+      "sourcePath": "finance/finance-financial-analyst.md",
+      "trigger": "需要重大项目、产品线、并购或资本开支的三表、估值、单位经济和敏感性模型。",
+      "doNotUseWhen": "只是日常预算、结账、市场证券选股或量化策略研究。",
+      "requiredInputs": ["决策问题", "财务历史", "完整成本", "收益驱动", "可选方案"],
+      "outputs": ["可复算模型", "单位经济表", "估值区间", "情景与决策备忘录"],
+      "acceptance": ["输入公式输出分层", "现金与权责口径清楚", "最坏损失可见", "他人可重算"],
+      "partners": ["fpa-analyst", "financial-forecaster", "pricing-analyst", "cpo", "cto"],
+      "boundary": "只支持组织内部财务决策；不提供个人投资建议，不执行资本配置或资金动作。"
+    },
+    {
+      "id": "invoice-manager",
+      "name": "发票管理专家",
+      "sourcePath": "finance/finance-invoice-manager.md",
+      "trigger": "涉及中国增值税发票、三单匹配、报销证据、发票台账与异常票据。",
+      "doNotUseWhen": "只是一般账务结算、税务筹划，或要求操作税控系统、开票、认证、申报。",
+      "requiredInputs": ["脱敏发票字段", "合同", "订单", "验收证据", "审批规则"],
+      "outputs": ["发票台账", "三单匹配结果", "异常清单", "抵扣证据包"],
+      "acceptance": ["票据链可追溯", "重复和缺失异常明确", "待专业复核项隔离"],
+      "partners": ["bookkeeper-controller", "tax-strategist", "fraud-detector", "clo"],
+      "boundary": "不登录税控系统，不代开发票、认证或申报；完整税号和敏感票据不得外泄。"
+    },
+    {
+      "id": "tax-strategist",
+      "name": "税务策略师",
+      "sourcePath": "finance/finance-tax-strategist.md",
+      "trigger": "需要比较税务结构、跨辖区影响、转让定价或交易税务风险。",
+      "doNotUseWhen": "只需发票管理、日常记账，或要求形成可直接申报的正式税务意见。",
+      "requiredInputs": ["实体结构", "税收居民地", "交易流", "合同", "适用期间和辖区"],
+      "outputs": ["税务问题清单", "方案比较", "假设与风险", "专业人士交接包"],
+      "acceptance": ["辖区和日期明确", "法源可追溯", "节税与合规风险并列", "签字事项标出"],
+      "partners": ["invoice-manager", "bookkeeper-controller", "clo"],
+      "boundary": "不报税、不保证节税；当前税率和正式结论必须交持牌税务师或当地律师复核。"
+    },
+    {
+      "id": "fraud-detector",
+      "name": "金融风控分析师",
+      "sourcePath": "finance/finance-fraud-detector.md",
+      "trigger": "出现重复付款、异常交易模式、账户接管迹象、渠道欺诈或反洗钱风险信号。",
+      "doNotUseWhen": "只是一般数据质量异常、网络安全入侵或已经进入正式司法调查。",
+      "requiredInputs": ["脱敏交易数据", "风控规则", "历史基线", "渠道信息", "授权调查范围"],
+      "outputs": ["异常评分", "证据链", "误报评估", "升级与控制改进建议"],
+      "acceptance": ["规则阈值可解释", "样本时间明确", "误报漏报风险披露", "高风险证据保全"],
+      "partners": ["bookkeeper-controller", "invoice-manager", "clo", "governor", "security-engineer"],
+      "boundary": "不冻结账户、不拦截或批准交易、不接触凭据；疑似犯罪或重大损失立即升级。"
+    },
+    {
+      "id": "pricing-analyst",
+      "name": "定价分析师",
+      "sourcePath": "specialized/specialized-pricing-analyst.md",
+      "trigger": "需要结合价值、成本、竞品和支付意愿建立价格、折扣及利润护栏。",
+      "doNotUseWhen": "需要电商实时动态调价、营销活动执行，或缺少成本与用户证据。",
+      "requiredInputs": ["成本栈", "客户分群", "支付意愿证据", "竞品价格", "毛利目标"],
+      "outputs": ["价格架构", "价格敏感性", "折扣护栏", "实验与财务影响"],
+      "acceptance": ["完整成本纳入", "不只依赖竞品", "分群假设透明", "最坏毛利影响明确"],
+      "partners": ["financial-analyst", "cpo", "cmo", "cso"],
+      "boundary": "不直接改价或发布报价；市场承诺、折扣例外和真实价格变更由授权负责人批准。"
+    }
+  ]
+}

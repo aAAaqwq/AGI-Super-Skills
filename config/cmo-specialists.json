@@ -1,0 +1,100 @@
+{
+  "$schema": "./specialist-routing.schema.json",
+  "schemaVersion": 1,
+  "parent": "cmo",
+  "requiredMaxDepth": 2,
+  "maxConcurrentLeaves": 2,
+  "source": {
+    "repository": "https://github.com/jnMetaCode/agency-agents-zh",
+    "commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977",
+    "license": "MIT",
+    "notice": "上游角色原文逐字复制并由 config/agent-sources.lock.json 锁定；本文件只维护本地路由与安全边界。"
+  },
+  "roleRoutes": [],
+  "specialists": [
+    {
+      "id": "brand-guardian",
+      "name": "品牌守护者",
+      "sourcePath": "design/design-brand-guardian.md",
+      "trigger": "需要品牌定位、品牌承诺、语气、信息架构、品牌指南或跨触点一致性审查。",
+      "doNotUseWhen": "只需制作单个平台内容、具体 UI，或尚无产品事实与目标受众证据。",
+      "requiredInputs": ["市场与受众", "产品事实与限制", "现有品牌资产", "竞品定位", "合规约束"],
+      "outputs": ["品牌基础框架", "信息语气架构", "品牌一致性检查表"],
+      "acceptance": ["定位回答核心问题", "所有承诺有证据", "渠道适配规则可执行"],
+      "partners": ["cpo", "cco", "clo", "china-market-localization-strategist"],
+      "boundary": "不替代 CPO 定义产品，不擅自判断商标法律结论，不直接发布或修改生产品牌资产。"
+    },
+    {
+      "id": "china-market-localization-strategist",
+      "name": "中国市场本地化策略师",
+      "sourcePath": "marketing/marketing-china-market-localization-strategist.md",
+      "trigger": "海外产品进入中国或选择中国市场细分，需要文化、平台、政策、季节和 GTM 本地化。",
+      "doNotUseWhen": "只是抖音、小红书、微信等单个平台的日常运营或内容制作。",
+      "requiredInputs": ["原市场定位", "产品能力限制", "目标品类", "区域人群", "预算时间窗"],
+      "outputs": ["中国市场机会报告", "本地化定位差距", "分阶段 GTM 路线"],
+      "acceptance": ["信号有来源时间", "趋势热点分离", "平台任务明确移交 CCO"],
+      "partners": ["cro", "cco", "cpo", "clo"],
+      "boundary": "只负责市场进入与本地化策略，不制作发布平台内容；政策和广告法结论交 CLO。"
+    },
+    {
+      "id": "pr-communications-manager",
+      "name": "PR 与传播经理",
+      "sourcePath": "marketing/marketing-pr-communications-manager.md",
+      "trigger": "需要发布叙事、媒体关系计划、新闻稿草案、高管传播、声誉或危机传播准备。",
+      "doNotUseWhen": "只是日常社媒内容、无事实依据的造势，或需法律与事故响应主导的重大事件。",
+      "requiredInputs": ["核验事实", "传播目标", "受众利益方", "禁发项", "批准链时间线"],
+      "outputs": ["传播策略", "信息矩阵", "新闻稿问答与应急声明草案"],
+      "acceptance": ["事实观点分离", "敏感声明有审批人", "危机场景含升级停止条件"],
+      "partners": ["cco", "cro", "clo", "governor"],
+      "boundary": "不得联系记者、发送稿件或公开回应；法律、事故和证券相关声明必须升级。"
+    },
+    {
+      "id": "email-strategist",
+      "name": "邮件营销策略师",
+      "sourcePath": "marketing/marketing-email-strategist.md",
+      "trigger": "需要基于同意状态的邮件分群、生命周期序列、数据契约、可送达性与衡量设计。",
+      "doNotUseWhen": "只需写单封邮件文案、销售一对一外联，或缺少合法同意依据。",
+      "requiredInputs": ["生命周期阶段", "同意退订状态", "CRM 字段", "目标行为", "地域合规要求"],
+      "outputs": ["分群定义", "序列退出规则", "系统字段映射", "衡量合规清单"],
+      "acceptance": ["无无差别群发", "触发退出可验证", "同意抑制规则完整", "指标不依赖打开率"],
+      "partners": ["cco", "cdo", "cso", "clo"],
+      "boundary": "不得导入联系人、操作账号或群发；文案成品交 CCO，销售外联交 CSO。"
+    },
+    {
+      "id": "paid-social-strategist",
+      "name": "社交广告策略师",
+      "sourcePath": "paid-media/paid-media-paid-social-strategist.md",
+      "trigger": "需要付费社交的受众、漏斗、创意测试和预算假设。",
+      "doNotUseWhen": "目标是自然社媒运营、单条内容创作，或尚未定义转化与数据同意。",
+      "requiredInputs": ["ICP 与目标行为", "渠道基线", "素材资产", "预算上限", "转化隐私约束"],
+      "outputs": ["付费社交方案", "受众排除架构", "创意实验矩阵", "预算停止规则"],
+      "acceptance": ["付费自然职责分开", "频次品牌隐私护栏清楚", "不保证 ROAS"],
+      "partners": ["tracking-attribution-specialist", "cco", "cdo", "cfo"],
+      "boundary": "不得创建广告、上传受众或花费预算；素材交 CCO，预算批准归 CFO 与人类。"
+    },
+    {
+      "id": "ppc-strategist",
+      "name": "PPC 竞价策略师",
+      "sourcePath": "paid-media/paid-media-ppc-strategist.md",
+      "trigger": "需要付费搜索账户结构、关键词、出价、预算与增量测试。",
+      "doNotUseWhen": "只是 SEO、自然搜索内容，或缺少已验证转化事件与预算边界。",
+      "requiredInputs": ["业务目标", "关键词意图", "历史账户数据", "预算", "转化价值定义"],
+      "outputs": ["PPC 账户架构", "关键词排除策略", "出价预算计划", "实验停止规则"],
+      "acceptance": ["流量类型分层", "预算风险上限明确", "结论标注归因限制"],
+      "partners": ["tracking-attribution-specialist", "seo-specialist", "cdo", "cfo"],
+      "boundary": "不得登录广告账户、改出价或消费；自然搜索归 CCO 的 SEO 专家。"
+    },
+    {
+      "id": "tracking-attribution-specialist",
+      "name": "追踪与归因专家",
+      "sourcePath": "paid-media/paid-media-tracking-specialist.md",
+      "trigger": "需要营销事件分类、追踪架构、事件去重、同意模式或归因限制审计。",
+      "doNotUseWhen": "需要直接改生产埋点、定义公司级数据口径，或把相关性证明为增量因果。",
+      "requiredInputs": ["转化定义", "数据流与埋点", "平台清单", "同意要求", "技术环境"],
+      "outputs": ["追踪架构", "事件字段字典", "QA 对账计划", "归因限制说明"],
+      "acceptance": ["事件可去重对账", "PII 同意边界明确", "部署验证职责清楚"],
+      "partners": ["cdo", "cto", "clo", "ppc-strategist", "paid-social-strategist"],
+      "boundary": "只设计和审计；生产代码由 CTO/PE 执行，数据口径由 CDO 确认，隐私由 CLO 审核。"
+    }
+  ]
+}

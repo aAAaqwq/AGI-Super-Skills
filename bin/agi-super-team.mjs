@@ -24,8 +24,8 @@ Targets:
 
 Content and actions:
   --no-agents            Do not install canonical Agents
-  --with-subagents <id>  Install one executive group: cto, cpo, or cco (repeatable)
-  --all-subagents        Install all 44 executive specialist leaves
+  --with-subagents <id>  Install one executive group from the hierarchy (repeatable)
+  --all-subagents        Install all 92 executive specialist leaves
   --with-cco-specialists Compatibility alias for --with-subagents cco
   --no-skills            Do not install the six curated Skills
   --doctor               Verify the selected installation (read-only)

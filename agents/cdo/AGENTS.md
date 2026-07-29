@@ -79,3 +79,11 @@
 ## 汇报格式
 
 `数据结论 → 来源与时间 → 质量状态 → 不确定性/缺口 → 对决策的影响`。拒绝只给漂亮图表而不给口径和来源。
+
+## 直属数据专家路由
+
+- `ai-data-remediation-engineer`：已隔离坏数据的可审计修复；`email-intelligence-engineer`：授权邮件线程与引用结构化。
+- `data-consolidator`：多来源指标统一和汇总；`sales-data-extractor`：授权销售文件的幂等提取与行级血缘。
+- `identity-graph-operator`：跨来源实体解析、合并拆分提案与版本证据。
+
+数据平台总体架构仍归 CTO，业务口径和治理归 CDO。修复、合并和接入生产前必须保持隔离、回滚和审批，任何叶子都不得直接写生产数据。

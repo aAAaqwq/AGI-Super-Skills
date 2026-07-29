@@ -42,7 +42,7 @@ python3 "<absolute-skill-directory>/scripts/sync_codex_agents.py"
 python3 "<absolute-skill-directory>/scripts/sync_codex_agents.py" --install
 ```
 
-To install only the executive pyramids, use `--with-subagents cto`, `cpo`, or `cco` (repeatable), or `--all-subagents`. `--with-cco-specialists` remains a compatibility alias.
+To install only executive pyramids, use repeatable `--with-subagents <manager-id>` for any manager declared in `agent-hierarchy.json`, or `--all-subagents` for all 92 specialists. `--with-cco-specialists` remains a compatibility alias.
 
 ## Safety Rules
 
@@ -56,7 +56,7 @@ To install only the executive pyramids, use `--with-subagents cto`, `cpo`, or `c
 
 ## Configuration
 
-This Skill deliberately leaves `~/.codex/config.toml` unchanged. Parent-led C-suite leaves work with depth 1. CTO/CPO/CCO-managed specialists require depth 2; recommend reviewing settings such as:
+This Skill deliberately leaves `~/.codex/config.toml` unchanged. Parent-led C-suite leaves work with depth 1. Manager-led specialists require depth 2; recommend reviewing settings such as:
 
 ```toml
 [agents]

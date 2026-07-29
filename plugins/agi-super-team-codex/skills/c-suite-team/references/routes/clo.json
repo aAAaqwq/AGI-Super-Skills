@@ -1,0 +1,212 @@
+{
+  "$schema": "./specialist-routing.schema.json",
+  "schemaVersion": 1,
+  "parent": "clo",
+  "requiredMaxDepth": 2,
+  "maxConcurrentLeaves": 2,
+  "source": {
+    "repository": "https://github.com/jnMetaCode/agency-agents-zh",
+    "commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977",
+    "license": "MIT",
+    "notice": "上游角色原文逐字复制并由 config/agent-sources.lock.json 锁定；本文件只维护本地路由与安全边界。"
+  },
+  "roleRoutes": [],
+  "specialists": [
+    {
+      "id": "contract-reviewer",
+      "name": "合同审查专家",
+      "sourcePath": "legal/legal-contract-reviewer.md",
+      "trigger": "中国商业合同需要主体、付款、责任、知识产权、数据、终止和争议解决审查。",
+      "doNotUseWhen": "需要非中国辖区正式意见、诉讼策略或纯隐私治理。",
+      "requiredInputs": [
+        "主体与我方角色",
+        "司法辖区",
+        "商业目标",
+        "合同版本",
+        "基线与风险容忍"
+      ],
+      "outputs": [
+        "合同摘要",
+        "条款偏差表",
+        "风险分级",
+        "修改建议与律师问题"
+      ],
+      "acceptance": [
+        "重大条款无遗漏",
+        "发现定位条款",
+        "缺失条款明确",
+        "残余风险可见"
+      ],
+      "partners": [
+        "legal-document-reviewer",
+        "cfo",
+        "cso",
+        "data-privacy-officer"
+      ],
+      "boundary": "不签署、不代表主体谈判、不保证可执行性；动态法源须按当前官方资料和当地律师复核。"
+    },
+    {
+      "id": "legal-policy-writer",
+      "name": "制度文件撰写专家",
+      "sourcePath": "legal/legal-policy-writer.md",
+      "trigger": "中国数据合规场景需要内部制度、隐私政策、用户协议或应用隐私整改文本。",
+      "doNotUseWhen": "缺少真实数据流却要求套模板，或需要全球隐私治理和正式法律意见。",
+      "requiredInputs": [
+        "主体辖区",
+        "产品数据流",
+        "数据类别 SDK",
+        "控制负责人",
+        "当前权威法源"
+      ],
+      "outputs": [
+        "义务矩阵",
+        "制度用户文本草案",
+        "控制落地映射",
+        "版本复核记录"
+      ],
+      "acceptance": [
+        "文本对应真实活动",
+        "义务有负责人证据",
+        "第三方披露完整",
+        "版本日期明确"
+      ],
+      "partners": [
+        "data-privacy-officer",
+        "cdo",
+        "cpo"
+      ],
+      "boundary": "只起草和映射，不宣称组织已经合规，不替人类批准发布，不处理不必要个人数据。"
+    },
+    {
+      "id": "data-privacy-officer",
+      "name": "数据隐私官",
+      "sourcePath": "specialized/data-privacy-officer.md",
+      "trigger": "涉及多辖区数据测绘、DPIA、合法性基础、数据主体请求、供应商或跨境传输。",
+      "doNotUseWhen": "属于数据平台工程、技术泄露遏制或普通内容审查。",
+      "requiredInputs": [
+        "主体辖区",
+        "数据地图目的",
+        "合法性基础",
+        "供应商跨境链路",
+        "保留安全措施"
+      ],
+      "outputs": [
+        "处理活动记录",
+        "DPIA",
+        "权利请求流程",
+        "供应商传输评估",
+        "通知时间线"
+      ],
+      "acceptance": [
+        "目的最小必要",
+        "处理有合法基础",
+        "跨境机制明确",
+        "法定时限未知可见"
+      ],
+      "partners": [
+        "legal-policy-writer",
+        "cdo",
+        "security-engineer",
+        "coo"
+      ],
+      "boundary": "不操作生产数据、不联系监管机构、不出正式法律意见；技术控制证据由技术负责人提供。"
+    },
+    {
+      "id": "legal-document-reviewer",
+      "name": "法律文书审查专家",
+      "sourcePath": "specialized/legal-document-review.md",
+      "trigger": "大型协议、诉讼或不动产文件需要初审、摘要、版本比对和律师关注点标记。",
+      "doNotUseWhen": "简单中国商业合同应优先合同审查专家；最终法律意见和诉讼策略交律师。",
+      "requiredInputs": [
+        "文件版本",
+        "文件类型",
+        "当事人角色",
+        "司法辖区",
+        "审查目的风险容忍"
+      ],
+      "outputs": [
+        "文书摘要",
+        "条款风险标记",
+        "版本差异",
+        "缺失条款与律师清单"
+      ],
+      "acceptance": [
+        "重大条款完整",
+        "发现定位页码条款",
+        "版本变化可追踪",
+        "律师复核点明确"
+      ],
+      "partners": [
+        "contract-reviewer",
+        "cfo",
+        "cso"
+      ],
+      "boundary": "不把初审当法律建议；不上传外部服务、不扩散受保护文件、不保存无必要原文。"
+    },
+    {
+      "id": "ai-governance-policy-specialist",
+      "name": "AI 治理政策专家",
+      "sourcePath": "specialized/specialized-ai-policy-writer.md",
+      "trigger": "中国 AI 产品涉及算法备案、深度合成、生成式 AI、安全评估、内容标识或伦理治理。",
+      "doNotUseWhen": "需要模型构建与性能验证、非中国辖区规则，或直接执行正式申报。",
+      "requiredInputs": [
+        "主体地域",
+        "产品开放方式",
+        "模型训练数据概况",
+        "内容流",
+        "当前法规版本"
+      ],
+      "outputs": [
+        "法规适用矩阵",
+        "合规差距",
+        "AI 生命周期治理",
+        "备案评估材料清单"
+      ],
+      "acceptance": [
+        "法规草案分开",
+        "触发主体准确",
+        "控制有负责人证据",
+        "引用含日期版本"
+      ],
+      "partners": [
+        "ai-engineer",
+        "data-privacy-officer",
+        "model-qa-specialist",
+        "governor"
+      ],
+      "boundary": "不提交备案、不联系监管、不保证审批；技术实现由 CTO，独立 Gate 由 Governor。"
+    },
+    {
+      "id": "healthcare-marketing-compliance",
+      "name": "医疗健康营销合规师",
+      "sourcePath": "specialized/healthcare-marketing-compliance.md",
+      "trigger": "中国药品、器械、医美、保健品或互联网医疗内容需要广告与患者隐私专项审查。",
+      "doNotUseWhen": "属于一般营销策略、医疗诊断建议、非医疗行业或非中国辖区。",
+      "requiredInputs": [
+        "主体产品分类",
+        "批件资质",
+        "受众渠道",
+        "宣传主张证据",
+        "患者数据授权"
+      ],
+      "outputs": [
+        "内容风险矩阵",
+        "禁用披露清单",
+        "审批路径",
+        "可接受改写与复核点"
+      ],
+      "acceptance": [
+        "主张不超批准范围",
+        "科普广告分开",
+        "证明有效期可查",
+        "患者同意脱敏有证据"
+      ],
+      "partners": [
+        "cco",
+        "cmo",
+        "data-privacy-officer"
+      ],
+      "boundary": "不发布内容、不作医疗建议、不签发广告审批；法规和平台规则必须按当前一手来源复核。"
+    }
+  ]
+}

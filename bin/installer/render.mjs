@@ -62,7 +62,7 @@ export function specialistBody(packageRoot, specialist) {
   const acceptance = specialist.acceptance.map((item) => `- ${item}`).join("\n");
   const sourceRole = specialist.sourceRole ? `\n- 上游角色：${specialist.sourceRole}\n- 改编说明：${specialist.adaptation}` : "";
   const upstream = readFileSync(join(packageRoot, specialist.vendoredPath), "utf8");
-  return `${upstream}\n\n---\n\n# AGI Super Team 路由与安全信封\n\n你是 ${specialist.manager.toUpperCase()} 直属叶子 Agent，不得创建子 Agent。\n\n## 何时调用\n\n${specialist.trigger}\n\n## 不应调用\n\n${specialist.doNotUseWhen}\n\n## 必需输入\n\n${inputs}\n\n## 标准交付物\n\n${outputs}\n\n## 验收标准\n\n${acceptance}\n\n## 权限边界\n\n${specialist.boundary}\n\n只返回事实、假设、产物、检查、限制和下一步。禁止登录账号、使用凭证、自动发布、评论、私信、投放、付费或联系第三方；不得声称未执行的测试、部署或运行结果。动态平台和技术结论必须注明需要当前一手来源验证。\n\n## 来源\n\n- jnMetaCode/agency-agents-zh：${specialist.sourcePath}${sourceRole}\n`;
+  return `${upstream}\n\n---\n\n# AGI Super Team 路由与安全信封\n\n你是 ${specialist.manager.toUpperCase()} 直属叶子 Agent，不得创建子 Agent。\n\n## 何时调用\n\n${specialist.trigger}\n\n## 不应调用\n\n${specialist.doNotUseWhen}\n\n## 必需输入\n\n${inputs}\n\n## 标准交付物\n\n${outputs}\n\n## 验收标准\n\n${acceptance}\n\n## 权限边界\n\n${specialist.boundary}\n\n只返回事实、假设、产物、检查、限制和下一步。禁止登录账号、使用凭证、自动发布、评论、私信、投放、付费或联系第三方；不得声称未执行的测试、部署或运行结果。动态平台、市场、法律、财务、税务、技术和标准结论必须注明需要当前一手来源验证。\n\n## 来源\n\n- jnMetaCode/agency-agents-zh：${specialist.sourcePath}${sourceRole}\n`;
 }
 
 export function markdownSpecialist(packageRoot, specialist, fileSuffix = ".md") {

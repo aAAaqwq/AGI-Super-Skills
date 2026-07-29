@@ -7,7 +7,7 @@ description: Run an outcome-oriented C-suite team in Codex with the parent actin
 
 Run the smallest C-suite team that can produce the requested outcome. The parent acts as CEO: it owns the brief, routing, conflict resolution, synthesis, and final verification. It does not spawn another CEO.
 
-The packaged structural contract is [references/team-contracts.json](references/team-contracts.json). Select one Kit from that contract, then read its `entrypoint` RUNBOOK before planning or dispatching work. Read only the role contracts needed for the task. When CTO, CPO, or CCO needs a narrower child, read that manager in [references/agent-hierarchy.json](references/agent-hierarchy.json), then read only its route file under `references/routes/`. Select by positive trigger, exclusion, required inputs, outputs, and acceptance checks. Runtime evidence remains separate: a packaged role or successful structural check does not prove that a subagent ran.
+The packaged structural contract is [references/team-contracts.json](references/team-contracts.json). Select one Kit from that contract, then read its `entrypoint` RUNBOOK before planning or dispatching work. Read only the role contracts needed for the task. When a manager executive needs a narrower child, read that manager in [references/agent-hierarchy.json](references/agent-hierarchy.json), then read only its route file under `references/routes/`. Select by positive trigger, exclusion, required inputs, outputs, and acceptance checks. Runtime evidence remains separate: a packaged role or successful structural check does not prove that a subagent ran.
 
 ## 1. Select a Kit and execution mode
 
@@ -15,7 +15,7 @@ Choose the closest Kit, then state its outcome, coordinator, independent reviewe
 
 Negotiate capability before dispatch:
 
-- **Native:** `spawn_agent`, messaging, and wait capabilities exist, and the mapped `ast-*` roles are installed. CTO/CPO/CCO-to-specialist delegation additionally requires runtime depth 2.
+- **Native:** `spawn_agent`, messaging, and wait capabilities exist, and the mapped `ast-*` roles are installed. Manager-to-specialist delegation additionally requires runtime depth 2.
 - **Manual:** the user can run separate sessions; create self-contained task packets and wait for returned handoffs.
 - **Sequential:** only one context exists; read each role contract in order and label the result as a simulated role pass, not independent review.
 - **Blocked:** a required mapping, permission, or reviewer is absent and substitution would change the decision.
@@ -29,11 +29,11 @@ Create a dispatch table before spawning:
 | Role | Objective | Owned artifacts/files | Dependencies | Acceptance checks |
 |---|---|---|---|---|
 
-Use no more than three concurrent C-suite leaves. A leaf receives one bounded task and must not spawn more agents. CTO, CPO, and CCO are bounded managers: while one is active it may spawn only its installed children from `managerAgentMap`, no more than two concurrently, with total depth no greater than two. Each identifies work object, domain/platform, and delivery stage; chooses one primary child; and adds at most one partner for a distinct downstream artifact. CTO reuses canonical `ast-pe` as its delivery lead; do not create `ast-cto-pe`, and PE remains a leaf. With four threads, run one manager wave at a time and do not occupy the remaining slots with other leaves. If required inputs are missing or two routes remain plausible, ask one concise clarification instead of broadcasting. Shared writable files have one owner. External publishing, deployment, trading, credentials, destructive changes, commits, pushes, merges, and PR creation require explicit human approval.
+Use no more than three concurrent C-suite leaves. A leaf receives one bounded task and must not spawn more agents. The eleven executives listed in `managerAgentMap` are bounded managers: while one is active it may spawn only its installed children, no more than two concurrently, with total depth no greater than two. Each identifies work object, domain/platform, and delivery stage; chooses one primary child; and adds at most one partner for a distinct downstream artifact. CTO reuses canonical `ast-pe` as its delivery lead; do not create `ast-cto-pe`, and PE remains a leaf. CEO is the parent coordinator and Governor is an independent review leaf; neither receives a specialist group. With four threads, run one manager wave at a time and do not occupy the remaining slots with other leaves. If required inputs are missing or two routes remain plausible, ask one concise clarification instead of broadcasting. Shared writable files have one owner. External publishing, deployment, trading, credentials, destructive changes, commits, pushes, merges, and PR creation require explicit human approval.
 
 ## 3. Dispatch and handoff
 
-In native mode, use `spawn_agent` with the adapter's mapped `ast-*` agent. Codex custom Agent types cannot be combined with a full-history fork: when `agent_type` is an `ast-*` role, set `fork_turns` to `"none"` and put all required context in the self-contained task packet below. The same rule applies when a bounded manager dispatches an `ast-cto-*`, `ast-cpo-*`, `ast-cco-*`, or canonical `ast-pe` child. Treat a rejected spawn as a failed attempt, not an observed role handoff. Every task includes:
+In native mode, use `spawn_agent` with the adapter's mapped `ast-*` agent. Codex custom Agent types cannot be combined with a full-history fork: when `agent_type` is an `ast-*` role, set `fork_turns` to `"none"` and put all required context in the self-contained task packet below. The same rule applies when a bounded manager dispatches its mapped `ast-<manager>-*` child or canonical `ast-pe` child. Treat a rejected spawn as a failed attempt, not an observed role handoff. Every task includes:
 
 ```markdown
 Objective: one observable result.

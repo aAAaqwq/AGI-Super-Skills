@@ -40,11 +40,19 @@
     "managerAgentMap": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["cto", "cpo", "cco"],
+      "required": ["cto", "cpo", "cco", "cfo", "cdo", "cqo", "cmo", "cro", "cso", "coo", "clo"],
       "properties": {
         "cto": {"$ref": "#/$defs/manager"},
         "cpo": {"$ref": "#/$defs/manager"},
-        "cco": {"$ref": "#/$defs/manager"}
+        "cco": {"$ref": "#/$defs/manager"},
+        "cfo": {"$ref": "#/$defs/manager"},
+        "cdo": {"$ref": "#/$defs/manager"},
+        "cqo": {"$ref": "#/$defs/manager"},
+        "cmo": {"$ref": "#/$defs/manager"},
+        "cro": {"$ref": "#/$defs/manager"},
+        "cso": {"$ref": "#/$defs/manager"},
+        "coo": {"$ref": "#/$defs/manager"},
+        "clo": {"$ref": "#/$defs/manager"}
       }
     }
   },
@@ -54,7 +62,7 @@
       "additionalProperties": false,
       "required": ["agent", "requiredMaxDepth", "maxConcurrentChildren", "fallbackMode", "delegates", "roleRefs"],
       "properties": {
-        "agent": {"type": "string", "pattern": "^ast-(cto|cpo|cco)$"},
+        "agent": {"type": "string", "pattern": "^ast-(cto|cpo|cco|cfo|cdo|cqo|cmo|cro|cso|coo|clo)$"},
         "requiredMaxDepth": {"const": 2},
         "maxConcurrentChildren": {"const": 2},
         "fallbackMode": {"const": "parent-flat"},
@@ -62,7 +70,7 @@
           "type": "object",
           "minProperties": 1,
           "propertyNames": {"pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
-          "additionalProperties": {"type": "string", "pattern": "^ast-(cto|cpo|cco)-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+          "additionalProperties": {"type": "string", "pattern": "^ast-(cto|cpo|cco|cfo|cdo|cqo|cmo|cro|cso|coo|clo)-[a-z0-9]+(?:-[a-z0-9]+)*$"}
         },
         "roleRefs": {
           "type": "object",

@@ -40,22 +40,30 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
 
 ### 安装高管子 Agent 军团
 
-默认仍只安装 14 个顶层角色。按需增加一个直属军团，或一次安装全部 44 个专家：
+默认仍只安装 14 个顶层角色。按需增加一个直属军团，或一次安装全部 92 个专家：
 
 ```bash
 # 先预览，再把相同命令加上 --install
 npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cto
-npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cpo --with-subagents cco
+npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cfo --with-subagents clo
 npx -y github:aAAaqwq/AGI-Super-Team --tool codex --all-subagents --install
 ```
 
-组织关系采用三层金字塔：CEO → CTO/CPO/CCO → 直属叶子。CTO 另外引用现有 PE 作为生产交付负责人，不复制第二份 PE 身份。44 份 `agents/<高管>/subagents/<角色>/AGENTS.md` 均从 `jnMetaCode/agency-agents-zh` 固定提交逐字复制；本项目的触发、排除、输入、交付、验收与安全边界单独维护，不改写上游原文。来源链接和 SHA-256 见 [`config/agent-sources.lock.json`](./config/agent-sources.lock.json)。
+组织关系采用三层金字塔：CEO → 11 位管理型高管 → 直属叶子。CTO 另外引用现有 PE 作为生产交付负责人，不复制第二份 PE 身份。92 份 `agents/<高管>/subagents/<角色>/AGENTS.md` 均从 `jnMetaCode/agency-agents-zh` 固定提交逐字复制；本项目的触发、排除、输入、交付、验收与安全边界单独维护，不改写上游原文。来源链接和 SHA-256 见 [`config/agent-sources.lock.json`](./config/agent-sources.lock.json)。CEO 保留总协调权，Governor 保持独立审查，PE 仍是 CTO 引用的生产交付叶子，三者都不再向下复制一套专家。
 
 | 管理者 | 直属角色 | 路由重点 |
 |---|---:|---|
 | CTO | 22 个工程专家 + canonical PE | 窄领域不确定性先交专家；已批准的跨模块生产交付交 PE |
 | CPO | 3 个设计专家 | 未知用户问题 → UX 研究；未知结构 → UX 架构；结构已定 → UI 设计 |
 | CCO | 19 个内容增长专家 | 先按工作对象、平台、生产阶段消歧；一个主责，最多一个协作 |
+| CFO | 8 个财务专家 | 核算、FP&A、预测、税务、反欺诈与定价分别路由 |
+| CDO | 5 个数据专家 | 数据修复、整合、提取与身份图谱分责 |
+| CQO | 4 个量化专家 | 投资研究、模型 QA、实验追踪与空间数据分析分责 |
+| CMO | 7 个营销专家 | 品牌、本地化、公关、邮件、付费投放与归因分责 |
+| CRO | 6 个研究专家 | 趋势、反馈、社媒、新闻、搜索词与证据收集分责 |
+| CSO | 8 个销售专家 | 发现、外呼、售前、交易、提案、管线、成功与大客户分责 |
+| COO | 4 个运营专家 | 日常运营、项目推进、变革与会议行动项分责 |
+| CLO | 6 个法务合规专家 | 合同、政策、隐私、文档、AI 治理与医疗营销合规分责 |
 
 Codex 的嵌套调用需要 `max_depth = 2`。在 `max_threads = 4` 下，一次只运行一个管理者波次：CEO + 一个高管 + 最多两个直属叶子。若深度仍为 1，由 CEO 平铺调用同一专家并如实标记降级，不声称高管完成了嵌套委派。
 
@@ -127,7 +135,7 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
 | 层级 | 你会得到什么 | 为什么有用 |
 |---|---|---|
 | **🧩 Skills** | 按 14 类成果组织的权威实体 `SKILL.md` | 为重复任务复用聚焦方法，不必每次重写指令 |
-| **🤖 Agents** | 14 个顶层角色包 + 44 个可选直属专家，包含人格、工作流、精确路由和来源锁 | 让规划、工程、产品、内容、研究和审查拥有明确负责人 |
+| **🤖 Agents** | 14 个顶层角色包 + 92 个可选直属专家，包含人格、工作流、精确路由和来源锁 | 让规划、工程、产品、内容、研究和审查拥有明确负责人 |
 | **🔁 Team Packs** | 8 个由 manifest 驱动的成果型 Team，覆盖 Solo Founder 到 Full Team | 围绕成果启用最小充分团队，而不是一开始加载全部角色 |
 
 <p>
@@ -279,8 +287,8 @@ npm run check:architecture
 flowchart LR
   subgraph R["AGI Super Team 仓库：版本化内容，不是运行时"]
     S["skills/<br/>可复用方法"]
-    A["agents/<br/>14 个顶层角色 + 44 个可选专家"]
-    M["team-manifest.json<br/>4 个团队包 + Skills 映射"]
+    A["agents/<br/>14 个顶层角色 + 92 个可选专家"]
+    M["team-manifest.json<br/>8 个团队包 + Skills 映射"]
     C["plugins/agi-super-team-codex/<br/>Codex 精选包"]
   end
 

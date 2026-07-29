@@ -3,8 +3,8 @@
 | Contract | Owns | Consumer / check |
 |---|---|---|
 | [`team-manifest.json`](./team-manifest.json) | 14 Agents, starter kits, portable, harness-specific, and external Skill assignments | installer, catalog, validator |
-| [`agent-hierarchy.json`](./agent-hierarchy.json) | CEO→CTO/CPO/CCO→direct-child edges, canonical PE reference, depth and wave limits | Codex generator, multi-CLI installer, hierarchy tests |
-| [`cto-specialists.json`](./cto-specialists.json), [`cpo-specialists.json`](./cpo-specialists.json), [`cco-specialists.json`](./cco-specialists.json) | positive/negative triggers, inputs, outputs, acceptance and boundaries for 44 leaves | manager prompts and adapter renderers |
+| [`agent-hierarchy.json`](./agent-hierarchy.json) | CEO→11 manager executives→direct-child edges, canonical PE reference, depth and wave limits | Codex generator, multi-CLI installer, hierarchy tests |
+| [`*-specialists.json`](./) | positive/negative triggers, inputs, outputs, acceptance and boundaries for 92 leaves across CTO, CPO, CCO, CFO, CDO, CQO, CMO, CRO, CSO, COO, and CLO | manager prompts and adapter renderers |
 | [`agent-sources.lock.json`](./agent-sources.lock.json) | pinned agency-agents-zh source URL, vendored path and byte-level SHA-256 | provenance builder and drift tests |
 | [`skill-taxonomy.json`](./skill-taxonomy.json) | deterministic primary discovery categories and risk flags | `npm run check:skills` |
 | [`skill-provenance.json`](./skill-provenance.json) | reviewed Original, Adapted, Collected, or Unknown origin evidence for named Skills | catalog and Agent index builders |

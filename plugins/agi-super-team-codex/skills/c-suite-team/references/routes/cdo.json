@@ -1,0 +1,179 @@
+{
+  "$schema": "./specialist-routing.schema.json",
+  "schemaVersion": 1,
+  "parent": "cdo",
+  "requiredMaxDepth": 2,
+  "maxConcurrentLeaves": 2,
+  "source": {
+    "repository": "https://github.com/jnMetaCode/agency-agents-zh",
+    "commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977",
+    "license": "MIT",
+    "notice": "上游角色原文逐字复制并由 config/agent-sources.lock.json 锁定；本文件只维护本地路由与安全边界。"
+  },
+  "roleRoutes": [],
+  "specialists": [
+    {
+      "id": "ai-data-remediation-engineer",
+      "name": "AI 数据修复工程师",
+      "sourcePath": "engineering/engineering-ai-data-remediation-engineer.md",
+      "trigger": "大批异常数据已隔离，确定性规则不足，需要归类并生成可审计修复逻辑。",
+      "doNotUseWhen": "需要重建整体数据平台、改变数据契约，或异常数据尚未完成隔离。",
+      "requiredInputs": [
+        "异常样本",
+        "数据契约",
+        "主键",
+        "质量规则",
+        "隔离与回滚要求"
+      ],
+      "outputs": [
+        "异常模式簇",
+        "候选修复函数",
+        "沙箱验证",
+        "隔离与审计记录"
+      ],
+      "acceptance": [
+        "无静默丢失",
+        "每项变换可解释",
+        "修复可回滚",
+        "敏感数据不出边界"
+      ],
+      "partners": [
+        "data-engineer",
+        "identity-graph-operator",
+        "cdo",
+        "pe"
+      ],
+      "boundary": "AI 只生成和验证候选逻辑，不直接写生产数据；真实提升由 CTO/PE 和人类批准。"
+    },
+    {
+      "id": "email-intelligence-engineer",
+      "name": "邮件智能工程师",
+      "sourcePath": "engineering/engineering-email-intelligence-engineer.md",
+      "trigger": "已授权邮件需要线程重建、去重、参与者归属和带引用的结构化上下文。",
+      "doNotUseWhen": "需要发送邮件、管理邮箱、绕过授权，或只是普通文本摘要。",
+      "requiredInputs": [
+        "授权数据范围",
+        "原始邮件导出",
+        "租户边界",
+        "保留规则",
+        "输出契约"
+      ],
+      "outputs": [
+        "线程拓扑",
+        "去重消息集",
+        "参与者图谱",
+        "行动项与来源引用"
+      ],
+      "acceptance": [
+        "消息归属正确",
+        "引用可回源",
+        "租户隔离",
+        "删除保留可执行"
+      ],
+      "partners": [
+        "identity-graph-operator",
+        "clo",
+        "data-engineer"
+      ],
+      "boundary": "只处理明确授权的数据；不得登录邮箱、发送邮件、扩展采集范围或把原文写入日志。"
+    },
+    {
+      "id": "data-consolidator",
+      "name": "数据整合师",
+      "sourcePath": "specialized/data-consolidation-agent.md",
+      "trigger": "多来源销售指标需要统一口径、区域人员汇总、趋势和新鲜度标记。",
+      "doNotUseWhen": "需要采集原始文件、对外发送报告，或数据契约尚未定义。",
+      "requiredInputs": [
+        "标准化指标",
+        "指标定义",
+        "主键",
+        "时区币种",
+        "新鲜度 SLO"
+      ],
+      "outputs": [
+        "汇总数据集",
+        "指标计算说明",
+        "新鲜度状态",
+        "异常质量报告"
+      ],
+      "acceptance": [
+        "跨视图口径一致",
+        "空值显式处理",
+        "时间来源可下钻",
+        "异常不静默修补"
+      ],
+      "partners": [
+        "sales-data-extractor",
+        "identity-graph-operator",
+        "cso",
+        "cfo"
+      ],
+      "boundary": "只生成受治理的数据资产，不把相关性包装成结论，不直接发布仪表盘或改生产数据。"
+    },
+    {
+      "id": "sales-data-extractor",
+      "name": "销售数据提取师",
+      "sourcePath": "specialized/sales-data-extraction-agent.md",
+      "trigger": "已授权销售报表需要幂等提取月度、年度和预测指标并保留行级血缘。",
+      "doNotUseWhen": "属于非销售数据源、需要跨系统平台重构，或文件访问未经授权。",
+      "requiredInputs": [
+        "授权文件",
+        "字段契约",
+        "人员主数据",
+        "时间币种规则",
+        "去重策略"
+      ],
+      "outputs": [
+        "标准化数据",
+        "字段映射",
+        "导入日志",
+        "失败隔离行与文件哈希"
+      ],
+      "acceptance": [
+        "重复导入不重复",
+        "每行可追溯",
+        "多币种不混算",
+        "失败显式"
+      ],
+      "partners": [
+        "data-consolidator",
+        "identity-graph-operator",
+        "cso"
+      ],
+      "boundary": "不持续监控未经授权目录，不写生产库；真实系统接入与自动化交 CTO/PE 实现。"
+    },
+    {
+      "id": "identity-graph-operator",
+      "name": "身份图谱操作员",
+      "sourcePath": "specialized/identity-graph-operator.md",
+      "trigger": "人、公司、产品等实体跨来源重复或冲突，需要规范 ID、合并拆分证据和版本历史。",
+      "doNotUseWhen": "只是字段清洗，或缺少租户、主键和身份解析授权。",
+      "requiredInputs": [
+        "来源记录",
+        "租户",
+        "匹配规则",
+        "阈值",
+        "主键与版本"
+      ],
+      "outputs": [
+        "规范实体映射",
+        "置信度",
+        "字段证据",
+        "合并拆分提案与冲突队列"
+      ],
+      "acceptance": [
+        "相同输入结果确定",
+        "决策可解释",
+        "中置信度不自动合并",
+        "跨租户零泄露"
+      ],
+      "partners": [
+        "ai-data-remediation-engineer",
+        "email-intelligence-engineer",
+        "sales-data-extractor",
+        "clo"
+      ],
+      "boundary": "不凭直觉合并、不跨租户查询；不可逆合并必须经过审核并具备回滚路径。"
+    }
+  ]
+}

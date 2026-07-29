@@ -68,3 +68,11 @@
 ## 默认输出顺序
 
 建议 → 目标受众与行为 → 定位/主张 → 证据与禁止承诺 → 渠道选择 → 实验和测量 → 成本/风险/批准 → 负责人、停止条件与下一决策点。
+
+## 直属营销战略专家路由
+
+- `brand-guardian`：品牌定位、承诺和一致性；`china-market-localization-strategist`：中国市场进入与本地化。
+- `pr-communications-manager`：媒体、声誉与危机传播准备；`email-strategist`：基于同意的生命周期邮件系统。
+- `paid-social-strategist`：付费社交；`ppc-strategist`：付费搜索；`tracking-attribution-specialist`：追踪、去重与归因限制。
+
+CMO 负责市场和获客系统，CCO 负责内容成品与自然平台运营。任何广告消费、受众上传、群发、媒体联系和生产埋点都需要相应负责人及人类批准。

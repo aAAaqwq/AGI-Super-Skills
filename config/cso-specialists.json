@@ -1,0 +1,112 @@
+{
+  "$schema": "./specialist-routing.schema.json",
+  "schemaVersion": 1,
+  "parent": "cso",
+  "requiredMaxDepth": 2,
+  "maxConcurrentLeaves": 2,
+  "source": {
+    "repository": "https://github.com/jnMetaCode/agency-agents-zh",
+    "commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977",
+    "license": "MIT",
+    "notice": "上游角色原文逐字复制并由 config/agent-sources.lock.json 锁定；本文件只维护本地路由与安全边界。"
+  },
+  "roleRoutes": [],
+  "specialists": [
+    {
+      "id": "discovery-coach",
+      "name": "Discovery 教练",
+      "sourcePath": "sales/sales-discovery-coach.md",
+      "trigger": "需要准备或复盘客户发现，澄清现状、问题、影响、决策标准和下一步。",
+      "doNotUseWhen": "需要大规模获客、正式技术 POC、报价或合同谈判。",
+      "requiredInputs": ["客户背景", "机会阶段", "事实假设", "会议目标", "授权边界"],
+      "outputs": ["发现问题树", "通话计划或复盘", "客户事实未知项", "下一步建议"],
+      "acceptance": ["问题不诱导", "客户原话与推断分开", "不虚构客户确认"],
+      "partners": ["deal-strategist", "sales-engineer", "cmo"],
+      "boundary": "不得联系、录音或代表销售开会；只准备和分析，任何外部动作需人类批准。"
+    },
+    {
+      "id": "outbound-strategist",
+      "name": "Outbound 策略师",
+      "sourcePath": "sales/sales-outbound-strategist.md",
+      "trigger": "已有 ICP 与合法联系人来源，需要信号驱动的账户分层、触达序列和实验设计。",
+      "doNotUseWhen": "尚未确认 ICP、合法依据不成立，或需要 CMO 负责的大规模需求生成。",
+      "requiredInputs": ["ICP 排除条件", "授权信号", "联系人来源", "价值主张", "合规限制"],
+      "outputs": ["账户分层", "信号字典", "多渠道序列草案", "回复停止指标"],
+      "acceptance": ["触达有相关性理由", "含抑制退出规则", "不以发送量为成功"],
+      "partners": ["discovery-coach", "cmo", "clo", "pipeline-analyst"],
+      "boundary": "不得抓取受限联系人、发送邮件私信或操作 CRM；禁止垃圾群发与隐藏自动化。"
+    },
+    {
+      "id": "sales-engineer",
+      "name": "售前工程师",
+      "sourcePath": "sales/sales-engineer.md",
+      "trigger": "合格机会需要技术 Discovery、定制 Demo、POC 范围、成功标准或技术竞争定位。",
+      "doNotUseWhen": "尚未确认客户问题，或需要真实产品开发和生产部署。",
+      "requiredInputs": ["客户用例", "技术环境", "决策标准", "产品能力限制", "POC 时间资源"],
+      "outputs": ["技术发现记录", "Demo 叙事", "POC 方案", "技术风险依赖"],
+      "acceptance": ["成功标准事前确认", "范围排除清楚", "能力声明经 CTO/CPO 验证"],
+      "partners": ["cto", "pe", "cpo", "deal-strategist"],
+      "boundary": "不得承诺路线图、运行未批准 POC 或接触客户系统；实现由 CTO/PE 负责。"
+    },
+    {
+      "id": "deal-strategist",
+      "name": "赢单策略师",
+      "sourcePath": "sales/sales-deal-strategist.md",
+      "trigger": "复杂 B2B 机会需要资格审查、利益相关方、竞争态势、采购流程和赢单计划。",
+      "doNotUseWhen": "只是首次发现、组合级预测，或需要撰写正式 RFP 响应。",
+      "requiredInputs": ["客户侧证据", "机会阶段", "利益相关方", "竞争情况", "下一步阻塞"],
+      "outputs": ["机会资格评估", "证据缺口", "赢单计划", "退出推进建议"],
+      "acceptance": ["阶段由客户行动证明", "未知项不被评分掩盖", "没有伪精确成交概率"],
+      "partners": ["discovery-coach", "sales-engineer", "proposal-strategist", "pipeline-analyst"],
+      "boundary": "不得篡改 CRM 阶段、制造虚假紧迫、擅自报价或作出合同与交付承诺。"
+    },
+    {
+      "id": "proposal-strategist",
+      "name": "投标策略师",
+      "sourcePath": "sales/sales-proposal-strategist.md",
+      "trigger": "已合格机会或 RFP 需要合规矩阵、赢标主题、执行摘要和有证据的方案叙事。",
+      "doNotUseWhen": "机会尚未完成发现、需要法律条款审查，或技术方案尚未确认。",
+      "requiredInputs": ["RFP 需求", "客户确认问题", "能力限制", "案例证据", "评审标准"],
+      "outputs": ["合规矩阵", "赢标主题", "执行摘要方案草案", "证据缺口台账"],
+      "acceptance": ["每项要求有响应", "每个主张有证据", "范围价格条款经负责人确认"],
+      "partners": ["deal-strategist", "sales-engineer", "cfo", "clo"],
+      "boundary": "不得提交投标、伪造案例或批准价格条款；外发前需人类与领域负责人审核。"
+    },
+    {
+      "id": "pipeline-analyst",
+      "name": "Pipeline 分析师",
+      "sourcePath": "sales/sales-pipeline-analyst.md",
+      "trigger": "需要销售组合健康、阶段转化、速度、停滞、覆盖和证据支持的预测区间。",
+      "doNotUseWhen": "需要单一机会推进策略、公司级财务预测，或 CRM 数据质量未知。",
+      "requiredInputs": ["CRM 导出", "阶段定义", "历史转化", "来源客群", "数据截止时间"],
+      "outputs": ["Pipeline 健康报告", "预测区间情景", "风险停滞清单", "数据质量说明"],
+      "acceptance": ["分层而非混合平均", "区间而非伪精确", "缺失陈旧记录显式"],
+      "partners": ["deal-strategist", "cdo", "cfo", "cmo"],
+      "boundary": "只分析授权导出，不写 CRM、不把相关性当因果、不替代 CFO 的营收确认。"
+    },
+    {
+      "id": "customer-success-manager",
+      "name": "客户成功经理",
+      "sourcePath": "specialized/customer-success-manager.md",
+      "trigger": "成交后需要 onboarding、价值实现、采用、健康度、风险、续约准备和承诺闭环。",
+      "doNotUseWhen": "客户尚未成交、主要目标是扩张销售，或出现正式支持事故。",
+      "requiredInputs": ["成功标准", "合同范围", "承诺台账", "利益相关方", "使用支持续约数据"],
+      "outputs": ["成功计划", "健康评分", "采用风险台账", "QBR 续约准备"],
+      "acceptance": ["价值实现可衡量", "未兑现承诺可见", "风险有负责人阈值"],
+      "partners": ["account-strategist", "coo", "cpo", "cto"],
+      "boundary": "专注采用留存，不主导增购、报价或谈判；事故交 COO/CTO，商业扩张交账户策略师。"
+    },
+    {
+      "id": "account-strategist",
+      "name": "客户拓展策略师",
+      "sourcePath": "sales/sales-account-strategist.md",
+      "trigger": "客户已实现并验证价值且健康，需要关系图谱、续约后扩展、交叉销售或扩展计划。",
+      "doNotUseWhen": "客户仍在 onboarding、健康度为红色、价值未实现，或只是处理支持问题。",
+      "requiredInputs": ["客户成功证据", "使用 ROI", "关系图谱", "合同边界", "扩展假设"],
+      "outputs": ["客户扩展计划", "利益方图谱", "扩展业务论证", "双方行动计划"],
+      "acceptance": ["先证明现有价值", "扩展来自客户目标", "健康客户才进入商业推进"],
+      "partners": ["customer-success-manager", "deal-strategist", "cfo", "cpo"],
+      "boundary": "不得向不健康客户强推扩展，不报价或修改合同；客户成功经理保留健康采用责任。"
+    }
+  ]
+}

@@ -14,7 +14,7 @@
     "managers": {
       "type": "object",
       "additionalProperties": {"$ref": "#/$defs/manager"},
-      "required": ["cto", "cpo", "cco"]
+      "required": ["cto", "cpo", "cco", "cfo", "cdo", "cqo", "cmo", "cro", "cso", "coo", "clo"]
     }
   },
   "$defs": {
