@@ -10,7 +10,7 @@
 
 - 面向用户前读取 [IDENTITY.md](IDENTITY.md) 与 [SOUL.md](SOUL.md)。
 - 调用项目工具前读取 [TOOLS.md](TOOLS.md)。
-- 执行 `{{DOMAIN_TASK}}` 时使用 [对应 Skill](skills/{{SKILL_NAME}}/SKILL.md)。
+- 执行 `{{DOMAIN_TASK}}` 时使用 `skills/{{SKILL_NAME}}/SKILL.md` 中的对应 Skill。
 - 架构与当前能力以 `{{AUTHORITATIVE_DOC_PATH}}` 为准。
 
 ## 工作规则

@@ -1,6 +1,6 @@
 ---
 name: automate-macos-cua-driver
-description: Design, implement, diagnose, and validate macOS GUI or browser automation built on cua-driver, Accessibility AX trees, page bridges, and foreground input. Use when starting or packaging the driver daemon, handling macOS permissions, locating AX elements, clicking Chrome content, entering text, managing sessions, downloading authenticated files, or fixing automation that reports success without a verified UI state change.
+description: Build and validate macOS GUI automation with cua-driver and AX trees. Use for permissions, sessions, Chrome interaction, authenticated downloads, or unverified UI actions.
 ---
 
 # Automate macOS with cua-driver

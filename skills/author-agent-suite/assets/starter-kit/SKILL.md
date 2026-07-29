@@ -26,4 +26,4 @@ description: Perform {{CAPABILITY}} with {{KEY_CONSTRAINTS}}. Use when users ask
 
 ## References
 
-- Read [{{REFERENCE_NAME}}](references/{{REFERENCE_FILE}}) when {{READ_CONDITION}}.
+- Read `references/{{REFERENCE_FILE}}` ({{REFERENCE_NAME}}) when {{READ_CONDITION}}.

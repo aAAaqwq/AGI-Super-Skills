@@ -1,6 +1,6 @@
 ---
 name: prepare-software-ip-filings
-description: Prepare evidence-backed software intellectual-property materials from a frozen code baseline, including invention disclosures, patent claim packages, drawings, code-to-claim maps, software copyright source-code deposits, user or design documents, filing checklists, and reproducible quality reports. Use when inventorying patentable software mechanisms, drafting or reviewing patent materials, preparing software copyright registration, or reconciling filing documents with code, tests, releases, authorship, and publication history.
+description: Prepare evidence-backed software IP materials from a frozen baseline. Use for invention disclosures, patent packages, copyright deposits, filing checks, or code-to-claim maps.
 ---
 
 # Prepare Software IP Filings

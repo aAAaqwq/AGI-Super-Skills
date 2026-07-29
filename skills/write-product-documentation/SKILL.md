@@ -1,6 +1,6 @@
 ---
 name: write-product-documentation
-description: Create and maintain a fact-based product documentation system from source code, tests, UI, configuration, and release evidence. Use when writing a product description, full user manual, daily operations guide, installation guide, technical specification, acceptance document, release note, FAQ, or when reconciling conflicting and outdated product claims across versions and platforms.
+description: Create fact-based product documentation from code and release evidence. Use for manuals, operations, installation, specifications, acceptance, release notes, FAQs, or claim audits.
 ---
 
 # Write Product Documentation

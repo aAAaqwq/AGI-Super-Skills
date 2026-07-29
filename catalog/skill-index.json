@@ -37,7 +37,7 @@
       "title": "Security, Privacy & Legal"
     },
     {
-      "count": 23,
+      "count": 22,
       "description": "Shape product requirements, interfaces, design systems, and user experience.",
       "emoji": "🎨",
       "id": "product-design-ux",
@@ -93,7 +93,7 @@
       "title": "Chinese Platform Workflows"
     },
     {
-      "count": 43,
+      "count": 44,
       "description": "Domain-specific helpers and cross-functional tools that need a dedicated review path.",
       "emoji": "🧰",
       "id": "general-utilities",
@@ -2851,7 +2851,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Create, restructure, or audit a repository's Agent Markdown suite, including AGENTS.md or host-specific AGENT.md, SKILL.md, IDENTITY.md, SOUL.md, TOOLS.md, references, templates,…",
+      "description": "Create or audit an Agent Markdown suite. Use when defining AGENTS.md, identity, behavior, tools, reusable Skills, instruction precedence, safety boundaries, or loading rules.",
       "description_status": "source-text",
       "path": "skills/author-agent-suite/SKILL.md",
       "portability_class": "catalog-only",
@@ -3007,7 +3007,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Design, implement, diagnose, and validate macOS GUI or browser automation built on cua-driver, Accessibility AX trees, page bridges, and foreground input. Use when starting or…",
+      "description": "Build and validate macOS GUI automation with cua-driver and AX trees. Use for permissions, sessions, Chrome interaction, authenticated downloads, or unverified UI actions.",
       "description_status": "source-text",
       "path": "skills/automate-macos-cua-driver/SKILL.md",
       "portability_class": "catalog-only",
@@ -3046,7 +3046,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Design, implement, diagnose, and validate Windows desktop or browser automation using native UI Automation, Win32 input, and optional CDP evidence. Use when locating…",
+      "description": "Build and validate Windows UI automation with UIA, Win32 input, and CDP evidence. Use for accessibility elements, DPI, Chrome sessions, stale state, or downloads.",
       "description_status": "source-text",
       "path": "skills/automate-windows-accessibility/SKILL.md",
       "portability_class": "catalog-only",
@@ -10049,7 +10049,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Design and review secure application data architecture across local databases, files, cloud projections, multi-tenant services, AI processing, backups, and synchronization. Use…",
+      "description": "Design secure application data architecture. Use for data ownership, PII, source-of-truth models, tenant isolation, provenance, transactions, sync, retention, or migrations.",
       "description_status": "source-text",
       "path": "skills/design-secure-data-architecture/SKILL.md",
       "portability_class": "portable-required",
@@ -18907,7 +18907,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Discover, model, document, and validate executable business processes from product requirements, code, tests, logs, and operator behavior. Use when creating process…",
+      "description": "Model and validate executable business processes. Use for workflow maps, state machines, orchestration, identity gates, dry-run rules, side effects, failures, or handoffs.",
       "description_status": "source-text",
       "path": "skills/model-business-processes/SKILL.md",
       "portability_class": "portable-required",
@@ -21947,7 +21947,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Prepare evidence-backed software intellectual-property materials from a frozen code baseline, including invention disclosures, patent claim packages, drawings, code-to-claim…",
+      "description": "Prepare evidence-backed software IP materials from a frozen baseline. Use for invention disclosures, patent packages, copyright deposits, filing checks, or code-to-claim maps.",
       "description_status": "source-text",
       "path": "skills/prepare-software-ip-filings/SKILL.md",
       "portability_class": "portable-optional",
@@ -25827,23 +25827,19 @@
     },
     {
       "assignments": [],
-      "category_id": "product-design-ux",
-      "classification": "description:design;metadata:frontmatter",
+      "category_id": "general-utilities",
+      "classification": "fallback;metadata:frontmatter",
       "classification_details": {
-        "matched_signals": [
-          "design"
-        ],
-        "method": "description",
-        "resolution_status": "rule-match",
+        "matched_signals": [],
+        "method": "fallback",
+        "resolution_status": "fallback",
         "review_state": "unreviewed",
         "runner_ups": [],
         "winner": {
-          "category_id": "product-design-ux",
-          "match_count": 1,
-          "matched_signals": [
-            "design"
-          ],
-          "priority": 90,
+          "category_id": "general-utilities",
+          "match_count": 0,
+          "matched_signals": [],
+          "priority": 0,
           "tie_detected": false
         }
       },
@@ -25851,7 +25847,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Build, package, validate, and release Tauri desktop applications that launch a Python sidecar. Use when designing a Tauri/WebView shell, bundling a PyInstaller executable,…",
+      "description": "Build and release Tauri apps with a Python sidecar. Use for WebView shells, PyInstaller bundles, version sync, installers, CI releases, lifecycle bugs, signing, or updates.",
       "description_status": "source-text",
       "path": "skills/ship-tauri-python-sidecar/SKILL.md",
       "portability_class": "catalog-only",
@@ -34854,7 +34850,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Create and maintain a fact-based product documentation system from source code, tests, UI, configuration, and release evidence. Use when writing a product description, full user…",
+      "description": "Create fact-based product documentation from code and release evidence. Use for manuals, operations, installation, specifications, acceptance, release notes, FAQs, or claim audits.",
       "description_status": "source-text",
       "path": "skills/write-product-documentation/SKILL.md",
       "portability_class": "portable-optional",
