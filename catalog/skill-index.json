@@ -1923,7 +1923,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Design and audit trustworthy analytics tracking. Use when setting up or fixing GA4, GTM, product events, conversions, UTMs, measurement strategy, or signal validation.",
+      "description": "Design, audit, and improve analytics tracking systems that produce reliable, decision-ready data. Use when the user wants to set up, fix, or evaluate analytics tracking (GA4,…",
       "description_status": "source-text",
       "path": "skills/analytics-tracking/SKILL.md",
       "portability_class": "portable-required",
@@ -2431,7 +2431,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Evaluate architecture options, document trade-offs, and write decision records. Use for ADRs, pattern selection, technology choices, or technical-debt decisions.",
+      "description": "Systematically evaluate architecture decisions, document trade-offs, and select appropriate patterns. This skill should be used when the user asks about 'architecture decision',…",
       "description_status": "source-text",
       "path": "skills/architecture-decision/SKILL.md",
       "portability_class": "portable-required",
@@ -3321,7 +3321,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Build trading-strategy backtests that account for look-ahead bias, survivorship bias, and costs. Use when validating strategies or designing backtest infrastructure.",
+      "description": "Build robust backtesting systems for trading strategies with proper handling of look-ahead bias, survivorship bias, and transaction costs. Use when developing trading algorithms,…",
       "description_status": "source-text",
       "path": "skills/backtesting-frameworks/SKILL.md",
       "portability_class": "portable-required",
@@ -4239,7 +4239,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Define brand strategy, voice, visual direction, tagline, and usage guidelines. Use when creating, refreshing, or standardizing a product or company brand.",
+      "description": "Build a complete brand identity for a solopreneur business from scratch or refresh an existing one. Covers brand personality, voice and tone, visual identity system (colors,…",
       "description_status": "source-text",
       "path": "skills/brand-identity/SKILL.md",
       "portability_class": "portable-required",
@@ -7087,7 +7087,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Design content strategy, distribution, SEO, and conversion experiments. Use when planning or improving measurable, multi-channel content marketing.",
+      "description": "You are an elite content marketing strategist specializing in AI-powered content creation, omnichannel marketing, and data-driven content optimization",
       "description_status": "source-text",
       "path": "skills/content-marketer/SKILL.md",
       "portability_class": "catalog-only",
@@ -9474,12 +9474,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/data-contract-quality-governance/SKILL.md",
           "skills/data-contract-quality-governance/agents/openai.yaml"
         ],
@@ -9582,7 +9582,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Turn data into clear narratives with context, visualization, and decision-oriented structure. Use for analytics reports, stakeholder briefings, or executive presentations.",
+      "description": "Transform data into compelling narratives using visualization, context, and persuasive structure. Use when presenting analytics to stakeholders, creating data reports, or…",
       "description_status": "source-text",
       "path": "skills/data-storytelling/SKILL.md",
       "portability_class": "portable-required",
@@ -11254,12 +11254,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/editorial-content-system/SKILL.md",
           "skills/editorial-content-system/agents/openai.yaml",
           "skills/editorial-content-system/references/artifact-templates.md"
@@ -12299,12 +12299,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/executive-decision-system/SKILL.md",
           "skills/executive-decision-system/agents/openai.yaml"
         ],
@@ -13048,12 +13048,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/financial-planning-and-analysis/SKILL.md",
           "skills/financial-planning-and-analysis/agents/openai.yaml"
         ],
@@ -13348,7 +13348,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Use Socratic questioning to expose assumptions, reduce a problem to fundamental truths, and rebuild options when a user is stuck or requests first-principles analysis.",
+      "description": "Socratic coach for breaking down problems to fundamental truths. Use when users want to think through a problem deeply, challenge assumptions, or find innovative solutions.…",
       "description_status": "source-text",
       "path": "skills/first-principles-thinking/SKILL.md",
       "portability_class": "portable-required",
@@ -15304,12 +15304,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/incident-command-and-review/SKILL.md",
           "skills/incident-command-and-review/agents/openai.yaml"
         ],
@@ -15424,12 +15424,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/independent-assurance-gate/SKILL.md",
           "skills/independent-assurance-gate/agents/openai.yaml"
         ],
@@ -16837,12 +16837,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/legal-issue-spotting/SKILL.md",
           "skills/legal-issue-spotting/agents/openai.yaml"
         ],
@@ -20188,12 +20188,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/operating-cadence-and-flow/SKILL.md",
           "skills/operating-cadence-and-flow/agents/openai.yaml"
         ],
@@ -21450,12 +21450,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/positioning-growth-experiment-system/SKILL.md",
           "skills/positioning-growth-experiment-system/agents/openai.yaml",
           "skills/positioning-growth-experiment-system/references/artifact-templates.md"
@@ -22268,12 +22268,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/product-discovery-portfolio-governance/SKILL.md",
           "skills/product-discovery-portfolio-governance/agents/openai.yaml"
         ],
@@ -22322,7 +22322,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Design and evaluate template-driven SEO page systems. Use for programmatic SEO, directories, location pages, comparisons, integrations, or scaled keyword patterns.",
+      "description": "You are an expert in **programmatic SEO strategy**—designing systems that generate",
       "description_status": "source-text",
       "path": "skills/programmatic-seo/SKILL.md",
       "portability_class": "portable-optional",
@@ -23919,12 +23919,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/research-evidence-synthesis/SKILL.md",
           "skills/research-evidence-synthesis/agents/openai.yaml"
         ],
@@ -24001,12 +24001,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/revenue-opportunity-governance/SKILL.md",
           "skills/revenue-opportunity-governance/agents/openai.yaml",
           "skills/revenue-opportunity-governance/references/artifact-templates.md"
@@ -28036,12 +28036,12 @@
           "Daniel Li",
           "AGI Super Team contributors"
         ],
-        "creation_commit": "167abec7cf49fbe361687656620c7e74190f1250",
+        "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
         "declared_hints": [
           "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
         ],
         "evidence": [
-          "commit:167abec7cf49fbe361687656620c7e74190f1250",
+          "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
           "skills/sre-reliability-governance/SKILL.md",
           "skills/sre-reliability-governance/agents/openai.yaml"
         ],
