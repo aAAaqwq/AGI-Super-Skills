@@ -4,6 +4,17 @@ This directory indexes the curated, Codex-native distribution in `plugins/agi-su
 
 ## Install from `main`
 
+One command handles the marketplace, plugin, global CEO, and Teams:
+
+```bash
+npx -y github:aAAaqwq/AGI-Super-Team
+npx -y github:aAAaqwq/AGI-Super-Team --install
+```
+
+The first command is a non-mutating preview. The second applies the exact plan. The npm-ready short form is `npx -y agi-super-team --install` after the package is published.
+
+Manual equivalent:
+
 ```bash
 codex plugin marketplace add aAAaqwq/AGI-Super-Team --ref main
 codex plugin add agi-super-team-codex@agi-super-team

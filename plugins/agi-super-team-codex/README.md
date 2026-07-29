@@ -4,6 +4,13 @@ This directory is the curated Codex plugin implementation. It is intentionally s
 
 Use the human-facing [Codex package index](../../.codex/INDEX.md) for installation, included roles, update policy, and current evidence status.
 
+Recommended one-command installation from the repository:
+
+```bash
+npx -y github:aAAaqwq/AGI-Super-Team
+npx -y github:aAAaqwq/AGI-Super-Team --install
+```
+
 After installing the plugin, use `$agi-super-team-sync` or run its installer directly:
 
 ```bash
