@@ -9,24 +9,50 @@ codex plugin marketplace add aAAaqwq/AGI-Super-Team --ref main
 codex plugin add agi-super-team-codex@agi-super-team
 ```
 
-Start a new Codex task after installation. The four workflow skills below are then available directly. To install or update the bundled personal agent roles, ask Codex to run `$agi-super-team-sync`; it previews changes first and backs up overwritten agent files.
+Start a new Codex task after installation. The six workflow Skills below are then available directly. Ask Codex to run `$agi-super-team-sync` to inject the global Musk CEO and install one or all outcome Teams; it previews first, preserves unrelated content, and backs up overwritten files.
+
+## Inject the global CEO and Teams
+
+```bash
+SYNC="<installed-plugin>/skills/agi-super-team-sync/scripts/install_codex_team.py"
+python3 "$SYNC" --list-teams
+python3 "$SYNC" --global-ceo --all-teams
+python3 "$SYNC" --global-ceo --all-teams --install
+```
+
+Use `--team solo-founder` instead of `--all-teams` for a selective install. The managed CEO block goes into `~/.codex/AGENTS.md`; Team leaves go into `~/.codex/agents/`. Existing content outside the managed block and unrelated Agent files remain untouched. Start a new task after installation.
 
 ## Packaged Skills
 
 | Skill | Purpose |
 |---|---|
+| `c-suite-team` | Parent-as-CEO orchestration across eight outcome Teams, bounded C-suite leaves, Governor review, and honest fallback modes |
 | `native-agent-swarms` | Bounded native Codex agent orchestration with ownership, dependencies, messaging, and synthesis gates |
 | `project-memory` | Explicit-save project decisions and handoffs without hooks, daemons, or automatic conversation capture |
 | `iterative-retrieval` | Evidence-oriented, progressively refined repository and context retrieval |
 | `context-engineering` | Context selection, compression, and handoff practices for long or multi-stage tasks |
-| `agi-super-team-sync` | Preview and safely copy bundled agent TOMLs into the user's Codex agent directory |
+| `agi-super-team-sync` | Inject the global Musk CEO, install selected Teams, or safely sync all bundled Agent TOMLs |
+
+## Outcome Teams
+
+| Team ID | 用途 | 核心角色 |
+|---|---|---|
+| `solo-founder` | 单人创业、MVP、商业验证与融资准备 | CEO、CPO、PE、CCO、CMO、Governor |
+| `content-creator` | 研究驱动的内容选题、生产与复盘 | CEO、CRO、CCO、CDO、CMO、Governor |
+| `quant-trader` | 量化研究、数据质量、风险与资本约束 | CEO、CQO、CDO、CFO、CRO、Governor |
+| `product-delivery` | 产品发现、架构、实现、数据与验收 | CEO、CPO、CTO、PE、CDO、Governor |
+| `research-decision` | 高不确定性研究与管理决策 | CEO、CRO、CDO、CFO、CLO、Governor |
+| `go-to-market` | 定位、增长、内容、销售、财务与法务 | CEO、CPO、CRO、CMO、CCO、CSO、CFO、CLO、CDO、Governor |
+| `operations-response` | 事故指挥、恢复、合规与复盘 | CEO、COO、CTO、PE、CDO、CLO、Governor |
+| `full-team` | 公司级跨职能综合任务 | 全部 14 个 C-suite 角色 |
 
 ## Packaged Agents
 
-The plugin bundles 31 specialist roles. Most are read-only reviewers or planners; only `debugger`, `tdd-guide`, and `test-automator` request workspace-write access for implementation work.
+The plugin bundles 44 specialist roles: 31 engineering/review specialists and 13 generated C-suite leaves. The current parent is the CEO, so no second CEO Agent is installed. Most roles are read-only; the bounded implementation roles use workspace-write.
 
 | Domain | Agents |
 |---|---|
+| Executive outcome teams | `ast-cto`, `ast-pe`, `ast-cpo`, `ast-cqo`, `ast-cmo`, `ast-cfo`, `ast-cdo`, `ast-cco`, `ast-clo`, `ast-cro`, `ast-cso`, `ast-coo`, `ast-governor` |
 | Orchestration and planning | `team-coordinator`, `planner`, `architect`, `context-manager` |
 | Architecture and engineering | `architecture-reviewer`, `backend-architect`, `frontend-reviewer`, `ai-engineer`, `legacy-modernizer` |
 | Language and data | `typescript-reviewer`, `python-reviewer`, `database-reviewer`, `vector-database-engineer`, `mle-reviewer` |
@@ -83,6 +109,7 @@ The larger Ruflo/Claude Flow, raw Claude agent-team, automatic conversation-memo
 .codex/INDEX.md                        This index
 plugins/agi-super-team-codex/
 ├── .codex-plugin/plugin.json          Plugin manifest
-├── payload/agents/*.toml              31 installable specialist agents
-└── skills/                            Five curated Codex skills
+├── payload/global/AGENTS.md           Managed global Musk CEO guidance
+├── payload/agents/*.toml              44 installable specialist agents
+└── skills/                            Six curated Codex skills
 ```
