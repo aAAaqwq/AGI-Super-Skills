@@ -78,6 +78,32 @@ class SkillCatalogTests(unittest.TestCase):
         self.assertEqual(len(actual), len(set(actual)))
         self.assertEqual(set(actual), expected)
 
+    def test_unreviewed_inventory_defaults_to_unknown_and_unscored(self) -> None:
+        index = json.loads(INDEX_PATH.read_text(encoding="utf-8"))
+        by_id = {item["skill_id"]: item for item in index["skills"]}
+
+        unreviewed = by_id["5minbtc"]
+        self.assertEqual(unreviewed["provenance"]["origin_kind"], "unknown")
+        self.assertEqual(unreviewed["provenance"]["review_state"], "unreviewed")
+        self.assertEqual(unreviewed["curation"]["status"], "unscored")
+        self.assertNotIn("score", unreviewed["curation"])
+
+    def test_reviewed_original_can_be_selected_without_claiming_runtime_verification(self) -> None:
+        index = json.loads(INDEX_PATH.read_text(encoding="utf-8"))
+        by_id = {item["skill_id"]: item for item in index["skills"]}
+
+        selected = by_id["content-typography"]
+        self.assertEqual(selected["provenance"]["origin_kind"], "project-original")
+        self.assertEqual(selected["provenance"]["review_state"], "reviewed")
+        self.assertEqual(selected["curation"]["status"], "selected")
+        self.assertGreaterEqual(selected["curation"]["score"], 75)
+        self.assertEqual(selected["curation"]["runtime_evidence"], "pending")
+        self.assertNotIn("verified", json.dumps(selected["curation"]).lower())
+
+        unresolved = by_id["agent-team-orchestration"]
+        self.assertEqual(unresolved["provenance"]["origin_kind"], "unknown")
+        self.assertEqual(unresolved["curation"]["status"], "unscored")
+
     def test_portability_class_covers_every_manifest_assignment_level(self) -> None:
         self.assertEqual(self.builder._portability_class({"required"}), "portable-required")
         self.assertEqual(self.builder._portability_class({"optional"}), "portable-optional")
@@ -93,15 +119,11 @@ class SkillCatalogTests(unittest.TestCase):
         fallback_count = counts[self.taxonomy["categories"][-1]["id"]]
         self.assertLess(fallback_count / len(self.entries), 0.10)
 
-    def test_featured_skills_exist_and_are_not_presented_as_verified(self) -> None:
-        by_id = {entry.skill_id: entry for entry in self.entries}
-        featured = self.taxonomy["featured"]
-        self.assertGreaterEqual(len(featured), 6)
-        for item in featured:
-            with self.subTest(skill=item["skill"]):
-                self.assertIn(item["skill"], by_id)
-                self.assertEqual(item["category"], by_id[item["skill"]].category_id)
-        serialized = json.dumps(featured).lower()
+    def test_selected_skills_come_from_curation_not_taxonomy(self) -> None:
+        self.assertNotIn("featured", self.taxonomy)
+        selected = [entry for entry in self.entries if entry.curation["status"] == "selected"]
+        self.assertGreaterEqual(len(selected), 2)
+        serialized = json.dumps([entry.curation for entry in selected]).lower()
         self.assertNotIn("verified", serialized)
         self.assertNotIn("production-ready", serialized)
 
@@ -352,6 +374,16 @@ print(hashlib.sha256(payload.encode()).hexdigest())
         forged_item["portability_class"] = "portable-required"
         forged_item["support_level"] = "pack-required"
         mutations.append(forged_portability)
+
+        unscored = next(item for item in index["skills"] if item["curation"]["status"] == "unscored")
+        forged_score = copy.deepcopy(index)
+        forged_score["skills"][index["skills"].index(unscored)]["curation"]["score"] = 100
+        mutations.append(forged_score)
+
+        unknown_origin = next(item for item in index["skills"] if item["provenance"]["origin_kind"] == "unknown")
+        forged_origin = copy.deepcopy(index)
+        forged_origin["skills"][index["skills"].index(unknown_origin)]["provenance"]["review_state"] = "reviewed"
+        mutations.append(forged_origin)
 
         for mutation in mutations:
             with self.subTest(skill=assigned["skill_id"]):

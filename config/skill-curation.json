@@ -1,0 +1,138 @@
+{
+  "$schema": "./skill-curation.schema.json",
+  "schemaVersion": 1,
+  "scoreName": "Curation evidence score",
+  "scoreModelVersion": 1,
+  "scope": "reviewed-curation-evidence-not-runtime-verification",
+  "entries": [
+    {
+      "skill_id": "content-typography",
+      "source_digest": "sha256:fd8d04bdf6e6a1b5b0902620431f09232f36e0a856b4f5be95933552a640077d",
+      "reviewed_at": "2026-07-28",
+      "status": "selected",
+      "score": 80,
+      "tier": "selected",
+      "runtime_evidence": "pending",
+      "dimensions": {
+        "instruction_design": 15,
+        "resource_integrity": 14,
+        "safety_and_reversibility": 18,
+        "provenance_and_license": 20,
+        "outcome_evidence": 13
+      },
+      "reason": "A focused first-party typography workflow with explicit platform templates and reviewable output criteria.",
+      "evidence": [
+        "skills/content-typography/SKILL.md",
+        "skills/content-typography/references/chinese-cover-typography.md",
+        "skills/content-typography/references/platform-layout-templates.md"
+      ],
+      "limitations": [
+        "No commit-matched runtime fixture or external beta receipt is published yet.",
+        "Visual judgment still requires a human reviewer for the target platform."
+      ]
+    },
+    {
+      "skill_id": "jimeng-storyboard",
+      "source_digest": "sha256:a70bc623962a13fd323e5a4d9bf07d9ed11197f84ab4281a9e9063d5b20ab6f0",
+      "reviewed_at": "2026-07-28",
+      "status": "selected",
+      "score": 78,
+      "tier": "selected",
+      "runtime_evidence": "pending",
+      "dimensions": {
+        "instruction_design": 14,
+        "resource_integrity": 13,
+        "safety_and_reversibility": 18,
+        "provenance_and_license": 20,
+        "outcome_evidence": 13
+      },
+      "reason": "A narrow first-party storyboard workflow with an explicit output format and a maintained field reference.",
+      "evidence": [
+        "skills/jimeng-storyboard/SKILL.md",
+        "skills/jimeng-storyboard/references/jimeng-format.md"
+      ],
+      "limitations": [
+        "No commit-matched runtime fixture or external beta receipt is published yet.",
+        "The target platform may change fields independently of this repository."
+      ]
+    },
+    {
+      "skill_id": "executive-decision-system", "source_digest": "sha256:20f1f38956c7c7cb48575f0a4d2680e00d02f4664f2adaec3b2bfa3d61dfd025", "reviewed_at": "2026-07-28", "status": "selected", "score": 78, "tier": "selected", "runtime_evidence": "pending",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 14, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 12},
+      "reason": "A bounded executive decision workflow with decision rights, options, reversibility, and review cadence.",
+      "evidence": ["skills/executive-decision-system/SKILL.md", "skills/executive-decision-system/agents/openai.yaml"], "limitations": ["No commit-matched runtime fixture or external beta receipt is published yet."]
+    },
+    {
+      "skill_id": "operating-cadence-and-flow", "source_digest": "sha256:0c59e7e4b5209926655a66ff981721eb60792ef3def03da6b6a75d2a2e8d7fb1", "reviewed_at": "2026-07-28", "status": "selected", "score": 78, "tier": "selected", "runtime_evidence": "pending",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 14, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 12},
+      "reason": "A role-specific operating system for cadence, flow, escalation, and accountable follow-through.",
+      "evidence": ["skills/operating-cadence-and-flow/SKILL.md", "skills/operating-cadence-and-flow/agents/openai.yaml"], "limitations": ["No commit-matched runtime fixture or external beta receipt is published yet."]
+    },
+    {
+      "skill_id": "independent-assurance-gate", "source_digest": "sha256:bc9962650e203d84185e2dc4c478ab4f8fe5018bb4964b4592436f7670fa2843", "reviewed_at": "2026-07-28", "status": "selected", "score": 78, "tier": "selected", "runtime_evidence": "pending",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 14, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 12},
+      "reason": "An independent assurance gate that separates evidence, findings, risk acceptance, and release authority.",
+      "evidence": ["skills/independent-assurance-gate/SKILL.md", "skills/independent-assurance-gate/agents/openai.yaml"], "limitations": ["No commit-matched runtime fixture or external beta receipt is published yet."]
+    },
+    {
+      "skill_id": "incident-command-and-review", "source_digest": "sha256:39256e8255d581e90ce8e977e8c0698011727cdf073d5ef84638c1c7bfc17bf4", "reviewed_at": "2026-07-28", "status": "selected", "score": 78, "tier": "selected", "runtime_evidence": "pending",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 14, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 12},
+      "reason": "A complete incident command and blameless review workflow with ownership and recovery checks.",
+      "evidence": ["skills/incident-command-and-review/SKILL.md", "skills/incident-command-and-review/agents/openai.yaml"], "limitations": ["No commit-matched runtime fixture or external beta receipt is published yet."]
+    },
+    {
+      "skill_id": "sre-reliability-governance", "source_digest": "sha256:fe1f9e84d40c06af9e0007cdcd08b2bd0e8851867d9ef3d8eafba1d6450c999b", "reviewed_at": "2026-07-28", "status": "selected", "score": 78, "tier": "selected", "runtime_evidence": "pending",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 14, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 12},
+      "reason": "A reliability governance workflow covering SLOs, error budgets, capacity, and recovery ownership.",
+      "evidence": ["skills/sre-reliability-governance/SKILL.md", "skills/sre-reliability-governance/agents/openai.yaml"], "limitations": ["No commit-matched runtime fixture or external beta receipt is published yet."]
+    },
+    {
+      "skill_id": "data-contract-quality-governance", "source_digest": "sha256:b013a85f3ae3f0f7eb85b53d1ac332a0d499be5ab8e35d2ae92443b61c9746db", "reviewed_at": "2026-07-28", "status": "selected", "score": 78, "tier": "selected", "runtime_evidence": "pending",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 14, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 12},
+      "reason": "A data contract and quality workflow with measurable ownership, breakage handling, and acceptance gates.",
+      "evidence": ["skills/data-contract-quality-governance/SKILL.md", "skills/data-contract-quality-governance/agents/openai.yaml"], "limitations": ["No commit-matched runtime fixture or external beta receipt is published yet."]
+    },
+    {
+      "skill_id": "product-discovery-portfolio-governance", "source_digest": "sha256:17babac332d1df8a486a8984276020e914a4e3af560f3752a26e552742170622", "reviewed_at": "2026-07-28", "status": "selected", "score": 82, "tier": "selected", "runtime_evidence": "prompt-tested",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 15, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 15},
+      "reason": "A prompt-tested discovery and portfolio workflow that connects evidence, sequencing, and decision checkpoints.",
+      "evidence": ["skills/product-discovery-portfolio-governance/SKILL.md", "skills/product-discovery-portfolio-governance/agents/openai.yaml"], "limitations": ["Prompt tests are not a substitute for production portfolio outcome data."]
+    },
+    {
+      "skill_id": "positioning-growth-experiment-system", "source_digest": "sha256:90af6a8ba1116c11bd2cd63dc554750c001baa6ea0ad7a532c67ea06b3710d57", "reviewed_at": "2026-07-28", "status": "selected", "score": 82, "tier": "selected", "runtime_evidence": "prompt-tested",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 15, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 15},
+      "reason": "A prompt-tested positioning and growth experiment workflow with explicit hypotheses and stop criteria.",
+      "evidence": ["skills/positioning-growth-experiment-system/SKILL.md", "skills/positioning-growth-experiment-system/references/artifact-templates.md"], "limitations": ["Prompt tests are not a substitute for production growth outcome data."]
+    },
+    {
+      "skill_id": "revenue-opportunity-governance", "source_digest": "sha256:3d6af82c357ea6036c08700c143f988ddfbdd6915707c3b020a1a9b1915d03f1", "reviewed_at": "2026-07-28", "status": "selected", "score": 82, "tier": "selected", "runtime_evidence": "prompt-tested",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 15, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 15},
+      "reason": "A prompt-tested revenue governance workflow for qualification, forecast evidence, and next-action discipline.",
+      "evidence": ["skills/revenue-opportunity-governance/SKILL.md", "skills/revenue-opportunity-governance/references/artifact-templates.md"], "limitations": ["Prompt tests are not a substitute for production revenue outcome data."]
+    },
+    {
+      "skill_id": "editorial-content-system", "source_digest": "sha256:bfc734e435a72347ef9b9e6c6cb70164816c8f7f2c7ba449adc4cea6b6d8d0ff", "reviewed_at": "2026-07-28", "status": "selected", "score": 82, "tier": "selected", "runtime_evidence": "prompt-tested",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 15, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 15},
+      "reason": "A prompt-tested editorial operating system for briefs, channels, review, and reusable content assets.",
+      "evidence": ["skills/editorial-content-system/SKILL.md", "skills/editorial-content-system/references/artifact-templates.md"], "limitations": ["Prompt tests are not a substitute for production audience outcome data."]
+    },
+    {
+      "skill_id": "research-evidence-synthesis", "source_digest": "sha256:dce6f68c4131e7354b00666d7123116df835315db29bef8fc11a0e5755375a68", "reviewed_at": "2026-07-28", "status": "selected", "score": 78, "tier": "selected", "runtime_evidence": "pending",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 14, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 12},
+      "reason": "A disciplined research synthesis workflow that distinguishes sources, confidence, inference, and open questions.",
+      "evidence": ["skills/research-evidence-synthesis/SKILL.md", "skills/research-evidence-synthesis/agents/openai.yaml"], "limitations": ["No commit-matched runtime fixture or external beta receipt is published yet."]
+    },
+    {
+      "skill_id": "legal-issue-spotting", "source_digest": "sha256:10af0bf8d511eaa9cae4005acd817dd87543e1735594e4cbdcd4e3c377e43cd4", "reviewed_at": "2026-07-28", "status": "selected", "score": 78, "tier": "selected", "runtime_evidence": "pending",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 14, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 12},
+      "reason": "A bounded legal issue-spotting workflow with jurisdiction checks, escalation, and no unauthorized legal conclusions.",
+      "evidence": ["skills/legal-issue-spotting/SKILL.md", "skills/legal-issue-spotting/agents/openai.yaml"], "limitations": ["It does not replace qualified counsel or jurisdiction-specific review."]
+    },
+    {
+      "skill_id": "financial-planning-and-analysis", "source_digest": "sha256:088d82576cdfc53a323b3f0a37f999d5b677ea29320b59da5ff777d674b630f4", "reviewed_at": "2026-07-28", "status": "selected", "score": 78, "tier": "selected", "runtime_evidence": "pending",
+      "dimensions": {"instruction_design": 14, "resource_integrity": 14, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 12},
+      "reason": "A practical FP&A workflow for assumptions, scenarios, variance analysis, and decision support.",
+      "evidence": ["skills/financial-planning-and-analysis/SKILL.md", "skills/financial-planning-and-analysis/agents/openai.yaml"], "limitations": ["No commit-matched runtime fixture or external beta receipt is published yet."]
+    }
+  ]
+}

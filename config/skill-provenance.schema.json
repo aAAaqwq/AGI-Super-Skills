@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aaaaqwq.github.io/AGI-Super-Team/schemas/skill-provenance.schema.json",
+  "title": "Reviewed canonical Skill provenance",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "scope", "entries"],
+  "properties": {
+    "$schema": {"const": "./skill-provenance.schema.json"},
+    "schemaVersion": {"const": 1},
+    "scope": {"const": "authored-provenance-evidence-not-runtime-verification"},
+    "entries": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/entry"}
+    }
+  },
+  "$defs": {
+    "skillId": {"type": "string", "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spdx", "evidence"],
+      "properties": {
+        "spdx": {"type": "string", "minLength": 2},
+        "evidence": {"type": "string", "minLength": 3}
+      }
+    },
+    "upstream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "subpath", "pinned_commit", "license"],
+      "properties": {
+        "repository": {"type": "string", "pattern": "^https://github\\.com/[^/]+/[^/]+/?$"},
+        "subpath": {"type": "string", "minLength": 1},
+        "pinned_commit": {"$ref": "#/$defs/commit"},
+        "license": {"$ref": "#/$defs/license"}
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skill_id", "origin_kind", "review_state", "declared_hints", "evidence"],
+      "properties": {
+        "skill_id": {"$ref": "#/$defs/skillId"},
+        "origin_kind": {"enum": ["project-original", "adapted", "collected", "unknown"]},
+        "review_state": {"enum": ["reviewed", "unreviewed"]},
+        "authors": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 2}
+        },
+        "creation_commit": {"$ref": "#/$defs/commit"},
+        "license": {"$ref": "#/$defs/license"},
+        "upstream": {"$ref": "#/$defs/upstream"},
+        "local_tree_digest": {"$ref": "#/$defs/digest"},
+        "adaptations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 8}
+        },
+        "declared_hints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 3}
+        },
+        "evidence": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 8}
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"origin_kind": {"const": "project-original"}}, "required": ["origin_kind"]},
+          "then": {
+            "required": ["authors", "creation_commit", "license", "local_tree_digest"],
+            "properties": {"review_state": {"const": "reviewed"}},
+            "not": {"required": ["upstream"]}
+          }
+        },
+        {
+          "if": {"properties": {"origin_kind": {"enum": ["adapted", "collected"]}}, "required": ["origin_kind"]},
+          "then": {
+            "required": ["authors", "upstream", "local_tree_digest"],
+            "properties": {"review_state": {"const": "reviewed"}}
+          }
+        },
+        {
+          "if": {"properties": {"origin_kind": {"const": "adapted"}}, "required": ["origin_kind"]},
+          "then": {"required": ["adaptations"]}
+        },
+        {
+          "if": {"properties": {"origin_kind": {"const": "unknown"}}, "required": ["origin_kind"]},
+          "then": {
+            "properties": {"review_state": {"const": "unreviewed"}},
+            "not": {"anyOf": [{"required": ["upstream"]}, {"required": ["local_tree_digest"]}]}
+          }
+        }
+      ]
+    }
+  }
+}

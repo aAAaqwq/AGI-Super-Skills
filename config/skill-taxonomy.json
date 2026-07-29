@@ -202,16 +202,5 @@
     "whatsapp-send": ["credentials", "external-write", "personal-data"],
     "xhs-publisher": ["credentials", "external-write"],
     "ziliu-publisher": ["credentials", "external-write"]
-  },
-  "featured": [
-    {"skill": "dispatching-parallel-agents", "category": "ai-agents-orchestration", "reason": "Break independent work into bounded parallel tasks."},
-    {"skill": "tdd-workflow", "category": "software-engineering", "reason": "Drive implementation through a test-first loop."},
-    {"skill": "deep-research", "category": "data-analytics-research", "reason": "Turn a question into an evidence-oriented research process."},
-    {"skill": "seo-audit", "category": "marketing-seo-growth", "reason": "Review search discoverability with explicit checks."},
-    {"skill": "writing-skills", "category": "ai-agents-orchestration", "reason": "Create and maintain reusable agent Skill instructions with a reviewable workflow."},
-    {"skill": "security-audit", "category": "security-privacy-legal", "reason": "Inspect code and configuration for security risk."},
-    {"skill": "backtest-expert", "category": "finance-trading-markets", "reason": "Review backtests without implying live-trading safety."},
-    {"skill": "frontend-design-ultimate", "category": "product-design-ux", "reason": "Create a concrete interface direction and implementation."},
-    {"skill": "github-automation", "category": "apps-workflow-automation", "reason": "Work with GitHub through an explicit automation boundary."}
-  ]
+  }
 }

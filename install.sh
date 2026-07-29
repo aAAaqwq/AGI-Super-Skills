@@ -1,26 +1,15 @@
 #!/usr/bin/env bash
-# AGI Super Team — One-Click Deploy
-# Usage: curl -sSL <raw-url> | bash -s -- [--apply] [starter-kit] [agent-id]
-#   or:  ./install.sh [--source PATH] [--destination PATH] [--apply] [starter-kit] [agent-id]
+# AGI Super Team — Generic Workspace Materializer
+# Usage: ./install.sh --source PATH [--destination PATH] [--apply] (--kit ID | --agent ID)
 #
 # Examples:
-#   ./install.sh solo-founder          # Preview solo-founder kit (CEO + PE + CCO)
-#   ./install.sh --apply solo-founder  # Deploy the solo-founder kit
-#   ./install.sh --apply full-team     # Deploy all 14 agents
-#   ./install.sh --apply ceo           # Deploy single CEO agent
+#   ./install.sh --source "$PWD" --kit solo-founder
+#   ./install.sh --source "$PWD" --layout coordinated --kit full-team
+#   ./install.sh --source "$PWD" --apply --agent ceo
 #
-# ── 推荐方式 / Recommended ──────────────────────────────────────────
-# 现在首选 harness 原生安装（无需本脚本）：
-#   Claude Code (推荐): /plugin install aAAaqwq/AGI-Super-Team
-#   或直接 clone:
-#     git clone --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git ~/.agi-super-team
-#
-# 本脚本 (install.sh) 是多 harness 的通用部署器，仍可用于批量部署 starter
-# kit 到本地工作区。下文依赖 OpenClaw CLI 的步骤（openclaw config /
-# gateway restart 等）标注为 (legacy)，仅当你的环境仍运行 OpenClaw harness
-# 时需要；OpenClaw 已 discontinued，新用户请使用 Claude Code / Codex /
-# Cursor / Hermes 等 harness 原生方式。
-# ─────────────────────────────────────────────────────────────────────
+# Review a trusted checkout before running this script. It materializes portable
+# role workspaces; the chosen harness still owns models, tools, credentials,
+# delegation, and runtime verification.
 #
 set -euo pipefail
 
@@ -28,6 +17,10 @@ REPO_URL="https://github.com/aAAaqwq/AGI-Super-Team.git"
 OPENCLAW_DIR="${AGI_SUPER_TEAM_DESTINATION:-${HOME}/.openclaw}"
 SOURCE_DIR="${AGI_SUPER_TEAM_SOURCE:-}"
 APPLY=0
+SKILL_TIER="standard"
+TEAM_TIER="full"
+LAYOUT="isolated"
+SELECTOR_KIND=""
 MANIFEST_PATH=""
 DEPLOY_ROOT=""
 INSTALL_STAGE=""
@@ -44,12 +37,6 @@ err()   { echo -e "${RED}[ERROR]${NC} $*"; exit 1; }
 check_prereqs() {
   if [[ -z "$SOURCE_DIR" && "$APPLY" -eq 1 ]]; then
     command -v git &>/dev/null || err "git not found."
-  fi
-  # (legacy) OpenClaw CLI is OPTIONAL — the script works with any harness
-  # (Claude Code / Codex / Cursor / Hermes). Only needed if your environment
-  # still runs the (discontinued) OpenClaw harness. Warn instead of failing.
-  if ! command -v openclaw &>/dev/null; then
-    warn "(legacy) openclaw CLI not found — OK for Claude Code / Codex / Cursor / Hermes. Only required for the discontinued OpenClaw harness."
   fi
   info "Prerequisites ✓"
 }
@@ -118,6 +105,26 @@ switch (query) {
     process.stdout.write(kit.agents.map(String).join('\n'));
     if (kit.agents.length) process.stdout.write('\n');
     break;
+  case 'kit-core-agents':
+    if (!kit) process.exit(2);
+    process.stdout.write((kit.coreAgents || kit.agents).map(String).join('\n'));
+    if ((kit.coreAgents || kit.agents).length) process.stdout.write('\n');
+    break;
+  case 'kit-coordinator':
+    if (!kit) process.exit(2);
+    process.stdout.write(`${kit.coordinator || (kit.agents.includes('ceo') ? 'ceo' : kit.agents[0])}\n`);
+    break;
+  case 'kit-reviewers': {
+    if (!kit) process.exit(2);
+    const reviewers = kit.reviewers || (kit.agents.includes('governor') ? ['governor'] : []);
+    process.stdout.write(reviewers.map(String).join('\n'));
+    if (reviewers.length) process.stdout.write('\n');
+    break;
+  }
+  case 'kit-entrypoint':
+    if (!kit) process.exit(2);
+    process.stdout.write(`${kit.entrypoint}\n`);
+    break;
   case 'kit-exists':
     process.stdout.write(kit ? 'yes\n' : 'no\n');
     break;
@@ -148,6 +155,15 @@ const exactKeys = (value, expected) => value && typeof value === 'object'
 const validIds = value => Array.isArray(value)
   && value.every(item => typeof item === 'string' && identifier.test(item))
   && new Set(value).size === value.length;
+const descriptiveText = value => typeof value === 'string' && value.trim().length >= 24;
+const validOutputs = value => Array.isArray(value)
+  && value.length >= 2 && value.length <= 5
+  && value.every(item => typeof item === 'string' && item.trim().length >= 3)
+  && new Set(value).size === value.length;
+const validKitOutputs = value => Array.isArray(value)
+  && value.length >= 2 && value.length <= 6
+  && value.every(item => typeof item === 'string' && item.trim().length >= 3)
+  && new Set(value).size === value.length;
 if (manifest.$schema !== './team-manifest.schema.json' || manifest.schemaVersion !== 1) process.exit(1);
 if (!exactKeys(manifest, ['$schema', 'schemaVersion', 'inventory', 'agents', 'kits'])) process.exit(1);
 if (!Array.isArray(manifest.agents) || !Array.isArray(manifest.kits)
@@ -163,8 +179,10 @@ const agentIds = manifest.agents.map(agent => agent && agent.id);
 if (!validIds(agentIds)) process.exit(1);
 const knownAgents = new Set(agentIds);
 for (const agent of manifest.agents) {
-  if (!exactKeys(agent, ['id', 'name', 'path', 'skills'])) process.exit(1);
+  if (!exactKeys(agent, ['id', 'name', 'path', 'focus', 'outputs', 'boundary', 'skills'])) process.exit(1);
   if (typeof agent.name !== 'string' || !agent.name.trim()) process.exit(1);
+  if (!descriptiveText(agent.focus) || !descriptiveText(agent.boundary)
+      || !validOutputs(agent.outputs)) process.exit(1);
   if (agent.path !== `agents/${agent.id}`) process.exit(1);
   if (!exactKeys(agent.skills, ['required', 'optional', 'harnessSpecific', 'recommendedExternal'])) process.exit(1);
   if (!agent.skills || !validIds(agent.skills.required) || !validIds(agent.skills.optional)
@@ -181,9 +199,33 @@ for (const agent of manifest.agents) {
 const kitIds = manifest.kits.map(kit => kit && kit.id);
 if (!validIds(kitIds)) process.exit(1);
 for (const kit of manifest.kits) {
-  if (!exactKeys(kit, ['id', 'agents'])) process.exit(1);
-  if (!validIds(kit.agents) || !kit.agents.length
+  const layeredKit = exactKeys(kit, [
+    'id', 'name', 'outcome', 'entrypoint', 'coordinator', 'reviewers',
+    'coreAgents', 'agents', 'outputs', 'checks',
+  ]);
+  if (!layeredKit) process.exit(1);
+  if (!validIds(kit.agents) || kit.agents.length < 3
       || kit.agents.some(agent => !knownAgents.has(agent))) process.exit(1);
+  if (typeof kit.name !== 'string' || kit.name.trim().length < 3
+      || !descriptiveText(kit.outcome)
+      || typeof kit.entrypoint !== 'string'
+      || !/^starter-kits\/[a-z0-9]+(?:-[a-z0-9]+)*\/RUNBOOK\.md$/.test(kit.entrypoint)
+      || !knownAgents.has(kit.coordinator)
+      || !validIds(kit.reviewers) || !kit.reviewers.length
+      || kit.reviewers.some(agent => !knownAgents.has(agent))
+      || kit.reviewers.includes(kit.coordinator)
+      || !validIds(kit.coreAgents) || kit.coreAgents.length < 2
+      || kit.coreAgents.some(agent => !kit.agents.includes(agent))
+      || !kit.coreAgents.includes(kit.coordinator)
+      || kit.reviewers.some(agent => !kit.coreAgents.includes(agent))
+      || !validKitOutputs(kit.outputs)
+      || !validIds(kit.checks) || kit.checks.length < 2) process.exit(1);
+  if (kit.id === 'full-team') {
+    const fullRoster = new Set(kit.agents);
+    if (kit.agents.length !== 14 || kit.coordinator !== 'ceo'
+        || !kit.reviewers.includes('governor')
+        || agentIds.some(agent => !fullRoster.has(agent))) process.exit(1);
+  }
 }
 NODE
     then
@@ -196,72 +238,34 @@ NODE
 }
 
 agent_name() {
-  if [[ -n "$MANIFEST_PATH" ]]; then
-    manifest_query agent-name "$1"
-    return
-  fi
-  case "$1" in
-    ceo) printf '%s\n' "CEO (Elon Musk)" ;; cto) printf '%s\n' "CTO (Jensen Huang)" ;;
-    pe) printf '%s\n' "PE (Linus Torvalds)" ;; cpo) printf '%s\n' "CPO (Steve Jobs)" ;;
-    cqo) printf '%s\n' "CQO (Jim Simons)" ;; cmo) printf '%s\n' "CMO (David Ogilvy)" ;;
-    cfo) printf '%s\n' "CFO (Warren Buffett)" ;; cdo) printf '%s\n' "CDO (Nate Silver)" ;;
-    cco) printf '%s\n' "CCO (MrBeast)" ;; clo) printf '%s\n' "CLO (Alan Dershowitz)" ;;
-    cro) printf '%s\n' "CRO (Richard Feynman)" ;; cso) printf '%s\n' "CSO (Michael Dell)" ;;
-    coo) printf '%s\n' "COO (Andy Grove)" ;; governor) printf '%s\n' "Governor" ;;
-    *) printf '%s\n' "$1" ;;
-  esac
+  [[ -n "$MANIFEST_PATH" ]] || err "Canonical team manifest is not loaded"
+  manifest_query agent-name "$1"
 }
 
 # ── Skills for each agent (curated top skills) ────────────────
 agent_skills() {
-  if [[ -n "$MANIFEST_PATH" ]]; then
-    manifest_query required "$1"
+  if [[ "$SKILL_TIER" == "role-only" ]]; then
+    printf '\n'
     return
   fi
-  case "$1" in
-  ceo) printf '%s\n' "team-coordinator context-manager healthcheck web-search project-planner" ;;
-  pe) printf '%s\n' "react-expert tdd-workflow systematic-debugging code-review-quality github gh-issues deployment-automation kubernetes-specialist ghost-scan-code cli-developer" ;;
-  cco) printf '%s\n' "xhs-publisher douyin-publisher" ;;
-  cto) printf '%s\n' "api-design api-design-patterns architecture-decision architecture-patterns nginx-configuration" ;;
-  cdo) printf '%s\n' "apify-ultimate-scraper web-search" ;;
-  cmo) printf '%s\n' "seo-audit" ;;
-  cfo|cqo) printf '\n' ;;
-  cro) printf '%s\n' "deep-research web-search" ;;
-  cpo) printf '%s\n' "prd-development user-story" ;;
-  clo) printf '%s\n' "legal-review" ;;
-  cso) printf '%s\n' "crm-automation" ;;
-  coo) printf '%s\n' "cost-optimization" ;;
-  *) printf '\n' ;;
-  esac
+  [[ -n "$MANIFEST_PATH" ]] || err "Canonical team manifest is not loaded"
+  manifest_query required "$1"
 }
 
 agent_recommended_external_skills() {
-  if [[ -n "$MANIFEST_PATH" ]]; then
-    manifest_query recommendedExternal "$1"
-    return
-  fi
-  case "$1" in
-    ceo) printf '%s\n' "daily-rhythm" ;;
-    pe) printf '%s\n' "docker-containerization" ;;
-    cco) printf '%s\n' "gzh-publisher content-pipeline seo-writing" ;;
-    cdo) printf '%s\n' "data-pipeline duckdb-analytics" ;;
-    cmo) printf '%s\n' "marketing-strategy growth-hacking competitor-analysis" ;;
-    cfo) printf '%s\n' "financial-modeling budget-optimization cost-analysis" ;;
-    cqo) printf '%s\n' "backtesting-system risk-management portfolio-optimization" ;;
-    cro) printf '%s\n' "scientific-method" ;;
-    cpo) printf '%s\n' "product-roadmap" ;;
-    clo) printf '%s\n' "contract-analysis compliance-check" ;;
-    cso) printf '%s\n' "sales-strategy customer-analysis" ;;
-    coo) printf '%s\n' "monitoring incident-response" ;;
-    *) printf '\n' ;;
-  esac
+  [[ -n "$MANIFEST_PATH" ]] || err "Canonical team manifest is not loaded"
+  manifest_query recommendedExternal "$1"
 }
 
 agent_optional_skills() {
+  if [[ "$SKILL_TIER" != "standard" ]]; then
+    printf '\n'
+    return
+  fi
   if [[ -n "$MANIFEST_PATH" ]]; then
     manifest_query optional "$1"
   else
-    printf '\n'
+    err "Canonical team manifest is not loaded"
   fi
 }
 
@@ -269,7 +273,7 @@ agent_harness_specific_skills() {
   if [[ -n "$MANIFEST_PATH" ]]; then
     manifest_query harnessSpecific "$1"
   else
-    printf '\n'
+    err "Canonical team manifest is not loaded"
   fi
 }
 
@@ -277,7 +281,7 @@ agent_source_path() {
   if [[ -n "$MANIFEST_PATH" ]]; then
     manifest_query agent-path "$1"
   else
-    printf 'agents/%s\n' "$1"
+    err "Canonical team manifest is not loaded"
   fi
 }
 
@@ -297,6 +301,18 @@ report_recommended_external_skills() {
   if [[ "$harness_count" -gt 0 ]]; then
     info "${harness_count} harness-specific skill assignment(s) stay catalog-only and are not copied by the generic installer."
   fi
+}
+
+preflight_kit_entrypoint() {
+  local repo_dir="$1"
+  local kit="$2"
+  local entrypoint source_file
+
+  [[ "$(manifest_query kit-exists "$kit")" == "yes" ]] || return 0
+  entrypoint=$(manifest_query kit-entrypoint "$kit")
+  source_file="${repo_dir}/${entrypoint}"
+  [[ ( -e "$source_file" || -L "$source_file" ) && -f "$source_file" && ! -L "$source_file" ]] \
+    || err "Kit entrypoint must be a real regular file: $source_file"
 }
 
 preflight_agents() {
@@ -372,6 +388,27 @@ validate_install_paths() {
         || err "Destination skill must not be a symlink: $destination_entry"
     done
   done
+
+  if [[ "$LAYOUT" == "coordinated" && -d "$OPENCLAW_DIR" ]]; then
+    for destination_entry in AGENTS.md START_HERE.md TEAM.md RUNBOOK.md team.lock.json; do
+      destination_entry="${OPENCLAW_DIR}/${destination_entry}"
+      [[ -e "$destination_entry" || -L "$destination_entry" ]] || continue
+      [[ -f "$destination_entry" && ! -L "$destination_entry" ]] \
+        || err "Destination team contract must be a regular non-symlink file: $destination_entry"
+      if [[ "$(basename "$destination_entry")" == "team.lock.json" ]]; then
+        node - "$destination_entry" <<'NODE' \
+          || err "Destination team contract is not installer-managed: $destination_entry"
+const fs = require('fs');
+const value = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+if (value.managedBy !== 'agi-super-team-installer') process.exit(1);
+NODE
+      else
+        IFS= read -r linked_entry < "$destination_entry" || true
+        [[ "$linked_entry" == '<!-- managed-by: agi-super-team-installer -->' ]] \
+          || err "Destination team contract is not installer-managed: $destination_entry"
+      fi
+    done
+  fi
 }
 
 copy_file_no_clobber() {
@@ -468,7 +505,96 @@ prepare_stage() {
         cp -R "$final_workspace" "${DEPLOY_ROOT}/workspace-${agent_key}"
       fi
     done
+
   fi
+}
+
+write_coordinated_team() {
+  local repo_dir="$1"
+  local kit="$2"
+  shift 2
+  local -a selected_agents=("$@")
+  local coordinator="" reviewer agent_key role reviewers_text="" entrypoint source_runbook
+
+  coordinator=$(manifest_query kit-coordinator "$kit")
+  entrypoint=$(manifest_query kit-entrypoint "$kit")
+  source_runbook="${repo_dir}/${entrypoint}"
+  while IFS= read -r reviewer; do
+    [[ -n "$reviewer" ]] || continue
+    reviewers_text+="${reviewer} "
+  done < <(manifest_query kit-reviewers "$kit")
+  reviewers_text="${reviewers_text% }"
+
+  cat > "${DEPLOY_ROOT}/AGENTS.md" <<'EOF'
+<!-- managed-by: agi-super-team-installer -->
+# Coordinated AGI Super Team
+
+Read `RUNBOOK.md` first, then open `TEAM.md`, `START_HERE.md`, and the selected role workspaces before acting.
+
+The CEO coordinator lives in `workspace-ceo`. It scopes the brief, assigns bounded specialist work, collects evidence, and sends the result to the configured reviewer.
+
+First inspect whether the active harness exposes a real delegation capability. If it does, delegate with explicit objective, ownership, checks, and safety limits. If it does not, use sequential/manual handoffs between the listed workspaces. Never claim that a subagent was started without observable harness confirmation.
+
+This directory is materialized content, not runtime-verified execution. External publishing, credentials, transactions, deployments, merges, and destructive actions require human approval.
+EOF
+
+  cat > "${DEPLOY_ROOT}/START_HERE.md" <<'EOF'
+<!-- managed-by: agi-super-team-installer -->
+# Start here
+
+Open this destination root in your configured agent harness. Read `RUNBOOK.md` first, then ask it to read `AGENTS.md`, `TEAM.md`, `agents/CHARTER.md`, and `agents/COLLABORATION.md` before handling your brief.
+
+The installed files do not prove that a harness loaded roles or started subagents. Require observable delegation results, specialist handoffs, reviewer evidence, and a human approval gate.
+EOF
+
+  {
+      printf '<!-- managed-by: agi-super-team-installer -->\n'
+      printf '# Materialized team\n\n'
+      printf 'Selector: `%s` · Skill tier: `%s` · Team tier: `%s` · Runtime verification: **pending**\n\n' \
+        "$kit" "$SKILL_TIER" "$TEAM_TIER"
+      printf '| Function | Agent | Workspace |\n|---|---|---|\n'
+      for agent_key in "${selected_agents[@]}"; do
+        role="Specialist"
+        [[ "$agent_key" == "$coordinator" ]] && role="Coordinator"
+        if [[ " $reviewers_text " == *" $agent_key "* ]]; then role="Reviewer"; fi
+        printf '| %s | %s | `workspace-%s` |\n' "$role" "$(agent_name "$agent_key")" "$agent_key"
+      done
+      printf '\nOnly the workspaces listed above belong to the current materialized plan. Unlisted workspace directories from an earlier install are preserved as unmanaged local data and are not active team members.\n\n'
+      printf 'Use the routing and handoff contract in `agents/COLLABORATION.md`.\n'
+  } > "${DEPLOY_ROOT}/TEAM.md"
+
+  {
+    printf '<!-- managed-by: agi-super-team-installer -->\n'
+    cat "$source_runbook"
+  } > "${DEPLOY_ROOT}/RUNBOOK.md"
+
+  node - "${DEPLOY_ROOT}/team.lock.json" "$MANIFEST_PATH" "$kit" "$LAYOUT" "$SKILL_TIER" "$TEAM_TIER" \
+    "$coordinator" "$reviewers_text" "${selected_agents[@]}" <<'NODE'
+const crypto = require('crypto');
+const fs = require('fs');
+const [path, manifestPath, selector, layout, skillTier, teamTier, coordinator, reviewerText, ...agents] = process.argv.slice(2);
+const manifestBytes = fs.readFileSync(manifestPath);
+const manifest = JSON.parse(manifestBytes);
+const kit = manifest.kits.find(item => item.id === selector);
+if (!kit) process.exit(2);
+fs.writeFileSync(path, `${JSON.stringify({
+  schemaVersion: 1,
+  managedBy: 'agi-super-team-installer',
+  status: 'materialized',
+  runtimeVerified: false,
+  selector,
+  layout,
+  skillTier,
+  teamTier,
+  coordinator,
+  reviewers: reviewerText.split(/\s+/).filter(Boolean),
+  agents,
+  entrypoint: kit.entrypoint,
+  outputs: kit.outputs,
+  checks: kit.checks,
+  manifestDigest: crypto.createHash('sha256').update(manifestBytes).digest('hex'),
+}, null, 2)}\n`);
+NODE
 }
 
 publish_stage() {
@@ -477,9 +603,13 @@ publish_stage() {
   local -a published=()
   local index published_component published_final published_backup
   local restore_failed=0 recovery_path
+  local restore_message="Atomic publish failed; restored the previous destination state"
   for agent_key in "$@"; do
     components+=("workspace-${agent_key}")
   done
+  if [[ "$LAYOUT" == "coordinated" ]]; then
+    components+=(AGENTS.md START_HERE.md TEAM.md RUNBOOK.md team.lock.json)
+  fi
 
   if [[ ! -e "$OPENCLAW_DIR" && ! -L "$OPENCLAW_DIR" ]]; then
     mv "${DEPLOY_ROOT}" "$OPENCLAW_DIR"
@@ -515,7 +645,7 @@ publish_stage() {
           trap - EXIT HUP INT TERM
           err "Atomic publish failed; automatic restore is incomplete. Recovery transaction preserved at: $recovery_path"
         fi
-        err "Atomic publish failed; restored the previous destination state"
+        err "$restore_message"
       fi
     fi
     if ! mv "$staged_component" "$final_component"; then
@@ -541,7 +671,7 @@ publish_stage() {
         trap - EXIT HUP INT TERM
         err "Atomic publish failed; automatic restore is incomplete. Recovery transaction preserved at: $recovery_path"
       fi
-      err "Atomic publish failed; restored the previous destination state"
+      err "$restore_message"
     fi
     published+=("$component")
   done
@@ -574,11 +704,11 @@ deploy_agent() {
   fi
 
   if [[ "$APPLY" -eq 0 ]]; then
-    info "[PREVIEW] Would deploy ${display_name} → ${ws}"
+    info "[PREVIEW] Would materialize ${display_name} → ${ws}"
     return
   fi
 
-  info "Deploying ${display_name}..."
+  info "Materializing ${display_name}..."
 
   # Create workspace
   mkdir -p "${ws}/skills" "${ws}/memory"
@@ -610,7 +740,7 @@ deploy_agent() {
     [[ -f "${repo_dir}/${f}" ]] && copy_file_no_clobber "${repo_dir}/${f}" "${DEPLOY_ROOT}/agents"
   done
 
-  ok "Deployed ${display_name} → ${OPENCLAW_DIR}/workspace-${agent_key}"
+  ok "Materialized ${display_name} → ${OPENCLAW_DIR}/workspace-${agent_key}"
 }
 
 # ── Starter Kits ──────────────────────────────────────────────
@@ -620,29 +750,21 @@ deploy_starter_kit() {
   local filter="${3:-}"   # optional: deploy only one agent from kit
 
   local -a agents=()
+  local kit_agent_query="kit-agents"
 
   if [[ -n "$MANIFEST_PATH" ]]; then
     if [[ "$(manifest_query kit-exists "$kit")" == "yes" ]]; then
+      [[ "$TEAM_TIER" == "core" ]] && kit_agent_query="kit-core-agents"
       while IFS= read -r a; do
         [[ -n "$a" ]] && agents+=("$a")
-      done < <(manifest_query kit-agents "$kit")
+      done < <(manifest_query "$kit_agent_query" "$kit")
     elif [[ "$(manifest_query agent-exists "$kit")" == "yes" ]]; then
       agents=("$kit")
     else
       err "Agent source not found: ${repo_dir}/agents/${kit}"
     fi
   else
-    case "$kit" in
-      solo-founder) agents=(ceo pe cco) ;;
-      content-creator) agents=(cco cdo cmo) ;;
-      quant-trader) agents=(cqo cdo cfo) ;;
-      full-team) agents=(ceo cto pe cpo cqo cmo cfo cdo cco clo cro cso coo governor) ;;
-      *)
-        local resolved
-        resolved=$(resolve_agent "$kit")
-        agents=("$resolved")
-        ;;
-    esac
+    err "Canonical team manifest is not loaded"
   fi
 
   # Filter to single agent if specified
@@ -657,8 +779,9 @@ deploy_starter_kit() {
     agents=("$resolved")
   fi
 
-  info "Deploying kit: ${kit} (${#agents[@]} agent(s))"
+  info "Materializing selection: ${kit} (${#agents[@]} agent(s))"
 
+  preflight_kit_entrypoint "$repo_dir" "$kit"
   validate_install_paths "$repo_dir" "${agents[@]}"
   preflight_agents "$repo_dir" "${agents[@]}"
   report_recommended_external_skills "${agents[@]}"
@@ -672,6 +795,12 @@ deploy_starter_kit() {
     deploy_agent "$repo_dir" "$a"
   done
 
+  if [[ "$APPLY" -eq 1 && "$LAYOUT" == "coordinated" ]]; then
+    write_coordinated_team "$repo_dir" "$kit" "${agents[@]}"
+  elif [[ "$LAYOUT" == "coordinated" ]]; then
+    info "[PREVIEW] Would materialize managed root AGENTS.md, START_HERE.md, TEAM.md, RUNBOOK.md, and team.lock.json (not runtime verified)"
+  fi
+
   if [[ "$APPLY" -eq 1 ]]; then
     publish_stage "${agents[@]}"
   fi
@@ -679,7 +808,7 @@ deploy_starter_kit() {
   echo ""
   ok "════════════════════════════════════════"
   if [[ "$APPLY" -eq 1 ]]; then
-    ok " Kit '${kit}' deployed! ${#agents[@]} agent(s) ready"
+    ok " Kit '${kit}' materialized: ${#agents[@]} role workspace(s); runtime validation pending"
   else
     ok " PREVIEW complete for '${kit}': ${#agents[@]} agent(s)"
     info "Re-run with --apply to perform these writes."
@@ -687,13 +816,17 @@ deploy_starter_kit() {
   ok "════════════════════════════════════════"
   echo ""
   echo "Next steps:"
-  echo "  Recommended (harness-native, no extra tooling):"
-  echo "    Claude Code:  /plugin install aAAaqwq/AGI-Super-Team"
-  echo "    Or open ${OPENCLAW_DIR}/workspace-<agent>/ in your harness."
+  if [[ "$LAYOUT" == "coordinated" ]]; then
+    echo "  Open the destination root in your configured harness: ${OPENCLAW_DIR}/"
+    echo "  Read AGENTS.md and START_HERE.md before submitting the team brief."
+  else
+    echo "  Configure your chosen harness, then open ${OPENCLAW_DIR}/workspace-<agent>/."
+  fi
+  echo "  Materialized files are not runtime-verified and do not prove that subagents started."
   echo "  Inspect the installed role and skills before granting tools or credentials."
   echo ""
   if [[ "$APPLY" -eq 1 ]]; then
-    echo "Deployed agents:"
+    echo "Materialized role workspaces:"
   else
     echo "Planned agents:"
   fi
@@ -703,34 +836,129 @@ deploy_starter_kit() {
 }
 
 # ── Main ──────────────────────────────────────────────────────
+usage() {
+  cat <<'EOF'
+AGI Super Team generic workspace materializer
+
+Usage:
+  ./install.sh [options] (--kit ID | --agent ID)
+  ./install.sh [options] <kit-or-agent> [agent-filter]
+
+Preview is the default and requires --source so it can validate the canonical
+manifest without cloning. Add --apply only after reviewing the plan.
+
+Options:
+  --source PATH                 Reviewed repository checkout
+  --destination PATH            Destination root
+  --kit ID                      Select a manifest starter kit
+  --agent ID                    Select one Agent role pack
+  --skill-tier TIER             role-only | core | standard (default)
+  --team-tier TIER              core | full (default; kits only)
+  --layout LAYOUT               isolated (default) | coordinated
+  --apply                       Materialize the previewed payload
+  -h, --help                    Show this help
+
+Coordinated layout materializes a root team entrypoint. It does not prove that
+a harness loaded roles or started subagents.
+EOF
+}
+
 main() {
+  local selector=""
+  local -a positionals=()
   while [[ $# -gt 0 ]]; do
     case "$1" in
+      -h|--help) usage; return 0 ;;
       --source) [[ $# -ge 2 ]] || err "--source requires a path"; SOURCE_DIR="$2"; shift 2 ;;
       --destination) [[ $# -ge 2 ]] || err "--destination requires a path"; OPENCLAW_DIR="$2"; shift 2 ;;
+      --skill-tier)
+        [[ $# -ge 2 ]] || err "--skill-tier requires role-only, core, or standard"
+        SKILL_TIER="$2"
+        case "$SKILL_TIER" in role-only|core|standard) ;; *) err "Invalid skill tier: $SKILL_TIER" ;; esac
+        shift 2
+        ;;
+      --team-tier)
+        [[ $# -ge 2 ]] || err "--team-tier requires core or full"
+        TEAM_TIER="$2"
+        case "$TEAM_TIER" in core|full) ;; *) err "Invalid team tier: $TEAM_TIER" ;; esac
+        shift 2
+        ;;
+      --layout)
+        [[ $# -ge 2 ]] || err "--layout requires isolated or coordinated"
+        LAYOUT="$2"
+        case "$LAYOUT" in isolated|coordinated) ;; *) err "Invalid layout: $LAYOUT" ;; esac
+        shift 2
+        ;;
+      --kit)
+        [[ $# -ge 2 ]] || err "--kit requires an ID"
+        [[ -z "$selector" ]] || err "Choose exactly one kit or agent"
+        selector="$2"
+        SELECTOR_KIND="kit"
+        shift 2
+        ;;
+      --agent)
+        [[ $# -ge 2 ]] || err "--agent requires an ID"
+        [[ -z "$selector" ]] || err "Choose exactly one kit or agent"
+        selector="$2"
+        SELECTOR_KIND="agent"
+        shift 2
+        ;;
       --apply) APPLY=1; shift ;;
-      --) shift; break ;;
+      --)
+        shift
+        while [[ $# -gt 0 ]]; do
+          positionals+=("$1")
+          shift
+        done
+        ;;
       -*) err "Unknown option: $1" ;;
-      *) break ;;
+      *) positionals+=("$1"); shift ;;
     esac
   done
 
+  if [[ -n "$selector" && "${#positionals[@]}" -gt 0 ]]; then
+    err "Choose one --kit/--agent selector or one legacy positional selector, not both"
+  fi
+  if [[ "${#positionals[@]}" -gt 2 ]]; then
+    err "Unexpected extra arguments: ${positionals[*]:2}"
+  fi
+  if [[ -z "$SOURCE_DIR" && "$APPLY" -eq 0 ]]; then
+    err "Preview requires --source PATH so the canonical team manifest can be validated without cloning or inventing a plan."
+  fi
+
   echo ""
   echo "╔══════════════════════════════════════╗"
-  echo "║     🏛️  AGI Super Team Deployer      ║"
+  echo "║    🏛️  AGI Super Team Materializer   ║"
   echo "║     Preview-first role workspaces     ║"
   echo "╚══════════════════════════════════════╝"
   echo ""
 
   check_prereqs
 
-  local kit="${1:-solo-founder}"
-  local agent_filter="${2:-}"
+  local kit="${selector:-${positionals[0]:-solo-founder}}"
+  local agent_filter="${positionals[1]:-}"
+
+  if [[ "$LAYOUT" == "coordinated" && "$SELECTOR_KIND" == "agent" ]]; then
+    err "Coordinated layout requires a kit selector"
+  fi
+  if [[ "$LAYOUT" == "coordinated" && -n "$agent_filter" ]]; then
+    err "Coordinated layout does not support a single-Agent kit filter"
+  fi
 
   local repo_dir
   ensure_repo
   repo_dir="$RETVAL_REPO"
   load_team_manifest "$repo_dir"
+
+  if [[ "$SELECTOR_KIND" == "kit" && "$(manifest_query kit-exists "$kit")" != "yes" ]]; then
+    err "Unknown kit: $kit"
+  fi
+  if [[ "$SELECTOR_KIND" == "agent" && "$(manifest_query agent-exists "$kit")" != "yes" ]]; then
+    err "Unknown agent: $kit"
+  fi
+  if [[ "$LAYOUT" == "coordinated" && "$(manifest_query kit-exists "$kit")" != "yes" ]]; then
+    err "Coordinated layout requires a kit selector"
+  fi
 
   deploy_starter_kit "$repo_dir" "$kit" "$agent_filter"
 }

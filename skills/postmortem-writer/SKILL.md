@@ -200,4 +200,3 @@ client.release(); // ✅ Always release
 - [ ] Postmortem meeting held
 - [ ] Document shared widely
 - [ ] Follow-up scheduled
-      ENDFILE

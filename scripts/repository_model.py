@@ -402,6 +402,234 @@ def _validate_skill_list(
     return value
 
 
+def _validate_identifier_list(
+    report: ValidationReport,
+    value: Any,
+    location: str,
+    field_name: str,
+    minimum: int = 0,
+) -> list[str] | None:
+    if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
+        report.add(
+            "error",
+            "manifest",
+            f"manifest.schema_kit_{field_name}",
+            f"{field_name} must be an array of identifiers",
+            location,
+        )
+        return None
+    invalid = sorted(item for item in value if not IDENTIFIER_PATTERN.fullmatch(item))
+    if invalid:
+        report.add(
+            "error",
+            "manifest",
+            "manifest.schema_identifier",
+            f"invalid {field_name} identifier(s): {', '.join(invalid)}",
+            location,
+        )
+    duplicates = sorted({item for item in value if value.count(item) > 1})
+    if duplicates:
+        report.add(
+            "error",
+            "manifest",
+            f"manifest.duplicate_kit_{field_name}",
+            f"duplicate {field_name} identifier(s): {', '.join(duplicates)}",
+            location,
+        )
+    if len(value) < minimum:
+        report.add(
+            "error",
+            "manifest",
+            f"manifest.schema_kit_{field_name}",
+            f"{field_name} must contain at least {minimum} item(s)",
+            location,
+        )
+    return value
+
+
+def validate_team_orchestration_contracts(
+    root: Path, manifest: dict[str, Any]
+) -> ValidationReport:
+    """Validate Kit relationships and runbook routes not expressible in JSON Schema."""
+
+    report = ValidationReport()
+    agents = manifest.get("agents")
+    known_agents = {
+        agent["id"]
+        for agent in agents
+        if isinstance(agent, dict)
+        and isinstance(agent.get("id"), str)
+        and IDENTIFIER_PATTERN.fullmatch(agent["id"])
+    } if isinstance(agents, list) else set()
+    kits = manifest.get("kits")
+    if not isinstance(kits, list) or not kits:
+        report.add(
+            "error", "manifest", "manifest.schema_kits",
+            "kits must be a non-empty array", MANIFEST_PATH,
+        )
+        return report
+
+    expected_fields = {
+        "id", "name", "outcome", "entrypoint", "coordinator", "reviewers",
+        "coreAgents", "agents", "outputs", "checks",
+    }
+    kit_ids: list[str] = []
+    for index, kit in enumerate(kits):
+        location = f"{MANIFEST_PATH}:kits[{index}]"
+        if not _expect_exact_keys(report, kit, expected_fields, location):
+            continue
+        kit_id = kit.get("id")
+        if not isinstance(kit_id, str) or not IDENTIFIER_PATTERN.fullmatch(kit_id):
+            report.add(
+                "error", "manifest", "manifest.schema_identifier", "invalid kit id", location
+            )
+            continue
+        kit_ids.append(kit_id)
+
+        for field, minimum in (("name", 3), ("outcome", 24)):
+            value = kit.get(field)
+            if not isinstance(value, str) or len(value.strip()) < minimum:
+                report.add(
+                    "error", "manifest", f"manifest.schema_kit_{field}",
+                    f"{field} must contain at least {minimum} characters", location,
+                )
+
+        members = _validate_identifier_list(
+            report, kit.get("agents"), f"{location}:agents", "agents", 3
+        )
+        core_agents = _validate_identifier_list(
+            report, kit.get("coreAgents"), f"{location}:coreAgents", "coreAgents", 2
+        )
+        reviewers = _validate_identifier_list(
+            report, kit.get("reviewers"), f"{location}:reviewers", "reviewers", 1
+        )
+        _validate_identifier_list(
+            report, kit.get("checks"), f"{location}:checks", "checks", 2
+        )
+
+        outputs = kit.get("outputs")
+        if (
+            not isinstance(outputs, list)
+            or not 2 <= len(outputs) <= 6
+            or any(not isinstance(item, str) or len(item.strip()) < 3 for item in outputs)
+            or len(outputs) != len(set(outputs))
+        ):
+            report.add(
+                "error", "manifest", "manifest.schema_kit_outputs",
+                "outputs must contain 2 to 6 unique, non-empty strings",
+                f"{location}:outputs",
+            )
+
+        coordinator = kit.get("coordinator")
+        if not isinstance(coordinator, str) or not IDENTIFIER_PATTERN.fullmatch(coordinator):
+            report.add(
+                "error", "manifest", "manifest.schema_kit_coordinator",
+                "coordinator must be an agent identifier", f"{location}:coordinator",
+            )
+        elif coordinator not in known_agents:
+            report.add(
+                "error", "manifest", "manifest.kit_unknown_coordinator",
+                f"unknown coordinator: {coordinator}", f"{location}:coordinator",
+            )
+
+        member_set = set(members or [])
+        core_set = set(core_agents or [])
+        reviewer_set = set(reviewers or [])
+        unknown_members = sorted(member_set - known_agents)
+        if unknown_members:
+            report.add(
+                "error", "manifest", "manifest.kit_unknown_agent",
+                f"unknown agent(s): {', '.join(unknown_members)}", f"{location}:agents",
+            )
+        if isinstance(coordinator, str) and coordinator in known_agents and coordinator not in member_set:
+            report.add(
+                "error", "manifest", "manifest.kit_coordinator_membership",
+                "coordinator must belong to agents", location,
+            )
+        reviewers_outside = sorted(reviewer_set - member_set)
+        if reviewers_outside:
+            report.add(
+                "error", "manifest", "manifest.kit_reviewer_membership",
+                f"reviewer(s) outside agents: {', '.join(reviewers_outside)}", location,
+            )
+        core_outside = sorted(core_set - member_set)
+        if core_outside:
+            report.add(
+                "error", "manifest", "manifest.kit_core_membership",
+                f"core agent(s) outside agents: {', '.join(core_outside)}", location,
+            )
+        required_core = set(reviewer_set)
+        if isinstance(coordinator, str):
+            required_core.add(coordinator)
+        missing_core = sorted(required_core - core_set)
+        if missing_core:
+            report.add(
+                "error", "manifest", "manifest.kit_core_roles",
+                f"coordinator/reviewer role(s) missing from coreAgents: {', '.join(missing_core)}",
+                location,
+            )
+        if isinstance(coordinator, str) and coordinator in reviewer_set:
+            report.add(
+                "error", "manifest", "manifest.kit_review_independence",
+                "coordinator and reviewers must not overlap", location,
+            )
+
+        entrypoint = kit.get("entrypoint")
+        expected_entrypoint = f"starter-kits/{kit_id}/RUNBOOK.md"
+        if entrypoint != expected_entrypoint:
+            report.add(
+                "error", "manifest", "manifest.kit_entrypoint",
+                f"entrypoint must be {expected_entrypoint}", f"{location}:entrypoint",
+            )
+        else:
+            runbook = root / expected_entrypoint
+            if not runbook.is_file() or runbook.is_symlink():
+                report.add(
+                    "error", "manifest", "manifest.kit_entrypoint_missing",
+                    "kit entrypoint must be a regular non-symlink file", expected_entrypoint,
+                )
+            else:
+                runbook_text = runbook.read_text(encoding="utf-8")
+                required_sections = (
+                    "## Input", "## Waves", "## Artifacts", "## Checks",
+                    "## Capability fallback", "## Human approval",
+                )
+                missing_sections = [
+                    section for section in required_sections if section not in runbook_text
+                ]
+                if missing_sections:
+                    report.add(
+                        "error", "manifest", "manifest.kit_runbook_contract",
+                        f"runbook missing section(s): {', '.join(missing_sections)}",
+                        expected_entrypoint,
+                    )
+
+        if kit_id == "full-team":
+            if member_set != known_agents:
+                report.add(
+                    "error", "manifest", "manifest.full_team_roster",
+                    "full-team agents must equal the canonical Agent roster", location,
+                )
+            if coordinator != "ceo":
+                report.add(
+                    "error", "manifest", "manifest.full_team_coordinator",
+                    "full-team coordinator must be ceo", location,
+                )
+            if reviewers != ["governor"]:
+                report.add(
+                    "error", "manifest", "manifest.full_team_reviewer",
+                    "full-team reviewer must be governor", location,
+                )
+
+    duplicate_kit_ids = sorted({item for item in kit_ids if kit_ids.count(item) > 1})
+    if duplicate_kit_ids:
+        report.add(
+            "error", "manifest", "manifest.duplicate_kit",
+            f"duplicate kit id(s): {', '.join(duplicate_kit_ids)}", MANIFEST_PATH,
+        )
+    return report
+
+
 def validate_manifest(root: Path) -> ValidationReport:
     report = ValidationReport()
     manifest_file = root / MANIFEST_PATH
@@ -518,7 +746,8 @@ def validate_manifest(root: Path) -> ValidationReport:
     physical_skills = _physical_skill_names(root)
     for index, agent in enumerate(agents):
         location = f"{MANIFEST_PATH}:agents[{index}]"
-        if not _expect_exact_keys(report, agent, {"id", "name", "path", "skills"}, location):
+        agent_fields = {"id", "name", "path", "focus", "outputs", "boundary", "skills"}
+        if not _expect_exact_keys(report, agent, agent_fields, location):
             continue
         agent_id = agent.get("id")
         name = agent.get("name")
@@ -532,6 +761,30 @@ def validate_manifest(root: Path) -> ValidationReport:
         if not isinstance(name, str) or not name.strip():
             report.add(
                 "error", "manifest", "manifest.schema_name", "name must be non-empty", location
+            )
+        for field in ("focus", "boundary"):
+            value = agent.get(field)
+            if not isinstance(value, str) or len(value.strip()) < 24:
+                report.add(
+                    "error",
+                    "manifest",
+                    f"manifest.schema_{field}",
+                    f"{field} must be a descriptive string of at least 24 characters",
+                    location,
+                )
+        outputs = agent.get("outputs")
+        if (
+            not isinstance(outputs, list)
+            or not 2 <= len(outputs) <= 5
+            or any(not isinstance(item, str) or len(item.strip()) < 3 for item in outputs)
+            or len(outputs) != len(set(outputs))
+        ):
+            report.add(
+                "error",
+                "manifest",
+                "manifest.schema_outputs",
+                "outputs must contain 2 to 5 unique, non-empty strings",
+                location,
             )
         expected_path = f"agents/{agent_id}"
         if path != expected_path:
@@ -603,67 +856,15 @@ def validate_manifest(root: Path) -> ValidationReport:
             MANIFEST_PATH,
         )
 
+    report.extend(validate_team_orchestration_contracts(root, manifest))
     kits = manifest.get("kits")
-    if not isinstance(kits, list) or not kits:
-        report.add(
-            "error",
-            "manifest",
-            "manifest.schema_kits",
-            "kits must be a non-empty array",
-            MANIFEST_PATH,
-        )
-        kits = []
-    kit_ids: list[str] = []
-    for index, kit in enumerate(kits):
-        location = f"{MANIFEST_PATH}:kits[{index}]"
-        if not _expect_exact_keys(report, kit, {"id", "agents"}, location):
-            continue
-        kit_id = kit.get("id")
-        members = kit.get("agents")
-        if not isinstance(kit_id, str) or not IDENTIFIER_PATTERN.fullmatch(kit_id):
-            report.add(
-                "error", "manifest", "manifest.schema_identifier", "invalid kit id", location
-            )
-        else:
-            kit_ids.append(kit_id)
-        if not isinstance(members, list) or not members or any(
-            not isinstance(member, str) for member in members
-        ):
-            report.add(
-                "error",
-                "manifest",
-                "manifest.schema_kit_agents",
-                "agents must be a non-empty array of agent ids",
-                location,
-            )
-            continue
-        duplicates = sorted({member for member in members if members.count(member) > 1})
-        if duplicates:
-            report.add(
-                "error",
-                "manifest",
-                "manifest.duplicate_kit_agent",
-                f"duplicate kit agent(s): {', '.join(duplicates)}",
-                location,
-            )
-        unknown = sorted(set(members) - set(agent_ids))
-        if unknown:
-            report.add(
-                "error",
-                "manifest",
-                "manifest.kit_unknown_agent",
-                f"unknown agent(s): {', '.join(unknown)}",
-                location,
-            )
-    duplicate_kit_ids = sorted({item for item in kit_ids if kit_ids.count(item) > 1})
-    if duplicate_kit_ids:
-        report.add(
-            "error",
-            "manifest",
-            "manifest.duplicate_kit",
-            f"duplicate kit id(s): {', '.join(duplicate_kit_ids)}",
-            MANIFEST_PATH,
-        )
+    kit_ids = [
+        kit["id"]
+        for kit in kits
+        if isinstance(kit, dict)
+        and isinstance(kit.get("id"), str)
+        and IDENTIFIER_PATTERN.fullmatch(kit["id"])
+    ] if isinstance(kits, list) else []
 
     physical_skill_count, physical_agent_count = tracked_inventory_counts(root)
     if inventory_valid:
