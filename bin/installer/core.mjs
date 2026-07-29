@@ -18,11 +18,15 @@ import {
   agentAsSkill,
   antigravityAgent,
   codexAgent,
+  codexSpecialist,
   combinedRules,
   globalCeoPayload,
   markdownAgent,
+  markdownSpecialist,
   openClawFiles,
   renderManaged,
+  specialistAsSkill,
+  specialistBody,
   walkFiles,
 } from "./render.mjs";
 
@@ -93,7 +97,7 @@ function planSkills(plan, catalog, tool, root) {
   }
 }
 
-function renderAgents(plan, packageRoot, catalog, tool, root, agents, codexPayloadAll) {
+function renderAgents(plan, packageRoot, catalog, tool, root, agents, codexPayloadAll, groups = {}) {
   const mode = tool.agentMode;
   if (mode === "codex-toml") {
     const ceo = agents.find((agent) => agent.id === "ceo");
@@ -112,24 +116,24 @@ function renderAgents(plan, packageRoot, catalog, tool, root, agents, codexPaylo
       }
     } else {
       for (const agent of agents.filter((item) => item.id !== "ceo")) {
-        addFile(plan, tool, root, destination(root, tool.agentPaths[0], `ast-${agent.id}.toml`), codexAgent(packageRoot, agent), `agent:${agent.id}`);
+        addFile(plan, tool, root, destination(root, tool.agentPaths[0], `ast-${agent.id}.toml`), codexAgent(packageRoot, agent, groups[agent.id] || null), `agent:${agent.id}`);
       }
     }
     return;
   }
   if (mode === "openclaw-workspace") {
-    for (const agent of agents) for (const file of openClawFiles(packageRoot, agent)) {
+    for (const agent of agents) for (const file of openClawFiles(packageRoot, agent, groups[agent.id] || null)) {
       addFile(plan, tool, root, destination(root, tool.agentPaths[0], file.relative), file.content, `agent:${agent.id}`);
     }
     return;
   }
   if (mode === "agent-as-skill") {
-    for (const agent of agents) addFile(plan, tool, root, destination(root, tool.agentPaths[0], join(agent.id, "SKILL.md")), agentAsSkill(packageRoot, agent), `agent:${agent.id}`);
+    for (const agent of agents) addFile(plan, tool, root, destination(root, tool.agentPaths[0], join(agent.id, "SKILL.md")), agentAsSkill(packageRoot, agent, groups[agent.id] || null), `agent:${agent.id}`);
     return;
   }
   if (mode === "antigravity-agent") {
     for (const agent of agents) {
-      const file = antigravityAgent(packageRoot, agent);
+      const file = antigravityAgent(packageRoot, agent, groups[agent.id] || null);
       addFile(plan, tool, root, destination(root, tool.agentPaths[0], file.relative), file.content, `agent:${agent.id}`);
     }
     return;
@@ -140,7 +144,7 @@ function renderAgents(plan, packageRoot, catalog, tool, root, agents, codexPaylo
   if (["markdown", "cursor-rule", "trae-rule", "gemini-extension-skill"].includes(mode)) {
     const suffix = tool.id === "copilot" ? ".agent.md" : mode === "cursor-rule" ? ".mdc" : ".md";
     for (const configured of tool.agentPaths) for (const agent of agents) {
-      const rendered = markdownAgent(packageRoot, agent, suffix);
+      const rendered = markdownAgent(packageRoot, agent, suffix, groups[agent.id] || null);
       addFile(plan, tool, root, destination(root, configured, rendered.name), rendered.content, `agent:${agent.id}`);
     }
     return;
@@ -148,9 +152,51 @@ function renderAgents(plan, packageRoot, catalog, tool, root, agents, codexPaylo
   throw new Error(`unsupported agent mode for ${tool.id}: ${mode}`);
 }
 
-export function buildPlan({ packageRoot, catalog, tools, home, projectDir, includeAgents, includeSkills, agentIds, codexPayloadAll = false }) {
+function renderSpecialists(plan, packageRoot, tool, root, specialists) {
+  if (!specialists.length) return;
+  const mode = tool.agentMode;
+  if (mode === "codex-toml") {
+    for (const specialist of specialists) {
+      addFile(plan, tool, root, destination(root, tool.agentPaths[0], `ast-${specialist.manager}-${specialist.id}.toml`), codexSpecialist(packageRoot, specialist), `specialist:${specialist.manager}/${specialist.id}`);
+    }
+    return;
+  }
+  if (mode === "openclaw-workspace") {
+    for (const specialist of specialists) {
+      addFile(plan, tool, root, destination(root, tool.agentPaths[0], join(`workspace-${specialist.manager}-${specialist.id}`, "AGENTS.md")), Buffer.from(specialistBody(packageRoot, specialist)), `specialist:${specialist.manager}/${specialist.id}`);
+    }
+    return;
+  }
+  if (mode === "agent-as-skill") {
+    for (const specialist of specialists) {
+      addFile(plan, tool, root, destination(root, tool.agentPaths[0], join(`${specialist.manager}-${specialist.id}`, "SKILL.md")), specialistAsSkill(packageRoot, specialist), `specialist:${specialist.manager}/${specialist.id}`);
+    }
+    return;
+  }
+  if (mode === "antigravity-agent") {
+    for (const specialist of specialists) {
+      addFile(plan, tool, root, destination(root, tool.agentPaths[0], join(`${specialist.manager}-${specialist.id}`, "agent.md")), markdownSpecialist(packageRoot, specialist).content, `specialist:${specialist.manager}/${specialist.id}`);
+    }
+    return;
+  }
+  if (["markdown", "cursor-rule", "trae-rule", "gemini-extension-skill"].includes(mode)) {
+    const suffix = tool.id === "copilot" ? ".agent.md" : mode === "cursor-rule" ? ".mdc" : ".md";
+    for (const configured of tool.agentPaths) for (const specialist of specialists) {
+      const rendered = markdownSpecialist(packageRoot, specialist, suffix);
+      addFile(plan, tool, root, destination(root, configured, rendered.name), rendered.content, `specialist:${specialist.manager}/${specialist.id}`);
+    }
+    return;
+  }
+  if (mode !== "combined-rules") throw new Error(`unsupported specialist mode for ${tool.id}: ${mode}`);
+}
+
+export function buildPlan({ packageRoot, catalog, tools, home, projectDir, includeAgents, includeSkills, agentIds, subagentManagers = new Set(), includeCcoSpecialists = false, codexPayloadAll = false }) {
   const plan = [];
   const selected = agentIds ? catalog.agents.filter((agent) => agentIds.has(agent.id)) : catalog.agents;
+  const managers = new Set(subagentManagers);
+  if (includeCcoSpecialists) managers.add("cco");
+  const groups = Object.fromEntries([...managers].map((manager) => [manager, catalog.specialistGroups[manager]]));
+  const specialists = Object.values(groups).flatMap((group) => group.specialists);
   for (const tool of tools) {
     const root = tool.scope === "project" ? projectDir : home;
     if (!root) throw new Error(`${tool.id} is project-scoped; pass --project-dir <path>`);
@@ -162,12 +208,13 @@ export function buildPlan({ packageRoot, catalog, tools, home, projectDir, inclu
         tool,
         root,
         path,
-        renderManaged(readSafe(path), combinedRules(packageRoot, includeAgents ? selected : [], includeSkills ? catalog.skills : [])),
+        renderManaged(readSafe(path), combinedRules(packageRoot, includeAgents ? selected : [], includeSkills ? catalog.skills : [], groups)),
         "combined-rules",
       );
       continue;
     }
-    if (includeAgents) renderAgents(plan, packageRoot, catalog, tool, root, selected, codexPayloadAll && tool.id === "codex");
+    if (includeAgents) renderAgents(plan, packageRoot, catalog, tool, root, selected, codexPayloadAll && tool.id === "codex", groups);
+    if (includeAgents && !(codexPayloadAll && tool.id === "codex")) renderSpecialists(plan, packageRoot, tool, root, specialists);
     if (includeSkills) planSkills(plan, catalog, tool, root);
   }
   return plan;

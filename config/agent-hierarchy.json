@@ -1,0 +1,43 @@
+{
+  "$schema": "./agent-hierarchy.schema.json",
+  "schemaVersion": 1,
+  "coordinator": "ceo",
+  "requiredMaxDepth": 2,
+  "recommendedMaxThreads": 4,
+  "executionPolicy": "wave",
+  "managers": {
+    "cto": {
+      "maxConcurrentChildren": 2,
+      "routingFile": "config/cto-specialists.json",
+      "roleRefs": ["pe"],
+      "subagents": [
+        "frontend-developer", "backend-architect", "ai-engineer", "devops-automator",
+        "security-engineer", "rapid-prototyper", "senior-developer", "mobile-app-builder",
+        "data-engineer", "technical-writer", "autonomous-optimization-architect",
+        "embedded-firmware-engineer", "pc-host-engineer", "mechanical-design-engineer",
+        "embedded-linux-driver-engineer", "fpga-digital-design-engineer", "iot-solution-architect",
+        "network-engineer-china", "incident-response-commander", "threat-detection-engineer",
+        "solidity-smart-contract-engineer", "wechat-mini-program-developer"
+      ]
+    },
+    "cpo": {
+      "maxConcurrentChildren": 2,
+      "routingFile": "config/cpo-specialists.json",
+      "roleRefs": [],
+      "subagents": ["ui-designer", "ux-researcher", "ux-architect"]
+    },
+    "cco": {
+      "maxConcurrentChildren": 2,
+      "routingFile": "config/cco-specialists.json",
+      "roleRefs": [],
+      "subagents": [
+        "xiaohongshu-operator", "douyin-strategist", "wechat-operator", "bilibili-strategist",
+        "short-video-editing-coach", "weixin-channels-strategist", "knowledge-commerce-strategist",
+        "xiaohongshu-specialist", "wechat-official-account-manager", "zhihu-strategist",
+        "twitter-engager", "instagram-curator", "reddit-community-operator",
+        "video-optimization-specialist", "growth-hacker", "seo-specialist",
+        "ai-citation-strategist", "prompt-engineer", "content-illustration-planner"
+      ]
+    }
+  }
+}

@@ -79,3 +79,11 @@
 ## 汇报格式
 
 先给结论，再给证据：`建议 → 关键权衡 → 风险与假设 → 下一步 → 需要谁批准`。短而明确，不用术语堆砌权威感。
+
+## 子 Agent 军团
+
+- CTO 是受限技术管理节点。完整直属关系见 [`config/agent-hierarchy.json`](../../config/agent-hierarchy.json)，精确触发、排除、输入、交付和验收见 [`config/cto-specialists.json`](../../config/cto-specialists.json)。
+- PE 是 CTO 的 canonical 交付负责人：架构与范围已批准、需要跨模块生产实现和统一验证时调用 `pe`；只引用现有 `agents/pe`，不得复制第二份身份，也不得创建 `ast-cto-pe`。
+- 最大不确定性集中在一个技术领域时，直接调用对应窄专家；窄专家先定义领域方案，PE 再负责生产集成。故障期间由故障响应指挥官主责协调。
+- 每轮只选一个主责，必要时增加一个独立协作角色；最多两个直属叶子并发，总深度二。PE 与所有工程专家都是叶子，不得继续创建 Agent。
+- `agents/cto/subagents/*/AGENTS.md` 是固定上游 commit 的逐字副本；不得直接本地改写。来源与 SHA-256 见 `config/agent-sources.lock.json`。

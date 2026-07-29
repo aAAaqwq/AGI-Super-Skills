@@ -149,6 +149,27 @@ class MultiCliInstallerTests(unittest.TestCase):
                 for relative_path in tool["agentPaths"]:
                     self.assert_contains_artifact(destination_root / relative_path)
 
+    def test_priority_tools_install_all_executive_subagents_on_request(self) -> None:
+        hierarchy = json.loads((ROOT / "config/agent-hierarchy.json").read_text(encoding="utf-8"))
+        expected = {f"{manager}-{role}" for manager, settings in hierarchy["managers"].items() for role in settings["subagents"]}
+        for tool_id in PRIORITY_TOOLS:
+            with self.subTest(tool=tool_id), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                home = root / "home"
+                project = root / "project"
+                project.mkdir()
+                result = self.run_cli(home, project, "--tool", tool_id, "--no-skills", "--all-subagents", "--install")
+                self.assert_success(result)
+                if tool_id == "codex":
+                    installed = {path.stem.removeprefix("ast-") for path in (home / ".codex/agents").glob("ast-*-*.toml") if path.stem.removeprefix("ast-") in expected}
+                elif tool_id == "claude-code":
+                    installed = {path.stem for path in (home / ".claude/agents").glob("*.md") if path.stem in expected}
+                elif tool_id == "openclaw":
+                    installed = {path.name.removeprefix("workspace-") for path in (home / ".openclaw/agency-agents").glob("workspace-*-*") if path.name.removeprefix("workspace-") in expected}
+                else:
+                    installed = {path.name for path in (home / ".hermes/skills/agi-super-team-agents").glob("*-*") if path.name in expected}
+                self.assertEqual(installed, expected)
+
     def test_no_agents_installs_only_skills(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

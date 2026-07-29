@@ -1,0 +1,731 @@
+{
+  "$schema": "./specialist-routing.schema.json",
+  "schemaVersion": 1,
+  "parent": "cto",
+  "requiredMaxDepth": 2,
+  "maxConcurrentLeaves": 2,
+  "source": {
+    "repository": "https://github.com/jnMetaCode/agency-agents-zh",
+    "commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977",
+    "license": "MIT",
+    "notice": "Vendored role text is byte-for-byte tracked in config/agent-sources.lock.json."
+  },
+  "roleRoutes": [
+    {
+      "id": "pe",
+      "name": "PE（Linus Torvalds）",
+      "trigger": "架构与范围已经批准，需要一个负责人跨模块实现、集成、测试、代码评审和可回退交付。",
+      "doNotUseWhen": "只需要一个窄领域的设计、审计或专项实现建议；此时直接调用对应工程专家。",
+      "requiredInputs": [
+        "已批准设计",
+        "范围与非目标",
+        "代码所有权",
+        "验收命令",
+        "回滚边界"
+      ],
+      "outputs": [
+        "可运行实现",
+        "回归测试",
+        "可审查变更集",
+        "验证回执"
+      ],
+      "acceptance": [
+        "实现符合批准边界",
+        "相关测试真实运行",
+        "失败和风险可见",
+        "不吞并无关改动"
+      ],
+      "partners": [
+        "frontend-developer",
+        "backend-architect",
+        "security-engineer"
+      ],
+      "boundary": "PE 是 CTO 直属交付叶子，不得继续创建子 Agent；提交、推送、部署和不可逆操作仍需明确批准。"
+    }
+  ],
+  "specialists": [
+    {
+      "id": "frontend-developer",
+      "name": "前端开发者",
+      "sourcePath": "engineering/engineering-frontend-developer.md",
+      "trigger": "需要 React、Vue 或现代 Web 前端的组件实现、状态管理、响应式布局、可访问性或浏览器性能优化。",
+      "doNotUseWhen": "任务核心是视觉设计而非代码、后端接口架构，或跨模块总体交付。",
+      "requiredInputs": [
+        "界面或需求",
+        "技术栈",
+        "数据契约",
+        "浏览器范围",
+        "验收标准"
+      ],
+      "outputs": [
+        "前端实现方案或代码",
+        "组件状态说明",
+        "前端测试与性能检查"
+      ],
+      "acceptance": [
+        "关键状态可用",
+        "无障碍可检查",
+        "数据边界明确",
+        "测试与性能结论有证据"
+      ],
+      "partners": [
+        "backend-architect",
+        "ui-designer",
+        "pe"
+      ],
+      "boundary": "不擅自改产品范围或后端契约，不声称未运行的浏览器、性能或可访问性测试。"
+    },
+    {
+      "id": "backend-architect",
+      "name": "后端架构师",
+      "sourcePath": "engineering/engineering-backend-architect.md",
+      "trigger": "需要 API、领域边界、数据库架构、微服务、一致性、扩展性或服务端可靠性设计。",
+      "doNotUseWhen": "只是局部编码实现、前端界面、数据仓库管线或基础设施流水线。",
+      "requiredInputs": [
+        "业务能力",
+        "流量与数据规模",
+        "一致性要求",
+        "现有系统",
+        "SLO 与约束"
+      ],
+      "outputs": [
+        "后端架构方案",
+        "API 与数据契约",
+        "故障与迁移计划"
+      ],
+      "acceptance": [
+        "边界清晰",
+        "关键权衡有证据",
+        "失败模式和回滚明确",
+        "不提前微服务化"
+      ],
+      "partners": [
+        "frontend-developer",
+        "data-engineer",
+        "pe"
+      ],
+      "boundary": "不拥有产品优先级，不直接部署生产服务，不把架构草图宣称为运行验证。"
+    },
+    {
+      "id": "ai-engineer",
+      "name": "AI 工程师",
+      "sourcePath": "engineering/engineering-ai-engineer.md",
+      "trigger": "需要机器学习或大模型功能、数据到模型管线、评测、推理服务、模型部署与 AI 系统集成。",
+      "doNotUseWhen": "只是普通后端业务逻辑、传统数据仓库，或缺少可评测任务仍要求直接上模型。",
+      "requiredInputs": [
+        "任务定义",
+        "数据与权限",
+        "模型约束",
+        "质量指标",
+        "成本和延迟目标"
+      ],
+      "outputs": [
+        "AI 系统设计或实现",
+        "评测方案",
+        "部署与监测计划"
+      ],
+      "acceptance": [
+        "基线和评测集明确",
+        "数据泄漏受控",
+        "成本延迟可测",
+        "有降级和回滚"
+      ],
+      "partners": [
+        "data-engineer",
+        "backend-architect",
+        "pe"
+      ],
+      "boundary": "不上传敏感数据，不索取密钥，不保证模型准确率，不以演示样例替代代表性评测。"
+    },
+    {
+      "id": "devops-automator",
+      "name": "DevOps 自动化师",
+      "sourcePath": "engineering/engineering-devops-automator.md",
+      "trigger": "需要 CI/CD、基础设施自动化、构建发布流水线、环境一致性、部署编排或回滚自动化。",
+      "doNotUseWhen": "正在处理线上事故指挥、安全威胁检测，或只需应用代码实现。",
+      "requiredInputs": [
+        "仓库与构建系统",
+        "目标环境",
+        "发布策略",
+        "权限边界",
+        "回滚和 SLO"
+      ],
+      "outputs": [
+        "流水线设计或配置",
+        "环境与发布契约",
+        "验证和回滚步骤"
+      ],
+      "acceptance": [
+        "最小权限",
+        "构建可复现",
+        "密钥不落盘",
+        "失败可回退"
+      ],
+      "partners": [
+        "incident-response-commander",
+        "security-engineer",
+        "pe"
+      ],
+      "boundary": "未经批准不得部署、改云资源、写入生产、轮换凭证或触发真实发布。"
+    },
+    {
+      "id": "security-engineer",
+      "name": "安全工程师",
+      "sourcePath": "engineering/engineering-security-engineer.md",
+      "trigger": "需要威胁建模、安全架构、代码审计、漏洞评估、身份权限或应用安全整改。",
+      "doNotUseWhen": "任务核心是 SIEM 检测规则和威胁狩猎，或普通功能开发。",
+      "requiredInputs": [
+        "资产与数据",
+        "信任边界",
+        "攻击面",
+        "代码或设计",
+        "风险接受标准"
+      ],
+      "outputs": [
+        "威胁模型",
+        "安全审查发现",
+        "优先级整改与验证方案"
+      ],
+      "acceptance": [
+        "发现可复现",
+        "风险分级有依据",
+        "缓解措施可验证",
+        "不泄露利用细节"
+      ],
+      "partners": [
+        "threat-detection-engineer",
+        "backend-architect",
+        "pe"
+      ],
+      "boundary": "不得攻击外部目标、使用真实凭证、扩大扫描范围或把合规检查等同于安全证明。"
+    },
+    {
+      "id": "rapid-prototyper",
+      "name": "快速原型师",
+      "sourcePath": "engineering/engineering-rapid-prototyper.md",
+      "trigger": "需要在明确时间盒内做可丢弃 POC、MVP 或黑客马拉松原型，以验证一个关键技术或用户假设。",
+      "doNotUseWhen": "目标是生产级长期系统、安全关键功能或已有批准设计的正式交付。",
+      "requiredInputs": [
+        "待验证假设",
+        "时间盒",
+        "成功标准",
+        "可用数据和工具",
+        "明确不做事项"
+      ],
+      "outputs": [
+        "可演示原型",
+        "学习结论",
+        "技术债与处置建议"
+      ],
+      "acceptance": [
+        "只验证关键假设",
+        "原型与生产状态明确区分",
+        "失败也形成证据",
+        "无隐藏依赖"
+      ],
+      "partners": [
+        "frontend-developer",
+        "ai-engineer",
+        "pe"
+      ],
+      "boundary": "原型不得直接上线、处理真实敏感数据或被描述为生产就绪。"
+    },
+    {
+      "id": "senior-developer",
+      "name": "高级开发者",
+      "sourcePath": "engineering/engineering-senior-developer.md",
+      "trigger": "需要 Laravel、Livewire、FluxUI、高品质 CSS 或 Three.js 的高级 Web 实现与体验打磨。",
+      "doNotUseWhen": "技术栈不匹配、任务只是通用架构评审，或需要跨模块总负责人。",
+      "requiredInputs": [
+        "明确技术栈",
+        "设计与交互",
+        "现有代码",
+        "性能目标",
+        "验收标准"
+      ],
+      "outputs": [
+        "高品质 Web 实现",
+        "交互与样式说明",
+        "测试和性能回执"
+      ],
+      "acceptance": [
+        "符合指定技术栈",
+        "细节可复现",
+        "性能有测量",
+        "不破坏既有行为"
+      ],
+      "partners": [
+        "frontend-developer",
+        "backend-architect",
+        "pe"
+      ],
+      "boundary": "不以个人偏好替代既有架构，不声称未运行的视觉或性能验证。"
+    },
+    {
+      "id": "mobile-app-builder",
+      "name": "移动应用开发者",
+      "sourcePath": "engineering/engineering-mobile-app-builder.md",
+      "trigger": "需要 iOS、Android 原生或跨平台移动应用架构、实现、生命周期、性能和发布准备。",
+      "doNotUseWhen": "目标是移动 Web、微信小程序或仅设计界面。",
+      "requiredInputs": [
+        "目标平台",
+        "技术栈",
+        "用户流程",
+        "设备范围",
+        "隐私和商店约束"
+      ],
+      "outputs": [
+        "移动端实现方案或代码",
+        "设备与生命周期测试",
+        "发布准备清单"
+      ],
+      "acceptance": [
+        "平台行为正确",
+        "离线和权限状态明确",
+        "性能可测",
+        "商店风险可见"
+      ],
+      "partners": [
+        "backend-architect",
+        "ui-designer",
+        "pe"
+      ],
+      "boundary": "不得签名、上传商店、使用生产证书或读取未授权设备数据。"
+    },
+    {
+      "id": "data-engineer",
+      "name": "数据工程师",
+      "sourcePath": "engineering/engineering-data-engineer.md",
+      "trigger": "需要 ETL/ELT、数据湖、Spark、dbt、数据仓库、批流管线、血缘、质量和恢复设计。",
+      "doNotUseWhen": "核心是模型训练、业务 API 数据库或单次手工分析。",
+      "requiredInputs": [
+        "数据源与契约",
+        "规模和时效",
+        "消费方",
+        "质量规则",
+        "保留与权限"
+      ],
+      "outputs": [
+        "数据管线设计或实现",
+        "数据契约与质量门",
+        "运行和恢复手册"
+      ],
+      "acceptance": [
+        "幂等可重跑",
+        "血缘清晰",
+        "质量可观测",
+        "成本与恢复目标明确"
+      ],
+      "partners": [
+        "ai-engineer",
+        "backend-architect",
+        "pe"
+      ],
+      "boundary": "不得复制生产敏感数据、绕过治理或把样例数据质量当生产证明。"
+    },
+    {
+      "id": "technical-writer",
+      "name": "技术文档工程师",
+      "sourcePath": "engineering/engineering-technical-writer.md",
+      "trigger": "需要 API 文档、开发者指南、架构说明、运行手册、知识库或 docs-as-code 工作流。",
+      "doNotUseWhen": "产品行为尚未确定、只需营销文案，或需要实现代码而非解释代码。",
+      "requiredInputs": [
+        "目标读者",
+        "真实接口或代码",
+        "任务场景",
+        "版本范围",
+        "验证环境"
+      ],
+      "outputs": [
+        "可执行技术文档",
+        "示例和故障排查",
+        "版本与维护说明"
+      ],
+      "acceptance": [
+        "示例可运行",
+        "与当前版本一致",
+        "前置条件完整",
+        "不隐藏限制"
+      ],
+      "partners": [
+        "backend-architect",
+        "frontend-developer",
+        "pe"
+      ],
+      "boundary": "不虚构 API、命令、测试结果或兼容性，不发布未经评审的公共文档。"
+    },
+    {
+      "id": "autonomous-optimization-architect",
+      "name": "自主优化架构师",
+      "sourcePath": "engineering/engineering-autonomous-optimization-architect.md",
+      "trigger": "需要有护栏的自适应系统、自动调优、自愈策略、反馈控制、回退和人工接管机制。",
+      "doNotUseWhen": "只需普通监控告警、一次性性能优化，或无法定义安全目标和停止条件。",
+      "requiredInputs": [
+        "被控系统",
+        "目标函数",
+        "护栏指标",
+        "观测信号",
+        "回退和人工接管"
+      ],
+      "outputs": [
+        "闭环优化架构",
+        "策略与护栏",
+        "仿真、灰度和回退计划"
+      ],
+      "acceptance": [
+        "目标不会驱动危险行为",
+        "变化可审计",
+        "可停止回退",
+        "先仿真再有限灰度"
+      ],
+      "partners": [
+        "devops-automator",
+        "ai-engineer",
+        "incident-response-commander"
+      ],
+      "boundary": "不得在生产中自主改配置、扩容、部署或执行恢复动作，除非有明确授权和硬护栏。"
+    },
+    {
+      "id": "embedded-firmware-engineer",
+      "name": "嵌入式固件工程师",
+      "sourcePath": "engineering/engineering-embedded-firmware-engineer.md",
+      "trigger": "需要 MCU、RTOS、外设驱动、启动流程、低功耗、实时性或资源受限固件设计与实现。",
+      "doNotUseWhen": "目标是 Linux 内核驱动、FPGA 数字逻辑或上位机软件。",
+      "requiredInputs": [
+        "芯片与板卡",
+        "外设和时序",
+        "RTOS 或裸机环境",
+        "功耗内存限制",
+        "硬件测试条件"
+      ],
+      "outputs": [
+        "固件设计或代码",
+        "驱动与时序说明",
+        "板级测试计划"
+      ],
+      "acceptance": [
+        "中断与并发安全",
+        "资源预算明确",
+        "异常可恢复",
+        "硬件测试不被模拟替代"
+      ],
+      "partners": [
+        "embedded-linux-driver-engineer",
+        "fpga-digital-design-engineer",
+        "iot-solution-architect"
+      ],
+      "boundary": "不得刷写真实设备、改变熔丝或安全启动配置，硬件风险操作需人工批准。"
+    },
+    {
+      "id": "pc-host-engineer",
+      "name": "上位机工程师",
+      "sourcePath": "engineering/engineering-pc-host-engineer.md",
+      "trigger": "需要 Qt/QML、QSerialPort、Modbus、CAN、QChart 实时可视化或工业检测设备 HMI 上位机。",
+      "doNotUseWhen": "任务是普通 Web 前端、嵌入式固件或工业网络拓扑。",
+      "requiredInputs": [
+        "设备协议",
+        "通信链路",
+        "数据频率",
+        "HMI 流程",
+        "目标系统与故障模式"
+      ],
+      "outputs": [
+        "上位机架构或实现",
+        "协议与状态机",
+        "实时可视化和故障测试"
+      ],
+      "acceptance": [
+        "通信可恢复",
+        "线程模型安全",
+        "数据刷新可测",
+        "异常状态对操作员可见"
+      ],
+      "partners": [
+        "embedded-firmware-engineer",
+        "mechanical-design-engineer",
+        "pe"
+      ],
+      "boundary": "不得连接或控制未授权真实设备，不绕过工业安全联锁。"
+    },
+    {
+      "id": "mechanical-design-engineer",
+      "name": "机械设计工程师",
+      "sourcePath": "engineering/engineering-mechanical-design-engineer.md",
+      "trigger": "需要传动选型、强度刚度疲劳振动校核、DFMA、GB/ISO 标准件或工业装备机械设计。",
+      "doNotUseWhen": "问题仅涉及电子、固件、软件或未经工程输入就要求出生产图。",
+      "requiredInputs": [
+        "载荷与工况",
+        "寿命和安全系数",
+        "空间材料与工艺",
+        "适用标准",
+        "制造和检验能力"
+      ],
+      "outputs": [
+        "机械方案",
+        "关键计算与选型",
+        "DFMA 和验证计划"
+      ],
+      "acceptance": [
+        "假设和单位明确",
+        "关键失效模式覆盖",
+        "标准版本可追溯",
+        "需要签章处明确升级"
+      ],
+      "partners": [
+        "pc-host-engineer",
+        "embedded-firmware-engineer",
+        "iot-solution-architect"
+      ],
+      "boundary": "不替代持证工程签章，不批准生产、采购或安全关键设备投用。"
+    },
+    {
+      "id": "embedded-linux-driver-engineer",
+      "name": "嵌入式 Linux 驱动工程师",
+      "sourcePath": "engineering/engineering-embedded-linux-driver-engineer.md",
+      "trigger": "需要 Linux 内核模块、设备树、Platform/I2C/SPI 驱动、BSP 集成或内核态故障诊断。",
+      "doNotUseWhen": "目标是裸机/RTOS 固件、用户态上位机或 FPGA 逻辑。",
+      "requiredInputs": [
+        "SoC 与内核版本",
+        "硬件原理和寄存器",
+        "设备树",
+        "总线时序",
+        "测试板和日志"
+      ],
+      "outputs": [
+        "驱动设计或代码",
+        "设备树与绑定说明",
+        "内核测试和回退步骤"
+      ],
+      "acceptance": [
+        "资源生命周期正确",
+        "并发和电源管理安全",
+        "内核日志可诊断",
+        "版本兼容范围明确"
+      ],
+      "partners": [
+        "embedded-firmware-engineer",
+        "fpga-digital-design-engineer",
+        "pe"
+      ],
+      "boundary": "不得在关键设备刷写内核或加载未审模块，不声称未在目标硬件验证的结果。"
+    },
+    {
+      "id": "fpga-digital-design-engineer",
+      "name": "FPGA/ASIC 数字设计工程师",
+      "sourcePath": "engineering/engineering-fpga-digital-design-engineer.md",
+      "trigger": "需要 Verilog/SystemVerilog、RTL、时序收敛、CDC、AXI、验证或 FPGA/ASIC 数字逻辑设计。",
+      "doNotUseWhen": "问题是 MCU 固件、Linux 驱动、模拟电路或机械结构。",
+      "requiredInputs": [
+        "功能与接口",
+        "目标器件或工艺",
+        "时钟复位",
+        "性能资源目标",
+        "验证环境"
+      ],
+      "outputs": [
+        "RTL 架构或代码",
+        "验证计划与断言",
+        "时序和资源报告说明"
+      ],
+      "acceptance": [
+        "接口时序明确",
+        "CDC/RDC 已审",
+        "综合与仿真证据分开",
+        "约束完整"
+      ],
+      "partners": [
+        "embedded-firmware-engineer",
+        "embedded-linux-driver-engineer",
+        "pe"
+      ],
+      "boundary": "不得烧录生产器件、签核 ASIC tape-out 或把仿真通过等同于硅上验证。"
+    },
+    {
+      "id": "iot-solution-architect",
+      "name": "IoT 方案架构师",
+      "sourcePath": "engineering/engineering-iot-solution-architect.md",
+      "trigger": "需要 MQTT/CoAP、边缘计算、设备身份、设备管理、遥测、OTA 与云平台的端到端 IoT 方案。",
+      "doNotUseWhen": "只是单个固件驱动、机械设计或普通后端服务。",
+      "requiredInputs": [
+        "设备规模与网络",
+        "遥测和控制需求",
+        "安全模型",
+        "边云边界",
+        "SLO 与运维能力"
+      ],
+      "outputs": [
+        "端云架构",
+        "设备与消息契约",
+        "安全、OTA 和运维方案"
+      ],
+      "acceptance": [
+        "身份和密钥生命周期明确",
+        "离线与重连可处理",
+        "消息幂等",
+        "OTA 可回退"
+      ],
+      "partners": [
+        "embedded-firmware-engineer",
+        "backend-architect",
+        "security-engineer"
+      ],
+      "boundary": "不得远程控制真实设备、下发 OTA、创建云资源或接触生产设备密钥。"
+    },
+    {
+      "id": "network-engineer-china",
+      "name": "国内网络工程师",
+      "sourcePath": "engineering/engineering-network-engineer-china.md",
+      "trigger": "需要华为 VRP、华三 Comware、锐捷、VLAN/OSPF/BGP/VXLAN、园区网/数据中心/广域网或信创等保组网。",
+      "doNotUseWhen": "任务是云应用网络、普通后端 API 或未指定国产网络设备与场景。",
+      "requiredInputs": [
+        "现网拓扑",
+        "设备型号与版本",
+        "地址和路由策略",
+        "容量与冗余",
+        "变更窗口和回滚"
+      ],
+      "outputs": [
+        "网络方案",
+        "厂商命令候选与变更单",
+        "验证和回滚计划"
+      ],
+      "acceptance": [
+        "命令匹配设备版本",
+        "故障域和冗余明确",
+        "变更可分步验证",
+        "符合适用合规要求"
+      ],
+      "partners": [
+        "security-engineer",
+        "incident-response-commander",
+        "iot-solution-architect"
+      ],
+      "boundary": "不得登录真实设备、下发命令、改变路由或声称未经实验室验证的厂商兼容性。"
+    },
+    {
+      "id": "incident-response-commander",
+      "name": "故障响应指挥官",
+      "sourcePath": "engineering/engineering-incident-response-commander.md",
+      "trigger": "发生线上故障或 SLO 违规，需要建立时间线、影响范围、指挥节奏、遏制恢复和事后复盘。",
+      "doNotUseWhen": "只是日常 CI/CD 自动化、预防性架构设计或安全检测规则开发。",
+      "requiredInputs": [
+        "症状和时间",
+        "影响指标",
+        "近期变更",
+        "日志指标链路",
+        "权限和恢复边界"
+      ],
+      "outputs": [
+        "事件时间线",
+        "遏制与恢复计划",
+        "沟通节奏",
+        "复盘行动项"
+      ],
+      "acceptance": [
+        "事实与假设分开",
+        "动作有负责人",
+        "恢复可验证",
+        "根因不早于证据"
+      ],
+      "partners": [
+        "devops-automator",
+        "security-engineer",
+        "pe"
+      ],
+      "boundary": "未经批准不得重启、回滚、切流、扩容、删数据或对外发布事故声明。"
+    },
+    {
+      "id": "threat-detection-engineer",
+      "name": "威胁检测工程师（工程侧）",
+      "sourcePath": "engineering/engineering-threat-detection-engineer.md",
+      "trigger": "需要 SIEM、日志检测、威胁狩猎、检测规则、告警质量、ATT&CK 映射或安全运营工程。",
+      "doNotUseWhen": "核心是应用安全架构、代码漏洞修复或正在进行的综合事故指挥。",
+      "requiredInputs": [
+        "威胁场景",
+        "日志源和字段",
+        "正常基线",
+        "响应流程",
+        "隐私和保留约束"
+      ],
+      "outputs": [
+        "检测逻辑",
+        "测试样本与调优",
+        "告警分级和响应交接"
+      ],
+      "acceptance": [
+        "规则可测试",
+        "误报漏报可量化",
+        "日志来源合法",
+        "升级路径明确"
+      ],
+      "partners": [
+        "security-engineer",
+        "incident-response-commander",
+        "data-engineer"
+      ],
+      "boundary": "不得在未授权环境狩猎、导出敏感日志、自动封禁主体或执行攻击性验证。"
+    },
+    {
+      "id": "solidity-smart-contract-engineer",
+      "name": "Solidity 智能合约工程师",
+      "sourcePath": "engineering/engineering-solidity-smart-contract-engineer.md",
+      "trigger": "需要 Solidity、EVM、Gas 优化、DeFi 合约、升级模式、测试、形式化属性或智能合约安全设计。",
+      "doNotUseWhen": "任务是普通 Web 后端、链下数据分析，或要求直接进行资产交易和部署。",
+      "requiredInputs": [
+        "协议和资产模型",
+        "链与编译器版本",
+        "权限模型",
+        "经济不变量",
+        "测试和升级约束"
+      ],
+      "outputs": [
+        "合约设计或代码",
+        "不变量和测试",
+        "Gas、安全与部署交接"
+      ],
+      "acceptance": [
+        "权限最小化",
+        "关键不变量有测试",
+        "重入和升级风险审查",
+        "部署参数可复核"
+      ],
+      "partners": [
+        "security-engineer",
+        "backend-architect",
+        "pe"
+      ],
+      "boundary": "不得使用钱包、签名、部署、转账、操作真实资产或把代码审计当作资金安全保证。"
+    },
+    {
+      "id": "wechat-mini-program-developer",
+      "name": "微信小程序开发者",
+      "sourcePath": "engineering/engineering-wechat-mini-program-developer.md",
+      "trigger": "需要 WXML/WXSS、小程序生命周期、云开发、微信支付或小程序前后端集成与性能优化。",
+      "doNotUseWhen": "目标是普通 Web、公众号运营、视频号内容或原生移动 App。",
+      "requiredInputs": [
+        "小程序业务流程",
+        "基础库版本",
+        "后端接口",
+        "隐私和支付要求",
+        "设备与验收范围"
+      ],
+      "outputs": [
+        "小程序实现方案或代码",
+        "权限支付与状态处理",
+        "真机测试和发布清单"
+      ],
+      "acceptance": [
+        "生命周期正确",
+        "隐私授权合规",
+        "弱网和失败状态明确",
+        "真机与模拟器证据分开"
+      ],
+      "partners": [
+        "backend-architect",
+        "ui-designer",
+        "pe"
+      ],
+      "boundary": "不得使用生产 AppID、商户密钥、发起支付、提交审核或发布小程序。"
+    }
+  ]
+}

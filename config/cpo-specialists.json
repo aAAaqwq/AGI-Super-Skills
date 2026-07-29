@@ -1,0 +1,46 @@
+{
+  "$schema": "./specialist-routing.schema.json",
+  "schemaVersion": 1,
+  "parent": "cpo",
+  "requiredMaxDepth": 2,
+  "maxConcurrentLeaves": 2,
+  "source": {
+    "repository": "https://github.com/jnMetaCode/agency-agents-zh",
+    "commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977",
+    "license": "MIT",
+    "notice": "Vendored role text is byte-for-byte tracked in config/agent-sources.lock.json."
+  },
+  "roleRoutes": [],
+  "specialists": [
+    {
+      "id": "ui-designer", "name": "UI 设计师", "sourcePath": "design/design-ui-designer.md",
+      "trigger": "产品结构与关键流程已明确，需要视觉层级、组件、状态、响应式界面或设计系统规范。",
+      "doNotUseWhen": "尚未理解用户问题、需要研究证据，或核心问题是信息架构与跨流程导航。",
+      "requiredInputs": ["产品目标", "用户与场景", "已批准流程", "品牌规范", "技术和无障碍约束"],
+      "outputs": ["界面方案", "组件与状态规范", "响应式和无障碍交接"],
+      "acceptance": ["关键状态齐全", "视觉层级一致", "规格可由前端实现", "不以图片替代真实交互说明"],
+      "partners": ["ux-architect", "ux-researcher"],
+      "boundary": "不伪造用户研究，不代替 CPO 决定范围，不直接修改生产设计文件或发布界面。"
+    },
+    {
+      "id": "ux-researcher", "name": "UX 研究员", "sourcePath": "design/design-ux-researcher.md",
+      "trigger": "产品决策缺少用户证据，需要研究问题、招募标准、访谈或可用性测试方案及证据综合。",
+      "doNotUseWhen": "已有充分研究结论，只需完成信息架构或视觉界面设计。",
+      "requiredInputs": ["待决策问题", "目标用户", "现有证据", "研究限制", "隐私与同意要求"],
+      "outputs": ["研究计划", "访谈或测试脚本", "证据综合与局限", "产品机会建议"],
+      "acceptance": ["问题可回答", "样本和偏差透明", "观察与推断分开", "不把单一样本当普遍事实"],
+      "partners": ["ux-architect", "ui-designer"],
+      "boundary": "未经授权不得招募、联系或记录用户，不收集超出目的的数据，不伪造访谈或测试结果。"
+    },
+    {
+      "id": "ux-architect", "name": "UX 架构师", "sourcePath": "design/design-ux-architect.md",
+      "trigger": "需要把已验证需求组织成信息架构、任务流、导航、页面层级、交互模型和复杂产品一致性规则。",
+      "doNotUseWhen": "核心缺口是用户研究证据，或只需要视觉样式、组件皮肤和品牌表现。",
+      "requiredInputs": ["用户任务", "研究证据", "产品范围", "内容模型", "平台与技术约束"],
+      "outputs": ["信息架构", "关键任务流", "导航与交互规则", "异常和边界状态"],
+      "acceptance": ["主任务路径可走通", "层级与命名一致", "异常状态明确", "决策可追溯到用户证据"],
+      "partners": ["ux-researcher", "ui-designer"],
+      "boundary": "不补造研究结论，不决定未经批准的产品范围，不把线框图宣称为已验证成品。"
+    }
+  ]
+}

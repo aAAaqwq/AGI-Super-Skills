@@ -9,19 +9,30 @@
     ↓ 战略方向
 CEO (ceo)
     ↓ 运营调度 ───────────────────────┐
-    ├── CTO + PE (首席工程师) ← 代码   │
+    ├── CTO → PE + 22 工程子专家       │
     ├── CQO ← 量化交易                 │
-    ├── CCO ← 内容/视频                │ 跨部门
+    ├── CCO → 19 内容增长子专家        │ 跨部门
     ├── CDO ← 数据/API                 │ 通过 CEO
     ├── CFO ← 财务                     │ 协调
     ├── CRO ← 研究                     │
     ├── CMO ← 营销/SEO                 │
-    ├── CPO ← 产品                     │
+    ├── CPO → 3 设计子专家             │
     ├── CLO ← 法务                     │
     ├── CSO ← 销售                     │
     ├── COO ← 运维/安全 ──────────────┘
     └── Governor ← 治理验证（三证验真）
 ```
+
+子 Agent 目录采用可审计金字塔：
+
+```text
+agents/
+├── cto/subagents/<role>/AGENTS.md   # 22 个工程专家；PE 复用 agents/pe
+├── cpo/subagents/<role>/AGENTS.md   # UI、UX 研究、UX 架构
+└── cco/subagents/<role>/AGENTS.md   # 19 个内容增长专家
+```
+
+这些 `AGENTS.md` 是固定上游 commit 的逐字副本；组织关系、触发和安全规则分别由 `config/agent-hierarchy.json` 与 `config/*-specialists.json` 管理，来源哈希由 `config/agent-sources.lock.json` 锁定。不要直接修改 vendored 子 Agent 原文。
 
 ## Agent 速查表
 

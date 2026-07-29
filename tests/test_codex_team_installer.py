@@ -79,6 +79,17 @@ class CodexTeamInstallerTests(unittest.TestCase):
             self.assertIn("- Keep this.", guidance)
             self.assertEqual(guidance.count("AGI-SUPER-TEAM:CEO:BEGIN"), 1)
 
+    def test_all_subagents_installs_three_managers_pe_reference_and_forty_four_leaves(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = Path(directory) / "codex"
+            result = self.run_installer(codex_home, "--all-subagents", "--install")
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            names = {path.stem for path in (codex_home / "agents").glob("ast-*.toml")}
+            self.assertEqual(len(names), 48)
+            self.assertTrue({"ast-cto", "ast-cpo", "ast-cco", "ast-pe"}.issubset(names))
+            self.assertFalse((codex_home / "agents" / "ast-cto-pe.toml").exists())
+            self.assertEqual(len([name for name in names if name.startswith(("ast-cto-", "ast-cpo-", "ast-cco-"))]), 44)
+
     def test_unknown_team_fails_without_writes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             codex_home = Path(directory) / "codex"

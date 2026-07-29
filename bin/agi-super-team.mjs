@@ -24,6 +24,9 @@ Targets:
 
 Content and actions:
   --no-agents            Do not install canonical Agents
+  --with-subagents <id>  Install one executive group: cto, cpo, or cco (repeatable)
+  --all-subagents        Install all 44 executive specialist leaves
+  --with-cco-specialists Compatibility alias for --with-subagents cco
   --no-skills            Do not install the six curated Skills
   --doctor               Verify the selected installation (read-only)
   --install              Apply changes (default: preview)
@@ -42,14 +45,14 @@ function requireValue(argv, index, option) {
 
 function parseArgs(argv) {
   const usesMultiTargetInterface = argv.some((argument) =>
-    ["--tool", "--all-tools", "--list-tools", "--home", "--project-dir", "--no-agents", "--no-skills", "--doctor"].includes(argument),
+    ["--tool", "--all-tools", "--list-tools", "--home", "--project-dir", "--no-agents", "--no-skills", "--with-subagents", "--all-subagents", "--with-cco-specialists", "--doctor"].includes(argument),
   );
   const options = {
     install: false, doctor: false, listTools: false, listTeams: false,
     tools: [], allTools: false, home: homedir(), projectDir: process.cwd(),
     includeAgents: true, includeSkills: true, teams: [], allTeams: true,
     allAgents: false, globalCeo: true, codexHome: process.env.CODEX_HOME || null,
-    plugin: true, legacy: false,
+    plugin: true, legacy: false, includeCcoSpecialists: false, subagentManagers: [], allSubagents: false,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
@@ -59,23 +62,28 @@ function parseArgs(argv) {
     else if (argument === "--list-tools") options.listTools = true;
     else if (argument === "--no-agents") options.includeAgents = false;
     else if (argument === "--no-skills") options.includeSkills = false;
+    else if (argument === "--with-cco-specialists") options.includeCcoSpecialists = true;
+    else if (argument === "--all-subagents") options.allSubagents = true;
     else if (argument === "--all-teams") { options.allTeams = true; options.legacy = true; }
     else if (argument === "--all-agents") { options.allAgents = true; options.legacy = true; }
     else if (argument === "--no-global-ceo") { options.globalCeo = false; options.legacy = true; }
     else if (argument === "--skip-plugin") options.plugin = false;
     else if (argument === "--list") { options.listTeams = true; options.legacy = true; }
     else if (argument === "--help" || argument === "-h") { usage(); process.exit(0); }
-    else if (["--tool", "--home", "--project-dir", "--team", "--codex-home"].includes(argument)) {
+    else if (["--tool", "--home", "--project-dir", "--team", "--codex-home", "--with-subagents"].includes(argument)) {
       const value = requireValue(argv, index, argument);
       if (argument === "--tool") options.tools.push(value);
       else if (argument === "--home") options.home = value;
       else if (argument === "--project-dir") options.projectDir = value;
       else if (argument === "--team") { options.teams.push(value); options.allTeams = false; options.legacy = true; }
+      else if (argument === "--with-subagents") options.subagentManagers.push(value);
       else { options.codexHome = value; options.legacy = true; }
       index += 1;
     } else throw new Error(`unknown option: ${argument}`);
   }
   if (!options.includeAgents && !options.includeSkills) throw new Error("--no-agents and --no-skills select no content");
+  if (!options.includeAgents && (options.includeCcoSpecialists || options.allSubagents || options.subagentManagers.length)) throw new Error("subagent options require Agents");
+  if (options.allSubagents && (options.includeCcoSpecialists || options.subagentManagers.length)) throw new Error("choose --all-subagents or individual subagent groups, not both");
   if (options.install && options.doctor) throw new Error("choose either --install or --doctor");
   if (options.allTools && options.tools.length) throw new Error("choose --all-tools or --tool, not both");
   if (options.legacy && options.tools.length && options.tools.some((id) => id !== "codex")) {
@@ -136,6 +144,16 @@ function selectedAgentIds(catalog, options) {
   return roles;
 }
 
+function selectedSubagentManagers(catalog, options) {
+  const available = Object.keys(catalog.specialistGroups);
+  const selected = options.allSubagents
+    ? available
+    : [...options.subagentManagers, ...(options.includeCcoSpecialists ? ["cco"] : [])];
+  const unknown = [...new Set(selected)].filter((id) => !available.includes(id));
+  if (unknown.length) throw new Error(`unknown subagent group: ${unknown.join(", ")}`);
+  return new Set(selected);
+}
+
 function configureLegacyCodex(tools, options) {
   if (!options.codexHome) return { tools, home: safeRoot(options.home, "home") };
   const codexHome = safeRoot(options.codexHome, "Codex home");
@@ -186,6 +204,8 @@ function main() {
       includeAgents: options.includeAgents,
       includeSkills: legacyCodex ? false : options.includeSkills,
       agentIds: selectedAgentIds(catalog, options),
+      subagentManagers: selectedSubagentManagers(catalog, options),
+      includeCcoSpecialists: options.includeCcoSpecialists,
       codexPayloadAll: options.allAgents,
     });
     if (options.doctor) {

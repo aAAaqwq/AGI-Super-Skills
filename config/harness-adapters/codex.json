@@ -25,5 +25,81 @@
     "cso": "ast-cso",
     "coo": "ast-coo",
     "governor": "ast-governor"
+  },
+  "requiredMaxDepth": 2,
+  "managerAgentMap": {
+    "cto": {
+      "agent": "ast-cto",
+      "requiredMaxDepth": 2,
+      "maxConcurrentChildren": 2,
+      "fallbackMode": "parent-flat",
+      "delegates": {
+        "frontend-developer": "ast-cto-frontend-developer",
+        "backend-architect": "ast-cto-backend-architect",
+        "ai-engineer": "ast-cto-ai-engineer",
+        "devops-automator": "ast-cto-devops-automator",
+        "security-engineer": "ast-cto-security-engineer",
+        "rapid-prototyper": "ast-cto-rapid-prototyper",
+        "senior-developer": "ast-cto-senior-developer",
+        "mobile-app-builder": "ast-cto-mobile-app-builder",
+        "data-engineer": "ast-cto-data-engineer",
+        "technical-writer": "ast-cto-technical-writer",
+        "autonomous-optimization-architect": "ast-cto-autonomous-optimization-architect",
+        "embedded-firmware-engineer": "ast-cto-embedded-firmware-engineer",
+        "pc-host-engineer": "ast-cto-pc-host-engineer",
+        "mechanical-design-engineer": "ast-cto-mechanical-design-engineer",
+        "embedded-linux-driver-engineer": "ast-cto-embedded-linux-driver-engineer",
+        "fpga-digital-design-engineer": "ast-cto-fpga-digital-design-engineer",
+        "iot-solution-architect": "ast-cto-iot-solution-architect",
+        "network-engineer-china": "ast-cto-network-engineer-china",
+        "incident-response-commander": "ast-cto-incident-response-commander",
+        "threat-detection-engineer": "ast-cto-threat-detection-engineer",
+        "solidity-smart-contract-engineer": "ast-cto-solidity-smart-contract-engineer",
+        "wechat-mini-program-developer": "ast-cto-wechat-mini-program-developer"
+      },
+      "roleRefs": {
+        "pe": "ast-pe"
+      }
+    },
+    "cpo": {
+      "agent": "ast-cpo",
+      "requiredMaxDepth": 2,
+      "maxConcurrentChildren": 2,
+      "fallbackMode": "parent-flat",
+      "delegates": {
+        "ui-designer": "ast-cpo-ui-designer",
+        "ux-researcher": "ast-cpo-ux-researcher",
+        "ux-architect": "ast-cpo-ux-architect"
+      },
+      "roleRefs": {}
+    },
+    "cco": {
+      "agent": "ast-cco",
+      "requiredMaxDepth": 2,
+      "maxConcurrentChildren": 2,
+      "fallbackMode": "parent-flat",
+      "delegates": {
+        "xiaohongshu-operator": "ast-cco-xiaohongshu-operator",
+        "douyin-strategist": "ast-cco-douyin-strategist",
+        "wechat-operator": "ast-cco-wechat-operator",
+        "bilibili-strategist": "ast-cco-bilibili-strategist",
+        "short-video-editing-coach": "ast-cco-short-video-editing-coach",
+        "weixin-channels-strategist": "ast-cco-weixin-channels-strategist",
+        "knowledge-commerce-strategist": "ast-cco-knowledge-commerce-strategist",
+        "xiaohongshu-specialist": "ast-cco-xiaohongshu-specialist",
+        "wechat-official-account-manager": "ast-cco-wechat-official-account-manager",
+        "zhihu-strategist": "ast-cco-zhihu-strategist",
+        "twitter-engager": "ast-cco-twitter-engager",
+        "instagram-curator": "ast-cco-instagram-curator",
+        "reddit-community-operator": "ast-cco-reddit-community-operator",
+        "video-optimization-specialist": "ast-cco-video-optimization-specialist",
+        "growth-hacker": "ast-cco-growth-hacker",
+        "seo-specialist": "ast-cco-seo-specialist",
+        "ai-citation-strategist": "ast-cco-ai-citation-strategist",
+        "prompt-engineer": "ast-cco-prompt-engineer",
+        "content-illustration-planner": "ast-cco-content-illustration-planner"
+      },
+      "roleRefs": {}
+    }
   }
 }

@@ -27,6 +27,7 @@ PLUGIN_ROOT = Path(__file__).resolve().parents[3]
 AGENT_PAYLOAD = PLUGIN_ROOT / "payload" / "agents"
 GLOBAL_GUIDANCE = PLUGIN_ROOT / "payload" / "global" / "AGENTS.md"
 TEAM_CONTRACTS = PLUGIN_ROOT / "skills" / "c-suite-team" / "references" / "team-contracts.json"
+AGENT_HIERARCHY = PLUGIN_ROOT / "skills" / "c-suite-team" / "references" / "agent-hierarchy.json"
 BEGIN_MARKER = "<!-- AGI-SUPER-TEAM:CEO:BEGIN -->"
 END_MARKER = "<!-- AGI-SUPER-TEAM:CEO:END -->"
 
@@ -63,7 +64,13 @@ def list_teams(contracts: dict) -> None:
         print(f"  {team['id']:<20} {team['name']} — {members}")
 
 
-def selected_agent_names(contracts: dict, team_ids: list[str], all_teams: bool) -> list[str]:
+def selected_agent_names(
+    contracts: dict,
+    team_ids: list[str],
+    all_teams: bool,
+    subagent_managers: list[str] | None = None,
+    with_cco_specialists: bool = False,
+) -> list[str]:
     teams = {team["id"]: team for team in contracts["kits"]}
     unknown = sorted(set(team_ids) - set(teams))
     if unknown:
@@ -76,6 +83,22 @@ def selected_agent_names(contracts: dict, team_ids: list[str], all_teams: bool) 
         if role != "ceo"
     }
     names = sorted(f"ast-{role}" for role in roles)
+    requested_managers = set(subagent_managers or [])
+    if with_cco_specialists:
+        requested_managers.add("cco")
+    if requested_managers:
+        if AGENT_HIERARCHY.is_symlink() or not AGENT_HIERARCHY.is_file():
+            raise ValueError(f"invalid Agent hierarchy: {AGENT_HIERARCHY}")
+        hierarchy = json.loads(AGENT_HIERARCHY.read_text(encoding="utf-8"))
+        managers = hierarchy.get("managers", {})
+        unknown_managers = sorted(requested_managers - set(managers))
+        if unknown_managers:
+            raise ValueError(f"unknown subagent group: {', '.join(unknown_managers)}")
+        for manager in requested_managers:
+            names.append(f"ast-{manager}")
+            names.extend(f"ast-{role}" for role in managers[manager]["roleRefs"])
+            names.extend(f"ast-{manager}-{role}" for role in managers[manager]["subagents"])
+        names = sorted(set(names))
     missing = [name for name in names if not (AGENT_PAYLOAD / f"{name}.toml").is_file()]
     if missing:
         raise ValueError(f"team payload is incomplete: {', '.join(missing)}")
@@ -114,13 +137,15 @@ def build_plan(
     team_ids: list[str],
     all_teams: bool,
     global_ceo: bool,
+    subagent_managers: list[str] | None = None,
+    with_cco_specialists: bool = False,
 ) -> list[PlanItem]:
     plan: list[PlanItem] = []
     if global_ceo:
         destination = codex_home / "AGENTS.md"
         baseline = read_regular_file(destination, codex_home)
         plan.append(PlanItem(destination, baseline, render_global_guidance(baseline), "global-ceo"))
-    for name in selected_agent_names(contracts, team_ids, all_teams):
+    for name in selected_agent_names(contracts, team_ids, all_teams, subagent_managers, with_cco_specialists):
         source = AGENT_PAYLOAD / f"{name}.toml"
         if source.is_symlink():
             raise ValueError(f"refusing symlinked agent payload: {source}")
@@ -178,7 +203,15 @@ def run(args: argparse.Namespace) -> int:
         list_teams(contracts)
         return 0
     codex_home = validate_codex_home(args.codex_home)
-    plan = build_plan(codex_home, contracts, args.team, args.all_teams, args.global_ceo)
+    plan = build_plan(
+        codex_home,
+        contracts,
+        args.team,
+        args.all_teams,
+        args.global_ceo,
+        [*args.with_subagents, *(["cto", "cpo", "cco"] if args.all_subagents else [])],
+        args.with_cco_specialists,
+    )
     counts = {status: sum(item.status == status for item in plan) for status in ("add", "update", "unchanged")}
     print(f"AGI Super Team Codex injection — {'INSTALL' if args.install else 'PREVIEW'}")
     print(f"target: {codex_home}")
@@ -207,6 +240,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--global-ceo", action="store_true", help="inject or update the managed CEO block in AGENTS.md")
     parser.add_argument("--team", action="append", default=[], metavar="ID", help="install one team; repeat for multiple teams")
     parser.add_argument("--all-teams", action="store_true", help="install the union of all packaged C-suite teams")
+    parser.add_argument("--with-cco-specialists", action="store_true", help="also install the 19 CCO-routed content and growth leaves")
+    parser.add_argument("--with-subagents", action="append", default=[], choices=("cto", "cpo", "cco"), help="install one executive subagent group; repeatable")
+    parser.add_argument("--all-subagents", action="store_true", help="install all 44 executive specialist leaves")
     parser.add_argument("--install", action="store_true", help="apply the previewed plan")
     parser.add_argument("--codex-home", type=Path, default=default_codex_home(), help="destination Codex home")
     return parser.parse_args()

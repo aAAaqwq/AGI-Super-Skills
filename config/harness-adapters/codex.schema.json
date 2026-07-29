@@ -13,7 +13,9 @@
     "maxParallelLeaves",
     "fallbackModes",
     "runtimeEvidence",
-    "agentMap"
+    "agentMap",
+    "requiredMaxDepth",
+    "managerAgentMap"
   ],
   "properties": {
     "$schema": {"const": "./codex.schema.json"},
@@ -33,6 +35,41 @@
       "minProperties": 1,
       "propertyNames": {"pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
       "additionalProperties": {"type": "string", "pattern": "^ast-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+    },
+    "requiredMaxDepth": {"const": 2},
+    "managerAgentMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cto", "cpo", "cco"],
+      "properties": {
+        "cto": {"$ref": "#/$defs/manager"},
+        "cpo": {"$ref": "#/$defs/manager"},
+        "cco": {"$ref": "#/$defs/manager"}
+      }
+    }
+  },
+  "$defs": {
+    "manager": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent", "requiredMaxDepth", "maxConcurrentChildren", "fallbackMode", "delegates", "roleRefs"],
+      "properties": {
+        "agent": {"type": "string", "pattern": "^ast-(cto|cpo|cco)$"},
+        "requiredMaxDepth": {"const": 2},
+        "maxConcurrentChildren": {"const": 2},
+        "fallbackMode": {"const": "parent-flat"},
+        "delegates": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {"pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "additionalProperties": {"type": "string", "pattern": "^ast-(cto|cpo|cco)-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        },
+        "roleRefs": {
+          "type": "object",
+          "propertyNames": {"pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "additionalProperties": {"type": "string", "pattern": "^ast-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        }
+      }
     }
   }
 }
