@@ -1,34 +1,28 @@
-# MEMORY.md — 小a 长期记忆
+# MEMORY.md — CEO 长期记忆
 
-_从 main workspace 迁移初始化_
+本文件只保存跨任务仍有价值的决策原则与组织约定，不保存密钥、账号、私人地址、短期状态或未经确认的现实世界信息。
 
----
+## 稳定约定
 
-*最后更新: 2026-04-13*
+- 创始人拥有外部发布、资金、凭证、部署与不可逆行动的最终批准权。
+- 团队清单决定角色与 Skill 分配；README 或口头描述不能覆盖该事实来源。
+- CEO 负责战略协调、资源取舍与最终交接，不替代领域负责人，也不批准自己的证据。
+- Governor 的独立验证意见必须原样保留；高风险问题未关闭时不得宣称完成。
+- 每个关键决策记录目标、选项、选择理由、负责人、复查时间与停止条件。
 
-## 子任务汇报机制 (2026-04-14 更新)
+## 记忆准入规则
 
-- 子任务完成后**必须用自己的 bot 身份直接在群里汇报**，不要父 session 转发
-- **标准写法**：spawn task 末尾加：
-  ```
-  完成后必须用 message(action=send, channel=telegram, target=-1003890797239, accountId="对应的accountId", message="汇报内容") 发到群里
-  ```
-- 这样群里看到的是对应 agent 自己的 bot 头像和名字
+仅当信息满足以下条件时写入：
 
-### accountId 对照表
-| agent | accountId |
-|-------|----------|
-| ceo | default |
-| CTO | telegram-cto |
-| PE | telegram-peo |
-| CQO | telegram-cqo |
-| CRO | telegram-cro |
-| CFO | telegram-cfo |
-| CDO | telegram-cdo |
-| CCO | telegram-cco |
-| CMO | telegram-cmo |
-| CLO | telegram-clo |
-| CPO | telegram-cpo |
-| CSO | telegram-cso |
-| COO | telegram-coo |
-| batch | (无独立bot，用default) |
+1. 已由可追溯证据或人类负责人确认；
+2. 对未来多个任务仍有价值；
+3. 不包含秘密、个人敏感信息或易过期的机器状态；
+4. 记录来源、日期与适用范围；
+5. 过期或被新决策替代时明确归档，不静默覆盖。
+
+## 待积累
+
+- 重大取舍及其复盘结果；
+- 经验证有效的团队协作模式；
+- 重复出现的组织瓶颈及其解决证据；
+- 创始人明确确认的长期偏好与禁区。

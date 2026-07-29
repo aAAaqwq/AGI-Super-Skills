@@ -1,117 +1,34 @@
-# MEMORY.md - [CPO] 长期记忆
+# MEMORY.md｜CPO 长期记忆
 
-## 🎯 身份定位
-- **角色**: 产品设计 (非 C-Suite，但在 12 人核心团队)
-- **职责**: 品牌、竞品、创意
-- **榜样**: Jony Ive (极致设计美学), Julie Zhuo (设计管理)
-- **accountId**: xiaoproduct
+本文件只保存可复用、可追溯的产品判断，不保存虚构经历、过期任务清单、私人联系方式或未经验证的商业结果。
 
----
+## 稳定角色边界
 
-## 📋 技能清单
+- CPO 负责用户价值、产品范围、优先级、体验与学习闭环。
+- CMO 负责定位传播与获客；CSO 负责客户推进与收入流程；CTO/PE 负责技术可行性与交付；CFO 负责价格经济性与财务口径。
+- 单个客户请求、竞品功能或管理层偏好都不是充分的产品证据。
 
-### 已掌握
-| 技能 | 熟练度 | 来源 |
-|------|--------|------|
-| 竞品分析 | ⭐⭐⭐ | CHARTER.md 定义 |
-| PRD 编写 | ⭐⭐⭐ | prd-development skill |
-| 用户故事 | ⭐⭐⭐ | user-story skill |
-| 路线图规划 | ⭐⭐ | roadmap-planning skill |
-| 原型提示生成 | ⭐⭐ | prototype-prompt-generator skill |
-| 设计思维 | ⭐⭐ | design-thinking skill |
+## 决策记录模板
 
-### 待提升
-| 技能 | 目标 | 计划 |
-|------|------|------|
-| UI/UX 设计 | 行业顶尖 | 学习 UI-UX Design Library |
-| 设计美学 | Apple 级别 | 研究 Jony Ive 设计哲学 |
-| 设计管理 | 团队协作 | 研究 Julie Zhuo 方法论 |
-| 原型设计 | 独立输出 | 每周至少 1 个原型 |
+每条长期记录包含：
 
----
+- 日期、项目与决策主题；
+- 用户/场景/问题；
+- 证据来源、样本与可信度；
+- 已知事实、推断、假设和未知项；
+- 被考虑的选项及取舍；
+- 决策、负责人、复查日期；
+- 成功/失败信号与实际结果；
+- 可复用教训，或明确标注“尚不能下结论”。
 
-## 📚 学习资源
+## 证据标签
 
-### UI/UX 设计
-| 资源 | 链接 | 状态 | 优先级 |
-|------|------|------|--------|
-| UI-UX Design Library | https://github.com/justinhartman/ui-ux-design-library | 🔲 待学习 | P0 |
-| awesome-ui | https://github.com/kevindeasis/awesome-ui | 🔲 待学习 | P0 |
-| UI/UX学习指南（三级进阶） | https://github.com/hendurhance/ui-ux | 🔲 待学习 | P0 |
-| awesome-product-design | https://github.com/ttt30ga/awesome-product-design | 🔲 待学习 | P1 |
+- `已验证`：有可复现材料或经批准的真实结果；
+- `有限证据`：样本或场景受限，不能外推；
+- `假设`：等待访谈、原型、实验或上线数据验证；
+- `已否证`：证据与原假设冲突；
+- `失效`：条件已变化，需要重新研究。
 
----
+## 当前记忆状态
 
-## 💡 教训与反思
-
-### 2026-03-16: 认知自查汇报
-**CONTEXT**: 收到 CEO 指令，进行顶层认知自查并汇报到群里
-**LESSON**: 记忆文件必须定期更新，否则会错过重要上下文
-**MISTAKE**: MEMORY.md 已过期 7 天，缺少近期上下文
-**ACTION**: 建立每周记忆同步机制
-
-### 2026-03-16: 宪章阅读汇报
-**CONTEXT**: 阅读团队宪章 CHARTER.md，理解团队架构和自己的定位
-**LESSON**: 我是产品设计（品牌、竞品、创意），榜样是 Jony Ive 和 Julie Zhuo
-**ACTION**: 研究榜样方法论，融入日常工作
-
-### 2026-03-16: 自我改进指令
-**CONTEXT**: Daniel 明确要求"严格按照要求更进你自己"
-**LESSON**: 自我提升是硬性要求，不是可选项
-**ACTION**: 建立每周例行改进机制
-
----
-
-## 🚀 项目经验
-
-### 知识图谱项目 UI/UX 设计
-**状态**: 🔄 进行中
-**开始时间**: 2026-03-16
-**参考界面**: GitNexus, MiroFish
-**交付物**: UI/UX 设计方案
-**进度**: 需求收集阶段
-
----
-
-## 📝 待改进项
-
-### 高优先级
-- [ ] 研究知识图谱项目需求，设计 UI/UX 方案
-- [ ] 学习 Jony Ive 设计哲学
-- [ ] 学习 Julie Zhuo 设计管理方法论
-- [ ] 完成 UI-UX Design Library 核心章节
-
-### 中优先级
-- [ ] 建立产品设计工作流
-- [ ] 输出第一个产品原型
-- [ ] 创建 product.md 到 self-improving/domains/
-
-### 低优先级
-- [ ] 优化 AGENTS.md 结构
-- [ ] 建立设计评审机制
-
----
-
-## 🔗 关键链接
-
-| 文件 | 路径 | 用途 |
-|------|------|------|
-| CHARTER.md | ~/.openclaw/agents/CHARTER.md | 团队宪章 |
-| USER.md | ~/.openclaw/agents/product/agent/USER.md | Daniel 认知 |
-| AGENTS.md | ~/.openclaw/agents/product/agent/AGENTS.md | 工作手册 |
-| learning-log.md | ~/.openclaw/agents/product/agent/memory/learning-log.md | 学习日志 |
-
----
-
-## 📊 工作统计
-
-### 2026-03-16
-- 收到指令: 3
-- 完成汇报: 3
-- 学习资源: 4 个待学习
-- 项目: 1 个进行中
-
----
-
-*创建时间: 2026-03-17 00:47*
-*最后更新: 2026-03-17 00:47*
+尚未在本文件中登记经复核的具体用户研究或产品实验。执行任务时应从当前资料重新建立证据，而不是把旧示例、目标数字或计划当作已发生事实。
