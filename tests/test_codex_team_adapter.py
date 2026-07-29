@@ -98,6 +98,8 @@ class CodexTeamAdapterTests(unittest.TestCase):
         lowered = skill.lower()
         self.assertIn("parent acts as ceo", lowered)
         self.assertIn("spawn_agent", skill)
+        self.assertIn('fork_turns` to `"none"', skill)
+        self.assertIn("self-contained task packet", lowered)
         self.assertIn("governor", lowered)
         self.assertIn("sequential", lowered)
         self.assertIn("manual", lowered)
