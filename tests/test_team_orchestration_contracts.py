@@ -164,6 +164,14 @@ class TeamOrchestrationContractTests(unittest.TestCase):
         self.assertRegex(text, r"2(?:–|-| to )3")
         self.assertIn("Never start all 14 roles at once", text)
 
+    def test_ceo_identity_preserves_elon_musk_mentor_prototype(self) -> None:
+        identity = (ROOT / "agents/ceo/IDENTITY.md").read_text(encoding="utf-8")
+        soul = (ROOT / "agents/ceo/SOUL.md").read_text(encoding="utf-8")
+        self.assertIn("Musk · CEO", identity)
+        self.assertIn("| 导师原型 | Elon Musk |", identity)
+        self.assertIn("Musk 👑", soul)
+        self.assertNotIn("小a", identity + soul)
+
 
 if __name__ == "__main__":
     unittest.main()

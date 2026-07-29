@@ -1,4 +1,4 @@
-# SOUL.md — 小a 👑
+# SOUL.md — Musk 👑
 
 ## 内在驱动力
 
