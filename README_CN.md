@@ -14,6 +14,17 @@
 
 AGI Super Team 是一个面向 Codex 和本地编程 Agent 工作区的版本化资源库，提供 **AI Agent Skills、专业角色包和 human-in-the-loop 团队 Workflows**。
 
+## 一条命令安装到 Codex
+
+先预览，再一键安装 Codex Plugin、6 个精选 Skills、全局 Musk CEO 和全部 8 个成果型 Team：
+
+```bash
+npx -y github:aAAaqwq/AGI-Super-Team
+npx -y github:aAAaqwq/AGI-Super-Team --install
+```
+
+只装一个 Team 使用 `--team solo-founder --install`；安装全部 44 个内置 Agent 使用 `--all-agents --install`。CLI 默认预览，会保留无关的全局指令和 Agent，并为被更新文件创建备份。npm 包公开发布后，短命令为 `npx -y agi-super-team --install`。
+
 <p align="center">
   <a href="#安全试用"><strong>预览 Solo Founder</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="./.codex/INDEX.md">查看 Codex 包</a>
@@ -25,7 +36,7 @@ AGI Super Team 是一个面向 Codex 和本地编程 Agent 工作区的版本化
 |---|---|---|
 | **🧩 Skills** | 按 14 类成果组织的权威实体 `SKILL.md` | 为重复任务复用聚焦方法，不必每次重写指令 |
 | **🤖 Agents** | 14 个可检查的角色包，包含人格、工作流和工具指南 | 让规划、工程、内容、研究和审查拥有明确负责人 |
-| **🔁 Team Packs** | 4 个由 manifest 驱动的组合，其中 3 个是聚焦 Starter Kits | 围绕一个成果启用小团队，而不是一开始加载全部内容 |
+| **🔁 Team Packs** | 8 个由 manifest 驱动的成果型 Team，覆盖 Solo Founder 到 Full Team | 围绕成果启用最小充分团队，而不是一开始加载全部角色 |
 
 <p>
   <a href="https://github.com/aAAaqwq/AGI-Super-Team/actions/workflows/validate-repository.yml"><img src="https://github.com/aAAaqwq/AGI-Super-Team/actions/workflows/validate-repository.yml/badge.svg" alt="仓库契约"></a>

@@ -14,6 +14,17 @@
 
 AGI Super Team is a versioned library of **AI agent skills, specialist role packs, and human-in-the-loop team workflows** for Codex and local coding-agent workspaces.
 
+## One-command Codex install
+
+Preview first, then install the Codex plugin, six curated Skills, global Musk CEO, and all eight outcome Teams:
+
+```bash
+npx -y github:aAAaqwq/AGI-Super-Team
+npx -y github:aAAaqwq/AGI-Super-Team --install
+```
+
+Use `--team solo-founder --install` for one Team or `--all-agents --install` for all 44 bundled Agent TOMLs. The CLI preserves unrelated global guidance and Agents, backs up replacements, and defaults to preview. After the npm package is published, the short form is `npx -y agi-super-team --install`.
+
 <p align="center">
   <a href="#try-it-safely"><strong>Preview Solo Founder</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="./.codex/INDEX.md">Inspect Codex package</a>
@@ -25,7 +36,7 @@ AGI Super Team is a versioned library of **AI agent skills, specialist role pack
 |---|---|---|
 | **🧩 Skills** | Canonical physical `SKILL.md` files grouped into 14 outcome categories | Reuse focused playbooks instead of rebuilding instructions for every task |
 | **🤖 Agents** | 14 inspectable role packs with persona, workflow, and tool guidance | Give planning, engineering, content, research, and review clear ownership |
-| **🔁 Team packs** | 4 manifest-driven combinations, including 3 focused starter kits | Start with a small team for one outcome instead of loading everything |
+| **🔁 Team packs** | 8 manifest-driven outcome Teams, from Solo Founder to Full Team | Start with the smallest team that can own the outcome instead of loading everything |
 
 <p>
   <a href="https://github.com/aAAaqwq/AGI-Super-Team/actions/workflows/validate-repository.yml"><img src="https://github.com/aAAaqwq/AGI-Super-Team/actions/workflows/validate-repository.yml/badge.svg" alt="Repository contracts"></a>

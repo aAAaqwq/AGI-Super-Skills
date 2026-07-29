@@ -1,8 +1,37 @@
 {
   "name": "agi-super-team",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Evidence-backed AI team packs with preview-first installation and repository contracts",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aAAaqwq/AGI-Super-Team.git"
+  },
+  "homepage": "https://github.com/aAAaqwq/AGI-Super-Team#readme",
+  "bugs": {
+    "url": "https://github.com/aAAaqwq/AGI-Super-Team/issues"
+  },
   "type": "module",
+  "bin": {
+    "agi-super-team": "./bin/agi-super-team.mjs"
+  },
+  "files": [
+    "bin/",
+    ".agents/plugins/marketplace.json",
+    "config/team-manifest.json",
+    "plugins/agi-super-team-codex/",
+    "!plugins/**/__pycache__/**",
+    "!plugins/**/*.pyc",
+    "LICENSE",
+    "README.md",
+    "README_CN.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "npm run test:repository && npm run test:installer && npm run check:agent-indexes && npm run check:codex-team && npm run check:skills && npm run check:skill-quality && npm run check:taxonomy-evaluation && npm run check:architecture",
     "test:repository": "python3 -m unittest discover -s tests -p 'test_*.py'",
