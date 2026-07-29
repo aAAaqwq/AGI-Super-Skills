@@ -1,6 +1,6 @@
 {
   "name": "agi-super-team",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Evidence-backed AI team packs with preview-first installation and repository contracts",
   "license": "MIT",
   "repository": {
@@ -17,7 +17,9 @@
   },
   "files": [
     "bin/",
+    "agents/",
     ".agents/plugins/marketplace.json",
+    "config/cli-adapters.json",
     "config/team-manifest.json",
     "plugins/agi-super-team-codex/",
     "!plugins/**/__pycache__/**",
