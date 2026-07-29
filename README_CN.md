@@ -14,19 +14,90 @@
 
 AGI Super Team 是一个面向 Codex 和本地编程 Agent 工作区的版本化资源库，提供 **AI Agent Skills、专业角色包和 human-in-the-loop 团队 Workflows**。
 
-## 一条命令安装到 Codex
+## 安装到你的 AI 客户端
 
-先预览，再一键安装 Codex Plugin、6 个精选 Skills、全局 Musk CEO 和全部 8 个成果型 Team：
+先列出全部 18 个适配目标，再预览一个目标，确认后用同一选择安装：
 
 ```bash
-npx -y github:aAAaqwq/AGI-Super-Team
-npx -y github:aAAaqwq/AGI-Super-Team --install
+npx -y github:aAAaqwq/AGI-Super-Team --list-tools
+npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code
+npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --install
+npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
 ```
 
-只装一个 Team 使用 `--team solo-founder --install`；安装全部 44 个内置 Agent 使用 `--all-agents --install`。CLI 默认预览，会保留无关的全局指令和 Agent，并为被更新文件创建备份。npm 包公开发布后，短命令为 `npx -y agi-super-team --install`。
+把 `claude-code` 换成 `--list-tools` 输出的目标 ID。只有在确实要同时写入全部全局和项目适配目标时，才使用 `--all-tools`。不带参数仍保留旧版 Codex 预览行为；新脚本应明确写出 `--tool` 或 `--all-tools`。
+
+### 四个平台优先入口
+
+| 平台 | 预览命令 | 安装能力 |
+|---|---|---|
+| **Claude Code** | `npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code` | 原生 Markdown Agent + 原生 Skill |
+| **Codex** | `npx -y github:aAAaqwq/AGI-Super-Team --tool codex` | 原生 TOML Agent + Codex Plugin Skill；当前有 Runtime 验证的适配器 |
+| **OpenClaw** | `npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw` | 原生 Agent Workspace + 原生 Skill |
+| **Hermes Agent** | `npx -y github:aAAaqwq/AGI-Super-Team --tool hermes` | 原生 Skill；角色包以 Skill 暴露，不是原生 Agent |
+
+对 OpenClaw，安装器只生成 Agent Workspace，不会自动注册；请先审查内容，再显式注册需要的 Workspace。
+
+这里列出的是 **18 个 AI 客户端/运行时适配目标**，不是 18 个功能相同的 CLI。适配器可能安装原生 Agent、原生 Skill、项目规则/上下文，或把角色包降级为 Agent-as-Skill。文件写入成功不等于当前客户端已经加载或执行这些内容。
+
+### 18 个适配目标矩阵
+
+全局适配器的路径相对于所选 Home；项目适配器的路径相对于所选项目目录。
+
+| ID | 客户端/运行时 | 范围 | Agent 交付方式 | Skill 交付方式 | 状态 |
+|---|---|---|---|---|---|
+| `claude-code` | Claude Code | 全局 | 原生 Markdown Agent：`.claude/agents` | 原生：`.claude/skills` | 原生适配 |
+| `codex` | Codex | 全局 | 原生 TOML Agent：`.codex/agents` | 原生 Plugin：`.codex/skills` | Runtime 已验证适配器 |
+| `openclaw` | OpenClaw | 全局 | 原生 Workspace：`.openclaw/agency-agents` | 原生：`.openclaw/skills/agi-super-team` | 原生适配 |
+| `hermes` | Hermes Agent | 全局 | Agent-as-Skill：`.hermes/skills/agi-super-team-agents` | 原生：`.hermes/skills/agi-super-team` | 原生 Skills |
+| `copilot` | GitHub Copilot | 全局 | Markdown Agent：`.github/agents`、`.copilot/agents` | 原生：`.copilot/skills` | 适配器 |
+| `antigravity` | Antigravity | 全局 | Agent：`.gemini/config/agents` | 原生：`.gemini/config/skills` | **实验性** |
+| `gemini-cli` | Gemini CLI | 全局 | Markdown Agent：`.gemini/agents` | 原生：`.gemini/skills` | 适配器 |
+| `opencode` | OpenCode | 全局 | Markdown Agent：`.config/opencode/agents` | 原生：`.config/opencode/skills` | 适配器 |
+| `cursor` | Cursor | 全局 | Markdown Agent：`.cursor/agents` | 原生：`.cursor/skills` | **实验性** |
+| `trae` | Trae | 项目 | 项目规则：`.trae/rules` | 原生：`.trae/skills` | 项目适配器 |
+| `aider` | Aider | 项目 | 合并项目规则：`CONVENTIONS.md` | 合并进同一项目上下文 | 项目适配器 |
+| `windsurf` | Windsurf | 项目 | 合并项目规则：`.windsurfrules` | 合并进同一项目上下文 | 项目适配器 |
+| `qwen` | Qwen Code | 全局 | Markdown Agent：`.qwen/agents` | 原生：`.qwen/skills` | 适配器 |
+| `deerflow` | DeerFlow | 项目 | Agent-as-Skill：`skills/custom/agi-super-team-agents` | 原生：`skills/custom/agi-super-team` | 项目适配器 |
+| `workbuddy` | WorkBuddy | 全局 | Agent-as-Skill：`.workbuddy/skills/agi-super-team-agents` | 原生：`.workbuddy/skills/agi-super-team` | 适配器 |
+| `codewhale` | CodeWhale | 全局 | Agent-as-Skill：`.codewhale/skills/agi-super-team-agents` | 原生：`.codewhale/skills/agi-super-team` | 适配器 |
+| `kiro` | Kiro | 全局 | Markdown Agent：`.kiro/agents` | 原生：`.kiro/skills` | 适配器 |
+| `qoder` | Qoder | 全局 | Markdown Agent：`.qoder/agents` | 原生：`.qoder/skills` | 适配器 |
+
+矩阵描述的是 [`config/cli-adapters.json`](./config/cli-adapters.json) 中的适配契约，并不表示 18 个客户端都做过运行时验证。Cursor 与 Antigravity 明确处于实验状态。
+
+### 指定目录、刷新与验证
+
+`--home` 用于重定向全局目标，`--project-dir` 用于项目范围目标（默认是当前目录）。可用临时目录完成一次隔离审计：
+
+```bash
+AGI_AUDIT_HOME="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-home.XXXXXX")"
+AGI_AUDIT_PROJECT="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-project.XXXXXX")"
+
+npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+  --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT"
+npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+  --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --install
+npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+  --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --doctor
+```
+
+以后用同一条 `--install` 命令刷新受管理内容，再运行一次 `--doctor`。随后重启目标客户端或新建任务，确认它发现了预期 Agent/Skill。`--doctor` 检查的是已安装的适配产物，不验证模型行为或任务质量。
+
+### 安全与更新边界
+
+- 默认只预览且不写文件；`--install` 是明确的写入边界。
+- 对相同选择重复执行按幂等设计。不同的受管理目标会先备份再替换；选择范围外的客户端文件不归安装器管理。
+- 本地备份只用于辅助恢复，不是完整快照或卸载系统。重要配置仍应纳入自己的版本控制或文件系统备份。
+- 安装器拒绝符号链接等不安全目标；需要缩小范围时可使用 `--no-agents` 或 `--no-skills`。
+- 本项目不提供远程脚本管道安装方式；上方命令使用 npm package runner，但仍应按常规审查依赖。
+- 安装只证明文件已生成。除明确标为 Runtime 已验证的适配器外，当前客户端是否加载和执行仍需与 commit 匹配的凭据支持。
+
+适配器设计部分参考了 [`jnMetaCode/agency-agents-zh`](https://github.com/jnMetaCode/agency-agents-zh) 的固定提交 [`2ecfabf8`](https://github.com/jnMetaCode/agency-agents-zh/commit/2ecfabf8e944ccdfed63ad8c44d5241290af6977)。AGI Super Team 在本仓库独立维护 Manifest、Payload 映射、安全行为和证据边界。
 
 <p align="center">
-  <a href="#安全试用"><strong>预览 Solo Founder</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#安装到你的-ai-客户端"><strong>安装到一个客户端</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="./.codex/INDEX.md">查看 Codex 包</a>
 </p>
 
@@ -63,11 +134,9 @@ AGI Super Team 负责版本化内容、选择规则、安全复制和仓库检�
 
 确实需要更广覆盖时，`full-team` 会选择 manifest 中全部 14 个 Agents。一般情况下建议先从聚焦团队开始。
 
-## ⚡ 安全试用
+## ⚡ 旧版通用工作区生成器
 
-使用 Codex？先检查[独立打包的 Codex 分发](./.codex/INDEX.md)。它的仓库结构已有测试；在当前 Codex 客户端中的安装与加载仍为 **Validation pending（待验证）**。
-
-如需评估通用工作区路径，请克隆 `main` 并预览 Solo Founder。默认只预览，不会写入文件：
+上方多客户端 npm 安装器是主要入口。需要与具体客户端无关、可直接检查的角色工作区时，旧版 `install.sh` 仍然有用。克隆 `main` 并预览 Solo Founder；默认只预览，不会写入文件：
 
 ```bash
 git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
@@ -134,7 +203,7 @@ Star 只用于发现，不等于可信。矩阵记录 `DAILY`、`LIBRARY` 和 `Q
 | 通用安装器的预览、预检、no-clobber 和暂存 | `npm test` | **当前 checkout 已验证** |
 | 自动生成目录覆盖权威库存 | `npm run check:skills` | **当前 checkout 已验证** |
 | 主成果分类与固定独立复核集一致 | [Gold Set 方法](./docs/skill-taxonomy-gold-set.md) + [生成报告](./catalog/skill-taxonomy-evaluation.json) | **当前 checkout 的复核集门禁已通过** |
-| 当前客户端中的工具安装与加载 | 与版本匹配的 harness receipt | **Validation pending** |
+| 尚无匹配凭据的适配器在客户端中的加载 | 与版本匹配的 Harness Receipt | **Validation pending** |
 | 任务质量或商业成果 | 公开 fixture、基线、评估规则和产物 | **Validation pending** |
 
 ## 🧾 可复现安装凭据
@@ -179,14 +248,9 @@ npm run check:architecture
 
 ## 🔌 选择分发方式
 
-| 使用方式 | 仓库支持 | 从这里开始 | 证据边界 |
-|---|---|---|---|
-| 通用本地工作区 | 默认预览的 `install.sh` | 使用上方快速开始 | 安装器行为已有集成测试 |
-| Codex | 独立维护的精选包 | [`.codex/INDEX.md`](./.codex/INDEX.md) | 包结构已有测试；当前客户端加载凭据待完成 |
-| Claude Code | 存在插件清单 | [Claude Code 指南](./docs/guides/claude-code-install.html) | 使用前确认已安装客户端版本支持 |
-| Cursor、Gemini、Kimi | 存在元数据或清单 | [Harness 兼容说明](./docs/guides/harness-compatibility.html) | 文件存在不代表功能完全一致 |
+为指定 AI 客户端/运行时安装时，使用上方的 [18 目标 npm 安装器](#安装到你的-ai-客户端)；需要 Codex 专用细节时查看 [Codex 精选包](./.codex/INDEX.md)；需要与客户端无关的文件时使用旧版通用工作区生成器。[Claude Code 指南](./docs/guides/claude-code-install.html)与[客户端兼容说明](./docs/guides/harness-compatibility.html)提供补充背景，但支持状态以当前适配 Manifest 和与 commit 匹配的凭据为准。
 
-通用路径需要 Bash 与 Node.js；仓库验证还需要 npm 与 Python 3。操作系统和客户端版本支持范围以 CI 和已发布凭据为准。
+通用路径需要 Bash 与 Node.js；仓库验证还需要 npm 与 Python 3。操作系统和客户端版本支持范围以 CI 和已发布凭据为准。存在适配文件永远不代表功能完全一致。
 
 ## 🗂️ 仓库架构
 

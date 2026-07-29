@@ -14,20 +14,91 @@
 
 AGI Super Team is a versioned library of **AI agent skills, specialist role packs, and human-in-the-loop team workflows** for Codex and local coding-agent workspaces.
 
-## One-command Codex install
+## Install for your AI client
 
-Preview first, then install the Codex plugin, six curated Skills, global Musk CEO, and all eight outcome Teams:
+List all 18 adapter targets, preview one target, then apply the same selection:
 
 ```bash
-npx -y github:aAAaqwq/AGI-Super-Team
-npx -y github:aAAaqwq/AGI-Super-Team --install
+npx -y github:aAAaqwq/AGI-Super-Team --list-tools
+npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code
+npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --install
+npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
 ```
 
-Use `--team solo-founder --install` for one Team or `--all-agents --install` for all 44 bundled Agent TOMLs. The CLI preserves unrelated global guidance and Agents, backs up replacements, and defaults to preview. After the npm package is published, the short form is `npx -y agi-super-team --install`.
+Replace `claude-code` with an ID from `--list-tools`. Use `--all-tools` only when you intentionally want every global and project adapter. A no-argument run remains the legacy Codex preview; new automation should always name `--tool` or `--all-tools`.
+
+### Recommended starting points
+
+| Platform | Preview command | Installed capability |
+|---|---|---|
+| **Claude Code** | `npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code` | Native Markdown Agents + native Skills |
+| **Codex** | `npx -y github:aAAaqwq/AGI-Super-Team --tool codex` | Native TOML Agents + Codex plugin Skills; the currently runtime-verified adapter |
+| **OpenClaw** | `npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw` | Native Agent workspaces + native Skills |
+| **Hermes Agent** | `npx -y github:aAAaqwq/AGI-Super-Team --tool hermes` | Native Skills; role packs are exposed as Skills rather than native Agents |
+
+For OpenClaw, the installer materializes Agent workspaces but does not register them; review and register the desired workspaces explicitly after installation.
+
+These are **18 AI client/runtime adapter targets**, not 18 interchangeable CLIs. An adapter can install native Agents, native Skills, project rules/context, or role packs degraded to Agent-as-Skill. File placement does not by itself prove that a current client loaded or executed the content.
+
+### All 18 adapter targets
+
+Paths for global adapters are relative to the selected home; project adapters are relative to the selected project directory.
+
+| ID | Client/runtime | Scope | Agent delivery | Skill delivery | Status |
+|---|---|---|---|---|---|
+| `claude-code` | Claude Code | Global | Native Markdown Agent: `.claude/agents` | Native: `.claude/skills` | Native adapter |
+| `codex` | Codex | Global | Native TOML Agent: `.codex/agents` | Native plugin: `.codex/skills` | Runtime-verified adapter |
+| `openclaw` | OpenClaw | Global | Native workspace: `.openclaw/agency-agents` | Native: `.openclaw/skills/agi-super-team` | Native adapter |
+| `hermes` | Hermes Agent | Global | Agent-as-Skill: `.hermes/skills/agi-super-team-agents` | Native: `.hermes/skills/agi-super-team` | Native Skills |
+| `copilot` | GitHub Copilot | Global | Markdown Agent: `.github/agents`, `.copilot/agents` | Native: `.copilot/skills` | Adapter |
+| `antigravity` | Antigravity | Global | Agent: `.gemini/config/agents` | Native: `.gemini/config/skills` | **Experimental** |
+| `gemini-cli` | Gemini CLI | Global | Markdown Agent: `.gemini/agents` | Native: `.gemini/skills` | Adapter |
+| `opencode` | OpenCode | Global | Markdown Agent: `.config/opencode/agents` | Native: `.config/opencode/skills` | Adapter |
+| `cursor` | Cursor | Global | Markdown Agent: `.cursor/agents` | Native: `.cursor/skills` | **Experimental** |
+| `trae` | Trae | Project | Project rule: `.trae/rules` | Native: `.trae/skills` | Project adapter |
+| `aider` | Aider | Project | Combined project rules: `CONVENTIONS.md` | Combined into the same project context | Project adapter |
+| `windsurf` | Windsurf | Project | Combined project rules: `.windsurfrules` | Combined into the same project context | Project adapter |
+| `qwen` | Qwen Code | Global | Markdown Agent: `.qwen/agents` | Native: `.qwen/skills` | Adapter |
+| `deerflow` | DeerFlow | Project | Agent-as-Skill: `skills/custom/agi-super-team-agents` | Native: `skills/custom/agi-super-team` | Project adapter |
+| `workbuddy` | WorkBuddy | Global | Agent-as-Skill: `.workbuddy/skills/agi-super-team-agents` | Native: `.workbuddy/skills/agi-super-team` | Adapter |
+| `codewhale` | CodeWhale | Global | Agent-as-Skill: `.codewhale/skills/agi-super-team-agents` | Native: `.codewhale/skills/agi-super-team` | Adapter |
+| `kiro` | Kiro | Global | Markdown Agent: `.kiro/agents` | Native: `.kiro/skills` | Adapter |
+| `qoder` | Qoder | Global | Markdown Agent: `.qoder/agents` | Native: `.qoder/skills` | Adapter |
+
+The matrix describes the adapter contract in [`config/cli-adapters.json`](./config/cli-adapters.json), not a claim that all 18 clients have been runtime-verified. Cursor and Antigravity are explicitly experimental.
+
+### Select destinations, refresh, and verify
+
+Use `--home` to redirect global targets and `--project-dir` for project-scoped targets (the project directory defaults to the current directory). This makes a disposable audit easy:
+
+```bash
+AGI_AUDIT_HOME="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-home.XXXXXX")"
+AGI_AUDIT_PROJECT="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-project.XXXXXX")"
+
+npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+  --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT"
+npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+  --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --install
+npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+  --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --doctor
+```
+
+Run the same `--install` command again to refresh managed content; repeat `--doctor` afterward. Restart or open a new task in the target client, then verify that it discovers the expected Agent/Skill surface. `--doctor` verifies installed adapter artifacts, not model behavior or task quality.
+
+### Safety and update limits
+
+- Preview is the default and performs no writes; `--install` is the explicit write boundary.
+- Reapplying the same selection is designed to be idempotent. Differing managed destinations are backed up before replacement; unrelated client files are outside the managed selection.
+- Backups are local recovery aids, not a complete snapshot or uninstall system. Review the preview and keep your own version-control or filesystem backup for important configuration.
+- Symlinked or unsafe destinations are refused. `--no-agents` and `--no-skills` can narrow the payload when needed.
+- This project does not use a remote-script pipe installer; the commands above use npm's package runner and still deserve normal dependency review.
+- Installation proves file materialization only. Except for the adapter explicitly marked runtime-verified, current-client loading and execution remain unverified until supported by a commit-matched receipt.
+
+The adapter design was inspired in part by [`jnMetaCode/agency-agents-zh`](https://github.com/jnMetaCode/agency-agents-zh) at fixed commit [`2ecfabf8`](https://github.com/jnMetaCode/agency-agents-zh/commit/2ecfabf8e944ccdfed63ad8c44d5241290af6977). AGI Super Team's manifest, payload mapping, safety behavior, and evidence boundaries are maintained here.
 
 <p align="center">
-  <a href="#try-it-safely"><strong>Preview Solo Founder</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
-  <a href="./.codex/INDEX.md">Inspect Codex package</a>
+  <a href="#install-for-your-ai-client"><strong>Install for one client</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="./.codex/INDEX.md">Inspect the Codex package</a>
 </p>
 
 ## 🧠 The system in one minute
@@ -63,11 +134,9 @@ AGI Super Team owns the versioned content, selection rules, safe copying, and re
 
 Need wider coverage? `full-team` selects all 14 manifest Agents. Start with a focused kit unless your evaluation genuinely needs every role.
 
-## ⚡ Try it safely
+## ⚡ Legacy generic workspace materializer
 
-Using Codex? Inspect the [separately packaged Codex distribution](./.codex/INDEX.md). Its repository structure is tested; installation and loading in a current Codex client remain **Validation pending**.
-
-To evaluate the generic workspace path, clone `main` and preview Solo Founder. Preview is the default and writes nothing:
+The multi-client npm installer above is the primary entry point. The older `install.sh` path remains useful when you want harness-neutral, inspectable role workspaces instead of a client adapter. Clone `main` and preview Solo Founder; preview is the default and writes nothing:
 
 ```bash
 git clone --depth 1 --branch main https://github.com/aAAaqwq/AGI-Super-Team.git
@@ -134,7 +203,7 @@ You can already browse a deterministic skill catalog, inspect every Agent instru
 | Generic installer preview, preflight, no-clobber, and staging | `npm test` | **Verified in this checkout** |
 | Generated catalog covers the canonical inventory | `npm run check:skills` | **Verified in this checkout** |
 | Primary-outcome classification agrees with the fixed reviewed set | [Gold Set method](./docs/skill-taxonomy-gold-set.md) + [generated report](./catalog/skill-taxonomy-evaluation.json) | **Reviewed-set gate passed in this checkout** |
-| Current-client harness installation and loading | Revision-matched harness receipt | **Validation pending** |
+| Client loading for an adapter without a matching receipt | Revision-matched harness receipt | **Validation pending** |
 | Task quality or business outcome | Public fixture, baseline, rubric, and artifacts | **Validation pending** |
 
 ## 🧾 Reproducible installation receipt
@@ -179,14 +248,9 @@ Did the preview-first workflow help? [Star the repository](https://github.com/aA
 
 ## 🔌 Choose a distribution
 
-| Surface | Repository support | Start here | Evidence boundary |
-|---|---|---|---|
-| Generic/local workspace | Preview-first `install.sh` | Use the quick start above | Installer behavior is integration-tested |
-| Codex | Separate curated package | [`.codex/INDEX.md`](./.codex/INDEX.md) | Package structure is tested; current-client load receipt pending |
-| Claude Code | Plugin manifest present | [Claude Code guide](./docs/guides/claude-code-install.html) | Confirm support in the installed client version |
-| Cursor, Gemini, Kimi | Metadata or manifests present | [Harness compatibility](./docs/guides/harness-compatibility.html) | Presence does not establish feature parity |
+Use the [18-target npm installer](#install-for-your-ai-client) for a named AI client/runtime, the [curated Codex package](./.codex/INDEX.md) for Codex-specific details, or the legacy generic workspace materializer above for harness-neutral files. The [Claude Code guide](./docs/guides/claude-code-install.html) and [Harness compatibility guide](./docs/guides/harness-compatibility.html) provide additional background, but the current adapter manifest and commit-matched receipts govern support claims.
 
-The generic path requires Bash and Node.js; repository verification also requires npm and Python 3. Exact operating-system and client-version support remains bounded by CI and published receipts.
+The generic path requires Bash and Node.js; repository verification also requires npm and Python 3. Exact operating-system and client-version support remains bounded by CI and published receipts. Adapter presence never establishes feature parity.
 
 ## 🗂️ Repository architecture
 

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "reference": {
+    "repository": "https://github.com/jnMetaCode/agency-agents-zh",
+    "commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977"
+  },
+  "tools": [
+    {"id":"claude-code","label":"Claude Code","scope":"global","agentMode":"markdown","skillMode":"native","agentPaths":[".claude/agents"],"skillPaths":[".claude/skills"],"support":"native"},
+    {"id":"codex","label":"Codex","scope":"global","agentMode":"codex-toml","skillMode":"native-plugin","agentPaths":[".codex/agents"],"skillPaths":[".codex/skills"],"support":"runtime-verified"},
+    {"id":"openclaw","label":"OpenClaw","scope":"global","agentMode":"openclaw-workspace","skillMode":"native","agentPaths":[".openclaw/agency-agents"],"skillPaths":[".openclaw/skills/agi-super-team"],"support":"native"},
+    {"id":"hermes","label":"Hermes Agent","scope":"global","agentMode":"agent-as-skill","skillMode":"native","agentPaths":[".hermes/skills/agi-super-team-agents"],"skillPaths":[".hermes/skills/agi-super-team"],"support":"native-skills"},
+    {"id":"copilot","label":"GitHub Copilot","scope":"global","agentMode":"markdown","skillMode":"native","agentPaths":[".github/agents",".copilot/agents"],"skillPaths":[".copilot/skills"],"support":"adapter"},
+    {"id":"antigravity","label":"Antigravity","scope":"global","agentMode":"antigravity-agent","skillMode":"native","agentPaths":[".gemini/config/agents"],"skillPaths":[".gemini/config/skills"],"support":"experimental"},
+    {"id":"gemini-cli","label":"Gemini CLI","scope":"global","agentMode":"markdown","skillMode":"native","agentPaths":[".gemini/agents"],"skillPaths":[".gemini/skills"],"support":"adapter"},
+    {"id":"opencode","label":"OpenCode","scope":"global","agentMode":"markdown","skillMode":"native","agentPaths":[".config/opencode/agents"],"skillPaths":[".config/opencode/skills"],"support":"adapter"},
+    {"id":"cursor","label":"Cursor","scope":"global","agentMode":"markdown","skillMode":"native","agentPaths":[".cursor/agents"],"skillPaths":[".cursor/skills"],"support":"experimental"},
+    {"id":"trae","label":"Trae","scope":"project","agentMode":"trae-rule","skillMode":"native","agentPaths":[".trae/rules"],"skillPaths":[".trae/skills"],"support":"project-adapter"},
+    {"id":"aider","label":"Aider","scope":"project","agentMode":"combined-rules","skillMode":"combined-index","agentPaths":["CONVENTIONS.md"],"skillPaths":[],"support":"project-adapter"},
+    {"id":"windsurf","label":"Windsurf","scope":"project","agentMode":"combined-rules","skillMode":"combined-index","agentPaths":[".windsurfrules"],"skillPaths":[],"support":"project-adapter"},
+    {"id":"qwen","label":"Qwen Code","scope":"global","agentMode":"markdown","skillMode":"native","agentPaths":[".qwen/agents"],"skillPaths":[".qwen/skills"],"support":"adapter"},
+    {"id":"deerflow","label":"DeerFlow","scope":"project","agentMode":"agent-as-skill","skillMode":"native","agentPaths":["skills/custom/agi-super-team-agents"],"skillPaths":["skills/custom/agi-super-team"],"support":"project-adapter"},
+    {"id":"workbuddy","label":"WorkBuddy","scope":"global","agentMode":"agent-as-skill","skillMode":"native","agentPaths":[".workbuddy/skills/agi-super-team-agents"],"skillPaths":[".workbuddy/skills/agi-super-team"],"support":"adapter"},
+    {"id":"codewhale","label":"CodeWhale","scope":"global","agentMode":"agent-as-skill","skillMode":"native","agentPaths":[".codewhale/skills/agi-super-team-agents"],"skillPaths":[".codewhale/skills/agi-super-team"],"support":"adapter"},
+    {"id":"kiro","label":"Kiro","scope":"global","agentMode":"markdown","skillMode":"native","agentPaths":[".kiro/agents"],"skillPaths":[".kiro/skills"],"support":"adapter"},
+    {"id":"qoder","label":"Qoder","scope":"global","agentMode":"markdown","skillMode":"native","agentPaths":[".qoder/agents"],"skillPaths":[".qoder/skills"],"support":"adapter"}
+  ]
+}
