@@ -33,7 +33,7 @@ Use no more than three concurrent leaves. A leaf receives one bounded task and m
 
 ## 3. Dispatch and handoff
 
-In native mode, use `spawn_agent` with the adapter's mapped `ast-*` agent. Every task includes:
+In native mode, use `spawn_agent` with the adapter's mapped `ast-*` agent. Codex custom Agent types cannot be combined with a full-history fork: when `agent_type` is an `ast-*` role, set `fork_turns` to `"none"` and put all required context in the self-contained task packet below. Treat a rejected spawn as a failed attempt, not an observed role handoff. Every task includes:
 
 ```markdown
 Objective: one observable result.
