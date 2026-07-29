@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aaaaqwq.github.io/AGI-Super-Team/schemas/skill-curation.schema.json",
+  "title": "Reviewed Skill curation evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "scoreName", "scoreModelVersion", "scope", "entries"],
+  "properties": {
+    "$schema": {"const": "./skill-curation.schema.json"},
+    "schemaVersion": {"const": 1},
+    "scoreName": {"const": "Curation evidence score"},
+    "scoreModelVersion": {"const": 1},
+    "scope": {"const": "reviewed-curation-evidence-not-runtime-verification"},
+    "entries": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/entry"}
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skill_id", "source_digest", "reviewed_at", "status", "score", "tier", "runtime_evidence", "dimensions", "reason", "evidence", "limitations"],
+      "properties": {
+        "skill_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"},
+        "source_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "reviewed_at": {"type": "string", "format": "date"},
+        "status": {"enum": ["selected", "candidate", "hold"]},
+        "score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "tier": {"enum": ["exemplary", "recommended", "selected", "candidate", "hold"]},
+        "runtime_evidence": {"enum": ["pending", "prompt-tested", "fixture-one-harness", "fixture-two-harness", "external-beta"]},
+        "dimensions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["instruction_design", "resource_integrity", "safety_and_reversibility", "provenance_and_license", "outcome_evidence"],
+          "properties": {
+            "instruction_design": {"type": "integer", "minimum": 0, "maximum": 15},
+            "resource_integrity": {"type": "integer", "minimum": 0, "maximum": 15},
+            "safety_and_reversibility": {"type": "integer", "minimum": 0, "maximum": 20},
+            "provenance_and_license": {"type": "integer", "minimum": 0, "maximum": 20},
+            "outcome_evidence": {"type": "integer", "minimum": 0, "maximum": 30}
+          }
+        },
+        "reason": {"type": "string", "minLength": 20},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 8}
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 8}
+        }
+      }
+    }
+  }
+}

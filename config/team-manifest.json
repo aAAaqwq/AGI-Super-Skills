@@ -3,7 +3,7 @@
   "schemaVersion": 1,
   "inventory": {
     "agentCount": 14,
-    "physicalSkillCount": 802,
+    "physicalSkillCount": 815,
     "skillEntrypoint": "SKILL.md",
     "symlinkPolicy": "forbid"
   },
@@ -12,378 +12,459 @@
       "id": "ceo",
       "name": "CEO (Elon Musk)",
       "path": "agents/ceo",
+      "focus": "确定公司方向，配置稀缺资源，并基于证据作出跨职能决策。",
+      "outputs": ["决策备忘录", "公司级优先计划", "经验证的高管交接包"],
+      "boundary": "负责综合专业意见，不替代财务、法务、安全或工程负责人作出其领域内的最终判断。",
       "skills": {
         "required": [
-          "ads",
-          "backtest-expert",
-          "brainstorming",
-          "cold-email-sequence-generator",
           "competitive-analysis",
-          "contract-review",
-          "dashboard-builder",
-          "deployment-automation",
-          "e2e-testing",
-          "executing-plans",
-          "feature-requirements-clarification",
-          "financial-analyst",
-          "gdpr-dsgvo-expert",
-          "google-analytics",
-          "kubernetes-specialist",
-          "lead-intelligence",
-          "legal-risk-assessment",
-          "meeting-insights-analyzer",
-          "postgresql-database-engineering",
-          "prd-development",
+          "executive-decision-system",
+          "first-principles-thinking",
           "prioritization-funnel",
           "project-planner",
-          "react-expert",
-          "roadmap-planning",
+          "setting-okrs-goals",
           "startup-metrics-framework",
-          "tdd-workflow",
-          "token-budget-advisor",
-          "traffic-acquisition",
-          "user-story",
-          "verification-before-completion",
-          "video-marketing",
-          "writing-skills",
-          "xiaohongshu-growth"
+          "verification-before-completion"
         ],
-        "optional": [],
+        "optional": [
+          "architecture-decision-records",
+          "financial-analyst",
+          "kpi-dashboard-design",
+          "legal-risk-assessment",
+          "thinking-elon-musk"
+        ],
         "harnessSpecific": [
-          "content-ops-toolkit",
-          "context-manager",
-          "deep-research",
+          "company-investment-research",
           "dispatching-parallel-agents",
-          "healthcheck",
-          "okr",
-          "polymarket-api",
-          "systematic-debugging",
-          "team-coordinator",
+          "internal-comms",
           "web-search"
         ],
-        "recommendedExternal": [
-          "daily-rhythm",
-          "docker-containerization",
-          "generating-trading-signals",
-          "office-hours",
-          "planning-with-files",
-          "taskflow",
-          "xiaohongshu-viral-copy"
-        ]
+        "recommendedExternal": ["planning-with-files"]
       }
     },
     {
       "id": "cto",
       "name": "CTO (Jensen Huang)",
       "path": "agents/cto",
+      "focus": "负责技术战略、架构边界、平台经济性与系统可靠性。",
+      "outputs": ["架构决策记录", "技术路线图", "可靠性评审"],
+      "boundary": "制定技术方向和约束；工程实现由 PE 负责，数据平台与治理由 CDO 负责。",
       "skills": {
         "required": [
-          "api-design",
           "api-design-patterns",
           "architecture-decision",
           "architecture-patterns",
-          "deployment-automation",
-          "docker-essentials",
-          "github-automation",
-          "kubernetes-specialist",
-          "nginx-configuration",
-          "render-automation",
-          "sentry-automation",
-          "supabase-automation",
-          "vercel-automation"
+          "sre-reliability-governance",
+          "tech-decision"
         ],
-        "optional": [],
+        "optional": [
+          "api-design",
+          "architecture-decision-records",
+          "cost-aware-llm-pipeline",
+          "dashboard-builder",
+          "distributed-tracing",
+          "docker-essentials",
+          "kubernetes-deployment",
+          "observability-designer",
+          "postmortem-writer"
+        ],
         "harnessSpecific": [
           "api-provider-status",
-          "auth-manager",
-          "browser-profile-guide",
-          "browser-use",
-          "inference-optimizer",
-          "model-fallback",
           "model-provider-manager",
+          "pre-push-security-scan",
           "provider-key-manager",
+          "sentry-automation",
           "token-reporter"
         ],
-        "recommendedExternal": [
-          "docker-development",
-          "openclaw-workspace-audit",
-          "token-guard"
-        ]
+        "recommendedExternal": []
       }
     },
     {
       "id": "pe",
       "name": "PE (Linus Torvalds)",
       "path": "agents/pe",
+      "focus": "把已批准的设计转化为可维护、可测试、可审查且可安全交付的软件。",
+      "outputs": ["可运行实现", "回归测试", "可供评审的变更集"],
+      "boundary": "负责实现与验证；产品优先级由 CPO 决定，架构例外必须由 CTO 评审。",
       "skills": {
         "required": [
-          "api-design",
-          "auth-system",
-          "cli-developer",
-          "css-ninja",
-          "db-migrator",
-          "deployment-automation",
-          "docker-essentials",
           "e2e-testing",
-          "finishing-a-development-branch",
-          "ghost-scan-code",
-          "github",
-          "kubernetes-specialist",
-          "react-architect",
-          "react-expert",
           "receiving-code-review",
-          "redis-inspect",
           "requesting-code-review",
-          "security-audit",
-          "sp-condition-based-waiting",
-          "sp-subagent-driven-development",
-          "sp-test-driven-development",
-          "sp-testing-anti-patterns",
-          "sql-optimization",
           "tdd-workflow",
-          "verification-before-completion"
+          "verification-before-completion",
+          "vibe-code-auditor"
         ],
-        "optional": [],
+        "optional": [
+          "bash-pro",
+          "cli-developer",
+          "docker-essentials",
+          "finishing-a-development-branch",
+          "github",
+          "react-expert",
+          "redis-inspect",
+          "shell-expert",
+          "sql-pro",
+          "sql-optimization"
+        ],
         "harnessSpecific": [
-          "browser-profile-guide",
           "claude-code-runner",
-          "code-review-quality",
+          "code-review",
           "codex-cc-guide",
-          "coding-agent-backup",
           "gh-issues",
-          "sp-using-git-worktrees",
+          "pre-push-security-scan",
           "systematic-debugging"
         ],
-        "recommendedExternal": [
-          "ci-cd-pipeline-builder",
-          "docker-containerization",
-          "openclaw-claude-code"
-        ]
+        "recommendedExternal": []
       }
     },
     {
       "id": "cpo",
       "name": "CPO (Steve Jobs)",
       "path": "agents/cpo",
+      "focus": "把用户问题转化为一致的产品选择、可访问体验与可验证需求。",
+      "outputs": ["产品简报", "优先级需求集", "体验评审"],
+      "boundary": "负责用户价值与产品范围；技术可行性由 CTO 负责，获客表现由 CMO 负责。",
       "skills": {
         "required": [
-          "brand-identity",
-          "prd-development",
-          "user-story"
+          "accessibility-compliance-accessibility-audit",
+          "feature-requirements-clarification",
+          "prioritization-funnel",
+          "product-discovery-portfolio-governance",
+          "ux-heuristics"
         ],
-        "optional": [],
-        "harnessSpecific": [
-          "frontend-design-ultimate",
-          "self-improving"
+        "optional": [
+          "analytics-tracking",
+          "competitive-analysis",
+          "customer-success",
+          "design-thinking",
+          "doc-coauthoring",
+          "pm-competitive-teardown",
+          "user-story",
+          "write-product-documentation"
         ],
-        "recommendedExternal": [
-          "product-roadmap"
-        ]
+        "harnessSpecific": ["deep-research", "figma-automation"],
+        "recommendedExternal": []
       }
     },
     {
       "id": "cqo",
       "name": "CQO (Jim Simons)",
       "path": "agents/cqo",
+      "focus": "设计可复现的量化研究、回测、组合风险控制与模型评估。",
+      "outputs": ["可证伪研究假设", "可复现回测", "风险调整后评估"],
+      "boundary": "只提供量化证据，不作收益保证；资本配置和实盘行为必须经 CFO 与人类批准。",
       "skills": {
         "required": [
-          "polymarket-copy-tracker",
+          "backtest-expert",
+          "backtesting-frameworks",
+          "quant-analyst",
+          "research-evidence-synthesis",
+          "risk-metrics-calculation"
+        ],
+        "optional": [
+          "csv-pipeline",
+          "data-analyst",
+          "defi-risk-assessment",
+          "financial-planning-and-analysis",
+          "technical-analysis"
+        ],
+        "harnessSpecific": [
+          "alpha101",
+          "backtesting-trading-strategies",
+          "company-investment-research",
+          "deep-research",
           "trade-prediction-markets"
         ],
-        "optional": [],
-        "harnessSpecific": [
-          "deep-research",
-          "polymarket-api",
-          "polymarket-profit"
-        ],
-        "recommendedExternal": [
-          "backtesting-system",
-          "portfolio-optimization",
-          "risk-management"
-        ]
+        "recommendedExternal": []
       }
     },
     {
       "id": "cmo",
       "name": "CMO (David Ogilvy)",
       "path": "agents/cmo",
+      "focus": "基于受众证据建立定位、品牌与可测量的合规获客系统。",
+      "outputs": ["定位简报", "渠道实验方案", "获客测量计划"],
+      "boundary": "负责需求创造与测量；内容生产由 CCO 负责，产品承诺必须经 CPO 验证。",
       "skills": {
         "required": [
-          "competitor-alternatives",
-          "market-research",
-          "seo-audit"
+          "analytics-tracking",
+          "brand-identity",
+          "competitive-analysis",
+          "positioning-growth-experiment-system",
+          "seo-audit",
+          "traffic-acquisition"
         ],
-        "optional": [],
-        "harnessSpecific": [],
-        "recommendedExternal": [
-          "competitor-analysis",
-          "growth-hacking",
-          "marketing-strategy"
-        ]
+        "optional": [
+          "campaign-analytics",
+          "copywriting",
+          "data-storytelling",
+          "doc-coauthoring",
+          "marketing-psychology",
+          "programmatic-seo",
+          "seo-geo"
+        ],
+        "harnessSpecific": [
+          "deep-research",
+          "google-analytics",
+          "google-analytics-automation",
+          "mailchimp-automation",
+          "social-media-management"
+        ],
+        "recommendedExternal": []
       }
     },
     {
       "id": "cfo",
       "name": "CFO (Warren Buffett)",
       "path": "agents/cfo",
+      "focus": "负责经营计划、单位经济、资本配置、定价证据与财务控制。",
+      "outputs": ["财务模型", "预算决策", "单位经济评审"],
+      "boundary": "提供财务分析而非投资保证；法律条款由 CLO 负责，商业执行由 CSO 负责。",
       "skills": {
-        "required": [],
-        "optional": [],
-        "harnessSpecific": [],
-        "recommendedExternal": [
-          "budget-optimization",
-          "cost-analysis",
-          "financial-modeling"
-        ]
+        "required": [
+          "cost-optimization",
+          "financial-analyst",
+          "financial-planning-and-analysis",
+          "pricing-strategy",
+          "startup-business-analyst-financial-projections",
+          "startup-metrics-framework"
+        ],
+        "optional": [
+          "bookkeeping-basics",
+          "business-analyst",
+          "cost-aware-llm-pipeline",
+          "invoice-organizer",
+          "prioritization-funnel",
+          "risk-metrics-calculation",
+          "saas-metrics-coach",
+          "startup-business-analyst-business-case"
+        ],
+        "harnessSpecific": ["company-investment-research"],
+        "recommendedExternal": []
       }
     },
     {
       "id": "cdo",
       "name": "CDO (Nate Silver)",
       "path": "agents/cdo",
+      "focus": "让团队数据可信、可治理、可观测，并能安全支持决策。",
+      "outputs": ["数据契约", "分析模型", "数据质量评审"],
+      "boundary": "负责数据系统与分析完整性；研究解释由 CRO 负责，业务决策仍由相应高管承担。",
       "skills": {
         "required": [
-          "api-gateway",
-          "apify-ultimate-scraper"
+          "analytics-tracking",
+          "data-contract-quality-governance",
+          "data-engineering-data-pipeline",
+          "design-secure-data-architecture",
+          "postgresql-database-engineering"
         ],
-        "optional": [],
-        "harnessSpecific": [
-          "web-search"
+        "optional": [
+          "business-analyst",
+          "csv-pipeline",
+          "data-analyst",
+          "data-storytelling",
+          "dashboard-builder",
+          "kpi-dashboard-design",
+          "senior-data-engineer",
+          "senior-data-scientist",
+          "sql-pro",
+          "startup-metrics-framework",
+          "supabase-postgres-best-practices"
         ],
-        "recommendedExternal": [
-          "data-pipeline",
-          "duckdb-analytics",
-          "mineru-extract"
-        ]
+        "harnessSpecific": [],
+        "recommendedExternal": []
       }
     },
     {
       "id": "cco",
       "name": "CCO (MrBeast)",
       "path": "agents/cco",
+      "focus": "把已验证的选题转化为有辨识度、适配渠道且来源可审查的内容资产。",
+      "outputs": ["编辑简报", "渠道就绪内容", "来源与权利交接包"],
+      "boundary": "负责内容策略、制作与适配；分发策略由 CMO 负责，任何外部发布都需人类批准。",
       "skills": {
         "required": [
-          "ai-marketing-videos",
-          "jimeng-storyboard",
-          "openai-whisper",
-          "video-merge-send",
-          "x-articles",
-          "xiaohongshu-growth"
+          "copy-editing",
+          "content-research-writer",
+          "content-typography",
+          "copywriting",
+          "data-storytelling",
+          "editorial-content-system",
+          "jimeng-storyboard"
         ],
-        "optional": [],
+        "optional": [
+          "content-rewriter",
+          "doc-coauthoring",
+          "openai-whisper",
+          "video-marketing"
+        ],
         "harnessSpecific": [
+          "ai-marketing-videos",
           "content-cover-gen",
-          "douyin-publisher",
+          "content-illustration-strategy",
+          "content-ops-toolkit",
           "douyin-smart-publish",
-          "jimeng-digital-human",
-          "jimeng-login",
           "nano-banana-pro",
-          "wechat-toolkit",
+          "seo-content-writer",
+          "social-content",
+          "video-transcriber",
           "xhs-publisher"
         ],
-        "recommendedExternal": [
-          "content-distributor",
-          "content-pipeline",
-          "douyin-publish",
-          "gzh-publisher",
-          "seo-writing"
-        ]
+        "recommendedExternal": []
       }
     },
     {
       "id": "clo",
       "name": "CLO (Alan Dershowitz)",
       "path": "agents/clo",
+      "focus": "在形成承诺前识别法律、隐私、合同、许可与跨境合规风险。",
+      "outputs": ["法律问题识别备忘录", "合同风险评审", "合规检查表"],
+      "boundary": "提供问题识别与审查支持，不构成特定司法辖区法律意见；最终法律判断由合格律师负责。",
       "skills": {
         "required": [
-          "legal-review"
+          "contract-review",
+          "legal-issue-spotting",
+          "legal-risk-assessment",
+          "privacy-compliance"
         ],
-        "optional": [],
-        "harnessSpecific": [],
-        "recommendedExternal": [
-          "compliance-check",
-          "contract-analysis"
-        ]
+        "optional": [
+          "accessibility-compliance-accessibility-audit",
+          "china-contract-review",
+          "contract-and-proposal-writer",
+          "customs-trade-compliance",
+          "employment-contract-templates",
+          "gdpr-compliance",
+          "legal-advisor",
+          "prepare-software-ip-filings",
+          "security-compliance-compliance-check"
+        ],
+        "harnessSpecific": ["gdpr-dsgvo-expert"],
+        "recommendedExternal": []
       }
     },
     {
       "id": "cro",
       "name": "CRO (Richard Feynman)",
       "path": "agents/cro",
+      "focus": "设计可回答的研究问题，获取一手证据，并透明综合不确定性。",
+      "outputs": ["研究计划", "证据地图", "带引用的综合结论"],
+      "boundary": "负责研究方法与证据质量；财务、法律、产品和营销结论仍由对应领域负责人决定。",
       "skills": {
         "required": [
-          "sp-tracing-knowledge-lineages",
-          "tavily-search"
+          "first-principles-thinking",
+          "research-evidence-synthesis",
+          "search-specialist"
         ],
-        "optional": [],
+        "optional": [
+          "competitive-analysis",
+          "competitive-intelligence",
+          "market-sizing-analysis",
+          "pm-competitive-teardown",
+          "research-engineer",
+          "search-first"
+        ],
         "harnessSpecific": [
+          "arxiv-automation",
+          "company-investment-research",
           "deep-research",
+          "search-layer",
+          "tech-selection-research",
           "web-search"
         ],
-        "recommendedExternal": [
-          "scientific-method"
-        ]
+        "recommendedExternal": []
       }
     },
     {
       "id": "cso",
       "name": "CSO (Michael Dell)",
       "path": "agents/cso",
+      "focus": "建立可重复的客户发现、资格审查、方案、谈判与客户成功流程。",
+      "outputs": ["合格商机简报", "可审查方案", "客户成功交接包"],
+      "boundary": "负责收入流程与客户关系推进；定价经济性需 CFO 评审，合同条款需 CLO 评审。",
       "skills": {
         "required": [
-          "competitor-alternatives",
-          "crm-automation"
+          "contract-and-proposal-writer",
+          "customer-success",
+          "lead-intelligence",
+          "revenue-opportunity-governance",
+          "sandler-system"
         ],
-        "optional": [],
+        "optional": [
+          "account-executive",
+          "cold-email-sequence-generator",
+          "competitive-analysis",
+          "doc-coauthoring",
+          "founder-sales",
+          "pricing-strategy"
+        ],
         "harnessSpecific": [
-          "self-improving",
-          "skill-finder-cn"
+          "close-automation",
+          "crm-automation",
+          "deep-research",
+          "salesforce-automation",
+          "zoho-crm-automation"
         ],
-        "recommendedExternal": [
-          "customer-analysis",
-          "sales-strategy"
-        ]
+        "recommendedExternal": []
       }
     },
     {
       "id": "coo",
       "name": "COO (Andy Grove)",
       "path": "agents/coo",
+      "focus": "把优先级转化为可靠的执行系统、责任结构、运营节奏与异常恢复机制。",
+      "outputs": ["运营计划", "责任与依赖地图", "执行或事故复盘"],
+      "boundary": "负责执行流与运营健康；产品范围、技术设计和治理例外分别由 CPO、CTO 与 Governor 负责。",
       "skills": {
         "required": [
-          "cost-optimization",
-          "sp-defense-in-depth",
-          "sp-verification-before-completion"
+          "model-business-processes",
+          "operating-cadence-and-flow",
+          "prioritization-funnel",
+          "project-planner",
+          "verification-before-completion"
         ],
-        "optional": [],
+        "optional": [
+          "architecture-decision-records",
+          "incident-command-and-review",
+          "kpi-dashboard-design",
+          "postmortem-writer",
+          "thinking-andy-grove"
+        ],
         "harnessSpecific": [
-          "browser-profile-guide",
-          "healthcheck",
-          "sp-root-cause-tracing",
-          "sp-systematic-debugging"
+          "asana-automation",
+          "internal-comms",
+          "jira-automation",
+          "linear-automation",
+          "systematic-debugging"
         ],
-        "recommendedExternal": [
-          "incident-response",
-          "monitoring"
-        ]
+        "recommendedExternal": []
       }
     },
     {
       "id": "governor",
       "name": "Governor",
       "path": "agents/governor",
+      "focus": "独立质疑声明、执行证据门，并升级未解决的安全与质量风险。",
+      "outputs": ["独立评审", "放行门决定", "风险升级记录"],
+      "boundary": "不接管交付；只验证声明、记录异议，并在证据不足时阻止发布。",
       "skills": {
         "required": [
-          "agent-skills-audit",
-          "kpi-dashboard-design",
-          "quality-convergence-engine",
-          "security-audit"
+          "independent-assurance-gate",
+          "verification-before-completion"
         ],
-        "optional": [],
-        "harnessSpecific": [
-          "okr",
-          "silicon-performance-reviewer"
+        "optional": [
+          "accessibility-compliance-accessibility-audit",
+          "architecture-decision-records",
+          "contract-review",
+          "design-secure-data-architecture",
+          "eval-harness",
+          "gdpr-compliance",
+          "legal-risk-assessment",
+          "risk-metrics-calculation",
+          "security-compliance-compliance-check",
+          "vibe-code-auditor"
         ],
+        "harnessSpecific": ["code-review", "pre-push-security-scan"],
         "recommendedExternal": []
       }
     }
@@ -391,30 +472,117 @@
   "kits": [
     {
       "id": "solo-founder",
+      "name": "Solo Founder",
+      "outcome": "Turn a bounded product idea into an evidence-backed product decision, implementation plan, and reviewable launch package.",
+      "entrypoint": "starter-kits/solo-founder/RUNBOOK.md",
+      "coordinator": "ceo",
+      "reviewers": ["governor"],
+      "coreAgents": ["ceo", "cpo", "pe", "governor"],
       "agents": [
         "ceo",
+        "cpo",
         "pe",
-        "cco"
-      ]
+        "cco",
+        "cmo",
+        "governor"
+      ],
+      "outputs": ["Product decision memo", "Test-first delivery plan", "Launch evidence pack", "Governor gate decision"],
+      "checks": ["scope-approved", "implementation-plan-reviewed", "launch-claims-sourced", "governor-gate-recorded"]
     },
     {
       "id": "content-creator",
+      "name": "Content Creator",
+      "outcome": "Turn approved source material into cited, channel-aware content and an ethical measurement plan without automatic publishing.",
+      "entrypoint": "starter-kits/content-creator/RUNBOOK.md",
+      "coordinator": "ceo",
+      "reviewers": ["governor"],
+      "coreAgents": ["ceo", "cro", "cco", "cmo", "governor"],
       "agents": [
+        "ceo",
+        "cro",
         "cco",
         "cdo",
-        "cmo"
-      ]
+        "cmo",
+        "governor"
+      ],
+      "outputs": ["Evidence brief", "Channel-ready draft set", "Measurement plan", "Claims review"],
+      "checks": ["sources-resolve", "claims-trace-to-evidence", "channel-rules-reviewed", "manual-publish-gate-recorded"]
     },
     {
       "id": "quant-trader",
+      "name": "Quant Research",
+      "outcome": "Evaluate a quantitative hypothesis with reproducible data controls, realistic backtesting assumptions, and independent risk review.",
+      "entrypoint": "starter-kits/quant-trader/RUNBOOK.md",
+      "coordinator": "ceo",
+      "reviewers": ["governor"],
+      "coreAgents": ["ceo", "cqo", "cdo", "cfo", "governor"],
       "agents": [
+        "ceo",
         "cqo",
         "cdo",
-        "cfo"
-      ]
+        "cfo",
+        "cro",
+        "governor"
+      ],
+      "outputs": ["Research hypothesis", "Reproducible backtest specification", "Risk memorandum", "Independent gate decision"],
+      "checks": ["data-lineage-recorded", "leakage-controls-defined", "costs-and-slippage-modeled", "no-live-trade-action"]
+    },
+    {
+      "id": "product-delivery",
+      "name": "Product Delivery",
+      "outcome": "Convert a validated user problem into an architecture-aware, testable implementation and a review-ready delivery handoff.",
+      "entrypoint": "starter-kits/product-delivery/RUNBOOK.md",
+      "coordinator": "ceo",
+      "reviewers": ["governor"],
+      "coreAgents": ["ceo", "cpo", "cto", "pe", "governor"],
+      "agents": ["ceo", "cpo", "cto", "pe", "cdo", "governor"],
+      "outputs": ["Product brief", "Architecture decision", "Tested change set", "Release handoff"],
+      "checks": ["acceptance-criteria-testable", "architecture-reviewed", "regression-checks-pass", "rollback-documented"]
+    },
+    {
+      "id": "research-decision",
+      "name": "Research Decision",
+      "outcome": "Answer a consequential question with primary evidence, explicit uncertainty, domain review, and a bounded executive decision.",
+      "entrypoint": "starter-kits/research-decision/RUNBOOK.md",
+      "coordinator": "ceo",
+      "reviewers": ["governor"],
+      "coreAgents": ["ceo", "cro", "cdo", "governor"],
+      "agents": ["ceo", "cro", "cdo", "cfo", "clo", "governor"],
+      "outputs": ["Answerable research plan", "Evidence map", "Cited synthesis", "Decision memorandum"],
+      "checks": ["primary-sources-prioritized", "uncertainty-explicit", "domain-risks-reviewed", "decision-boundary-recorded"]
+    },
+    {
+      "id": "go-to-market",
+      "name": "Go To Market",
+      "outcome": "Build a claim-safe launch and revenue experiment from validated positioning, content, economics, and customer evidence.",
+      "entrypoint": "starter-kits/go-to-market/RUNBOOK.md",
+      "coordinator": "ceo",
+      "reviewers": ["governor"],
+      "coreAgents": ["ceo", "cpo", "cmo", "cco", "cso", "governor"],
+      "agents": ["ceo", "cpo", "cro", "cmo", "cco", "cso", "cfo", "clo", "cdo", "governor"],
+      "outputs": ["Positioning brief", "Launch asset pack", "Revenue experiment", "Risk and measurement gate"],
+      "checks": ["audience-evidence-recorded", "claims-and-terms-reviewed", "unit-economics-bounded", "manual-launch-gate-recorded"]
+    },
+    {
+      "id": "operations-response",
+      "name": "Operations Response",
+      "outcome": "Coordinate a bounded operational incident or delivery failure through containment, diagnosis, recovery, and evidence-backed review.",
+      "entrypoint": "starter-kits/operations-response/RUNBOOK.md",
+      "coordinator": "ceo",
+      "reviewers": ["governor"],
+      "coreAgents": ["ceo", "coo", "cto", "pe", "governor"],
+      "agents": ["ceo", "coo", "cto", "pe", "cdo", "clo", "governor"],
+      "outputs": ["Incident scope", "Containment and recovery plan", "Verified recovery evidence", "Post-incident review"],
+      "checks": ["impact-bounded", "writes-human-approved", "recovery-verified", "follow-up-owners-assigned"]
     },
     {
       "id": "full-team",
+      "name": "Executive Team",
+      "outcome": "Route a cross-functional company brief through one CEO coordinator, the smallest relevant specialist subset, independent review, and human approval.",
+      "entrypoint": "starter-kits/full-team/RUNBOOK.md",
+      "coordinator": "ceo",
+      "reviewers": ["governor"],
+      "coreAgents": ["ceo", "coo", "governor"],
       "agents": [
         "ceo",
         "cto",
@@ -430,7 +598,9 @@
         "cso",
         "coo",
         "governor"
-      ]
+      ],
+      "outputs": ["Executive routing plan", "Specialist artifact set", "Independent review", "Verified executive handoff"],
+      "checks": ["minimum-team-selected", "ownership-non-overlapping", "specialist-evidence-reviewed", "human-approval-recorded"]
     }
   ]
 }

@@ -1,17 +1,18 @@
-# USER.md - About Your Human
+# CTO 用户协作边界
 
-_Learn about the person you're helping. Update this as you go._
+此角色包不保存个人档案。姓名、生日、联系方式、账号标识、住址、精确时区、设备路径、资产、持仓、凭据和心理画像均不应写入可分发配置。
 
-- **Name:**
-- **What to call them:**
-- **Pronouns:** _(optional)_
-- **Timezone:**
-- **Notes:**
+## 任务所需上下文
 
-## Context
+仅在当前任务中按最小必要原则确认：
 
-_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
+- 要支持的业务目标、用户旅程和成功指标；
+- 当前系统边界、规模基线、预算、期限和团队能力；
+- 不可接受的失败、合规约束和批准人；
+- 输出深度、语言和决策期限偏好。
 
----
+任务结束后，默认不将这些信息写入长期记忆。只有用户明确要求且内容稳定、非敏感、与未来技术决策持续相关时，才记录抽象偏好；不记录原始个人数据。
 
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
+## 授权边界
+
+用户的讨论、草案或技术偏好不等于生产变更授权。部署、合并、购买、账号操作、凭据使用、外部通信和不可逆迁移必须逐项获得明确授权。

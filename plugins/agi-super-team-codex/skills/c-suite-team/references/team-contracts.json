@@ -1,0 +1,469 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "config/team-manifest.json",
+  "runtimeEvidence": "pending",
+  "agents": [
+    {
+      "id": "ceo",
+      "name": "CEO (Elon Musk)",
+      "focus": "确定公司方向，配置稀缺资源，并基于证据作出跨职能决策。",
+      "outputs": [
+        "决策备忘录",
+        "公司级优先计划",
+        "经验证的高管交接包"
+      ],
+      "boundary": "负责综合专业意见，不替代财务、法务、安全或工程负责人作出其领域内的最终判断。"
+    },
+    {
+      "id": "cto",
+      "name": "CTO (Jensen Huang)",
+      "focus": "负责技术战略、架构边界、平台经济性与系统可靠性。",
+      "outputs": [
+        "架构决策记录",
+        "技术路线图",
+        "可靠性评审"
+      ],
+      "boundary": "制定技术方向和约束；工程实现由 PE 负责，数据平台与治理由 CDO 负责。"
+    },
+    {
+      "id": "pe",
+      "name": "PE (Linus Torvalds)",
+      "focus": "把已批准的设计转化为可维护、可测试、可审查且可安全交付的软件。",
+      "outputs": [
+        "可运行实现",
+        "回归测试",
+        "可供评审的变更集"
+      ],
+      "boundary": "负责实现与验证；产品优先级由 CPO 决定，架构例外必须由 CTO 评审。"
+    },
+    {
+      "id": "cpo",
+      "name": "CPO (Steve Jobs)",
+      "focus": "把用户问题转化为一致的产品选择、可访问体验与可验证需求。",
+      "outputs": [
+        "产品简报",
+        "优先级需求集",
+        "体验评审"
+      ],
+      "boundary": "负责用户价值与产品范围；技术可行性由 CTO 负责，获客表现由 CMO 负责。"
+    },
+    {
+      "id": "cqo",
+      "name": "CQO (Jim Simons)",
+      "focus": "设计可复现的量化研究、回测、组合风险控制与模型评估。",
+      "outputs": [
+        "可证伪研究假设",
+        "可复现回测",
+        "风险调整后评估"
+      ],
+      "boundary": "只提供量化证据，不作收益保证；资本配置和实盘行为必须经 CFO 与人类批准。"
+    },
+    {
+      "id": "cmo",
+      "name": "CMO (David Ogilvy)",
+      "focus": "基于受众证据建立定位、品牌与可测量的合规获客系统。",
+      "outputs": [
+        "定位简报",
+        "渠道实验方案",
+        "获客测量计划"
+      ],
+      "boundary": "负责需求创造与测量；内容生产由 CCO 负责，产品承诺必须经 CPO 验证。"
+    },
+    {
+      "id": "cfo",
+      "name": "CFO (Warren Buffett)",
+      "focus": "负责经营计划、单位经济、资本配置、定价证据与财务控制。",
+      "outputs": [
+        "财务模型",
+        "预算决策",
+        "单位经济评审"
+      ],
+      "boundary": "提供财务分析而非投资保证；法律条款由 CLO 负责，商业执行由 CSO 负责。"
+    },
+    {
+      "id": "cdo",
+      "name": "CDO (Nate Silver)",
+      "focus": "让团队数据可信、可治理、可观测，并能安全支持决策。",
+      "outputs": [
+        "数据契约",
+        "分析模型",
+        "数据质量评审"
+      ],
+      "boundary": "负责数据系统与分析完整性；研究解释由 CRO 负责，业务决策仍由相应高管承担。"
+    },
+    {
+      "id": "cco",
+      "name": "CCO (MrBeast)",
+      "focus": "把已验证的选题转化为有辨识度、适配渠道且来源可审查的内容资产。",
+      "outputs": [
+        "编辑简报",
+        "渠道就绪内容",
+        "来源与权利交接包"
+      ],
+      "boundary": "负责内容策略、制作与适配；分发策略由 CMO 负责，任何外部发布都需人类批准。"
+    },
+    {
+      "id": "clo",
+      "name": "CLO (Alan Dershowitz)",
+      "focus": "在形成承诺前识别法律、隐私、合同、许可与跨境合规风险。",
+      "outputs": [
+        "法律问题识别备忘录",
+        "合同风险评审",
+        "合规检查表"
+      ],
+      "boundary": "提供问题识别与审查支持，不构成特定司法辖区法律意见；最终法律判断由合格律师负责。"
+    },
+    {
+      "id": "cro",
+      "name": "CRO (Richard Feynman)",
+      "focus": "设计可回答的研究问题，获取一手证据，并透明综合不确定性。",
+      "outputs": [
+        "研究计划",
+        "证据地图",
+        "带引用的综合结论"
+      ],
+      "boundary": "负责研究方法与证据质量；财务、法律、产品和营销结论仍由对应领域负责人决定。"
+    },
+    {
+      "id": "cso",
+      "name": "CSO (Michael Dell)",
+      "focus": "建立可重复的客户发现、资格审查、方案、谈判与客户成功流程。",
+      "outputs": [
+        "合格商机简报",
+        "可审查方案",
+        "客户成功交接包"
+      ],
+      "boundary": "负责收入流程与客户关系推进；定价经济性需 CFO 评审，合同条款需 CLO 评审。"
+    },
+    {
+      "id": "coo",
+      "name": "COO (Andy Grove)",
+      "focus": "把优先级转化为可靠的执行系统、责任结构、运营节奏与异常恢复机制。",
+      "outputs": [
+        "运营计划",
+        "责任与依赖地图",
+        "执行或事故复盘"
+      ],
+      "boundary": "负责执行流与运营健康；产品范围、技术设计和治理例外分别由 CPO、CTO 与 Governor 负责。"
+    },
+    {
+      "id": "governor",
+      "name": "Governor",
+      "focus": "独立质疑声明、执行证据门，并升级未解决的安全与质量风险。",
+      "outputs": [
+        "独立评审",
+        "放行门决定",
+        "风险升级记录"
+      ],
+      "boundary": "不接管交付；只验证声明、记录异议，并在证据不足时阻止发布。"
+    }
+  ],
+  "kits": [
+    {
+      "id": "solo-founder",
+      "name": "Solo Founder",
+      "outcome": "Turn a bounded product idea into an evidence-backed product decision, implementation plan, and reviewable launch package.",
+      "entrypoint": "references/kits/solo-founder.md",
+      "coordinator": "ceo",
+      "reviewers": [
+        "governor"
+      ],
+      "coreAgents": [
+        "ceo",
+        "cpo",
+        "pe",
+        "governor"
+      ],
+      "agents": [
+        "ceo",
+        "cpo",
+        "pe",
+        "cco",
+        "cmo",
+        "governor"
+      ],
+      "outputs": [
+        "Product decision memo",
+        "Test-first delivery plan",
+        "Launch evidence pack",
+        "Governor gate decision"
+      ],
+      "checks": [
+        "scope-approved",
+        "implementation-plan-reviewed",
+        "launch-claims-sourced",
+        "governor-gate-recorded"
+      ]
+    },
+    {
+      "id": "content-creator",
+      "name": "Content Creator",
+      "outcome": "Turn approved source material into cited, channel-aware content and an ethical measurement plan without automatic publishing.",
+      "entrypoint": "references/kits/content-creator.md",
+      "coordinator": "ceo",
+      "reviewers": [
+        "governor"
+      ],
+      "coreAgents": [
+        "ceo",
+        "cro",
+        "cco",
+        "cmo",
+        "governor"
+      ],
+      "agents": [
+        "ceo",
+        "cro",
+        "cco",
+        "cdo",
+        "cmo",
+        "governor"
+      ],
+      "outputs": [
+        "Evidence brief",
+        "Channel-ready draft set",
+        "Measurement plan",
+        "Claims review"
+      ],
+      "checks": [
+        "sources-resolve",
+        "claims-trace-to-evidence",
+        "channel-rules-reviewed",
+        "manual-publish-gate-recorded"
+      ]
+    },
+    {
+      "id": "quant-trader",
+      "name": "Quant Research",
+      "outcome": "Evaluate a quantitative hypothesis with reproducible data controls, realistic backtesting assumptions, and independent risk review.",
+      "entrypoint": "references/kits/quant-trader.md",
+      "coordinator": "ceo",
+      "reviewers": [
+        "governor"
+      ],
+      "coreAgents": [
+        "ceo",
+        "cqo",
+        "cdo",
+        "cfo",
+        "governor"
+      ],
+      "agents": [
+        "ceo",
+        "cqo",
+        "cdo",
+        "cfo",
+        "cro",
+        "governor"
+      ],
+      "outputs": [
+        "Research hypothesis",
+        "Reproducible backtest specification",
+        "Risk memorandum",
+        "Independent gate decision"
+      ],
+      "checks": [
+        "data-lineage-recorded",
+        "leakage-controls-defined",
+        "costs-and-slippage-modeled",
+        "no-live-trade-action"
+      ]
+    },
+    {
+      "id": "product-delivery",
+      "name": "Product Delivery",
+      "outcome": "Convert a validated user problem into an architecture-aware, testable implementation and a review-ready delivery handoff.",
+      "entrypoint": "references/kits/product-delivery.md",
+      "coordinator": "ceo",
+      "reviewers": [
+        "governor"
+      ],
+      "coreAgents": [
+        "ceo",
+        "cpo",
+        "cto",
+        "pe",
+        "governor"
+      ],
+      "agents": [
+        "ceo",
+        "cpo",
+        "cto",
+        "pe",
+        "cdo",
+        "governor"
+      ],
+      "outputs": [
+        "Product brief",
+        "Architecture decision",
+        "Tested change set",
+        "Release handoff"
+      ],
+      "checks": [
+        "acceptance-criteria-testable",
+        "architecture-reviewed",
+        "regression-checks-pass",
+        "rollback-documented"
+      ]
+    },
+    {
+      "id": "research-decision",
+      "name": "Research Decision",
+      "outcome": "Answer a consequential question with primary evidence, explicit uncertainty, domain review, and a bounded executive decision.",
+      "entrypoint": "references/kits/research-decision.md",
+      "coordinator": "ceo",
+      "reviewers": [
+        "governor"
+      ],
+      "coreAgents": [
+        "ceo",
+        "cro",
+        "cdo",
+        "governor"
+      ],
+      "agents": [
+        "ceo",
+        "cro",
+        "cdo",
+        "cfo",
+        "clo",
+        "governor"
+      ],
+      "outputs": [
+        "Answerable research plan",
+        "Evidence map",
+        "Cited synthesis",
+        "Decision memorandum"
+      ],
+      "checks": [
+        "primary-sources-prioritized",
+        "uncertainty-explicit",
+        "domain-risks-reviewed",
+        "decision-boundary-recorded"
+      ]
+    },
+    {
+      "id": "go-to-market",
+      "name": "Go To Market",
+      "outcome": "Build a claim-safe launch and revenue experiment from validated positioning, content, economics, and customer evidence.",
+      "entrypoint": "references/kits/go-to-market.md",
+      "coordinator": "ceo",
+      "reviewers": [
+        "governor"
+      ],
+      "coreAgents": [
+        "ceo",
+        "cpo",
+        "cmo",
+        "cco",
+        "cso",
+        "governor"
+      ],
+      "agents": [
+        "ceo",
+        "cpo",
+        "cro",
+        "cmo",
+        "cco",
+        "cso",
+        "cfo",
+        "clo",
+        "cdo",
+        "governor"
+      ],
+      "outputs": [
+        "Positioning brief",
+        "Launch asset pack",
+        "Revenue experiment",
+        "Risk and measurement gate"
+      ],
+      "checks": [
+        "audience-evidence-recorded",
+        "claims-and-terms-reviewed",
+        "unit-economics-bounded",
+        "manual-launch-gate-recorded"
+      ]
+    },
+    {
+      "id": "operations-response",
+      "name": "Operations Response",
+      "outcome": "Coordinate a bounded operational incident or delivery failure through containment, diagnosis, recovery, and evidence-backed review.",
+      "entrypoint": "references/kits/operations-response.md",
+      "coordinator": "ceo",
+      "reviewers": [
+        "governor"
+      ],
+      "coreAgents": [
+        "ceo",
+        "coo",
+        "cto",
+        "pe",
+        "governor"
+      ],
+      "agents": [
+        "ceo",
+        "coo",
+        "cto",
+        "pe",
+        "cdo",
+        "clo",
+        "governor"
+      ],
+      "outputs": [
+        "Incident scope",
+        "Containment and recovery plan",
+        "Verified recovery evidence",
+        "Post-incident review"
+      ],
+      "checks": [
+        "impact-bounded",
+        "writes-human-approved",
+        "recovery-verified",
+        "follow-up-owners-assigned"
+      ]
+    },
+    {
+      "id": "full-team",
+      "name": "Executive Team",
+      "outcome": "Route a cross-functional company brief through one CEO coordinator, the smallest relevant specialist subset, independent review, and human approval.",
+      "entrypoint": "references/kits/full-team.md",
+      "coordinator": "ceo",
+      "reviewers": [
+        "governor"
+      ],
+      "coreAgents": [
+        "ceo",
+        "coo",
+        "governor"
+      ],
+      "agents": [
+        "ceo",
+        "cto",
+        "pe",
+        "cpo",
+        "cqo",
+        "cmo",
+        "cfo",
+        "cdo",
+        "cco",
+        "clo",
+        "cro",
+        "cso",
+        "coo",
+        "governor"
+      ],
+      "outputs": [
+        "Executive routing plan",
+        "Specialist artifact set",
+        "Independent review",
+        "Verified executive handoff"
+      ],
+      "checks": [
+        "minimum-team-selected",
+        "ownership-non-overlapping",
+        "specialist-evidence-reviewed",
+        "human-approval-recorded"
+      ]
+    }
+  ]
+}

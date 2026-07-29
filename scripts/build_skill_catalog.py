@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from repository_model import load_manifest, physical_skill_names
+from skill_evidence import build_evidence_index
 
 
 TAXONOMY_PATH = Path("config/skill-taxonomy.json")
@@ -57,6 +58,8 @@ class SkillEntry:
     description_status: str
     classification: str
     classification_details: dict[str, Any]
+    provenance: dict[str, Any]
+    curation: dict[str, Any]
 
 
 def _normalize(value: str) -> str:
@@ -376,17 +379,11 @@ def _validate_taxonomy(taxonomy: dict[str, Any], skill_names: set[str]) -> None:
         if set(signals) - set(risk_labels):
             raise ValueError("risk overrides reference unknown labels")
 
-    featured_ids = [item["skill"] for item in taxonomy.get("featured", [])]
-    if len(featured_ids) != len(set(featured_ids)):
-        raise ValueError("featured skill ids must be unique")
-    if set(featured_ids) - skill_names:
-        raise ValueError("featured list references missing skills")
-
-
 def build_entries(root: Path, taxonomy: dict[str, Any]) -> list[SkillEntry]:
     skill_names = physical_skill_names(root)
     _validate_taxonomy(taxonomy, skill_names)
     usage, levels_by_skill = _agent_usage(root)
+    evidence_by_skill = build_evidence_index(root)
     known_risks = {item["id"] for item in taxonomy.get("riskLabels", [])}
     entries: list[SkillEntry] = []
     for skill_id in sorted(skill_names):
@@ -424,6 +421,8 @@ def build_entries(root: Path, taxonomy: dict[str, Any]) -> list[SkillEntry]:
                 description_status=_description_status(description),
                 classification=f"{classification};metadata:{metadata_source}",
                 classification_details=classification_details,
+                provenance=evidence_by_skill[skill_id]["provenance"],
+                curation=evidence_by_skill[skill_id]["curation"],
             )
         )
     return entries
@@ -456,11 +455,38 @@ def _support_label(entry: SkillEntry) -> str:
     return labels[entry.portability_class]
 
 
+def _origin_label(entry: SkillEntry) -> str:
+    labels = {
+        "project-original": "Project original",
+        "adapted": "Adapted",
+        "collected": "Collected",
+        "unknown": "Unknown",
+    }
+    label = labels[entry.provenance["origin_kind"]]
+    if entry.provenance["review_state"] == "stale":
+        return f"{label} · stale review"
+    if entry.provenance["review_state"] == "unreviewed":
+        return f"{label} · unreviewed"
+    return f"{label} · reviewed"
+
+
+def _curation_label(entry: SkillEntry) -> str:
+    status = entry.curation["status"]
+    if status == "stale":
+        return "Stale · score hidden"
+    if status == "unscored":
+        return "Unscored"
+    return f"{entry.curation['score']}/100 · {entry.curation['tier'].title()}"
+
+
+def _runtime_label(entry: SkillEntry) -> str:
+    return str(entry.curation["runtime_evidence"]).replace("-", " ").title()
+
+
 def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
     categories = {item["id"]: item for item in taxonomy["categories"]}
     counts = category_counts(entries, taxonomy)
     by_category: dict[str, list[SkillEntry]] = defaultdict(list)
-    by_id = {entry.skill_id: entry for entry in entries}
     for entry in entries:
         by_category[entry.category_id].append(entry)
 
@@ -473,22 +499,25 @@ def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
         "",
         "**Classification evidence:** inspect the fixed [Gold Set methodology](../docs/skill-taxonomy-gold-set.md) and the machine-readable [reviewed-set agreement report](./skill-taxonomy-evaluation.json). The score measures agreement on reviewed primary-outcome labels; it is not a Skill quality or runtime-success score.",
         "",
-        "## 🚀 Suggested starting points",
+        "**Curation evidence:** origin labels and the separate **Curation evidence score** come from reviewed authored contracts. `Unknown` and `Unscored` are honest defaults; runtime evidence remains a separate field. See the [methodology](../docs/skill-provenance-and-scoring.md).",
         "",
-        "For a first run, prefer a [starter kit](../starter-kits/) or the [Codex package](../.codex/INDEX.md). These are navigation aids, not claims of behavioral verification or a ranking of the full library.",
+        "## 🚀 Selected starting points",
         "",
-        "| Goal | Skill | Support | Why start here |",
-        "|---|---|---|---|",
+        "Only digest-matched, structurally valid Skills with reviewed provenance and a Curation evidence score of at least 75 appear here. Selection is not runtime verification.",
+        "",
+        "| Goal | Skill | Origin | Curation evidence | Runtime | Why start here |",
+        "|---|---|---|---|---|---|",
     ]
-    for item in taxonomy["featured"]:
-        entry = by_id[item["skill"]]
-        support = _support_label(entry)
-        if entry.review_signals:
-            support += " · review: " + ", ".join(entry.review_signals)
+    selected_entries = sorted(
+        (entry for entry in entries if entry.curation["status"] == "selected"),
+        key=lambda entry: (-int(entry.curation["score"]), entry.skill_id),
+    )
+    for entry in selected_entries:
         lines.append(
-            f"| {_category_label(categories[item['category']])} | "
+            f"| {_category_label(categories[entry.category_id])} | "
             f"[`{entry.skill_id}`](../skills/{entry.skill_id}/) | "
-            f"{support} | {_escape_markdown(item['reason'])} |"
+            f"{_origin_label(entry)} | {_curation_label(entry)} | "
+            f"{_runtime_label(entry)} | {_escape_markdown(str(entry.curation['reason']))} |"
         )
 
     lines.extend(
@@ -518,8 +547,8 @@ def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
                 "",
                 category["description"],
                 "",
-                "| Skill | What it helps with | Support / review signals |",
-                "|---|---|---|",
+                "| Skill | What it helps with | Origin | Curation evidence | Support / review signals |",
+                "|---|---|---|---|---|",
             ]
         )
         for entry in by_category[category_id]:
@@ -536,7 +565,8 @@ def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
             )
             lines.append(
                 f"| [`{entry.skill_id}`](../skills/{entry.skill_id}/) | "
-                f"{_escape_markdown(description)} | {support} |"
+                f"{_escape_markdown(description)} | {_origin_label(entry)} | "
+                f"{_curation_label(entry)} | {support} |"
             )
 
     lines.extend(
@@ -553,6 +583,8 @@ def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
             "",
             "Review signals are conservative manual flags, not a complete safety analysis. Their absence does not establish safety. Classification is deterministic but not a quality score.",
             "",
+            "A Curation evidence score is a digest-matched review of instruction design, resources, safety, provenance, and outcome evidence. It is not a runtime receipt; stale content hides the number until re-review.",
+            "",
             "Inspect the source, permissions, dependencies, provenance, and license before use. Report a wrong category or missing risk flag through [an issue](https://github.com/aaaaqwq/AGI-Super-Team/issues).",
             "",
         ]
@@ -564,7 +596,7 @@ def render_json(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
     counts = category_counts(entries, taxonomy)
     document = {
         "$schema": "../config/skill-index.schema.json",
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "inventorySemantics": "tracked physical top-level directories with SKILL.md",
         "inventoryCount": len(entries),
         "categories": [

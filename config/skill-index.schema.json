@@ -7,7 +7,7 @@
   "required": ["$schema", "schemaVersion", "inventorySemantics", "inventoryCount", "categories", "skills"],
   "properties": {
     "$schema": {"const": "../config/skill-index.schema.json"},
-    "schemaVersion": {"const": 1},
+    "schemaVersion": {"const": 2},
     "inventorySemantics": {"type": "string", "minLength": 20},
     "inventoryCount": {"type": "integer", "minimum": 0},
     "categories": {
@@ -166,10 +166,63 @@
         "level": {"enum": ["required", "optional", "harnessSpecific"]}
       }
     },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origin_kind", "review_state"],
+      "properties": {
+        "origin_kind": {"enum": ["project-original", "adapted", "collected", "unknown"]},
+        "review_state": {"enum": ["reviewed", "unreviewed", "stale"]},
+        "authors": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "creation_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+        "license": {"type": "object"},
+        "upstream": {"type": "object"},
+        "adaptations": {"type": "array", "items": {"type": "string"}},
+        "declared_hints": {"type": "array", "items": {"type": "string"}},
+        "evidence": {"type": "array", "items": {"type": "string"}}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"origin_kind": {"const": "unknown"}}, "required": ["origin_kind"]},
+          "then": {"properties": {"review_state": {"enum": ["unreviewed", "stale"]}}}
+        },
+        {
+          "if": {"properties": {"review_state": {"const": "reviewed"}}, "required": ["review_state"]},
+          "then": {"not": {"properties": {"origin_kind": {"const": "unknown"}}, "required": ["origin_kind"]}}
+        }
+      ]
+    },
+    "curation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "runtime_evidence"],
+      "properties": {
+        "status": {"enum": ["unscored", "stale", "selected", "candidate", "hold"]},
+        "runtime_evidence": {"enum": ["pending", "prompt-tested", "fixture-one-harness", "fixture-two-harness", "external-beta"]},
+        "reviewed_at": {"type": "string", "format": "date"},
+        "score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "tier": {"enum": ["exemplary", "recommended", "selected", "candidate", "hold"]},
+        "dimensions": {"type": "object"},
+        "reason": {"type": "string"},
+        "evidence": {"type": "array", "items": {"type": "string"}},
+        "limitations": {"type": "array", "items": {"type": "string"}}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"enum": ["unscored", "stale"]}}, "required": ["status"]},
+          "then": {
+            "not": {"anyOf": [{"required": ["score"]}, {"required": ["tier"]}, {"required": ["dimensions"]}]}
+          },
+          "else": {
+            "required": ["reviewed_at", "score", "tier", "dimensions", "reason", "evidence", "limitations"]
+          }
+        }
+      ]
+    },
     "skill": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["skill_id", "category_id", "description", "support_level", "used_by", "assignments", "portability_class", "review_signals", "description_status", "classification", "classification_details", "path"],
+      "required": ["skill_id", "category_id", "description", "support_level", "used_by", "assignments", "portability_class", "review_signals", "description_status", "classification", "classification_details", "provenance", "curation", "path"],
       "properties": {
         "skill_id": {"$ref": "#/$defs/skillIdentifier"},
         "category_id": {"$ref": "#/$defs/identifier"},
@@ -182,6 +235,8 @@
         "description_status": {"enum": ["source-text", "needs-review"]},
         "classification": {"type": "string", "minLength": 1},
         "classification_details": {"$ref": "#/$defs/classificationDetails"},
+        "provenance": {"$ref": "#/$defs/provenance"},
+        "curation": {"$ref": "#/$defs/curation"},
         "path": {"type": "string", "pattern": "^skills/[a-z0-9]+(?:[-_][a-z0-9]+)*/SKILL\\.md$"}
       },
       "oneOf": [
@@ -189,8 +244,7 @@
           "properties": {
             "assignments": {
               "minItems": 1,
-              "contains": {"properties": {"level": {"const": "required"}}, "required": ["level"]},
-              "items": {"allOf": [{"$ref": "#/$defs/assignment"}, {"properties": {"level": {"const": "required"}}}]}
+              "contains": {"properties": {"level": {"const": "required"}}, "required": ["level"]}
             },
             "portability_class": {"const": "portable-required"},
             "support_level": {"const": "pack-required"}
@@ -201,7 +255,7 @@
             "assignments": {
               "minItems": 1,
               "contains": {"properties": {"level": {"const": "optional"}}, "required": ["level"]},
-              "items": {"allOf": [{"$ref": "#/$defs/assignment"}, {"properties": {"level": {"const": "optional"}}}]}
+              "not": {"contains": {"properties": {"level": {"const": "required"}}, "required": ["level"]}}
             },
             "portability_class": {"const": "portable-optional"},
             "support_level": {"const": "catalog"}
@@ -212,7 +266,10 @@
             "assignments": {
               "minItems": 1,
               "contains": {"properties": {"level": {"const": "harnessSpecific"}}, "required": ["level"]},
-              "items": {"allOf": [{"$ref": "#/$defs/assignment"}, {"properties": {"level": {"const": "harnessSpecific"}}}]}
+              "allOf": [
+                {"not": {"contains": {"properties": {"level": {"const": "required"}}, "required": ["level"]}}},
+                {"not": {"contains": {"properties": {"level": {"const": "optional"}}, "required": ["level"]}}}
+              ]
             },
             "portability_class": {"const": "harness-specific"},
             "support_level": {"const": "catalog"}

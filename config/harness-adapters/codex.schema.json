@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aAAaqwq/AGI-Super-Team/config/harness-adapters/codex.schema.json",
+  "title": "AGI Super Team Codex C-suite adapter",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "harness",
+    "coordinator",
+    "independentReviewer",
+    "maxParallelLeaves",
+    "fallbackModes",
+    "runtimeEvidence",
+    "agentMap"
+  ],
+  "properties": {
+    "$schema": {"const": "./codex.schema.json"},
+    "schemaVersion": {"const": 1},
+    "harness": {"const": "codex"},
+    "coordinator": {"const": "ceo"},
+    "independentReviewer": {"const": "governor"},
+    "maxParallelLeaves": {"type": "integer", "minimum": 1, "maximum": 4},
+    "fallbackModes": {
+      "const": ["native", "manual", "sequential"]
+    },
+    "runtimeEvidence": {
+      "enum": ["pending", "fixture-tested", "external-receipt"]
+    },
+    "agentMap": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {"pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+      "additionalProperties": {"type": "string", "pattern": "^ast-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+    }
+  }
+}

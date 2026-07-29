@@ -4,7 +4,7 @@
   "title": "AGI Super Team skill taxonomy",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "categories", "overrides", "overrideRationales", "riskLabels", "riskOverrides", "featured"],
+  "required": ["schemaVersion", "categories", "overrides", "overrideRationales", "riskLabels", "riskOverrides"],
   "properties": {
     "$schema": {"type": "string"},
     "schemaVersion": {"const": 2},
@@ -53,20 +53,6 @@
         "type": "array",
         "items": {"type": "string"},
         "uniqueItems": true
-      }
-    },
-    "featured": {
-      "type": "array",
-      "minItems": 6,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["skill", "category", "reason"],
-        "properties": {
-          "skill": {"type": "string"},
-          "category": {"type": "string"},
-          "reason": {"type": "string", "minLength": 12}
-        }
       }
     }
   }

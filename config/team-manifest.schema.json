@@ -78,6 +78,9 @@
         "id",
         "name",
         "path",
+        "focus",
+        "outputs",
+        "boundary",
         "skills"
       ],
       "properties": {
@@ -91,6 +94,24 @@
         "path": {
           "type": "string",
           "pattern": "^agents/[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "focus": {
+          "type": "string",
+          "minLength": 24
+        },
+        "outputs": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "boundary": {
+          "type": "string",
+          "minLength": 24
         },
         "skills": {
           "type": "object",
@@ -123,15 +144,73 @@
       "additionalProperties": false,
       "required": [
         "id",
-        "agents"
+        "name",
+        "outcome",
+        "entrypoint",
+        "coordinator",
+        "reviewers",
+        "coreAgents",
+        "agents",
+        "outputs",
+        "checks"
       ],
       "properties": {
         "id": {
           "$ref": "#/$defs/identifier"
         },
-        "agents": {
+        "name": {
+          "type": "string",
+          "minLength": 3
+        },
+        "outcome": {
+          "type": "string",
+          "minLength": 24
+        },
+        "entrypoint": {
+          "type": "string",
+          "pattern": "^starter-kits/[a-z0-9]+(?:-[a-z0-9]+)*/RUNBOOK\\.md$"
+        },
+        "coordinator": {
+          "$ref": "#/$defs/identifier"
+        },
+        "reviewers": {
           "type": "array",
           "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "coreAgents": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "agents": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
           "uniqueItems": true,
           "items": {
             "$ref": "#/$defs/identifier"

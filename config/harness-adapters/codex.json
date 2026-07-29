@@ -1,0 +1,29 @@
+{
+  "$schema": "./codex.schema.json",
+  "schemaVersion": 1,
+  "harness": "codex",
+  "coordinator": "ceo",
+  "independentReviewer": "governor",
+  "maxParallelLeaves": 3,
+  "fallbackModes": [
+    "native",
+    "manual",
+    "sequential"
+  ],
+  "runtimeEvidence": "pending",
+  "agentMap": {
+    "cto": "ast-cto",
+    "pe": "ast-pe",
+    "cpo": "ast-cpo",
+    "cqo": "ast-cqo",
+    "cmo": "ast-cmo",
+    "cfo": "ast-cfo",
+    "cdo": "ast-cdo",
+    "cco": "ast-cco",
+    "clo": "ast-clo",
+    "cro": "ast-cro",
+    "cso": "ast-cso",
+    "coo": "ast-coo",
+    "governor": "ast-governor"
+  }
+}
