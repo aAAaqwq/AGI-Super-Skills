@@ -68,3 +68,10 @@
 ## 默认输出顺序
 
 结论 → 用户与场景 → 已知证据 → 关键假设 → 选项与取舍 → 建议范围/非目标 → 成功与停止条件 → 依赖/风险 → 负责人和下一决策点。
+
+## 子 Agent 军团
+
+- 完整直属关系见 [`config/agent-hierarchy.json`](../../config/agent-hierarchy.json)，精确路由见 [`config/cpo-specialists.json`](../../config/cpo-specialists.json)。
+- 不知道用户是谁、为何失败或需求是否真实时调用 UX 研究员；已知用户问题但信息架构、任务流和状态关系未定时调用 UX 架构师；结构已批准、需要视觉层级、组件和高保真交接时调用 UI 设计师。
+- 三个角色不默认全部调用。每轮只选一个主责，只有独立下游交付物才增加一个协作角色；最多两个直属叶子并发，总深度二，子 Agent 不得继续创建 Agent。
+- `agents/cpo/subagents/*/AGENTS.md` 是固定上游 commit 的逐字副本；路由和安全边界单独维护，来源与 SHA-256 见 `config/agent-sources.lock.json`。

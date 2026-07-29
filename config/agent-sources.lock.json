@@ -1,0 +1,449 @@
+{
+  "schemaVersion": 1,
+  "repository": "https://github.com/jnMetaCode/agency-agents-zh",
+  "commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977",
+  "license": "MIT",
+  "notice": "plugins/agi-super-team-codex/THIRD_PARTY_NOTICES.md",
+  "entries": [
+    {
+      "manager": "cco",
+      "id": "xiaohongshu-operator",
+      "name": "小红书运营专家",
+      "sourcePath": "marketing/marketing-xiaohongshu-operator.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-xiaohongshu-operator.md",
+      "vendoredPath": "agents/cco/subagents/xiaohongshu-operator/AGENTS.md",
+      "sha256": "1d48333fbe54906ad76af8096b0a8a7d8bc26b1d12a3507e94f070d2c0b83d93",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "douyin-strategist",
+      "name": "抖音策略师",
+      "sourcePath": "marketing/marketing-douyin-strategist.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-douyin-strategist.md",
+      "vendoredPath": "agents/cco/subagents/douyin-strategist/AGENTS.md",
+      "sha256": "7482d0758335fe95a6f6839e5efefeee4503a4aa83a1f1d07bd1b0f4f63c1de0",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "wechat-operator",
+      "name": "微信公众号运营",
+      "sourcePath": "marketing/marketing-wechat-operator.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-wechat-operator.md",
+      "vendoredPath": "agents/cco/subagents/wechat-operator/AGENTS.md",
+      "sha256": "7311b34a39a47718cc32c80b2ebd9ea682eff2ba9cadf58f3cd1b8741c83a322",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "bilibili-strategist",
+      "name": "B站内容策略师",
+      "sourcePath": "marketing/marketing-bilibili-strategist.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-bilibili-strategist.md",
+      "vendoredPath": "agents/cco/subagents/bilibili-strategist/AGENTS.md",
+      "sha256": "bb718aaf407144b09105ca3da19a903c1cceedb7ac7f574b40f21bc3af4fe009",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "short-video-editing-coach",
+      "name": "短视频剪辑指导师",
+      "sourcePath": "marketing/marketing-short-video-editing-coach.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-short-video-editing-coach.md",
+      "vendoredPath": "agents/cco/subagents/short-video-editing-coach/AGENTS.md",
+      "sha256": "ac43113ca1c14ca26587c7223ff40a729fb58f980c29cadd6a18607c850e2c22",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "weixin-channels-strategist",
+      "name": "微信视频号运营策略师",
+      "sourcePath": "marketing/marketing-weixin-channels-strategist.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-weixin-channels-strategist.md",
+      "vendoredPath": "agents/cco/subagents/weixin-channels-strategist/AGENTS.md",
+      "sha256": "871905f8636591766d8931951491599c5094687d81b37b9aaddff69893200113",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "knowledge-commerce-strategist",
+      "name": "知识付费产品策划师",
+      "sourcePath": "marketing/marketing-knowledge-commerce-strategist.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-knowledge-commerce-strategist.md",
+      "vendoredPath": "agents/cco/subagents/knowledge-commerce-strategist/AGENTS.md",
+      "sha256": "44abeb16eacd28ee0c364f04652f71c89f180b807c6fd83e3fb0879793b054cc",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "xiaohongshu-specialist",
+      "name": "小红书专家",
+      "sourcePath": "marketing/marketing-xiaohongshu-specialist.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-xiaohongshu-specialist.md",
+      "vendoredPath": "agents/cco/subagents/xiaohongshu-specialist/AGENTS.md",
+      "sha256": "e5e6127be028d61a15b59839c629b4c19d2b7b61f33bc53efb29110a92544f5d",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "wechat-official-account-manager",
+      "name": "微信公众号管理",
+      "sourcePath": "marketing/marketing-wechat-official-account.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-wechat-official-account.md",
+      "vendoredPath": "agents/cco/subagents/wechat-official-account-manager/AGENTS.md",
+      "sha256": "840a72d99f8472bba032f671fef4ba5afc7b9afec4113b7df28e165f0572883b",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "zhihu-strategist",
+      "name": "知乎策略师",
+      "sourcePath": "marketing/marketing-zhihu-strategist.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-zhihu-strategist.md",
+      "vendoredPath": "agents/cco/subagents/zhihu-strategist/AGENTS.md",
+      "sha256": "2c5ef7bc1120e568d2ff19059cbc66fbbf97b18807c926139a9516c3b280eb0d",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "twitter-engager",
+      "name": "Twitter 互动官",
+      "sourcePath": "marketing/marketing-twitter-engager.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-twitter-engager.md",
+      "vendoredPath": "agents/cco/subagents/twitter-engager/AGENTS.md",
+      "sha256": "c09743e819777cea81c956b6176c0048f0e6c6a60c3039e1f8b7e730f6e89a30",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "instagram-curator",
+      "name": "Instagram 策展师",
+      "sourcePath": "marketing/marketing-instagram-curator.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-instagram-curator.md",
+      "vendoredPath": "agents/cco/subagents/instagram-curator/AGENTS.md",
+      "sha256": "e4a2822928c5d4184473fa30555993abac09d3e1b9811bde005127d732f96cb2",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "reddit-community-operator",
+      "name": "Reddit 社区运营",
+      "sourcePath": "marketing/marketing-reddit-community-builder.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-reddit-community-builder.md",
+      "vendoredPath": "agents/cco/subagents/reddit-community-operator/AGENTS.md",
+      "sha256": "10098662dfc977f9644baaed810cb2236cf3b319b5fed5e8d0dcf51edaf5812e",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "video-optimization-specialist",
+      "name": "视频优化专家",
+      "sourcePath": "marketing/marketing-video-optimization-specialist.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-video-optimization-specialist.md",
+      "vendoredPath": "agents/cco/subagents/video-optimization-specialist/AGENTS.md",
+      "sha256": "be248c25319a7a8aa96052b7fbd2b5d55bc5411aebe76cc29b30620d5c0db385",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "growth-hacker",
+      "name": "增长黑客",
+      "sourcePath": "marketing/marketing-growth-hacker.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-growth-hacker.md",
+      "vendoredPath": "agents/cco/subagents/growth-hacker/AGENTS.md",
+      "sha256": "d0e6e05c1b6d506ec34befa796fc2020e071869978cf9f3645a72fc0acddbff3",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "seo-specialist",
+      "name": "SEO专家",
+      "sourcePath": "marketing/marketing-seo-specialist.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-seo-specialist.md",
+      "vendoredPath": "agents/cco/subagents/seo-specialist/AGENTS.md",
+      "sha256": "3a6099d7c8982bbbd390e844f1b32c2c23c317feb233f2e9a9797b90cd3767af",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "ai-citation-strategist",
+      "name": "AI 引文策略师",
+      "sourcePath": "marketing/marketing-ai-citation-strategist.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/marketing/marketing-ai-citation-strategist.md",
+      "vendoredPath": "agents/cco/subagents/ai-citation-strategist/AGENTS.md",
+      "sha256": "13b52ae43e1dfe0f0e6bba2688ec991d3bb446bcbdfb69eec91426830ee421ff",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "prompt-engineer",
+      "name": "提示词工程师",
+      "sourcePath": "specialized/prompt-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/specialized/prompt-engineer.md",
+      "vendoredPath": "agents/cco/subagents/prompt-engineer/AGENTS.md",
+      "sha256": "96abf6dc6efb74391c27248b440ba605f6954510193b1846c626f98ccac56b71",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cco",
+      "id": "content-illustration-planner",
+      "name": "图像提示词工程师",
+      "sourcePath": "design/design-image-prompt-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/design/design-image-prompt-engineer.md",
+      "vendoredPath": "agents/cco/subagents/content-illustration-planner/AGENTS.md",
+      "sha256": "78400484719d2b3c6889735befe0d01215d2b51a86011a90222e4df70a70781d",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "frontend-developer",
+      "name": "前端开发者",
+      "sourcePath": "engineering/engineering-frontend-developer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-frontend-developer.md",
+      "vendoredPath": "agents/cto/subagents/frontend-developer/AGENTS.md",
+      "sha256": "d6a428dd719c950ee0137fa4053ef0fb2cc9403aa2fdf5613832bbd4d5344055",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "backend-architect",
+      "name": "后端架构师",
+      "sourcePath": "engineering/engineering-backend-architect.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-backend-architect.md",
+      "vendoredPath": "agents/cto/subagents/backend-architect/AGENTS.md",
+      "sha256": "8fe4312fa28978e6939d77cb09170b6fbb3b353306a6f55595f6ca27d56e6793",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "ai-engineer",
+      "name": "AI 工程师",
+      "sourcePath": "engineering/engineering-ai-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-ai-engineer.md",
+      "vendoredPath": "agents/cto/subagents/ai-engineer/AGENTS.md",
+      "sha256": "961924c67bf689c185ccb5f7ec5e10a3ba4f7db15b93b4512e916c5234017a09",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "devops-automator",
+      "name": "DevOps 自动化师",
+      "sourcePath": "engineering/engineering-devops-automator.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-devops-automator.md",
+      "vendoredPath": "agents/cto/subagents/devops-automator/AGENTS.md",
+      "sha256": "ea09f7bf48628a20b1132cc45d1510933c98be441c35f7fa77fecabd9576147d",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "security-engineer",
+      "name": "安全工程师",
+      "sourcePath": "engineering/engineering-security-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-security-engineer.md",
+      "vendoredPath": "agents/cto/subagents/security-engineer/AGENTS.md",
+      "sha256": "2d71dada5f2d938da90fbff1d6933b0c0c7775ef2c67c13529af0e80bdd6b52f",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "rapid-prototyper",
+      "name": "快速原型师",
+      "sourcePath": "engineering/engineering-rapid-prototyper.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-rapid-prototyper.md",
+      "vendoredPath": "agents/cto/subagents/rapid-prototyper/AGENTS.md",
+      "sha256": "6f8b18a7f612b0563401d4c101f64414aba12dc5e19812b2bf7329f7943eb50b",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "senior-developer",
+      "name": "高级开发者",
+      "sourcePath": "engineering/engineering-senior-developer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-senior-developer.md",
+      "vendoredPath": "agents/cto/subagents/senior-developer/AGENTS.md",
+      "sha256": "be10be0af5ae0af3e5508d57321610fadb14b5fec03607b5751ce6b1d6ef584a",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "mobile-app-builder",
+      "name": "移动应用开发者",
+      "sourcePath": "engineering/engineering-mobile-app-builder.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-mobile-app-builder.md",
+      "vendoredPath": "agents/cto/subagents/mobile-app-builder/AGENTS.md",
+      "sha256": "0293ed98a5b77441c6a5681bd3e048424662ec45730b86f4b2d169c2337de9e2",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "data-engineer",
+      "name": "数据工程师",
+      "sourcePath": "engineering/engineering-data-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-data-engineer.md",
+      "vendoredPath": "agents/cto/subagents/data-engineer/AGENTS.md",
+      "sha256": "b09eea5e3096e649c0599b448b8e48db70e5f7d45f16f630b5c9deaf7be29656",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "technical-writer",
+      "name": "技术文档工程师",
+      "sourcePath": "engineering/engineering-technical-writer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-technical-writer.md",
+      "vendoredPath": "agents/cto/subagents/technical-writer/AGENTS.md",
+      "sha256": "736c31430de535e3bbbf3231244d537358eb35fbc8b5615887a69cf0534dac6d",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "autonomous-optimization-architect",
+      "name": "自主优化架构师",
+      "sourcePath": "engineering/engineering-autonomous-optimization-architect.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-autonomous-optimization-architect.md",
+      "vendoredPath": "agents/cto/subagents/autonomous-optimization-architect/AGENTS.md",
+      "sha256": "127db14dc99315b16283da3aff1f286277f1408c2da3d690ba2111441fc1cdde",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "embedded-firmware-engineer",
+      "name": "嵌入式固件工程师",
+      "sourcePath": "engineering/engineering-embedded-firmware-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-embedded-firmware-engineer.md",
+      "vendoredPath": "agents/cto/subagents/embedded-firmware-engineer/AGENTS.md",
+      "sha256": "9f0e73007ba56460154c3cd0e2e691c69053b73d6fa816ed70c51bbb197abf2f",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "pc-host-engineer",
+      "name": "上位机工程师",
+      "sourcePath": "engineering/engineering-pc-host-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-pc-host-engineer.md",
+      "vendoredPath": "agents/cto/subagents/pc-host-engineer/AGENTS.md",
+      "sha256": "489109a2d6897c48e0f733c604e647aa8f69476d45860a6ce7d0de1de5ada476",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "mechanical-design-engineer",
+      "name": "机械设计工程师",
+      "sourcePath": "engineering/engineering-mechanical-design-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-mechanical-design-engineer.md",
+      "vendoredPath": "agents/cto/subagents/mechanical-design-engineer/AGENTS.md",
+      "sha256": "017e724ee8b941993cc518d34d72f9debe15d6062e5bce04c9aa1ad4df218878",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "embedded-linux-driver-engineer",
+      "name": "嵌入式 Linux 驱动工程师",
+      "sourcePath": "engineering/engineering-embedded-linux-driver-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-embedded-linux-driver-engineer.md",
+      "vendoredPath": "agents/cto/subagents/embedded-linux-driver-engineer/AGENTS.md",
+      "sha256": "299ed78b0ad7e592c2014a795fbd67d821343d24e41fb4ceb45487fa8952793e",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "fpga-digital-design-engineer",
+      "name": "FPGA/ASIC 数字设计工程师",
+      "sourcePath": "engineering/engineering-fpga-digital-design-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-fpga-digital-design-engineer.md",
+      "vendoredPath": "agents/cto/subagents/fpga-digital-design-engineer/AGENTS.md",
+      "sha256": "efd3dc3642485e3669d7b6b767c9a6a9770f1b4fa5b6adfcff6b9eb0396aac7b",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "iot-solution-architect",
+      "name": "IoT 方案架构师",
+      "sourcePath": "engineering/engineering-iot-solution-architect.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-iot-solution-architect.md",
+      "vendoredPath": "agents/cto/subagents/iot-solution-architect/AGENTS.md",
+      "sha256": "30f2294925cd07f8acb9ee74057945d52a6fd01424bbc41397a91bb597b23d17",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "network-engineer-china",
+      "name": "国内网络工程师",
+      "sourcePath": "engineering/engineering-network-engineer-china.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-network-engineer-china.md",
+      "vendoredPath": "agents/cto/subagents/network-engineer-china/AGENTS.md",
+      "sha256": "9525700edb247ea2e5e0dfeca3e73edfc87234062ca0af07aa095c452b98b0e2",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "incident-response-commander",
+      "name": "故障响应指挥官",
+      "sourcePath": "engineering/engineering-incident-response-commander.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-incident-response-commander.md",
+      "vendoredPath": "agents/cto/subagents/incident-response-commander/AGENTS.md",
+      "sha256": "9ae5d1f2e80e987b5c9117ad06e5d1058056ce463ea05596db2852f1266e55b6",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "threat-detection-engineer",
+      "name": "威胁检测工程师（工程侧）",
+      "sourcePath": "engineering/engineering-threat-detection-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-threat-detection-engineer.md",
+      "vendoredPath": "agents/cto/subagents/threat-detection-engineer/AGENTS.md",
+      "sha256": "50fd375ea270678399525cab3abdc1a856f48e751725d8288482c0c4959e294f",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "solidity-smart-contract-engineer",
+      "name": "Solidity 智能合约工程师",
+      "sourcePath": "engineering/engineering-solidity-smart-contract-engineer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-solidity-smart-contract-engineer.md",
+      "vendoredPath": "agents/cto/subagents/solidity-smart-contract-engineer/AGENTS.md",
+      "sha256": "f278652abb896ac1004c96fb503db77b58dc3a30ffe62c408cd4eea2e1eee061",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cto",
+      "id": "wechat-mini-program-developer",
+      "name": "微信小程序开发者",
+      "sourcePath": "engineering/engineering-wechat-mini-program-developer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/engineering/engineering-wechat-mini-program-developer.md",
+      "vendoredPath": "agents/cto/subagents/wechat-mini-program-developer/AGENTS.md",
+      "sha256": "d9a32063f86864f9c35f91df113d042e97278ffbe038ec92ba18d4eb625ccfcd",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cpo",
+      "id": "ui-designer",
+      "name": "UI 设计师",
+      "sourcePath": "design/design-ui-designer.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/design/design-ui-designer.md",
+      "vendoredPath": "agents/cpo/subagents/ui-designer/AGENTS.md",
+      "sha256": "281edf2c63124b5762bf01a6995087a3734a186d65135bc0d80218d7ef659684",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cpo",
+      "id": "ux-researcher",
+      "name": "UX 研究员",
+      "sourcePath": "design/design-ux-researcher.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/design/design-ux-researcher.md",
+      "vendoredPath": "agents/cpo/subagents/ux-researcher/AGENTS.md",
+      "sha256": "c47fc392cb91cb05bb422b57e7f6ffc86f1974394548f4c8ab18f293e084c78e",
+      "copyMode": "verbatim"
+    },
+    {
+      "manager": "cpo",
+      "id": "ux-architect",
+      "name": "UX 架构师",
+      "sourcePath": "design/design-ux-architect.md",
+      "sourceUrl": "https://github.com/jnMetaCode/agency-agents-zh/blob/2ecfabf8e944ccdfed63ad8c44d5241290af6977/design/design-ux-architect.md",
+      "vendoredPath": "agents/cpo/subagents/ux-architect/AGENTS.md",
+      "sha256": "d53059c7e304bf9d3023e55686b80981ccc0829e6610e94fe0f43b4f0e97f2ef",
+      "copyMode": "verbatim"
+    }
+  ]
+}

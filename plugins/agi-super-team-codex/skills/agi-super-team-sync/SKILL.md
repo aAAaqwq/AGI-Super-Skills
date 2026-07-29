@@ -10,7 +10,7 @@ description: Preview, install, or update AGI Super Team in Codex. Use when the u
 Install AGI Super Team in two explicit layers:
 
 1. A managed Musk CEO block in the user's global `AGENTS.md`, making the current Codex parent the CEO coordinator in every repository.
-2. One or more outcome Teams backed by the generated `ast-*` C-suite leaf agents.
+2. One or more outcome Teams backed by generated `ast-*` C-suite roles. CTO, CPO, and CCO may route to their optional specialist groups when installed.
 
 The installer preserves content outside its managed block, never deletes unrelated agents, leaves `config.toml` unchanged, previews by default, and backs up replaced files.
 
@@ -42,6 +42,8 @@ python3 "<absolute-skill-directory>/scripts/sync_codex_agents.py"
 python3 "<absolute-skill-directory>/scripts/sync_codex_agents.py" --install
 ```
 
+To install only the executive pyramids, use `--with-subagents cto`, `cpo`, or `cco` (repeatable), or `--all-subagents`. `--with-cco-specialists` remains a compatibility alias.
+
 ## Safety Rules
 
 - Never copy credentials, conversation databases, memory stores, `config.toml`, or unrelated local backups.
@@ -54,14 +56,14 @@ python3 "<absolute-skill-directory>/scripts/sync_codex_agents.py" --install
 
 ## Configuration
 
-This Skill deliberately leaves `~/.codex/config.toml` unchanged. The eight parent-led outcome Teams work with depth 1. For wider Team runs, recommend reviewing settings such as:
+This Skill deliberately leaves `~/.codex/config.toml` unchanged. Parent-led C-suite leaves work with depth 1. CTO/CPO/CCO-managed specialists require depth 2; recommend reviewing settings such as:
 
 ```toml
 [agents]
 max_threads = 4
-max_depth = 1
+max_depth = 2
 job_max_runtime_seconds = 1800
 interrupt_message = true
 ```
 
-Explain that these values are recommendations, not requirements. Preserve existing settings and let the user decide before editing them.
+Explain that depth 2 is a functional requirement only for an executive spawning its own specialists. Preserve existing settings and let the user decide before editing them; if depth remains 1, the parent CEO must dispatch the selected specialist directly and report that flat fallback honestly. With four threads, run one manager plus at most two children per wave.

@@ -38,6 +38,27 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
 
 对 OpenClaw，安装器只生成 Agent Workspace，不会自动注册；请先审查内容，再显式注册需要的 Workspace。
 
+### 安装高管子 Agent 军团
+
+默认仍只安装 14 个顶层角色。按需增加一个直属军团，或一次安装全部 44 个专家：
+
+```bash
+# 先预览，再把相同命令加上 --install
+npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cto
+npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cpo --with-subagents cco
+npx -y github:aAAaqwq/AGI-Super-Team --tool codex --all-subagents --install
+```
+
+组织关系采用三层金字塔：CEO → CTO/CPO/CCO → 直属叶子。CTO 另外引用现有 PE 作为生产交付负责人，不复制第二份 PE 身份。44 份 `agents/<高管>/subagents/<角色>/AGENTS.md` 均从 `jnMetaCode/agency-agents-zh` 固定提交逐字复制；本项目的触发、排除、输入、交付、验收与安全边界单独维护，不改写上游原文。来源链接和 SHA-256 见 [`config/agent-sources.lock.json`](./config/agent-sources.lock.json)。
+
+| 管理者 | 直属角色 | 路由重点 |
+|---|---:|---|
+| CTO | 22 个工程专家 + canonical PE | 窄领域不确定性先交专家；已批准的跨模块生产交付交 PE |
+| CPO | 3 个设计专家 | 未知用户问题 → UX 研究；未知结构 → UX 架构；结构已定 → UI 设计 |
+| CCO | 19 个内容增长专家 | 先按工作对象、平台、生产阶段消歧；一个主责，最多一个协作 |
+
+Codex 的嵌套调用需要 `max_depth = 2`。在 `max_threads = 4` 下，一次只运行一个管理者波次：CEO + 一个高管 + 最多两个直属叶子。若深度仍为 1，由 CEO 平铺调用同一专家并如实标记降级，不声称高管完成了嵌套委派。
+
 这里列出的是 **18 个 AI 客户端/运行时适配目标**，不是 18 个功能相同的 CLI。适配器可能安装原生 Agent、原生 Skill、项目规则/上下文，或把角色包降级为 Agent-as-Skill。文件写入成功不等于当前客户端已经加载或执行这些内容。
 
 ### 18 个适配目标矩阵
@@ -106,7 +127,7 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
 | 层级 | 你会得到什么 | 为什么有用 |
 |---|---|---|
 | **🧩 Skills** | 按 14 类成果组织的权威实体 `SKILL.md` | 为重复任务复用聚焦方法，不必每次重写指令 |
-| **🤖 Agents** | 14 个可检查的角色包，包含人格、工作流和工具指南 | 让规划、工程、内容、研究和审查拥有明确负责人 |
+| **🤖 Agents** | 14 个顶层角色包 + 44 个可选直属专家，包含人格、工作流、精确路由和来源锁 | 让规划、工程、产品、内容、研究和审查拥有明确负责人 |
 | **🔁 Team Packs** | 8 个由 manifest 驱动的成果型 Team，覆盖 Solo Founder 到 Full Team | 围绕成果启用最小充分团队，而不是一开始加载全部角色 |
 
 <p>
@@ -258,7 +279,7 @@ npm run check:architecture
 flowchart LR
   subgraph R["AGI Super Team 仓库：版本化内容，不是运行时"]
     S["skills/<br/>可复用方法"]
-    A["agents/<br/>14 个角色包"]
+    A["agents/<br/>14 个顶层角色 + 44 个可选专家"]
     M["team-manifest.json<br/>4 个团队包 + Skills 映射"]
     C["plugins/agi-super-team-codex/<br/>Codex 精选包"]
   end

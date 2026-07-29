@@ -27,6 +27,25 @@ class CodexTeamAdapterTests(unittest.TestCase):
             manifest_path.read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        for relative in (
+            "config/agent-hierarchy.json",
+            "config/cto-specialists.json",
+            "config/cpo-specialists.json",
+            "config/cco-specialists.json",
+        ):
+            destination = temporary_root / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_text(
+                (ROOT / relative).read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
+        hierarchy = json.loads((ROOT / "config/agent-hierarchy.json").read_text(encoding="utf-8"))
+        for manager, settings in hierarchy["managers"].items():
+            for role in settings["subagents"]:
+                relative = Path("agents") / manager / "subagents" / role / "AGENTS.md"
+                destination = temporary_root / relative
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes((ROOT / relative).read_bytes())
         for kit in manifest["kits"]:
             source = ROOT / kit["entrypoint"]
             destination = temporary_root / kit["entrypoint"]
@@ -77,7 +96,7 @@ class CodexTeamAdapterTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
-    def test_every_mapped_agent_is_a_safe_leaf_contract(self) -> None:
+    def test_every_mapped_agent_is_a_safe_role_contract(self) -> None:
         adapter = json.loads(ADAPTER_PATH.read_text(encoding="utf-8"))
         for role_id, agent_name in adapter["agentMap"].items():
             with self.subTest(role=role_id):
@@ -86,9 +105,14 @@ class CodexTeamAdapterTests(unittest.TestCase):
                 self.assertEqual(payload["name"], agent_name)
                 self.assertIn(payload["sandbox_mode"], {"read-only", "workspace-write"})
                 instructions = payload["developer_instructions"].lower()
-                self.assertIn("leaf", instructions)
-                self.assertIn("do not spawn", instructions)
-                self.assertIn("human approval", instructions)
+                if role_id in {"cto", "cpo", "cco"}:
+                    self.assertIn("受限管理节点", instructions)
+                    self.assertIn(f"ast-{role_id}-", instructions)
+                    self.assertIn("总深度不得超过二", instructions)
+                else:
+                    self.assertIn("叶子 agent", instructions)
+                    self.assertIn("不得创建子 agent", instructions)
+                self.assertIn("人类明确批准", instructions)
                 self.assertNotIn("production-ready", instructions)
 
     def test_team_skill_has_native_and_honest_fallback_paths(self) -> None:
@@ -107,6 +131,8 @@ class CodexTeamAdapterTests(unittest.TestCase):
         self.assertIn("verification receipt", lowered)
         self.assertIn("read its `entrypoint` runbook", lowered)
         self.assertNotIn("automatically verified", lowered)
+        self.assertIn("agent-hierarchy.json", lowered)
+        self.assertIn("total depth no greater than two", lowered)
 
     def test_packaged_team_contract_matches_manifest_kits(self) -> None:
         manifest = json.loads(

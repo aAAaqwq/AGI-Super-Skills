@@ -33,6 +33,8 @@ python3 "$SYNC" --global-ceo --all-teams --install
 
 Use `--team solo-founder` instead of `--all-teams` for a selective install. The managed CEO block goes into `~/.codex/AGENTS.md`; Team leaves go into `~/.codex/agents/`. Existing content outside the managed block and unrelated Agent files remain untouched. Start a new task after installation.
 
+Install one executive subagent pyramid with `--with-subagents cto`, `cpo`, or `cco`; repeat the flag or use `--all-subagents` for all 44 leaves. CTO reuses `ast-pe` as its delivery lead and never creates `ast-cto-pe`.
+
 ## Packaged Skills
 
 | Skill | Purpose |
@@ -59,7 +61,7 @@ Use `--team solo-founder` instead of `--all-teams` for a selective install. The 
 
 ## Packaged Agents
 
-The plugin bundles 44 specialist roles: 31 engineering/review specialists and 13 generated C-suite leaves. The current parent is the CEO, so no second CEO Agent is installed. Most roles are read-only; the bounded implementation roles use workspace-write.
+The plugin bundles 88 roles: 31 general engineering/review specialists, 13 generated C-suite roles, and 44 opt-in CTO/CPO/CCO child specialists. The current parent is the CEO, so no second CEO Agent is installed. Most roles are read-only; bounded implementation roles use workspace-write.
 
 | Domain | Agents |
 |---|---|
@@ -80,12 +82,12 @@ The plugin does not modify `~/.codex/config.toml`. Review these conservative def
 ```toml
 [agents]
 max_threads = 4
-max_depth = 1
+max_depth = 2
 job_max_runtime_seconds = 1800
 interrupt_message = true
 ```
 
-The parent agent occupies one thread, so a four-thread limit normally permits two or three useful workers without unbounded fan-out.
+The parent and one executive manager occupy two threads, leaving room for at most two direct children. Run manager groups in waves; three managers with two children each would require ten live threads and is not the default topology.
 
 ## Security and Update Policy
 
@@ -109,6 +111,7 @@ The parent agent occupies one thread, so a four-thread limit normally permits tw
 | Professional agents and swarm patterns | `wshobson/agents@767d969a73ce6608d10ac713e52be9ac7f061ab9` | MIT | Selected roles rewritten as Codex TOML plus native orchestration guidance |
 | Iterative retrieval | `affaan-m/everything-claude-code@0f84c0e2796703fbda87d577b2636351418c7442` | MIT | Adapted without installing the full ECC plugin |
 | Context engineering | `addyosmani/agent-skills@6ce029897d2b794940325fc7148774a6ec51111c` | MIT | Packaged as a focused Codex skill |
+| CTO/CPO/CCO child agents | `jnMetaCode/agency-agents-zh@2ecfabf8e944ccdfed63ad8c44d5241290af6977` | MIT | 44 byte-locked Chinese source files plus separate local routing and safety envelopes |
 | Project memory | Codex-native local adaptation, 2026-07-21 | Repository license | Explicit save/recall/archive only; no transcript scan or background capture |
 
 The larger Ruflo/Claude Flow, raw Claude agent-team, automatic conversation-memory, and full ECC surfaces are not bundled. They remain library candidates until their hooks, MCP servers, runtimes, privacy boundaries, and Codex semantics are reviewed independently.
@@ -121,6 +124,6 @@ The larger Ruflo/Claude Flow, raw Claude agent-team, automatic conversation-memo
 plugins/agi-super-team-codex/
 ├── .codex-plugin/plugin.json          Plugin manifest
 ├── payload/global/AGENTS.md           Managed global Musk CEO guidance
-├── payload/agents/*.toml              44 installable specialist agents
+├── payload/agents/*.toml              88 installable agents
 └── skills/                            Six curated Codex skills
 ```
