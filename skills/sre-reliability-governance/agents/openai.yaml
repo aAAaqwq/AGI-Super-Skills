@@ -1,0 +1,4 @@
+interface:
+  display_name: "SRE 可靠性治理"
+  short_description: "设计可审查的 SLO、容量、韧性与变更风险治理方案"
+  default_prompt: "Use $sre-reliability-governance to review this service and produce a reliability governance packet."

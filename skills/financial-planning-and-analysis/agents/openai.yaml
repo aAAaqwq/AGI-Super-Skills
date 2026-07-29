@@ -1,0 +1,4 @@
+interface:
+  display_name: "财务规划与分析"
+  short_description: "建立滚动预测、单位经济、差异分析、资本配置与财务控制决策"
+  default_prompt: "使用 $financial-planning-and-analysis 构建可复算的预算、情景分析和资本配置建议。"

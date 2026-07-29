@@ -1,0 +1,4 @@
+interface:
+  display_name: "研究证据综合"
+  short_description: "设计可证伪研究，综合一手证据、反证、不确定性与决策含义"
+  default_prompt: "使用 $research-evidence-synthesis 为这个决策建立研究计划、证据图和可校准结论。"

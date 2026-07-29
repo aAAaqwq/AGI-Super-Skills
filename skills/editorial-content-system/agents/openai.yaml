@@ -1,0 +1,4 @@
+interface:
+  display_name: "编辑内容系统"
+  short_description: "建立内容战略、生产门、来源权利、发布交接与复盘治理的完整工作流"
+  default_prompt: "使用 $editorial-content-system 设计一套可审计的内容生产与发布交接方案。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "法律问题识别"
+  short_description: "按主体、辖区和事实识别法律风险、控制选项及专业律师升级点"
+  default_prompt: "使用 $legal-issue-spotting 识别此事项的法律问题、事实缺口、风险选项和专业复核需求。"

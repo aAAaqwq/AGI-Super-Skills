@@ -1,0 +1,4 @@
+interface:
+  display_name: "独立保证门"
+  short_description: "用独立证据审查重要完成声明、剩余风险并给出可复核的放行结论"
+  default_prompt: "使用 $independent-assurance-gate 审查这项完成声明并给出 Gate 结论。"

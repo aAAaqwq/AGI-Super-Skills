@@ -1,0 +1,4 @@
+interface:
+  display_name: "数据契约与质量治理"
+  short_description: "设计可审查的数据契约、质量、血缘、隐私与退役治理方案"
+  default_prompt: "Use $data-contract-quality-governance to review this data product and produce a governance packet."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "定位与增长实验系统"
+  short_description: "定位与增长实验：从可信主张到渠道、增量测量与扩张决策"
+  default_prompt: "使用 $positioning-growth-experiment-system 为这个市场机会设计定位、增长实验和增量测量方案。"

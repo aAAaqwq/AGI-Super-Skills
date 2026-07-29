@@ -1,0 +1,4 @@
+interface:
+  display_name: "运营节奏与价值流"
+  short_description: "把既定战略转成职责清晰、运行稳定并可恢复的运营系统"
+  default_prompt: "使用 $operating-cadence-and-flow 设计这项工作的价值流、节奏与异常处理。"
