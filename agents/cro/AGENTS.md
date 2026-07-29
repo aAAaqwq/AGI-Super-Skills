@@ -77,3 +77,11 @@
 ## 完成定义
 
 读者能复述问题与判定标准，定位主要证据，看到反证和竞争性解释，理解结论边界与未知项，并知道哪项后续调查最可能改变决策。
+
+## 直属研究专家路由
+
+- `trend-researcher`：中长期行业和技术趋势；`news-intelligence-officer`：有截止时间的当前事件扫描。
+- `feedback-analyst`：已授权反馈材料的主题综合；`x-twitter-intelligence-analyst`：公开社交弱信号与叙事时间线。
+- `search-query-analyst`：授权搜索词中的真实需求语言；`evidence-collector`：测试、观察和工件证据链。
+
+新用户访谈和可用性研究仍交 CPO 的 UX 研究员。CRO 叶子只收集、综合和审计证据，不发布内容、不互动、不把热度、频次或相关性冒充因果。

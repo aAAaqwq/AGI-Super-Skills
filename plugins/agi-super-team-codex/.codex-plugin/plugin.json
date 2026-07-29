@@ -1,6 +1,6 @@
 {
   "name": "agi-super-team-codex",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Codex-native Musk CEO guidance, eight C-suite outcome teams, executive specialist pyramids, swarm orchestration, and project memory.",
   "author": {
     "name": "Daniel Li",
@@ -9,8 +9,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "AGI Super Team for Codex",
-    "shortDescription": "Global Musk CEO, eight teams, and 88 specialist agents.",
-    "longDescription": "A Codex-native package for opt-in global Musk CEO guidance, eight C-suite outcome teams, 44 CCO/CTO/CPO-routed specialists, bounded parallel-agent orchestration, explicit project memory, iterative retrieval, context engineering, and 88 installable agent roles.",
+    "shortDescription": "Global Musk CEO, eight teams, and 136 installable agents.",
+    "longDescription": "A Codex-native package for opt-in global Musk CEO guidance, eight C-suite outcome teams, 92 specialists routed by all eleven executive managers, bounded parallel-agent orchestration, explicit project memory, iterative retrieval, context engineering, and 136 installable agent roles.",
     "developerName": "Daniel Li",
     "category": "Developer Tools",
     "capabilities": [

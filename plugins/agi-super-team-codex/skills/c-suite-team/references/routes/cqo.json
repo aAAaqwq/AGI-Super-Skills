@@ -1,0 +1,147 @@
+{
+  "$schema": "./specialist-routing.schema.json",
+  "schemaVersion": 1,
+  "parent": "cqo",
+  "requiredMaxDepth": 2,
+  "maxConcurrentLeaves": 2,
+  "source": {
+    "repository": "https://github.com/jnMetaCode/agency-agents-zh",
+    "commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977",
+    "license": "MIT",
+    "notice": "上游角色原文逐字复制并由 config/agent-sources.lock.json 锁定；本文件只维护本地路由与安全边界。"
+  },
+  "roleRoutes": [],
+  "specialists": [
+    {
+      "id": "investment-researcher",
+      "name": "投资研究员",
+      "sourcePath": "finance/finance-investment-researcher.md",
+      "trigger": "需要把公司、资产或行业论点转化为可证伪的基本面与量化研究假设。",
+      "doNotUseWhen": "需要企业内部预算、实盘下单、个人投资建议或纯数据平台建设。",
+      "requiredInputs": [
+        "研究问题",
+        "投资期限",
+        "一手资料",
+        "可用数据",
+        "基线与限制"
+      ],
+      "outputs": [
+        "多空论点",
+        "估值区间",
+        "催化剂",
+        "下行情景与失效条件"
+      ],
+      "acceptance": [
+        "一手来源优先",
+        "多空同等严谨",
+        "下行损失可见",
+        "信心与证据质量分开"
+      ],
+      "partners": [
+        "experiment-tracker",
+        "model-qa-specialist",
+        "cdo",
+        "cfo",
+        "clo"
+      ],
+      "boundary": "只产出研究证据；不建议个人仓位、不下单、不连接真实账户，也不保证任何收益。"
+    },
+    {
+      "id": "model-qa-specialist",
+      "name": "模型 QA 专家",
+      "sourcePath": "specialized/specialized-model-qa.md",
+      "trigger": "候选量化或统计模型需要独立复现、泄漏检查、校准、漂移和稳健性审计。",
+      "doNotUseWhen": "审查者参与过被审模型构建，或代码、数据、环境不具备复现条件。",
+      "requiredInputs": [
+        "模型版本",
+        "不可变数据",
+        "代码环境",
+        "方法文档",
+        "基准与原结果"
+      ],
+      "outputs": [
+        "独立复现",
+        "差异报告",
+        "泄漏漂移检查",
+        "严重度发现与晋级意见"
+      ],
+      "acceptance": [
+        "审查者独立",
+        "环境可重跑",
+        "发现包含证据影响",
+        "负结果完整保留"
+      ],
+      "partners": [
+        "investment-researcher",
+        "experiment-tracker",
+        "cdo",
+        "governor"
+      ],
+      "boundary": "不得审查自己参与构建的模型；CQO 不得覆盖独立复核意见，生产模型不得由本角色修改。"
+    },
+    {
+      "id": "experiment-tracker",
+      "name": "实验追踪员",
+      "sourcePath": "project-management/project-management-experiment-tracker.md",
+      "trigger": "量化假设进入试验，需要预登记、试验预算、样本拆分、指标和停止规则。",
+      "doNotUseWhen": "只是项目排期，或研究已经完成只需独立模型复核。",
+      "requiredInputs": [
+        "假设",
+        "基线",
+        "数据范围",
+        "参数空间",
+        "主要指标与试验预算"
+      ],
+      "outputs": [
+        "预登记记录",
+        "试验矩阵",
+        "样本设计",
+        "完整试验族与晋级记录"
+      ],
+      "acceptance": [
+        "事前冻结主要指标",
+        "多重检验受控",
+        "不偷看停试",
+        "零结果完整保留"
+      ],
+      "partners": [
+        "investment-researcher",
+        "model-qa-specialist",
+        "cdo"
+      ],
+      "boundary": "不把统计显著等同经济意义；不得自行进入实盘、改变资本额度或连接交易账户。"
+    },
+    {
+      "id": "spatial-data-scientist",
+      "name": "空间数据科学家",
+      "sourcePath": "gis/gis-spatial-data-scientist.md",
+      "trigger": "量化研究明确使用卫星、地理、门店、物流或其他空间另类数据。",
+      "doNotUseWhen": "数据没有空间依赖，或只是地图制图、空间 ETL 与一般数据可视化。",
+      "requiredInputs": [
+        "空间数据快照",
+        "坐标系",
+        "时间可得性",
+        "研究假设",
+        "地理边界"
+      ],
+      "outputs": [
+        "空间统计模型",
+        "自相关检验",
+        "空间交叉验证",
+        "不确定性与尺度敏感性"
+      ],
+      "acceptance": [
+        "检查空间自相关",
+        "避免随机切分泄漏",
+        "报告尺度效应",
+        "适用地域明确"
+      ],
+      "partners": [
+        "investment-researcher",
+        "model-qa-specialist",
+        "cdo"
+      ],
+      "boundary": "仅在空间另类数据场景调用；不把空间相关性宣称为因果或可交易优势。"
+    }
+  ]
+}

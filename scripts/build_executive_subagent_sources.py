@@ -13,64 +13,21 @@ from pathlib import Path
 
 REPOSITORY = "https://github.com/jnMetaCode/agency-agents-zh"
 COMMIT = "2ecfabf8e944ccdfed63ad8c44d5241290af6977"
-SOURCE_FILES = {
-    "cco": {
-        "xiaohongshu-operator": "marketing/marketing-xiaohongshu-operator.md",
-        "douyin-strategist": "marketing/marketing-douyin-strategist.md",
-        "wechat-operator": "marketing/marketing-wechat-operator.md",
-        "bilibili-strategist": "marketing/marketing-bilibili-strategist.md",
-        "short-video-editing-coach": "marketing/marketing-short-video-editing-coach.md",
-        "weixin-channels-strategist": "marketing/marketing-weixin-channels-strategist.md",
-        "knowledge-commerce-strategist": "marketing/marketing-knowledge-commerce-strategist.md",
-        "xiaohongshu-specialist": "marketing/marketing-xiaohongshu-specialist.md",
-        "wechat-official-account-manager": "marketing/marketing-wechat-official-account.md",
-        "zhihu-strategist": "marketing/marketing-zhihu-strategist.md",
-        "twitter-engager": "marketing/marketing-twitter-engager.md",
-        "instagram-curator": "marketing/marketing-instagram-curator.md",
-        "reddit-community-operator": "marketing/marketing-reddit-community-builder.md",
-        "video-optimization-specialist": "marketing/marketing-video-optimization-specialist.md",
-        "growth-hacker": "marketing/marketing-growth-hacker.md",
-        "seo-specialist": "marketing/marketing-seo-specialist.md",
-        "ai-citation-strategist": "marketing/marketing-ai-citation-strategist.md",
-        "prompt-engineer": "specialized/prompt-engineer.md",
-        "content-illustration-planner": "design/design-image-prompt-engineer.md",
-    },
-    "cto": {
-        "frontend-developer": "engineering/engineering-frontend-developer.md",
-        "backend-architect": "engineering/engineering-backend-architect.md",
-        "ai-engineer": "engineering/engineering-ai-engineer.md",
-        "devops-automator": "engineering/engineering-devops-automator.md",
-        "security-engineer": "engineering/engineering-security-engineer.md",
-        "rapid-prototyper": "engineering/engineering-rapid-prototyper.md",
-        "senior-developer": "engineering/engineering-senior-developer.md",
-        "mobile-app-builder": "engineering/engineering-mobile-app-builder.md",
-        "data-engineer": "engineering/engineering-data-engineer.md",
-        "technical-writer": "engineering/engineering-technical-writer.md",
-        "autonomous-optimization-architect": "engineering/engineering-autonomous-optimization-architect.md",
-        "embedded-firmware-engineer": "engineering/engineering-embedded-firmware-engineer.md",
-        "pc-host-engineer": "engineering/engineering-pc-host-engineer.md",
-        "mechanical-design-engineer": "engineering/engineering-mechanical-design-engineer.md",
-        "embedded-linux-driver-engineer": "engineering/engineering-embedded-linux-driver-engineer.md",
-        "fpga-digital-design-engineer": "engineering/engineering-fpga-digital-design-engineer.md",
-        "iot-solution-architect": "engineering/engineering-iot-solution-architect.md",
-        "network-engineer-china": "engineering/engineering-network-engineer-china.md",
-        "incident-response-commander": "engineering/engineering-incident-response-commander.md",
-        "threat-detection-engineer": "engineering/engineering-threat-detection-engineer.md",
-        "solidity-smart-contract-engineer": "engineering/engineering-solidity-smart-contract-engineer.md",
-        "wechat-mini-program-developer": "engineering/engineering-wechat-mini-program-developer.md",
-    },
-    "cpo": {
-        "ui-designer": "design/design-ui-designer.md",
-        "ux-researcher": "design/design-ux-researcher.md",
-        "ux-architect": "design/design-ux-architect.md",
-    },
-}
 
 
 def build(root: Path) -> dict:
     entries = []
-    for manager, specialists in SOURCE_FILES.items():
-        for specialist_id, source_path in specialists.items():
+    hierarchy = json.loads((root / "config/agent-hierarchy.json").read_text(encoding="utf-8"))
+    for manager, settings in hierarchy["managers"].items():
+        registry = json.loads((root / settings["routingFile"]).read_text(encoding="utf-8"))
+        if registry["parent"] != manager:
+            raise ValueError(f"routing parent mismatch: {manager}")
+        specialists = registry["specialists"]
+        if [item["id"] for item in specialists] != settings["subagents"]:
+            raise ValueError(f"hierarchy and routing order differ: {manager}")
+        for specialist in specialists:
+            specialist_id = specialist["id"]
+            source_path = specialist["sourcePath"]
             vendored_path = Path("agents") / manager / "subagents" / specialist_id / "AGENTS.md"
             content = (root / vendored_path).read_bytes()
             text = content.decode("utf-8")

@@ -1,0 +1,88 @@
+{
+  "$schema": "./specialist-routing.schema.json",
+  "schemaVersion": 1,
+  "parent": "cro",
+  "requiredMaxDepth": 2,
+  "maxConcurrentLeaves": 2,
+  "source": {
+    "repository": "https://github.com/jnMetaCode/agency-agents-zh",
+    "commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977",
+    "license": "MIT",
+    "notice": "上游角色原文逐字复制并由 config/agent-sources.lock.json 锁定；本文件只维护本地路由与安全边界。"
+  },
+  "roleRoutes": [],
+  "specialists": [
+    {
+      "id": "trend-researcher",
+      "name": "趋势研究员",
+      "sourcePath": "product/product-trend-researcher.md",
+      "trigger": "重大决策需要行业、技术、竞品或未来六至十八个月趋势证据。",
+      "doNotUseWhen": "只是实时热点收集、平台内容选题，或已有明确实验可直接验证。",
+      "requiredInputs": ["决策问题", "时间范围", "市场技术边界", "竞争性假设", "停止条件"],
+      "outputs": ["趋势证据地图", "生命周期判断", "机会威胁与待验证项"],
+      "acceptance": ["事实预测分开", "核心信号多源交叉", "结论包含失效条件"],
+      "partners": ["news-intelligence-officer", "cmo", "cpo", "cto"],
+      "boundary": "不把热度当趋势，不替代 CEO 作下注决定，不购买报告或擅自联系专家。"
+    },
+    {
+      "id": "feedback-analyst",
+      "name": "反馈分析师",
+      "sourcePath": "product/product-feedback-synthesizer.md",
+      "trigger": "已有客服、评价、NPS、销售记录或访谈材料，需要跨来源去重、分层与主题综合。",
+      "doNotUseWhen": "需要主持新的可用性研究，或只有一条反馈就要求产品决策。",
+      "requiredInputs": ["原始反馈集", "来源时间", "用户分层", "采样同意说明", "分析问题"],
+      "outputs": ["反馈分类体系", "主题分层分析", "原话证据包", "未知偏差说明"],
+      "acceptance": ["保留原话来源", "报告样本偏差", "不把频次等同重要性"],
+      "partners": ["ux-researcher", "cpo", "cso", "cdo"],
+      "boundary": "仅综合已授权材料；新访谈与可用性测试交 CPO 的 UX 研究员，外部联系需批准。"
+    },
+    {
+      "id": "x-twitter-intelligence-analyst",
+      "name": "X/Twitter 情报分析师",
+      "sourcePath": "marketing/marketing-x-twitter-intelligence-analyst.md",
+      "trigger": "研究问题需要公开社交信号中的受众语言、竞品叙事、弱信号或声誉时间线。",
+      "doNotUseWhen": "需要发帖、互动、私信、增长运营，或试图识别私人身份。",
+      "requiredInputs": ["决策问题", "查询账号集", "时间语言范围", "排除项", "证据标准"],
+      "outputs": ["带链接情报简报", "查询矩阵", "信号时间线", "采样限制"],
+      "acceptance": ["保存链接时间窗口", "去重说明样本", "观察推断建议分开"],
+      "partners": ["twitter-engager", "brand-guardian", "cmo", "cco"],
+      "boundary": "仅使用公开或经授权数据；互动交 CCO，禁止人肉、骚扰或绕过访问控制。"
+    },
+    {
+      "id": "news-intelligence-officer",
+      "name": "新闻情报官",
+      "sourcePath": "marketing/marketing-daily-news-briefing.md",
+      "trigger": "决策需要有截止时间的海内外新闻、政策、科技或财经事件扫描与多源核验。",
+      "doNotUseWhen": "需要长期趋势判断、内容成品，或仅凭热榜推导市场需求。",
+      "requiredInputs": ["主题", "时间窗", "地域语言", "纳入排除标准", "来源层级"],
+      "outputs": ["时间戳新闻简报", "事实争议未知标记", "来源与后续核验清单"],
+      "acceptance": ["重大事实回到权威来源", "同源转载去重", "报道与事件日期分开"],
+      "partners": ["trend-researcher", "cco", "cmo", "clo"],
+      "boundary": "只提供研究原料，不生成平台内容；不可访问内容标记未知，不绕付费墙或伪造实时扫描。"
+    },
+    {
+      "id": "search-query-analyst",
+      "name": "搜索词分析师",
+      "sourcePath": "paid-media/paid-media-search-query-analyst.md",
+      "trigger": "研究需要从已授权搜索词报告识别真实查询语言、需求意图、噪声和市场信号。",
+      "doNotUseWhen": "需要直接调整广告账户、自然搜索内容生产，或没有合法授权的搜索数据。",
+      "requiredInputs": ["搜索词导出", "时间地域", "业务分类", "转化定义", "采样限制"],
+      "outputs": ["查询意图分类", "需求信号", "噪声与未知项", "可复现分析说明"],
+      "acceptance": ["原始查询可追溯", "付费样本偏差披露", "意图不是人口属性推断"],
+      "partners": ["ppc-strategist", "seo-specialist", "cmo", "cdo"],
+      "boundary": "仅分析授权导出，不登录或修改广告账户；不得把付费搜索样本外推为全部市场。"
+    },
+    {
+      "id": "evidence-collector",
+      "name": "证据收集者",
+      "sourcePath": "testing/testing-evidence-collector.md",
+      "trigger": "研究结论依赖测试、观察、日志、截图、复现步骤或环境状态，需要完整证据链。",
+      "doNotUseWhen": "只是纯文献综述、无可复现实验的战略判断，或要求其作最终领域结论。",
+      "requiredInputs": ["待验证主张", "环境版本", "复现协议", "原始工件", "保留要求"],
+      "outputs": ["证据包", "复现记录", "覆盖缺口清单", "工件索引"],
+      "acceptance": ["主张定位到工件", "版本环境完整", "失败与未覆盖范围可见"],
+      "partners": ["cto", "cdo", "governor", "model-qa-specialist"],
+      "boundary": "只负责观察与证据链，不把 QA 证据扩张成市场或因果结论，不伪造未运行验证。"
+    }
+  ]
+}

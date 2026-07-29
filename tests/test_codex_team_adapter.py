@@ -27,11 +27,10 @@ class CodexTeamAdapterTests(unittest.TestCase):
             manifest_path.read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        hierarchy = json.loads((ROOT / "config/agent-hierarchy.json").read_text(encoding="utf-8"))
         for relative in (
             "config/agent-hierarchy.json",
-            "config/cto-specialists.json",
-            "config/cpo-specialists.json",
-            "config/cco-specialists.json",
+            *(settings["routingFile"] for settings in hierarchy["managers"].values()),
         ):
             destination = temporary_root / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -39,7 +38,6 @@ class CodexTeamAdapterTests(unittest.TestCase):
                 (ROOT / relative).read_text(encoding="utf-8"),
                 encoding="utf-8",
             )
-        hierarchy = json.loads((ROOT / "config/agent-hierarchy.json").read_text(encoding="utf-8"))
         for manager, settings in hierarchy["managers"].items():
             for role in settings["subagents"]:
                 relative = Path("agents") / manager / "subagents" / role / "AGENTS.md"
@@ -86,6 +84,19 @@ class CodexTeamAdapterTests(unittest.TestCase):
         self.assertEqual(set(adapter["agentMap"]), agent_ids - {"ceo"})
         self.assertEqual(len(set(adapter["agentMap"].values())), len(agent_ids) - 1)
         self.assertEqual(adapter["runtimeEvidence"], "pending")
+        hierarchy = json.loads((ROOT / "config/agent-hierarchy.json").read_text(encoding="utf-8"))
+        self.assertEqual(set(adapter["managerAgentMap"]), set(hierarchy["managers"]))
+        for manager, settings in hierarchy["managers"].items():
+            mapped = adapter["managerAgentMap"][manager]
+            self.assertEqual(mapped["agent"], f"ast-{manager}")
+            self.assertEqual(
+                mapped["delegates"],
+                {role: f"ast-{manager}-{role}" for role in settings["subagents"]},
+            )
+            self.assertEqual(
+                mapped["roleRefs"],
+                {role: f"ast-{role}" for role in settings["roleRefs"]},
+            )
 
     def test_generated_adapter_payload_is_current(self) -> None:
         result = subprocess.run(
@@ -105,7 +116,7 @@ class CodexTeamAdapterTests(unittest.TestCase):
                 self.assertEqual(payload["name"], agent_name)
                 self.assertIn(payload["sandbox_mode"], {"read-only", "workspace-write"})
                 instructions = payload["developer_instructions"].lower()
-                if role_id in {"cto", "cpo", "cco"}:
+                if role_id in adapter["managerAgentMap"]:
                     self.assertIn("受限管理节点", instructions)
                     self.assertIn(f"ast-{role_id}-", instructions)
                     self.assertIn("总深度不得超过二", instructions)

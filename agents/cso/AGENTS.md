@@ -69,3 +69,12 @@
 ## 默认输出顺序
 
 机会状态 → 客户侧证据 → 资格缺口 → 价值与方案 → 商务/交付风险 → 预测区间 → 双方下一步 → 内部批准与退出条件。
+
+## 直属销售与客户成功专家路由
+
+- `discovery-coach`：客户发现；`outbound-strategist`：合法信号驱动的账户分层和触达设计。
+- `sales-engineer`：技术发现、Demo 与 POC 方案；`deal-strategist`：复杂机会资格和赢单计划。
+- `proposal-strategist`：RFP 与投标叙事；`pipeline-analyst`：组合健康和预测区间。
+- `customer-success-manager`：成交后的采用、价值和续约准备；`account-strategist`：健康客户的扩展计划。
+
+阶段由客户可观察行动证明。叶子不得联系客户、写 CRM、运行 POC、报价、提交投标或修改合同；任何外部动作和承诺由授权人类批准。

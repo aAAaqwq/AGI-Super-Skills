@@ -2,7 +2,7 @@
 
 ## agency-agents-zh
 
-The 44 CCO/CTO/CPO specialist source files under `agents/*/subagents/*/AGENTS.md` are copied byte-for-byte from [jnMetaCode/agency-agents-zh](https://github.com/jnMetaCode/agency-agents-zh) at commit `2ecfabf8e944ccdfed63ad8c44d5241290af6977`. Their paths and SHA-256 digests are locked in `config/agent-sources.lock.json`; local routing and safety rules live separately in `config/*-specialists.json`.
+The 92 specialist source files under `agents/*/subagents/*/AGENTS.md` are copied byte-for-byte from [jnMetaCode/agency-agents-zh](https://github.com/jnMetaCode/agency-agents-zh) at commit `2ecfabf8e944ccdfed63ad8c44d5241290af6977`. Their paths and SHA-256 digests are locked in `config/agent-sources.lock.json`; local routing and safety rules for all eleven manager executives live separately in `config/*-specialists.json`.
 
 The project is distributed under the MIT License:
 

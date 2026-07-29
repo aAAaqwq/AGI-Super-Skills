@@ -57,6 +57,15 @@ def load_contracts() -> dict:
     return contracts
 
 
+def load_hierarchy() -> dict:
+    if AGENT_HIERARCHY.is_symlink() or not AGENT_HIERARCHY.is_file():
+        raise ValueError(f"invalid Agent hierarchy: {AGENT_HIERARCHY}")
+    hierarchy = json.loads(AGENT_HIERARCHY.read_text(encoding="utf-8"))
+    if not isinstance(hierarchy.get("managers"), dict):
+        raise ValueError("Agent hierarchy must contain managers")
+    return hierarchy
+
+
 def list_teams(contracts: dict) -> None:
     print("AGI Super Team outcome teams")
     for team in contracts["kits"]:
@@ -87,9 +96,7 @@ def selected_agent_names(
     if with_cco_specialists:
         requested_managers.add("cco")
     if requested_managers:
-        if AGENT_HIERARCHY.is_symlink() or not AGENT_HIERARCHY.is_file():
-            raise ValueError(f"invalid Agent hierarchy: {AGENT_HIERARCHY}")
-        hierarchy = json.loads(AGENT_HIERARCHY.read_text(encoding="utf-8"))
+        hierarchy = load_hierarchy()
         managers = hierarchy.get("managers", {})
         unknown_managers = sorted(requested_managers - set(managers))
         if unknown_managers:
@@ -209,7 +216,10 @@ def run(args: argparse.Namespace) -> int:
         args.team,
         args.all_teams,
         args.global_ceo,
-        [*args.with_subagents, *(["cto", "cpo", "cco"] if args.all_subagents else [])],
+        [
+            *args.with_subagents,
+            *(list(load_hierarchy()["managers"]) if args.all_subagents else []),
+        ],
         args.with_cco_specialists,
     )
     counts = {status: sum(item.status == status for item in plan) for status in ("add", "update", "unchanged")}
@@ -241,8 +251,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--team", action="append", default=[], metavar="ID", help="install one team; repeat for multiple teams")
     parser.add_argument("--all-teams", action="store_true", help="install the union of all packaged C-suite teams")
     parser.add_argument("--with-cco-specialists", action="store_true", help="also install the 19 CCO-routed content and growth leaves")
-    parser.add_argument("--with-subagents", action="append", default=[], choices=("cto", "cpo", "cco"), help="install one executive subagent group; repeatable")
-    parser.add_argument("--all-subagents", action="store_true", help="install all 44 executive specialist leaves")
+    parser.add_argument("--with-subagents", action="append", default=[], metavar="ID", help="install one executive subagent group; repeatable")
+    parser.add_argument("--all-subagents", action="store_true", help="install all 92 executive specialist leaves")
     parser.add_argument("--install", action="store_true", help="apply the previewed plan")
     parser.add_argument("--codex-home", type=Path, default=default_codex_home(), help="destination Codex home")
     return parser.parse_args()

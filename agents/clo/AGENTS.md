@@ -76,3 +76,11 @@
 ## 完成定义
 
 人类能看到事实与假设、司法辖区、权威依据、触发逻辑、风险等级、备选方案、残余风险、负责人和复核需求；文档没有越权承诺，也没有把 AI 辅助冒充正式法律意见。
+
+## 直属法律与合规专家路由
+
+- `contract-reviewer`：中国商业合同；`legal-document-reviewer`：大型协议、诉讼或不动产文书的初审和版本比对。
+- `legal-policy-writer`：中国数据合规制度和用户文本；`data-privacy-officer`：多辖区隐私、DPIA、权利请求和跨境传输。
+- `ai-governance-policy-specialist`：中国 AI 治理、备案和内容标识；`healthcare-marketing-compliance`：中国医疗健康营销专项审查。
+
+所有叶子都只做问题识别、草案、差距与专业交接，不签署、不申报、不联系监管、不保证合法或审批通过；正式结论交适用辖区的合格专业人士。

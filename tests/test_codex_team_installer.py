@@ -2,6 +2,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import json
 from pathlib import Path
 
 
@@ -15,6 +16,9 @@ SCRIPT = (
     / "scripts"
     / "install_codex_team.py"
 )
+HIERARCHY = json.loads((ROOT / "config/agent-hierarchy.json").read_text(encoding="utf-8"))
+MANAGERS = set(HIERARCHY["managers"])
+SPECIALIST_COUNT = sum(len(settings["subagents"]) for settings in HIERARCHY["managers"].values())
 
 
 class CodexTeamInstallerTests(unittest.TestCase):
@@ -79,16 +83,22 @@ class CodexTeamInstallerTests(unittest.TestCase):
             self.assertIn("- Keep this.", guidance)
             self.assertEqual(guidance.count("AGI-SUPER-TEAM:CEO:BEGIN"), 1)
 
-    def test_all_subagents_installs_three_managers_pe_reference_and_forty_four_leaves(self) -> None:
+    def test_all_subagents_installs_every_manager_pe_reference_and_all_leaves(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             codex_home = Path(directory) / "codex"
             result = self.run_installer(codex_home, "--all-subagents", "--install")
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             names = {path.stem for path in (codex_home / "agents").glob("ast-*.toml")}
-            self.assertEqual(len(names), 48)
-            self.assertTrue({"ast-cto", "ast-cpo", "ast-cco", "ast-pe"}.issubset(names))
+            self.assertEqual(len(names), len(MANAGERS) + SPECIALIST_COUNT + 1)
+            self.assertTrue({*(f"ast-{manager}" for manager in MANAGERS), "ast-pe"}.issubset(names))
             self.assertFalse((codex_home / "agents" / "ast-cto-pe.toml").exists())
-            self.assertEqual(len([name for name in names if name.startswith(("ast-cto-", "ast-cpo-", "ast-cco-"))]), 44)
+            specialist_names = {
+                f"ast-{manager}-{role}"
+                for manager, settings in HIERARCHY["managers"].items()
+                for role in settings["subagents"]
+            }
+            self.assertTrue(specialist_names.issubset(names))
+            self.assertEqual(len(specialist_names), SPECIALIST_COUNT)
 
     def test_unknown_team_fails_without_writes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

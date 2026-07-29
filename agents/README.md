@@ -10,16 +10,16 @@
 CEO (ceo)
     ↓ 运营调度 ───────────────────────┐
     ├── CTO → PE + 22 工程子专家       │
-    ├── CQO ← 量化交易                 │
+    ├── CQO → 4 量化子专家             │
     ├── CCO → 19 内容增长子专家        │ 跨部门
-    ├── CDO ← 数据/API                 │ 通过 CEO
-    ├── CFO ← 财务                     │ 协调
-    ├── CRO ← 研究                     │
-    ├── CMO ← 营销/SEO                 │
+    ├── CDO → 5 数据子专家             │ 通过 CEO
+    ├── CFO → 8 财务子专家             │ 协调
+    ├── CRO → 6 研究子专家             │
+    ├── CMO → 7 营销子专家             │
     ├── CPO → 3 设计子专家             │
-    ├── CLO ← 法务                     │
-    ├── CSO ← 销售                     │
-    ├── COO ← 运维/安全 ──────────────┘
+    ├── CLO → 6 法务合规子专家         │
+    ├── CSO → 8 销售子专家             │
+    ├── COO → 4 运营子专家 ───────────┘
     └── Governor ← 治理验证（三证验真）
 ```
 
@@ -29,7 +29,15 @@ CEO (ceo)
 agents/
 ├── cto/subagents/<role>/AGENTS.md   # 22 个工程专家；PE 复用 agents/pe
 ├── cpo/subagents/<role>/AGENTS.md   # UI、UX 研究、UX 架构
-└── cco/subagents/<role>/AGENTS.md   # 19 个内容增长专家
+├── cco/subagents/<role>/AGENTS.md   # 19 个内容增长专家
+├── cfo/subagents/<role>/AGENTS.md   # 8 个财务专家
+├── cdo/subagents/<role>/AGENTS.md   # 5 个数据专家
+├── cqo/subagents/<role>/AGENTS.md   # 4 个量化专家
+├── cmo/subagents/<role>/AGENTS.md   # 7 个营销专家
+├── cro/subagents/<role>/AGENTS.md   # 6 个研究专家
+├── cso/subagents/<role>/AGENTS.md   # 8 个销售专家
+├── coo/subagents/<role>/AGENTS.md   # 4 个运营专家
+└── clo/subagents/<role>/AGENTS.md   # 6 个法务合规专家
 ```
 
 这些 `AGENTS.md` 是固定上游 commit 的逐字副本；组织关系、触发和安全规则分别由 `config/agent-hierarchy.json` 与 `config/*-specialists.json` 管理，来源哈希由 `config/agent-sources.lock.json` 锁定。不要直接修改 vendored 子 Agent 原文。

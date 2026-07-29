@@ -40,15 +40,15 @@ For OpenClaw, the installer materializes Agent workspaces but does not register 
 
 ### Install executive subagent groups
 
-The default remains the 14 top-level roles. Add one executive pyramid, or all 44 optional specialists:
+The default remains the 14 top-level roles. Add one executive pyramid, or all 92 optional specialists:
 
 ```bash
 npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cto
-npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cpo --with-subagents cco
+npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cfo --with-subagents clo
 npx -y github:aAAaqwq/AGI-Super-Team --tool codex --all-subagents --install
 ```
 
-The hierarchy is CEO → CTO/CPO/CCO → leaf specialists. CTO also references the existing canonical PE as delivery lead; it does not create a second PE identity. All 44 source files under `agents/*/subagents/*/AGENTS.md` are byte-for-byte copies from pinned `jnMetaCode/agency-agents-zh`; local routing and safety envelopes remain separate. See [`config/agent-sources.lock.json`](./config/agent-sources.lock.json) for source URLs and SHA-256 digests. Nested Codex routing requires `max_depth = 2`; with four threads, run one manager plus at most two children per wave.
+The hierarchy is CEO → eleven manager executives → leaf specialists. CTO also references the existing canonical PE as delivery lead; it does not create a second PE identity. All 92 source files under `agents/*/subagents/*/AGENTS.md` are byte-for-byte copies from pinned `jnMetaCode/agency-agents-zh`; local routing and safety envelopes remain separate. CEO retains coordination authority, Governor remains an independent reviewer, and PE remains CTO's canonical delivery leaf rather than another manager. See [`config/agent-sources.lock.json`](./config/agent-sources.lock.json) for source URLs and SHA-256 digests. Nested Codex routing requires `max_depth = 2`; with four threads, run one manager plus at most two children per wave.
 
 These are **18 AI client/runtime adapter targets**, not 18 interchangeable CLIs. An adapter can install native Agents, native Skills, project rules/context, or role packs degraded to Agent-as-Skill. File placement does not by itself prove that a current client loaded or executed the content.
 
@@ -118,7 +118,7 @@ The adapter design was inspired in part by [`jnMetaCode/agency-agents-zh`](https
 | Layer | What you get | Why it matters |
 |---|---|---|
 | **🧩 Skills** | Canonical physical `SKILL.md` files grouped into 14 outcome categories | Reuse focused playbooks instead of rebuilding instructions for every task |
-| **🤖 Agents** | 14 top-level role packs plus 44 optional direct specialists with exact routing and source locks | Give planning, engineering, product, content, research, and review clear ownership |
+| **🤖 Agents** | 14 top-level role packs plus 92 optional direct specialists with exact routing and source locks | Give planning, engineering, product, content, research, and review clear ownership |
 | **🔁 Team packs** | 8 manifest-driven outcome Teams, from Solo Founder to Full Team | Start with the smallest team that can own the outcome instead of loading everything |
 
 <p>
@@ -270,8 +270,8 @@ The generic path requires Bash and Node.js; repository verification also require
 flowchart LR
   subgraph R["AGI Super Team repository: versioned content, not a runtime"]
     S["skills/<br/>reusable playbooks"]
-    A["agents/<br/>14 top-level roles + 44 optional specialists"]
-    M["team-manifest.json<br/>4 kits + skill mappings"]
+    A["agents/<br/>14 top-level roles + 92 optional specialists"]
+    M["team-manifest.json<br/>8 kits + skill mappings"]
     C["plugins/agi-super-team-codex/<br/>curated Codex package"]
   end
 
