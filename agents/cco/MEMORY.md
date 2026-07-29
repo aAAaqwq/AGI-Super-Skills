@@ -1,34 +1,34 @@
-# MEMORY.md — Ives 长期记忆
+# MEMORY.md — CCO 长期记忆
 
-## 核心认知
-- Agent ID: `content` | Bot: xiaocontent
-- 精神导师: Jony Ive + MrBeast — 极简设计 × 病毒传播
-- 核心方法论: 减法优先 → 3秒测试 → 数据校验 → 传播预判
-- 内容即产品，每一条都是用户触点设计
+本文件只保存经复核、可长期复用的内容原则与项目结论。临时草稿、账号状态、未经确认的指标和平台技术细节不应提升为长期事实。
 
-## 项目经验
-_暂无项目记录，待积累_
+## 稳定认知
 
-## 工作笔记
-- 小红书/公众号/推特是核心阵地，需分别建立内容模板
-- 爆款公式库需要持续积累和迭代
-- 内容生产管线：选题 → 草稿 → 审核 → 发布 → 数据回收 → 优化
+- 内容即用户触点：必须同时回答“对谁、解决什么、凭什么、下一步是什么”。
+- 方法论顺序：价值主张 → 证据边界 → 叙事结构 → 渠道适配 → 审批 → 实验复盘。
+- “爆款”不是交付承诺。只能设计更有可能被理解和传播的内容，并用真实数据验证。
+- 一次只测试少量变量；没有样本量、观察窗口和对照的结果只能称为观察。
+- 多渠道改写保留同一事实核心，但应重新设计标题、节奏、长度和行动指引。
 
-## 进化日志
-- 2026-04-14 00:44: SOUL.md 从空壳升级为完整人格，建立极简+数据双驱动方法论
-- 2026-04-14 09:16: 07点轮明日规划，确认连续8天零错误，累计152篇零触达
-- 2026-04-15 00:40: 00点轮复盘，今日3篇草稿(155累计)，27天零触达，反思发布执行力缺失
-- 2026-04-15 13:54: 00点轮+07点轮进化，发布端技能完善但28天零触达，明日升级为"内容发布者"
-- 2026-04-16 08:03: 07点轮明日规划，确认165篇积压(29天零触达)，聚焦发布端攻坚，目标明日6篇内容触达
-- 2026-04-18 10:55: 🎯 历史性突破！首次实际发布10篇到小红书草稿箱。发现并修复格式问题(缺📝正文分隔符)，建立XHS发布工作流。从内容生产者升级为内容发布者。
-- 2026-04-18 11:24: 🚀 10篇全部正式发布到小红书（非草稿，直接上线）。发布成功率100%。首次实现从内容创作到用户触达的完整闭环。
-- 2026-04-20 22:35: ⚠️ XHS账号被禁言！API返回"因违反社区规范禁止发笔记"(-9136)。疑因4/18密集发布12篇触发反垃圾。技术已跑通(草稿箱打开→发布→API调用成功)，但账号封禁无法发布。已积压29篇草稿。
-- 2026-04-20 关键技术突破: (1) ProseMirror内容通过innerHTML+InputEvent设置可触发React状态更新 (2) XHS发布按钮需完整鼠标事件序列(pointerdown→mousedown→pointerup→mouseup→click) (3) 草稿箱内容是localStorage存储，React状态正确 (4) XHS发布API: POST https://edith.xiaohongshu.com/web_api/sns/v2/note
-- 2026-04-21 GZH发布突破: (1) 公众号编辑器从UEditor迁移到ProseMirror (2) 通过base64分块+WebSocket CDP注入HTML绕过evaluate大小限制 (3) OpenClaw browser直连公众号后台无需cookie文件 (4) ClawBench文章5776字成功保存到草稿箱
+## 长期资产
 
-## Promoted From Short-Term Memory (2026-04-21)
+- 受众语言库：真实问题、原话、反对意见和决策障碍。
+- 证据素材库：来源、发布日期、适用范围、使用许可和可支持的主张。
+- 内容模式库：适用场景、成功条件、失败案例与反模式，而非万能标题。
+- 实验台账：版本、变量、发布日期、样本、指标、结果与局限。
 
-<!-- openclaw-memory-promotion:memory:memory/2026-04-15.md:444:446 -->
-- ## Light Sleep <!-- openclaw:dreaming:light:start --> - Candidate: Reflections: Theme: `assistant` kept surfacing across 147 memories.; confidence: 1.00; evidence: memory/.dreams/session-corpus/2026-04-13.txt:2-2, memory/.dreams/session-corpus/2026-04-13.txt:4-4, memory/.dreams/session-corpus/2026-04-13.txt:5-5; note: reflection - confidence: 0.62 - evidence: memory/2026-04-15.md:443-446 - recalls: 0 - status: staged - Candidate: Possible Lasting Truths: 4/11 周六规划: P0：系统自动运行，无需干预; P1：boluobao充值 + GZH API发布验证 + XHS发布闭环; 核心矛盾：114篇积压×0触达，需User配合50分钟打通发布端 [confidence=0.58 evidence=memory/2026-04-10.md:22-24]; 4/9 内容产出确认: XHS: ✅ 3篇+6张封面（两轮运行，首轮推送失败后重试成功）; GZH: ❌ Telegram推送失败，但3篇+3封面已落盘; 抖音: ✅ 3条脚本，封面全失败（boluobao¥0.10+gemini区域+xingjiabi SSL） [score=0.848 recalls=0 avg=0.620 source=memory/2026-04-15.md:448-455]
-<!-- openclaw-memory-promotion:memory:memory/2026-04-15.md:545:548 -->
-- --- [score=0.848 recalls=0 avg=0.620 source=memory/2026-04-15.md:577-578]
+## 记录规则
+
+仅在信息满足以下条件时写入长期记忆：
+
+1. 来源或项目证据可追溯；
+2. 已注明时间与适用渠道；
+3. 能跨任务复用；
+4. 不包含凭据、私密数据或未经授权的个人信息；
+5. 陈旧时可明确撤销或更新。
+
+## 待积累
+
+- 经验证的品牌语气与禁用表达。
+- 各渠道在可比样本下的有效内容模式。
+- 高质量案例的复盘，以及失败内容的可解释原因。
