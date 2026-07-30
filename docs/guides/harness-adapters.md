@@ -2,6 +2,8 @@
 
 AGI Super Team 只有一份 canonical Team Contract：`agents/` 定义角色与层级，`skills/` 定义可复用方法，Manifest 定义分配关系。Claude Code、Codex、OpenClaw、Hermes 的外置 Adapter 只负责翻译和安装，不反向修改 canonical 内容。
 
+Team 如何选择 C-suite、Manager 如何限制直属专家，以及 Skills 为什么不是 Subagent 的自动继承链，见 [Team、C-suite、Subagent 与 Skill 的连接原理](./team-agent-skill-architecture.md)。
+
 ```mermaid
 flowchart TD
     C["Canonical Team Contract<br/>角色、层级、权限、验收"] --> CA["Claude Adapter"]
