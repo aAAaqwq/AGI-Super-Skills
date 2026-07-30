@@ -1,3 +1,4 @@
+import json
 import re
 import unittest
 from pathlib import Path
@@ -13,10 +14,25 @@ class ReadmeContractTests(unittest.TestCase):
         cls.chinese = (ROOT / "README_CN.md").read_text(encoding="utf-8")
 
     def test_readmes_define_the_product_and_its_boundary(self) -> None:
-        self.assertIn("Composable skills for specialist agents and reviewable team workflows.", self.english)
+        self.assertIn("An organized, installable team of Agents + Skills", self.english)
+        self.assertIn("not a Codex-only plugin", self.english)
         self.assertIn("not a model, autonomous orchestrator, or agent runtime", self.english)
-        self.assertIn("可组合 Skills。专业 Agents。可审查的团队 Workflows。", self.chinese)
+        self.assertIn("有组织、可安装的 Agents + Skills 团队系统", self.chinese)
+        self.assertIn("不是 Codex 专属插件", self.chinese)
         self.assertIn("不是模型、自治编排器或 Agent 运行时", self.chinese)
+        for framework in ("Claude Code", "Codex", "OpenClaw", "Hermes"):
+            self.assertIn(framework, self.english)
+            self.assertIn(framework, self.chinese)
+
+    def test_readmes_expose_all_manifest_outcome_teams(self) -> None:
+        manifest = json.loads((ROOT / "config/team-manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(manifest["kits"]), 8)
+        starter_index = (ROOT / "starter-kits/README.md").read_text(encoding="utf-8")
+        for kit in manifest["kits"]:
+            kit_path = f"starter-kits/{kit['id']}/"
+            self.assertIn(kit_path, self.english)
+            self.assertIn(kit_path, self.chinese)
+            self.assertIn(f"./{kit['id']}/RUNBOOK.md", starter_index)
 
     def test_readmes_lead_with_value_before_boundaries(self) -> None:
         for readme, value_heading, boundary_heading, flow_marker in (

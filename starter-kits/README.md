@@ -1,12 +1,21 @@
-# 🎯 Starter Kits
+# 🎯 Outcome Team Armies
 
-Start with the smallest team that can produce the outcome you need. Each kit selects existing Agent roles through `config/team-manifest.json`; it does not start a runtime or guarantee task quality.
+Start with the smallest complete army that can own the outcome. Each Team selects existing executives and specialists through `config/team-manifest.json`.
 
-| Kit | Best for | Roles | Guide |
+The same contract can be adapted to Claude Code, Codex, OpenClaw, Hermes, and other supported frameworks.
+
+The files define organization, routing, and review. They do not start a runtime or guarantee task quality.
+
+| Team army | Best for | Core roles | Runbook |
 |---|---|---|---|
-| 🚀 Solo Founder | Product and launch planning | CEO, PE, CCO | [Open kit](./solo-founder/) |
-| ✍️ Content Creator | Research, drafting, and measurement | CCO, CDO, CMO | [Open kit](./content-creator/) |
-| 📊 Quant Research | Historical research and risk review | CQO, CDO, CFO | [Open kit](./quant-trader/) |
+| 🚀 Solo Founder | Product decisions, MVP delivery, and launch preparation | CEO, CPO, PE, Governor | [Open](./solo-founder/RUNBOOK.md) |
+| ✍️ Content Creator | Evidence-led content, channel adaptation, and measurement | CEO, CRO, CCO, CMO, Governor | [Open](./content-creator/RUNBOOK.md) |
+| 📊 Quant Research | Reproducible backtesting and independent risk review | CEO, CQO, CDO, CFO, Governor | [Open](./quant-trader/RUNBOOK.md) |
+| 🧱 Product Delivery | Product discovery, architecture, implementation, and release handoff | CEO, CPO, CTO, PE, Governor | [Open](./product-delivery/RUNBOOK.md) |
+| 🔬 Research Decision | Primary evidence, uncertainty, and consequential decisions | CEO, CRO, CDO, Governor | [Open](./research-decision/RUNBOOK.md) |
+| 📣 Go To Market | Positioning, launch assets, revenue experiments, and risk gates | CEO, CPO, CMO, CCO, CSO, Governor | [Open](./go-to-market/RUNBOOK.md) |
+| 🚨 Operations Response | Incident containment, recovery, evidence, and review | CEO, COO, CTO, PE, Governor | [Open](./operations-response/RUNBOOK.md) |
+| 🏛️ Executive Team | Cross-functional company outcomes requiring broad optional coverage | All 14 top-level roles eligible; CEO coordinates, Governor reviews | [Open](./full-team/RUNBOOK.md) |
 
 Preview a kit without writing files:
 
