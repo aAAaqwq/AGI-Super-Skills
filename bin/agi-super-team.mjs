@@ -1,13 +1,44 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { homedir, platform } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadCatalog, selectTools } from "./installer/catalog.mjs";
 import { applyPlan, buildPlan, doctor, safeRoot } from "./installer/core.mjs";
+import { connectHarness, writeHarnessReceipt } from "./installer/connect.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+
+function distributionMetadata(packageRoot) {
+  const packageJson = JSON.parse(
+    readFileSync(join(packageRoot, "package.json"), "utf8"),
+  );
+  const revisionResult = spawnSync(
+    "git",
+    ["-C", packageRoot, "rev-parse", "HEAD"],
+    {encoding: "utf8"},
+  );
+  const sourceRevision = revisionResult.status === 0
+    ? revisionResult.stdout.trim()
+    : process.env.AGI_SUPER_TEAM_REVISION || null;
+  const dirtyResult = spawnSync(
+    "git",
+    ["-C", packageRoot, "status", "--porcelain", "--untracked-files=normal"],
+    {encoding: "utf8"},
+  );
+  const sourceDirty = dirtyResult.status === 0
+    ? Boolean(dirtyResult.stdout.trim())
+    : null;
+  return {
+    packageVersion: packageJson.version,
+    sourceRevision,
+    sourceDirty,
+    revisionMatched: Boolean(sourceRevision && sourceDirty === false),
+  };
+}
 
 function usage() {
   console.log(`AGI Super Team — preview-first multi-CLI installer
@@ -30,6 +61,7 @@ Content and actions:
   --no-skills            Do not install the six curated Skills
   --doctor               Verify the selected installation (read-only)
   --install              Apply changes (default: preview)
+  --connect              Connect installed Adapter state and write a pending receipt
   --skip-plugin          Do not install/update the Codex plugin
 
 Legacy Codex options remain supported:
@@ -45,10 +77,10 @@ function requireValue(argv, index, option) {
 
 function parseArgs(argv) {
   const usesMultiTargetInterface = argv.some((argument) =>
-    ["--tool", "--all-tools", "--list-tools", "--home", "--project-dir", "--no-agents", "--no-skills", "--with-subagents", "--all-subagents", "--with-cco-specialists", "--doctor"].includes(argument),
+    ["--tool", "--all-tools", "--list-tools", "--home", "--project-dir", "--no-agents", "--no-skills", "--with-subagents", "--all-subagents", "--with-cco-specialists", "--doctor", "--connect"].includes(argument),
   );
   const options = {
-    install: false, doctor: false, listTools: false, listTeams: false,
+    install: false, connect: false, doctor: false, listTools: false, listTeams: false,
     tools: [], allTools: false, home: homedir(), projectDir: process.cwd(),
     includeAgents: true, includeSkills: true, teams: [], allTeams: true,
     allAgents: false, globalCeo: true, codexHome: process.env.CODEX_HOME || null,
@@ -57,6 +89,7 @@ function parseArgs(argv) {
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === "--install") options.install = true;
+    else if (argument === "--connect") options.connect = true;
     else if (argument === "--doctor") options.doctor = true;
     else if (argument === "--all-tools") options.allTools = true;
     else if (argument === "--list-tools") options.listTools = true;
@@ -85,6 +118,7 @@ function parseArgs(argv) {
   if (!options.includeAgents && (options.includeCcoSpecialists || options.allSubagents || options.subagentManagers.length)) throw new Error("subagent options require Agents");
   if (options.allSubagents && (options.includeCcoSpecialists || options.subagentManagers.length)) throw new Error("choose --all-subagents or individual subagent groups, not both");
   if (options.install && options.doctor) throw new Error("choose either --install or --doctor");
+  if (options.connect && !options.install) throw new Error("--connect requires --install");
   if (options.allTools && options.tools.length) throw new Error("choose --all-tools or --tool, not both");
   if (options.legacy && options.tools.length && options.tools.some((id) => id !== "codex")) {
     throw new Error("legacy Team options only apply to the codex target");
@@ -155,14 +189,20 @@ function selectedSubagentManagers(catalog, options) {
 }
 
 function configureLegacyCodex(tools, options) {
-  if (!options.codexHome) return { tools, home: safeRoot(options.home, "home") };
+  const legacyTools = tools.map((tool) => tool.id === "codex" ? {
+    ...tool,
+    agentMode: "codex-toml",
+  } : tool);
+  if (!options.codexHome) {
+    return {tools: legacyTools, home: safeRoot(options.home, "home")};
+  }
   const codexHome = safeRoot(options.codexHome, "Codex home");
   if (codexHome === resolve(homedir())) throw new Error(`refusing unsafe Codex home: ${codexHome}`);
   const home = dirname(codexHome);
   const prefix = basename(codexHome);
   return {
     home,
-    tools: tools.map((tool) => tool.id === "codex" ? {
+    tools: legacyTools.map((tool) => tool.id === "codex" ? {
       ...tool,
       agentPaths: [join(prefix, "agents")],
       skillPaths: [join(prefix, "skills")],
@@ -223,7 +263,32 @@ function main() {
     }
     const backups = applyPlan(plan);
     for (const backup of backups) console.log(`Backup: ${backup}`);
-    if (tools.some((tool) => tool.id === "openclaw")) {
+    if (options.connect) {
+      for (const tool of tools.filter((item) => item.adapterModule)) {
+        const item = plan.find((entry) => entry.label === `adapter:${tool.id}/connection`);
+        if (!item) throw new Error(`missing generated connection spec for ${tool.id}`);
+        const connection = JSON.parse(item.content.toString("utf8"));
+        const connectionSha256 = createHash("sha256")
+          .update(item.content)
+          .digest("hex");
+        const receipt = {
+          ...connectHarness({
+            tool,
+            home: item.root,
+            connection,
+          }),
+          ...distributionMetadata(PACKAGE_ROOT),
+          connectionSha256,
+          generatedAt: new Date().toISOString(),
+        };
+        const receiptPath = writeHarnessReceipt({
+          root: item.root,
+          connectionPath: tool.connectionPath,
+          receipt,
+        });
+        console.log(`Connected: ${tool.id} (${receipt.status}); receipt: ${receiptPath}`);
+      }
+    } else if (tools.some((tool) => tool.id === "openclaw")) {
       console.log("OpenClaw note: artifacts were installed but workspaces were not registered; register them explicitly after review.");
     }
     console.log("\nInstalled. Restart the selected CLI to load new Agents and Skills.");

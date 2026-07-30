@@ -10,7 +10,7 @@ Start with the shared [repository context](./CONTEXT.md). The machine-readable o
 |---|---|---|---|
 | Reusable instructions | `skills/*/SKILL.md` | Catalog, Agents, distributions | Tracked physical entrypoint; no symlink |
 | Team composition | `agents/`, `starter-kits/`, `config/team-manifest.json` | Generic installer and docs | Manifest is roster and kit authority |
-| Distribution | `.codex/`, plugin manifests, `plugins/agi-super-team-codex/` | External harnesses | Presence is not compatibility evidence |
+| Distribution | `bin/adapters/`, `config/harness-adapters/`, curated plugin manifests | External harnesses | Presence is not compatibility evidence |
 | Verification evidence | `scripts/`, `tests/`, CI | Maintainers and release gates | Structural checks do not imply runtime outcomes |
 | Discovery and navigation | `catalog/`, `docs/`, README indexes | Humans, search, coding agents | Generated files never become source authority |
 
@@ -38,8 +38,10 @@ flowchart LR
   Manifest --> Validator
   Validator --> Receipt["Repository evidence"]
 
-  CodexPackage["plugins/agi-super-team-codex/<br/>independently curated source"]
-  CodexPackage --> Harness["External harness"]
+  Contract["Canonical Team Contract"]
+  Contract --> Adapters["Claude / Codex / OpenClaw / Hermes Adapters"]
+  Adapters --> Harness["External harness"]
+  Adapters --> AdapterReceipt["Connection + pending runtime receipt"]
   Workspace --> Harness
 
   Skills --> QualityAudit["Skill quality audit"]
@@ -67,7 +69,7 @@ README counts, badges, plugin manifests, and generated JSON must not override th
 | Team composition | `config/team-manifest.json` | `agents/`, `starter-kits/` | Composed; one roster drives installer and validation |
 | Safe installation | `./install.sh … <kit-or-agent>` | `install.sh`, installer fixtures | Composed; one safety boundary protects every deployment |
 | Catalog discovery | taxonomy + fixed reviewed labels in; Markdown/JSON index + agreement report out | taxonomy, Gold Set, builders, `catalog/` | Composed; one rule set serves human and machine discovery with a separate semantic regression contract |
-| Distribution Adapters | harness manifests and curated packages | `.codex/`, plugin manifests, `plugins/` | Boundary; isolates harness conventions from canonical content |
+| Distribution Adapters | `renderAdapterArtifacts` + `buildConnectionSpec` | `bin/adapters/`, `config/harness-adapters/`, curated plugins | Boundary; isolates harness conventions from canonical content |
 | Verification evidence | `npm test`, `npm run validate:strict` | `scripts/`, `tests/`, CI | Foundational; prevents drift across public surfaces |
 | Public navigation | README routes and maintained Pages | README files, `docs/`, `cookbook/`, `assets/` | Boundary; keeps copied claims out of source authority |
 | Governance memory | context, architecture, ADRs | `CONTEXT.md`, this file, `docs/adr/` | Foundational; preserves language and decisions |
@@ -81,6 +83,8 @@ The registry also records each primary path role: `authored-authority`, `authore
 - `skill-taxonomy → catalog builder → catalog/` is a generated discovery Seam.
 - `fixed Gold labels + generated skill index → taxonomy evaluator → reviewed-set agreement report` is a semantic-regression Seam. It measures label agreement, not runtime quality.
 - Root full-library harness manifests are legacy or manifest-only Adapters.
+- The four primary external Adapters consume canonical Agents and assigned physical Skills without modifying either source tree. They emit native artifacts, a connection spec, and a pending receipt contract.
+- `--connect` only performs harness-specific structural wiring. OpenClaw uses previewed `agents.list` upsert with unmanaged-Agent preservation and no bindings; Claude/Codex use filesystem discovery; Hermes remains blueprint-only.
 - `plugins/agi-super-team-codex/` is an independently curated Codex Adapter; it remains manifest-only until a matching client receipt exists.
 - `CHARTER.md` and `COLLABORATION.md` are required shared generic-workspace inputs. Installed role packs use relative links to them.
 

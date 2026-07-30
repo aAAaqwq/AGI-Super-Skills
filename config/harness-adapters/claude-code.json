@@ -1,0 +1,53 @@
+{
+  "$schema": "./claude-code.schema.json",
+  "schemaVersion": 1,
+  "harness": "claude-code",
+  "connectionMode": "filesystem-discovery",
+  "runtimeEvidence": "pending",
+  "coordinator": "ast-ceo",
+  "independentReviewer": "ast-governor",
+  "requiredMaxDepth": 2,
+  "maxConcurrentChildren": 2,
+  "agentPath": ".claude/agents",
+  "skillPath": ".claude/skills",
+  "orchestratorSkill": "agi-super-team-orchestrator",
+  "agentMap": {
+    "ceo": "ast-ceo",
+    "cto": "ast-cto",
+    "pe": "ast-pe",
+    "cpo": "ast-cpo",
+    "cqo": "ast-cqo",
+    "cmo": "ast-cmo",
+    "cfo": "ast-cfo",
+    "cdo": "ast-cdo",
+    "cco": "ast-cco",
+    "clo": "ast-clo",
+    "cro": "ast-cro",
+    "cso": "ast-cso",
+    "coo": "ast-coo",
+    "governor": "ast-governor"
+  },
+  "delegation": {
+    "tool": "Agent",
+    "coordinatorMayDelegate": true,
+    "managers": ["cto", "cpo", "cco", "cfo", "cdo", "cqo", "cmo", "cro", "cso", "coo", "clo"],
+    "leafDisallowedTools": ["Agent"],
+    "governorDisallowedTools": ["Agent"],
+    "fallbackMode": "parent-flat"
+  },
+  "skills": {
+    "source": "canonical-assigned",
+    "preloadFrontmatterField": "skills"
+  },
+  "cleanClientReceipt": {
+    "status": "pending",
+    "configEnvironmentVariable": "CLAUDE_CONFIG_DIR",
+    "requiredChecks": [
+      "fresh-config-directory",
+      "agents-discovered",
+      "orchestrator-semantic-trigger",
+      "ceo-manager-leaf-dispatch-observed",
+      "governor-independent-review-observed"
+    ]
+  }
+}

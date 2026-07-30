@@ -1,6 +1,6 @@
 {
   "name": "agi-super-team",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Evidence-backed AI team packs with preview-first installation and repository contracts",
   "license": "MIT",
   "repository": {
@@ -20,6 +20,8 @@
     "agents/",
     ".agents/plugins/marketplace.json",
     "config/cli-adapters.json",
+    "config/cli-adapters.schema.json",
+    "config/harness-adapters/",
     "config/agent-hierarchy.json",
     "config/agent-hierarchy.schema.json",
     "config/agent-sources.lock.json",
@@ -34,6 +36,7 @@
     "plugins/agi-super-team-codex/skills/*/agents/",
     "plugins/agi-super-team-codex/skills/*/references/",
     "plugins/agi-super-team-codex/skills/*/scripts/*.py",
+    "skills/",
     "LICENSE",
     "README.md",
     "README_CN.md"

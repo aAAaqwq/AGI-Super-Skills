@@ -25,7 +25,7 @@ List all 18 adapter targets, preview one target, then apply the same selection:
 ```bash
 npx -y github:aAAaqwq/AGI-Super-Team --list-tools
 npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code
-npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --install
+npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --install --connect
 npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
 ```
 
@@ -35,12 +35,12 @@ Replace `claude-code` with an ID from `--list-tools`. Use `--all-tools` only whe
 
 | Platform | Preview command | Installed capability |
 |---|---|---|
-| **Claude Code** | `npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code` | Native Markdown Agents + native Skills |
-| **Codex** | `npx -y github:aAAaqwq/AGI-Super-Team --tool codex` | Native TOML Agents + Codex plugin Skills; the currently runtime-verified adapter |
-| **OpenClaw** | `npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw` | Native Agent workspaces + native Skills |
-| **Hermes Agent** | `npx -y github:aAAaqwq/AGI-Super-Team --tool hermes` | Native Skills; role packs are exposed as Skills rather than native Agents |
+| **Claude Code** | `npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code` | Native Markdown Agents + canonical Skills + Claude orchestrator |
+| **Codex** | `npx -y github:aAAaqwq/AGI-Super-Team --tool codex` | Main-session CEO + native TOML Agents + canonical Skills |
+| **OpenClaw** | `npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw` | Namespaced Agent workspaces + canonical Skills + safe config merge |
+| **Hermes Agent** | `npx -y github:aAAaqwq/AGI-Super-Team --tool hermes` | Role Skills + canonical Skills + Profiles/Kanban blueprints |
 
-For OpenClaw, the installer materializes Agent workspaces but does not register them; review and register the desired workspaces explicitly after installation.
+`--install` materializes files; `--install --connect` also writes a connection receipt. OpenClaw dry-runs and then upserts managed `agents.list` entries while preserving unmanaged Agents and creating no channel bindings. Claude and Codex use filesystem discovery. Hermes emits blueprints but does not create Profiles, Cron jobs, or a Gateway. See the [primary harness Adapter guide](./docs/guides/harness-adapters.md) for paths, permissions, and receipt requirements.
 
 Claude Code, Codex, OpenClaw, and Hermes are first-class entry points to the same team system, not separate editions with different organizations.
 
@@ -66,10 +66,10 @@ Paths for global adapters are relative to the selected home; project adapters ar
 
 | ID | Client/runtime | Scope | Agent delivery | Skill delivery | Status |
 |---|---|---|---|---|---|
-| `claude-code` | Claude Code | Global | Native Markdown Agent: `.claude/agents` | Native: `.claude/skills` | Native adapter |
-| `codex` | Codex | Global | Native TOML Agent: `.codex/agents` | Native plugin: `.codex/skills` | Runtime-verified adapter |
-| `openclaw` | OpenClaw | Global | Native workspace: `.openclaw/agency-agents` | Native: `.openclaw/skills/agi-super-team` | Native adapter |
-| `hermes` | Hermes Agent | Global | Agent-as-Skill: `.hermes/skills/agi-super-team-agents` | Native: `.hermes/skills/agi-super-team` | Native Skills |
+| `claude-code` | Claude Code | Global | Native Markdown Agent: `.claude/agents` | Canonical: `.claude/skills` | Structurally connected; runtime pending |
+| `codex` | Codex | Global | Main-session CEO + TOML: `.codex/agents` | Canonical: `.codex/skills` | Structurally connected; runtime pending |
+| `openclaw` | OpenClaw | Global | Native workspace: `.openclaw/agency-agents/agi-super-team` | Canonical: `.openclaw/skills/agi-super-team` | Structurally connected; runtime pending |
+| `hermes` | Hermes Agent | Global | Role Skills: `.hermes/skills/agi-super-team-agents` | Canonical: `.hermes/skills/agi-super-team` | Blueprint connected; runtime pending |
 | `copilot` | GitHub Copilot | Global | Markdown Agent: `.github/agents`, `.copilot/agents` | Native: `.copilot/skills` | Adapter |
 | `antigravity` | Antigravity | Global | Agent: `.gemini/config/agents` | Native: `.gemini/config/skills` | **Experimental** |
 | `gemini-cli` | Gemini CLI | Global | Markdown Agent: `.gemini/agents` | Native: `.gemini/skills` | Adapter |
@@ -103,7 +103,7 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
   --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --doctor
 ```
 
-Run the same `--install` command again to refresh managed content; repeat `--doctor` afterward. Restart or open a new task in the target client, then verify that it discovers the expected Agent/Skill surface. `--doctor` verifies installed adapter artifacts, not model behavior or task quality.
+Run the same `--install` command again to refresh managed content; use `--install --connect` when the connection and pending receipt should also be refreshed, then repeat `--doctor`. Restart or open a new task in the target client and verify that it discovers the expected Agent/Skill surface. `--doctor` verifies installed adapter artifacts, not model behavior or task quality.
 
 ### Safety and update limits
 
@@ -112,7 +112,7 @@ Run the same `--install` command again to refresh managed content; repeat `--doc
 - Backups are local recovery aids, not a complete snapshot or uninstall system. Review the preview and keep your own version-control or filesystem backup for important configuration.
 - Symlinked or unsafe destinations are refused. `--no-agents` and `--no-skills` can narrow the payload when needed.
 - This project does not use a remote-script pipe installer; the commands above use npm's package runner and still deserve normal dependency review.
-- Installation proves file materialization only. Except for the adapter explicitly marked runtime-verified, current-client loading and execution remain unverified until supported by a commit-matched receipt.
+- Installation proves file materialization only. Runtime evidence for all four primary Adapters remains `pending` until a clean-client canary is bound to a clean source revision.
 
 The adapter design was inspired in part by [`jnMetaCode/agency-agents-zh`](https://github.com/jnMetaCode/agency-agents-zh) at fixed commit [`2ecfabf8`](https://github.com/jnMetaCode/agency-agents-zh/commit/2ecfabf8e944ccdfed63ad8c44d5241290af6977). AGI Super Team's manifest, payload mapping, safety behavior, and evidence boundaries are maintained here.
 

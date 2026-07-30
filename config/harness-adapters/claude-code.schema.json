@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aAAaqwq/AGI-Super-Team/config/harness-adapters/claude-code.schema.json",
+  "title": "AGI Super Team Claude Code Adapter",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "harness",
+    "connectionMode",
+    "runtimeEvidence",
+    "coordinator",
+    "independentReviewer",
+    "requiredMaxDepth",
+    "maxConcurrentChildren",
+    "agentPath",
+    "skillPath",
+    "orchestratorSkill",
+    "agentMap",
+    "delegation",
+    "skills",
+    "cleanClientReceipt"
+  ],
+  "properties": {
+    "$schema": {"const": "./claude-code.schema.json"},
+    "schemaVersion": {"const": 1},
+    "harness": {"const": "claude-code"},
+    "connectionMode": {"const": "filesystem-discovery"},
+    "runtimeEvidence": {"enum": ["pending", "fixture-tested", "external-receipt"]},
+    "coordinator": {"const": "ast-ceo"},
+    "independentReviewer": {"const": "ast-governor"},
+    "requiredMaxDepth": {"const": 2},
+    "maxConcurrentChildren": {"const": 2},
+    "agentPath": {"const": ".claude/agents"},
+    "skillPath": {"const": ".claude/skills"},
+    "orchestratorSkill": {"const": "agi-super-team-orchestrator"},
+    "agentMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ceo", "cto", "pe", "cpo", "cqo", "cmo", "cfo", "cdo", "cco", "clo", "cro", "cso", "coo", "governor"],
+      "properties": {
+        "ceo": {"const": "ast-ceo"},
+        "cto": {"const": "ast-cto"},
+        "pe": {"const": "ast-pe"},
+        "cpo": {"const": "ast-cpo"},
+        "cqo": {"const": "ast-cqo"},
+        "cmo": {"const": "ast-cmo"},
+        "cfo": {"const": "ast-cfo"},
+        "cdo": {"const": "ast-cdo"},
+        "cco": {"const": "ast-cco"},
+        "clo": {"const": "ast-clo"},
+        "cro": {"const": "ast-cro"},
+        "cso": {"const": "ast-cso"},
+        "coo": {"const": "ast-coo"},
+        "governor": {"const": "ast-governor"}
+      }
+    },
+    "delegation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool", "coordinatorMayDelegate", "managers", "leafDisallowedTools", "governorDisallowedTools", "fallbackMode"],
+      "properties": {
+        "tool": {"const": "Agent"},
+        "coordinatorMayDelegate": {"const": true},
+        "managers": {"const": ["cto", "cpo", "cco", "cfo", "cdo", "cqo", "cmo", "cro", "cso", "coo", "clo"]},
+        "leafDisallowedTools": {"const": ["Agent"]},
+        "governorDisallowedTools": {"const": ["Agent"]},
+        "fallbackMode": {"const": "parent-flat"}
+      }
+    },
+    "skills": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "preloadFrontmatterField"],
+      "properties": {
+        "source": {"const": "canonical-assigned"},
+        "preloadFrontmatterField": {"const": "skills"}
+      }
+    },
+    "cleanClientReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "configEnvironmentVariable", "requiredChecks"],
+      "properties": {
+        "status": {"enum": ["pending", "passed", "failed"]},
+        "configEnvironmentVariable": {"const": "CLAUDE_CONFIG_DIR"},
+        "requiredChecks": {
+          "const": [
+            "fresh-config-directory",
+            "agents-discovered",
+            "orchestrator-semantic-trigger",
+            "ceo-manager-leaf-dispatch-observed",
+            "governor-independent-review-observed"
+          ]
+        }
+      }
+    }
+  }
+}

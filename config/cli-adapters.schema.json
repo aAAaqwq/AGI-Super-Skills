@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aAAaqwq/AGI-Super-Team/config/cli-adapters.schema.json",
+  "title": "AGI Super Team CLI adapter registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "reference", "tools"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit"],
+      "properties": {
+        "repository": {"type": "string", "format": "uri"},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "tools": {
+      "type": "array",
+      "minItems": 18,
+      "maxItems": 18,
+      "items": {"$ref": "#/$defs/tool"}
+    }
+  },
+  "$defs": {
+    "tool": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "scope",
+        "agentMode",
+        "skillMode",
+        "agentPaths",
+        "skillPaths",
+        "support"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "label": {"type": "string", "minLength": 1},
+        "scope": {"enum": ["global", "project"]},
+        "agentMode": {"type": "string", "minLength": 1},
+        "skillMode": {"type": "string", "minLength": 1},
+        "agentPaths": {"type": "array", "items": {"type": "string"}},
+        "skillPaths": {"type": "array", "items": {"type": "string"}},
+        "support": {"type": "string", "minLength": 1},
+        "runtimeEvidence": {
+          "enum": ["pending", "fixture-tested", "external-receipt"]
+        },
+        "skillSource": {"enum": ["canonical-assigned", "plugin-curated"]},
+        "adapterModule": {
+          "type": "string",
+          "pattern": "^bin/adapters/[a-z0-9-]+\\.mjs$"
+        },
+        "connectionPath": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

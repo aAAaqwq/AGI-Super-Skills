@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aAAaqwq/AGI-Super-Team/config/harness-adapters/openclaw.schema.json",
+  "title": "AGI Super Team OpenClaw adapter contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "harness",
+    "targetVersion",
+    "namespace",
+    "coordinator",
+    "independentReviewer",
+    "paths",
+    "connection",
+    "requiredMaxDepth",
+    "maxChildrenPerAgent",
+    "runtimeEvidence"
+  ],
+  "properties": {
+    "$schema": {"const": "./openclaw.schema.json"},
+    "schemaVersion": {"const": 1},
+    "harness": {"const": "openclaw"},
+    "targetVersion": {"type": "string", "pattern": "^[0-9]{4}\\.[0-9]+\\.[0-9]+$"},
+    "namespace": {"const": "agi-super-team"},
+    "coordinator": {"const": "ast-ceo"},
+    "independentReviewer": {"const": "ast-governor"},
+    "paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["config", "workspaceRoot", "skillRoot"],
+      "properties": {
+        "config": {"const": ".openclaw/openclaw.json"},
+        "workspaceRoot": {"const": ".openclaw/agency-agents/agi-super-team"},
+        "skillRoot": {"const": ".openclaw/skills/agi-super-team"}
+      }
+    },
+    "connection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "listPath",
+        "key",
+        "strategy",
+        "managedPrefix",
+        "conflictPolicy",
+        "removeUnmentionedManaged",
+        "generateBindings"
+      ],
+      "properties": {
+        "listPath": {"const": "agents.list"},
+        "key": {"const": "id"},
+        "strategy": {"const": "upsert-managed-preserve-unmanaged"},
+        "managedPrefix": {"const": "ast-"},
+        "conflictPolicy": {"const": "fail-unless-previewed"},
+        "removeUnmentionedManaged": {"const": false},
+        "generateBindings": {"const": false}
+      }
+    },
+    "requiredMaxDepth": {"const": 2},
+    "maxChildrenPerAgent": {"const": 2},
+    "runtimeEvidence": {"const": "pending"}
+  }
+}

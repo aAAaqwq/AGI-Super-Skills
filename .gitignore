@@ -45,6 +45,7 @@ auth.json
 auth-profiles.json
 models.json
 openclaw.json
+!config/harness-adapters/openclaw.json
 *.key
 *.pem
 *.p12

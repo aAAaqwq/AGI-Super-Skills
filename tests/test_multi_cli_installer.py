@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -163,11 +164,11 @@ class MultiCliInstallerTests(unittest.TestCase):
                 if tool_id == "codex":
                     installed = {path.stem.removeprefix("ast-") for path in (home / ".codex/agents").glob("ast-*-*.toml") if path.stem.removeprefix("ast-") in expected}
                 elif tool_id == "claude-code":
-                    installed = {path.stem for path in (home / ".claude/agents").glob("*.md") if path.stem in expected}
+                    installed = {path.stem.removeprefix("ast-") for path in (home / ".claude/agents").glob("ast-*-*.md") if path.stem.removeprefix("ast-") in expected}
                 elif tool_id == "openclaw":
-                    installed = {path.name.removeprefix("workspace-") for path in (home / ".openclaw/agency-agents").glob("workspace-*-*") if path.name.removeprefix("workspace-") in expected}
+                    installed = {path.name.removeprefix("ast-") for path in (home / ".openclaw/agency-agents/agi-super-team").glob("ast-*-*") if path.name.removeprefix("ast-") in expected}
                 else:
-                    installed = {path.name for path in (home / ".hermes/skills/agi-super-team-agents").glob("*-*") if path.name in expected}
+                    installed = {path.name.removeprefix("ast-") for path in (home / ".hermes/skills/agi-super-team-agents").glob("ast-*-*") if path.name.removeprefix("ast-") in expected}
                 self.assertEqual(installed, expected)
 
     def test_no_agents_installs_only_skills(self) -> None:
@@ -294,6 +295,62 @@ class MultiCliInstallerTests(unittest.TestCase):
                 r"refus|unsafe|symlink|symbolic",
             )
             self.assertEqual(self.snapshot(outside), before)
+
+    def test_exact_whole_skill_symlink_is_reused_without_writes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            project = root / "project"
+            project.mkdir()
+            external = root / "external-ai-marketing-videos"
+            shutil.copytree(ROOT / "skills" / "ai-marketing-videos", external)
+            skill_root = home / ".claude" / "skills"
+            skill_root.mkdir(parents=True)
+            linked = skill_root / "ai-marketing-videos"
+            linked.symlink_to(external, target_is_directory=True)
+            before = self.snapshot(external)
+
+            result = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "claude-code",
+                "--no-agents",
+                "--install",
+            )
+
+            self.assert_success(result)
+            self.assertTrue(linked.is_symlink())
+            self.assertEqual(self.snapshot(external), before)
+
+    def test_mismatched_whole_skill_symlink_is_refused(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            project = root / "project"
+            project.mkdir()
+            external = root / "external-ai-marketing-videos"
+            external.mkdir()
+            (external / "SKILL.md").write_text("not canonical\n", encoding="utf-8")
+            skill_root = home / ".claude" / "skills"
+            skill_root.mkdir(parents=True)
+            (skill_root / "ai-marketing-videos").symlink_to(
+                external, target_is_directory=True
+            )
+            before = self.snapshot(external)
+
+            result = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "claude-code",
+                "--no-agents",
+                "--install",
+            )
+
+            self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("mismatched Skill symlink", result.stderr)
+            self.assertEqual(self.snapshot(external), before)
 
     def test_doctor_fails_for_missing_install_and_passes_after_install(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

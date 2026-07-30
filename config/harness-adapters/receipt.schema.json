@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aAAaqwq/AGI-Super-Team/config/harness-adapters/receipt.schema.json",
+  "title": "AGI Super Team installed harness receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "harness",
+    "status",
+    "runtimeEvidence",
+    "checks",
+    "limitations",
+    "packageVersion",
+    "sourceRevision",
+    "sourceDirty",
+    "revisionMatched",
+    "connectionSha256",
+    "generatedAt"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "harness": {"enum": ["claude-code", "codex", "openclaw", "hermes"]},
+    "status": {"enum": ["filesystem-connected", "connected-structural"]},
+    "runtimeEvidence": {"const": "pending"},
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "packageVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "sourceRevision": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sourceDirty": {"type": ["boolean", "null"]},
+    "revisionMatched": {"type": "boolean"},
+    "connectionSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "generatedAt": {"type": "string", "format": "date-time"},
+    "version": {"type": "string"},
+    "managedAgents": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^ast-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+    },
+    "preservedAgents": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "bindingsChanged": {"const": false},
+    "backup": {"type": ["string", "null"]}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"revisionMatched": {"const": true}},
+        "required": ["revisionMatched"]
+      },
+      "then": {
+        "properties": {
+          "sourceRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "sourceDirty": {"const": false}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"harness": {"const": "openclaw"}},
+        "required": ["harness"]
+      },
+      "then": {
+        "required": [
+          "version",
+          "managedAgents",
+          "preservedAgents",
+          "bindingsChanged",
+          "backup"
+        ],
+        "properties": {"status": {"const": "connected-structural"}}
+      }
+    }
+  ]
+}

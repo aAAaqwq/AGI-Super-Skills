@@ -23,7 +23,7 @@ AGI Super Team 不是 Codex 专属插件，而是一套版本化、有组织的 
 ```bash
 npx -y github:aAAaqwq/AGI-Super-Team --list-tools
 npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code
-npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --install
+npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --install --connect
 npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
 ```
 
@@ -33,12 +33,12 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
 
 | 平台 | 预览命令 | 安装能力 |
 |---|---|---|
-| **Claude Code** | `npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code` | 原生 Markdown Agent + 原生 Skill |
-| **Codex** | `npx -y github:aAAaqwq/AGI-Super-Team --tool codex` | 原生 TOML Agent + Codex Plugin Skill；当前有 Runtime 验证的适配器 |
-| **OpenClaw** | `npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw` | 原生 Agent Workspace + 原生 Skill |
-| **Hermes Agent** | `npx -y github:aAAaqwq/AGI-Super-Team --tool hermes` | 原生 Skill；角色包以 Skill 暴露，不是原生 Agent |
+| **Claude Code** | `npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code` | 原生 Markdown Agent + canonical Skills + Claude orchestrator |
+| **Codex** | `npx -y github:aAAaqwq/AGI-Super-Team --tool codex` | 主会话 CEO + 原生 TOML Agent + canonical Skills |
+| **OpenClaw** | `npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw` | 命名空间化 Agent Workspace + canonical Skills + 安全配置合并 |
+| **Hermes Agent** | `npx -y github:aAAaqwq/AGI-Super-Team --tool hermes` | 角色 Skill + canonical Skills + Profiles/Kanban 蓝图 |
 
-对 OpenClaw，安装器只生成 Agent Workspace，不会自动注册；请先审查内容，再显式注册需要的 Workspace。
+`--install` 负责落盘；`--install --connect` 还会生成接线凭据。OpenClaw 会先 dry-run，再按 `id` 合并 `agents.list`，保留非托管 Agent，且不创建 channel binding。Claude/Codex 采用文件系统发现；Hermes 只生成 Profile 蓝图，不自动创建 Profile、Cron 或 Gateway。完整路径、权限和 receipt 契约见[四个主力框架 Adapter 接入手册](./docs/guides/harness-adapters.md)。
 
 Claude Code、Codex、OpenClaw、Hermes 都是同一套团队系统的一等入口，不是组织结构不同的四个版本。由于各框架的原生 Agent 与 Skill 能力不同，最终交付形态会有所区别。
 
@@ -79,10 +79,10 @@ Codex 的嵌套调用需要 `max_depth = 2`。在 `max_threads = 4` 下，一次
 
 | ID | 客户端/运行时 | 范围 | Agent 交付方式 | Skill 交付方式 | 状态 |
 |---|---|---|---|---|---|
-| `claude-code` | Claude Code | 全局 | 原生 Markdown Agent：`.claude/agents` | 原生：`.claude/skills` | 原生适配 |
-| `codex` | Codex | 全局 | 原生 TOML Agent：`.codex/agents` | 原生 Plugin：`.codex/skills` | Runtime 已验证适配器 |
-| `openclaw` | OpenClaw | 全局 | 原生 Workspace：`.openclaw/agency-agents` | 原生：`.openclaw/skills/agi-super-team` | 原生适配 |
-| `hermes` | Hermes Agent | 全局 | Agent-as-Skill：`.hermes/skills/agi-super-team-agents` | 原生：`.hermes/skills/agi-super-team` | 原生 Skills |
+| `claude-code` | Claude Code | 全局 | 原生 Markdown Agent：`.claude/agents` | canonical：`.claude/skills` | 结构接入；Runtime pending |
+| `codex` | Codex | 全局 | 主会话 CEO + TOML：`.codex/agents` | canonical：`.codex/skills` | 结构接入；Runtime pending |
+| `openclaw` | OpenClaw | 全局 | 原生 Workspace：`.openclaw/agency-agents/agi-super-team` | canonical：`.openclaw/skills/agi-super-team` | 结构接入；Runtime pending |
+| `hermes` | Hermes Agent | 全局 | 角色 Skill：`.hermes/skills/agi-super-team-agents` | canonical：`.hermes/skills/agi-super-team` | 蓝图接入；Runtime pending |
 | `copilot` | GitHub Copilot | 全局 | Markdown Agent：`.github/agents`、`.copilot/agents` | 原生：`.copilot/skills` | 适配器 |
 | `antigravity` | Antigravity | 全局 | Agent：`.gemini/config/agents` | 原生：`.gemini/config/skills` | **实验性** |
 | `gemini-cli` | Gemini CLI | 全局 | Markdown Agent：`.gemini/agents` | 原生：`.gemini/skills` | 适配器 |
@@ -116,7 +116,7 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
   --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --doctor
 ```
 
-以后用同一条 `--install` 命令刷新受管理内容，再运行一次 `--doctor`。随后重启目标客户端或新建任务，确认它发现了预期 Agent/Skill。`--doctor` 检查的是已安装的适配产物，不验证模型行为或任务质量。
+以后用同一条 `--install` 命令刷新受管理内容，再运行一次 `--doctor`。需要更新接线和 pending receipt 时使用 `--install --connect`。随后重启目标客户端或新建任务，确认它发现了预期 Agent/Skill。`--doctor` 检查的是已安装的适配产物，不验证模型行为或任务质量。
 
 ### 安全与更新边界
 
@@ -125,7 +125,7 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
 - 本地备份只用于辅助恢复，不是完整快照或卸载系统。重要配置仍应纳入自己的版本控制或文件系统备份。
 - 安装器拒绝符号链接等不安全目标；需要缩小范围时可使用 `--no-agents` 或 `--no-skills`。
 - 本项目不提供远程脚本管道安装方式；上方命令使用 npm package runner，但仍应按常规审查依赖。
-- 安装只证明文件已生成。除明确标为 Runtime 已验证的适配器外，当前客户端是否加载和执行仍需与 commit 匹配的凭据支持。
+- 安装只证明文件已生成；当前四个主力 Adapter 的运行证据都保持 `pending`，直到 clean client canary 与干净 revision 匹配。
 
 适配器设计部分参考了 [`jnMetaCode/agency-agents-zh`](https://github.com/jnMetaCode/agency-agents-zh) 的固定提交 [`2ecfabf8`](https://github.com/jnMetaCode/agency-agents-zh/commit/2ecfabf8e944ccdfed63ad8c44d5241290af6977)。AGI Super Team 在本仓库独立维护 Manifest、Payload 映射、安全行为和证据边界。
 
