@@ -148,12 +148,26 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
   <img src="https://img.shields.io/badge/outcome%20fixture-validation%20pending-64748b" alt="成果测试样例待验证">
 </p>
 
-这些团队包围绕以下审查闭环设计：
+Team、C-suite、Subagent 与 Skill 不是目录继承链，而是一张成果驱动的连接图：Team 选择最小充分的 C-suite；每位高管一条支路获得专属 Skills，另一条支路获得允许调用的直属专家；所有产物最后进入独立 Governor 验收。
 
 ```mermaid
-flowchart LR
-  B["Brief"] --> C["协调者界定范围"] --> S["专家使用 Skills 执行"] --> R["审查者提出挑战"] --> H["人工批准"]
+flowchart TD
+  O["成果目标 / Brief"] --> C["协调者界定范围"]
+  C --> T["Team Kit<br/>成员、产物、验收"]
+  T --> CEO["CEO 协调者"]
+  CEO --> M["最小充分 C-suite"]
+  CEO --> G["Governor 独立复核"]
+  M -->|"角色分配"| SK["Canonical Skills<br/>可复用方法"]
+  M -->|"受限委派"| L["直属 Subagents<br/>领域专家"]
+  L --> RI["专家角色指令<br/>触发、输入、输出、边界"]
+  SK --> W["有证据的工作产物"]
+  RI --> W
+  W --> G
+  G --> CEO
+  CEO --> H["人工批准<br/>发布、资金、凭证、不可逆操作"]
 ```
+
+Skills 与 Subagents 是 C-suite 下的两条并行能力支路，不是 `Subagent → Skill` 的自动继承关系。完整的配置编译过程、运行时委派时序、框架差异和安全不变量见 [Team、C-suite、Subagent 与 Skill 的连接原理](./docs/guides/team-agent-skill-architecture.md)。
 
 AGI Super Team 负责版本化内容、选择规则、安全复制和仓库检查。你另行配置的编程 Agent 工具负责模型、凭据、工具、执行和最终任务产物。
 
@@ -219,6 +233,7 @@ Manifest 会把可移植的 `required`/`optional` Skills、仅适用于特定 Ha
 | [实用指南](./docs/guides/) | Codex、Claude Code、兼容性、团队选择和工作边界 |
 | [专题手册](./cookbook/) | 内容、提示词、研究和量化工作流的深入材料 |
 | [架构地图](./ARCHITECTURE.md) | 事实来源、生成产物、公开入口和变更责任 |
+| [Team / Agent / Skill 连接原理](./docs/guides/team-agent-skill-architecture.md) | Team 选人、Manager 路由、Skill 分配、Adapter 编译与运行时委派 |
 | [统一术语](./CONTEXT.md) | Module、Interface、Adapter、证据与产品术语 |
 
 ### 🔎 查找高质量 Skill 来源

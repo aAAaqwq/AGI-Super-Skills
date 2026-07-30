@@ -135,12 +135,26 @@ The adapter design was inspired in part by [`jnMetaCode/agency-agents-zh`](https
   <img src="https://img.shields.io/badge/outcome%20fixture-validation%20pending-64748b" alt="Outcome fixture validation pending">
 </p>
 
-The packs are designed for this review loop:
+Team, C-suite, Subagents, and Skills form an outcome-driven graph rather than a directory inheritance chain. A Team selects the smallest sufficient C-suite; each executive receives assigned Skills on one branch and an allowlisted specialist roster on another; all evidence flows through an independent Governor gate.
 
 ```mermaid
-flowchart LR
-  B["Brief"] --> C["Coordinator scopes"] --> S["Specialists execute with skills"] --> R["Reviewer challenges"] --> H["Human approves"]
+flowchart TD
+  O["Outcome / Brief"] --> C["Coordinator scopes"]
+  C --> T["Team Kit<br/>roster, outputs, checks"]
+  T --> CEO["CEO coordinator"]
+  CEO --> M["Smallest sufficient C-suite"]
+  CEO --> G["Independent Governor"]
+  M -->|"role assignment"| SK["Canonical Skills<br/>reusable methods"]
+  M -->|"bounded delegation"| L["Direct Subagents<br/>domain specialists"]
+  L --> RI["Specialist role contract<br/>trigger, inputs, outputs, boundary"]
+  SK --> W["Evidence-backed work"]
+  RI --> W
+  W --> G
+  G --> CEO
+  CEO --> H["Human approval<br/>release, money, credentials, irreversible actions"]
 ```
+
+Skills and Subagents are parallel capability branches beneath a C-suite role, not an automatic `Subagent → Skill` inheritance chain. See [How Teams, C-suite Agents, Subagents, and Skills connect](./docs/guides/team-agent-skill-architecture.md) for the contract compiler, runtime sequence, framework mappings, and invariants.
 
 AGI Super Team owns the versioned content, selection rules, safe copying, and repository checks. Your configured coding-agent harness owns the model, credentials, tools, execution, and final task output.
 
@@ -206,6 +220,7 @@ Explore the repository by depth:
 | [Practical guides](./docs/guides/) | Codex, Claude Code, compatibility, team choice, and workflow boundaries |
 | [Cookbooks](./cookbook/) | Longer material for content, prompts, research, and quantitative workflows |
 | [Architecture map](./ARCHITECTURE.md) | Sources of truth, generated outputs, public entry points, and change ownership |
+| [Team / Agent / Skill linking model](./docs/guides/team-agent-skill-architecture.md) | Team selection, Manager routing, Skill assignment, Adapter compilation, and runtime delegation |
 | [Shared language](./CONTEXT.md) | Module, Interface, Adapter, evidence, and product terminology |
 
 ### 🔎 Find high-quality skill sources
