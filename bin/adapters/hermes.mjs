@@ -155,6 +155,8 @@ metadata:
 
 runtimeEvidence: pending
 
+开始前先读取 \`../agi-super-team/orchestrate-agi-super-team/SKILL.md\`，并按需读取其 references。canonical Skill 决定是否组队、通用任务包、Governor 与人工批准契约；本 Skill 只补充 Hermes Profile、Kanban 与 delegation 方式。
+
 ## 触发条件
 
 当任务需要一个以上持久命名 C-suite 角色、独立 Governor 复核，或需要跨 Profile 保留可观察的依赖与交接时使用。

@@ -113,7 +113,9 @@ description: 跨职能、公司级、高不确定性或用户明确要求 AGI Su
 
 # AGI Super Team｜Claude Code 编排器
 
-本 Skill 只定义 Claude Code 的运行时编排方式。canonical 角色正文和专业 Skills 由安装器逐字复制；本文件不改写它们。
+开始前先读取同一 Skill 根目录中的 \`../orchestrate-agi-super-team/SKILL.md\`，并按需读取其 references。canonical Skill 决定是否组队、通用任务包、Governor 与人工批准契约；本 Skill 只定义 Claude Code 的运行时编排方式。
+
+canonical 角色正文和专业 Skills 由安装器逐字复制；本文件不改写它们。
 
 ## 启动条件
 

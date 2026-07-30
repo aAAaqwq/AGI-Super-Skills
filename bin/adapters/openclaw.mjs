@@ -162,6 +162,8 @@ description: 在 OpenClaw 中按 CEO→管理节点→叶子→Governor 路由 A
 
 # AGI Super Team｜OpenClaw 调度入口
 
+开始前先读取同一 Skill 根目录中的 \`../orchestrate-agi-super-team/SKILL.md\`，并按需读取其 references。canonical Skill 决定是否组队、通用任务包、Governor 与人工批准契约；本 Skill 只补充 OpenClaw 会话调度方式。
+
 仅由 \`ast-ceo\` 使用。先定义结果、验收、边界与不做什么，再选择最小充分团队。
 
 ## 原生工具流程
