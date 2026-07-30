@@ -19,4 +19,4 @@ Run the first command as a preview. Run the second only after reviewing the prop
 
 Respect platform rules, consent, attribution, and community norms. All posts and replies must be reviewed and sent manually by an authorized human.
 
-See [the setup guide](../../setup.md) and [growth playbooks](../../growth/README.md).
+See [the setup guide](../../setup.md) and [the Team, Agent, and Skill linking model](../../docs/guides/team-agent-skill-architecture.md).

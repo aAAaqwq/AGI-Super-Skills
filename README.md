@@ -67,7 +67,7 @@ Paths for global adapters are relative to the selected home; project adapters ar
 | ID | Client/runtime | Scope | Agent delivery | Skill delivery | Status |
 |---|---|---|---|---|---|
 | `claude-code` | Claude Code | Global | Native Markdown Agent: `.claude/agents` | Canonical: `.claude/skills` | Structurally connected; runtime pending |
-| `codex` | Codex | Global | Main-session CEO + TOML: `.codex/agents` | Canonical: `.codex/skills` | Structurally connected; runtime pending |
+| `codex` | Codex | Global | Main-session CEO + TOML: `.codex/agents` | Canonical: `.agents/skills`; compatibility copy: `.codex/skills` | Structurally connected; runtime pending |
 | `openclaw` | OpenClaw | Global | Native workspace: `.openclaw/agency-agents/agi-super-team` | Canonical: `.openclaw/skills/agi-super-team` | Structurally connected; runtime pending |
 | `hermes` | Hermes Agent | Global | Role Skills: `.hermes/skills/agi-super-team-agents` | Canonical: `.hermes/skills/agi-super-team` | Blueprint connected; runtime pending |
 | `copilot` | GitHub Copilot | Global | Markdown Agent: `.github/agents`, `.copilot/agents` | Native: `.copilot/skills` | Adapter |
@@ -86,6 +86,8 @@ Paths for global adapters are relative to the selected home; project adapters ar
 | `qoder` | Qoder | Global | Markdown Agent: `.qoder/agents` | Native: `.qoder/skills` | Adapter |
 
 The matrix describes the adapter contract in [`config/cli-adapters.json`](./config/cli-adapters.json), not a claim that all 18 clients have been runtime-verified. Cursor and Antigravity are explicitly experimental.
+
+Use the canonical [`orchestrate-agi-super-team`](./skills/orchestrate-agi-super-team/SKILL.md) Skill when a task needs the complete Team → C-suite → Skills/Subagents → Governor → CEO → human-approval flow. It detects the current framework's real delegation limits and records any flat or sequential fallback instead of pretending native nesting occurred.
 
 ### Select destinations, refresh, and verify
 
@@ -286,8 +288,6 @@ The animation uses sanitized paths and is illustrative, not runtime evidence. Re
 
 </details>
 
-Did the preview-first workflow help? [Star the repository](https://github.com/aAAaqwq/AGI-Super-Team) so you can find the verified path again.
-
 ## 🔌 Choose a distribution
 
 Use the [18-target npm installer](#install-into-your-agent-framework) for a named Agent framework, the [curated Codex package](./.codex/INDEX.md) for Codex-specific details, or the legacy generic workspace materializer above for harness-neutral files. The [Claude Code guide](./docs/guides/claude-code-install.html) and [Harness compatibility guide](./docs/guides/harness-compatibility.html) provide additional background, but the current adapter manifest and commit-matched receipts govern support claims.
@@ -329,6 +329,7 @@ flowchart LR
 | [`config/team-manifest.json`](./config/team-manifest.json) | Source of truth for Agents, kits, and portable, harness-specific, or external Skill assignments |
 | [`config/repository-architecture.json`](./config/repository-architecture.json) | Machine-readable Modules, path owners, generated lineage, and Adapter status |
 | [`agents/`](./agents/) and [`skills/`](./skills/) | Authored, versioned inputs; only manifest-classified portable payloads enter generic workspaces |
+| [`docs/guides/team-agent-skill-architecture.md`](./docs/guides/team-agent-skill-architecture.md) | Team, C-suite, Subagent, Skill, Governor, and human-approval linking principles |
 | [`.codex/INDEX.md`](./.codex/INDEX.md) | Installation guide and Codex package index |
 | [`plugins/agi-super-team-codex/`](./plugins/agi-super-team-codex/) | Actual curated Codex plugin, skills, and bundled agent roles |
 | [`install.sh`](./install.sh) | Preview-first selection, preflight, staging, and no-clobber publishing |
@@ -371,12 +372,11 @@ AGI Super Team is not a model, autonomous orchestrator, or agent runtime. Instal
 - [Contributing and provenance](./CONTRIBUTING.md)
 - [Setup and recovery](./setup.md)
 - [Security policy](./SECURITY.md)
-- [Growth playbooks](./growth/README.md)
 - [MIT License](./LICENSE)
 
 ## ⭐ GitHub Stars
 
-Track AGI Super Team's public growth over time. The live visualization is provided by Star History; click the chart to inspect the interactive timeline.
+Track AGI Super Team's public star trend over time. The live visualization is provided by Star History; click the chart to inspect the interactive timeline.
 
 <p align="center">
   <a href="https://www.star-history.com/?type=date&amp;legend=top-left&amp;repos=aAAaqwq%2FAGI-Super-Team">
@@ -385,3 +385,5 @@ Track AGI Super Team's public growth over time. The live visualization is provid
   <br>
   <sub>Live chart by Star History · <a href="https://github.com/aAAaqwq/AGI-Super-Team/stargazers">View Stargazers on GitHub</a></sub>
 </p>
+
+If AGI Super Team has genuinely saved you time, feel free to [Star the repository](https://github.com/aAAaqwq/AGI-Super-Team) so you can find it again.

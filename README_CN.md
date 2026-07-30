@@ -80,7 +80,7 @@ Codex 的嵌套调用需要 `max_depth = 2`。在 `max_threads = 4` 下，一次
 | ID | 客户端/运行时 | 范围 | Agent 交付方式 | Skill 交付方式 | 状态 |
 |---|---|---|---|---|---|
 | `claude-code` | Claude Code | 全局 | 原生 Markdown Agent：`.claude/agents` | canonical：`.claude/skills` | 结构接入；Runtime pending |
-| `codex` | Codex | 全局 | 主会话 CEO + TOML：`.codex/agents` | canonical：`.codex/skills` | 结构接入；Runtime pending |
+| `codex` | Codex | 全局 | 主会话 CEO + TOML：`.codex/agents` | canonical：`.agents/skills`；兼容副本：`.codex/skills` | 结构接入；Runtime pending |
 | `openclaw` | OpenClaw | 全局 | 原生 Workspace：`.openclaw/agency-agents/agi-super-team` | canonical：`.openclaw/skills/agi-super-team` | 结构接入；Runtime pending |
 | `hermes` | Hermes Agent | 全局 | 角色 Skill：`.hermes/skills/agi-super-team-agents` | canonical：`.hermes/skills/agi-super-team` | 蓝图接入；Runtime pending |
 | `copilot` | GitHub Copilot | 全局 | Markdown Agent：`.github/agents`、`.copilot/agents` | 原生：`.copilot/skills` | 适配器 |
@@ -99,6 +99,8 @@ Codex 的嵌套调用需要 `max_depth = 2`。在 `max_threads = 4` 下，一次
 | `qoder` | Qoder | 全局 | Markdown Agent：`.qoder/agents` | 原生：`.qoder/skills` | 适配器 |
 
 矩阵描述的是 [`config/cli-adapters.json`](./config/cli-adapters.json) 中的适配契约，并不表示 18 个客户端都做过运行时验证。Cursor 与 Antigravity 明确处于实验状态。
+
+复杂任务可直接使用 canonical [`orchestrate-agi-super-team`](./skills/orchestrate-agi-super-team/SKILL.md) Skill，执行 Team → C-suite → Skills/Subagents → Governor → CEO → 人工批准的完整流程。它会识别当前框架的真实委派限制，并记录平铺或顺序降级，不伪称发生了原生嵌套。
 
 ### 指定目录、刷新与验证
 
@@ -299,8 +301,6 @@ npm run check:architecture
 
 </details>
 
-如果 preview-first 流程对你有帮助，可以 [Star 本仓库](https://github.com/aAAaqwq/AGI-Super-Team)，方便以后找到这条经过验证的路径。
-
 ## 🔌 选择分发方式
 
 为指定 Agent 框架安装时，使用上方的 [18 目标 npm 安装器](#安装到你的-agent-框架)；需要 Codex 专用细节时查看 [Codex 精选包](./.codex/INDEX.md)；需要与客户端无关的文件时使用旧版通用工作区生成器。[Claude Code 指南](./docs/guides/claude-code-install.html)与[客户端兼容说明](./docs/guides/harness-compatibility.html)提供补充背景，但支持状态以当前适配 Manifest 和与 commit 匹配的凭据为准。
@@ -342,6 +342,7 @@ flowchart LR
 | [`config/team-manifest.json`](./config/team-manifest.json) | Agents、团队包，以及可移植、Harness 专用和外部 Skill assignment 的事实源 |
 | [`config/repository-architecture.json`](./config/repository-architecture.json) | 机器可读的 Modules、路径责任、生成 lineage 与 Adapter 状态 |
 | [`agents/`](./agents/) 与 [`skills/`](./skills/) | 人工编写、版本化输入；只有 manifest 标记为可移植的 payload 会进入通用工作区 |
+| [`docs/guides/team-agent-skill-architecture.md`](./docs/guides/team-agent-skill-architecture.md) | Team、C-suite、Subagent、Skill、Governor 与人工批准的连接原理 |
 | [`.codex/INDEX.md`](./.codex/INDEX.md) | 安装指南和 Codex 包索引 |
 | [`plugins/agi-super-team-codex/`](./plugins/agi-super-team-codex/) | 实际的 Codex 插件、Skills 和内置 Agent 角色 |
 | [`install.sh`](./install.sh) | 默认预览、选择、预检、暂存和 no-clobber 发布 |
@@ -384,12 +385,11 @@ AGI Super Team 不是模型、自治编排器或 Agent 运行时。安装文件�
 - [贡献与来源要求](./CONTRIBUTING.md)
 - [安装与恢复](./setup.md)
 - [安全政策](./SECURITY.md)
-- [增长手册](./growth/README.md)
 - [MIT 许可证](./LICENSE)
 
 ## ⭐ GitHub Stars
 
-查看 AGI Super Team 的公开增长趋势。动态图由 Star History 提供；点击图表可打开交互式时间线。
+查看 AGI Super Team 的公开 Star 趋势。动态图由 Star History 提供；点击图表可打开交互式时间线。
 
 <p align="center">
   <a href="https://www.star-history.com/?type=date&amp;legend=top-left&amp;repos=aAAaqwq%2FAGI-Super-Team">
@@ -398,3 +398,5 @@ AGI Super Team 不是模型、自治编排器或 Agent 运行时。安装文件�
   <br>
   <sub>动态图由 Star History 提供 · <a href="https://github.com/aAAaqwq/AGI-Super-Team/stargazers">在 GitHub 查看 Stargazers</a></sub>
 </p>
+
+如果 AGI Super Team 确实帮你省下了时间，欢迎顺手 [Star 本仓库](https://github.com/aAAaqwq/AGI-Super-Team)，方便以后回来查看。

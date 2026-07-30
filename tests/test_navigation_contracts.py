@@ -17,8 +17,6 @@ PUBLIC_MARKDOWN = (
     "cookbook/README.md",
     "plugins/README.md",
     "plugins/agi-super-team-codex/README.md",
-    "growth/README.md",
-    "growth/quality-iterations-2026-07-21.md",
     "config/README.md",
     "scripts/README.md",
     "tests/README.md",

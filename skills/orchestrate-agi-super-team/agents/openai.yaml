@@ -1,0 +1,4 @@
+interface:
+  display_name: "AGI Super Team 编排"
+  short_description: "跨 Claude、Codex、OpenClaw 与 Hermes 组织和验收团队"
+  default_prompt: "使用 $orchestrate-agi-super-team 按当前框架组建最小充分团队，并输出可验证的编排与验收记录。"
