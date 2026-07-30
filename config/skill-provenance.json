@@ -186,6 +186,16 @@
       "local_tree_digest": "sha256:088d82576cdfc53a323b3f0a37f999d5b677ea29320b59da5ff777d674b630f4",
       "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
       "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/financial-planning-and-analysis/SKILL.md", "skills/financial-planning-and-analysis/agents/openai.yaml"]
+    },
+    {
+      "skill_id": "orchestrate-agi-super-team",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "creation_commit": "44e0092bcf4f02d1c6c59154a709cde313019cb5",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:562be0205f19d5c49380bfb6f7256c29e5499438f93a1079fe1019026fedaf6b",
+      "declared_hints": ["Created in this repository to translate the canonical Team contract into evidence-bounded execution modes for four Agent frameworks; no upstream prompt was copied."],
+      "evidence": ["commit:44e0092bcf4f02d1c6c59154a709cde313019cb5", "skills/orchestrate-agi-super-team/SKILL.md", "skills/orchestrate-agi-super-team/agents/openai.yaml", "skills/orchestrate-agi-super-team/references/execution-contract.md", "skills/orchestrate-agi-super-team/references/framework-mechanisms.md"]
     }
   ]
 }

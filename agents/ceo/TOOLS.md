@@ -43,7 +43,7 @@
 - [`company-investment-research`](../../skills/company-investment-research/) — 来源待核 · 尚未评分 · 运行证据：待验证
 - [`dispatching-parallel-agents`](../../skills/dispatching-parallel-agents/) — 来源待核 · 尚未评分 · 运行证据：待验证
 - [`internal-comms`](../../skills/internal-comms/) — 来源待核 · 尚未评分 · 运行证据：待验证
-- [`orchestrate-agi-super-team`](../../skills/orchestrate-agi-super-team/) — 来源待核 · 尚未评分 · 运行证据：待验证
+- [`orchestrate-agi-super-team`](../../skills/orchestrate-agi-super-team/) — 项目原创 · 80/100 精选 · 运行证据：待验证
 - [`web-search`](../../skills/web-search/) — 来源待核 · 尚未评分 · 运行证据：待验证
 
 ## 🌐 外部候选
