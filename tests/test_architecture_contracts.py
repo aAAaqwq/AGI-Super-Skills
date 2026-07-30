@@ -59,7 +59,6 @@ class ArchitectureContractTests(unittest.TestCase):
             "config",
             "cookbook",
             "docs",
-            "growth",
             "plugins",
             "scripts",
             "skills",

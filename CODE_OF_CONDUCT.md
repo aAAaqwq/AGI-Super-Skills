@@ -8,7 +8,7 @@ Unacceptable behavior includes harassment, threats, discriminatory language, unw
 
 ## Project spaces
 
-This standard applies to repository issues, pull requests, discussions, reviews, and project-related public representation. Marketing and community participation must follow platform rules and the ethical guidance in [`growth/`](./growth/README.md).
+This standard applies to repository issues, pull requests, discussions, reviews, and project-related public representation. Marketing and community participation must follow platform rules, avoid spam or manipulation, and accurately represent project evidence.
 
 ## Enforcement
 

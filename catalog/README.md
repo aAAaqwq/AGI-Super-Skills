@@ -32,11 +32,11 @@ Only digest-matched, structurally valid Skills with reviewed provenance and a Cu
 
 ## 🗂️ Browse by outcome
 
-This revision contains 815 canonical catalog entries. The number is generated here rather than used as a product claim.
+This revision contains 816 canonical catalog entries. The number is generated here rather than used as a product claim.
 
 | Category | Use it for | Entries |
 |---|---|---:|
-| [🤖 AI Agents & Orchestration](#ai-agents-orchestration) | Coordinate agents, context, memory, models, prompts, and tool protocols. | 79 |
+| [🤖 AI Agents & Orchestration](#ai-agents-orchestration) | Coordinate agents, context, memory, models, prompts, and tool protocols. | 80 |
 | [💻 Software Engineering](#software-engineering) | Build, test, review, debug, and maintain applications and developer tooling. | 82 |
 | [☁️ Cloud, DevOps & Reliability](#cloud-devops-reliability) | Deploy, observe, troubleshoot, and operate cloud and local infrastructure. | 34 |
 | [📊 Data, Analytics & Research](#data-analytics-research) | Collect evidence, search sources, analyze data, and communicate findings. | 80 |
@@ -110,6 +110,7 @@ Coordinate agents, context, memory, models, prompts, and tool protocols.
 | [`model-provider-manager`](../skills/model-provider-manager/) | Unified LLM provider and model configuration, health monitoring, and key management | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CTO |
 | [`multi-agent-architecture`](../skills/multi-agent-architecture/) | 多 Agent 架构设计与智能 Spawn 系统。当需要设计多 Agent 系统、配置专业化 Agent、实现智能任务分发、或优化并发处理能力时使用此技能。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`multi-agent-trading`](../skills/multi-agent-trading/) | multi-agent trading, 交易团队, analyst team, trading debate, bull bear debate, 协作交易, agent trading framework | Unknown · unreviewed | Unscored | Catalog only |
+| [`orchestrate-agi-super-team`](../skills/orchestrate-agi-super-team/) | 按 Team→C-suite→Skills/直属 Subagents→Governor→CEO→人工批准契约编排 AGI Super Team。适用于用户要求跨职能团队、专家委派、独立复核，或需在 Claude Code、Codex、OpenClaw、Hermes 中选择真实执行方式；单领域一步任务不要启用。 | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CEO |
 | [`parallel-agents`](../skills/parallel-agents/) | Multi-agent orchestration patterns. Use when multiple independent tasks can run with different domain expertise or when comprehensive analysis requires multiple perspectives. | Unknown · unreviewed | Unscored | Catalog only |
 | [`proactive-agent-lite`](../skills/proactive-agent-lite/) | Description needs review; inspect source. | Unknown · unreviewed | Unscored | Catalog only |
 | [`prompt-optimizer`](../skills/prompt-optimizer/) | Evaluate, optimize, and enhance prompts using 58 proven prompting techniques. Use when user asks to improve, optimize, or analyze a prompt; when a prompt needs better clarity,… | Unknown · unreviewed | Unscored | Catalog only |

@@ -2,7 +2,7 @@
   "$schema": "../config/skill-index.schema.json",
   "categories": [
     {
-      "count": 79,
+      "count": 80,
       "description": "Coordinate agents, context, memory, models, prompts, and tool protocols.",
       "emoji": "🤖",
       "id": "ai-agents-orchestration",
@@ -100,7 +100,7 @@
       "title": "Specialized Domains & Utilities"
     }
   ],
-  "inventoryCount": 815,
+  "inventoryCount": 816,
   "inventorySemantics": "tracked physical top-level directories with SKILL.md",
   "schemaVersion": 2,
   "skills": [
@@ -20249,6 +20249,62 @@
       "skill_id": "options-flow-analyzer",
       "support_level": "catalog",
       "used_by": []
+    },
+    {
+      "assignments": [
+        {
+          "agent": "CEO",
+          "level": "harnessSpecific"
+        }
+      ],
+      "category_id": "ai-agents-orchestration",
+      "classification": "slug:orchestrat;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "orchestrat"
+        ],
+        "method": "slug",
+        "resolution_status": "priority-tie",
+        "review_state": "unreviewed",
+        "runner_ups": [
+          {
+            "category_id": "business-operations-strategy",
+            "match_count": 1,
+            "matched_signals": [
+              "team"
+            ],
+            "priority": 65,
+            "tied_for_first": true
+          }
+        ],
+        "winner": {
+          "category_id": "ai-agents-orchestration",
+          "match_count": 1,
+          "matched_signals": [
+            "orchestrat"
+          ],
+          "priority": 75,
+          "tie_detected": true
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "按 Team→C-suite→Skills/直属 Subagents→Governor→CEO→人工批准契约编排 AGI Super Team。适用于用户要求跨职能团队、专家委派、独立复核，或需在 Claude Code、Codex、OpenClaw、Hermes 中选择真实执行方式；单领域一步任务不要启用。",
+      "description_status": "source-text",
+      "path": "skills/orchestrate-agi-super-team/SKILL.md",
+      "portability_class": "harness-specific",
+      "provenance": {
+        "origin_kind": "unknown",
+        "review_state": "unreviewed"
+      },
+      "review_signals": [],
+      "skill_id": "orchestrate-agi-super-team",
+      "support_level": "catalog",
+      "used_by": [
+        "CEO"
+      ]
     },
     {
       "assignments": [],

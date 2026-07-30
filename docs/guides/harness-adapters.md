@@ -2,7 +2,7 @@
 
 AGI Super Team 只有一份 canonical Team Contract：`agents/` 定义角色与层级，`skills/` 定义可复用方法，Manifest 定义分配关系。Claude Code、Codex、OpenClaw、Hermes 的外置 Adapter 只负责翻译和安装，不反向修改 canonical 内容。
 
-Team 如何选择 C-suite、Manager 如何限制直属专家，以及 Skills 为什么不是 Subagent 的自动继承链，见 [Team、C-suite、Subagent 与 Skill 的连接原理](./team-agent-skill-architecture.md)。
+Team 如何选择 C-suite、Manager 如何限制直属专家，以及 Skills 为什么不是 Subagent 的自动继承链，见 [Team、C-suite、Subagent 与 Skill 的连接原理](./team-agent-skill-architecture.md)。需要直接执行这套流程时，调用 [`orchestrate-agi-super-team`](../../skills/orchestrate-agi-super-team/SKILL.md)。
 
 ```mermaid
 flowchart TD
@@ -36,7 +36,7 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --all-subagents --doctor
 | 框架 | Agent/角色产物 | canonical Skills | 接线行为 |
 |---|---|---|---|
 | Claude Code | `~/.claude/agents/ast-*.md` | `~/.claude/skills/<skill>` | 文件系统发现；生成 Claude `Agent` 工具专用 orchestrator |
-| Codex | `~/.codex/AGENTS.md` 受管理 CEO 块 + `~/.codex/agents/ast-*.toml` | `~/.codex/skills/<skill>` | 当前主会话是 CEO，不生成第二个 CEO Agent；其余角色使用 TOML |
+| Codex | `~/.codex/AGENTS.md` 受管理 CEO 块 + `~/.codex/agents/ast-*.toml` | 官方 `~/.agents/skills/<skill>` + 兼容副本 `~/.codex/skills/<skill>` | 当前主会话是 CEO，不生成第二个 CEO Agent；其余角色使用 TOML |
 | OpenClaw | `~/.openclaw/agency-agents/agi-super-team/ast-*` | `~/.openclaw/skills/agi-super-team/<skill>` | `--connect` 先 dry-run，再按 `id` 合并 `agents.list`，保留非托管 Agent，不创建 channel binding |
 | Hermes | `~/.hermes/skills/agi-super-team-agents/ast-*/SKILL.md` + Profile 蓝图 | `~/.hermes/skills/agi-super-team/<skill>` | 生成 Profiles + Kanban 蓝图；不自动创建 Profile、Cron 或 Gateway |
 

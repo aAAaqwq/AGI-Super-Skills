@@ -4,6 +4,8 @@ AGI Super Team 使用一份 canonical 组织契约，经过 Adapter 编译到不
 
 更准确的模型是一张有向图：Team 选择 C-suite；C-suite 一条支路获得可复用 Skills，另一条支路获得允许调用的直属 Subagents；二者共同产出可审查结果，再由 Governor 独立复核。
 
+需要让 Agent 直接执行本章契约时，调用 [`orchestrate-agi-super-team`](../../skills/orchestrate-agi-super-team/SKILL.md)。该 Skill 会先识别当前框架，再选择原生树、Lead 平铺、顺序交接或仅结构接线模式。
+
 ## 一张图理解完整关系
 
 ```mermaid
@@ -95,6 +97,17 @@ sequenceDiagram
 - 叶子和 Governor 不得继续委派；总深度不超过二。
 - Governor 独立复核，不由工作 Agent 自评代替。
 - 发布、部署、凭证、资金、法律承诺和不可逆操作由人类最终批准。
+
+## 四个主力框架如何真正执行
+
+| 框架 | 发现入口 | Subagent / Team 机制 | AGI 执行策略 |
+|---|---|---|---|
+| Claude Code | `CLAUDE.md`、`.claude/agents/`、`.claude/skills/` | 普通 Subagent 独立上下文且不能继续创建 Subagent；Agent Teams 为实验功能 | 默认由主会话/Lead 平铺调用 Manager 与 Leaf；用户批准并启用实验功能后才用 Agent Teams |
+| Codex | `AGENTS.md`、`.codex/agents/*.toml`、`.agents/skills/` | 父 Agent 管理子 Agent 树；真实深度受当前配置与版本限制 | 深度足够时使用两层树，否则由 CEO 平铺或顺序交接，并记录降级 |
+| OpenClaw | `agents.list`、workspace/managed Skills、Agent skill allowlist | `sessions_spawn` 与 `allowAgents` 控制跨 Agent 会话 | 只使用 `connection.json` 中的精确 ID；Governor 从原始子会话证据独立复核 |
+| Hermes | Profile 的 SOUL/Skills/config、`~/.hermes/skills/` | `delegate_task` 是隔离短任务；Kanban 是跨 Profile/人工的持久队列 | 命名 C-suite 用 Profile + Kanban，一次性叶子用 delegation；蓝图存在不等于 Profile 已运行 |
+
+框架机制、官方链接与证据等级见 Skill 的[框架参考](../../skills/orchestrate-agi-super-team/references/framework-mechanisms.md)。
 
 ## 五类连接分别由什么定义
 

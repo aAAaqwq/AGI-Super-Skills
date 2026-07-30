@@ -3,7 +3,7 @@
   "schemaVersion": 1,
   "inventory": {
     "agentCount": 14,
-    "physicalSkillCount": 815,
+    "physicalSkillCount": 816,
     "skillEntrypoint": "SKILL.md",
     "symlinkPolicy": "forbid"
   },
@@ -37,6 +37,7 @@
           "company-investment-research",
           "dispatching-parallel-agents",
           "internal-comms",
+          "orchestrate-agi-super-team",
           "web-search"
         ],
         "recommendedExternal": ["planning-with-files"]
