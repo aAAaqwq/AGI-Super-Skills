@@ -1,3 +1,5 @@
+<p align="right"><a href="./README_EN.md">English</a></p>
+
 # 👥 Agents — C-Suite Digital Executives
 
 > OPC (One Person Company) 团队模板 — 14 个 C-Suite AI Agent，即插即用
@@ -41,6 +43,20 @@ agents/
 ```
 
 这些 `AGENTS.md` 是固定上游 commit 的逐字副本；组织关系、触发和安全规则分别由 `config/agent-hierarchy.json` 与 `config/*-specialists.json` 管理，来源哈希由 `config/agent-sources.lock.json` 锁定。不要直接修改 vendored 子 Agent 原文。
+
+## 安装直属专家
+
+默认只安装 14 个顶层角色。可按管理者安装一个直属军团，也可以安装全部 92 个专家：
+
+```bash
+# 只预览 CFO 军团；确认后追加 --install
+npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cfo
+
+# 安装全部直属专家
+npx -y github:aAAaqwq/AGI-Super-Team --tool codex --all-subagents --install
+```
+
+可用管理者 ID：`cto`、`cpo`、`cco`、`cfo`、`cdo`、`cqo`、`cmo`、`cro`、`cso`、`coo`、`clo`。嵌套路由需要 Codex `max_depth = 2`；若未启用，由 CEO 平铺调用专家并明确说明降级。
 
 ## Agent 速查表
 

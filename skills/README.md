@@ -1,3 +1,5 @@
+<p align="right"><a href="./README_CN.md">中文</a></p>
+
 # 🧰 Skills library
 
 Find reusable instructions by the outcome you need. Each catalog entry is a tracked, physical directory with a `SKILL.md`; symlinks are forbidden.
@@ -12,6 +14,25 @@ Start with a small team pack when possible. A large inventory improves coverage,
 | Research, draft, and measure | [Content Creator](../starter-kits/content-creator/) | Drafting workflow; publishing remains human-controlled |
 | Backtest with risk review | [Quant Trader](../starter-kits/quant-trader/) | Research only; no live-trading claim |
 | Use native Codex workflows | [Codex package](../.codex/INDEX.md) | Separate curated distribution and sync policy |
+
+## 👥 Skills and C-suite specialists
+
+Skills are reusable methods; Agents are accountable role contracts. The repository currently has 14 top-level roles and 92 opt-in specialists routed by eleven manager executives. Installing a specialist does not duplicate the whole Skills library: its manager selects the narrow role, then the role uses only the methods and tools needed for the task.
+
+- Organization and allowed parent-child edges: [`config/agent-hierarchy.json`](../config/agent-hierarchy.json)
+- Positive/negative triggers, inputs, outputs, acceptance, and boundaries: [`config/*-specialists.json`](../config/)
+- Pinned upstream paths and byte-level hashes: [`config/agent-sources.lock.json`](../config/agent-sources.lock.json)
+- Human-readable Agent guide: [`agents/README_EN.md`](../agents/README_EN.md)
+
+```bash
+# Preview one executive group; append --install after review
+npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cmo
+
+# Install all 92 direct specialists
+npx -y github:aAAaqwq/AGI-Super-Team --tool codex --all-subagents --install
+```
+
+The 136-role Codex package consists of 31 general engineering/review Agents, 13 C-suite Agent files, and 92 executive specialists. CEO remains the parent coordinator, Governor remains independent, and PE remains CTO's canonical delivery leaf.
 
 ## 🧭 Browse skills by outcome
 
