@@ -133,6 +133,13 @@
       "dimensions": {"instruction_design": 14, "resource_integrity": 14, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 12},
       "reason": "A practical FP&A workflow for assumptions, scenarios, variance analysis, and decision support.",
       "evidence": ["skills/financial-planning-and-analysis/SKILL.md", "skills/financial-planning-and-analysis/agents/openai.yaml"], "limitations": ["No commit-matched runtime fixture or external beta receipt is published yet."]
+    },
+    {
+      "skill_id": "orchestrate-agi-super-team", "source_digest": "sha256:562be0205f19d5c49380bfb6f7256c29e5499438f93a1079fe1019026fedaf6b", "reviewed_at": "2026-07-30", "status": "selected", "score": 80, "tier": "selected", "runtime_evidence": "pending",
+      "dimensions": {"instruction_design": 15, "resource_integrity": 15, "safety_and_reversibility": 18, "provenance_and_license": 20, "outcome_evidence": 12},
+      "reason": "A first-party orchestration workflow that preserves one canonical organization while translating real delegation limits across four Agent frameworks.",
+      "evidence": ["skills/orchestrate-agi-super-team/SKILL.md", "skills/orchestrate-agi-super-team/agents/openai.yaml", "skills/orchestrate-agi-super-team/references/execution-contract.md", "skills/orchestrate-agi-super-team/references/framework-mechanisms.md"],
+      "limitations": ["No commit-matched four-framework runtime fixture or clean-client canary receipt is published yet."]
     }
   ]
 }
