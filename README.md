@@ -67,7 +67,7 @@ Paths for global adapters are relative to the selected home; project adapters ar
 | ID | Client/runtime | Scope | Agent delivery | Skill delivery | Status |
 |---|---|---|---|---|---|
 | `claude-code` | Claude Code | Global | Native Markdown Agent: `.claude/agents` | Canonical: `.claude/skills` | Structurally connected; runtime pending |
-| `codex` | Codex | Global | Main-session CEO + TOML: `.codex/agents` | Canonical: `.agents/skills`; compatibility copy: `.codex/skills` | Structurally connected; runtime pending |
+| `codex` | Codex | Global | Main-session CEO + TOML: `.codex/agents` | Canonical: `.agents/skills` | Structurally connected; runtime pending |
 | `openclaw` | OpenClaw | Global | Native workspace: `.openclaw/agency-agents/agi-super-team` | Canonical: `.openclaw/skills/agi-super-team` | Structurally connected; runtime pending |
 | `hermes` | Hermes Agent | Global | Role Skills: `.hermes/skills/agi-super-team-agents` | Canonical: `.hermes/skills/agi-super-team` | Blueprint connected; runtime pending |
 | `copilot` | GitHub Copilot | Global | Markdown Agent: `.github/agents`, `.copilot/agents` | Native: `.copilot/skills` | Adapter |

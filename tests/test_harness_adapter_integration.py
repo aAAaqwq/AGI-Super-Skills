@@ -176,7 +176,7 @@ class HarnessAdapterIntegrationTests(unittest.TestCase):
                 self.assertNotIn("CODEX_HOME", body)
                 self.assertNotIn("~/.codex", body)
 
-    def test_codex_refreshes_the_orchestrator_in_both_skill_roots(self) -> None:
+    def test_codex_uses_only_the_official_skill_root(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             home = root / "home"
@@ -193,16 +193,16 @@ class HarnessAdapterIntegrationTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
-            for skill_root in (Path(".agents/skills"), Path(".codex/skills")):
-                with self.subTest(skill_root=skill_root):
-                    wrapper = home / skill_root / "agi-super-team-orchestrator/SKILL.md"
-                    canonical = home / skill_root / "orchestrate-agi-super-team/SKILL.md"
-                    self.assertTrue(wrapper.is_file())
-                    self.assertTrue(canonical.is_file())
-                    self.assertIn(
-                        "../orchestrate-agi-super-team/SKILL.md",
-                        wrapper.read_text(encoding="utf-8"),
-                    )
+            skill_root = home / ".agents/skills"
+            wrapper = skill_root / "agi-super-team-orchestrator/SKILL.md"
+            canonical = skill_root / "orchestrate-agi-super-team/SKILL.md"
+            self.assertTrue(wrapper.is_file())
+            self.assertTrue(canonical.is_file())
+            self.assertIn(
+                "../orchestrate-agi-super-team/SKILL.md",
+                wrapper.read_text(encoding="utf-8"),
+            )
+            self.assertFalse((home / ".codex/skills").exists())
 
     def test_connect_requires_install_and_writes_pending_receipt(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

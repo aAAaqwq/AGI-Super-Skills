@@ -80,7 +80,7 @@ Codex 的嵌套调用需要 `max_depth = 2`。在 `max_threads = 4` 下，一次
 | ID | 客户端/运行时 | 范围 | Agent 交付方式 | Skill 交付方式 | 状态 |
 |---|---|---|---|---|---|
 | `claude-code` | Claude Code | 全局 | 原生 Markdown Agent：`.claude/agents` | canonical：`.claude/skills` | 结构接入；Runtime pending |
-| `codex` | Codex | 全局 | 主会话 CEO + TOML：`.codex/agents` | canonical：`.agents/skills`；兼容副本：`.codex/skills` | 结构接入；Runtime pending |
+| `codex` | Codex | 全局 | 主会话 CEO + TOML：`.codex/agents` | canonical：`.agents/skills` | 结构接入；Runtime pending |
 | `openclaw` | OpenClaw | 全局 | 原生 Workspace：`.openclaw/agency-agents/agi-super-team` | canonical：`.openclaw/skills/agi-super-team` | 结构接入；Runtime pending |
 | `hermes` | Hermes Agent | 全局 | 角色 Skill：`.hermes/skills/agi-super-team-agents` | canonical：`.hermes/skills/agi-super-team` | 蓝图接入；Runtime pending |
 | `copilot` | GitHub Copilot | 全局 | Markdown Agent：`.github/agents`、`.copilot/agents` | 原生：`.copilot/skills` | 适配器 |
