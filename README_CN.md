@@ -1,20 +1,22 @@
 <p align="right"><a href="./README.md">English</a></p>
 
 <p align="center">
-  <img src="assets/banner-v2.png" alt="AGI Super Team：可组合 Skills、专业 Agents 与可审查 Workflows" width="760">
+  <img src="assets/banner-v2.png" alt="AGI Super Team：跨框架、有组织的 Agents 与 Skills 团队" width="760">
 </p>
 
 <h1 align="center">AGI Super Team</h1>
 
-<p align="center"><strong>可组合 Skills。专业 Agents。可审查的团队 Workflows。</strong></p>
+<p align="center"><strong>面向本地 AI Agent 框架的、有组织、可安装的 Agents + Skills 团队系统。</strong></p>
 
 <p align="center">
-  用一份 Brief 组织范围明确的工作、专业任务、独立审查和清晰的人工批准门禁。
+  从一个成果开始：CEO 路由高管，高管调度专家，Skills 提供方法，Governor 独立验收。
 </p>
 
-AGI Super Team 是一个面向 Codex 和本地编程 Agent 工作区的版本化资源库，提供 **AI Agent Skills、专业角色包和 human-in-the-loop 团队 Workflows**。
+AGI Super Team 不是 Codex 专属插件，而是一套版本化、有组织的 **Agents + Skills 团队系统**。它通过 18 个明确适配器，服务 Claude Code、Codex、OpenClaw、Hermes 等主流本地 AI Agent 框架。
 
-## 安装到你的 AI 客户端
+同一套组织契约可以跨框架落地：14 个顶层角色、92 个可选直属专家、可复用 Skills、8 支成果型 Team、独立审查与明确人工批准。不同适配器只负责映射目标框架真实支持的能力。
+
+## 安装到你的 Agent 框架
 
 先列出全部 18 个适配目标，再预览一个目标，确认后用同一选择安装：
 
@@ -27,7 +29,7 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
 
 把 `claude-code` 换成 `--list-tools` 输出的目标 ID。只有在确实要同时写入全部全局和项目适配目标时，才使用 `--all-tools`。不带参数仍保留旧版 Codex 预览行为；新脚本应明确写出 `--tool` 或 `--all-tools`。
 
-### 四个平台优先入口
+### 四个主力框架
 
 | 平台 | 预览命令 | 安装能力 |
 |---|---|---|
@@ -37,6 +39,8 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
 | **Hermes Agent** | `npx -y github:aAAaqwq/AGI-Super-Team --tool hermes` | 原生 Skill；角色包以 Skill 暴露，不是原生 Agent |
 
 对 OpenClaw，安装器只生成 Agent Workspace，不会自动注册；请先审查内容，再显式注册需要的 Workspace。
+
+Claude Code、Codex、OpenClaw、Hermes 都是同一套团队系统的一等入口，不是组织结构不同的四个版本。由于各框架的原生 Agent 与 Skill 能力不同，最终交付形态会有所区别。
 
 ### 安装高管子 Agent 军团
 
@@ -126,7 +130,7 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
 适配器设计部分参考了 [`jnMetaCode/agency-agents-zh`](https://github.com/jnMetaCode/agency-agents-zh) 的固定提交 [`2ecfabf8`](https://github.com/jnMetaCode/agency-agents-zh/commit/2ecfabf8e944ccdfed63ad8c44d5241290af6977)。AGI Super Team 在本仓库独立维护 Manifest、Payload 映射、安全行为和证据边界。
 
 <p align="center">
-  <a href="#安装到你的-ai-客户端"><strong>安装到一个客户端</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#安装到你的-agent-框架"><strong>安装团队</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="./.codex/INDEX.md">查看 Codex 包</a>
 </p>
 
@@ -155,13 +159,20 @@ AGI Super Team 负责版本化内容、选择规则、安全复制和仓库检�
 
 ## 🎯 从一个成果开始
 
-| Starter Kit | 提供给它 | 预期评估产物 | 团队 |
-|---|---|---|---|
-| [🚀 Solo Founder](./starter-kits/solo-founder/) | 产品或发布 Brief | 决策备忘录、测试优先实施计划、发布文案草稿 | CEO、PE、CCO |
-| [✍️ Content Creator](./starter-kits/content-creator/) | 素材与目标受众 | 调研笔记、内容草稿、衡量计划 | CCO、CDO、CMO |
-| [📊 Quant Research](./starter-kits/quant-trader/) | 研究问题与历史数据 | 研究备忘录、回测计划、风险审查；绝不执行实盘交易 | CQO、CDO、CFO |
+先选择与成果匹配的军团。每支 Team 都包含 CEO 协调者、范围明确的高管核心、独立 Governor 验收门，并可在出现明确证据缺口时增加其他高管或直属专家。
 
-确实需要更广覆盖时，`full-team` 会选择 manifest 中全部 14 个 Agents。一般情况下建议先从聚焦团队开始。
+| Team 军团 | 提供给它 | 预期评估产物 | 核心团队 |
+|---|---|---|---|
+| [🚀 Solo Founder](./starter-kits/solo-founder/) | 有边界的产品想法或发布 Brief | 产品决策、测试优先计划、发布证据、Governor 结论 | CEO、CPO、PE、Governor |
+| [✍️ Content Creator](./starter-kits/content-creator/) | 已批准素材、受众与渠道 | 证据 Brief、渠道内容、衡量计划、声明审查 | CEO、CRO、CCO、CMO、Governor |
+| [📊 Quant Research](./starter-kits/quant-trader/) | 研究假设与历史数据 | 可复现回测规范、风险备忘录、独立验收 | CEO、CQO、CDO、CFO、Governor |
+| [🧱 Product Delivery](./starter-kits/product-delivery/) | 已验证用户问题与交付约束 | 产品 Brief、架构决策、已测试改动、发布交接 | CEO、CPO、CTO、PE、Governor |
+| [🔬 Research Decision](./starter-kits/research-decision/) | 重大问题与决策标准 | 研究计划、证据地图、带引用综合、决策备忘录 | CEO、CRO、CDO、Governor |
+| [📣 Go To Market](./starter-kits/go-to-market/) | 已验证定位与上市/营收目标 | 定位 Brief、上市资产、营收实验、风险门禁 | CEO、CPO、CMO、CCO、CSO、Governor |
+| [🚨 Operations Response](./starter-kits/operations-response/) | 有边界的事故或交付失败 | 事故范围、遏制方案、恢复证据、事后复盘 | CEO、COO、CTO、PE、Governor |
+| [🏛️ Executive Team](./starter-kits/full-team/) | 跨职能公司级 Brief | 高管路由计划、专家产物、独立审查、验证交接 | 全部 14 个顶层角色可用；CEO 协调、Governor 审查 |
+
+优先选择能够完整负责成果的最小军团。`full-team` 会让全部 14 个顶层角色进入可选范围，但 CEO 仍只调度 Brief 有充分理由需要的角色与专家。
 
 ## ⚡ 旧版通用工作区生成器
 
@@ -277,7 +288,7 @@ npm run check:architecture
 
 ## 🔌 选择分发方式
 
-为指定 AI 客户端/运行时安装时，使用上方的 [18 目标 npm 安装器](#安装到你的-ai-客户端)；需要 Codex 专用细节时查看 [Codex 精选包](./.codex/INDEX.md)；需要与客户端无关的文件时使用旧版通用工作区生成器。[Claude Code 指南](./docs/guides/claude-code-install.html)与[客户端兼容说明](./docs/guides/harness-compatibility.html)提供补充背景，但支持状态以当前适配 Manifest 和与 commit 匹配的凭据为准。
+为指定 Agent 框架安装时，使用上方的 [18 目标 npm 安装器](#安装到你的-agent-框架)；需要 Codex 专用细节时查看 [Codex 精选包](./.codex/INDEX.md)；需要与客户端无关的文件时使用旧版通用工作区生成器。[Claude Code 指南](./docs/guides/claude-code-install.html)与[客户端兼容说明](./docs/guides/harness-compatibility.html)提供补充背景，但支持状态以当前适配 Manifest 和与 commit 匹配的凭据为准。
 
 通用路径需要 Bash 与 Node.js；仓库验证还需要 npm 与 Python 3。操作系统和客户端版本支持范围以 CI 和已发布凭据为准。存在适配文件永远不代表功能完全一致。
 

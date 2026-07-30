@@ -1,20 +1,24 @@
 <p align="right"><a href="./README_CN.md">中文</a></p>
 
 <p align="center">
-  <img src="assets/banner-v2.png" alt="AGI Super Team: composable skills, specialist agents, and reviewable workflows" width="760">
+  <img src="assets/banner-v2.png" alt="AGI Super Team: an organized cross-harness team of agents and skills" width="760">
 </p>
 
 <h1 align="center">AGI Super Team</h1>
 
-<p align="center"><strong>Composable skills for specialist agents and reviewable team workflows.</strong></p>
+<p align="center"><strong>An organized, installable team of Agents + Skills for local AI agent frameworks.</strong></p>
 
 <p align="center">
-  Use one brief to structure scoped work, specialist tasks, independent review, and an explicit human approval gate.
+  Start with an outcome. Let the CEO route executives, executives dispatch specialists, Skills supply methods, and the Governor verify the result.
 </p>
 
-AGI Super Team is a versioned library of **AI agent skills, specialist role packs, and human-in-the-loop team workflows** for Codex and local coding-agent workspaces.
+AGI Super Team is not a Codex-only plugin. It is a versioned, organized **Agents + Skills team system** for Claude Code, Codex, OpenClaw, Hermes, and other mainstream local AI agent frameworks through 18 explicit adapters.
 
-## Install for your AI client
+The same organizational contract travels across frameworks: 14 top-level roles, 92 opt-in specialists, reusable Skills, eight outcome Teams, independent review, and explicit human approval.
+
+Each adapter maps that contract to the capabilities its target actually supports.
+
+## Install into your agent framework
 
 List all 18 adapter targets, preview one target, then apply the same selection:
 
@@ -27,7 +31,7 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
 
 Replace `claude-code` with an ID from `--list-tools`. Use `--all-tools` only when you intentionally want every global and project adapter. A no-argument run remains the legacy Codex preview; new automation should always name `--tool` or `--all-tools`.
 
-### Recommended starting points
+### Four primary frameworks
 
 | Platform | Preview command | Installed capability |
 |---|---|---|
@@ -37,6 +41,10 @@ Replace `claude-code` with an ID from `--list-tools`. Use `--all-tools` only whe
 | **Hermes Agent** | `npx -y github:aAAaqwq/AGI-Super-Team --tool hermes` | Native Skills; role packs are exposed as Skills rather than native Agents |
 
 For OpenClaw, the installer materializes Agent workspaces but does not register them; review and register the desired workspaces explicitly after installation.
+
+Claude Code, Codex, OpenClaw, and Hermes are first-class entry points to the same team system, not separate editions with different organizations.
+
+Delivery format varies because each framework exposes different native Agent and Skill primitives.
 
 ### Install executive subagent groups
 
@@ -109,7 +117,7 @@ Run the same `--install` command again to refresh managed content; repeat `--doc
 The adapter design was inspired in part by [`jnMetaCode/agency-agents-zh`](https://github.com/jnMetaCode/agency-agents-zh) at fixed commit [`2ecfabf8`](https://github.com/jnMetaCode/agency-agents-zh/commit/2ecfabf8e944ccdfed63ad8c44d5241290af6977). AGI Super Team's manifest, payload mapping, safety behavior, and evidence boundaries are maintained here.
 
 <p align="center">
-  <a href="#install-for-your-ai-client"><strong>Install for one client</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#install-into-your-agent-framework"><strong>Install the team</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="./.codex/INDEX.md">Inspect the Codex package</a>
 </p>
 
@@ -138,13 +146,20 @@ AGI Super Team owns the versioned content, selection rules, safe copying, and re
 
 ## 🎯 Start with an outcome
 
-| Starter kit | Give it | Intended evaluation outputs | Team |
-|---|---|---|---|
-| [🚀 Solo Founder](./starter-kits/solo-founder/) | A product or launch brief | Decision memo, test-first implementation plan, launch drafts | CEO, PE, CCO |
-| [✍️ Content Creator](./starter-kits/content-creator/) | Source material and an audience | Research notes, content drafts, measurement plan | CCO, CDO, CMO |
-| [📊 Quant Research](./starter-kits/quant-trader/) | A research question and historical data | Research memo, backtest plan, risk review; never a live trade | CQO, CDO, CFO |
+Choose the army that matches the outcome. Each Team has a CEO coordinator, a bounded executive core, an independent Governor gate, and access to additional executives or specialists when a named evidence gap requires them.
 
-Need wider coverage? `full-team` selects all 14 manifest Agents. Start with a focused kit unless your evaluation genuinely needs every role.
+| Team army | Give it | Intended evaluation outputs | Core team |
+|---|---|---|---|
+| [🚀 Solo Founder](./starter-kits/solo-founder/) | A bounded product idea or launch brief | Product decision, test-first plan, launch evidence, Governor decision | CEO, CPO, PE, Governor |
+| [✍️ Content Creator](./starter-kits/content-creator/) | Approved sources, audience, and channel | Evidence brief, channel-ready drafts, measurement plan, claims review | CEO, CRO, CCO, CMO, Governor |
+| [📊 Quant Research](./starter-kits/quant-trader/) | A hypothesis and historical data | Reproducible backtest specification, risk memo, independent gate | CEO, CQO, CDO, CFO, Governor |
+| [🧱 Product Delivery](./starter-kits/product-delivery/) | A validated user problem and delivery constraints | Product brief, architecture decision, tested change, release handoff | CEO, CPO, CTO, PE, Governor |
+| [🔬 Research Decision](./starter-kits/research-decision/) | A consequential question and decision criteria | Research plan, evidence map, cited synthesis, decision memo | CEO, CRO, CDO, Governor |
+| [📣 Go To Market](./starter-kits/go-to-market/) | Validated positioning and a launch/revenue objective | Positioning brief, launch assets, revenue experiment, risk gate | CEO, CPO, CMO, CCO, CSO, Governor |
+| [🚨 Operations Response](./starter-kits/operations-response/) | A bounded incident or delivery failure | Incident scope, containment, verified recovery, post-incident review | CEO, COO, CTO, PE, Governor |
+| [🏛️ Executive Team](./starter-kits/full-team/) | A cross-functional company brief | Executive routing plan, specialist artifacts, independent review, verified handoff | All 14 top-level roles available; CEO coordinates, Governor reviews |
+
+Start with the smallest complete army that can own the outcome. `full-team` makes all 14 top-level roles eligible, but the CEO still dispatches only the roles and specialists justified by the brief.
 
 ## ⚡ Legacy generic workspace materializer
 
@@ -260,7 +275,7 @@ Did the preview-first workflow help? [Star the repository](https://github.com/aA
 
 ## 🔌 Choose a distribution
 
-Use the [18-target npm installer](#install-for-your-ai-client) for a named AI client/runtime, the [curated Codex package](./.codex/INDEX.md) for Codex-specific details, or the legacy generic workspace materializer above for harness-neutral files. The [Claude Code guide](./docs/guides/claude-code-install.html) and [Harness compatibility guide](./docs/guides/harness-compatibility.html) provide additional background, but the current adapter manifest and commit-matched receipts govern support claims.
+Use the [18-target npm installer](#install-into-your-agent-framework) for a named Agent framework, the [curated Codex package](./.codex/INDEX.md) for Codex-specific details, or the legacy generic workspace materializer above for harness-neutral files. The [Claude Code guide](./docs/guides/claude-code-install.html) and [Harness compatibility guide](./docs/guides/harness-compatibility.html) provide additional background, but the current adapter manifest and commit-matched receipts govern support claims.
 
 The generic path requires Bash and Node.js; repository verification also requires npm and Python 3. Exact operating-system and client-version support remains bounded by CI and published receipts. Adapter presence never establishes feature parity.
 
