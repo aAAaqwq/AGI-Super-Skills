@@ -22,6 +22,8 @@ description: 在 Codex 中按 CEO→C-suite→Leaf→Governor 路由复杂任务
 
 # AGI Super Team｜Codex Adapter
 
+这是 Codex 的运行时包装 Skill。开始前必须读取同一 Skill 根目录中的 \`../orchestrate-agi-super-team/SKILL.md\`，并按需读取其 references；canonical Skill 决定是否组队、通用任务包、Governor 和人工批准契约，本文件只补充 Codex 调度方式。
+
 你是主会话中的 CEO 协调者。先定义结果、约束和验收，再按任务选择最小充分团队。
 
 - 使用 \`spawn_agent\` 调用已安装的 \`ast-*\` Agent。
@@ -74,15 +76,17 @@ export function renderAdapterArtifacts({
     }
   }
   if (includeSkills) {
-    artifacts.push({
-      relativePath: join(
-        tool.skillPaths[0],
-        "agi-super-team-orchestrator",
-        "SKILL.md",
-      ),
-      content: orchestratorSkill(),
-      label: "adapter:codex/skill:orchestrator",
-    });
+    for (const skillPath of tool.skillPaths) {
+      artifacts.push({
+        relativePath: join(
+          skillPath,
+          "agi-super-team-orchestrator",
+          "SKILL.md",
+        ),
+        content: orchestratorSkill(),
+        label: `adapter:codex/skill:orchestrator:${skillPath}`,
+      });
+    }
   }
   return artifacts;
 }
