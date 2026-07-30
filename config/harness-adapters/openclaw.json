@@ -1,0 +1,26 @@
+{
+  "$schema": "./openclaw.schema.json",
+  "schemaVersion": 1,
+  "harness": "openclaw",
+  "targetVersion": "2026.6.8",
+  "namespace": "agi-super-team",
+  "coordinator": "ast-ceo",
+  "independentReviewer": "ast-governor",
+  "paths": {
+    "config": ".openclaw/openclaw.json",
+    "workspaceRoot": ".openclaw/agency-agents/agi-super-team",
+    "skillRoot": ".openclaw/skills/agi-super-team"
+  },
+  "connection": {
+    "listPath": "agents.list",
+    "key": "id",
+    "strategy": "upsert-managed-preserve-unmanaged",
+    "managedPrefix": "ast-",
+    "conflictPolicy": "fail-unless-previewed",
+    "removeUnmentionedManaged": false,
+    "generateBindings": false
+  },
+  "requiredMaxDepth": 2,
+  "maxChildrenPerAgent": 2,
+  "runtimeEvidence": "pending"
+}

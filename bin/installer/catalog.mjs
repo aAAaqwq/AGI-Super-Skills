@@ -30,12 +30,25 @@ export function loadCatalog(packageRoot) {
     throw new Error("CLI adapter manifest must contain exactly 18 tools");
   }
   const ids = new Set();
+  const priorityHarnesses = new Set(["claude-code", "codex", "openclaw", "hermes"]);
   for (const tool of adapters.tools) {
     if (!tool.id || ids.has(tool.id) || !["global", "project"].includes(tool.scope)) {
       throw new Error(`invalid or duplicate CLI adapter: ${tool.id || "<missing>"}`);
     }
     if (!Array.isArray(tool.agentPaths) || !Array.isArray(tool.skillPaths)) {
       throw new Error(`CLI adapter ${tool.id} must declare agentPaths and skillPaths`);
+    }
+    if (priorityHarnesses.has(tool.id)) {
+      if (
+        tool.agentMode !== "harness-adapter"
+        || tool.runtimeEvidence !== "pending"
+        || tool.skillSource !== "canonical-assigned"
+        || typeof tool.adapterModule !== "string"
+        || typeof tool.connectionPath !== "string"
+      ) {
+        throw new Error(`priority harness ${tool.id} must declare the external Adapter contract`);
+      }
+      regularFile(resolve(packageRoot, tool.adapterModule), `${tool.id} Adapter module`);
     }
     ids.add(tool.id);
   }
@@ -80,12 +93,49 @@ export function loadCatalog(packageRoot) {
   if (sourceByRole.size !== Object.values(specialistGroups).reduce((count, group) => count + group.specialists.length, 0)) {
     throw new Error("Agent source lock contains an unreferenced or missing specialist");
   }
-  const skillsRoot = join(packageRoot, "plugins", "agi-super-team-codex", "skills");
-  const skills = readdirSync(skillsRoot)
-    .filter((name) => statSync(join(skillsRoot, name)).isDirectory())
+  const curatedSkillsRoot = join(packageRoot, "plugins", "agi-super-team-codex", "skills");
+  const curatedSkills = readdirSync(curatedSkillsRoot)
+    .filter((name) => statSync(join(curatedSkillsRoot, name)).isDirectory())
     .sort();
-  if (skills.length !== 6) throw new Error("Codex plugin must contain exactly 6 curated Skills");
-  return { tools: adapters.tools, agents: manifest.agents, kits: manifest.kits, hierarchy, specialistGroups, skills, skillsRoot };
+  if (curatedSkills.length !== 6) throw new Error("Codex plugin must contain exactly 6 curated Skills");
+
+  const canonicalSkillsRoot = join(packageRoot, "skills");
+  const physicalSkills = new Set(
+    readdirSync(canonicalSkillsRoot)
+      .filter((name) => {
+        const root = join(canonicalSkillsRoot, name);
+        return !lstatSync(root).isSymbolicLink()
+          && statSync(root).isDirectory()
+          && existsSync(join(root, "SKILL.md"));
+      }),
+  );
+  const byAgent = {};
+  for (const agent of manifest.agents) {
+    const selected = new Set();
+    for (const tier of ["required", "optional", "harnessSpecific"]) {
+      for (const skill of agent.skills?.[tier] || []) {
+        if (physicalSkills.has(skill)) selected.add(skill);
+      }
+    }
+    byAgent[agent.id] = [...selected].sort();
+  }
+  const assignedSkills = {
+    byAgent,
+    all: [...new Set(Object.values(byAgent).flat())].sort(),
+  };
+  return {
+    tools: adapters.tools,
+    agents: manifest.agents,
+    kits: manifest.kits,
+    hierarchy,
+    specialistGroups,
+    skills: curatedSkills,
+    skillsRoot: curatedSkillsRoot,
+    curatedSkills,
+    curatedSkillsRoot,
+    canonicalSkillsRoot,
+    assignedSkills,
+  };
 }
 
 export function selectTools(catalog, requested, allTools) {

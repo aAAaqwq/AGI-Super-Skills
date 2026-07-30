@@ -8,12 +8,14 @@ import {
   mkdtempSync,
   openSync,
   readFileSync,
+  realpathSync,
   renameSync,
   statSync,
   unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { adapterFor } from "../adapters/index.mjs";
 import {
   agentAsSkill,
   antigravityAgent,
@@ -85,11 +87,48 @@ function addFile(plan, tool, root, path, content, label) {
   });
 }
 
-function planSkills(plan, catalog, tool, root) {
+function selectedAssignedSkills(catalog, agents) {
+  const byAgent = Object.fromEntries(
+    agents.map((agent) => [
+      agent.id,
+      [...(catalog.assignedSkills.byAgent[agent.id] || [])],
+    ]),
+  );
+  return {
+    byAgent,
+    all: [...new Set(Object.values(byAgent).flat())].sort(),
+  };
+}
+
+function planSkills(plan, catalog, tool, root, assignedSkills) {
   if (!tool.skillPaths.length) return;
+  const canonical = tool.skillSource === "canonical-assigned";
+  const skillNames = canonical ? assignedSkills.all : catalog.curatedSkills;
+  const skillsRoot = canonical ? catalog.canonicalSkillsRoot : catalog.curatedSkillsRoot;
   for (const configured of tool.skillPaths) {
-    for (const skill of catalog.skills) {
-      const sourceRoot = join(catalog.skillsRoot, skill);
+    for (const skill of skillNames) {
+      const sourceRoot = join(skillsRoot, skill);
+      const targetRoot = destination(root, configured, skill);
+      if (existsSync(targetRoot) && lstatSync(targetRoot).isSymbolicLink()) {
+        const resolved = realpathSync(targetRoot);
+        if (!statSync(resolved).isDirectory()) {
+          throw new Error(`refusing non-directory Skill symlink: ${targetRoot}`);
+        }
+        const sourceFiles = walkFiles(sourceRoot);
+        const targetFiles = walkFiles(resolved);
+        const targetByPath = new Map(
+          targetFiles.map((file) => [file.relative, file.content]),
+        );
+        const exact = sourceFiles.length === targetFiles.length
+          && sourceFiles.every((file) => {
+            const candidate = targetByPath.get(file.relative);
+            return candidate && Buffer.compare(file.content, candidate) === 0;
+          });
+        if (!exact) {
+          throw new Error(`refusing mismatched Skill symlink: ${targetRoot}`);
+        }
+        continue;
+      }
       for (const file of walkFiles(sourceRoot)) {
         addFile(plan, tool, root, destination(root, configured, join(skill, file.relative)), file.content, `skill:${skill}`);
       }
@@ -197,9 +236,70 @@ export function buildPlan({ packageRoot, catalog, tools, home, projectDir, inclu
   if (includeCcoSpecialists) managers.add("cco");
   const groups = Object.fromEntries([...managers].map((manager) => [manager, catalog.specialistGroups[manager]]));
   const specialists = Object.values(groups).flatMap((group) => group.specialists);
+  const assignedSkills = selectedAssignedSkills(catalog, selected);
   for (const tool of tools) {
     const root = tool.scope === "project" ? projectDir : home;
     if (!root) throw new Error(`${tool.id} is project-scoped; pass --project-dir <path>`);
+    if (tool.agentMode === "harness-adapter") {
+      const adapter = adapterFor(tool.id);
+      const artifacts = adapter.renderAdapterArtifacts({
+        packageRoot,
+        tool,
+        agents: includeAgents ? selected : [],
+        groups,
+        specialists: includeAgents ? specialists : [],
+        assignedSkills,
+        includeAgents,
+        includeSkills,
+      });
+      for (const artifact of artifacts) {
+        const path = destination(root, artifact.relativePath);
+        let content = artifact.content;
+        if (artifact.managed) {
+          const rendered = Buffer.isBuffer(content) ? content.toString("utf8") : String(content);
+          const { begin, end } = artifact.managed;
+          const start = rendered.indexOf(begin);
+          const finish = rendered.indexOf(end, start + begin.length);
+          if (start < 0 || finish < 0) throw new Error(`invalid managed Adapter artifact: ${artifact.label}`);
+          content = renderManaged(
+            readSafe(path),
+            rendered.slice(start + begin.length, finish).trim(),
+            begin,
+            end,
+          );
+        }
+        addFile(plan, tool, root, path, content, artifact.label);
+      }
+      const adapterConnection = adapter.buildConnectionSpec({
+        packageRoot,
+        home: root,
+        tool,
+        agents: includeAgents ? selected : [],
+        groups,
+        specialists: includeAgents ? specialists : [],
+        assignedSkills,
+      });
+      const connection = {
+        ...adapterConnection,
+        schemaVersion: 1,
+        harness: tool.id,
+        runtimeEvidence: "pending",
+        coordinator: adapterConnection.coordinator ?? "ast-ceo",
+        independentReviewer: adapterConnection.independentReviewer ?? "ast-governor",
+        requiredMaxDepth: adapterConnection.requiredMaxDepth ?? 2,
+        maxConcurrentChildren: adapterConnection.maxConcurrentChildren ?? 2,
+      };
+      addFile(
+        plan,
+        tool,
+        root,
+        destination(root, tool.connectionPath),
+        `${JSON.stringify(connection, null, 2)}\n`,
+        `adapter:${tool.id}/connection`,
+      );
+      if (includeSkills) planSkills(plan, catalog, tool, root, assignedSkills);
+      continue;
+    }
     if (tool.agentMode === "combined-rules") {
       const path = destination(root, tool.agentPaths[0]);
       assertSafeAncestors(root, path);
@@ -215,7 +315,7 @@ export function buildPlan({ packageRoot, catalog, tools, home, projectDir, inclu
     }
     if (includeAgents) renderAgents(plan, packageRoot, catalog, tool, root, selected, codexPayloadAll && tool.id === "codex", groups);
     if (includeAgents && !(codexPayloadAll && tool.id === "codex")) renderSpecialists(plan, packageRoot, tool, root, specialists);
-    if (includeSkills) planSkills(plan, catalog, tool, root);
+    if (includeSkills) planSkills(plan, catalog, tool, root, assignedSkills);
   }
   return plan;
 }

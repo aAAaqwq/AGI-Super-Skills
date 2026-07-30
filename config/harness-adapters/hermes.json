@@ -1,0 +1,51 @@
+{
+  "$schema": "./hermes.schema.json",
+  "schemaVersion": 1,
+  "harness": "hermes",
+  "adapterMode": "profiles-kanban",
+  "coordinator": "ceo",
+  "independentReviewer": "governor",
+  "requiredMaxDepth": 2,
+  "maxConcurrentChildren": 2,
+  "runtimeEvidence": "pending",
+  "runtimePaths": {
+    "roleSkillRoot": "~/.hermes/skills/agi-super-team-agents",
+    "orchestratorSkill": "~/.hermes/skills/agi-super-team-orchestrator/SKILL.md",
+    "profileBlueprintRoot": "~/.hermes/agi-super-team/profiles"
+  },
+  "profileMap": {
+    "ceo": {"profileId": "ast-ceo", "roleType": "coordinator"},
+    "cto": {"profileId": "ast-cto", "roleType": "manager"},
+    "pe": {"profileId": "ast-pe", "roleType": "leaf"},
+    "cpo": {"profileId": "ast-cpo", "roleType": "manager"},
+    "cqo": {"profileId": "ast-cqo", "roleType": "manager"},
+    "cmo": {"profileId": "ast-cmo", "roleType": "manager"},
+    "cfo": {"profileId": "ast-cfo", "roleType": "manager"},
+    "cdo": {"profileId": "ast-cdo", "roleType": "manager"},
+    "cco": {"profileId": "ast-cco", "roleType": "manager"},
+    "clo": {"profileId": "ast-clo", "roleType": "manager"},
+    "cro": {"profileId": "ast-cro", "roleType": "manager"},
+    "cso": {"profileId": "ast-cso", "roleType": "manager"},
+    "coo": {"profileId": "ast-coo", "roleType": "manager"},
+    "governor": {"profileId": "ast-governor", "roleType": "independent-reviewer"}
+  },
+  "delegationPolicy": {
+    "persistentNamedRoles": "profiles-kanban",
+    "anonymousShortTasks": "delegate_task",
+    "profileArgumentAllowed": false,
+    "leafDelegationAllowed": false,
+    "nestedOrchestratorRole": "orchestrator"
+  },
+  "kanbanPolicy": {
+    "managerOutput": "manager-output",
+    "governorReviewDependsOn": ["manager-output"],
+    "ceoSynthesisDependsOn": ["manager-output", "governor-review"],
+    "governorRunsInSeparateProfile": true,
+    "roleSkillPinningRequired": true
+  },
+  "sideEffects": {
+    "createProfiles": false,
+    "createCron": false,
+    "startGateway": false
+  }
+}

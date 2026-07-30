@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aAAaqwq/AGI-Super-Team/config/harness-adapters/hermes.schema.json",
+  "title": "AGI Super Team Hermes adapter",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "harness",
+    "adapterMode",
+    "coordinator",
+    "independentReviewer",
+    "requiredMaxDepth",
+    "maxConcurrentChildren",
+    "runtimeEvidence",
+    "runtimePaths",
+    "profileMap",
+    "delegationPolicy",
+    "kanbanPolicy",
+    "sideEffects"
+  ],
+  "properties": {
+    "$schema": {"const": "./hermes.schema.json"},
+    "schemaVersion": {"const": 1},
+    "harness": {"const": "hermes"},
+    "adapterMode": {"const": "profiles-kanban"},
+    "coordinator": {"const": "ceo"},
+    "independentReviewer": {"const": "governor"},
+    "requiredMaxDepth": {"const": 2},
+    "maxConcurrentChildren": {"const": 2},
+    "runtimeEvidence": {
+      "enum": ["pending", "fixture-tested", "external-receipt"]
+    },
+    "runtimePaths": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roleSkillRoot", "orchestratorSkill", "profileBlueprintRoot"],
+      "properties": {
+        "roleSkillRoot": {"const": "~/.hermes/skills/agi-super-team-agents"},
+        "orchestratorSkill": {"const": "~/.hermes/skills/agi-super-team-orchestrator/SKILL.md"},
+        "profileBlueprintRoot": {"const": "~/.hermes/agi-super-team/profiles"}
+      }
+    },
+    "profileMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ceo", "cto", "pe", "cpo", "cqo", "cmo", "cfo", "cdo", "cco", "clo", "cro", "cso", "coo", "governor"],
+      "properties": {
+        "ceo": {"$ref": "#/$defs/coordinatorProfile"},
+        "cto": {"$ref": "#/$defs/managerProfile"},
+        "pe": {"$ref": "#/$defs/leafProfile"},
+        "cpo": {"$ref": "#/$defs/managerProfile"},
+        "cqo": {"$ref": "#/$defs/managerProfile"},
+        "cmo": {"$ref": "#/$defs/managerProfile"},
+        "cfo": {"$ref": "#/$defs/managerProfile"},
+        "cdo": {"$ref": "#/$defs/managerProfile"},
+        "cco": {"$ref": "#/$defs/managerProfile"},
+        "clo": {"$ref": "#/$defs/managerProfile"},
+        "cro": {"$ref": "#/$defs/managerProfile"},
+        "cso": {"$ref": "#/$defs/managerProfile"},
+        "coo": {"$ref": "#/$defs/managerProfile"},
+        "governor": {"$ref": "#/$defs/governorProfile"}
+      }
+    },
+    "delegationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["persistentNamedRoles", "anonymousShortTasks", "profileArgumentAllowed", "leafDelegationAllowed", "nestedOrchestratorRole"],
+      "properties": {
+        "persistentNamedRoles": {"const": "profiles-kanban"},
+        "anonymousShortTasks": {"const": "delegate_task"},
+        "profileArgumentAllowed": {"const": false},
+        "leafDelegationAllowed": {"const": false},
+        "nestedOrchestratorRole": {"const": "orchestrator"}
+      }
+    },
+    "kanbanPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["managerOutput", "governorReviewDependsOn", "ceoSynthesisDependsOn", "governorRunsInSeparateProfile", "roleSkillPinningRequired"],
+      "properties": {
+        "managerOutput": {"const": "manager-output"},
+        "governorReviewDependsOn": {"const": ["manager-output"]},
+        "ceoSynthesisDependsOn": {"const": ["manager-output", "governor-review"]},
+        "governorRunsInSeparateProfile": {"const": true},
+        "roleSkillPinningRequired": {"const": true}
+      }
+    },
+    "sideEffects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["createProfiles", "createCron", "startGateway"],
+      "properties": {
+        "createProfiles": {"const": false},
+        "createCron": {"const": false},
+        "startGateway": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "baseProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profileId", "roleType"],
+      "properties": {
+        "profileId": {"type": "string", "pattern": "^ast-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "roleType": {"enum": ["coordinator", "manager", "leaf", "independent-reviewer"]}
+      }
+    },
+    "coordinatorProfile": {
+      "allOf": [
+        {"$ref": "#/$defs/baseProfile"},
+        {"properties": {"profileId": {"const": "ast-ceo"}, "roleType": {"const": "coordinator"}}}
+      ]
+    },
+    "managerProfile": {
+      "allOf": [
+        {"$ref": "#/$defs/baseProfile"},
+        {"properties": {"roleType": {"const": "manager"}}}
+      ]
+    },
+    "leafProfile": {
+      "allOf": [
+        {"$ref": "#/$defs/baseProfile"},
+        {"properties": {"profileId": {"const": "ast-pe"}, "roleType": {"const": "leaf"}}}
+      ]
+    },
+    "governorProfile": {
+      "allOf": [
+        {"$ref": "#/$defs/baseProfile"},
+        {"properties": {"profileId": {"const": "ast-governor"}, "roleType": {"const": "independent-reviewer"}}}
+      ]
+    }
+  }
+}
