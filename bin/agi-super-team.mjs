@@ -2,7 +2,7 @@
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync } from "node:fs";
 import { homedir, platform } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -259,6 +259,7 @@ function main() {
     if (!options.install) { console.log("\nPreview only. Add --install to apply."); return; }
     if (options.plugin && options.includeSkills && tools.some((tool) => tool.id === "codex")) {
       const codexHome = options.codexHome ? resolve(options.codexHome) : join(home, ".codex");
+      mkdirSync(codexHome, {recursive: true, mode: 0o700});
       installCodexPlugin(codexHome);
     }
     const backups = applyPlan(plan);

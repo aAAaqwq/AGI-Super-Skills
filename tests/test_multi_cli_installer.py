@@ -384,6 +384,9 @@ class MultiCliInstallerTests(unittest.TestCase):
             fake_codex.write_text(
                 "#!/usr/bin/env python3\n"
                 "import os, sys\n"
+                "if sys.argv[1:] != ['--version'] and not os.path.isdir(os.environ['CODEX_HOME']):\n"
+                "    print('CODEX_HOME must exist before plugin commands', file=sys.stderr)\n"
+                "    raise SystemExit(23)\n"
                 "with open(os.environ['FAKE_CODEX_LOG'], 'a', encoding='utf-8') as f:\n"
                 "    f.write(' '.join(sys.argv[1:]) + '\\n')\n",
                 encoding="utf-8",
