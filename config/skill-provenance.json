@@ -193,7 +193,7 @@
       "authors": ["Daniel Li", "AGI Super Team contributors"],
       "creation_commit": "44e0092bcf4f02d1c6c59154a709cde313019cb5",
       "license": {"spdx": "MIT", "evidence": "LICENSE"},
-      "local_tree_digest": "sha256:562be0205f19d5c49380bfb6f7256c29e5499438f93a1079fe1019026fedaf6b",
+      "local_tree_digest": "sha256:1da39355c5d9073689b7d9ebd4f09999e5e847d1c50840152db3d8980370e78d",
       "declared_hints": ["Created in this repository to translate the canonical Team contract into evidence-bounded execution modes for four Agent frameworks; no upstream prompt was copied."],
       "evidence": ["commit:44e0092bcf4f02d1c6c59154a709cde313019cb5", "skills/orchestrate-agi-super-team/SKILL.md", "skills/orchestrate-agi-super-team/agents/openai.yaml", "skills/orchestrate-agi-super-team/references/execution-contract.md", "skills/orchestrate-agi-super-team/references/framework-mechanisms.md"]
     }

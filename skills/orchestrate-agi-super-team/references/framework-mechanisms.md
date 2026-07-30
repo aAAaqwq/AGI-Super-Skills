@@ -23,7 +23,7 @@
 - Skills：<https://developers.openai.com/codex/skills/>
 - Subagents：<https://developers.openai.com/codex/multi-agent/>
 
-Skill 可由 `$skill-name` 显式触发，或由 `description` 语义匹配。安装器同时写入官方 `~/.agents/skills/` 与兼容目录 `~/.codex/skills/` 时，以前者作为运行时入口；兼容副本不应被解释为重复能力。
+Skill 可由 `$skill-name` 显式触发，或由 `description` 语义匹配。安装器只把 canonical Skills 写入官方 `~/.agents/skills/`；不要再复制到 `~/.codex/skills/`，否则同名 Skill 会重复占用模型可见的 Skill 预算，降低精准触发率。
 
 启动前检查 `~/.codex/config.toml` 或当前会话暴露的限制。如果本机只允许一层子 Agent，主 Agent可直接调 Manager 和 Leaf，但必须将模式记为 `lead-flat`，不能伪造 Manager→Leaf 运行轨迹。
 
