@@ -12,6 +12,35 @@ class ReadmeContractTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.english = (ROOT / "README.md").read_text(encoding="utf-8")
         cls.chinese = (ROOT / "README_CN.md").read_text(encoding="utf-8")
+        cls.spanish = (ROOT / "README.es-ES.md").read_text(encoding="utf-8")
+
+    def test_public_npm_commands_are_consistent_across_languages(self) -> None:
+        command = "npx -y agi-super-team@latest --list-tools"
+        install = "npx -y agi-super-team@latest --tool claude-code --install --connect"
+        for readme in (self.english, self.chinese, self.spanish):
+            self.assertIn(command, readme)
+            self.assertIn(install, readme)
+            self.assertNotIn("npx -y github:aAAaqwq/AGI-Super-Team", readme)
+        package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+        self.assertEqual(package["name"], "agi-super-team")
+        self.assertIn("README.es-ES.md", package["files"])
+        self.assertIn("!**/__pycache__/**", package["files"])
+        self.assertIn("!**/*.pyc", package["files"])
+        npmignore = (ROOT / ".npmignore").read_text(encoding="utf-8")
+        self.assertIn("**/__pycache__/", npmignore)
+        self.assertIn(".npmrc", npmignore)
+
+    def test_spanish_readme_matches_current_team_contract(self) -> None:
+        self.assertIn("Un equipo organizado e instalable de Agents + Skills", self.spanish)
+        self.assertIn("92 especialistas", self.spanish)
+        self.assertIn("11 ejecutivos gestores", self.spanish)
+        self.assertIn("8 Teams", self.spanish)
+        self.assertIn("runtime pendiente", self.spanish)
+        self.assertIn("starter-kits/operations-response/", self.spanish)
+        self.assertIn("docs/guides/team-agent-skill-architecture.md", self.spanish)
+        self.assertNotIn("44 especialistas", self.spanish)
+        self.assertNotIn("4 kits", self.spanish)
+        self.assertNotIn("./growth/README.md", self.spanish)
 
     def test_readmes_define_the_product_and_its_boundary(self) -> None:
         self.assertIn("An organized, installable team of Agents + Skills", self.english)
@@ -114,7 +143,11 @@ class ReadmeContractTests(unittest.TestCase):
 
     def test_readme_local_links_resolve(self) -> None:
         pattern = re.compile(r"\[[^]]+\]\(([^)]+)\)|<img[^>]+src=\"([^\"]+)\"")
-        for filename, readme in (("README.md", self.english), ("README_CN.md", self.chinese)):
+        for filename, readme in (
+            ("README.md", self.english),
+            ("README_CN.md", self.chinese),
+            ("README.es-ES.md", self.spanish),
+        ):
             for match in pattern.finditer(readme):
                 target = next(group for group in match.groups() if group)
                 if target.startswith(("http://", "https://", "#")):
@@ -170,7 +203,7 @@ class ReadmeContractTests(unittest.TestCase):
         )
 
     def test_readmes_embed_the_interactive_star_history_chart(self) -> None:
-        for readme in (self.english, self.chinese):
+        for readme in (self.english, self.chinese, self.spanish):
             self.assertIn(
                 "https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&amp;type=Date&amp;legend=top-left",
                 readme,

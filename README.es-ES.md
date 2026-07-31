@@ -1,56 +1,62 @@
-
-
-<p align="right"><a href="./README_CN.md">中文</a></p>
+<p align="right"><a href="./README.md">English</a> · <a href="./README_CN.md">中文</a></p>
 
 <p align="center">
-  <img src="assets/banner-v2.png" alt="Equipo Super AGI: habilidades componibles, agentes especialistas y flujos de trabajo revisables" width="760">
+  <img src="assets/banner-v2.png" alt="AGI Super Team: un equipo organizado de Agents y Skills para múltiples frameworks" width="760">
 </p>
 
 <h1 align="center">AGI Super Team</h1>
 
-<p align="center"><strong>Habilidades componibles para agentes especialistas y flujos de trabajo de equipo revisables.</strong></p>
+<p align="center"><strong>Un equipo organizado e instalable de Agents + Skills para frameworks de agentes de IA locales.</strong></p>
 
 <p align="center">
-  Usa un único breve para estructurar trabajo con alcance definido, tareas especializadas, revisión independiente y una puerta de aprobación humana explícita.
+  Comienza con un resultado: el CEO coordina a los ejecutivos, los ejecutivos delegan en especialistas, las Skills aportan métodos y el Governor verifica el resultado.
 </p>
 
-AGI Super Team es una biblioteca versionada de **habilidades de agentes de IA, paquetes de roles especialistas y flujos de trabajo de equipo con intervención humana** para Codex y espacios de trabajo de agentes de codificación locales.
+AGI Super Team no es un plugin exclusivo de Codex. Es un **sistema organizado y versionado de Agents + Skills** para Claude Code, Codex, OpenClaw, Hermes y otros frameworks locales mediante 18 adaptadores explícitos.
 
-## Instalar para tu cliente de IA
+El mismo contrato organizativo funciona en todos los frameworks: 14 roles principales, 92 especialistas opcionales, Skills reutilizables, 8 Teams orientados a resultados, revisión independiente y aprobación humana explícita.
+
+Cada adaptador traduce ese contrato a las capacidades reales del framework de destino.
+
+## Instalar en tu framework de agentes
 
 Lista los 18 objetivos de adaptador, previsualiza uno y luego aplica la misma selección:
 
 ```bash
-npx -y github:aAAaqwq/AGI-Super-Team --list-tools
-npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code
-npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --install
-npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
+npx -y agi-super-team@latest --list-tools
+npx -y agi-super-team@latest --tool claude-code
+npx -y agi-super-team@latest --tool claude-code --install --connect
+npx -y agi-super-team@latest --tool claude-code --doctor
 ```
+
+Los comandos anteriores usan el paquete público de npm. Para automatizaciones reproducibles, sustituye `@latest` por una versión exacta, por ejemplo `@1.4.0`.
 
 Reemplaza `claude-code` con un ID de `--list-tools`. Usa `--all-tools` solo cuando quieras intencionalmente cada adaptador global y de proyecto. Una ejecución sin argumentos permanece como la vista previa heredada de Codex; la nueva automatización debe especificar siempre `--tool` o `--all-tools`.
 
-### Puntos de inicio recomendados
+### Cuatro frameworks principales
 
 | Plataforma | Comando de vista previa | Capacidad instalada |
 |---|---|---|
-| **Claude Code** | `npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code` | Agentes nativos Markdown + Habilidades nativas |
-| **Codex** | `npx -y github:aAAaqwq/AGI-Super-Team --tool codex` | Agentes nativos TOML + Habilidades del plugin Codex; el adaptador actualmente verificado en tiempo de ejecución |
-| **OpenClaw** | `npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw` | Espacios de trabajo nativos de Agentes + Habilidades nativas |
-| **Hermes Agent** | `npx -y github:aAAaqwq/AGI-Super-Team --tool hermes` | Habilidades nativas; los paquetes de roles se exponen como Habilidades en lugar de Agentes nativos |
+| **Claude Code** | `npx -y agi-super-team@latest --tool claude-code` | Agents Markdown nativos + Skills canónicas + orquestador de Claude |
+| **Codex** | `npx -y agi-super-team@latest --tool codex` | CEO en la sesión principal + Agents TOML nativos + Skills canónicas |
+| **OpenClaw** | `npx -y agi-super-team@latest --tool openclaw` | Workspaces de Agent con namespace + Skills canónicas + fusión segura de configuración |
+| **Hermes Agent** | `npx -y agi-super-team@latest --tool hermes` | Skills de rol + Skills canónicas + blueprints de Profiles/Kanban |
 
-Para OpenClaw, el instalador materializa los espacios de trabajo de Agentes pero no los registra; revisa y registra los espacios de trabajo deseados explícitamente después de la instalación.
+`--install` materializa los archivos; `--install --connect` también escribe un recibo de conexión. OpenClaw hace primero un dry-run y después actualiza las entradas gestionadas de `agents.list`, conservando los Agents no gestionados y sin crear bindings de canal. Claude y Codex usan descubrimiento por sistema de archivos. Hermes genera blueprints, pero no crea Profiles, tareas Cron ni un Gateway. Consulta la [guía de adaptadores principales](./docs/guides/harness-adapters.md) para rutas, permisos y requisitos de recibos.
+
+Claude Code, Codex, OpenClaw y Hermes son entradas de primera clase al mismo sistema de equipo, no ediciones con organizaciones diferentes. El formato de entrega cambia porque cada framework ofrece primitivas distintas de Agent y Skill.
 
 ### Instalar grupos de subagentes ejecutivos
 
-El predeterminado siguen siendo los 14 roles de nivel superior. Agrega una pirámide ejecutiva, o los 44 especialistas opcionales:
+La instalación predeterminada mantiene los 14 roles principales. Añade una pirámide ejecutiva o los 92 especialistas opcionales:
 
 ```bash
-npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cto
-npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cpo --with-subagents cco
-npx -y github:aAAaqwq/AGI-Super-Team --tool codex --all-subagents --install
+npx -y agi-super-team@latest --tool codex --with-subagents cto
+npx -y agi-super-team@latest --tool codex --with-subagents cfo --with-subagents clo
+npx -y agi-super-team@latest --tool codex --all-subagents --install
 ```
 
-La jerarquía es CEO → CTO/CPO/CCO → especialistas hoja. El CTO también referencia al PE canónico existente como líder de entrega; no crea una segunda identidad PE. Los 44 archivos fuente bajo `agents/*/subagents/*/AGENTS.md` son copias byte a byte desde `jnMetaCode/agency-agents-zh` fijado; el enrutamiento local y los contenedores de seguridad permanecen separados. Consulta `config/agent-sources.lock.json` para las URLs de origen y los dígitos SHA-256. El enrutamiento anidado de Codex requiere `max_depth = 2`; con cuatro hilos, ejecuta un gerente más como máximo dos hijos por oleada.
+La jerarquía es CEO → 11 ejecutivos gestores → especialistas hoja. CTO también referencia al PE canónico como responsable de entrega y no crea una segunda identidad PE. Los 92 archivos `agents/*/subagents/*/AGENTS.md` son copias byte a byte de una revisión fijada de `jnMetaCode/agency-agents-zh`; el enrutamiento local y los límites de seguridad se mantienen separados. CEO conserva la coordinación, Governor actúa como revisor independiente y PE sigue siendo la hoja de entrega canónica de CTO. Consulta [`config/agent-sources.lock.json`](./config/agent-sources.lock.json) para las fuentes y hashes SHA-256. La delegación anidada de Codex requiere `max_depth = 2`; con cuatro hilos, ejecuta un gestor con un máximo de dos hijos por oleada.
 
 Estos son **18 objetivos de adaptador de cliente/runtime de IA**, no 18 CLIs intercambiables. Un adaptador puede instalar Agentes nativos, Habilidades nativas, reglas/contexto de proyecto, o paquetes de roles degradados a Agente-como-Habilidad. La colocación de archivos por sí sola no demuestra que un cliente actual haya cargado o ejecutado el contenido.
 
@@ -60,10 +66,10 @@ Las rutas para adaptadores globales son relativas al home seleccionado; los adap
 
 | ID | Cliente/runtime | Ámbito | Entrega de Agente | Entrega de Habilidad | Estado |
 |---|---|---|---|---|---|
-| `claude-code` | Claude Code | Global | Agente nativo Markdown: `.claude/agents` | Nativo: `.claude/skills` | Adaptador nativo |
-| `codex` | Codex | Global | Agente nativo TOML: `.codex/agents` | Plugin nativo: `.codex/skills` | Adaptador verificado en tiempo de ejecución |
-| `openclaw` | OpenClaw | Global | Espacio de trabajo nativo: `.openclaw/agency-agents` | Nativo: `.openclaw/skills/agi-super-team` | Adaptador nativo |
-| `hermes` | Hermes Agent | Global | Agente-como-Habilidad: `.hermes/skills/agi-super-team-agents` | Nativo: `.hermes/skills/agi-super-team` | Habilidades nativas |
+| `claude-code` | Claude Code | Global | Agent Markdown nativo: `.claude/agents` | Canónica: `.claude/skills` | Conectado estructuralmente; runtime pendiente |
+| `codex` | Codex | Global | CEO principal + TOML: `.codex/agents` | Canónica: `.agents/skills` | Conectado estructuralmente; runtime pendiente |
+| `openclaw` | OpenClaw | Global | Workspace nativo: `.openclaw/agency-agents/agi-super-team` | Canónica: `.openclaw/skills/agi-super-team` | Conectado estructuralmente; runtime pendiente |
+| `hermes` | Hermes Agent | Global | Skills de rol: `.hermes/skills/agi-super-team-agents` | Canónica: `.hermes/skills/agi-super-team` | Blueprint conectado; runtime pendiente |
 | `copilot` | GitHub Copilot | Global | Agente Markdown: `.github/agents`, `.copilot/agents` | Nativo: `.copilot/skills` | Adaptador |
 | `antigravity` | Antigravity | Global | Agente: `.gemini/config/agents` | Nativo: `.gemini/config/skills` | **Experimental** |
 | `gemini-cli` | Gemini CLI | Global | Agente Markdown: `.gemini/agents` | Nativo: `.gemini/skills` | Adaptador |
@@ -79,7 +85,9 @@ Las rutas para adaptadores globales son relativas al home seleccionado; los adap
 | `kiro` | Kiro | Global | Agente Markdown: `.kiro/agents` | Nativo: `.kiro/skills` | Adaptador |
 | `qoder` | Qoder | Global | Agente Markdown: `.qoder/agents` | Nativo: `.qoder/skills` | Adaptador |
 
-La matriz describe el contrato del adaptador en `config/cli-adapters.json`, no una afirmación de que los 18 clientes hayan sido verificados en tiempo de ejecución. Cursor y Antigravity son explícitamente experimentales.
+La matriz describe el contrato de [`config/cli-adapters.json`](./config/cli-adapters.json), no afirma que los 18 clientes hayan sido verificados en tiempo de ejecución. Cursor y Antigravity son explícitamente experimentales.
+
+Usa la Skill canónica [`orchestrate-agi-super-team`](./skills/orchestrate-agi-super-team/SKILL.md) cuando una tarea necesite el flujo completo Team → C-suite → Skills/Subagents → Governor → CEO → aprobación humana. Detecta los límites reales de delegación del framework y registra cualquier degradación plana o secuencial, sin fingir que hubo anidamiento nativo.
 
 ### Seleccionar destinos, actualizar y verificar
 
@@ -89,15 +97,15 @@ Usa `--home` para redirigir objetivos globales y `--project-dir` para objetivos 
 AGI_AUDIT_HOME="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-home.XXXXXX")"
 AGI_AUDIT_PROJECT="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-project.XXXXXX")"
 
-npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+npx -y agi-super-team@latest --tool openclaw \
   --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT"
-npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+npx -y agi-super-team@latest --tool openclaw \
   --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --install
-npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+npx -y agi-super-team@latest --tool openclaw \
   --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --doctor
 ```
 
-Ejecuta el mismo comando `--install` nuevamente para actualizar el contenido gestionado; repite `--doctor` después. Reinicia o abre una nueva tarea en el cliente objetivo, luego verifica que descubra la superficie de Agente/Habilidad esperada. `--doctor` verifica los artefactos del adaptador instalados, no el comportamiento del modelo o la calidad de la tarea.
+Ejecuta de nuevo el mismo comando `--install` para actualizar el contenido gestionado; usa `--install --connect` cuando también debas renovar la conexión y el recibo pendiente. Después repite `--doctor`, reinicia el cliente o abre una tarea nueva y comprueba que descubre los Agents y Skills esperados. `--doctor` verifica artefactos instalados, no el comportamiento del modelo ni la calidad de la tarea.
 
 ### Seguridad y límites de actualización
 
@@ -106,12 +114,12 @@ Ejecuta el mismo comando `--install` nuevamente para actualizar el contenido ges
 - Los respaldos son ayudas de recuperación local, no una instantánea completa ni un sistema de desinstalación. Revisa la vista previa y mantén tu propio respaldo de control de versiones o sistema de archivos para configuraciones importantes.
 - Se rechazan destinos con enlaces simbólicos o inseguros. `--no-agents` y `--no-skills` pueden reducir la carga cuando sea necesario.
 - Este proyecto no utiliza un instalador basado en tuberías de scripts remotos; los comandos anteriores usan el ejecutor de paquetes de npm y aún merecen una revisión normal de dependencias.
-- La instalación solo demuestra la materialización de archivos. Excepto para el adaptador marcado explícitamente como verificado en tiempo de ejecución, la carga y ejecución por parte del cliente actual permanecen sin verificar hasta que sean respaldadas por un recibo coincidente con el commit.
+- La instalación solo demuestra la materialización de archivos. La evidencia de runtime de los cuatro adaptadores principales permanece `pending` hasta que exista un canary de cliente limpio asociado a una revisión limpia.
 
-El diseño del adaptador se inspiró en parte en `jnMetaCode/agency-agents-zh` en el commit fijo `2ecfabf8`. El manifiesto de AGI Super Team, el mapeo de carga, el comportamiento de seguridad y los límites de evidencia se mantienen aquí.
+El diseño del adaptador se inspiró en parte en [`jnMetaCode/agency-agents-zh`](https://github.com/jnMetaCode/agency-agents-zh) en el commit fijo [`2ecfabf8`](https://github.com/jnMetaCode/agency-agents-zh/commit/2ecfabf8e944ccdfed63ad8c44d5241290af6977). AGI Super Team mantiene aquí su manifiesto, el mapeo de payloads, el comportamiento de seguridad y los límites de evidencia.
 
 <p align="center">
-  <a href="#instalar-para-tu-cliente-de-ia"><strong>Instalar para un cliente</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#instalar-en-tu-framework-de-agentes"><strong>Instalar el equipo</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="./.codex/INDEX.md">Inspeccionar el paquete Codex</a>
 </p>
 
@@ -120,7 +128,7 @@ El diseño del adaptador se inspiró en parte en `jnMetaCode/agency-agents-zh` e
 | Capa | Lo que obtienes | Por qué importa |
 |---|---|---|
 | **🧩 Habilidades** | Archivos físicos canónicos `SKILL.md` agrupados en 14 categorías de resultados | Reutiliza manuales de procedimientos enfocados en lugar de reconstruir instrucciones para cada tarea |
-| **🤖 Agentes** | 14 paquetes de roles de nivel superior más 44 especialistas directos opcionales con enrutamiento exacto y bloqueos de origen | Otorga una propiedad clara para planificación, ingeniería, producto, contenido, investigación y revisión |
+| **🤖 Agents** | 14 paquetes de roles principales más 92 especialistas directos opcionales, con enrutamiento exacto y fuentes fijadas | Asigna responsables claros a planificación, ingeniería, producto, contenido, investigación y revisión |
 | **🔁 Paquetes de equipo** | 8 Equipos de resultados impulsados por manifiesto, desde Fundador Solitario hasta Equipo Completo | Comienza con el equipo más pequeño que puede poseer el resultado en lugar de cargar todo |
 
 <p>
@@ -129,24 +137,45 @@ El diseño del adaptador se inspiró en parte en `jnMetaCode/agency-agents-zh` e
   <img src="https://img.shields.io/badge/outcome%20fixture-validation%20pending-64748b" alt="Validación del fixture de resultados pendiente">
 </p>
 
-Los paquetes están diseñados para este ciclo de revisión:
+Team, C-suite, Subagents y Skills forman un grafo orientado a resultados, no una cadena de herencia de directorios. Un Team selecciona el C-suite mínimo suficiente; cada ejecutivo recibe Skills asignadas en una rama y una lista permitida de especialistas en otra; toda la evidencia pasa por una puerta independiente de Governor.
 
 ```mermaid
-flowchart LR
-  B["Breve"] --> C["El Coordinador delimita"] --> S["Especialistas ejecutan con habilidades"] --> R["Revisor cuestiona"] --> H["Humano aprueba"]
+flowchart TD
+  O["Resultado / Brief"] --> C["El coordinador delimita"]
+  C --> T["Team Kit<br/>roles, entregables y controles"]
+  T --> CEO["CEO coordinador"]
+  CEO --> M["C-suite mínimo suficiente"]
+  CEO --> G["Governor independiente"]
+  M -->|"asignación de rol"| SK["Skills canónicas<br/>métodos reutilizables"]
+  M -->|"delegación acotada"| L["Subagents directos<br/>especialistas de dominio"]
+  L --> RI["Contrato del especialista<br/>trigger, entradas, salidas y límites"]
+  SK --> W["Trabajo respaldado por evidencia"]
+  RI --> W
+  W --> G
+  G --> CEO
+  CEO --> H["Aprobación humana<br/>publicación, dinero, credenciales y acciones irreversibles"]
 ```
+
+Skills y Subagents son ramas de capacidad paralelas bajo un rol C-suite, no una herencia automática `Subagent → Skill`. Consulta [Cómo se conectan Teams, Agents C-suite, Subagents y Skills](./docs/guides/team-agent-skill-architecture.md) para el compilador de contratos, la secuencia de runtime, el mapeo entre frameworks y sus invariantes.
 
 AGI Super Team posee el contenido versionado, las reglas de selección, la copia segura y las verificaciones del repositorio. Tu arnés de agente de codificación configurado posee el modelo, las credenciales, las herramientas, la ejecución y la salida final de la tarea.
 
 ## 🎯 Comienza con un resultado
 
-| Kit inicial | Proporciona | Salidas de evaluación previstas | Equipo |
-|---|---|---|---|
-| [🚀 Fundador Solitario](./starter-kits/solo-founder/) | Un breve de producto o lanzamiento | Memorando de decisión, plan de implementación test-first, borradores de lanzamiento | CEO, PE, CCO |
-| [✍️ Creador de Contenido](./starter-kits/content-creator/) | Material fuente y una audiencia | Notas de investigación, borradores de contenido, plan de medición | CCO, CDO, CMO |
-| [📊 Investigación Cuantitativa](./starter-kits/quant-trader/) | Una pregunta de investigación y datos históricos | Memorando de investigación, plan de backtest, revisión de riesgos; nunca una operación en vivo | CQO, CDO, CFO |
+Elige el equipo que corresponda al resultado. Cada Team incluye un CEO coordinador, un núcleo ejecutivo acotado, una puerta independiente de Governor y acceso a otros ejecutivos o especialistas cuando exista una brecha de evidencia concreta.
 
-¿Necesitas mayor cobertura? `full-team` selecciona los 14 Agentes del manifiesto. Comienza con un kit enfocado a menos que tu evaluación realmente necesite cada rol.
+| Equipo | Entradas | Entregables de evaluación previstos | Núcleo |
+|---|---|---|---|
+| [🚀 Solo Founder](./starter-kits/solo-founder/) | Una idea de producto o brief de lanzamiento acotado | Decisión de producto, plan test-first, evidencia de lanzamiento y decisión de Governor | CEO, CPO, PE, Governor |
+| [✍️ Content Creator](./starter-kits/content-creator/) | Fuentes aprobadas, audiencia y canal | Brief de evidencia, borradores listos para el canal, medición y revisión de afirmaciones | CEO, CRO, CCO, CMO, Governor |
+| [📊 Quant Research](./starter-kits/quant-trader/) | Una hipótesis y datos históricos | Especificación reproducible de backtest, memo de riesgos y puerta independiente | CEO, CQO, CDO, CFO, Governor |
+| [🧱 Product Delivery](./starter-kits/product-delivery/) | Un problema de usuario validado y restricciones de entrega | Brief de producto, decisión de arquitectura, cambio probado y handoff de release | CEO, CPO, CTO, PE, Governor |
+| [🔬 Research Decision](./starter-kits/research-decision/) | Una pregunta de alto impacto y criterios de decisión | Plan de investigación, mapa de evidencia, síntesis citada y memo de decisión | CEO, CRO, CDO, Governor |
+| [📣 Go To Market](./starter-kits/go-to-market/) | Posicionamiento validado y objetivo de lanzamiento o ingresos | Brief de posicionamiento, activos de lanzamiento, experimento de ingresos y control de riesgo | CEO, CPO, CMO, CCO, CSO, Governor |
+| [🚨 Operations Response](./starter-kits/operations-response/) | Un incidente o fallo de entrega acotado | Alcance, contención, recuperación verificada y revisión posterior | CEO, COO, CTO, PE, Governor |
+| [🏛️ Executive Team](./starter-kits/full-team/) | Un brief empresarial multifuncional | Plan de enrutamiento ejecutivo, artefactos especialistas, revisión independiente y handoff verificado | Los 14 roles principales disponibles; CEO coordina y Governor revisa |
+
+Comienza con el equipo completo más pequeño que pueda asumir el resultado. `full-team` habilita los 14 roles principales, pero el CEO solo activa los roles y especialistas justificados por el brief.
 
 ## ⚡ Materializador genérico de espacios de trabajo heredado
 
@@ -165,7 +194,7 @@ Inspecciona los Agentes y destinos seleccionados. Aplica solo cuando coincidan c
 ./install.sh --source "$PWD" --destination /path/to/review-workspace --apply solo-founder
 ```
 
-El instalador genérico valida cada archivo requerido antes de publicar los espacios de trabajo preparados. Preserva los archivos existentes de persona y habilidad y rechaza enlaces simbólicos de origen o destino peligrosos. Consulta `setup.md` para requisitos previos, actualizaciones y recuperación.
+El instalador genérico valida cada archivo requerido antes de publicar los workspaces preparados. Conserva los archivos existentes de persona y Skill y rechaza enlaces simbólicos peligrosos en origen o destino. Consulta [setup.md](./setup.md) para requisitos previos, actualizaciones y recuperación.
 
 El manifiesto separa las Habilidades portátiles `required`/`optional` de las entradas del catálogo `harnessSpecific` y recomendaciones externas sin agrupar. Las instalaciones genéricas copian solo clases que pasan el contrato de portabilidad actual; la carga copiada completa se escanea en busca de rutas de host conocidas y comandos solo de tiempo de ejecución.
 
@@ -193,11 +222,12 @@ Explora el repositorio por profundidad:
 | [Guías prácticas](./docs/guides/) | Codex, Claude Code, compatibilidad, elección de equipo y límites de flujo de trabajo |
 | [Recetarios](./cookbook/) | Materiales más largos para contenido, prompts, investigación y flujos cuantitativos |
 | [Mapa de arquitectura](./ARCHITECTURE.md) | Fuentes de verdad, salidas generadas, puntos de entrada públicos y propiedad de cambios |
+| [Modelo de conexión Team / Agent / Skill](./docs/guides/team-agent-skill-architecture.md) | Selección del Team, enrutamiento de gestores, asignación de Skills, compilación del Adapter y delegación en runtime |
 | [Lenguaje compartido](./CONTEXT.md) | Módulo, Interfaz, Adaptador, evidencia y terminología de producto |
 
 ### 🔎 Encontrar fuentes de habilidades de alta calidad
 
-El `agent-skill-repository-index` convierte la lista de fuentes revisadas de Daniel en un flujo de trabajo de selección seguro. Compara un candidato, inspecciona sus permisos y procedencia, luego instálalo o elimínalo sin activar globalmente repositorios completos.
+[`agent-skill-repository-index`](./skills/agent-skill-repository-index/) convierte la lista de fuentes revisadas de Daniel en un flujo de selección seguro. Compara un candidato, inspecciona sus permisos y procedencia y luego instálalo o elimínalo sin activar repositorios completos de forma global.
 
 | Necesidad | Referencia mantenida |
 |---|---|
@@ -258,11 +288,9 @@ La animación usa rutas sanitizadas y es ilustrativa, no evidencia de tiempo de 
 
 </details>
 
-¿Te ayudó el flujo de trabajo de vista previa primero? [Dale estrella al repositorio](https://github.com/aAAaqwq/AGI-Super-Team) para que puedas encontrar la ruta verificada nuevamente.
-
 ## 🔌 Elegir una distribución
 
-Usa el [instalador npm de 18 objetivos](#instalar-para-tu-cliente-de-ia) para un cliente/runtime de IA con nombre, el [paquete Codex curado](./.codex/INDEX.md) para detalles específicos de Codex, o el materializador genérico de espacios de trabajo heredado anterior para archivos neutrales respecto al arnés. La [guía de Claude Code](./docs/guides/claude-code-install.html) y la [guía de compatibilidad del arnés](./docs/guides/harness-compatibility.html) proporcionan contexto adicional, pero el manifiesto del adaptador actual y los recibos coincidentes con commits rigen las afirmaciones de soporte.
+Usa el [instalador npm de 18 objetivos](#instalar-en-tu-framework-de-agentes) para un framework concreto, el [paquete Codex curado](./.codex/INDEX.md) para detalles específicos de Codex o el materializador genérico anterior para archivos neutrales respecto al harness. La [guía de Claude Code](./docs/guides/claude-code-install.html) y la [guía de compatibilidad](./docs/guides/harness-compatibility.html) aportan contexto adicional, pero el manifiesto actual y los recibos vinculados a commits gobiernan las afirmaciones de soporte.
 
 La ruta genérica requiere Bash y Node.js; la verificación del repositorio también requiere npm y Python 3. El soporte exacto de sistema operativo y versión de cliente permanece limitado por CI y recibos publicados. La presencia del adaptador nunca establece paridad de características.
 
@@ -272,8 +300,8 @@ La ruta genérica requiere Bash y Node.js; la verificación del repositorio tamb
 flowchart LR
   subgraph R["Repositorio AGI Super Team: contenido versionado, no un runtime"]
     S["skills/<br/>manuales reutilizables"]
-    A["agents/<br/>14 roles de nivel superior + 44 especialistas opcionales"]
-    M["team-manifest.json<br/>4 kits + mapeos de habilidades"]
+    A["agents/<br/>14 roles principales + 92 especialistas opcionales"]
+    M["team-manifest.json<br/>8 kits + mapeos de Skills"]
     C["plugins/agi-super-team-codex/<br/>paquete Codex curado"]
   end
 
@@ -301,6 +329,7 @@ flowchart LR
 | [`config/team-manifest.json`](./config/team-manifest.json) | Fuente de verdad para Agentes, kits y asignaciones de Habilidades portátiles, específicas del arnés o externas |
 | [`config/repository-architecture.json`](./config/repository-architecture.json) | Módulos legibles por máquina, propietarios de rutas, linaje generado y estado del Adaptador |
 | [`agents/`](./agents/) y [`skills/`](./skills/) | Entradas autoradas y versionadas; solo las cargas portátiles clasificadas por manifiesto entran en espacios de trabajo genéricos |
+| [`docs/guides/team-agent-skill-architecture.md`](./docs/guides/team-agent-skill-architecture.md) | Principios de conexión entre Team, C-suite, Subagent, Skill, Governor y aprobación humana |
 | [`.codex/INDEX.md`](./.codex/INDEX.md) | Guía de instalación e índice del paquete Codex |
 | [`plugins/agi-super-team-codex/`](./plugins/agi-super-team-codex/) | Plugin Codex curado real, habilidades y roles de agentes agrupados |
 | [`install.sh`](./install.sh) | Selección vista previa primero, preflight, preparación y publicación sin sobrescribir |
@@ -343,12 +372,11 @@ AGI Super Team no es un modelo, orquestador autónomo ni runtime de agente. Inst
 - [Contribución y procedencia](./CONTRIBUTING.md)
 - [Configuración y recuperación](./setup.md)
 - [Política de seguridad](./SECURITY.md)
-- [Manuales de crecimiento](./growth/README.md)
 - [Licencia MIT](./LICENSE)
 
 ## ⭐ Estrellas de GitHub
 
-Rastrea el crecimiento público de AGI Super Team a lo largo del tiempo. La visualización en vivo es proporcionada por Star History; haz clic en el gráfico para inspeccionar la línea de tiempo interactiva.
+Sigue la tendencia pública de estrellas de AGI Super Team. La visualización en vivo es proporcionada por Star History; haz clic en el gráfico para consultar la línea de tiempo interactiva.
 
 <p align="center">
   <a href="https://www.star-history.com/?type=date&amp;legend=top-left&amp;repos=aAAaqwq%2FAGI-Super-Team">
@@ -357,3 +385,5 @@ Rastrea el crecimiento público de AGI Super Team a lo largo del tiempo. La visu
   <br>
   <sub>Gráfico en vivo por Star History · <a href="https://github.com/aAAaqwq/AGI-Super-Team/stargazers">Ver Estrellas en GitHub</a></sub>
 </p>
+
+Si AGI Super Team realmente te ha ahorrado tiempo, puedes [dar una estrella al repositorio](https://github.com/aAAaqwq/AGI-Super-Team) para encontrarlo de nuevo fácilmente.

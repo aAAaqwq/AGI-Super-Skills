@@ -1,4 +1,4 @@
-<p align="right"><a href="./README.md">English</a></p>
+<p align="right"><a href="./README.md">English</a> · <a href="./README.es-ES.md">Español</a></p>
 
 <p align="center">
   <img src="assets/banner-v2.png" alt="AGI Super Team：跨框架、有组织的 Agents 与 Skills 团队" width="760">
@@ -21,11 +21,13 @@ AGI Super Team 不是 Codex 专属插件，而是一套版本化、有组织的 
 先列出全部 18 个适配目标，再预览一个目标，确认后用同一选择安装：
 
 ```bash
-npx -y github:aAAaqwq/AGI-Super-Team --list-tools
-npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code
-npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --install --connect
-npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
+npx -y agi-super-team@latest --list-tools
+npx -y agi-super-team@latest --tool claude-code
+npx -y agi-super-team@latest --tool claude-code --install --connect
+npx -y agi-super-team@latest --tool claude-code --doctor
 ```
+
+以上命令直接使用公开 npm 包。自动化场景建议把 `@latest` 换成明确版本，例如 `@1.4.0`，以获得可复现安装。
 
 把 `claude-code` 换成 `--list-tools` 输出的目标 ID。只有在确实要同时写入全部全局和项目适配目标时，才使用 `--all-tools`。不带参数仍保留旧版 Codex 预览行为；新脚本应明确写出 `--tool` 或 `--all-tools`。
 
@@ -33,10 +35,10 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
 
 | 平台 | 预览命令 | 安装能力 |
 |---|---|---|
-| **Claude Code** | `npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code` | 原生 Markdown Agent + canonical Skills + Claude orchestrator |
-| **Codex** | `npx -y github:aAAaqwq/AGI-Super-Team --tool codex` | 主会话 CEO + 原生 TOML Agent + canonical Skills |
-| **OpenClaw** | `npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw` | 命名空间化 Agent Workspace + canonical Skills + 安全配置合并 |
-| **Hermes Agent** | `npx -y github:aAAaqwq/AGI-Super-Team --tool hermes` | 角色 Skill + canonical Skills + Profiles/Kanban 蓝图 |
+| **Claude Code** | `npx -y agi-super-team@latest --tool claude-code` | 原生 Markdown Agent + canonical Skills + Claude orchestrator |
+| **Codex** | `npx -y agi-super-team@latest --tool codex` | 主会话 CEO + 原生 TOML Agent + canonical Skills |
+| **OpenClaw** | `npx -y agi-super-team@latest --tool openclaw` | 命名空间化 Agent Workspace + canonical Skills + 安全配置合并 |
+| **Hermes Agent** | `npx -y agi-super-team@latest --tool hermes` | 角色 Skill + canonical Skills + Profiles/Kanban 蓝图 |
 
 `--install` 负责落盘；`--install --connect` 还会生成接线凭据。OpenClaw 会先 dry-run，再按 `id` 合并 `agents.list`，保留非托管 Agent，且不创建 channel binding。Claude/Codex 采用文件系统发现；Hermes 只生成 Profile 蓝图，不自动创建 Profile、Cron 或 Gateway。完整路径、权限和 receipt 契约见[四个主力框架 Adapter 接入手册](./docs/guides/harness-adapters.md)。
 
@@ -48,9 +50,9 @@ Claude Code、Codex、OpenClaw、Hermes 都是同一套团队系统的一等入�
 
 ```bash
 # 先预览，再把相同命令加上 --install
-npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cto
-npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cfo --with-subagents clo
-npx -y github:aAAaqwq/AGI-Super-Team --tool codex --all-subagents --install
+npx -y agi-super-team@latest --tool codex --with-subagents cto
+npx -y agi-super-team@latest --tool codex --with-subagents cfo --with-subagents clo
+npx -y agi-super-team@latest --tool codex --all-subagents --install
 ```
 
 组织关系采用三层金字塔：CEO → 11 位管理型高管 → 直属叶子。CTO 另外引用现有 PE 作为生产交付负责人，不复制第二份 PE 身份。92 份 `agents/<高管>/subagents/<角色>/AGENTS.md` 均从 `jnMetaCode/agency-agents-zh` 固定提交逐字复制；本项目的触发、排除、输入、交付、验收与安全边界单独维护，不改写上游原文。来源链接和 SHA-256 见 [`config/agent-sources.lock.json`](./config/agent-sources.lock.json)。CEO 保留总协调权，Governor 保持独立审查，PE 仍是 CTO 引用的生产交付叶子，三者都不再向下复制一套专家。
@@ -110,11 +112,11 @@ Codex 的嵌套调用需要 `max_depth = 2`。在 `max_threads = 4` 下，一次
 AGI_AUDIT_HOME="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-home.XXXXXX")"
 AGI_AUDIT_PROJECT="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-project.XXXXXX")"
 
-npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+npx -y agi-super-team@latest --tool openclaw \
   --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT"
-npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+npx -y agi-super-team@latest --tool openclaw \
   --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --install
-npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+npx -y agi-super-team@latest --tool openclaw \
   --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --doctor
 ```
 

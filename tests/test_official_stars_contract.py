@@ -8,14 +8,24 @@ ROOT = Path(__file__).resolve().parents[1]
 class OfficialStarsContractTests(unittest.TestCase):
     def test_readmes_keep_star_history_and_use_a_low_pressure_invitation(self) -> None:
         expected = {
-            "README.md": "If AGI Super Team has genuinely saved you time",
-            "README_CN.md": "如果 AGI Super Team 确实帮你省下了时间",
+            "README.md": (
+                "If AGI Super Team has genuinely saved you time",
+                "AGI Super Team Star History chart",
+            ),
+            "README_CN.md": (
+                "如果 AGI Super Team 确实帮你省下了时间",
+                "AGI Super Team Star History chart",
+            ),
+            "README.es-ES.md": (
+                "Si AGI Super Team realmente te ha ahorrado tiempo",
+                "Gráfico de Historial de Estrellas de AGI Super Team",
+            ),
         }
-        for readme_name, invitation in expected.items():
+        for readme_name, (invitation, alt) in expected.items():
             with self.subTest(readme=readme_name):
                 readme = (ROOT / readme_name).read_text(encoding="utf-8")
                 self.assertIn(invitation, readme)
-                self.assertIn('alt="AGI Super Team Star History chart"', readme)
+                self.assertIn(f'alt="{alt}"', readme)
                 self.assertIn(
                     "https://api.star-history.com/svg?repos=aAAaqwq/AGI-Super-Team&amp;type=Date&amp;legend=top-left",
                     readme,
