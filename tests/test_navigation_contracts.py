@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_MARKDOWN = (
     "README.md",
     "README_CN.md",
+    "README.es-ES.md",
     "ARCHITECTURE.md",
     "CONTEXT.md",
     "AGENTS.md",
@@ -47,9 +48,14 @@ class NavigationContractTests(unittest.TestCase):
     def test_language_and_distribution_routes_are_bidirectional(self) -> None:
         english = (ROOT / "README.md").read_text(encoding="utf-8")
         chinese = (ROOT / "README_CN.md").read_text(encoding="utf-8")
+        spanish = (ROOT / "README.es-ES.md").read_text(encoding="utf-8")
         self.assertIn("./README_CN.md", english)
+        self.assertIn("./README.es-ES.md", english)
         self.assertIn("./README.md", chinese)
-        for text in (english, chinese):
+        self.assertIn("./README.es-ES.md", chinese)
+        self.assertIn("./README.md", spanish)
+        self.assertIn("./README_CN.md", spanish)
+        for text in (english, chinese, spanish):
             self.assertIn("docs/guides/claude-code-install.html", text)
             self.assertIn("docs/guides/harness-compatibility.html", text)
 

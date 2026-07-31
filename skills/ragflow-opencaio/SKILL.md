@@ -39,7 +39,7 @@ description: RAGFlow OpenCAIO 知识库文档上传与管理。当需要将文�
 ### 通用请求头
 
 ```
-Authorization: Bearer ragflow-mlZjyQxsDT27bhT6tbONrn0f6dyA-g6hR1jcRqh1lNo
+Authorization: Bearer ${RAGFLOW_API_KEY}
 Content-Type: application/json  (检索/解析/对话)
 Content-Type: multipart/form-data  (上传)
 ```
@@ -160,7 +160,7 @@ version: "1.0"
 ```bash
 curl -X POST \
   http://8.134.103.73:12700/api/v1/datasets/2ccc31fe4f8511f181580bef240bdf9e/documents \
-  -H "Authorization: Bearer ragflow-mlZjyQxsDT27bhT6tbONrn0f6dyA-g6hR1jcRqh1lNo" \
+  -H "Authorization: Bearer ${RAGFLOW_API_KEY}" \
   -F "file=@/path/to/document.md"
 ```
 
@@ -171,7 +171,7 @@ curl -X POST \
 ```bash
 curl -X POST \
   http://8.134.103.73:12700/api/v1/datasets/2ccc31fe4f8511f181580bef240bdf9e/chunks \
-  -H "Authorization: Bearer ragflow-mlZjyQxsDT27bhT6tbONrn0f6dyA-g6hR1jcRqh1lNo" \
+  -H "Authorization: Bearer ${RAGFLOW_API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{"document_ids": ["DOCUMENT_ID"]}'
 ```
@@ -185,7 +185,7 @@ curl -X POST \
 ```bash
 curl -s \
   http://8.134.103.73:12700/api/v1/datasets/2ccc31fe4f8511f181580bef240bdf9e/documents \
-  -H "Authorization: Bearer ragflow-mlZjyQxsDT27bhT6tbONrn0f6dyA-g6hR1jcRqh1lNo" \
+  -H "Authorization: Bearer ${RAGFLOW_API_KEY}" \
   | python3 -c "import sys,json; [print(f'{d[\"name\"]}: run={d[\"run\"]} chunks={d.get(\"chunk_count\",0)}') for d in json.load(sys.stdin)['data']['docs']]"
 ```
 
@@ -199,7 +199,7 @@ curl -s \
 ```bash
 curl -X POST \
   http://8.134.103.73:12700/api/v1/retrieval \
-  -H "Authorization: Bearer ragflow-mlZjyQxsDT27bhT6tbONrn0f6dyA-g6hR1jcRqh1lNo" \
+  -H "Authorization: Bearer ${RAGFLOW_API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{"question": "测试查询内容", "dataset_ids": ["2ccc31fe4f8511f181580bef240bdf9e"]}'
 ```
@@ -239,7 +239,7 @@ for f in "$DIR"/*.md; do
   [ -f "$f" ] || continue
   echo "📤 $f"
   RESP=$(curl -s -X POST "$SERVER/api/v1/datasets/$DS/documents" \
-    -H "Authorization: Bearer $KEY" -F "file=@$f")
+    -H "Authorization: Bearer ${RAGFLOW_API_KEY}" -F "file=@$f")
   ID=$(echo "$RESP" | python3 -c "import sys,json; print(json.load(sys.stdin)['data'][0]['id'])" 2>/dev/null)
   if [ -n "$ID" ]; then
     IDS+=("\"$ID\"")
@@ -254,7 +254,7 @@ if [ ${#IDS[@]} -gt 0 ]; then
   ID_LIST=$(IFS=,; echo "${IDS[*]}")
   echo "🔧 解析 ${#IDS[@]} 个文档..."
   curl -s -X POST "$SERVER/api/v1/datasets/$DS/chunks" \
-    -H "Authorization: Bearer $KEY" \
+    -H "Authorization: Bearer ${RAGFLOW_API_KEY}" \
     -H "Content-Type: application/json" \
     -d "{\"document_ids\": [$ID_LIST]}"
 fi
@@ -268,7 +268,7 @@ fi
 
 ```bash
 curl -X POST http://8.134.103.73:12700/api/v1/retrieval \
-  -H "Authorization: Bearer $KEY" \
+  -H "Authorization: Bearer ${RAGFLOW_API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{"question": "查询内容", "dataset_ids": ["2ccc31fe4f8511f181580bef240bdf9e"]}'
 ```
@@ -278,14 +278,14 @@ curl -X POST http://8.134.103.73:12700/api/v1/retrieval \
 ```bash
 # 1. 创建 Chat Assistant
 CHAT_ID=$(curl -s -X POST http://8.134.103.73:12700/api/v1/chats \
-  -H "Authorization: Bearer $KEY" \
+  -H "Authorization: Bearer ${RAGFLOW_API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{"name": "Assistant", "dataset_ids": ["2ccc31fe4f8511f181580bef240bdf9e"]}' \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['id'])")
 
 # 2. 对话
 curl -X POST "http://8.134.103.73:12700/api/v1/openai/$CHAT_ID/chat/completions" \
-  -H "Authorization: Bearer $KEY" \
+  -H "Authorization: Bearer ${RAGFLOW_API_KEY}" \
   -H "Content-Type: application/json" \
   -d "{\"model\": \"model\", \"messages\": [{\"role\": \"user\", \"content\": \"问题\"}], \"stream\": false}"
 ```

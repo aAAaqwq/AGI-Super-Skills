@@ -1,4 +1,4 @@
-<p align="right"><a href="./README_CN.md">中文</a></p>
+<p align="right"><a href="./README_CN.md">中文</a> · <a href="./README.es-ES.md">Español</a></p>
 
 <p align="center">
   <img src="assets/banner-v2.png" alt="AGI Super Team: an organized cross-harness team of agents and skills" width="760">
@@ -23,11 +23,13 @@ Each adapter maps that contract to the capabilities its target actually supports
 List all 18 adapter targets, preview one target, then apply the same selection:
 
 ```bash
-npx -y github:aAAaqwq/AGI-Super-Team --list-tools
-npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code
-npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --install --connect
-npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --doctor
+npx -y agi-super-team@latest --list-tools
+npx -y agi-super-team@latest --tool claude-code
+npx -y agi-super-team@latest --tool claude-code --install --connect
+npx -y agi-super-team@latest --tool claude-code --doctor
 ```
+
+The commands above use the public npm package. For reproducible automation, replace `@latest` with an exact published version such as `@1.4.0`.
 
 Replace `claude-code` with an ID from `--list-tools`. Use `--all-tools` only when you intentionally want every global and project adapter. A no-argument run remains the legacy Codex preview; new automation should always name `--tool` or `--all-tools`.
 
@@ -35,10 +37,10 @@ Replace `claude-code` with an ID from `--list-tools`. Use `--all-tools` only whe
 
 | Platform | Preview command | Installed capability |
 |---|---|---|
-| **Claude Code** | `npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code` | Native Markdown Agents + canonical Skills + Claude orchestrator |
-| **Codex** | `npx -y github:aAAaqwq/AGI-Super-Team --tool codex` | Main-session CEO + native TOML Agents + canonical Skills |
-| **OpenClaw** | `npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw` | Namespaced Agent workspaces + canonical Skills + safe config merge |
-| **Hermes Agent** | `npx -y github:aAAaqwq/AGI-Super-Team --tool hermes` | Role Skills + canonical Skills + Profiles/Kanban blueprints |
+| **Claude Code** | `npx -y agi-super-team@latest --tool claude-code` | Native Markdown Agents + canonical Skills + Claude orchestrator |
+| **Codex** | `npx -y agi-super-team@latest --tool codex` | Main-session CEO + native TOML Agents + canonical Skills |
+| **OpenClaw** | `npx -y agi-super-team@latest --tool openclaw` | Namespaced Agent workspaces + canonical Skills + safe config merge |
+| **Hermes Agent** | `npx -y agi-super-team@latest --tool hermes` | Role Skills + canonical Skills + Profiles/Kanban blueprints |
 
 `--install` materializes files; `--install --connect` also writes a connection receipt. OpenClaw dry-runs and then upserts managed `agents.list` entries while preserving unmanaged Agents and creating no channel bindings. Claude and Codex use filesystem discovery. Hermes emits blueprints but does not create Profiles, Cron jobs, or a Gateway. See the [primary harness Adapter guide](./docs/guides/harness-adapters.md) for paths, permissions, and receipt requirements.
 
@@ -51,9 +53,9 @@ Delivery format varies because each framework exposes different native Agent and
 The default remains the 14 top-level roles. Add one executive pyramid, or all 92 optional specialists:
 
 ```bash
-npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cto
-npx -y github:aAAaqwq/AGI-Super-Team --tool codex --with-subagents cfo --with-subagents clo
-npx -y github:aAAaqwq/AGI-Super-Team --tool codex --all-subagents --install
+npx -y agi-super-team@latest --tool codex --with-subagents cto
+npx -y agi-super-team@latest --tool codex --with-subagents cfo --with-subagents clo
+npx -y agi-super-team@latest --tool codex --all-subagents --install
 ```
 
 The hierarchy is CEO → eleven manager executives → leaf specialists. CTO also references the existing canonical PE as delivery lead; it does not create a second PE identity. All 92 source files under `agents/*/subagents/*/AGENTS.md` are byte-for-byte copies from pinned `jnMetaCode/agency-agents-zh`; local routing and safety envelopes remain separate. CEO retains coordination authority, Governor remains an independent reviewer, and PE remains CTO's canonical delivery leaf rather than another manager. See [`config/agent-sources.lock.json`](./config/agent-sources.lock.json) for source URLs and SHA-256 digests. Nested Codex routing requires `max_depth = 2`; with four threads, run one manager plus at most two children per wave.
@@ -97,11 +99,11 @@ Use `--home` to redirect global targets and `--project-dir` for project-scoped t
 AGI_AUDIT_HOME="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-home.XXXXXX")"
 AGI_AUDIT_PROJECT="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-project.XXXXXX")"
 
-npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+npx -y agi-super-team@latest --tool openclaw \
   --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT"
-npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+npx -y agi-super-team@latest --tool openclaw \
   --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --install
-npx -y github:aAAaqwq/AGI-Super-Team --tool openclaw \
+npx -y agi-super-team@latest --tool openclaw \
   --home "$AGI_AUDIT_HOME" --project-dir "$AGI_AUDIT_PROJECT" --doctor
 ```
 

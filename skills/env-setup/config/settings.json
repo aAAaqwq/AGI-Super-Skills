@@ -22,7 +22,7 @@
     "superpowers@superpowers-marketplace": true
   },
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "0b00b813538c416fbb08ea849a4d231a.wAZH2t1Vjt9fP9zQ",
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_ANTHROPIC_AUTH_TOKEN",
     "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
     "ANTHROPIC_CONNECT_TIMEOUT_MS": "30000",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.7",

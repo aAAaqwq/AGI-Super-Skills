@@ -39,7 +39,11 @@
     "skills/",
     "LICENSE",
     "README.md",
-    "README_CN.md"
+    "README_CN.md",
+    "README.es-ES.md",
+    "!**/__pycache__/**",
+    "!**/*.pyc",
+    "!**/*.pyo"
   ],
   "engines": {
     "node": ">=18"
@@ -48,6 +52,7 @@
     "access": "public"
   },
   "scripts": {
+    "prepublishOnly": "npm test && npm run validate:strict && git diff --check",
     "test": "npm run test:repository && npm run test:installer && npm run check:subagent-sources && npm run check:agent-indexes && npm run check:codex-team && npm run check:skills && npm run check:skill-quality && npm run check:taxonomy-evaluation && npm run check:architecture",
     "test:repository": "python3 -m unittest discover -s tests -p 'test_*.py'",
     "test:installer": "bash tests/installer/test_install.sh",
