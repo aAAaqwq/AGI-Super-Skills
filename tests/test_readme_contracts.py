@@ -24,6 +24,25 @@ class ReadmeContractTests(unittest.TestCase):
         package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
         self.assertEqual(package["name"], "agi-super-team")
         self.assertIn("README.es-ES.md", package["files"])
+        self.assertNotIn("skills/", package["files"])
+        self.assertIn("skills/*/SKILL.md", package["files"])
+        manifest = json.loads((ROOT / "config/team-manifest.json").read_text(encoding="utf-8"))
+        assigned_skills = {
+            skill
+            for agent in manifest["agents"]
+            for tier in ("required", "optional", "harnessSpecific")
+            for skill in agent["skills"][tier]
+        }
+        self.assertEqual(len(assigned_skills), 168)
+        packaged_skill_roots = {
+            entry.removeprefix("skills/").removesuffix("/")
+            for entry in package["files"]
+            if entry.startswith("skills/") and entry.endswith("/")
+        }
+        self.assertTrue(assigned_skills <= packaged_skill_roots)
+        self.assertIn("all 816 `SKILL.md` entrypoints", self.english)
+        self.assertIn("全部 816 个 `SKILL.md` 入口", self.chinese)
+        self.assertIn("los 816 puntos de entrada `SKILL.md`", self.spanish)
         cli_entrypoint = ROOT / package["bin"]["agi-super-team"]
         self.assertTrue(cli_entrypoint.stat().st_mode & 0o111)
         self.assertIn("!**/__pycache__/**", package["files"])

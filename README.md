@@ -31,6 +31,8 @@ npx -y agi-super-team@latest --tool claude-code --doctor
 
 The commands above use the public npm package. For reproducible automation, replace `@latest` with an exact published version such as `@1.4.0`.
 
+The npm distribution keeps all 816 `SKILL.md` entrypoints discoverable and includes the complete files for every Skill assigned by `config/team-manifest.json`. Clone the repository when you need every auxiliary asset from the wider Skill library.
+
 Replace `claude-code` with an ID from `--list-tools`. Use `--all-tools` only when you intentionally want every global and project adapter. A no-argument run remains the legacy Codex preview; new automation should always name `--tool` or `--all-tools`.
 
 ### Four primary frameworks
