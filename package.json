@@ -13,7 +13,7 @@
   },
   "type": "module",
   "bin": {
-    "agi-super-team": "./bin/agi-super-team.mjs"
+    "agi-super-team": "bin/agi-super-team.mjs"
   },
   "files": [
     "bin/",

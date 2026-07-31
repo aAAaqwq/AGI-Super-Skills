@@ -24,6 +24,8 @@ class ReadmeContractTests(unittest.TestCase):
         package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
         self.assertEqual(package["name"], "agi-super-team")
         self.assertIn("README.es-ES.md", package["files"])
+        cli_entrypoint = ROOT / package["bin"]["agi-super-team"]
+        self.assertTrue(cli_entrypoint.stat().st_mode & 0o111)
         self.assertIn("!**/__pycache__/**", package["files"])
         self.assertIn("!**/*.pyc", package["files"])
         npmignore = (ROOT / ".npmignore").read_text(encoding="utf-8")
