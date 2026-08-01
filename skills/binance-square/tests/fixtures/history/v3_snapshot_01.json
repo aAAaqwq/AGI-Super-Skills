@@ -1,0 +1,10 @@
+{
+  "status": "ok",
+  "scanned_at": "2026-08-01T00:00:00Z",
+  "count": 2,
+  "posts": [
+    {"url": "https://www.binance.com/en/square/post/10001", "text": "synthetic BTC observation", "time": "1h", "author": "fixture-a", "is_new": true},
+    {"url": "https://www.binance.com/en/square/post/10002", "text": "synthetic ETH observation", "time": "2h", "author": "fixture-b", "is_new": true}
+  ],
+  "new_posts": []
+}

@@ -1,0 +1,31 @@
+{
+  "fixture_schema": "m1b.post_detail_public.v1",
+  "captured_at_utc": "2026-08-01T07:03:00Z",
+  "request": {
+    "method": "GET",
+    "path": "/bapi/composite/v4/friendly/pgc/content/990000000000101",
+    "credentials": "omit"
+  },
+  "response": {
+    "success": true,
+    "data": {
+      "id": 990000000000101,
+      "webLink": "https://www.binance.com/en/square/post/990000000000101",
+      "squareUid": "synthetic-square-uid-profile",
+      "username": "FixtureTrader",
+      "displayName": "Fixture Analyst",
+      "contentType": 1,
+      "contentStatus": 2,
+      "bodyTextOnly": "$COTI synthetic fixture plan.\n\nLong $COTI\nEntry: 0.0166–0.0169\nSL: 0.0150\nTP1: 0.0182\nTP2: 0.0195\nTP3: 0.0205\n\nSynthetic text used only to test parameter parsing.\n{future}(COTIUSDT)",
+      "firstReleaseTime": 1785390516000,
+      "latestReleaseTime": 1785390522000,
+      "createTime": 1785390516000,
+      "updateTime": 1785562692000,
+      "editCount": 1,
+      "editTime": null,
+      "authorVerificationType": 1,
+      "tendency": 1
+    }
+  },
+  "sanitization": "Only selected public content fields retained; response headers and all authentication/session material excluded."
+}

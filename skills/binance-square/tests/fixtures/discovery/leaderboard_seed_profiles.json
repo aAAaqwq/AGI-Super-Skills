@@ -1,0 +1,100 @@
+{
+  "schema_version": "binance-square-leaderboard-evidence-v1",
+  "captured_at_utc": "2026-08-01T08:50:34Z",
+  "leaderboard_entry": {
+    "surface": "synthetic-test-fixture",
+    "coverage_status": "PARTIAL_SEED_DISCOVERY"
+  },
+  "profiles": [
+    {
+      "display_name": "Fixture Trader 01",
+      "username": "fixture-trader-01",
+      "square_uid": "synthetic-square-uid-01",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-trader-01",
+      "top_trader_id": "synthetic-top-trader-01",
+      "user_tags": ["Open Trade", "Synthetic Fixture"],
+      "badges": ["Synthetic PNL Label"],
+      "leaderboard_labels": []
+    },
+    {
+      "display_name": "Fixture Trader 02",
+      "username": "fixture-trader-02",
+      "square_uid": "synthetic-square-uid-02",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-trader-02",
+      "top_trader_id": null,
+      "user_tags": ["Synthetic Fixture"],
+      "badges": ["Synthetic Volume Label"],
+      "leaderboard_labels": []
+    },
+    {
+      "display_name": "Fixture Trader 03",
+      "username": "fixture-trader-03",
+      "square_uid": "synthetic-square-uid-03",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-trader-03",
+      "top_trader_id": "synthetic-top-trader-03",
+      "user_tags": ["Synthetic Fixture"],
+      "badges": [],
+      "leaderboard_labels": ["Synthetic ROI Label"]
+    },
+    {
+      "display_name": "Fixture Trader 04",
+      "username": "fixture-trader-04",
+      "square_uid": "synthetic-square-uid-04",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-trader-04",
+      "top_trader_id": null,
+      "user_tags": ["Synthetic Fixture"],
+      "badges": [],
+      "leaderboard_labels": []
+    },
+    {
+      "display_name": "Fixture Trader 05",
+      "username": "fixture-trader-05",
+      "square_uid": "synthetic-square-uid-05",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-trader-05",
+      "top_trader_id": "synthetic-top-trader-05",
+      "user_tags": ["Synthetic Fixture"],
+      "badges": [],
+      "leaderboard_labels": []
+    },
+    {
+      "display_name": "Fixture Trader 06",
+      "username": "fixture-trader-06",
+      "square_uid": "synthetic-square-uid-06",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-trader-06",
+      "top_trader_id": null,
+      "user_tags": ["Synthetic Fixture"],
+      "badges": [],
+      "leaderboard_labels": []
+    },
+    {
+      "display_name": "Fixture Trader 07",
+      "username": "fixture-trader-07",
+      "square_uid": "synthetic-square-uid-07",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-trader-07",
+      "top_trader_id": "synthetic-top-trader-07",
+      "user_tags": ["Synthetic Fixture"],
+      "badges": [],
+      "leaderboard_labels": []
+    },
+    {
+      "display_name": "Fixture Trader 08",
+      "username": "fixture-trader-08",
+      "square_uid": "synthetic-square-uid-08",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-trader-08",
+      "top_trader_id": null,
+      "user_tags": ["Synthetic Fixture"],
+      "badges": [],
+      "leaderboard_labels": []
+    },
+    {
+      "display_name": "Fixture Trader 09",
+      "username": "fixture-trader-09",
+      "square_uid": "synthetic-square-uid-09",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-trader-09",
+      "top_trader_id": "synthetic-top-trader-09",
+      "user_tags": ["Synthetic Fixture"],
+      "badges": [],
+      "leaderboard_labels": []
+    }
+  ]
+}

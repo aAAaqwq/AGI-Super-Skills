@@ -14,10 +14,21 @@ def api(url):
         return json.loads(r.read())
 
 def get_ticker(symbol):
-    """24hr ticker: lastPrice, priceChangePercent, high, low, volume"""
+    """24hr ticker: lastPrice, priceChangePercent, high, low, volume
+
+    先试现货 API, 失败则 fallback 到合约 API（部分小币只有合约没有现货）。
+    """
+    # 1. Spot API
     try:
         return api(f"https://api.binance.com/api/v3/ticker/24hr?symbol={symbol}")
     except Exception as e:
+        err_str = str(e)
+        # 2. Futures API fallback (1000RATS/GRASS/SOON/AKE等合约独有交易对)
+        if "400" in err_str or "1121" in err_str or "Invalid symbol" in err_str:
+            try:
+                return api(f"https://fapi.binance.com/fapi/v1/ticker/24hr?symbol={symbol}")
+            except Exception as e2:
+                return {"error": f"现货:{e} | 合约:{e2}", "symbol": symbol}
         return {"error": str(e), "symbol": symbol}
 
 def get_klines(symbol, interval="1h", limit=5):

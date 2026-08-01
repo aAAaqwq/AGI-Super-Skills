@@ -1,0 +1,11 @@
+{
+  "status": "ok",
+  "scanned_at": "2026-08-01T04:00:00Z",
+  "count": 3,
+  "posts": [
+    {"url": "https://www.binance.com/en/square/post/20001", "text": "synthetic observation 1", "time": "1h", "author": "fixture-a", "is_new": false},
+    {"url": "https://www.binance.com/en/square/post/20002", "text": "synthetic observation 2", "time": "2h", "author": "fixture-b", "is_new": false},
+    {"url": "https://www.binance.com/en/square/post/20003", "text": "synthetic observation 3", "time": "3h", "author": "fixture-c", "is_new": true}
+  ],
+  "new_posts": []
+}

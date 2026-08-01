@@ -1,0 +1,42 @@
+{
+  "fixture_schema": "m1b.profile_public.v1",
+  "captured_at_utc": "2026-08-01T07:03:00Z",
+  "request": {
+    "method": "POST",
+    "path": "/bapi/composite/v3/friendly/pgc/user/client",
+    "body": {
+      "username": "fixturetrader",
+      "getFollowCount": true,
+      "queryFollowersInfo": true
+    },
+    "credentials": "omit"
+  },
+  "response": {
+    "success": true,
+    "data": {
+      "squareUid": "synthetic-square-uid-profile",
+      "username": "FixtureTrader",
+      "displayName": "Fixture Analyst",
+      "biography": "Synthetic profile used only for deterministic parser tests.",
+      "createTime": 1700000000000,
+      "modifyTime": 1785567000000,
+      "accountStatus": 0,
+      "verificationType": 1,
+      "totalFollowCount": 12,
+      "totalFollowerCount": 12000,
+      "totalLikeCount": 8000,
+      "totalListedPostCount": 320,
+      "userTags": [
+        {
+          "name": "High-Frequency Trader",
+          "type": 3
+        },
+        {
+          "name": "3.6 Years",
+          "type": 4
+        }
+      ]
+    }
+  },
+  "sanitization": "Only selected public profile fields retained; response headers and all authentication/session material excluded."
+}

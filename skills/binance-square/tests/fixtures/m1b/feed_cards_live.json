@@ -1,0 +1,51 @@
+{
+  "fixture_schema": "m1b.feed_cards.v1",
+  "captured_at_utc": "2026-08-01T07:05:52.061Z",
+  "source_url": "https://www.binance.com/en/square",
+  "sanitization": "Synthetic values derived from the public-field schema; no account, session, or copied post text is included.",
+  "coverage": {
+    "sample_size": 13,
+    "post_id": 13,
+    "post_url": 13,
+    "profile_url": 13,
+    "author_name": 13,
+    "published_text": 13,
+    "exact_timestamp": 0,
+    "cards_with_live_label": 1
+  },
+  "cards": [
+    {
+      "post_id": "990000000000201",
+      "post_url": "https://www.binance.com/en/square/post/990000000000201",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-feed-author-1",
+      "profile_slug": "fixture-feed-author-1",
+      "author_name": "Fixture Feed Author 1",
+      "visible_labels": ["LIVE"],
+      "published_text": "Jul 30",
+      "published_precision": "day_without_year_or_timezone",
+      "feed_text_excerpt": "Synthetic $BANK long-direction summary for parser testing."
+    },
+    {
+      "post_id": "990000000000202",
+      "post_url": "https://www.binance.com/en/square/post/990000000000202",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-feed-author-2",
+      "profile_slug": "fixture-feed-author-2",
+      "author_name": "Fixture Feed Author 2",
+      "visible_labels": [],
+      "published_text": "14h",
+      "published_precision": "relative_hour",
+      "feed_text_excerpt": "Synthetic BTC moving-average discussion."
+    },
+    {
+      "post_id": "990000000000203",
+      "post_url": "https://www.binance.com/en/square/post/990000000000203",
+      "profile_url": "https://www.binance.com/en/square/profile/fixture-feed-author-3",
+      "profile_slug": "fixture-feed-author-3",
+      "author_name": "Fixture Feed Author 3",
+      "visible_labels": [],
+      "published_text": "2h",
+      "published_precision": "relative_hour",
+      "feed_text_excerpt": "Synthetic BTC mining-news summary."
+    }
+  ]
+}
