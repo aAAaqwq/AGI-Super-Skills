@@ -1,0 +1,277 @@
+{
+  "fixture_version": "m4-futures-api-1",
+  "source_system": "BINANCE_USDS_M_FUTURES_PUBLIC_REST",
+  "origin": "https://fapi.binance.com",
+  "capture_window_utc": {
+    "start": "2026-08-01T07:03:52.247Z",
+    "end": "2026-08-01T07:05:10.389Z"
+  },
+  "safety": {
+    "public_get_only": true,
+    "credentials_present": false,
+    "account_or_trade_endpoints_present": false
+  },
+  "authoritative_server_time_ms": 1785567833227,
+  "authoritative_server_time_utc": "2026-08-01T07:03:53.227Z",
+  "catalog": {
+    "request": {
+      "method": "GET",
+      "url": "https://fapi.binance.com/fapi/v1/exchangeInfo",
+      "requested_at_utc": "2026-08-01T07:03:53.228Z",
+      "status": 200,
+      "response_sha256": "223c06c729aaa6616434e0bfba1f7bc6e06182a8e420fd13e6dd5cc878a67728",
+      "observed_x_mbx_used_weight_1m": "347"
+    },
+    "sol_record_request": {
+      "method": "GET",
+      "url": "https://fapi.binance.com/fapi/v1/exchangeInfo",
+      "requested_at_utc": "2026-08-01T07:05:01.915Z",
+      "status": 200,
+      "response_sha256": "de6b623d607ab9fc6ca32c92301542c7db621d2d2fb392abe6d9adf64e7c903a",
+      "observed_x_mbx_used_weight_1m": "74"
+    },
+    "symbol_count": 851,
+    "trading_symbol_count": 727,
+    "rate_limits": [
+      {"rateLimitType": "REQUEST_WEIGHT", "interval": "MINUTE", "intervalNum": 1, "limit": 2400},
+      {"rateLimitType": "ORDERS", "interval": "MINUTE", "intervalNum": 1, "limit": 1200},
+      {"rateLimitType": "ORDERS", "interval": "SECOND", "intervalNum": 10, "limit": 300}
+    ],
+    "selected_records": [
+      {
+        "symbol": "BTCUSDT",
+        "pair": "BTCUSDT",
+        "contractType": "PERPETUAL",
+        "deliveryDate": 4133404800000,
+        "onboardDate": 1567965300000,
+        "status": "TRADING",
+        "baseAsset": "BTC",
+        "quoteAsset": "USDT",
+        "marginAsset": "USDT",
+        "pricePrecision": 2,
+        "quantityPrecision": 3,
+        "baseAssetPrecision": 8,
+        "quotePrecision": 8,
+        "underlyingType": "COIN",
+        "triggerProtect": "0.0500"
+      },
+      {
+        "symbol": "SOLUSDT",
+        "pair": "SOLUSDT",
+        "contractType": "PERPETUAL",
+        "deliveryDate": 4133404800000,
+        "onboardDate": 1600066800000,
+        "status": "TRADING",
+        "baseAsset": "SOL",
+        "quoteAsset": "USDT",
+        "marginAsset": "USDT",
+        "pricePrecision": 4,
+        "quantityPrecision": 2,
+        "baseAssetPrecision": 8,
+        "quotePrecision": 8,
+        "underlyingType": "COIN",
+        "triggerProtect": "0.0500"
+      }
+    ]
+  },
+  "current_market": {
+    "BTCUSDT": {
+      "mark_price_request": {
+        "url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT",
+        "requested_at_utc": "2026-08-01T07:04:38.282Z",
+        "status": 200,
+        "observed_x_mbx_used_weight_1m": "129",
+        "response_sha256": "1f1727ea67760c8eeb2bdca7c058c0d7b39b2a7b32dacdae90ea693dc8a957e0"
+      },
+      "mark_price": {
+        "symbol": "BTCUSDT",
+        "markPrice": "63057.20000000",
+        "indexPrice": "63082.29630435",
+        "estimatedSettlePrice": "63073.87352476",
+        "lastFundingRate": "0.00003388",
+        "interestRate": "0.00010000",
+        "nextFundingTime": 1785571200000,
+        "time": 1785567878000
+      },
+      "last_price_v2_request": {
+        "url": "https://fapi.binance.com/fapi/v2/ticker/price?symbol=BTCUSDT",
+        "requested_at_utc": "2026-08-01T07:04:40.076Z",
+        "status": 200,
+        "observed_x_mbx_used_weight_1m": "1",
+        "response_sha256": "9d6c98cc00b74ec592fff06277050fb557c30f87e259623c72dcef13345e5292"
+      },
+      "last_price_v2": {"symbol": "BTCUSDT", "price": "63057.20", "time": 1785567881304},
+      "ticker_24h": {
+        "closeTime": 1785567878638,
+        "count": 2660785,
+        "firstId": 7942805527,
+        "highPrice": "64143.10",
+        "lastId": 7945472584,
+        "lastPrice": "63057.20",
+        "lastQty": "0.031",
+        "lowPrice": "62410.50",
+        "openPrice": "64103.90",
+        "openTime": 1785481440000,
+        "priceChange": "-1046.70",
+        "priceChangePercent": "-1.633",
+        "quoteVolume": "8811171973.50",
+        "symbol": "BTCUSDT",
+        "volume": "139503.896",
+        "weightedAvgPrice": "63160.76"
+      },
+      "ticker_24h_request": {
+        "url": "https://fapi.binance.com/fapi/v1/ticker/24hr?symbol=BTCUSDT",
+        "requested_at_utc": "2026-08-01T07:04:41.895Z",
+        "status": 200,
+        "observed_x_mbx_used_weight_1m": "133",
+        "response_sha256": "66427071ec2eaacb20054b3dd10c94981a18506621d41c758d6ee2000e79f848"
+      },
+      "open_interest": {"symbol": "BTCUSDT", "openInterest": "109239.225", "time": 1785567876654},
+      "open_interest_request": {
+        "url": "https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT",
+        "requested_at_utc": "2026-08-01T07:04:42.719Z",
+        "status": 200,
+        "observed_x_mbx_used_weight_1m": "143",
+        "response_sha256": "13bdbf37c78fca6a6a94ea0b440b24e088ab67eceee3f3bcfb2251c2571e8888"
+      },
+      "funding_history_limit_2": [
+        {"symbol": "BTCUSDT", "fundingTime": 1785513600000, "fundingRate": "0.00005664", "markPrice": "62696.71869565", "rateType": "Regular"},
+        {"symbol": "BTCUSDT", "fundingTime": 1785542400001, "fundingRate": "0.00004123", "markPrice": "62859.90000000", "rateType": "Regular"}
+      ],
+      "funding_history_request": {
+        "url": "https://fapi.binance.com/fapi/v1/fundingRate?symbol=BTCUSDT&limit=2",
+        "requested_at_utc": "2026-08-01T07:04:43.301Z",
+        "status": 200,
+        "observed_x_mbx_used_weight_1m": null,
+        "response_sha256": "48e01e5b4d2b15d2cf410e41bc33eb701b0f6c76cc9af9a67ea25de30d2fc0b5"
+      }
+    },
+    "SOLUSDT": {
+      "closure_server_time_ms": 1785567901909,
+      "mark_price_request": {
+        "url": "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=SOLUSDT",
+        "requested_at_utc": "2026-08-01T07:05:05.073Z",
+        "status": 200,
+        "observed_x_mbx_used_weight_1m": "105",
+        "response_sha256": "45c9b01483a9f03158c78515e5962a654c0ee34082a5c1ff5b2b119bbbd356c3"
+      },
+      "mark_price": {
+        "symbol": "SOLUSDT",
+        "markPrice": "72.97000000",
+        "indexPrice": "73.00860071",
+        "estimatedSettlePrice": "72.99390218",
+        "lastFundingRate": "0.00010000",
+        "interestRate": "0.00010000",
+        "nextFundingTime": 1785571200000,
+        "time": 1785567905003
+      },
+      "last_price_v2": {"symbol": "SOLUSDT", "price": "72.9600", "time": 1785567906181}
+    }
+  },
+  "kline_contract": {
+    "endpoint": "/fapi/v1/klines",
+    "request_limit": 3,
+    "field_order": [
+      "open_time", "open", "high", "low", "close", "volume", "close_time",
+      "quote_asset_volume", "number_of_trades", "taker_buy_base_volume",
+      "taker_buy_quote_volume", "ignore"
+    ],
+    "closure_rule": "closed iff close_time < authoritative /fapi/v1/time serverTime",
+    "note": "raw_body contains the exact 12-element API tuples; closed_flags are fixture annotations"
+  },
+  "klines": {
+    "BTCUSDT": {
+      "15m": {
+        "requested_at_utc": "2026-08-01T07:03:55.828Z",
+        "status": 200,
+        "observed_x_mbx_used_weight_1m": "374",
+        "response_sha256": "86e0ef9fb76d6f9fcd0c5d2533517510873281516a19409953db8716398c06a1",
+        "raw_body": [
+          [1785565800000, "63035.40", "63046.00", "63029.30", "63033.80", "278.319", 1785566699999, "17545038.72150", 5295, "81.448", "5134404.17860", "0"],
+          [1785566700000, "63033.90", "63051.00", "63030.30", "63049.90", "136.322", 1785567599999, "8594445.57770", 4907, "73.810", "4653318.08990", "0"],
+          [1785567600000, "63049.90", "63057.20", "63049.90", "63057.20", "100.240", 1785568499999, "6320528.89480", 1810, "81.357", "5129881.71500", "0"]
+        ],
+        "closed_flags": [true, true, false]
+      },
+      "1h": {
+        "requested_at_utc": "2026-08-01T07:03:57.180Z",
+        "status": 200,
+        "observed_x_mbx_used_weight_1m": "375",
+        "response_sha256": "7c3583e04a0601f6662e1c7858457a1ae5a25482027fe805fa2f8b5bd03496ac",
+        "raw_body": [
+          [1785560400000, "63074.00", "63118.70", "62969.60", "62999.80", "1857.218", 1785563999999, "117080292.52160", 35910, "938.939", "59192524.37740", "0"],
+          [1785564000000, "62999.80", "63053.10", "62965.20", "63049.90", "1072.175", 1785567599999, "67570314.59860", 27343, "449.785", "28348016.94770", "0"],
+          [1785567600000, "63049.90", "63057.20", "63049.90", "63057.20", "100.354", 1785571199999, "6327717.41560", 1813, "81.471", "5137070.23580", "0"]
+        ],
+        "closed_flags": [true, true, false]
+      },
+      "4h": {
+        "requested_at_utc": "2026-08-01T07:03:58.468Z",
+        "status": 200,
+        "observed_x_mbx_used_weight_1m": "376",
+        "response_sha256": "00e190510c981ddbbf8b5d1a053cc7e08404b614e7aee92866d74e7d6249c526",
+        "raw_body": [
+          [1785528000000, "62947.10", "63037.00", "62814.10", "62859.90", "9226.024", 1785542399999, "580680211.53830", 206535, "4497.906", "283104564.54760", "0"],
+          [1785542400000, "62859.90", "63084.60", "62859.80", "62973.80", "6513.744", 1785556799999, "410169020.53080", 157865, "3322.299", "209208838.51310", "0"],
+          [1785556800000, "62973.80", "63118.70", "62964.10", "63057.20", "3899.223", 1785571199999, "245773687.36700", 88460, "1992.652", "125603818.75690", "0"]
+        ],
+        "closed_flags": [true, true, false]
+      },
+      "1d": {
+        "requested_at_utc": "2026-08-01T07:03:59.114Z",
+        "status": 200,
+        "observed_x_mbx_used_weight_1m": "1",
+        "response_sha256": "6319a20eefcb7e3d6570d339918f572b717d30d454ebce94b77e6200469d5f9d",
+        "raw_body": [
+          [1785369600000, "63958.90", "65157.00", "63576.40", "64750.00", "112855.732", 1785455999999, "7285615069.23900", 2430250, "58513.207", "3777408120.33580", "0"],
+          [1785456000000, "64750.00", "65391.30", "62410.50", "62859.90", "174964.935", 1785542399999, "11118195413.65680", 3354622, "87864.890", "5584820653.20320", "0"],
+          [1785542400000, "62859.90", "63118.70", "62859.80", "63057.20", "10413.527", 1785628799999, "655978019.92840", 246338, "5315.497", "334847086.50120", "0"]
+        ],
+        "closed_flags": [true, true, false]
+      }
+    },
+    "SOLUSDT": {
+      "closure_server_time_ms": 1785567901909,
+      "15m": {
+        "requested_at_utc": "2026-08-01T07:05:06.333Z",
+        "status": 200,
+        "raw_body": [
+          [1785565800000, "72.9600", "72.9900", "72.9200", "72.9500", "37911.80", 1785566699999, "2765713.997500", 3673, "13755.19", "1003464.797400", "0"],
+          [1785566700000, "72.9500", "72.9900", "72.9100", "72.9500", "31934.86", 1785567599999, "2329632.436100", 3926, "16536.65", "1206383.948400", "0"],
+          [1785567600000, "72.9500", "72.9700", "72.9400", "72.9700", "9170.51", 1785568499999, "669007.136900", 1042, "5596.56", "408307.402200", "0"]
+        ],
+        "closed_flags": [true, true, false]
+      },
+      "1h": {
+        "requested_at_utc": "2026-08-01T07:05:07.266Z",
+        "status": 200,
+        "raw_body": [
+          [1785560400000, "73.1300", "73.1700", "72.8300", "72.9100", "276537.68", 1785563999999, "20186818.872600", 22478, "116169.56", "8482859.146000", "0"],
+          [1785564000000, "72.9100", "73.0000", "72.8500", "72.9500", "191085.06", 1785567599999, "13936610.150800", 16266, "90229.43", "6581230.510900", "0"],
+          [1785567600000, "72.9500", "72.9700", "72.9400", "72.9700", "9170.51", 1785571199999, "669007.136900", 1042, "5596.56", "408307.402200", "0"]
+        ],
+        "closed_flags": [true, true, false]
+      },
+      "4h": {
+        "requested_at_utc": "2026-08-01T07:05:07.872Z",
+        "status": 200,
+        "raw_body": [
+          [1785528000000, "73.0500", "73.2000", "72.5200", "72.8300", "1360399.87", 1785542399999, "99133686.307600", 103515, "603884.90", "44014098.585200", "0"],
+          [1785542400000, "72.8300", "73.1300", "72.8300", "73.0100", "1104879.59", 1785556799999, "80655316.106200", 93388, "569582.44", "41579868.605100", "0"],
+          [1785556800000, "73.0100", "73.1800", "72.8300", "72.9600", "634784.62", 1785571199999, "46339110.587300", 55257, "308179.74", "22502660.255300", "0"]
+        ],
+        "closed_flags": [true, true, false]
+      },
+      "1d": {
+        "requested_at_utc": "2026-08-01T07:05:09.340Z",
+        "status": 200,
+        "raw_body": [
+          [1785369600000, "73.6500", "74.9600", "73.1000", "74.4600", "12189962.86", 1785455999999, "905151240.455600", 931200, "6359246.09", "472286422.107400", "0"],
+          [1785456000000, "74.4600", "75.2800", "72.5200", "72.8300", "15509398.88", 1785542399999, "1141566524.607700", 998429, "7535201.25", "554821821.719500", "0"],
+          [1785542400000, "72.8300", "73.1800", "72.8300", "72.9600", "1739664.40", 1785628799999, "126994440.555900", 148647, "877762.18", "64082528.860400", "0"]
+        ],
+        "closed_flags": [true, true, false]
+      }
+    }
+  }
+}

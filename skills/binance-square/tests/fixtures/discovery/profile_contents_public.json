@@ -1,0 +1,26 @@
+{
+  "planned_author_id": "synthetic-square-uid-01",
+  "response": {
+    "success": true,
+    "data": {
+      "contents": [
+        {
+          "id": "990000000000201",
+          "webLink": "https://www.binance.com/en/square/post/990000000000201?ref=profile",
+          "squareUid": "synthetic-square-uid-01",
+          "contentType": "POST"
+        },
+        {
+          "id": "990000000000299",
+          "squareUid": "synthetic-square-uid-01",
+          "contentType": "ARTICLE"
+        },
+        {
+          "id": "audio-replay-1",
+          "squareUid": "synthetic-square-uid-01",
+          "contentType": "AUDIO"
+        }
+      ]
+    }
+  }
+}
