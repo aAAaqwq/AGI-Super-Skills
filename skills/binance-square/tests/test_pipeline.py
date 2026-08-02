@@ -14,7 +14,7 @@ import unittest
 from unittest.mock import patch
 
 from scanner.contracts import ContractViolation
-from scanner.market import FailureKind, MarketApiError, MarketSource
+from scanner.market import ContractRecord, FailureKind, MarketApiError, MarketSource
 from scanner.pipeline import (
     PipelineConfig,
     _publish_latest,
@@ -254,6 +254,81 @@ class ShadowPipelineTests(unittest.TestCase):
                 )
             )
 
+    def test_smart_money_profile_mapping_is_consumed_without_name_inference(self) -> None:
+        evidence = self._smart_money_evidence()
+        top_trader_id = evidence["rankings"][0]["rows"][0]["source_id"]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            mapping_path = root / "identity-mapping.json"
+            mapping_path.write_text(
+                json.dumps(
+                    {
+                        "schema": "binance-smart-money-square-identity-mapping/v1",
+                        "captured_at_utc": "2026-07-31T05:47:00Z",
+                        "provenance": "FIXTURE_REPLAY",
+                        "mappings": [
+                            {
+                                "topTraderId": top_trader_id,
+                                "squareUid": "fixture-square-mapped-01",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            requested: list[str] = []
+
+            def fetch_profile(square_uid: str) -> dict[str, object]:
+                requested.append(square_uid)
+                return {
+                    "success": True,
+                    "data": {
+                        "contents": [
+                            {
+                                "id": "123456789",
+                                "contentType": "POST",
+                                "squareUid": square_uid,
+                            }
+                        ]
+                    },
+                }
+
+            result = run_shadow_radar(
+                PipelineConfig(
+                    mode="fixture",
+                    output_dir=root / "runs",
+                    database=root / "radar.sqlite",
+                    decision_at="2026-07-31T05:48:36Z",
+                    fixture_dir=FIXTURE,
+                    smart_money_enabled=True,
+                    smart_money_square_mapping_evidence=mapping_path,
+                    limit=5,
+                ),
+                smart_money_collector=lambda: deepcopy(evidence),
+                profile_content_fetcher=fetch_profile,
+                profile_capture_time="2026-07-31T05:48:35Z",
+            )
+
+            report = json.loads(result.report_json.read_text(encoding="utf-8"))
+            self.assertEqual(["fixture-square-mapped-01"], requested)
+            self.assertEqual("PARTIAL", report["profile_channel"]["status"])
+            self.assertEqual(60, report["profile_channel"]["planned_authors"])
+            self.assertEqual(1, report["profile_channel"]["complete_authors"])
+            self.assertEqual(59, report["profile_channel"]["not_attempted_authors"])
+            self.assertEqual(
+                "1/60 (1.7%)",
+                report["smart_money"]["square_identity_mapping_coverage"]["label"],
+            )
+            self.assertEqual("PARTIAL", report["source_coverage"]["PROFILE"]["status"])
+            ledger = SQLiteRunLedger(root / "radar.sqlite", MIGRATION)
+            self.addCleanup(ledger.close)
+            self.assertTrue(
+                any(
+                    item.artifact_path == str(mapping_path)
+                    for item in ledger.list_manifests(result.logical_run_id)
+                )
+            )
+
     def test_smart_money_failure_is_audited_and_does_not_move_latest(self) -> None:
         evidence = self._smart_money_evidence()
         with tempfile.TemporaryDirectory() as directory:
@@ -450,6 +525,25 @@ class ShadowPipelineTests(unittest.TestCase):
             evidence_path.write_text(
                 json.dumps(evidence, ensure_ascii=False), encoding="utf-8"
             )
+            mapping_path = root / "identity-mapping.json"
+            mapping_path.write_text(
+                json.dumps(
+                    {
+                        "schema": "binance-smart-money-square-identity-mapping/v1",
+                        "captured_at_utc": "2026-07-31T05:47:00Z",
+                        "provenance": "FIXTURE_REPLAY",
+                        "mappings": [
+                            {
+                                "topTraderId": evidence["rankings"][0]["rows"][0][
+                                    "source_id"
+                                ],
+                                "squareUid": "fixture-square-cli-01",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
             completed = subprocess.run(
                 [
                     sys.executable,
@@ -460,6 +554,8 @@ class ShadowPipelineTests(unittest.TestCase):
                     "2026-07-31T05:48:36Z",
                     "--smart-money-fixture",
                     str(evidence_path),
+                    "--smart-money-square-mapping-evidence",
+                    str(mapping_path),
                     "--output-dir",
                     str(root / "runs"),
                     "--database",
@@ -481,6 +577,11 @@ class ShadowPipelineTests(unittest.TestCase):
             )
             self.assertEqual("2/2 (100.0%)", report["leaderboard_coverage"]["label"])
             self.assertEqual(0, report["smart_money"]["tier_a_eligible"])
+            self.assertEqual(
+                "1/60 (1.7%)",
+                report["smart_money"]["square_identity_mapping_coverage"]["label"],
+            )
+            self.assertEqual("NOT_ATTEMPTED", report["profile_channel"]["status"])
 
     def test_real_mode_merges_urls_refreshes_details_and_uses_market_seam(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -492,11 +593,12 @@ class ShadowPipelineTests(unittest.TestCase):
                 "count": 1,
                 "posts": [{"url": snapshot_url, "text": "old", "time": "old", "author": "LIVE", "is_new": True}],
                 "new_posts": [],
-                "scanned_at": "2026-07-31T04:00:00Z",
+                "scanned_at": "2026-07-31T07:59:30Z",
+                "snapshot_file": str(snapshot),
             }), encoding="utf-8")
             signals = root / "signals.json"
             signals.write_text(json.dumps([{
-                "url": signal_url, "symbol": "BTC", "direction": "long",
+                "source_url": signal_url, "symbol": "BTC", "direction": "long",
                 "entry": "62000 - 62500", "sl": "61000",
                 "tp": "65000 / 67000", "time": "old", "author": "untrusted",
             }]), encoding="utf-8")
@@ -521,7 +623,19 @@ class ShadowPipelineTests(unittest.TestCase):
                     self.symbols: list[str] = []
 
                 def fetch_futures_catalog(self) -> SimpleNamespace:
-                    return SimpleNamespace(server_time_ms=1785484800000)
+                    contract = ContractRecord(
+                        symbol="BTCUSDT",
+                        status="TRADING",
+                        contract_type="PERPETUAL",
+                        base_asset="BTC",
+                        quote_asset="USDT",
+                        margin_asset="USDT",
+                    )
+                    return SimpleNamespace(
+                        server_time_ms=1785484800000,
+                        captured_at=datetime(2026, 7, 31, 8, 0, tzinfo=timezone.utc),
+                        contracts={"BTCUSDT": contract},
+                    )
 
                 def fetch_snapshot(
                     self,
@@ -546,10 +660,26 @@ class ShadowPipelineTests(unittest.TestCase):
                 PipelineConfig(
                     mode="real", output_dir=root / "runs", database=root / "radar.sqlite",
                     decision_at="2026-07-31T08:00:00Z", input_snapshot=snapshot,
-                    signals_json=signals, limit=2,
+                    signals_json=signals, limit=2, official_news_enabled=True,
                 ),
                 detail_fetcher=fetch_detail,
                 market_client=market,  # type: ignore[arg-type]
+                official_news_collector=lambda: {
+                    "schema_version": "binance-official-news/v1",
+                    "source_system": "binance_official_announcement_cms",
+                    "status": "COMPLETE",
+                    "decision_at_utc": "2026-07-31T08:00:00Z",
+                    "window_start_utc": "2026-07-30T08:00:00Z",
+                    "captured_at_utc": "2026-07-31T08:00:01Z",
+                    "record_count": 1,
+                    "records": [{
+                        "article_id": "official-one",
+                        "title": "Official market update",
+                        "published_at_utc": "2026-07-31T07:30:00Z",
+                        "captured_at_utc": "2026-07-31T08:00:01Z",
+                        "source_url": "https://www.binance.com/en/support/announcement/detail/official-one",
+                    }],
+                },
                 clock=lambda: datetime(2026, 7, 31, 8, 0, tzinfo=timezone.utc),
             )
 
@@ -563,6 +693,28 @@ class ShadowPipelineTests(unittest.TestCase):
             self.assertEqual("2026-07-31T05:47:00Z", report["candidate_audit"][0]["market_captured_at"])
             market_artifact = json.loads(result.market_json.read_text(encoding="utf-8"))
             self.assertIn("BTCUSDT", market_artifact["snapshots"])
+            self.assertIsNotNone(result.market_catalog_json)
+            assert result.market_catalog_json is not None
+            catalog_artifact = json.loads(result.market_catalog_json.read_text(encoding="utf-8"))
+            self.assertEqual(1, catalog_artifact["record_count"])
+            self.assertEqual(
+                {
+                    "symbol": "BTCUSDT",
+                    "status": "TRADING",
+                    "contractType": "PERPETUAL",
+                    "baseAsset": "BTC",
+                    "quoteAsset": "USDT",
+                    "marginAsset": "USDT",
+                },
+                catalog_artifact["records"][0],
+            )
+            self.assertEqual(64, len(catalog_artifact["records_sha256"]))
+            self.assertIsNotNone(result.official_news_json)
+            assert result.official_news_json is not None
+            self.assertEqual(
+                "COMPLETE",
+                report["source_coverage"]["BINANCE_OFFICIAL_NEWS"]["status"],
+            )
             ledger = SQLiteRunLedger(root / "radar.sqlite", MIGRATION)
             self.addCleanup(ledger.close)
             self.assertEqual(
@@ -578,6 +730,18 @@ class ShadowPipelineTests(unittest.TestCase):
                 },
                 report["run_timing"],
             )
+            self.assertEqual(
+                "2026-07-31T07:59:30Z",
+                report["input_lineage"]["discovery_snapshot"]["captured_at_utc"],
+            )
+            self.assertEqual(str(snapshot), report["input_lineage"]["discovery_snapshot"]["path"])
+            self.assertEqual(str(signals), report["input_lineage"]["signal_input"]["path"])
+            manifested_paths = {
+                item.artifact_path for item in ledger.list_manifests(result.logical_run_id)
+            }
+            self.assertIn(str(snapshot), manifested_paths)
+            self.assertIn(str(signals), manifested_paths)
+            self.assertIn(str(result.official_news_json), manifested_paths)
 
     def test_real_failure_marks_attempt_failed_without_replacing_latest(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -588,7 +752,8 @@ class ShadowPipelineTests(unittest.TestCase):
                 "count": 1,
                 "posts": [{"url": snapshot_url}],
                 "new_posts": [],
-                "scanned_at": "2026-07-31T04:00:00Z",
+                "scanned_at": "2026-07-31T07:59:30Z",
+                "snapshot_file": str(snapshot),
             }), encoding="utf-8")
             signals = root / "signals.json"
             signals.write_text(json.dumps([{

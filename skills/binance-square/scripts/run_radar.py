@@ -70,7 +70,30 @@ def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
             "of making Smart Money network requests"
         ),
     )
+    parser.add_argument(
+        "--smart-money-square-mapping-evidence",
+        type=Path,
+        help=(
+            "explicit SHA-verified topTraderId-to-squareUid evidence; names are "
+            "never used for identity mapping"
+        ),
+    )
+    parser.add_argument(
+        "--official-news",
+        action="store_true",
+        help="collect Binance-hosted official announcements from the strict prior 24h",
+    )
     parser.add_argument("--limit", type=_limit, default=200)
+    parser.add_argument(
+        "--job-namespace",
+        default="production",
+        help="explicit run identity namespace (for example production or canary-a)",
+    )
+    parser.add_argument(
+        "--production-job-id",
+        default="binance-square-shadow-v4",
+        help="stable logical job identity; never inferred from the database path",
+    )
     parser.add_argument(
         "--dedup-baseline-post-id",
         type=_post_id,
@@ -116,7 +139,13 @@ def main(argv: list[str] | None = None) -> int:
                 args.smart_money or args.smart_money_fixture is not None
             ),
             smart_money_fixture=args.smart_money_fixture,
+            smart_money_square_mapping_evidence=(
+                args.smart_money_square_mapping_evidence
+            ),
+            official_news_enabled=args.official_news,
             limit=args.limit,
+            job_namespace=args.job_namespace,
+            production_job_id=args.production_job_id,
             no_send=True,
             dedup_baseline_post_ids=(
                 frozenset(args.dedup_baseline_post_id)
@@ -140,6 +169,16 @@ def main(argv: list[str] | None = None) -> int:
                 "smart_money_json": (
                     str(result.smart_money_json)
                     if result.smart_money_json is not None
+                    else None
+                ),
+                "market_catalog_json": (
+                    str(result.market_catalog_json)
+                    if result.market_catalog_json is not None
+                    else None
+                ),
+                "official_news_json": (
+                    str(result.official_news_json)
+                    if result.official_news_json is not None
                     else None
                 ),
                 "no_send": True,

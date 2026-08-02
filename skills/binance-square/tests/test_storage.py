@@ -87,6 +87,39 @@ def smart_money_rows() -> list[SmartMoneyLeaderboardRowInput]:
 
 
 class RunLedgerTests(unittest.TestCase):
+    def test_production_identity_is_scoped_by_explicit_job_namespace(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            ledger = SQLiteRunLedger(
+                Path(temporary_directory) / "radar.sqlite", MIGRATION
+            )
+            self.addCleanup(ledger.close)
+
+            production = ledger.create_or_open_production_run(
+                job_namespace="production",
+                production_job_id="binance-radar-4h",
+                scheduled_for_utc="2026-08-01T04:00:00Z",
+                pipeline_version="4.1.0",
+            )
+            canary = ledger.create_or_open_production_run(
+                job_namespace="canary-a",
+                production_job_id="binance-radar-4h",
+                scheduled_for_utc="2026-08-01T04:00:00Z",
+                pipeline_version="4.1.0",
+            )
+            production_attempt = ledger.start_next_attempt(
+                production.logical_run_id,
+                started_at="2026-08-01T04:00:01Z",
+            )
+            canary_attempt = ledger.start_next_attempt(
+                canary.logical_run_id,
+                started_at="2026-08-01T04:00:01Z",
+            )
+
+            self.assertNotEqual(production.logical_run_id, canary.logical_run_id)
+            self.assertNotEqual(production_attempt.attempt_id, canary_attempt.attempt_id)
+            self.assertEqual("production", production.job_namespace)
+            self.assertEqual("canary-a", canary.job_namespace)
+
     def test_legacy_smart_money_schema_fails_closed_with_clear_error(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             database = Path(temporary_directory) / "radar.sqlite"
@@ -1050,6 +1083,7 @@ class RunLedgerTests(unittest.TestCase):
             self.assertEqual(
                 frozenset(),
                 ledger.prior_succeeded_production_post_ids(
+                    job_namespace="default",
                     production_job_id="binance-radar-4h",
                     scheduled_for_utc="2026-08-01T04:00:00Z",
                 ),
@@ -1084,6 +1118,7 @@ class RunLedgerTests(unittest.TestCase):
             self.assertEqual(
                 frozenset({"1001"}),
                 ledger.prior_succeeded_production_post_ids(
+                    job_namespace="default",
                     production_job_id="binance-radar-4h",
                     scheduled_for_utc="2026-08-01T08:00:00Z",
                 ),
@@ -1092,6 +1127,46 @@ class RunLedgerTests(unittest.TestCase):
             self.assertEqual(
                 frozenset({"1001"}),
                 ledger.prior_succeeded_production_post_ids(
+                    job_namespace="default",
+                    production_job_id="binance-radar-4h",
+                    scheduled_for_utc="2026-08-01T04:00:00Z",
+                ),
+            )
+
+    def test_dedup_baseline_is_isolated_by_job_namespace(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            ledger = SQLiteRunLedger(
+                Path(temporary_directory) / "radar.sqlite", MIGRATION
+            )
+            self.addCleanup(ledger.close)
+
+            for namespace, post_id in (("production", "2001"), ("canary", "3001")):
+                run = ledger.create_or_open_production_run(
+                    job_namespace=namespace,
+                    production_job_id="binance-radar-4h",
+                    scheduled_for_utc="2026-08-01T00:00:00Z",
+                    pipeline_version="4.1.0",
+                )
+                attempt = ledger.start_next_attempt(
+                    run.logical_run_id,
+                    started_at="2026-08-01T00:00:01Z",
+                )
+                ledger.record_accepted_post_observations(
+                    logical_run_id=run.logical_run_id,
+                    attempt_id=attempt.attempt_id,
+                    observations=[accepted(post_id)],
+                    now="2026-08-01T00:00:02Z",
+                )
+                ledger.finish_attempt(
+                    attempt.attempt_id,
+                    status="SUCCEEDED",
+                    finished_at="2026-08-01T00:00:03Z",
+                )
+
+            self.assertEqual(
+                frozenset({"2001"}),
+                ledger.prior_succeeded_production_post_ids(
+                    job_namespace="production",
                     production_job_id="binance-radar-4h",
                     scheduled_for_utc="2026-08-01T04:00:00Z",
                 ),

@@ -15,7 +15,7 @@ from typing import Mapping
 
 from .authors import AuthorProfile
 from .contracts import ContractViolation, parse_utc
-from .indicators import IndicatorEvidence, calculate_indicators
+from .indicators import IndicatorEvidence, average_true_range, calculate_indicators
 from .market import INTERVALS, UNKNOWN, Candle, MarketSnapshot, MarketSource
 from .opportunities import (
     Direction,
@@ -49,6 +49,7 @@ class DerivationPolicy:
     max_chase_distance_atr: Decimal = Decimal("1.5")
     minimum_tp1_rr: Decimal = Decimal("1.5")
     minimum_main_target_rr: Decimal = Decimal("2")
+    minimum_author_stop_atr: Decimal = Decimal("0.4")
     maximum_post_age: timedelta = timedelta(hours=24)
     maximum_market_age: timedelta = timedelta(minutes=15)
     minimum_candles: int = 21
@@ -61,6 +62,7 @@ class DerivationPolicy:
             self.max_chase_distance_atr,
             self.minimum_tp1_rr,
             self.minimum_main_target_rr,
+            self.minimum_author_stop_atr,
         )
         if any(
             not isinstance(value, Decimal) or not value.is_finite() or value <= 0
@@ -176,7 +178,7 @@ def _market_rejection_reasons(
             continue
         if any(candle.source is not MarketSource.FUTURES for candle in candles):
             reasons.append(f"NON_FUTURES_{interval.upper()}_CANDLES")
-        if any(candle.close_time >= market.decision_time_ms for candle in candles):
+        if any(candle.close_time > market.decision_time_ms for candle in candles):
             reasons.append(f"OPEN_{interval.upper()}_CANDLE_PRESENT")
         if any(
             left.open_time >= right.open_time
@@ -207,7 +209,42 @@ def _author_plan_status(
     candidate: SignalCandidate,
     current_price: Decimal,
     policy: DerivationPolicy,
+    replay_candles: tuple[Candle, ...] = (),
+    published_at: datetime | None = None,
+    decision_at: datetime | None = None,
+    atr: Decimal | None = None,
+    structure_candles: tuple[Candle, ...] = (),
 ) -> tuple[str, tuple[str, ...]]:
+    if published_at is not None and decision_at is not None:
+        published_ms = int(published_at.timestamp() * 1000)
+        decision_ms = int(decision_at.timestamp() * 1000)
+        for candle in replay_candles:
+            if candle.close_time <= published_ms or candle.open_time > decision_ms:
+                continue
+            publication_ambiguous = candle.open_time < published_ms
+            target = candidate.tp1
+            target_hit = target is not None and (
+                candle.high >= target
+                if candidate.direction is Direction.LONG
+                else candle.low <= target
+            )
+            stop_hit = candidate.stop_loss is not None and (
+                candle.low <= candidate.stop_loss
+                if candidate.direction is Direction.LONG
+                else candle.high >= candidate.stop_loss
+            )
+            if stop_hit:
+                reasons = ["AUTHOR_STOP_HIT_BEFORE_DECISION"]
+                if publication_ambiguous:
+                    reasons.append("PUBLICATION_CANDLE_PATH_AMBIGUOUS_ASSUMED_HIT")
+                if target_hit:
+                    reasons.append("SAME_CANDLE_STOP_AND_TP_ASSUMED_STOP_FIRST")
+                return "REJECT", tuple(reasons)
+            if target_hit:
+                reasons = ["AUTHOR_TP_HIT_BEFORE_DECISION"]
+                if publication_ambiguous:
+                    reasons.append("PUBLICATION_CANDLE_PATH_AMBIGUOUS_ASSUMED_HIT")
+                return "REJECT", tuple(reasons)
     if candidate.stop_loss is not None:
         if candidate.direction is Direction.LONG and current_price <= candidate.stop_loss:
             return "REJECT", ("AUTHOR_STOP_ALREADY_INVALIDATED",)
@@ -226,6 +263,21 @@ def _author_plan_status(
     )
     if not complete:
         return "REDERIVE", ("AUTHOR_PARAMETERS_INCOMPLETE",)
+    assert candidate.entry_price is not None and candidate.stop_loss is not None
+    if len(structure_candles) < 6:
+        return "REJECT", ("AUTHOR_STOP_STRUCTURE_UNAVAILABLE",)
+    if atr is None or atr <= 0:
+        return "REJECT", ("AUTHOR_STOP_ATR_UNAVAILABLE",)
+    if abs(candidate.entry_price - candidate.stop_loss) < atr * policy.minimum_author_stop_atr:
+        return "REJECT", ("AUTHOR_STOP_TOO_NARROW_VS_ATR",)
+    recent = structure_candles[-6:]
+    stop_inside_structure = (
+        candidate.stop_loss >= min(candle.low for candle in recent)
+        if candidate.direction is Direction.LONG
+        else candidate.stop_loss <= max(candle.high for candle in recent)
+    )
+    if stop_inside_structure:
+        return "REJECT", ("AUTHOR_STOP_INSIDE_RECENT_STRUCTURE",)
     try:
         rr = calculate_risk_reward(candidate)
     except ContractViolation:
@@ -360,8 +412,30 @@ def apply_derivation_policy(
     if trends["1h"] != desired or trends["4h"] != desired:
         return _reject(candidate, policy, ("DIRECTIONAL_STRUCTURE_NOT_CONFIRMED",), evidence)
 
+    published_ms = int(published_at.timestamp() * 1000)
+    prepublication_structure = tuple(
+        candle
+        for candle in market.candles["15m"]
+        if candle.close_time <= published_ms
+    )
+    author_stop_atr = (
+        average_true_range(prepublication_structure)
+        if len(prepublication_structure) >= 15
+        else None
+    )
+    evidence.append(
+        "author_stop_atr_source=15m_prepublication;"
+        f"value={author_stop_atr if author_stop_atr is not None else 'UNAVAILABLE'}"
+    )
     author_status, author_reasons = _author_plan_status(
-        candidate, market.last_price, policy
+        candidate,
+        market.last_price,
+        policy,
+        market.candles["15m"],
+        published_at,
+        decision,
+        author_stop_atr,
+        prepublication_structure,
     )
     if author_status == "REJECT":
         return _reject(candidate, policy, author_reasons, evidence)

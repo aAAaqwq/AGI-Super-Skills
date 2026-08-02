@@ -7,6 +7,7 @@ from scanner.authors import (
     LEADERBOARD_METRICS,
     assess_leaderboard_coverage,
     load_seed_profile_evidence,
+    load_smart_money_square_identity_evidence,
     parse_30d_leaderboard,
     parse_author_profile,
 )
@@ -21,6 +22,55 @@ SEED_EVIDENCE = (
 
 
 class AuthorProfileTests(unittest.TestCase):
+    def test_explicit_smart_money_to_square_mapping_is_file_verified(self) -> None:
+        payload = {
+            "schema": "binance-smart-money-square-identity-mapping/v1",
+            "captured_at_utc": "2026-08-01T12:06:00Z",
+            "provenance": "FIXTURE_REPLAY",
+            "mappings": [
+                {
+                    "topTraderId": "fixture-trader-01",
+                    "squareUid": "fixture-square-01",
+                }
+            ],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "mapping.json"
+            content = json.dumps(payload, sort_keys=True).encode("utf-8")
+            path.write_bytes(content)
+
+            evidence = load_smart_money_square_identity_evidence(
+                path,
+                expected_sha256=__import__("hashlib").sha256(content).hexdigest(),
+            )
+
+        self.assertEqual("FIXTURE_REPLAY", evidence.provenance)
+        self.assertEqual("2026-08-01T12:06:00Z", evidence.captured_at)
+        self.assertEqual("fixture-square-01", evidence.square_uid_for("fixture-trader-01"))
+        self.assertIsNone(evidence.square_uid_for("unmapped-trader"))
+
+    def test_identity_mapping_rejects_name_only_and_non_bijective_claims(self) -> None:
+        base = {
+            "schema": "binance-smart-money-square-identity-mapping/v1",
+            "captured_at_utc": "2026-08-01T12:06:00Z",
+            "provenance": "LIVE_CAPTURE",
+        }
+        invalid_mappings = (
+            [{"traderName": "same name", "squareDisplayName": "same name"}],
+            [
+                {"topTraderId": "fixture-trader-01", "squareUid": "fixture-square-01"},
+                {"topTraderId": "fixture-trader-02", "squareUid": "fixture-square-01"},
+            ],
+        )
+        for index, mappings in enumerate(invalid_mappings):
+            with self.subTest(index=index), tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "invalid.json"
+                path.write_text(
+                    json.dumps({**base, "mappings": mappings}), encoding="utf-8"
+                )
+                with self.assertRaises(ContractViolation):
+                    load_smart_money_square_identity_evidence(path)
+
     def test_profile_keeps_stable_id_labels_duration_and_hard_tier_gate(self) -> None:
         public_payload = json.loads(
             (FIXTURES / "profile_public.json").read_text(encoding="utf-8")

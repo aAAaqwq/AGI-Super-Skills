@@ -27,6 +27,45 @@ class RankBucket(str, Enum):
     FILTER = "FILTER"
 
 
+class ExecutionReadinessStatus(str, Enum):
+    NOT_CONFIGURED = "NOT_CONFIGURED"
+    UNAVAILABLE = "UNAVAILABLE"
+    COST_ADJUSTED_RR_BELOW_MINIMUM = "COST_ADJUSTED_RR_BELOW_MINIMUM"
+    READY = "READY"
+
+
+class CostModelStatus(str, Enum):
+    NOT_CONFIGURED = "NOT_CONFIGURED"
+    UNAVAILABLE = "UNAVAILABLE"
+    APPLIED = "APPLIED"
+
+
+@dataclass(frozen=True, slots=True)
+class ExecutionCostConfig:
+    """Injected execution assumptions; defaults never invent live costs."""
+
+    fee_rate: Decimal | None = None
+    slippage_rate: Decimal | None = None
+    funding_rate: Decimal | None = None
+    depth_available: bool | None = None
+
+    def __post_init__(self) -> None:
+        for value in (self.fee_rate, self.slippage_rate, self.funding_rate):
+            if value is not None and (
+                not isinstance(value, Decimal)
+                or not value.is_finite()
+                or value < 0
+                or value > 1
+            ):
+                raise ContractViolation(
+                    "execution cost rates must be finite Decimals between zero and one"
+                )
+        if self.depth_available is not None and not isinstance(
+            self.depth_available, bool
+        ):
+            raise ContractViolation("depth_available must be bool or None")
+
+
 @dataclass(frozen=True, slots=True)
 class ScoreBreakdown:
     author_credibility: int
@@ -67,6 +106,15 @@ class ScoredOpportunity:
     missing_market_fields: tuple[str, ...]
     conflict_evidence: tuple[str, ...] = ()
     waiting_condition: str | None = None
+    content_hash: str | None = None
+    execution_readiness_status: ExecutionReadinessStatus = (
+        ExecutionReadinessStatus.NOT_CONFIGURED
+    )
+    cost_adjusted_main_rr: Decimal | None = None
+    execution_ready: bool = False
+    cost_model_status: CostModelStatus = CostModelStatus.NOT_CONFIGURED
+    evidence_captured_at: datetime | None = None
+    source_detail_captured_at: datetime | None = None
 
     @property
     def signal_id(self) -> str:
@@ -186,9 +234,9 @@ def _trend_label(snapshot: MarketSnapshot, interval: str) -> str:
 
 def _market_scores(
     candidate: SignalCandidate, snapshot: MarketSnapshot | None
-) -> tuple[int, int, tuple[str, ...]]:
+) -> tuple[int, int, tuple[str, ...], str | None]:
     if snapshot is None:
-        return 0, 0, ("market_evidence=UNAVAILABLE",)
+        return 0, 0, ("market_evidence=UNAVAILABLE",), None
     desired = "BULLISH" if candidate.direction is Direction.LONG else "BEARISH"
     labels = {interval: _trend_label(snapshot, interval) for interval in INTERVALS}
     evidence = [f"{interval}_trend={labels[interval]}" for interval in INTERVALS]
@@ -196,6 +244,8 @@ def _market_scores(
 
     bb_score = 0
     one_hour_volume: Decimal | str = UNKNOWN
+    one_hour_bandwidth: Decimal | str = UNKNOWN
+    one_hour_breakout = False
     for interval in INTERVALS:
         candles = snapshot.candles.get(interval, ())
         try:
@@ -205,6 +255,7 @@ def _market_scores(
             continue
         percent_b = indicator.bollinger.percent_b
         evidence.append(f"{interval}_bb_percent_b={percent_b}")
+        evidence.append(f"{interval}_bb_bandwidth={indicator.bollinger.bandwidth}")
         if isinstance(percent_b, Decimal):
             if candidate.direction is Direction.LONG and percent_b >= Decimal("0.5"):
                 bb_score += 1
@@ -212,6 +263,12 @@ def _market_scores(
                 bb_score += 1
         if interval == "1h":
             one_hour_volume = indicator.volume.ratio
+            one_hour_bandwidth = indicator.bollinger.bandwidth
+            one_hour_breakout = (
+                indicator.close >= indicator.bollinger.upper
+                if candidate.direction is Direction.LONG
+                else indicator.close <= indicator.bollinger.lower
+            )
             evidence.append(
                 f"1h_volume_ratio={one_hour_volume};source={indicator.volume.source.value}"
             )
@@ -222,8 +279,37 @@ def _market_scores(
             volume_score = 4
         elif one_hour_volume >= Decimal("1"):
             volume_score = 2
-    breakout_score = 2 if labels["1h"] == desired and labels["4h"] == desired else 0
-    return trend_score, min(10, bb_score + volume_score + breakout_score), tuple(evidence)
+    squeeze = (
+        isinstance(one_hour_bandwidth, Decimal)
+        and one_hour_bandwidth <= Decimal("0.01")
+    )
+    confirmed_squeeze_breakout = (
+        squeeze
+        and one_hour_breakout
+        and isinstance(one_hour_volume, Decimal)
+        and one_hour_volume >= Decimal("1.2")
+    )
+    waiting_condition = None
+    if squeeze and not confirmed_squeeze_breakout:
+        evidence.append("1h_bb_state=SQUEEZE_NO_BREAKOUT")
+        waiting_condition = "BB_SQUEEZE_AWAITING_BREAKOUT"
+    elif confirmed_squeeze_breakout:
+        evidence.append("1h_bb_state=SQUEEZE_BREAKOUT_CONFIRMED")
+    else:
+        evidence.append("1h_bb_state=NORMAL")
+    breakout_score = (
+        2
+        if labels["1h"] == desired
+        and labels["4h"] == desired
+        and (not squeeze or confirmed_squeeze_breakout)
+        else 0
+    )
+    return (
+        trend_score,
+        min(10, bb_score + volume_score + breakout_score),
+        tuple(evidence),
+        waiting_condition,
+    )
 
 
 def _rr_score_and_gates(candidate: SignalCandidate) -> tuple[int, RiskReward | None, list[str]]:
@@ -261,6 +347,63 @@ def _signal_invalidated(candidate: SignalCandidate, price: Decimal, rr: RiskRewa
     return price >= candidate.stop_loss or price <= rr.main_target
 
 
+def _execution_readiness(
+    candidate: SignalCandidate,
+    rr: RiskReward | None,
+    costs: ExecutionCostConfig | None,
+) -> tuple[ExecutionReadinessStatus, Decimal | None, str | None, tuple[str, ...]]:
+    if costs is None or any(
+        value is None
+        for value in (costs.fee_rate, costs.slippage_rate, costs.funding_rate)
+    ) or costs.depth_available is None:
+        return (
+            ExecutionReadinessStatus.NOT_CONFIGURED,
+            None,
+            "EXECUTION_COSTS_NOT_CONFIGURED",
+            ("execution_cost_status=NOT_CONFIGURED",),
+        )
+    if not costs.depth_available:
+        return (
+            ExecutionReadinessStatus.UNAVAILABLE,
+            None,
+            "EXECUTION_DEPTH_UNAVAILABLE",
+            ("execution_cost_status=UNAVAILABLE;depth=UNAVAILABLE",),
+        )
+    if rr is None or candidate.entry_price is None:
+        return (
+            ExecutionReadinessStatus.UNAVAILABLE,
+            None,
+            "NOMINAL_RR_UNAVAILABLE",
+            ("execution_cost_status=UNAVAILABLE;nominal_rr=UNAVAILABLE",),
+        )
+    assert costs.fee_rate is not None
+    assert costs.slippage_rate is not None
+    assert costs.funding_rate is not None
+    total_cost_rate = (
+        Decimal(2) * (costs.fee_rate + costs.slippage_rate)
+        + abs(costs.funding_rate)
+    )
+    adjusted_rr = rr.main_target_rr - (
+        candidate.entry_price * total_cost_rate / rr.risk
+    )
+    evidence = (
+        "execution_cost_status=CONFIGURED",
+        f"round_trip_fee_rate={costs.fee_rate * Decimal(2)}",
+        f"round_trip_slippage_rate={costs.slippage_rate * Decimal(2)}",
+        f"funding_cost_rate={abs(costs.funding_rate)}",
+        "depth=AVAILABLE",
+        f"cost_adjusted_main_rr={adjusted_rr}",
+    )
+    if adjusted_rr < Decimal("2"):
+        return (
+            ExecutionReadinessStatus.COST_ADJUSTED_RR_BELOW_MINIMUM,
+            adjusted_rr,
+            "COST_ADJUSTED_RR_BELOW_2",
+            evidence,
+        )
+    return ExecutionReadinessStatus.READY, adjusted_rr, None, evidence
+
+
 def _bucket(total: int, hard_gates: Iterable[str]) -> RankBucket:
     if tuple(hard_gates):
         return RankBucket.FILTER
@@ -280,6 +423,9 @@ def score_opportunity(
     consensus_author_ids: Iterable[str] = (),
     consensus_index: ConsensusIndex | None = None,
     content_hash: str | None = None,
+    execution_costs: ExecutionCostConfig | None = None,
+    evidence_captured_at: datetime | str | None = None,
+    source_detail_captured_at: datetime | str | None = None,
 ) -> ScoredOpportunity:
     """Apply the frozen 25/15/10/20/10/15/5 model and hard gates."""
 
@@ -301,7 +447,9 @@ def score_opportunity(
     if market is not None and _signal_invalidated(candidate, market.last_price, rr):
         gates.append("SIGNAL_INVALIDATED")
 
-    trend_score, confirmation_score, market_evidence = _market_scores(candidate, market)
+    trend_score, confirmation_score, market_evidence, market_waiting = _market_scores(
+        candidate, market
+    )
     stable_candidate_author = (
         candidate.author_id.strip()
         if isinstance(candidate.author_id, str)
@@ -341,30 +489,110 @@ def score_opportunity(
         news_or_consensus=consensus_score,
     )
     unique_gates = tuple(dict.fromkeys(gates))
+    readiness_status, adjusted_rr, cost_waiting, cost_evidence = (
+        _execution_readiness(candidate, rr, execution_costs)
+    )
+    if readiness_status is ExecutionReadinessStatus.NOT_CONFIGURED:
+        cost_model_status = CostModelStatus.NOT_CONFIGURED
+    elif readiness_status is ExecutionReadinessStatus.UNAVAILABLE:
+        cost_model_status = CostModelStatus.UNAVAILABLE
+    else:
+        cost_model_status = CostModelStatus.APPLIED
+    source_detail_time = (
+        parse_utc(source_detail_captured_at)
+        if source_detail_captured_at is not None
+        else None
+    )
+    evidence_time = (
+        parse_utc(evidence_captured_at)
+        if evidence_captured_at is not None
+        else source_detail_time
+    )
     rr_evidence = () if rr is None else (
         f"tp1_rr={rr.tp1_rr}",
         f"main_target_rr={rr.main_target_rr}",
     )
-    evidence = market_evidence + rr_evidence + (
+    evidence = market_evidence + rr_evidence + cost_evidence + (
         f"author_parameter_evidence={candidate.parameter_evidence_source.value}",
         f"consensus_distinct_other_authors={consensus_count}",
     )
+    rank_bucket = _bucket(breakdown.total, unique_gates)
+    capture_waiting = (
+        "EVIDENCE_CAPTURE_TIMESTAMPS_NOT_CONFIGURED"
+        if evidence_time is None or source_detail_time is None
+        else None
+    )
+    waiting_condition = market_waiting or cost_waiting or capture_waiting
+    if rank_bucket is RankBucket.TOP and waiting_condition is not None:
+        rank_bucket = RankBucket.WATCH
     return ScoredOpportunity(
         candidate=candidate,
         score_breakdown=breakdown,
         total_score=breakdown.total,
-        rank_bucket=_bucket(breakdown.total, unique_gates),
+        rank_bucket=rank_bucket,
         hard_gate_reasons=unique_gates,
         evidence=evidence,
         current_price=market.last_price if market is not None else None,
         market_source=market.source if market is not None else None,
         market_captured_at=market.captured_at if market is not None else None,
         missing_market_fields=market.missing_fields if market is not None else (),
+        waiting_condition=waiting_condition,
+        content_hash=(content_hash.strip() if isinstance(content_hash, str) and content_hash.strip() else None),
+        execution_readiness_status=readiness_status,
+        cost_adjusted_main_rr=adjusted_rr,
+        execution_ready=(
+            rank_bucket is RankBucket.TOP
+            and readiness_status is ExecutionReadinessStatus.READY
+        ),
+        cost_model_status=cost_model_status,
+        evidence_captured_at=evidence_time,
+        source_detail_captured_at=source_detail_time,
     )
 
 
 def _stable_key(value: ScoredOpportunity) -> tuple[int, str, str, str]:
     return (-value.total_score, value.symbol, value.direction.value, value.signal_id)
+
+
+def _independent_direction_contributors(
+    values: Iterable[ScoredOpportunity],
+) -> tuple[tuple[ScoredOpportunity, ...], tuple[ScoredOpportunity, ...]]:
+    """Select at most one post per stable author and content cluster."""
+
+    contributors: list[ScoredOpportunity] = []
+    duplicates: list[ScoredOpportunity] = []
+    seen_authors: set[str] = set()
+    seen_clusters: set[str] = set()
+    for value in sorted(values, key=_stable_key):
+        raw_author = value.candidate.author_id
+        author_id = (
+            raw_author.strip()
+            if isinstance(raw_author, str)
+            and raw_author.strip()
+            and raw_author.strip().upper() != "LIVE"
+            else "UNKNOWN_AUTHOR"
+        )
+        content_cluster = value.content_hash or "UNKNOWN_CONTENT_CLUSTER"
+        if author_id in seen_authors or content_cluster in seen_clusters:
+            duplicates.append(value)
+            continue
+        contributors.append(value)
+        seen_authors.add(author_id)
+        seen_clusters.add(content_cluster)
+    return tuple(contributors), tuple(duplicates)
+
+
+def _top_readiness_waiting(value: ScoredOpportunity) -> str | None:
+    if value.cost_model_status != CostModelStatus.APPLIED:
+        return "EXECUTION_READINESS_NOT_APPLIED"
+    if (
+        value.evidence_captured_at is None
+        or value.source_detail_captured_at is None
+    ):
+        return "EVIDENCE_CAPTURE_TIMESTAMPS_NOT_CONFIGURED"
+    if not value.execution_ready:
+        return "EXECUTION_READINESS_NOT_APPLIED"
+    return None
 
 
 def build_opportunity_board(
@@ -396,25 +624,55 @@ def build_opportunity_board(
     provisional_watch: list[ScoredOpportunity] = []
     for symbol in sorted(by_symbol):
         values = by_symbol[symbol]
-        best_by_direction: dict[Direction, ScoredOpportunity] = {}
+        by_direction: dict[Direction, list[ScoredOpportunity]] = {}
         for value in values:
-            if value.direction not in best_by_direction:
-                best_by_direction[value.direction] = value
-            else:
+            by_direction.setdefault(value.direction, []).append(value)
+        aggregates: list[
+            tuple[ScoredOpportunity, tuple[ScoredOpportunity, ...], int]
+        ] = []
+        for direction in sorted(by_direction, key=lambda item: item.value):
+            direction_values = by_direction[direction]
+            contributors, duplicates = _independent_direction_contributors(
+                direction_values
+            )
+            representative = contributors[0]
+            aggregates.append(
+                (
+                    representative,
+                    contributors,
+                    sum(value.total_score for value in contributors),
+                )
+            )
+            contributor_ids = {value.signal_id for value in contributors}
+            for value in direction_values:
+                if value.signal_id == representative.signal_id:
+                    continue
+                reason = (
+                    "AGGREGATED_SAME_DIRECTION_SUPPORT"
+                    if value.signal_id in contributor_ids
+                    else "DUPLICATE_AUTHOR_OR_CONTENT_CLUSTER"
+                )
                 filtered.append(
                     replace(
                         value,
                         rank_bucket=RankBucket.FILTER,
-                        waiting_condition="LOWER_RANKED_SAME_DIRECTION",
+                        waiting_condition=reason,
                     )
                 )
-        directional = sorted(best_by_direction.values(), key=_stable_key)
-        if len(directional) == 2:
-            winner, loser = directional
-            margin = winner.total_score - loser.total_score
+        aggregates.sort(key=lambda item: (-item[2], _stable_key(item[0])))
+        if len(aggregates) == 2:
+            (winner, winner_support, winner_strength), (
+                loser,
+                loser_support,
+                loser_strength,
+            ) = aggregates
+            margin = winner_strength - loser_strength
             conflict = (
                 f"opposing_direction_margin={margin}",
-                f"opposing_direction={loser.direction.value};score={loser.total_score}",
+                f"leading_independent_support={len(winner_support)}",
+                f"opposing_independent_support={len(loser_support)}",
+                f"leading_aggregate_strength={winner_strength}",
+                f"opposing_direction={loser.direction.value};aggregate_strength={loser_strength}",
             )
             winner = replace(winner, conflict_evidence=conflict)
             loser = replace(
@@ -422,27 +680,43 @@ def build_opportunity_board(
                 rank_bucket=RankBucket.FILTER,
                 conflict_evidence=(
                     f"opposing_direction_margin={margin}",
-                    f"leading_direction={winner.direction.value};score={winner.total_score}",
+                    f"leading_direction={winner.direction.value};aggregate_strength={winner_strength}",
                 ),
                 waiting_condition="OPPOSING_DIRECTION_CONFLICT",
             )
             filtered.append(loser)
-            if winner.total_score >= 75 and margin >= 10:
+            readiness_waiting = _top_readiness_waiting(winner)
+            if (
+                winner.total_score >= 75
+                and margin >= 10
+                and winner.waiting_condition is None
+                and readiness_waiting is None
+            ):
                 provisional_top.append(replace(winner, rank_bucket=RankBucket.TOP))
             elif winner.total_score >= 65:
                 provisional_watch.append(
                     replace(
                         winner,
                         rank_bucket=RankBucket.WATCH,
-                        waiting_condition="CONFLICT_MARGIN_BELOW_10_OR_NO_75_DIRECTION",
+                        waiting_condition=(
+                            winner.waiting_condition
+                            or readiness_waiting
+                            or "CONFLICT_MARGIN_BELOW_10_OR_NO_75_DIRECTION"
+                        ),
                     )
                 )
             else:
                 filtered.append(replace(winner, rank_bucket=RankBucket.FILTER))
             continue
 
-        value = directional[0]
+        value = aggregates[0][0]
         natural = _bucket(value.total_score, ())
+        if natural is RankBucket.TOP:
+            readiness_waiting = _top_readiness_waiting(value)
+            waiting_condition = value.waiting_condition or readiness_waiting
+            if waiting_condition is not None:
+                natural = RankBucket.WATCH
+                value = replace(value, waiting_condition=waiting_condition)
         if natural is RankBucket.TOP:
             provisional_top.append(replace(value, rank_bucket=natural))
         elif natural is RankBucket.WATCH:
@@ -481,6 +755,9 @@ def build_opportunity_board(
 
 
 __all__ = [
+    "CostModelStatus",
+    "ExecutionCostConfig",
+    "ExecutionReadinessStatus",
     "OpportunityBoard",
     "RankBucket",
     "ScoreBreakdown",

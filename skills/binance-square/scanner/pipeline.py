@@ -19,7 +19,12 @@ from scripts.collect_square_v4 import (
     _public_get_detail,
 )
 
-from .authors import SeedProfileEvidence, load_seed_profile_evidence
+from .authors import (
+    SeedProfileEvidence,
+    load_seed_profile_evidence,
+    load_smart_money_square_identity_evidence,
+)
+from .binance_news import collect_binance_official_news
 from .contracts import (
     AcceptedPostObservation,
     ContractViolation,
@@ -30,7 +35,12 @@ from .contracts import (
     parse_utc,
 )
 from .derivation import DerivationDisposition, DerivationResult, apply_derivation_policy
-from .discovery import plan_profile_fetches, reconcile_profile_fetch_plan
+from .discovery import (
+    feed_snapshot_post_urls,
+    plan_profile_fetches,
+    reconcile_profile_fetch_plan,
+    validate_feed_snapshot,
+)
 from .market import BinanceMarketClient, MarketApiError, MarketSnapshot
 from .opportunities import (
     ConsensusObservation,
@@ -38,6 +48,7 @@ from .opportunities import (
     build_consensus_index,
     extract_signal,
 )
+from .profile_pipeline import ProfilePipelineResult, run_profile_pipeline
 from .reports import build_local_report, render_local_markdown
 from .scoring import build_opportunity_board, score_opportunity
 from .smart_money import (
@@ -76,12 +87,15 @@ class PipelineConfig:
     signals_json: Path | None = None
     leaderboard_seed_evidence: Path | None = None
     limit: int = 200
+    job_namespace: str = "production"
     production_job_id: str = "binance-square-shadow-v4"
     no_send: bool = True
     scheduled_retry: bool = False
     dedup_baseline_post_ids: frozenset[str] | tuple[str, ...] | None = None
     smart_money_enabled: bool = False
     smart_money_fixture: Path | None = None
+    smart_money_square_mapping_evidence: Path | None = None
+    official_news_enabled: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -96,6 +110,8 @@ class PipelineResult:
     latest_markdown: Path
     latest_pointer: Path
     smart_money_json: Path | None = None
+    market_catalog_json: Path | None = None
+    official_news_json: Path | None = None
 
 
 def _json_value(value: Any) -> Any:
@@ -121,6 +137,88 @@ def _json_bytes(payload: Mapping[str, Any]) -> bytes:
         )
         + "\n"
     ).encode("utf-8")
+
+
+def _market_catalog_artifact(
+    catalog: Any,
+    *,
+    logical_run_id: str,
+    attempt_id: str,
+    decision_at: str,
+) -> dict[str, Any]:
+    """Freeze the complete Futures catalog used by this attempt."""
+
+    contracts = getattr(catalog, "contracts", {})
+    if not isinstance(contracts, Mapping):
+        contracts = {}
+    records = []
+    for symbol, contract in sorted(contracts.items()):
+        records.append(
+            {
+                "symbol": str(getattr(contract, "symbol", symbol)),
+                "status": str(getattr(contract, "status", "")),
+                "contractType": str(getattr(contract, "contract_type", "")),
+                "baseAsset": str(getattr(contract, "base_asset", "")),
+                "quoteAsset": str(getattr(contract, "quote_asset", "")),
+                "marginAsset": str(getattr(contract, "margin_asset", "")),
+            }
+        )
+    records_bytes = json.dumps(
+        records,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    captured_at = getattr(catalog, "captured_at", None)
+    return {
+        "schema_version": "binance-futures-catalog/v1",
+        "source_system": "binance_public_futures_exchange_info",
+        "logical_run_id": logical_run_id,
+        "attempt_id": attempt_id,
+        "decision_at_utc": format_utc(parse_utc(decision_at)),
+        "captured_at_utc": format_utc(captured_at) if captured_at is not None else None,
+        "server_time_ms": getattr(catalog, "server_time_ms", None),
+        "record_count": len(records),
+        "records_sha256": sha256(records_bytes).hexdigest(),
+        "records": records,
+    }
+
+
+def _validate_official_news_document(
+    document: Any,
+    *,
+    decision_at: str,
+) -> dict[str, Any]:
+    if not isinstance(document, dict):
+        raise ContractViolation("official news evidence must be an object")
+    status = str(document.get("status", "")).upper()
+    if status not in {"COMPLETE", "PARTIAL", "FAILED"}:
+        raise ContractViolation("official news evidence status is invalid")
+    captured_at = format_utc(parse_utc(document.get("captured_at_utc")))
+    records = document.get("records")
+    if not isinstance(records, list):
+        raise ContractViolation("official news records must be a list")
+    cutoff = parse_utc(decision_at)
+    window_start = cutoff - timedelta(hours=24)
+    for record in records:
+        if not isinstance(record, Mapping):
+            raise ContractViolation("official news record must be an object")
+        source_url = record.get("source_url")
+        published = parse_utc(record.get("published_at_utc"))
+        if (
+            not isinstance(source_url, str)
+            or not source_url.startswith(
+                "https://www.binance.com/en/support/announcement/detail/"
+            )
+        ):
+            raise ContractViolation("official news source URL is not Binance official")
+        if not (window_start <= published < cutoff):
+            raise ContractViolation("official news record is outside strict 24h")
+    normalized = dict(document)
+    normalized["status"] = status
+    normalized["captured_at_utc"] = captured_at
+    normalized["record_count"] = len(records)
+    return normalized
 
 
 def _write_new(path: Path, content: bytes) -> None:
@@ -206,6 +304,8 @@ def repair_latest_from_succeeded_attempt(
         )
         raw_path = run_dir / "raw.json"
         market_path = run_dir / "market.json"
+        market_catalog_path = run_dir / "market_catalog.json"
+        official_news_path = run_dir / "official_news.json"
         smart_money_path = run_dir / "smart_money.json"
         report_path = run_dir / "report.json"
         markdown_path = run_dir / "report.md"
@@ -215,6 +315,10 @@ def repair_latest_from_succeeded_attempt(
             if item.attempt_id == attempt.attempt_id
         }
         required_paths = [raw_path, market_path, report_path, markdown_path]
+        if market_catalog_path.is_file() or str(market_catalog_path) in manifests:
+            required_paths.append(market_catalog_path)
+        if official_news_path.is_file() or str(official_news_path) in manifests:
+            required_paths.append(official_news_path)
         if smart_money_path.is_file() or str(smart_money_path) in manifests:
             required_paths.append(smart_money_path)
         for path in required_paths:
@@ -245,6 +349,12 @@ def repair_latest_from_succeeded_attempt(
             latest_markdown=latest_markdown,
             latest_pointer=latest_pointer,
             smart_money_json=(smart_money_path if smart_money_path.is_file() else None),
+            market_catalog_json=(
+                market_catalog_path if market_catalog_path.is_file() else None
+            ),
+            official_news_json=(
+                official_news_path if official_news_path.is_file() else None
+            ),
         )
     finally:
         ledger.close()
@@ -541,8 +651,12 @@ def _smart_money_summary(
     last_update_at = format_utc(
         datetime.fromtimestamp(last_update_ms / 1000, tz=timezone.utc)
     )
+    provenance = str(document.get("provenance") or "").upper()
+    if provenance not in {"LIVE_CAPTURE", "FIXTURE_REPLAY"}:
+        raise ContractViolation("Smart Money evidence provenance is invalid")
     return {
         "status": "COMPLETE" if len(ranking_types) == 2 else "PARTIAL",
+        "provenance": provenance,
         "observation_semantics": "OBSERVED_WINDOW",
         "captured_at_utc": captured_at,
         "leaderboard_observed_window": {
@@ -576,6 +690,28 @@ def _smart_money_summary(
             "content retrieval, or author-score credit"
         ),
     }
+
+
+def _smart_money_top_trader_ids(
+    document: Mapping[str, Any],
+) -> tuple[str, ...]:
+    """Return the stable source IDs from an already-validated Smart Money document."""
+
+    rankings = document.get("rankings")
+    if not isinstance(rankings, list):
+        raise ContractViolation("Smart Money rankings are missing")
+    source_ids: list[str] = []
+    for ranking in rankings:
+        if not isinstance(ranking, Mapping) or not isinstance(ranking.get("rows"), list):
+            raise ContractViolation("Smart Money ranking rows are missing")
+        for row in ranking["rows"]:
+            if not isinstance(row, Mapping):
+                raise ContractViolation("Smart Money ranking row is invalid")
+            source_id = row.get("source_id")
+            if not isinstance(source_id, str) or not source_id:
+                raise ContractViolation("Smart Money ranking source ID is invalid")
+            source_ids.append(source_id)
+    return tuple(dict.fromkeys(source_ids))
 
 
 def _persist_smart_money(
@@ -968,21 +1104,32 @@ def _load_legacy_signals(path: Path | None) -> dict[str, Mapping[str, Any]]:
         raise ValueError("signals JSON must contain a list")
     result: dict[str, Mapping[str, Any]] = {}
     for item in payload:
-        if isinstance(item, Mapping) and isinstance(item.get("url"), str):
+        if isinstance(item, Mapping):
+            source_url = item.get("source_url", item.get("url"))
+        else:
+            source_url = None
+        if isinstance(source_url, str):
             try:
-                post_id = canonical_post_id(item["url"])
+                post_id = canonical_post_id(source_url)
             except ContractViolation:
                 continue
             result[f"https://www.binance.com/en/square/post/{post_id}"] = item
     return result
 
 
-def _real_discovery(config: PipelineConfig, legacy: Mapping[str, Any]) -> tuple[str, ...]:
+def _real_discovery(
+    config: PipelineConfig,
+    legacy: Mapping[str, Any],
+    *,
+    snapshot_payload: Mapping[str, Any] | None = None,
+) -> tuple[str, ...]:
     # Curated, explicitly extracted author signals are the primary evidence
     # set.  Snapshot discovery is broad/noisy and may only fill remaining
     # capacity; it must never evict a curated signal because of ``limit``.
     urls: list[str] = list(legacy)
-    if config.input_snapshot is not None:
+    if snapshot_payload is not None:
+        urls.extend(feed_snapshot_post_urls(snapshot_payload, limit=200))
+    elif config.input_snapshot is not None:
         urls.extend(discover_snapshot_post_urls(config.input_snapshot, limit=200))
     unique: list[str] = []
     seen: set[str] = set()
@@ -1004,6 +1151,9 @@ def run_shadow_radar(
     detail_fetcher: Callable[[str], dict[str, Any]] | None = None,
     market_client: BinanceMarketClient | None = None,
     smart_money_collector: Callable[[], dict[str, Any]] | None = None,
+    official_news_collector: Callable[[], dict[str, Any]] | None = None,
+    profile_content_fetcher: Callable[[str], dict[str, Any]] | None = None,
+    profile_capture_time: str | datetime | None = None,
 ) -> PipelineResult:
     """Run one fixture or real shadow pass and publish only local artifacts."""
 
@@ -1022,6 +1172,8 @@ def run_shadow_radar(
     smart_money_requested = (
         config.smart_money_enabled or config.smart_money_fixture is not None
     )
+    if config.smart_money_square_mapping_evidence is not None and not smart_money_requested:
+        raise ValueError("Smart Money identity mapping requires Smart Money collection")
     if (
         smart_money_requested
         and config.mode == "fixture"
@@ -1046,6 +1198,14 @@ def run_shadow_radar(
     ledger = SQLiteRunLedger(config.database, MIGRATIONS)
     attempt = None
     current_stage = "initialization"
+    discovery_snapshot_payload: Mapping[str, Any] | None = None
+    discovery_snapshot_content: bytes | None = None
+    discovery_snapshot_path: Path | None = None
+    discovery_snapshot_capture = None
+    signal_input_content: bytes | None = None
+    signal_input_count = 0
+    identity_mapping_content: bytes | None = None
+    identity_mapping_evidence = None
     try:
         if config.mode == "fixture":
             assert config.fixture_dir is not None
@@ -1057,6 +1217,7 @@ def run_shadow_radar(
             )
         else:
             logical_run = ledger.create_or_open_production_run(
+                job_namespace=config.job_namespace,
                 production_job_id=config.production_job_id,
                 scheduled_for_utc=_four_hour_slot(decision_at),
                 pipeline_version=SCHEMA_VERSION,
@@ -1095,6 +1256,8 @@ def run_shadow_radar(
         )
         raw_path = run_dir / "raw.json"
         market_path = run_dir / "market.json"
+        market_catalog_path = run_dir / "market_catalog.json"
+        official_news_path = run_dir / "official_news.json"
         report_path = run_dir / "report.json"
         markdown_path = run_dir / "report.md"
         smart_money_path = run_dir / "smart_money.json"
@@ -1103,16 +1266,92 @@ def run_shadow_radar(
         latest_pointer = config.output_dir / "latest"
 
         current_stage = "input"
+        if config.mode == "real" and config.input_snapshot is not None:
+            try:
+                discovery_snapshot_content = config.input_snapshot.read_bytes()
+                parsed_snapshot = json.loads(discovery_snapshot_content)
+            except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+                raise ContractViolation("Feed snapshot is not readable JSON") from exc
+            declared_snapshot = parsed_snapshot.get("snapshot_file")
+            if not isinstance(declared_snapshot, str) or not declared_snapshot.strip():
+                raise ContractViolation("Feed snapshot is missing immutable snapshot_file")
+            discovery_snapshot_path = Path(declared_snapshot)
+            if not discovery_snapshot_path.is_absolute():
+                discovery_snapshot_path = config.input_snapshot.parent / discovery_snapshot_path
+            try:
+                immutable_content = discovery_snapshot_path.read_bytes()
+            except OSError as exc:
+                raise ContractViolation("Feed immutable snapshot_file is unreadable") from exc
+            if immutable_content != discovery_snapshot_content:
+                raise ContractViolation("Feed latest payload differs from immutable snapshot_file")
+            discovery_snapshot_content = immutable_content
+            discovery_snapshot_capture = validate_feed_snapshot(
+                parsed_snapshot,
+                consumed_at=now,
+                maximum_age=MAX_PRODUCTION_SLOT_LATENESS,
+            )
+            discovery_snapshot_payload = parsed_snapshot
+        if config.mode == "real" and config.signals_json is not None:
+            try:
+                signal_input_content = config.signals_json.read_bytes()
+                signal_payload = json.loads(signal_input_content)
+            except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+                raise ContractViolation("signal input is not readable JSON") from exc
+            if not isinstance(signal_payload, list):
+                raise ContractViolation("signal input must contain a list")
+            signal_input_count = len(signal_payload)
         legacy_signals = _load_legacy_signals(config.signals_json)
         seed_evidence: SeedProfileEvidence | None = None
         if config.leaderboard_seed_evidence is not None:
             seed_evidence = load_seed_profile_evidence(
                 config.leaderboard_seed_evidence
             )
+        if config.smart_money_square_mapping_evidence is not None:
+            try:
+                identity_mapping_content = (
+                    config.smart_money_square_mapping_evidence.read_bytes()
+                )
+            except OSError as exc:
+                raise ContractViolation(
+                    "Smart Money identity mapping evidence is unreadable"
+                ) from exc
+            identity_mapping_evidence = load_smart_money_square_identity_evidence(
+                config.smart_money_square_mapping_evidence,
+                expected_sha256=sha256(identity_mapping_content).hexdigest(),
+            )
+            expected_provenance = (
+                "LIVE_CAPTURE" if config.mode == "real" else "FIXTURE_REPLAY"
+            )
+            if identity_mapping_evidence.provenance != expected_provenance:
+                raise ContractViolation(
+                    "Smart Money identity mapping provenance does not match run mode"
+                )
         profile_plan = plan_profile_fetches(
             seed_evidence.profiles if seed_evidence is not None else None
         )
         profile_coverage = reconcile_profile_fetch_plan(profile_plan, ())
+        profile_channel_contract: dict[str, Any] = {
+            "availability": profile_coverage.availability,
+            "status": profile_coverage.status,
+            "reason": profile_coverage.reason,
+            "provenance": (
+                "FIXTURE_REPLAY" if seed_evidence is not None else "UNKNOWN"
+            ),
+            "source_capture_time_utc": (
+                seed_evidence.captured_at if seed_evidence is not None else None
+            ),
+            "evidence_path": (
+                seed_evidence.evidence_path if seed_evidence is not None else None
+            ),
+            "planned_authors": profile_coverage.planned_count,
+            "complete_authors": profile_coverage.complete_count,
+            "empty_authors": profile_coverage.empty_count,
+            "partial_authors": profile_coverage.partial_count,
+            "failed_authors": profile_coverage.failed_count,
+            "not_attempted_authors": profile_coverage.not_attempted_count,
+            "source_records": profile_coverage.source_record_count,
+            "tier_a_eligible": 0,
+        }
 
         catalog = None
         market_failures: Counter[str] = Counter()
@@ -1148,7 +1387,11 @@ def run_shadow_radar(
                 decision_at=decision_at,
             )
         else:
-            urls = _real_discovery(config, legacy_signals)
+            urls = _real_discovery(
+                config,
+                legacy_signals,
+                snapshot_payload=discovery_snapshot_payload,
+            )
             raw = _collect_live_urls(
                 urls,
                 decision_at=decision_at,
@@ -1156,8 +1399,37 @@ def run_shadow_radar(
                 fetch_detail=detail_fetcher or _public_get_detail,
             )
 
+        official_news_document: dict[str, Any] | None = None
+        if config.official_news_enabled:
+            current_stage = "official_news"
+            try:
+                collected_news = (
+                    official_news_collector()
+                    if official_news_collector is not None
+                    else collect_binance_official_news(decision_at=decision_at)
+                )
+                official_news_document = _validate_official_news_document(
+                    collected_news,
+                    decision_at=decision_at,
+                )
+            except Exception as exc:
+                official_news_document = {
+                    "schema_version": "binance-official-news/v1",
+                    "source_system": "binance_official_announcement_cms",
+                    "status": "FAILED",
+                    "decision_at_utc": decision_at,
+                    "window_start_utc": format_utc(
+                        parse_utc(decision_at) - timedelta(hours=24)
+                    ),
+                    "captured_at_utc": format_utc(parse_utc(runtime_clock())),
+                    "record_count": 0,
+                    "records": [],
+                    "failure_reason": type(exc).__name__,
+                }
+
         smart_money_document: dict[str, Any] | None = None
         smart_money_summary: dict[str, Any] | None = None
+        profile_pipeline_result: ProfilePipelineResult | None = None
         if smart_money_requested:
             current_stage = "smart_money"
             if config.smart_money_fixture is not None:
@@ -1173,6 +1445,37 @@ def run_shadow_radar(
                 ledger,
             )
             smart_money_summary["evidence_path"] = str(smart_money_path)
+            profile_source_capture = profile_capture_time
+            if (
+                profile_content_fetcher is not None
+                and identity_mapping_evidence is not None
+                and profile_source_capture is None
+            ):
+                if config.mode == "fixture":
+                    raise ContractViolation(
+                        "fixture Profile collection requires profile_capture_time"
+                    )
+                profile_source_capture = runtime_clock()
+            profile_pipeline_result = run_profile_pipeline(
+                _smart_money_top_trader_ids(smart_money_document),
+                mapping_evidence=identity_mapping_evidence,
+                fetch_profile_contents=profile_content_fetcher,
+                source_capture_time_utc=(
+                    format_utc(profile_source_capture)
+                    if profile_source_capture is not None
+                    else None
+                ),
+                provenance=(
+                    "LIVE_CAPTURE" if config.mode == "real" else "FIXTURE_REPLAY"
+                ),
+            )
+            profile_channel_contract = profile_pipeline_result.as_report_contract()
+            smart_money_summary["square_identity_mapping_coverage"] = dict(
+                profile_channel_contract["square_identity_mapping_coverage"]
+            )
+            smart_money_summary["tier_a_eligible"] = (
+                profile_channel_contract["tier_a_eligible"]
+            )
 
         current_stage = "analysis"
         accepted_observations = _accepted_observation_contracts(raw)
@@ -1188,6 +1491,7 @@ def run_shadow_radar(
         if config.mode == "real":
             assert logical_run.scheduled_for_utc is not None
             baseline_post_ids = ledger.prior_succeeded_production_post_ids(
+                job_namespace=config.job_namespace,
                 production_job_id=config.production_job_id,
                 scheduled_for_utc=logical_run.scheduled_for_utc,
             )
@@ -1300,6 +1604,7 @@ def run_shadow_radar(
                 market,
                 decision_at=decision_at,
                 consensus_index=consensus_index,
+                source_detail_captured_at=post.observed_at,
                 content_hash=post.content_hash,
             )
             if derivation is not None:
@@ -1411,6 +1716,167 @@ def run_shadow_radar(
                 "source_system": "binance_square_shadow_v4",
                 "logical_run_id": logical_run.logical_run_id,
                 "attempt_id": attempt.attempt_id,
+                "run_identity": {
+                    "job_namespace": logical_run.job_namespace,
+                    "production_job_id": logical_run.production_job_id,
+                    "run_namespace": logical_run.run_namespace.value,
+                },
+                "input_lineage": {
+                    "discovery_snapshot": (
+                        {
+                            "path": str(discovery_snapshot_path),
+                            "sha256": sha256(discovery_snapshot_content).hexdigest(),
+                            "captured_at_utc": discovery_snapshot_capture.captured_at_utc,
+                            "record_count": discovery_snapshot_capture.record_count,
+                        }
+                        if discovery_snapshot_path is not None
+                        and discovery_snapshot_content is not None
+                        and discovery_snapshot_capture is not None
+                        else None
+                    ),
+                    "signal_input": (
+                        {
+                            "path": str(config.signals_json),
+                            "sha256": sha256(signal_input_content).hexdigest(),
+                            "record_count": signal_input_count,
+                        }
+                        if config.signals_json is not None
+                        and signal_input_content is not None
+                        else None
+                    ),
+                    "smart_money_square_identity_mapping": (
+                        {
+                            "path": str(
+                                config.smart_money_square_mapping_evidence
+                            ),
+                            "sha256": sha256(identity_mapping_content).hexdigest(),
+                            "captured_at_utc": identity_mapping_evidence.captured_at,
+                            "record_count": len(identity_mapping_evidence.mappings),
+                        }
+                        if config.smart_money_square_mapping_evidence is not None
+                        and identity_mapping_content is not None
+                        and identity_mapping_evidence is not None
+                        else None
+                    ),
+                    "market_catalog": (
+                        {
+                            "path": str(market_catalog_path),
+                            "captured_at_utc": (
+                                format_utc(catalog.captured_at)
+                                if getattr(catalog, "captured_at", None) is not None
+                                else None
+                            ),
+                            "record_count": len(getattr(catalog, "contracts", {})),
+                        }
+                        if catalog is not None
+                        else None
+                    ),
+                    "official_news": (
+                        {
+                            "path": str(official_news_path),
+                            "captured_at_utc": official_news_document["captured_at_utc"],
+                            "record_count": official_news_document["record_count"],
+                        }
+                        if official_news_document is not None
+                        else None
+                    ),
+                },
+                "source_coverage": {
+                    "FEED": {
+                        "status": (
+                            "COMPLETE"
+                            if discovery_snapshot_capture is not None
+                            else "NOT_ATTEMPTED"
+                        ),
+                        "provenance": (
+                            "LIVE_CAPTURE" if config.mode == "real" else "FIXTURE_REPLAY"
+                        ),
+                        "source_capture_time_utc": (
+                            discovery_snapshot_capture.captured_at_utc
+                            if discovery_snapshot_capture is not None
+                            else None
+                        ),
+                        "capture_started_at_utc": raw.get("collection_started_at_utc"),
+                        "capture_completed_at_utc": raw.get("collection_completed_at_utc"),
+                        "reason": (
+                            None
+                            if discovery_snapshot_capture is not None
+                            else "no_feed_snapshot_input"
+                        ),
+                    },
+                    "BINANCE_OFFICIAL_NEWS": {
+                        "status": (
+                            official_news_document["status"]
+                            if official_news_document is not None
+                            else "NOT_ATTEMPTED"
+                        ),
+                        "provenance": (
+                            "LIVE_CAPTURE"
+                            if official_news_document is not None
+                            else "UNKNOWN"
+                        ),
+                        "source_capture_time_utc": (
+                            official_news_document["captured_at_utc"]
+                            if official_news_document is not None
+                            else None
+                        ),
+                        "reason": (
+                            official_news_document.get("failure_reason")
+                            if official_news_document is not None
+                            else "official_news_not_requested"
+                        ),
+                    },
+                    "SMART_MONEY": {
+                        "status": (
+                            smart_money_summary["status"]
+                            if smart_money_summary is not None
+                            else "NOT_ATTEMPTED"
+                        ),
+                        "provenance": (
+                            "LIVE_CAPTURE"
+                            if smart_money_summary is not None
+                            and config.smart_money_fixture is None
+                            and config.mode == "real"
+                            else "FIXTURE_REPLAY"
+                            if smart_money_summary is not None
+                            else "UNKNOWN"
+                        ),
+                        "source_capture_time_utc": (
+                            smart_money_summary["captured_at_utc"]
+                            if smart_money_summary is not None
+                            else None
+                        ),
+                        "reason": (
+                            None
+                            if smart_money_summary is not None
+                            else "smart_money_not_requested"
+                        ),
+                    },
+                    "PROFILE": {
+                        "status": profile_channel_contract["status"],
+                        "provenance": profile_channel_contract.get(
+                            "provenance", "UNKNOWN"
+                        ),
+                        "source_capture_time_utc": profile_channel_contract.get(
+                            "source_capture_time_utc"
+                        ),
+                        "evidence_path": profile_channel_contract.get(
+                            "evidence_path"
+                        ),
+                        "reason": profile_channel_contract["reason"],
+                    },
+                    "MARKET_CATALOG": {
+                        "status": "COMPLETE" if catalog is not None else "NOT_ATTEMPTED",
+                        "provenance": "LIVE_CAPTURE" if catalog is not None else "UNKNOWN",
+                        "source_capture_time_utc": (
+                            format_utc(catalog.captured_at)
+                            if catalog is not None
+                            and getattr(catalog, "captured_at", None) is not None
+                            else None
+                        ),
+                        "reason": None if catalog is not None else "fixture_without_market_catalog",
+                    },
+                },
                 "scanned_at": latest_fetch_at,
                 "report_generated_at": format_utc(generated_at),
                 "run_timing": {
@@ -1431,8 +1897,21 @@ def run_shadow_radar(
                     ),
                 },
                 "capture_timing": {
+                    "discovery_snapshot_at_utc": (
+                        discovery_snapshot_capture.captured_at_utc
+                        if discovery_snapshot_capture is not None
+                        else None
+                    ),
+                    "detail_fetch_started_at_utc": raw.get("collection_started_at_utc"),
+                    "detail_fetch_completed_at_utc": raw.get("collection_completed_at_utc"),
                     "square_started_at_utc": raw.get("collection_started_at_utc"),
                     "square_completed_at_utc": raw.get("collection_completed_at_utc"),
+                    "market_catalog_at_utc": (
+                        format_utc(catalog.captured_at)
+                        if catalog is not None
+                        and getattr(catalog, "captured_at", None) is not None
+                        else None
+                    ),
                     "market_latest_at_utc": (
                         max(
                             (
@@ -1446,6 +1925,7 @@ def run_shadow_radar(
                         )
                     ),
                     "latest_fetch_at_utc": latest_fetch_at,
+                    "report_generated_at_utc": format_utc(generated_at),
                 },
                 "post_counts": {
                     "discovered": counts["discovered_source_records"],
@@ -1507,18 +1987,7 @@ def run_shadow_radar(
                     }
                 ),
                 "smart_money": smart_money_summary,
-                "profile_channel": {
-                    "availability": profile_coverage.availability,
-                    "status": profile_coverage.status,
-                    "reason": profile_coverage.reason,
-                    "planned_authors": profile_coverage.planned_count,
-                    "complete_authors": profile_coverage.complete_count,
-                    "empty_authors": profile_coverage.empty_count,
-                    "partial_authors": profile_coverage.partial_count,
-                    "failed_authors": profile_coverage.failed_count,
-                    "not_attempted_authors": profile_coverage.not_attempted_count,
-                    "source_records": profile_coverage.source_record_count,
-                },
+                "profile_channel": profile_channel_contract,
                 "top_opportunities": board.top,
                 "observations": board.watch,
                 "tracking": {
@@ -1591,12 +2060,32 @@ def run_shadow_radar(
             },
             "failures": dict(market_failures),
         }
+        market_catalog_payload = (
+            _market_catalog_artifact(
+                catalog,
+                logical_run_id=logical_run.logical_run_id,
+                attempt_id=attempt.attempt_id,
+                decision_at=decision_at,
+            )
+            if catalog is not None
+            else None
+        )
         raw_content = _json_bytes(raw)
         market_content = _json_bytes(market_payload)
+        market_catalog_content = (
+            _json_bytes(market_catalog_payload)
+            if market_catalog_payload is not None
+            else None
+        )
         report_content = _json_bytes(report)
         smart_money_content = (
             _json_bytes(smart_money_document)
             if smart_money_document is not None
+            else None
+        )
+        official_news_content = (
+            _json_bytes(official_news_document)
+            if official_news_document is not None
             else None
         )
         markdown_content = (
@@ -1604,8 +2093,12 @@ def run_shadow_radar(
         ).encode("utf-8")
         _write_new(raw_path, raw_content)
         _write_new(market_path, market_content)
+        if market_catalog_content is not None:
+            _write_new(market_catalog_path, market_catalog_content)
         if smart_money_content is not None:
             _write_new(smart_money_path, smart_money_content)
+        if official_news_content is not None:
+            _write_new(official_news_path, official_news_content)
         _write_new(report_path, report_content)
         _write_new(markdown_path, markdown_content)
         artifacts_written_at = max(
@@ -1626,6 +2119,74 @@ def run_shadow_radar(
                 evidence_file_sha256=sha256(smart_money_content).hexdigest(),
                 now=artifacts_written_at,
             )
+        if official_news_document is not None and official_news_content is not None:
+            published_times = [
+                record["published_at_utc"]
+                for record in official_news_document["records"]
+            ]
+            news_event_start = min(published_times, key=parse_utc) if published_times else official_news_document["captured_at_utc"]
+            news_event_end = max(published_times, key=parse_utc) if published_times else official_news_document["captured_at_utc"]
+            ledger.record_manifest(
+                logical_run_id=logical_run.logical_run_id,
+                attempt_id=attempt.attempt_id,
+                artifact_path=str(official_news_path),
+                sha256_hex=sha256(official_news_content).hexdigest(),
+                source_system="binance_official_announcement_cms",
+                payload_schema_version="binance-official-news/v1",
+                event_start=news_event_start,
+                event_end=news_event_end,
+                record_count=official_news_document["record_count"],
+                now=artifacts_written_at,
+            )
+        if (
+            discovery_snapshot_path is not None
+            and discovery_snapshot_content is not None
+            and discovery_snapshot_capture is not None
+        ):
+            ledger.record_manifest(
+                logical_run_id=logical_run.logical_run_id,
+                attempt_id=attempt.attempt_id,
+                artifact_path=str(discovery_snapshot_path),
+                sha256_hex=sha256(discovery_snapshot_content).hexdigest(),
+                source_system="binance_square_feed_snapshot",
+                payload_schema_version="binance-square-feed-snapshot/v3.1",
+                event_start=discovery_snapshot_capture.captured_at_utc,
+                event_end=discovery_snapshot_capture.captured_at_utc,
+                record_count=discovery_snapshot_capture.record_count,
+                now=artifacts_written_at,
+            )
+        if config.signals_json is not None and signal_input_content is not None:
+            ledger.record_manifest(
+                logical_run_id=logical_run.logical_run_id,
+                attempt_id=attempt.attempt_id,
+                artifact_path=str(config.signals_json),
+                sha256_hex=sha256(signal_input_content).hexdigest(),
+                source_system="curated_signal_input",
+                payload_schema_version="binance-square-signal-input/v1",
+                event_start=None,
+                event_end=None,
+                record_count=signal_input_count,
+                now=artifacts_written_at,
+            )
+        if (
+            config.smart_money_square_mapping_evidence is not None
+            and identity_mapping_content is not None
+            and identity_mapping_evidence is not None
+        ):
+            ledger.record_manifest(
+                logical_run_id=logical_run.logical_run_id,
+                attempt_id=attempt.attempt_id,
+                artifact_path=str(config.smart_money_square_mapping_evidence),
+                sha256_hex=sha256(identity_mapping_content).hexdigest(),
+                source_system="binance_smart_money_square_identity_mapping",
+                payload_schema_version=(
+                    "binance-smart-money-square-identity-mapping/v1"
+                ),
+                event_start=identity_mapping_evidence.captured_at,
+                event_end=identity_mapping_evidence.captured_at,
+                record_count=len(identity_mapping_evidence.mappings),
+                now=artifacts_written_at,
+            )
         ledger.record_manifest(
             logical_run_id=logical_run.logical_run_id,
             attempt_id=attempt.attempt_id,
@@ -1638,6 +2199,20 @@ def run_shadow_radar(
             record_count=counts["discovered_source_records"],
             now=artifacts_written_at,
         )
+        if market_catalog_payload is not None and market_catalog_content is not None:
+            catalog_event_at = market_catalog_payload.get("captured_at_utc")
+            ledger.record_manifest(
+                logical_run_id=logical_run.logical_run_id,
+                attempt_id=attempt.attempt_id,
+                artifact_path=str(market_catalog_path),
+                sha256_hex=sha256(market_catalog_content).hexdigest(),
+                source_system="binance_public_futures_exchange_info",
+                payload_schema_version="binance-futures-catalog/v1",
+                event_start=catalog_event_at,
+                event_end=catalog_event_at,
+                record_count=market_catalog_payload["record_count"],
+                now=artifacts_written_at,
+            )
         if smart_money_document is not None and smart_money_content is not None:
             smart_window = smart_money_document["leaderboard_observed_window"]
             smart_event_start = format_utc(
@@ -1736,6 +2311,12 @@ def run_shadow_radar(
             latest_pointer=latest_pointer,
             smart_money_json=(
                 smart_money_path if smart_money_document is not None else None
+            ),
+            market_catalog_json=(
+                market_catalog_path if market_catalog_payload is not None else None
+            ),
+            official_news_json=(
+                official_news_path if official_news_document is not None else None
             ),
         )
     except Exception:

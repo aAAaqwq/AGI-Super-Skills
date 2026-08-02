@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 from hashlib import sha256
 from pathlib import Path
 import subprocess
@@ -13,7 +14,9 @@ from scanner.discovery import (
     parse_profile_content_response,
     plan_profile_fetches,
     reconcile_profile_fetch_plan,
+    validate_feed_snapshot,
 )
+from scanner.contracts import ContractViolation
 from scanner.square import parse_feed_cards
 
 
@@ -82,6 +85,29 @@ class ProfileFetchPlanTests(unittest.TestCase):
 
 
 class CrossChannelDiscoveryTests(unittest.TestCase):
+    def test_feed_snapshot_must_be_fresh_and_not_from_the_future(self) -> None:
+        payload = {
+            "status": "ok",
+            "scanned_at": "2026-08-01T08:00:00Z",
+            "count": 1,
+            "posts": [
+                {"url": "https://www.binance.com/en/square/post/990000000000201"}
+            ],
+        }
+
+        with self.assertRaisesRegex(ContractViolation, "stale"):
+            validate_feed_snapshot(
+                payload,
+                consumed_at="2026-08-01T08:11:00Z",
+                maximum_age=timedelta(minutes=10),
+            )
+        with self.assertRaisesRegex(ContractViolation, "after consumption"):
+            validate_feed_snapshot(
+                payload,
+                consumed_at="2026-08-01T07:59:59Z",
+                maximum_age=timedelta(minutes=10),
+            )
+
     def test_profile_and_feed_deduplicate_by_post_id_and_keep_observations(self) -> None:
         feed_payload = json.loads(
             (M1B_FIXTURES / "feed_cards_live.json").read_text(encoding="utf-8")

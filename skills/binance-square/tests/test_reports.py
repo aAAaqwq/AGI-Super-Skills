@@ -91,6 +91,95 @@ def smart_money_input() -> dict[str, object]:
 
 
 class LocalReportContractTests(unittest.TestCase):
+    def test_source_coverage_keeps_capture_time_separate_from_report_time(self) -> None:
+        report = build_local_report(
+            report_input(
+                report_generated_at="2026-08-01T13:00:00Z",
+                source_coverage={
+                    "FEED": {
+                        "status": "COMPLETE",
+                        "provenance": "FIXTURE_REPLAY",
+                        "source_capture_time_utc": "2026-07-30T05:48:36Z",
+                        "evidence_path": "/fixtures/feed.json",
+                        "reason": "immutable fixture",
+                    },
+                    "SMART_MONEY": {
+                        "status": "FAILED",
+                        "provenance": "LIVE_CAPTURE",
+                        "source_capture_time_utc": "2026-08-01T12:00:07Z",
+                        "reason": "public endpoint timeout",
+                    },
+                },
+            )
+        )
+
+        coverage = report["source_coverage"]
+        self.assertEqual(
+            ("FEED", "BINANCE_OFFICIAL_NEWS", "SMART_MONEY", "PROFILE", "MARKET_CATALOG"),
+            tuple(coverage),
+        )
+        self.assertEqual("FIXTURE_REPLAY", coverage["FEED"]["provenance"])
+        self.assertEqual(
+            "2026-07-30T05:48:36Z",
+            coverage["FEED"]["source_capture_time_utc"],
+        )
+        self.assertEqual("/fixtures/feed.json", coverage["FEED"]["evidence_path"])
+        self.assertEqual(
+            "NOT_ATTEMPTED", coverage["BINANCE_OFFICIAL_NEWS"]["status"]
+        )
+        self.assertIsNone(
+            coverage["BINANCE_OFFICIAL_NEWS"]["source_capture_time_utc"]
+        )
+        markdown = render_local_markdown(report)
+        self.assertIn("报告生成时间 UTC：2026-08-01T13:00:00Z", markdown)
+        self.assertIn(
+            "FEED：COMPLETE｜FIXTURE_REPLAY｜source capture 2026-07-30T05:48:36Z",
+            markdown,
+        )
+        self.assertNotIn(
+            "BINANCE_OFFICIAL_NEWS：NOT_ATTEMPTED｜UNKNOWN｜source capture 2026-08-01T13:00:00Z",
+            markdown,
+        )
+
+    def test_cdo_capture_timing_aliases_are_consumed_without_clock_fallback(self) -> None:
+        report = build_local_report(
+            report_input(
+                feed_provenance="LIVE_CAPTURE",
+                market_provenance="LIVE_CAPTURE",
+                capture_timing={
+                    "discovery_snapshot_at": "2026-08-01T12:00:00Z",
+                    "detail_fetch_started": "2026-08-01T12:00:01Z",
+                    "detail_fetch_completed": "2026-08-01T12:00:03Z",
+                    "market_catalog": "2026-08-01T12:00:04Z",
+                    "report": "2026-08-01T12:00:10Z",
+                }
+            )
+        )
+
+        self.assertEqual("2026-08-01T12:00:10Z", report["report_generated_at"])
+        self.assertEqual("COMPLETE", report["source_coverage"]["FEED"]["status"])
+        self.assertEqual(
+            "COMPLETE", report["source_coverage"]["MARKET_CATALOG"]["status"]
+        )
+        self.assertEqual(
+            "2026-08-01T12:00:04Z",
+            report["source_coverage"]["MARKET_CATALOG"]["source_capture_time_utc"],
+        )
+
+        with self.assertRaisesRegex(ReportValidationError, "report_generated_at"):
+            build_local_report(
+                report_input(
+                    report_generated_at="2026-08-01T11:59:59Z",
+                    source_coverage={
+                        "FEED": {
+                            "status": "COMPLETE",
+                            "provenance": "LIVE_CAPTURE",
+                            "source_capture_time_utc": "2026-08-01T12:00:00Z",
+                        }
+                    },
+                )
+            )
+
     def test_smart_money_rank_profile_and_identity_coverage_are_separate(self) -> None:
         report = build_local_report(
             report_input(
@@ -117,6 +206,8 @@ class LocalReportContractTests(unittest.TestCase):
             "0/60 (0.0%)",
             report["smart_money"]["square_identity_mapping_coverage"]["label"],
         )
+        self.assertEqual("PARTIAL", report["source_coverage"]["SMART_MONEY"]["status"])
+        self.assertEqual("UNKNOWN", report["source_coverage"]["SMART_MONEY"]["provenance"])
         self.assertIn("OBSERVED_WINDOW", markdown)
         self.assertIn("60行", markdown)
         self.assertIn("Tier A eligible=0", markdown)
@@ -163,6 +254,7 @@ class LocalReportContractTests(unittest.TestCase):
         report = build_local_report(report_input())
 
         self.assertEqual("WAIT", report["status"])
+        self.assertIsNone(report["report_generated_at"])
         self.assertEqual(24, report["window_hours"])
         self.assertEqual(
             {
@@ -345,8 +437,14 @@ class LocalReportContractTests(unittest.TestCase):
                 market_captured_at=datetime(
                     2026, 8, 1, 7, 10, tzinfo=timezone.utc
                 ),
+                evidence_captured_at=datetime(
+                    2026, 8, 1, 7, 5, tzinfo=timezone.utc
+                ),
                 market_source=MarketSource.SPOT_PROXY if index == 0 else MarketSource.FUTURES,
                 missing_market_fields=("mark_price",) if index == 0 else (),
+                parameter_source="AUTHOR",
+                nominal_rr=Decimal("5"),
+                cost_model_status="APPLIED",
             )
 
         observations = [
@@ -394,10 +492,28 @@ class LocalReportContractTests(unittest.TestCase):
             "evidence": ["4h structure aligned"],
             "source_post_url": "https://www.binance.com/en/square/post/3001",
             "market_captured_at": "2026-08-01T07:12:00Z",
+            "evidence_captured_at": "2026-08-01T07:05:00Z",
             "market_source": "FUTURES",
+            "parameter_source": "AUTHOR",
+            "nominal_rr": "5",
+            "cost_model_status": "APPLIED",
         }
 
-        for missing_field in ("source_post_url", "market_captured_at"):
+        for missing_field in (
+            "entry",
+            "stop_loss",
+            "tp1",
+            "tp2",
+            "current_price",
+            "invalidation",
+            "parameter_source",
+            "nominal_rr",
+            "cost_model_status",
+            "evidence",
+            "source_post_url",
+            "market_captured_at",
+            "evidence_captured_at",
+        ):
             with self.subTest(missing_field=missing_field):
                 incomplete = dict(complete)
                 incomplete.pop(missing_field)
@@ -405,6 +521,13 @@ class LocalReportContractTests(unittest.TestCase):
                     build_local_report(
                         report_input(top_opportunities=[incomplete])
                     )
+
+        for unsafe_status in ("NOT_APPLIED", "NOT_CONFIGURED", "UNKNOWN"):
+            with self.subTest(unsafe_status=unsafe_status), self.assertRaisesRegex(
+                ReportValidationError, "cost_model_status"
+            ):
+                unsafe = dict(complete, cost_model_status=unsafe_status)
+                build_local_report(report_input(top_opportunities=[unsafe]))
 
     def test_full_markdown_puts_proxy_and_concentration_risks_first(self) -> None:
         top = {
@@ -420,8 +543,12 @@ class LocalReportContractTests(unittest.TestCase):
             "evidence": ["4h structure aligned", "volume confirms"],
             "source_post_url": "https://www.binance.com/en/square/post/3001",
             "market_captured_at": "2026-08-01T07:12:00Z",
+            "evidence_captured_at": "2026-08-01T07:05:00Z",
             "market_source": "SPOT_PROXY",
             "missing_market_fields": ["mark_price", "funding_rate"],
+            "parameter_source": "AUTHOR",
+            "nominal_rr": "5",
+            "cost_model_status": "APPLIED",
         }
         report = build_local_report(
             report_input(
@@ -447,6 +574,7 @@ class LocalReportContractTests(unittest.TestCase):
         self.assertIn("## TOP 1｜BTCUSDT LONG｜SPOT PROXY", markdown)
         self.assertIn("Entry：62000–62500", markdown)
         self.assertIn("SL：61000｜TP1：64500｜TP2：67000｜现价：63000", markdown)
+        self.assertIn("名义RR：5｜成本模型：APPLIED", markdown)
         self.assertIn("行情抓取：2026-08-01T07:12:00Z", markdown)
         self.assertIn("来源：https://www.binance.com/en/square/post/3001", markdown)
         self.assertIn("过滤原因：RR below 2.0 × 3", markdown)

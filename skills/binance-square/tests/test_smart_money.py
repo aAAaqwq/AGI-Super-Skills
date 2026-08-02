@@ -127,6 +127,20 @@ class SmartMoneyCollectionTests(unittest.TestCase):
                 )
             )
 
+    def test_fixture_replay_provenance_is_integrity_protected(self) -> None:
+        document = collect_smart_money(
+            ranking_types=("PNL",),
+            include_profiles=False,
+            get_json=self.api,
+            captured_at="2026-08-01T12:00:00Z",
+            provenance="FIXTURE_REPLAY",
+        )
+
+        self.assertEqual("FIXTURE_REPLAY", document["provenance"])
+        self.assertTrue(verify_evidence_integrity(document))
+        document["provenance"] = "LIVE_CAPTURE"
+        self.assertFalse(verify_evidence_integrity(document))
+
     def test_cross_ranking_duplicate_ids_fetch_one_profile_each(self) -> None:
         for page in (1, 2, 3):
             pnl_rows = self.api.responses[("PNL", "30D", page)]["data"]["rows"]

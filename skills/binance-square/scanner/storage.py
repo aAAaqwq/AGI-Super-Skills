@@ -27,6 +27,7 @@ from .contracts import (
 class LogicalRun:
     logical_run_id: str
     run_namespace: RunNamespace
+    job_namespace: str
     pipeline_version: str
     production_job_id: str | None
     scheduled_for_utc: str | None
@@ -545,16 +546,18 @@ class SQLiteRunLedger:
     def create_or_open_production_run(
         self,
         *,
+        job_namespace: str = "default",
         production_job_id: str,
         scheduled_for_utc: datetime | str,
         pipeline_version: str,
         now: datetime | str | None = None,
     ) -> LogicalRun:
+        namespace = _required(job_namespace, "job_namespace")
         job_id = _required(production_job_id, "production_job_id")
         scheduled = format_utc(scheduled_for_utc)
         version = _required(pipeline_version, "pipeline_version")
         observed_at = format_utc(now or datetime.now(timezone.utc))
-        logical_run_id = _stable_id("prod", job_id, scheduled)
+        logical_run_id = _stable_id("prod", namespace, job_id, scheduled)
         with self._connection:
             self._connection.execute(
                 """
@@ -575,13 +578,26 @@ class SQLiteRunLedger:
                     observed_at,
                 ),
             )
+            self._connection.execute(
+                """
+                INSERT OR IGNORE INTO run_identity_namespace (
+                    logical_run_id, job_namespace, production_job_id,
+                    scheduled_for_utc
+                ) VALUES (?, ?, ?, ?)
+                """,
+                (logical_run_id, namespace, job_id, scheduled),
+            )
         row = self._connection.execute(
             """
-            SELECT * FROM logical_run
-            WHERE run_namespace = 'PRODUCTION'
-              AND production_job_id = ? AND scheduled_for_utc = ?
+            SELECT logical.*, identity.job_namespace FROM logical_run AS logical
+            JOIN run_identity_namespace AS identity
+              ON identity.logical_run_id = logical.logical_run_id
+            WHERE logical.run_namespace = 'PRODUCTION'
+              AND identity.job_namespace = ?
+              AND identity.production_job_id = ?
+              AND identity.scheduled_for_utc = ?
             """,
-            (job_id, scheduled),
+            (namespace, job_id, scheduled),
         ).fetchone()
         if row is None:
             raise RuntimeError("production run insert was not observable")
@@ -620,13 +636,24 @@ class SQLiteRunLedger:
                     observed_at,
                 ),
             )
+            self._connection.execute(
+                """
+                INSERT OR IGNORE INTO run_identity_namespace (
+                    logical_run_id, job_namespace
+                ) VALUES (?, ?)
+                """,
+                (logical_run_id, f"replay:{namespace}"),
+            )
         row = self._connection.execute(
             """
-            SELECT * FROM logical_run
-            WHERE run_namespace = 'REPLAY'
-              AND replay_namespace = ?
-              AND source_logical_run_id = ?
-              AND pipeline_version = ?
+            SELECT logical.*, identity.job_namespace
+            FROM logical_run AS logical
+            JOIN run_identity_namespace AS identity
+              ON identity.logical_run_id = logical.logical_run_id
+            WHERE logical.run_namespace = 'REPLAY'
+              AND logical.replay_namespace = ?
+              AND logical.source_logical_run_id = ?
+              AND logical.pipeline_version = ?
             """,
             (namespace, source_run_id, version),
         ).fetchone()
@@ -1101,11 +1128,13 @@ class SQLiteRunLedger:
     def prior_succeeded_production_post_ids(
         self,
         *,
+        job_namespace: str,
         production_job_id: str,
         scheduled_for_utc: datetime | str,
     ) -> frozenset[str]:
         """Return only accepted IDs committed by strictly earlier slots."""
 
+        namespace = _required(job_namespace, "job_namespace")
         job_id = _required(production_job_id, "production_job_id")
         scheduled = format_utc(scheduled_for_utc)
         rows = self._connection.execute(
@@ -1117,13 +1146,16 @@ class SQLiteRunLedger:
              AND attempt.attempt_id = observation.attempt_id
             JOIN logical_run AS logical
               ON logical.logical_run_id = observation.logical_run_id
+            JOIN run_identity_namespace AS identity
+              ON identity.logical_run_id = logical.logical_run_id
             WHERE observation.observation_status = 'ACCEPTED'
               AND attempt.status = 'SUCCEEDED'
               AND logical.run_namespace = 'PRODUCTION'
+              AND identity.job_namespace = ?
               AND logical.production_job_id = ?
               AND julianday(logical.scheduled_for_utc) < julianday(?)
             """,
-            (job_id, scheduled),
+            (namespace, job_id, scheduled),
         ).fetchall()
         return frozenset(str(row["post_id"]) for row in rows)
 
@@ -2469,7 +2501,13 @@ class SQLiteRunLedger:
 
     def list_logical_runs(self) -> list[LogicalRun]:
         rows = self._connection.execute(
-            "SELECT * FROM logical_run ORDER BY created_at_utc, logical_run_id"
+            """
+            SELECT logical.*, identity.job_namespace
+            FROM logical_run AS logical
+            JOIN run_identity_namespace AS identity
+              ON identity.logical_run_id = logical.logical_run_id
+            ORDER BY logical.created_at_utc, logical.logical_run_id
+            """
         ).fetchall()
         return [self._logical_run(row) for row in rows]
 
@@ -2478,6 +2516,7 @@ class SQLiteRunLedger:
         return LogicalRun(
             logical_run_id=row["logical_run_id"],
             run_namespace=RunNamespace(row["run_namespace"]),
+            job_namespace=row["job_namespace"],
             pipeline_version=row["pipeline_version"],
             production_job_id=row["production_job_id"],
             scheduled_for_utc=row["scheduled_for_utc"],

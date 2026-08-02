@@ -38,6 +38,7 @@ ROWS_PER_PAGE = 10
 PAGES = (1, 2, 3)
 RANK_SOURCE = "DERIVED_FROM_PAGE_AND_POSITION"
 SOURCE_ID_TYPE = "topTraderId"
+EVIDENCE_PROVENANCE = frozenset({"LIVE_CAPTURE", "FIXTURE_REPLAY"})
 
 
 JsonGet = Callable[[str, float], dict[str, Any]]
@@ -384,6 +385,7 @@ def collect_smart_money(
     timeout: float = 20.0,
     captured_at: str | datetime | None = None,
     clock: Clock | None = None,
+    provenance: str = "LIVE_CAPTURE",
 ) -> dict[str, Any]:
     """Collect strict TOP30 rankings and optional unique-profile enrichment."""
 
@@ -392,6 +394,11 @@ def collect_smart_money(
         raise ContractViolation("ranking_types must be a non-empty unique sequence")
     if timeout <= 0:
         raise ContractViolation("timeout must be positive")
+    normalized_provenance = str(provenance).upper()
+    if normalized_provenance not in EVIDENCE_PROVENANCE:
+        raise ContractViolation(
+            "Smart Money provenance must be LIVE_CAPTURE or FIXTURE_REPLAY"
+        )
     if clock is not None:
         actual_clock = clock
     elif captured_at is not None:
@@ -463,6 +470,7 @@ def collect_smart_money(
     document = {
         "evidence_schema_version": EVIDENCE_SCHEMA_VERSION,
         "source_system": "binance_futures_smart_money_public_api",
+        "provenance": normalized_provenance,
         "source_endpoints": {
             "leaderboard": LEADERBOARD_ENDPOINT,
             "profile": PROFILE_ENDPOINT,

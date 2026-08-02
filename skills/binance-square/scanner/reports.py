@@ -19,6 +19,15 @@ from scanner.contracts import (
 
 
 _LOS_ANGELES = ZoneInfo("America/Los_Angeles")
+_REPORT_SOURCES = (
+    "FEED",
+    "BINANCE_OFFICIAL_NEWS",
+    "SMART_MONEY",
+    "PROFILE",
+    "MARKET_CATALOG",
+)
+_SOURCE_STATUSES = frozenset({"COMPLETE", "PARTIAL", "FAILED", "NOT_ATTEMPTED"})
+_SOURCE_PROVENANCE = frozenset({"LIVE_CAPTURE", "FIXTURE_REPLAY", "UNKNOWN"})
 
 
 class ReportValidationError(ValueError):
@@ -48,11 +57,20 @@ def build_local_report(payload: Mapping[str, Any]) -> dict[str, Any]:
 
     report = dict(payload)
     generated_at = payload.get("report_generated_at")
+    capture_timing_value = payload.get("capture_timing")
+    if generated_at is None and isinstance(capture_timing_value, Mapping):
+        generated_at = _first_time(
+            capture_timing_value,
+            "report_generated_at_utc",
+            "report",
+        )
     if generated_at is not None:
         try:
             report["report_generated_at"] = format_utc(parse_utc(generated_at))
         except ContractViolation as exc:
             raise ReportValidationError("report_generated_at must be timezone-aware") from exc
+    else:
+        report["report_generated_at"] = None
     leaderboard_coverage = _coverage(
         payload.get("leaderboard_coverage"), "leaderboard_coverage"
     )
@@ -73,6 +91,27 @@ def build_local_report(payload: Mapping[str, Any]) -> dict[str, Any]:
         "observations": observations,
         "snapshot_path": snapshot_path,
     })
+    report["source_coverage"] = _source_coverage(
+        payload,
+        normalized_smart_money,
+    )
+    if report["report_generated_at"] is not None:
+        generated = parse_utc(report["report_generated_at"])
+        captured_times = [scanned_at]
+        captured_times.extend(
+            parse_utc(source["source_capture_time_utc"])
+            for source in report["source_coverage"].values()
+            if source["source_capture_time_utc"] is not None
+        )
+        for opportunity in top:
+            captured_times.extend(
+                parse_utc(opportunity[field])
+                for field in ("evidence_captured_at", "market_captured_at")
+            )
+        if max(captured_times) > generated:
+            raise ReportValidationError(
+                "report_generated_at cannot precede source capture time"
+            )
     report["risk_banner"] = _risk_banner(report)
     report["scanned_at"] = {
         "utc": format_utc(scanned_at),
@@ -110,6 +149,24 @@ def render_local_markdown(report: Mapping[str, Any]) -> str:
         "",
         "## 数据覆盖",
     ]
+    source_coverage = _mapping(report.get("source_coverage"), "source_coverage")
+    for source_name in _REPORT_SOURCES:
+        source = _mapping(
+            source_coverage.get(source_name),
+            f"source_coverage.{source_name}",
+        )
+        line = (
+            f"- {source_name}：{source.get('status')}｜"
+            f"{source.get('provenance')}｜source capture "
+            f"{_display(source.get('source_capture_time_utc'))}"
+        )
+        if source.get("capture_started_at_utc"):
+            line += f"｜start {source['capture_started_at_utc']}"
+        if source.get("evidence_path"):
+            line += f"｜evidence {source['evidence_path']}"
+        if source.get("reason"):
+            line += f"｜{source['reason']}"
+        lines.append(line)
     if isinstance(capture_timing, Mapping):
         lines.insert(
             3,
@@ -231,8 +288,13 @@ def render_local_markdown(report: Mapping[str, Any]) -> str:
                     f"现价：{_display(opportunity.get('current_price'))}"
                 ),
                 f"参数来源：{_display(opportunity.get('parameter_source'))}",
+                (
+                    f"名义RR：{_display(opportunity.get('nominal_rr'))}｜"
+                    f"成本模型：{_display(opportunity.get('cost_model_status'))}"
+                ),
                 f"失效：{_display(opportunity.get('invalidation'))}｜分数：{_display(opportunity.get('score'))}",
                 f"证据：{_join(opportunity.get('evidence'))}",
+                f"证据抓取：{_display(opportunity.get('evidence_captured_at'))}",
                 f"行情抓取：{_display(opportunity.get('market_captured_at'))}",
                 f"缺失行情字段：{_join(opportunity.get('missing_market_fields'))}",
                 f"来源：{_display(opportunity.get('source_post_url'))}",
@@ -314,6 +376,14 @@ def render_telegram(report: Mapping[str, Any]) -> str:
             )
         ),
     ]
+    source_coverage = _mapping(report.get("source_coverage"), "source_coverage")
+    lines.append(
+        "来源 "
+        + " / ".join(
+            f"{name}={_mapping(source_coverage.get(name), f'source_coverage.{name}').get('status')}"
+            for name in _REPORT_SOURCES
+        )
+    )
     smart_money = report.get("smart_money")
     if isinstance(smart_money, Mapping):
         ranking = _mapping(
@@ -359,6 +429,10 @@ def render_telegram(report: Mapping[str, Any]) -> str:
                         f"分数 {_display(opportunity.get('score'))}｜"
                         f"参数 {_display(opportunity.get('parameter_source'))}｜"
                         f"失效 {_display(opportunity.get('invalidation'))}"
+                    ),
+                    (
+                        f"名义RR {_display(opportunity.get('nominal_rr'))}｜"
+                        f"成本模型 {_display(opportunity.get('cost_model_status'))}"
                     ),
                     (
                         f"行情 {opportunity.get('market_captured_at')}｜"
@@ -490,17 +564,36 @@ def _opportunity(value: Any, *, watch: bool) -> dict[str, Any]:
     if not isinstance(direction, str) or not direction.strip():
         raise ReportValidationError("opportunity direction is required")
 
-    captured_at = _read(value, "market_captured_at", "captured_at")
+    captured_at = _read(value, "market_captured_at")
     if captured_at is not None:
         try:
             captured_at = format_utc(captured_at)
         except ContractViolation as exc:
             raise ReportValidationError("market_captured_at must be timezone-aware") from exc
+    evidence_captured_at = _read(
+        value,
+        "evidence_captured_at",
+        "source_detail_captured_at",
+    )
+    if evidence_captured_at is not None:
+        try:
+            evidence_captured_at = format_utc(evidence_captured_at)
+        except ContractViolation as exc:
+            raise ReportValidationError(
+                "evidence_captured_at must be timezone-aware"
+            ) from exc
 
     candidate = _read(value, "candidate")
     parameter_source = _read(value, "parameter_source")
     if parameter_source is None and candidate is not None:
         parameter_source = _read(candidate, "parameter_source")
+    nominal_rr = _read(value, "nominal_rr")
+    cost_model_status = _read(value, "cost_model_status")
+    if not isinstance(value, Mapping) and candidate is not None:
+        if nominal_rr is None:
+            nominal_rr = _calculate_nominal_rr(value, direction)
+        if cost_model_status is None:
+            cost_model_status = "NOT_APPLIED"
     result = {
         "symbol": symbol.strip().upper(),
         "direction": direction.strip().upper(),
@@ -516,6 +609,9 @@ def _opportunity(value: Any, *, watch: bool) -> dict[str, Any]:
         "market_captured_at": captured_at,
         "market_source": _json_value(_read(value, "market_source", "source")),
         "parameter_source": _json_value(parameter_source),
+        "nominal_rr": _json_value(nominal_rr),
+        "cost_model_status": _json_value(cost_model_status),
+        "evidence_captured_at": evidence_captured_at,
         "missing_market_fields": _json_value(
             _read(value, "missing_market_fields", "missing_fields", default=())
         ),
@@ -525,6 +621,58 @@ def _opportunity(value: Any, *, watch: bool) -> dict[str, Any]:
             value, "waiting_condition", "wait_for", "wait_condition"
         )
     else:
+        required_values = {
+            "entry": result["entry"],
+            "stop_loss": result["stop_loss"],
+            "tp1": result["tp1"],
+            "tp2": result["tp2"],
+            "current_price": result["current_price"],
+            "invalidation": result["invalidation"],
+            "parameter_source": result["parameter_source"],
+            "nominal_rr": result["nominal_rr"],
+            "cost_model_status": result["cost_model_status"],
+            "evidence_captured_at": result["evidence_captured_at"],
+        }
+        for field, field_value in required_values.items():
+            if field_value is None or field_value == "" or field_value == []:
+                raise ReportValidationError(
+                    f"{field} is required for TOP opportunities"
+                )
+        _validate_top_price("entry", result["entry"])
+        for field in ("stop_loss", "tp1", "tp2", "current_price"):
+            _validate_top_price(field, result[field])
+        _validate_positive_decimal("nominal_rr", result["nominal_rr"])
+        if not isinstance(result["invalidation"], str) or not result[
+            "invalidation"
+        ].strip():
+            raise ReportValidationError(
+                "invalidation is required for TOP opportunities"
+            )
+        if not isinstance(result["parameter_source"], str) or not result[
+            "parameter_source"
+        ].strip():
+            raise ReportValidationError(
+                "parameter_source is required for TOP opportunities"
+            )
+        if not isinstance(result["cost_model_status"], str) or not result[
+            "cost_model_status"
+        ].strip():
+            raise ReportValidationError(
+                "cost_model_status is required for TOP opportunities"
+            )
+        if result["cost_model_status"].strip().upper() != "APPLIED":
+            raise ReportValidationError(
+                "cost_model_status must be APPLIED for TOP opportunities"
+            )
+        evidence = result["evidence"]
+        if (
+            not isinstance(evidence, list)
+            or not evidence
+            or not all(isinstance(item, str) and item.strip() for item in evidence)
+        ):
+            raise ReportValidationError(
+                "evidence is required for TOP opportunities"
+            )
         if not isinstance(result["source_post_url"], str) or not result[
             "source_post_url"
         ].strip():
@@ -534,6 +682,48 @@ def _opportunity(value: Any, *, watch: bool) -> dict[str, Any]:
                 "market_captured_at is required for TOP opportunities"
             )
     return result
+
+
+def _validate_positive_decimal(field: str, value: Any) -> Decimal:
+    try:
+        number = Decimal(str(value))
+    except Exception as exc:
+        raise ReportValidationError(f"{field} must be numeric") from exc
+    if not number.is_finite() or number <= 0:
+        raise ReportValidationError(f"{field} must be positive and finite")
+    return number
+
+
+def _validate_top_price(field: str, value: Any) -> None:
+    values = value if isinstance(value, list) else [value]
+    if not values or len(values) > 2:
+        raise ReportValidationError(f"{field} must contain one or two prices")
+    for item in values:
+        _validate_positive_decimal(field, item)
+
+
+def _calculate_nominal_rr(value: Any, direction: str) -> str | None:
+    entry = _json_value(_read(value, "entry", "entry_zone"))
+    stop = _json_value(_read(value, "stop_loss", "sl"))
+    target = _json_value(_read(value, "tp2"))
+    try:
+        entry_values = entry if isinstance(entry, list) else [entry]
+        if not entry_values or any(item is None for item in entry_values):
+            return None
+        midpoint = sum(Decimal(str(item)) for item in entry_values) / len(entry_values)
+        stop_value = Decimal(str(stop))
+        target_value = Decimal(str(target))
+        if direction.strip().upper() == "LONG":
+            risk = midpoint - stop_value
+            reward = target_value - midpoint
+        else:
+            risk = stop_value - midpoint
+            reward = midpoint - target_value
+        if risk <= 0 or reward <= 0:
+            return None
+        return format(reward / risk, "f")
+    except Exception:
+        return None
 
 
 def _coverage(value: Any, name: str) -> dict[str, Any]:
@@ -708,6 +898,249 @@ def _smart_money(
     normalized["profile_detail_coverage"] = details
     normalized["square_identity_mapping_coverage"] = identities
     return normalized
+
+
+def _source_coverage(
+    payload: Mapping[str, Any],
+    smart_money: Mapping[str, Any] | None,
+) -> dict[str, dict[str, Any]]:
+    """Return one explicit timing/provenance slot for every report source.
+
+    Missing source timestamps are never filled from ``scanned_at`` or report
+    generation time.  That distinction matters most for replay artifacts.
+    """
+
+    derived = _derived_source_coverage(payload, smart_money)
+    supplied = payload.get("source_coverage")
+    if supplied is None:
+        raw_supplied: Mapping[str, Any] = {}
+    else:
+        raw_supplied = _mapping(supplied, "source_coverage")
+    aliases = {
+        "FEED": "FEED",
+        "BINANCE_OFFICIAL_NEWS": "BINANCE_OFFICIAL_NEWS",
+        "OFFICIAL_NEWS": "BINANCE_OFFICIAL_NEWS",
+        "SMART_MONEY": "SMART_MONEY",
+        "PROFILE": "PROFILE",
+        "MARKET_CATALOG": "MARKET_CATALOG",
+    }
+    explicit: dict[str, Any] = {}
+    for raw_name, value in raw_supplied.items():
+        name = str(raw_name).strip().upper().replace(" ", "_").replace("-", "_")
+        canonical = aliases.get(name)
+        if canonical is None:
+            raise ReportValidationError(f"unknown report source: {raw_name}")
+        if canonical in explicit:
+            raise ReportValidationError(f"duplicate report source: {canonical}")
+        explicit[canonical] = value
+    return {
+        name: _normalize_source_coverage(
+            explicit.get(name, derived[name]),
+            f"source_coverage.{name}",
+        )
+        for name in _REPORT_SOURCES
+    }
+
+
+def _first_time(source: Mapping[str, Any], *names: str) -> Any:
+    return next((source.get(name) for name in names if source.get(name) is not None), None)
+
+
+def _derived_source_coverage(
+    payload: Mapping[str, Any],
+    smart_money: Mapping[str, Any] | None,
+) -> dict[str, dict[str, Any]]:
+    timing_value = payload.get("capture_timing")
+    timing = timing_value if isinstance(timing_value, Mapping) else {}
+    feed_start = _first_time(
+        timing,
+        "detail_fetch_started_at_utc",
+        "detail_fetch_started_at",
+        "detail_fetch_started",
+        "square_started_at_utc",
+    )
+    feed_end = _first_time(
+        timing,
+        "detail_fetch_completed_at_utc",
+        "detail_fetch_completed_at",
+        "detail_fetch_completed",
+        "square_completed_at_utc",
+    )
+    discovery_snapshot = _first_time(
+        timing,
+        "discovery_snapshot_at_utc",
+        "discovery_snapshot_at",
+    )
+    if feed_end is not None:
+        feed_status, feed_capture, feed_reason = "COMPLETE", feed_end, "detail_fetch_completed"
+    elif feed_start is not None or discovery_snapshot is not None:
+        feed_status = "PARTIAL"
+        feed_capture = discovery_snapshot or feed_start
+        feed_reason = "discovery_or_fetch_started_without_completion"
+    else:
+        feed_status, feed_capture, feed_reason = "NOT_ATTEMPTED", None, "capture_time_missing"
+
+    if smart_money is None:
+        smart_status, smart_capture, smart_provenance, smart_reason = (
+            "NOT_ATTEMPTED",
+            None,
+            "UNKNOWN",
+            "no_smart_money_evidence",
+        )
+    else:
+        declared = str(smart_money.get("status") or "PARTIAL").upper()
+        smart_status = "COMPLETE" if declared == "COMPLETE" else "PARTIAL"
+        smart_capture = smart_money.get("captured_at_utc")
+        smart_provenance = str(smart_money.get("provenance") or "UNKNOWN").upper()
+        smart_reason = "smart_money_evidence_present"
+
+    profile_value = payload.get("profile_channel")
+    profile = profile_value if isinstance(profile_value, Mapping) else {}
+    raw_profile_status = str(profile.get("status") or "NOT_ATTEMPTED").upper()
+    profile_status = (
+        raw_profile_status
+        if raw_profile_status in _SOURCE_STATUSES
+        else "PARTIAL"
+        if raw_profile_status == "EMPTY"
+        else "NOT_ATTEMPTED"
+    )
+    profile_capture = _first_time(
+        profile,
+        "source_capture_time_utc",
+        "captured_at_utc",
+        "observed_at_utc",
+    )
+
+    catalog_capture = _first_time(
+        timing,
+        "market_catalog_at_utc",
+        "market_catalog_at",
+        "market_catalog_captured_at_utc",
+        "market_catalog",
+    )
+    market_latest = _first_time(timing, "market_latest_at_utc")
+    if catalog_capture is not None:
+        market_status, market_capture, market_reason = (
+            "COMPLETE",
+            catalog_capture,
+            "market_catalog_capture_present",
+        )
+    elif market_latest is not None:
+        market_status, market_capture, market_reason = (
+            "PARTIAL",
+            market_latest,
+            "market_snapshot_time_does_not_prove_catalog_capture",
+        )
+    else:
+        market_status, market_capture, market_reason = (
+            "NOT_ATTEMPTED",
+            None,
+            "market_catalog_capture_missing",
+        )
+    return {
+        "FEED": {
+            "status": feed_status,
+            "provenance": str(payload.get("feed_provenance") or "UNKNOWN").upper(),
+            "source_capture_time_utc": feed_capture,
+            "capture_started_at_utc": feed_start,
+            "capture_completed_at_utc": feed_end,
+            "reason": feed_reason,
+        },
+        "BINANCE_OFFICIAL_NEWS": {
+            "status": "NOT_ATTEMPTED",
+            "provenance": "UNKNOWN",
+            "source_capture_time_utc": None,
+            "reason": "no_official_news_evidence",
+        },
+        "SMART_MONEY": {
+            "status": smart_status,
+            "provenance": smart_provenance,
+            "source_capture_time_utc": smart_capture,
+            "reason": smart_reason,
+            "evidence_path": smart_money.get("evidence_path") if smart_money else None,
+        },
+        "PROFILE": {
+            "status": profile_status,
+            "provenance": str(profile.get("provenance") or "UNKNOWN").upper(),
+            "source_capture_time_utc": profile_capture,
+            "reason": str(profile.get("reason") or "profile_channel_summary"),
+            "evidence_path": profile.get("evidence_path"),
+        },
+        "MARKET_CATALOG": {
+            "status": market_status,
+            "provenance": str(payload.get("market_provenance") or "UNKNOWN").upper(),
+            "source_capture_time_utc": market_capture,
+            "reason": market_reason,
+        },
+    }
+
+
+def _normalize_source_coverage(value: Any, name: str) -> dict[str, Any]:
+    source = _mapping(value, name)
+    status = str(source.get("status") or "").upper()
+    if status not in _SOURCE_STATUSES:
+        raise ReportValidationError(f"{name}.status is invalid")
+    provenance = str(source.get("provenance") or "UNKNOWN").upper()
+    if provenance not in _SOURCE_PROVENANCE:
+        raise ReportValidationError(f"{name}.provenance is invalid")
+
+    started = _first_time(source, "capture_started_at_utc", "started_at_utc")
+    completed = _first_time(source, "capture_completed_at_utc", "completed_at_utc")
+    captured = _first_time(
+        source,
+        "source_capture_time_utc",
+        "source_capture_at_utc",
+        "captured_at_utc",
+    )
+    normalized_times: dict[str, str | None] = {}
+    for field, raw in (
+        ("capture_started_at_utc", started),
+        ("capture_completed_at_utc", completed),
+        ("source_capture_time_utc", captured or completed),
+    ):
+        if raw is None:
+            normalized_times[field] = None
+            continue
+        try:
+            normalized_times[field] = format_utc(parse_utc(raw))
+        except (ContractViolation, TypeError) as exc:
+            raise ReportValidationError(f"{name}.{field} must be timezone-aware") from exc
+    if (
+        normalized_times["capture_started_at_utc"] is not None
+        and normalized_times["capture_completed_at_utc"] is not None
+        and parse_utc(normalized_times["capture_completed_at_utc"])
+        < parse_utc(normalized_times["capture_started_at_utc"])
+    ):
+        raise ReportValidationError(f"{name} capture completion precedes start")
+    reason = source.get("reason")
+    if reason is not None and not isinstance(reason, str):
+        raise ReportValidationError(f"{name}.reason must be a string")
+    if status == "COMPLETE" and normalized_times["source_capture_time_utc"] is None:
+        status = "PARTIAL"
+        reason = (
+            f"{reason};source_capture_time_missing"
+            if reason
+            else "source_capture_time_missing"
+        )
+    if status == "COMPLETE" and provenance == "UNKNOWN":
+        status = "PARTIAL"
+        reason = (
+            f"{reason};source_provenance_missing"
+            if reason
+            else "source_provenance_missing"
+        )
+    evidence_path = source.get("evidence_path")
+    if evidence_path is not None and (
+        not isinstance(evidence_path, str) or not evidence_path.strip()
+    ):
+        raise ReportValidationError(f"{name}.evidence_path must be a non-empty string")
+    return {
+        "status": status,
+        "provenance": provenance,
+        **normalized_times,
+        "reason": reason,
+        "evidence_path": evidence_path,
+    }
 
 
 def _author_coverage(value: Any) -> dict[str, dict[str, Any]]:

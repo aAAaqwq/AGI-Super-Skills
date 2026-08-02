@@ -1,3 +1,4 @@
+from dataclasses import replace
 from datetime import datetime, timezone
 from decimal import Decimal
 from types import MappingProxyType
@@ -169,6 +170,189 @@ class DerivationPolicyTests(unittest.TestCase):
         self.assertEqual(DerivationDisposition.AUTHOR, result.disposition)
         self.assertIs(signal, result.candidate)
         self.assertEqual(("AUTHOR_PARAMETERS_VALID",), result.reasons)
+
+    def test_author_plan_stopped_after_publication_cannot_revive_at_decision(self) -> None:
+        signal = extract_signal(
+            post(
+                "BTCUSDT LONG\nEntry: 103 - 105\nStop Loss: 100\n"
+                "TP1: 112\nTP2: 121\nInvalidation: 4h structure breaks"
+            ),
+            author(),
+        )
+        market = complete_market(current_price=Decimal("105"))
+        replay = list(market.candles["15m"])
+        stopped = replay[-3]
+        replay[-3] = replace(
+            stopped,
+            open=Decimal("104"),
+            high=Decimal("106"),
+            low=Decimal("99"),
+            close=Decimal("104"),
+        )
+        market = replace(
+            market,
+            candles=MappingProxyType({**market.candles, "15m": tuple(replay)}),
+        )
+
+        result = apply_derivation_policy(signal, market)
+
+        self.assertEqual(DerivationDisposition.REJECTED, result.disposition)
+        self.assertIn("AUTHOR_STOP_HIT_BEFORE_DECISION", result.reasons)
+
+    def test_publication_candle_stop_touch_is_ambiguous_and_fails_closed(self) -> None:
+        signal = extract_signal(
+            post(
+                "BTCUSDT LONG\nEntry: 103 - 105\nStop Loss: 100\n"
+                "TP1: 112\nTP2: 121",
+                published_at="2026-08-01T07:50:00Z",
+            ),
+            author(),
+        )
+        market = complete_market(current_price=Decimal("105"))
+        replay = list(market.candles["15m"])
+        overlap = replay[-1]
+        replay[-1] = replace(overlap, low=Decimal("99"))
+        market = replace(
+            market,
+            candles=MappingProxyType({**market.candles, "15m": tuple(replay)}),
+        )
+
+        result = apply_derivation_policy(signal, market)
+
+        self.assertEqual(DerivationDisposition.REJECTED, result.disposition)
+        self.assertIn("AUTHOR_STOP_HIT_BEFORE_DECISION", result.reasons)
+        self.assertIn("PUBLICATION_CANDLE_PATH_AMBIGUOUS_ASSUMED_HIT", result.reasons)
+
+    def test_candle_closing_exactly_at_decision_is_included_in_replay(self) -> None:
+        signal = extract_signal(
+            post(
+                "BTCUSDT LONG\nEntry: 103 - 105\nStop Loss: 100\n"
+                "TP1: 112\nTP2: 121"
+            ),
+            author(),
+        )
+        market = complete_market(current_price=Decimal("105"))
+        replay = list(market.candles["15m"])
+        decision_close = replay[-1]
+        replay[-1] = replace(
+            decision_close,
+            low=Decimal("99"),
+            close_time=DECISION_MS,
+        )
+        market = replace(
+            market,
+            candles=MappingProxyType({**market.candles, "15m": tuple(replay)}),
+        )
+
+        result = apply_derivation_policy(signal, market)
+
+        self.assertIn("AUTHOR_STOP_HIT_BEFORE_DECISION", result.reasons)
+
+    def test_author_stop_structure_requires_prepublication_closed_candles(self) -> None:
+        signal = extract_signal(
+            post(
+                "BTCUSDT LONG\nEntry: 103 - 105\nStop Loss: 90\n"
+                "TP1: 130\nTP2: 150",
+                published_at="2026-08-01T03:00:00Z",
+            ),
+            author(),
+        )
+
+        result = apply_derivation_policy(signal, complete_market())
+
+        self.assertEqual(DerivationDisposition.REJECTED, result.disposition)
+        self.assertIn("AUTHOR_STOP_STRUCTURE_UNAVAILABLE", result.reasons)
+
+    def test_author_plan_tp_hit_after_publication_cannot_revive_at_decision(self) -> None:
+        signal = extract_signal(
+            post(
+                "BTCUSDT LONG\nEntry: 103 - 105\nStop Loss: 100\n"
+                "TP1: 112\nTP2: 121"
+            ),
+            author(),
+        )
+        market = complete_market(current_price=Decimal("105"))
+        replay = list(market.candles["15m"])
+        reached = replay[-3]
+        replay[-3] = replace(
+            reached,
+            open=Decimal("105"),
+            high=Decimal("113"),
+            low=Decimal("104"),
+            close=Decimal("108"),
+        )
+        market = replace(
+            market,
+            candles=MappingProxyType({**market.candles, "15m": tuple(replay)}),
+        )
+
+        result = apply_derivation_policy(signal, market)
+
+        self.assertEqual(DerivationDisposition.REJECTED, result.disposition)
+        self.assertIn("AUTHOR_TP_HIT_BEFORE_DECISION", result.reasons)
+
+    def test_same_candle_stop_and_tp_uses_conservative_stop_first_order(self) -> None:
+        signal = extract_signal(
+            post(
+                "BTCUSDT LONG\nEntry: 103 - 105\nStop Loss: 100\n"
+                "TP1: 112\nTP2: 121"
+            ),
+            author(),
+        )
+        market = complete_market(current_price=Decimal("105"))
+        replay = list(market.candles["15m"])
+        ambiguous = replay[-3]
+        replay[-3] = replace(
+            ambiguous,
+            open=Decimal("104"),
+            high=Decimal("113"),
+            low=Decimal("99"),
+            close=Decimal("108"),
+        )
+        market = replace(
+            market,
+            candles=MappingProxyType({**market.candles, "15m": tuple(replay)}),
+        )
+
+        result = apply_derivation_policy(signal, market)
+
+        self.assertEqual(
+            (
+                "AUTHOR_STOP_HIT_BEFORE_DECISION",
+                "SAME_CANDLE_STOP_AND_TP_ASSUMED_STOP_FIRST",
+            ),
+            result.reasons,
+        )
+
+    def test_author_stop_too_narrow_relative_to_atr_is_rejected_despite_high_rr(self) -> None:
+        signal = extract_signal(
+            post(
+                "BTCUSDT LONG\nEntry: 103 - 105\nStop Loss: 103.9\n"
+                "TP1: 112\nTP2: 121",
+                published_at="2026-08-01T07:50:00Z",
+            ),
+            author(),
+        )
+
+        result = apply_derivation_policy(signal, complete_market())
+
+        self.assertEqual(DerivationDisposition.REJECTED, result.disposition)
+        self.assertIn("AUTHOR_STOP_TOO_NARROW_VS_ATR", result.reasons)
+
+    def test_author_stop_inside_recent_market_structure_is_rejected(self) -> None:
+        signal = extract_signal(
+            post(
+                "BTCUSDT LONG\nEntry: 103 - 105\nStop Loss: 102.9\n"
+                "TP1: 112\nTP2: 121",
+                published_at="2026-08-01T07:50:00Z",
+            ),
+            author(),
+        )
+
+        result = apply_derivation_policy(signal, complete_market())
+
+        self.assertEqual(DerivationDisposition.REJECTED, result.disposition)
+        self.assertIn("AUTHOR_STOP_INSIDE_RECENT_STRUCTURE", result.reasons)
 
     def test_missing_author_prices_are_rederived_as_pullback_with_exact_atr_buffer(self) -> None:
         signal = extract_signal(post("BTCUSDT LONG\nBullish continuation structure"), author())

@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import timedelta
 from typing import Any, Iterable
 
 from .contracts import (
     ContractViolation,
     canonical_post_id,
     canonical_profile_username,
+    format_utc,
+    parse_utc,
 )
 
 
@@ -106,6 +109,73 @@ class DeduplicatedDiscovery:
     source_record_count: int
     unique_post_count: int
     duplicate_source_records: int
+
+
+@dataclass(frozen=True, slots=True)
+class FeedSnapshotCapture:
+    """Validated point-in-time identity for one Feed discovery snapshot."""
+
+    captured_at_utc: str
+    record_count: int
+
+
+def validate_feed_snapshot(
+    payload: Any,
+    *,
+    consumed_at: Any,
+    maximum_age: timedelta,
+) -> FeedSnapshotCapture:
+    """Fail closed when a report would consume stale or future Feed evidence."""
+
+    if not isinstance(payload, dict):
+        raise ContractViolation("Feed snapshot must be an object")
+    if maximum_age <= timedelta(0):
+        raise ContractViolation("Feed snapshot maximum_age must be positive")
+    captured_value = payload.get("scanned_at", payload.get("captured_at"))
+    if captured_value is None:
+        raise ContractViolation("Feed snapshot is missing scanned_at")
+    captured = parse_utc(captured_value)
+    consumed = parse_utc(consumed_at)
+    if captured > consumed:
+        raise ContractViolation("Feed snapshot was captured after consumption")
+    if consumed - captured > maximum_age:
+        raise ContractViolation("Feed snapshot is stale")
+    posts = payload.get("posts")
+    if not isinstance(posts, list):
+        raise ContractViolation("Feed snapshot posts must be a list")
+    return FeedSnapshotCapture(
+        captured_at_utc=format_utc(captured),
+        record_count=len(posts),
+    )
+
+
+def feed_snapshot_post_urls(
+    payload: Any,
+    *,
+    limit: int,
+) -> tuple[str, ...]:
+    """Return canonical URLs from the exact validated in-memory snapshot."""
+
+    if not isinstance(limit, int) or isinstance(limit, bool) or limit < 1:
+        raise ContractViolation("Feed snapshot limit must be positive")
+    if not isinstance(payload, dict) or not isinstance(payload.get("posts"), list):
+        raise ContractViolation("Feed snapshot posts must be a list")
+    urls: list[str] = []
+    seen: set[str] = set()
+    for row in payload["posts"]:
+        if not isinstance(row, dict) or not isinstance(row.get("url"), str):
+            continue
+        try:
+            post_id = canonical_post_id(row["url"])
+        except ContractViolation:
+            continue
+        url = f"https://www.binance.com/en/square/post/{post_id}"
+        if url not in seen:
+            seen.add(url)
+            urls.append(url)
+        if len(urls) >= limit:
+            break
+    return tuple(urls)
 
 
 def _author_field(author: Any, field: str) -> Any:
@@ -454,13 +524,16 @@ __all__ = [
     "CanonicalPostDiscovery",
     "ChannelObservation",
     "DeduplicatedDiscovery",
+    "FeedSnapshotCapture",
     "ProfileFetchPlan",
     "ProfileFetchCoverage",
     "ProfileFetchOutcome",
     "ProfileFetchTarget",
     "deduplicate_post_observations",
+    "feed_snapshot_post_urls",
     "observations_from_feed_cards",
     "parse_profile_content_response",
     "plan_profile_fetches",
     "reconcile_profile_fetch_plan",
+    "validate_feed_snapshot",
 ]

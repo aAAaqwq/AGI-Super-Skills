@@ -19,6 +19,12 @@ from .contracts import (
 )
 
 
+SMART_MONEY_SQUARE_MAPPING_SCHEMA = (
+    "binance-smart-money-square-identity-mapping/v1"
+)
+IDENTITY_EVIDENCE_PROVENANCE = frozenset({"LIVE_CAPTURE", "FIXTURE_REPLAY"})
+
+
 @dataclass(frozen=True, slots=True)
 class AuthorProfile:
     author_id: str
@@ -65,6 +71,40 @@ class SeedProfileEvidence:
     source_system: str
     profiles: tuple[SeedAuthorIdentity, ...]
     leaderboard_coverage: dict[str, Any]
+
+
+@dataclass(frozen=True, slots=True)
+class SmartMoneySquareIdentityMapping:
+    """One explicitly evidenced, one-to-one source identity binding."""
+
+    top_trader_id: str
+    square_uid: str
+    verified_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class SmartMoneySquareIdentityEvidence:
+    """Auditable file evidence; aliases and display names are intentionally absent."""
+
+    schema: str
+    captured_at: str
+    provenance: str
+    evidence_path: str
+    evidence_sha256: str
+    mappings: tuple[SmartMoneySquareIdentityMapping, ...]
+
+    def square_uid_for(self, top_trader_id: str) -> str | None:
+        if not isinstance(top_trader_id, str) or not top_trader_id.strip():
+            return None
+        requested = top_trader_id.strip()
+        return next(
+            (
+                mapping.square_uid
+                for mapping in self.mappings
+                if mapping.top_trader_id == requested
+            ),
+            None,
+        )
 
 
 LEADERBOARD_METRICS = ("PNL", "ROI", "VOLUME", "WIN_RATE")
@@ -606,6 +646,107 @@ def assess_leaderboard_coverage(
     )
 
 
+def load_smart_money_square_identity_evidence(
+    path: str | Path,
+    *,
+    expected_sha256: str | None = None,
+) -> SmartMoneySquareIdentityEvidence:
+    """Load an explicit ``topTraderId`` → ``squareUid`` evidence document.
+
+    The file hash, capture time, provenance, schema, and one-to-one mapping are
+    all part of the public contract.  Names and aliases are never considered.
+    """
+
+    evidence_path = Path(path)
+    try:
+        content = evidence_path.read_bytes()
+        payload = json.loads(content)
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ContractViolation(
+            f"cannot read Smart Money identity mapping evidence: {evidence_path}"
+        ) from exc
+    digest = sha256(content).hexdigest()
+    if expected_sha256 is not None and (
+        not isinstance(expected_sha256, str)
+        or expected_sha256.casefold() != digest
+    ):
+        raise ContractViolation("Smart Money identity mapping evidence SHA256 mismatch")
+    if not isinstance(payload, dict):
+        raise ContractViolation("Smart Money identity mapping evidence must be an object")
+    if payload.get("schema") != SMART_MONEY_SQUARE_MAPPING_SCHEMA:
+        raise ContractViolation(
+            f"Smart Money identity mapping schema must be {SMART_MONEY_SQUARE_MAPPING_SCHEMA}"
+        )
+    captured_raw = payload.get("captured_at_utc", payload.get("verified_at_utc"))
+    try:
+        captured_at = format_utc(captured_raw)
+    except ContractViolation as exc:
+        raise ContractViolation(
+            "Smart Money identity mapping evidence requires captured_at_utc"
+        ) from exc
+    provenance = str(payload.get("provenance") or "").upper()
+    if provenance not in IDENTITY_EVIDENCE_PROVENANCE:
+        raise ContractViolation(
+            "Smart Money identity mapping provenance must be LIVE_CAPTURE or FIXTURE_REPLAY"
+        )
+    raw_mappings = payload.get("mappings")
+    if raw_mappings is None and (
+        "topTraderId" in payload or "squareUid" in payload
+    ):
+        raw_mappings = [payload]
+    if not isinstance(raw_mappings, list) or not raw_mappings:
+        raise ContractViolation(
+            "Smart Money identity mapping evidence requires non-empty mappings"
+        )
+
+    mappings: list[SmartMoneySquareIdentityMapping] = []
+    seen_traders: set[str] = set()
+    seen_square_uids: set[str] = set()
+    for index, raw in enumerate(raw_mappings):
+        if not isinstance(raw, dict):
+            raise ContractViolation(f"identity mappings[{index}] must be an object")
+        top_trader_id = _required_text(
+            raw.get("topTraderId"), f"identity mappings[{index}].topTraderId"
+        )
+        square_uid = _required_text(
+            raw.get("squareUid"), f"identity mappings[{index}].squareUid"
+        )
+        if top_trader_id in seen_traders:
+            raise ContractViolation(
+                f"duplicate identity mapping topTraderId: {top_trader_id}"
+            )
+        if square_uid in seen_square_uids:
+            raise ContractViolation(
+                f"identity mapping squareUid is not one-to-one: {square_uid}"
+            )
+        seen_traders.add(top_trader_id)
+        seen_square_uids.add(square_uid)
+        verified_raw = raw.get(
+            "verified_at_utc", raw.get("captured_at_utc", captured_at)
+        )
+        try:
+            verified_at = format_utc(verified_raw)
+        except ContractViolation as exc:
+            raise ContractViolation(
+                f"identity mappings[{index}].verified_at_utc is invalid"
+            ) from exc
+        mappings.append(
+            SmartMoneySquareIdentityMapping(
+                top_trader_id=top_trader_id,
+                square_uid=square_uid,
+                verified_at=verified_at,
+            )
+        )
+    return SmartMoneySquareIdentityEvidence(
+        schema=SMART_MONEY_SQUARE_MAPPING_SCHEMA,
+        captured_at=captured_at,
+        provenance=provenance,
+        evidence_path=str(evidence_path),
+        evidence_sha256=digest,
+        mappings=tuple(mappings),
+    )
+
+
 def load_seed_profile_evidence(path: str | Path) -> SeedProfileEvidence:
     """Load a fixed profile-seed artifact without promoting authors or ranks.
 
@@ -695,9 +836,7 @@ def load_seed_profile_evidence(path: str | Path) -> SeedProfileEvidence:
         "covered": 0,
         "expected": 4,
         "status": "PARTIAL_SEED_DISCOVERY",
-        "reason": (
-            "Profile种子只验证身份合同；未提供完整TOP30榜单"
-        ),
+        "reason": "Profile种子只验证身份合同；未提供完整TOP30榜单",
         "full_leaderboards_covered": 0,
         "rendered_rank_rows": 0,
         "expected_rows_per_leaderboard": 30,
@@ -727,9 +866,12 @@ __all__ = [
     "RejectedLeaderboardRow",
     "SeedAuthorIdentity",
     "SeedProfileEvidence",
+    "SmartMoneySquareIdentityEvidence",
+    "SmartMoneySquareIdentityMapping",
     "duration_tier",
     "assess_leaderboard_coverage",
     "load_seed_profile_evidence",
+    "load_smart_money_square_identity_evidence",
     "parse_30d_leaderboard",
     "parse_30d_leaderboards",
     "parse_author_profile",
