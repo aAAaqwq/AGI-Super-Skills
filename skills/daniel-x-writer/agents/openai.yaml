@@ -1,0 +1,4 @@
+interface:
+  display_name: "Daniel X Writer"
+  short_description: "用真实、拟人、证据驱动的 Daniel 风格写 X 帖子"
+  default_prompt: "Use $daniel-x-writer to rewrite this idea as a concise, authentic X post within the requested character limit."

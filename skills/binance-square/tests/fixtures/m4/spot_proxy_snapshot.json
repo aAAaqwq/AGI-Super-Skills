@@ -1,0 +1,94 @@
+{
+  "fixture_version": "m4-spot-proxy-api-1",
+  "source_system": "BINANCE_SPOT_PUBLIC_REST",
+  "origin": "https://api.binance.com",
+  "capture_window_utc": {
+    "start": "2026-08-01T07:05:29.965Z",
+    "end": "2026-08-01T07:05:37.663Z"
+  },
+  "safety": {
+    "public_get_only": true,
+    "credentials_present": false,
+    "account_or_trade_endpoints_present": false
+  },
+  "authoritative_server_time_ms": 1785567931171,
+  "authoritative_server_time_utc": "2026-08-01T07:05:31.171Z",
+  "symbol": "SOLUSDT",
+  "catalog_lookup": {
+    "url": "https://api.binance.com/api/v3/exchangeInfo?symbol=SOLUSDT",
+    "requested_at_utc": "2026-08-01T07:05:31.179Z",
+    "status": 200,
+    "response_sha256": "bff78543640e9070fda5c6daa9c33297487bdf9231848db4689b18324296644d",
+    "selected_record": {
+      "symbol": "SOLUSDT",
+      "status": "TRADING",
+      "baseAsset": "SOL",
+      "quoteAsset": "USDT",
+      "isSpotTradingAllowed": true
+    }
+  },
+  "price": {
+    "url": "https://api.binance.com/api/v3/ticker/price?symbol=SOLUSDT",
+    "requested_at_utc": "2026-08-01T07:05:31.705Z",
+    "status": 200,
+    "observed_x_mbx_used_weight_1m": "23",
+    "body": {"symbol": "SOLUSDT", "price": "73.00000000"}
+  },
+  "kline_contract": {
+    "endpoint": "/api/v3/klines",
+    "request_limit": 3,
+    "field_order": [
+      "open_time", "open", "high", "low", "close", "volume", "close_time",
+      "quote_asset_volume", "number_of_trades", "taker_buy_base_volume",
+      "taker_buy_quote_volume", "ignore"
+    ],
+    "closure_rule": "closed iff close_time < authoritative /api/v3/time serverTime",
+    "policy_boundary": "May proxy current price and OHLC price structure for BB/ATR only. Must not proxy futures volume, mark/index price, funding, open interest, liquidations, or futures depth."
+  },
+  "klines": {
+    "15m": {
+      "requested_at_utc": "2026-08-01T07:05:32.750Z",
+      "status": 200,
+      "observed_x_mbx_used_weight_1m": "25",
+      "raw_body": [
+        [1785565800000, "72.99000000", "73.01000000", "72.95000000", "72.98000000", "5416.03100000", 1785566699999, "395275.13522000", 1475, "3093.62000000", "225776.11931000", "0"],
+        [1785566700000, "72.99000000", "73.02000000", "72.95000000", "73.00000000", "15737.72800000", 1785567599999, "1148687.16645000", 1203, "7142.70800000", "521367.14483000", "0"],
+        [1785567600000, "73.00000000", "73.01000000", "72.97000000", "73.00000000", "2812.02000000", 1785568499999, "205230.02807000", 334, "729.17300000", "53222.22366000", "0"]
+      ],
+      "closed_flags": [true, true, false]
+    },
+    "1h": {
+      "requested_at_utc": "2026-08-01T07:05:33.978Z",
+      "status": 200,
+      "observed_x_mbx_used_weight_1m": "27",
+      "raw_body": [
+        [1785560400000, "73.17000000", "73.20000000", "72.86000000", "72.93000000", "31897.88000000", 1785563999999, "2330200.10684000", 5984, "11267.15900000", "823466.29377000", "0"],
+        [1785564000000, "72.94000000", "73.02000000", "72.89000000", "73.00000000", "41221.94900000", 1785567599999, "3008209.15327000", 7733, "22070.60500000", "1610510.18802000", "0"],
+        [1785567600000, "73.00000000", "73.01000000", "72.97000000", "73.00000000", "2813.68800000", 1785571199999, "205351.80207000", 336, "730.17300000", "53295.23366000", "0"]
+      ],
+      "closed_flags": [true, true, false]
+    },
+    "4h": {
+      "requested_at_utc": "2026-08-01T07:05:35.639Z",
+      "status": 200,
+      "observed_x_mbx_used_weight_1m": "29",
+      "raw_body": [
+        [1785528000000, "73.08000000", "73.23000000", "72.56000000", "72.87000000", "139717.22100000", 1785542399999, "10187540.60986000", 39079, "57315.67400000", "4179357.10925000", "0"],
+        [1785542400000, "72.87000000", "73.16000000", "72.86000000", "73.03000000", "222168.52600000", 1785556799999, "16226186.84695000", 38644, "91136.09500000", "6656202.82102000", "0"],
+        [1785556800000, "73.03000000", "73.21000000", "72.86000000", "73.00000000", "96434.59300000", 1785571199999, "7042547.67964000", 18997, "43673.78900000", "3189530.19709000", "0"]
+      ],
+      "closed_flags": [true, true, false]
+    },
+    "1d": {
+      "requested_at_utc": "2026-08-01T07:05:36.542Z",
+      "status": 200,
+      "observed_x_mbx_used_weight_1m": "51",
+      "raw_body": [
+        [1785369600000, "73.69000000", "74.99000000", "73.14000000", "74.51000000", "1218863.45100000", 1785455999999, "90486948.37483000", 404129, "583483.93200000", "43322957.66640000", "0"],
+        [1785456000000, "74.52000000", "75.29000000", "72.56000000", "72.87000000", "1337998.05100000", 1785542399999, "98541886.14749000", 448362, "608554.02600000", "44835603.37254000", "0"],
+        [1785542400000, "72.87000000", "73.21000000", "72.86000000", "73.00000000", "318603.11900000", 1785628799999, "23268734.52659000", 57641, "134809.88400000", "9845733.01811000", "0"]
+      ],
+      "closed_flags": [true, true, false]
+    }
+  }
+}
