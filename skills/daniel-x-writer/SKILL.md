@@ -1,6 +1,7 @@
 ---
 name: daniel-x-writer
-description: "Write and rewrite concise Chinese X/Twitter posts in Daniel's authentic first-person voice: human emotion, restrained agent personification, numerical evidence, explicit action and invalidation rules, and a sharp reflective ending. Use for crypto or quant trading reviews, AI/agent observations, technical lessons, founder reflections, and any request to shorten, humanize, or fit a post within X's character limit."
+description: "Use for concise Chinese X/Twitter posts in Daniel's first-person voice, mixing human tension, numerical evidence, explicit decision rules, and a sharp reflective ending."
+metadata: {"runtime_effects":"local-read-only; does not publish or call network services"}
 ---
 
 # Daniel X Writer
@@ -42,6 +43,12 @@ python3 scripts/check_x_length.py /absolute/path/to/draft.txt
 ```
 
 The checker deliberately overcounts non-ASCII characters and URLs conservatively. If it reports `over`, shorten the post and rerun it. Treat the final X composer as authoritative when available.
+
+Run its local regression tests after changing the checker:
+
+```bash
+python3 -m unittest scripts/test_check_x_length.py
+```
 
 ## Truth and risk rules
 

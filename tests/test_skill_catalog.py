@@ -82,7 +82,7 @@ class SkillCatalogTests(unittest.TestCase):
         index = json.loads(INDEX_PATH.read_text(encoding="utf-8"))
         by_id = {item["skill_id"]: item for item in index["skills"]}
 
-        unreviewed = by_id["5minbtc"]
+        unreviewed = by_id["btc-5min-scalper"]
         self.assertEqual(unreviewed["provenance"]["origin_kind"], "unknown")
         self.assertEqual(unreviewed["provenance"]["review_state"], "unreviewed")
         self.assertEqual(unreviewed["curation"]["status"], "unscored")

@@ -14,6 +14,7 @@ Start with a small team pack when possible. A large inventory improves coverage,
 | Research, draft, and measure | [Content Creator](../starter-kits/content-creator/) | Drafting workflow; publishing remains human-controlled |
 | Backtest with risk review | [Quant Trader](../starter-kits/quant-trader/) | Research only; no live-trading claim |
 | Use native Codex workflows | [Codex package](../.codex/INDEX.md) | Separate curated distribution and sync policy |
+| Browse first-party methods | [Daniel's Original Skills](./original/) | Reviewed authorship and provenance; runtime evidence remains separate |
 
 ## 👥 Skills and C-suite specialists
 

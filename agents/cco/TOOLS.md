@@ -39,10 +39,10 @@
 这些 Skill 依赖特定 Harness、连接器或外部能力；通用安装器不会自动复制或启用。
 
 - [`ai-marketing-videos`](../../skills/ai-marketing-videos/) — 来源待核 · 尚未评分 · 运行证据：待验证
-- [`content-cover-gen`](../../skills/content-cover-gen/) — 来源待核 · 尚未评分 · 运行证据：待验证
-- [`content-illustration-strategy`](../../skills/content-illustration-strategy/) — 来源待核 · 尚未评分 · 运行证据：待验证
+- [`content-cover-gen`](../../skills/content-cover-gen/) — 项目原创 · 尚未评分 · 运行证据：待验证
+- [`content-illustration-strategy`](../../skills/content-illustration-strategy/) — 项目原创 · 尚未评分 · 运行证据：待验证
 - [`content-ops-toolkit`](../../skills/content-ops-toolkit/) — 来源待核 · 尚未评分 · 运行证据：待验证
-- [`douyin-smart-publish`](../../skills/douyin-smart-publish/) — 来源待核 · 尚未评分 · 运行证据：待验证
+- [`douyin-smart-publish`](../../skills/douyin-smart-publish/) — 项目原创 · 尚未评分 · 运行证据：待验证
 - [`nano-banana-pro`](../../skills/nano-banana-pro/) — 来源待核 · 尚未评分 · 运行证据：待验证
 - [`seo-content-writer`](../../skills/seo-content-writer/) — 来源待核 · 尚未评分 · 运行证据：待验证
 - [`social-content`](../../skills/social-content/) — 来源待核 · 尚未评分 · 运行证据：待验证
