@@ -20,8 +20,12 @@ from scripts.collect_square_v4 import (
 )
 
 from .authors import (
+    SMART_MONEY_SQUARE_IDENTITY_CATALOG_SCHEMA,
+    SMART_MONEY_SQUARE_MAPPING_SCHEMA,
     SeedProfileEvidence,
+    SmartMoneySquareIdentityEvidence,
     load_seed_profile_evidence,
+    load_smart_money_square_identity_catalog,
     load_smart_money_square_identity_evidence,
 )
 from .binance_news import collect_binance_official_news
@@ -36,7 +40,12 @@ from .contracts import (
 )
 from .derivation import DerivationDisposition, DerivationResult, apply_derivation_policy
 from .discovery import (
+    CanonicalPostDiscovery,
+    ChannelObservation,
+    DeduplicatedDiscovery,
+    ProfileFetchOutcome,
     feed_snapshot_post_urls,
+    profile_first_detail_queue,
     plan_profile_fetches,
     reconcile_profile_fetch_plan,
     validate_feed_snapshot,
@@ -48,7 +57,12 @@ from .opportunities import (
     build_consensus_index,
     extract_signal,
 )
-from .profile_pipeline import ProfilePipelineResult, run_profile_pipeline
+from .profile_pipeline import (
+    ProfilePipelineResult,
+    collect_profile_pages,
+    public_get_profile_contents,
+    run_profile_pipeline,
+)
 from .reports import build_local_report, render_local_markdown
 from .scoring import build_opportunity_board, score_opportunity
 from .smart_money import (
@@ -64,7 +78,12 @@ from .smart_money import (
     verify_evidence_integrity,
 )
 from .square import PostDetail, discover_snapshot_post_urls
-from .storage import SQLiteRunLedger, SmartMoneyLeaderboardRowInput
+from .storage import (
+    PostDiscoveryObservationInput,
+    ProfileFetchOutcomeInput,
+    SQLiteRunLedger,
+    SmartMoneyLeaderboardRowInput,
+)
 from .tracking import tracking_signals_from_scored
 
 
@@ -95,6 +114,7 @@ class PipelineConfig:
     smart_money_enabled: bool = False
     smart_money_fixture: Path | None = None
     smart_money_square_mapping_evidence: Path | None = None
+    smart_money_square_mapping_catalog: Path | None = None
     official_news_enabled: bool = False
 
 
@@ -838,6 +858,66 @@ def _persist_smart_money(
         )
 
 
+def _persist_identity_mapping_evidence(
+    *,
+    ledger: SQLiteRunLedger,
+    evidence: SmartMoneySquareIdentityEvidence,
+    now: datetime,
+) -> None:
+    """Persist only active v2 evidence, revalidating each artifact in storage."""
+
+    if evidence.schema == SMART_MONEY_SQUARE_IDENTITY_CATALOG_SCHEMA:
+        if (
+            evidence.verification_status != "DIRECT_VERIFIED"
+            or evidence.promotion_status != "APPROVED"
+            or len(evidence.catalog_members) != len(evidence.mappings)
+        ):
+            raise ContractViolation(
+                "identity mapping catalog member evidence is incomplete"
+            )
+        records = tuple(
+            (mapping, artifact_path, artifact_sha256)
+            for mapping, (artifact_path, artifact_sha256) in zip(
+                evidence.mappings, evidence.catalog_members, strict=True
+            )
+        )
+    elif evidence.schema == SMART_MONEY_SQUARE_MAPPING_SCHEMA:
+        # A proposal may drive no Profile requests and must never create an
+        # active database projection. The legacy v1 fixture path is handled by
+        # the final branch below for backwards-compatible replay only.
+        if evidence.promotion_status == "PROPOSED":
+            return
+        if (
+            evidence.verification_status != "DIRECT_VERIFIED"
+            or evidence.promotion_status != "APPROVED"
+            or len(evidence.mappings) != 1
+        ):
+            raise ContractViolation(
+                "single identity mapping persistence requires one APPROVED v2 binding"
+            )
+        records = (
+            (
+                evidence.mappings[0],
+                evidence.evidence_path,
+                evidence.evidence_sha256,
+            ),
+        )
+    else:
+        # Legacy v1 evidence remains fixture-replay input only and cannot enter
+        # the v2 artifact/event projection.
+        return
+
+    for mapping, artifact_path, artifact_sha256 in records:
+        ledger.record_smart_money_square_identity_mapping(
+            top_trader_id=mapping.top_trader_id,
+            author_id=mapping.square_uid,
+            verified_at=mapping.verified_at,
+            evidence_path=artifact_path,
+            evidence_sha256=artifact_sha256,
+            now=now,
+        )
+
+
 def _extraction_failure_reason(error: ContractViolation) -> str:
     message = str(error).casefold()
     if "direction" in message:
@@ -1122,26 +1202,82 @@ def _real_discovery(
     legacy: Mapping[str, Any],
     *,
     snapshot_payload: Mapping[str, Any] | None = None,
-) -> tuple[str, ...]:
-    # Curated, explicitly extracted author signals are the primary evidence
-    # set.  Snapshot discovery is broad/noisy and may only fill remaining
-    # capacity; it must never evict a curated signal because of ``limit``.
-    urls: list[str] = list(legacy)
+    profile_observations: tuple[ChannelObservation, ...] = (),
+) -> DeduplicatedDiscovery:
+    # Mapped/seeded Profile observations are authoritative candidates and are
+    # never truncated by the broad Feed budget. Curated signal URLs remain the
+    # first Feed supplement, ahead of snapshot noise.
+    curated_observations = tuple(
+        ChannelObservation(
+            post_id=canonical_post_id(value),
+            post_url=(
+                "https://www.binance.com/en/square/post/"
+                f"{canonical_post_id(value)}"
+            ),
+            channel="CURATED_SIGNAL",
+        )
+        for value in legacy
+    )
+    feed_urls: list[str] = []
     if snapshot_payload is not None:
-        urls.extend(feed_snapshot_post_urls(snapshot_payload, limit=200))
+        feed_urls.extend(feed_snapshot_post_urls(snapshot_payload, limit=200))
     elif config.input_snapshot is not None:
-        urls.extend(discover_snapshot_post_urls(config.input_snapshot, limit=200))
-    unique: list[str] = []
-    seen: set[str] = set()
-    for value in urls:
+        feed_urls.extend(discover_snapshot_post_urls(config.input_snapshot, limit=200))
+    feed_observations: list[ChannelObservation] = []
+    for value in feed_urls:
         post_id = canonical_post_id(value)
         canonical = f"https://www.binance.com/en/square/post/{post_id}"
-        if canonical not in seen:
-            seen.add(canonical)
-            unique.append(canonical)
-        if len(unique) >= config.limit:
-            break
-    return tuple(unique)
+        feed_observations.append(
+            ChannelObservation(post_id=post_id, post_url=canonical, channel="FEED")
+        )
+    # The existing Profile-first selector owns the Feed budget. Curated signal
+    # candidates participate in that budget ahead of Feed noise, but their
+    # original source channel is restored below for lineage.
+    selection_feed = tuple(
+        ChannelObservation(
+            post_id=observation.post_id,
+            post_url=observation.post_url,
+            channel="FEED",
+        )
+        for observation in curated_observations
+    ) + tuple(feed_observations)
+    queued = profile_first_detail_queue(
+        profile_observations,
+        selection_feed,
+        feed_limit=config.limit,
+    )
+    selected_ids = {post.post_id for post in queued.posts}
+    source_observations = tuple(profile_observations) + tuple(
+        observation
+        for observation in (*curated_observations, *feed_observations)
+        if observation.post_id in selected_ids
+    )
+    by_post_id: dict[str, list[ChannelObservation]] = {
+        post.post_id: [] for post in queued.posts
+    }
+    for observation in source_observations:
+        by_post_id[observation.post_id].append(observation)
+    posts = tuple(
+        CanonicalPostDiscovery(
+            post_id=post.post_id,
+            post_url=post.post_url,
+            channels=tuple(
+                dict.fromkeys(
+                    observation.channel
+                    for observation in by_post_id[post.post_id]
+                )
+            ),
+            observations=tuple(by_post_id[post.post_id]),
+        )
+        for post in queued.posts
+    )
+    source_count = sum(len(post.observations) for post in posts)
+    return DeduplicatedDiscovery(
+        posts=posts,
+        source_record_count=source_count,
+        unique_post_count=len(posts),
+        duplicate_source_records=source_count - len(posts),
+    )
 
 
 def run_shadow_radar(
@@ -1172,7 +1308,16 @@ def run_shadow_radar(
     smart_money_requested = (
         config.smart_money_enabled or config.smart_money_fixture is not None
     )
-    if config.smart_money_square_mapping_evidence is not None and not smart_money_requested:
+    if (
+        config.smart_money_square_mapping_evidence is not None
+        and config.smart_money_square_mapping_catalog is not None
+    ):
+        raise ValueError("use either one Smart Money mapping artifact or one catalog")
+    identity_mapping_path = (
+        config.smart_money_square_mapping_catalog
+        or config.smart_money_square_mapping_evidence
+    )
+    if identity_mapping_path is not None and not smart_money_requested:
         raise ValueError("Smart Money identity mapping requires Smart Money collection")
     if (
         smart_money_requested
@@ -1306,19 +1451,24 @@ def run_shadow_radar(
             seed_evidence = load_seed_profile_evidence(
                 config.leaderboard_seed_evidence
             )
-        if config.smart_money_square_mapping_evidence is not None:
+        if identity_mapping_path is not None:
             try:
-                identity_mapping_content = (
-                    config.smart_money_square_mapping_evidence.read_bytes()
-                )
+                identity_mapping_content = identity_mapping_path.read_bytes()
             except OSError as exc:
                 raise ContractViolation(
                     "Smart Money identity mapping evidence is unreadable"
                 ) from exc
-            identity_mapping_evidence = load_smart_money_square_identity_evidence(
-                config.smart_money_square_mapping_evidence,
-                expected_sha256=sha256(identity_mapping_content).hexdigest(),
-            )
+            identity_mapping_digest = sha256(identity_mapping_content).hexdigest()
+            if config.smart_money_square_mapping_catalog is not None:
+                identity_mapping_evidence = load_smart_money_square_identity_catalog(
+                    identity_mapping_path,
+                    expected_sha256=identity_mapping_digest,
+                )
+            else:
+                identity_mapping_evidence = load_smart_money_square_identity_evidence(
+                    identity_mapping_path,
+                    expected_sha256=identity_mapping_digest,
+                )
             expected_provenance = (
                 "LIVE_CAPTURE" if config.mode == "real" else "FIXTURE_REPLAY"
             )
@@ -1330,6 +1480,8 @@ def run_shadow_radar(
             seed_evidence.profiles if seed_evidence is not None else None
         )
         profile_coverage = reconcile_profile_fetch_plan(profile_plan, ())
+        seed_coverage = profile_coverage
+        seed_page_results: list[dict[str, Any]] = []
         profile_channel_contract: dict[str, Any] = {
             "availability": profile_coverage.availability,
             "status": profile_coverage.status,
@@ -1352,6 +1504,74 @@ def run_shadow_radar(
             "source_records": profile_coverage.source_record_count,
             "tier_a_eligible": 0,
         }
+        seed_profile_contract = dict(profile_channel_contract)
+        seed_profile_observations: tuple[ChannelObservation, ...] = ()
+        profile_fetch_adapter = profile_content_fetcher or (
+            public_get_profile_contents if config.mode == "real" else None
+        )
+        if profile_plan.targets and profile_fetch_adapter is not None:
+            seed_capture = profile_capture_time
+            if seed_capture is None:
+                if config.mode == "fixture":
+                    raise ContractViolation(
+                        "fixture Profile collection requires profile_capture_time"
+                    )
+                seed_capture = runtime_clock()
+            seed_outcomes: list[ProfileFetchOutcome] = []
+            seed_observations: list[ChannelObservation] = []
+            for target in profile_plan.targets:
+                collection = collect_profile_pages(
+                    target.author_id,
+                    fetch_profile_contents=profile_fetch_adapter,
+                    decision_at=decision_at,
+                )
+                seed_observations.extend(collection.observations)
+                seed_page_results.append(
+                    {
+                        "author_id": target.author_id,
+                        "status": collection.status,
+                        "termination_reason": collection.reason,
+                        "pages_fetched": collection.pages_fetched,
+                        "post_count": len(collection.observations),
+                        "error": collection.error,
+                    }
+                )
+                seed_outcomes.append(
+                    ProfileFetchOutcome(
+                        target.author_id,
+                        collection.status,
+                        len(collection.observations),
+                        collection.error or (
+                            collection.reason
+                            if collection.status == "PARTIAL"
+                            else None
+                        ),
+                    )
+                )
+            seed_profile_observations = tuple(seed_observations)
+            seed_coverage = reconcile_profile_fetch_plan(
+                profile_plan,
+                seed_outcomes,
+            )
+            seed_profile_contract = {
+                "availability": seed_coverage.availability,
+                "status": seed_coverage.status,
+                "reason": seed_coverage.reason,
+                "provenance": (
+                    "LIVE_CAPTURE" if config.mode == "real" else "FIXTURE_REPLAY"
+                ),
+                "source_capture_time_utc": format_utc(seed_capture),
+                "evidence_path": seed_evidence.evidence_path if seed_evidence else None,
+                "planned_authors": seed_coverage.planned_count,
+                "complete_authors": seed_coverage.complete_count,
+                "empty_authors": seed_coverage.empty_count,
+                "partial_authors": seed_coverage.partial_count,
+                "failed_authors": seed_coverage.failed_count,
+                "not_attempted_authors": seed_coverage.not_attempted_count,
+                "source_records": seed_coverage.source_record_count,
+                "tier_a_eligible": 0,
+                "outcomes": seed_page_results,
+            }
 
         catalog = None
         market_failures: Counter[str] = Counter()
@@ -1378,6 +1598,177 @@ def run_shadow_radar(
                     "retry Binance server time precedes the frozen decision_at"
                 )
 
+        smart_money_document: dict[str, Any] | None = None
+        smart_money_summary: dict[str, Any] | None = None
+        profile_pipeline_result: ProfilePipelineResult | None = None
+        smart_money_profile_contract: dict[str, Any] = {
+            "status": "NOT_ATTEMPTED",
+            "reason": "smart_money_not_requested",
+            "provenance": "UNKNOWN",
+            "source_capture_time_utc": None,
+            "planned_authors": 0,
+            "complete_authors": 0,
+            "empty_authors": 0,
+            "partial_authors": 0,
+            "failed_authors": 0,
+            "not_attempted_authors": 0,
+            "source_records": 0,
+            "tier_a_eligible": 0,
+        }
+        if smart_money_requested:
+            current_stage = "smart_money"
+            if config.smart_money_fixture is not None:
+                smart_money_document = _load_smart_money_fixture(
+                    config.smart_money_fixture
+                )
+            elif smart_money_collector is not None:
+                smart_money_document = smart_money_collector()
+            else:
+                smart_money_document = collect_smart_money()
+            smart_money_summary = _smart_money_summary(
+                smart_money_document,
+                ledger,
+            )
+            smart_money_summary["evidence_path"] = str(smart_money_path)
+            profile_source_capture = profile_capture_time
+            if (
+                profile_fetch_adapter is not None
+                and identity_mapping_evidence is not None
+                and profile_source_capture is None
+            ):
+                if config.mode == "fixture":
+                    raise ContractViolation(
+                        "fixture Profile collection requires profile_capture_time"
+                    )
+                profile_source_capture = runtime_clock()
+            profile_pipeline_result = run_profile_pipeline(
+                _smart_money_top_trader_ids(smart_money_document),
+                mapping_evidence=identity_mapping_evidence,
+                fetch_profile_contents=profile_fetch_adapter,
+                source_capture_time_utc=(
+                    format_utc(profile_source_capture)
+                    if profile_source_capture is not None
+                    else None
+                ),
+                provenance=(
+                    "LIVE_CAPTURE" if config.mode == "real" else "FIXTURE_REPLAY"
+                ),
+                decision_at=decision_at,
+            )
+            smart_money_profile_contract = profile_pipeline_result.as_report_contract()
+            smart_money_summary["square_identity_mapping_coverage"] = dict(
+                smart_money_profile_contract["square_identity_mapping_coverage"]
+            )
+            smart_money_summary["tier_a_eligible"] = (
+                smart_money_profile_contract["tier_a_eligible"]
+            )
+
+        combined_profile_observations = tuple(
+            (*seed_profile_observations, *(
+                profile_pipeline_result.observations
+                if profile_pipeline_result is not None
+                else ()
+            ))
+        )
+        # Preserve cohort-specific denominators. The top level remains a
+        # compatibility summary and never represents seed coverage as Smart
+        # Money mapping coverage.
+        cohort_contracts = (smart_money_profile_contract, seed_profile_contract)
+        active_cohorts = tuple(
+            cohort
+            for cohort in cohort_contracts
+            if int(cohort.get("planned_authors", 0)) > 0
+        )
+        profile_channel_contract = dict(
+            active_cohorts[0]
+            if len(active_cohorts) == 1
+            else smart_money_profile_contract
+            if smart_money_requested
+            else seed_profile_contract
+        )
+        if len(active_cohorts) > 1:
+            statuses = {str(cohort["status"]) for cohort in active_cohorts}
+            if statuses <= {"COMPLETE", "EMPTY"}:
+                aggregate_status = "COMPLETE"
+            elif statuses == {"NOT_ATTEMPTED"}:
+                aggregate_status = "NOT_ATTEMPTED"
+            else:
+                aggregate_status = "PARTIAL"
+            profile_channel_contract.update(
+                {
+                    "status": aggregate_status,
+                    "reason": "PROFILE_COHORTS_REPORTED_SEPARATELY",
+                    **{
+                        field: sum(int(cohort.get(field, 0)) for cohort in active_cohorts)
+                        for field in (
+                            "planned_authors",
+                            "complete_authors",
+                            "empty_authors",
+                            "partial_authors",
+                            "failed_authors",
+                            "not_attempted_authors",
+                            "source_records",
+                        )
+                    },
+                }
+            )
+        profile_channel_contract["smart_money_profiles"] = smart_money_profile_contract
+        profile_channel_contract["seed_profiles"] = seed_profile_contract
+        profile_channel_contract["cohort_denominators"] = {
+            "smart_money_profiles": int(
+                smart_money_profile_contract.get("planned_authors", 0)
+            ),
+            "seed_profiles": int(seed_profile_contract.get("planned_authors", 0)),
+        }
+
+        seed_page_results_by_author = {
+            str(result["author_id"]): result for result in seed_page_results
+        }
+        persisted_profile_outcomes: list[ProfileFetchOutcomeInput] = []
+        for outcome in seed_coverage.outcomes:
+            page_result = seed_page_results_by_author.get(outcome.author_id, {})
+            persisted_profile_outcomes.append(
+                ProfileFetchOutcomeInput(
+                    profile_cohort="SEED_PROFILE",
+                    planned_author_id=outcome.author_id,
+                    planned_id_type="SQUARE_UID",
+                    resolved_author_id=outcome.author_id,
+                    fetch_status=outcome.status,
+                    post_count=outcome.post_count,
+                    pages_fetched=int(page_result.get("pages_fetched", 0)),
+                    termination_reason=page_result.get("termination_reason"),
+                    error_detail=page_result.get("error") or outcome.error,
+                )
+            )
+        if profile_pipeline_result is not None:
+            persisted_profile_outcomes.extend(
+                ProfileFetchOutcomeInput(
+                    profile_cohort="SMART_MONEY_PROFILE",
+                    planned_author_id=outcome.top_trader_id,
+                    planned_id_type="TOP_TRADER_ID",
+                    resolved_author_id=outcome.square_uid,
+                    fetch_status=outcome.status,
+                    post_count=outcome.post_count,
+                    pages_fetched=outcome.pages_fetched,
+                    termination_reason=outcome.termination_reason,
+                    error_detail=outcome.error,
+                )
+                for outcome in profile_pipeline_result.outcomes
+            )
+        profile_capture_candidates = [now]
+        for cohort in (seed_profile_contract, smart_money_profile_contract):
+            captured_at = cohort.get("source_capture_time_utc")
+            if captured_at is not None:
+                profile_capture_candidates.append(parse_utc(captured_at))
+        profile_outcome_observed_at = max(profile_capture_candidates)
+        current_stage = "profile_fetch_coverage"
+        ledger.record_profile_fetch_outcomes(
+            logical_run_id=logical_run.logical_run_id,
+            attempt_id=attempt.attempt_id,
+            outcomes=persisted_profile_outcomes,
+            observed_at=profile_outcome_observed_at,
+        )
+
         current_stage = "fetch"
         if config.mode == "fixture":
             assert config.fixture_dir is not None
@@ -1385,19 +1776,74 @@ def run_shadow_radar(
                 config.fixture_dir,
                 limit=config.limit,
                 decision_at=decision_at,
+                profile_observations=combined_profile_observations,
             )
         else:
-            urls = _real_discovery(
+            discovery = _real_discovery(
                 config,
                 legacy_signals,
                 snapshot_payload=discovery_snapshot_payload,
+                profile_observations=combined_profile_observations,
             )
+            profile_expectations = {
+                observation.post_id: observation
+                for observation in combined_profile_observations
+            }
             raw = _collect_live_urls(
-                urls,
+                discovery,
                 decision_at=decision_at,
                 source_mode="shadow_real_public_detail",
                 fetch_detail=detail_fetcher or _public_get_detail,
+                profile_expectations=profile_expectations,
             )
+
+        raw_discovery_observations = raw.get("discovery_observations")
+        if not isinstance(raw_discovery_observations, list) or not all(
+            isinstance(observation, Mapping)
+            for observation in raw_discovery_observations
+        ):
+            raise ContractViolation(
+                "raw discovery_observations must be an array of objects"
+            )
+        discovery_counts = raw.get("counts")
+        if not isinstance(discovery_counts, Mapping):
+            raise ContractViolation("raw discovery counts must be an object")
+        discovery_observed_at = max(
+            now,
+            parse_utc(raw.get("collection_completed_at_utc", now)),
+        )
+        current_stage = "discovery_lineage"
+        ledger.record_post_discovery_observations(
+            logical_run_id=logical_run.logical_run_id,
+            attempt_id=attempt.attempt_id,
+            observations=(
+                PostDiscoveryObservationInput(
+                    post_id=str(observation.get("post_id", "")),
+                    canonical_post_url=str(
+                        observation.get("canonical_post_url", "")
+                    ),
+                    source_channel=str(
+                        observation.get("source_channel", "")
+                    ),
+                    source_record_ordinal=observation.get(
+                        "source_record_ordinal"
+                    ),
+                    expected_author_id=observation.get("expected_author_id"),
+                    expected_first_release_time_ms=observation.get(
+                        "expected_first_release_time_ms"
+                    ),
+                    source_profile_url=observation.get("source_profile_url"),
+                )
+                for observation in raw_discovery_observations
+            ),
+            canonical_candidate_count=discovery_counts.get(
+                "deduplicated_post_candidates", 0
+            ),
+            same_run_duplicate_count=discovery_counts.get(
+                "duplicate_source_records", 0
+            ),
+            observed_at=discovery_observed_at,
+        )
 
         official_news_document: dict[str, Any] | None = None
         if config.official_news_enabled:
@@ -1426,56 +1872,6 @@ def run_shadow_radar(
                     "records": [],
                     "failure_reason": type(exc).__name__,
                 }
-
-        smart_money_document: dict[str, Any] | None = None
-        smart_money_summary: dict[str, Any] | None = None
-        profile_pipeline_result: ProfilePipelineResult | None = None
-        if smart_money_requested:
-            current_stage = "smart_money"
-            if config.smart_money_fixture is not None:
-                smart_money_document = _load_smart_money_fixture(
-                    config.smart_money_fixture
-                )
-            elif smart_money_collector is not None:
-                smart_money_document = smart_money_collector()
-            else:
-                smart_money_document = collect_smart_money()
-            smart_money_summary = _smart_money_summary(
-                smart_money_document,
-                ledger,
-            )
-            smart_money_summary["evidence_path"] = str(smart_money_path)
-            profile_source_capture = profile_capture_time
-            if (
-                profile_content_fetcher is not None
-                and identity_mapping_evidence is not None
-                and profile_source_capture is None
-            ):
-                if config.mode == "fixture":
-                    raise ContractViolation(
-                        "fixture Profile collection requires profile_capture_time"
-                    )
-                profile_source_capture = runtime_clock()
-            profile_pipeline_result = run_profile_pipeline(
-                _smart_money_top_trader_ids(smart_money_document),
-                mapping_evidence=identity_mapping_evidence,
-                fetch_profile_contents=profile_content_fetcher,
-                source_capture_time_utc=(
-                    format_utc(profile_source_capture)
-                    if profile_source_capture is not None
-                    else None
-                ),
-                provenance=(
-                    "LIVE_CAPTURE" if config.mode == "real" else "FIXTURE_REPLAY"
-                ),
-            )
-            profile_channel_contract = profile_pipeline_result.as_report_contract()
-            smart_money_summary["square_identity_mapping_coverage"] = dict(
-                profile_channel_contract["square_identity_mapping_coverage"]
-            )
-            smart_money_summary["tier_a_eligible"] = (
-                profile_channel_contract["tier_a_eligible"]
-            )
 
         current_stage = "analysis"
         accepted_observations = _accepted_observation_contracts(raw)
@@ -1728,6 +2124,13 @@ def run_shadow_radar(
                             "sha256": sha256(discovery_snapshot_content).hexdigest(),
                             "captured_at_utc": discovery_snapshot_capture.captured_at_utc,
                             "record_count": discovery_snapshot_capture.record_count,
+                            "coverage_contract_version": (
+                                "square-feed-coverage/v1"
+                                if discovery_snapshot_capture.discovery_result is not None
+                                else None
+                            ),
+                            "coverage_status": discovery_snapshot_capture.coverage_status,
+                            "termination_reason": discovery_snapshot_capture.termination_reason,
                         }
                         if discovery_snapshot_path is not None
                         and discovery_snapshot_content is not None
@@ -1747,13 +2150,13 @@ def run_shadow_radar(
                     "smart_money_square_identity_mapping": (
                         {
                             "path": str(
-                                config.smart_money_square_mapping_evidence
+                                identity_mapping_path
                             ),
                             "sha256": sha256(identity_mapping_content).hexdigest(),
                             "captured_at_utc": identity_mapping_evidence.captured_at,
                             "record_count": len(identity_mapping_evidence.mappings),
                         }
-                        if config.smart_money_square_mapping_evidence is not None
+                        if identity_mapping_path is not None
                         and identity_mapping_content is not None
                         and identity_mapping_evidence is not None
                         else None
@@ -1784,7 +2187,7 @@ def run_shadow_radar(
                 "source_coverage": {
                     "FEED": {
                         "status": (
-                            "COMPLETE"
+                            discovery_snapshot_capture.source_status
                             if discovery_snapshot_capture is not None
                             else "NOT_ATTEMPTED"
                         ),
@@ -1798,8 +2201,29 @@ def run_shadow_radar(
                         ),
                         "capture_started_at_utc": raw.get("collection_started_at_utc"),
                         "capture_completed_at_utc": raw.get("collection_completed_at_utc"),
+                        "coverage_contract_version": (
+                            "square-feed-coverage/v1"
+                            if discovery_snapshot_capture is not None
+                            and discovery_snapshot_capture.discovery_result is not None
+                            else None
+                        ),
+                        "coverage_status": (
+                            discovery_snapshot_capture.coverage_status
+                            if discovery_snapshot_capture is not None
+                            else None
+                        ),
+                        "termination_reason": (
+                            discovery_snapshot_capture.termination_reason
+                            if discovery_snapshot_capture is not None
+                            else None
+                        ),
+                        "evidence_path": (
+                            str(discovery_snapshot_path)
+                            if discovery_snapshot_path is not None
+                            else None
+                        ),
                         "reason": (
-                            None
+                            discovery_snapshot_capture.termination_reason
                             if discovery_snapshot_capture is not None
                             else "no_feed_snapshot_input"
                         ),
@@ -1928,7 +2352,20 @@ def run_shadow_radar(
                     "report_generated_at_utc": format_utc(generated_at),
                 },
                 "post_counts": {
-                    "discovered": counts["discovered_source_records"],
+                    "source_observations": counts[
+                        "discovered_source_records"
+                    ],
+                    "deduplicated_candidates": counts.get(
+                        "deduplicated_post_candidates",
+                        counts["discovered_source_records"],
+                    ),
+                    "same_run_duplicates": counts.get(
+                        "duplicate_source_records", 0
+                    ),
+                    "discovered": counts.get(
+                        "deduplicated_post_candidates",
+                        counts["discovered_source_records"],
+                    ),
                     "total": counts["accepted_observations"],
                     "accepted": counts["accepted_observations"],
                     "quarantine": counts["quarantined_source_records"],
@@ -2119,6 +2556,14 @@ def run_shadow_radar(
                 evidence_file_sha256=sha256(smart_money_content).hexdigest(),
                 now=artifacts_written_at,
             )
+        if identity_mapping_evidence is not None:
+            current_stage = "identity_mapping"
+            _persist_identity_mapping_evidence(
+                ledger=ledger,
+                evidence=identity_mapping_evidence,
+                now=artifacts_written_at,
+            )
+            current_stage = "artifacts"
         if official_news_document is not None and official_news_content is not None:
             published_times = [
                 record["published_at_utc"]
@@ -2149,7 +2594,11 @@ def run_shadow_radar(
                 artifact_path=str(discovery_snapshot_path),
                 sha256_hex=sha256(discovery_snapshot_content).hexdigest(),
                 source_system="binance_square_feed_snapshot",
-                payload_schema_version="binance-square-feed-snapshot/v3.1",
+                payload_schema_version=(
+                    "square-feed-coverage/v1"
+                    if discovery_snapshot_capture.discovery_result is not None
+                    else "binance-square-feed-snapshot/legacy-unverified"
+                ),
                 event_start=discovery_snapshot_capture.captured_at_utc,
                 event_end=discovery_snapshot_capture.captured_at_utc,
                 record_count=discovery_snapshot_capture.record_count,
@@ -2169,19 +2618,17 @@ def run_shadow_radar(
                 now=artifacts_written_at,
             )
         if (
-            config.smart_money_square_mapping_evidence is not None
+            identity_mapping_path is not None
             and identity_mapping_content is not None
             and identity_mapping_evidence is not None
         ):
             ledger.record_manifest(
                 logical_run_id=logical_run.logical_run_id,
                 attempt_id=attempt.attempt_id,
-                artifact_path=str(config.smart_money_square_mapping_evidence),
+                artifact_path=str(identity_mapping_path),
                 sha256_hex=sha256(identity_mapping_content).hexdigest(),
                 source_system="binance_smart_money_square_identity_mapping",
-                payload_schema_version=(
-                    "binance-smart-money-square-identity-mapping/v1"
-                ),
+                payload_schema_version=identity_mapping_evidence.schema,
                 event_start=identity_mapping_evidence.captured_at,
                 event_end=identity_mapping_evidence.captured_at,
                 record_count=len(identity_mapping_evidence.mappings),

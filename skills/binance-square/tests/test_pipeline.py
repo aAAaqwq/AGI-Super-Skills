@@ -14,6 +14,7 @@ import unittest
 from unittest.mock import patch
 
 from scanner.contracts import ContractViolation
+from scanner.authors import load_seed_profile_evidence
 from scanner.market import ContractRecord, FailureKind, MarketApiError, MarketSource
 from scanner.pipeline import (
     PipelineConfig,
@@ -25,6 +26,9 @@ from scanner.smart_money import collect_smart_money, verify_evidence_integrity
 from scanner.storage import SQLiteRunLedger
 from tests.test_derivation import complete_market
 from tests.test_smart_money import FakeSmartMoneyApi
+from tests.test_authors import write_v2_identity_evidence
+from scripts.build_identity_mapping_catalog import build_identity_mapping_catalog
+from scripts.run_radar import _arguments as radar_arguments
 
 
 PROJECT = Path(__file__).parents[1]
@@ -63,6 +67,305 @@ def resign_smart_money(document: dict[str, object]) -> dict[str, object]:
 
 
 class ShadowPipelineTests(unittest.TestCase):
+    def test_cli_accepts_one_catalog_and_rejects_catalog_plus_single_mapping(self) -> None:
+        catalog = Path("fixture-catalog.json")
+        parsed = radar_arguments(
+            [
+                "--fixture",
+                str(FIXTURE),
+                "--smart-money-square-mapping-catalog",
+                str(catalog),
+            ]
+        )
+        self.assertEqual(catalog, parsed.smart_money_square_mapping_catalog)
+        with self.assertRaises(SystemExit):
+            radar_arguments(
+                [
+                    "--fixture",
+                    str(FIXTURE),
+                    "--smart-money-square-mapping-catalog",
+                    str(catalog),
+                    "--smart-money-square-mapping-evidence",
+                    "single.json",
+                ]
+            )
+
+    def test_smart_money_catalog_fetches_two_approved_square_profiles(self) -> None:
+        evidence = self._smart_money_evidence()
+        trader_ids = [
+            evidence["rankings"][0]["rows"][index]["source_id"]
+            for index in range(2)
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            members = []
+            for index, trader_id in enumerate(reversed(trader_ids), start=1):
+                member = root / f"member-{index}"
+                member.mkdir()
+                path, _, _ = write_v2_identity_evidence(
+                    str(member),
+                    promotion_status="APPROVED",
+                    top_trader_id=trader_id,
+                    square_uid=f"fixture-square-{trader_id}",
+                    provenance="FIXTURE_REPLAY",
+                )
+                members.append((path, sha256(path.read_bytes()).hexdigest()))
+            catalog_path = root / "identity-catalog.json"
+            build_identity_mapping_catalog(
+                artifacts=members,
+                output_path=catalog_path,
+                receipt_path=root / "identity-catalog.receipt.json",
+            )
+            requested: list[str] = []
+
+            def fetch_profile(square_uid: str, offset: int) -> dict[str, object]:
+                requested.append(square_uid)
+                return {
+                    "success": True,
+                    "data": {"contents": [], "nextTimeOffset": None},
+                }
+
+            result = run_shadow_radar(
+                PipelineConfig(
+                    mode="fixture",
+                    output_dir=root / "runs",
+                    database=root / "radar.sqlite",
+                    decision_at="2026-07-31T05:48:36Z",
+                    fixture_dir=FIXTURE,
+                    smart_money_enabled=True,
+                    smart_money_square_mapping_catalog=catalog_path,
+                    limit=5,
+                ),
+                smart_money_collector=lambda: deepcopy(evidence),
+                profile_content_fetcher=fetch_profile,
+                profile_capture_time="2026-07-31T05:48:35Z",
+            )
+
+            report = json.loads(result.report_json.read_text(encoding="utf-8"))
+            self.assertEqual(
+                sorted(f"fixture-square-{value}" for value in trader_ids),
+                sorted(requested),
+            )
+            self.assertEqual(2, report["profile_channel"]["empty_authors"])
+            self.assertEqual(
+                "2/60 (3.3%)",
+                report["smart_money"]["square_identity_mapping_coverage"]["label"],
+            )
+            ledger = SQLiteRunLedger(root / "radar.sqlite", MIGRATION)
+            self.addCleanup(ledger.close)
+            catalog_manifest = next(
+                item
+                for item in ledger.list_manifests(result.logical_run_id)
+                if item.artifact_path == str(catalog_path)
+            )
+            self.assertEqual(2, catalog_manifest.record_count)
+            self.assertEqual(sha256(catalog_path.read_bytes()).hexdigest(), catalog_manifest.sha256_hex)
+            mapped_square_uids = tuple(
+                sorted(f"fixture-square-{value}" for value in trader_ids)
+            )
+            placeholders = ",".join("?" for _ in mapped_square_uids)
+            authors = ledger._connection.execute(  # noqa: SLF001 - audit receipt
+                f"SELECT * FROM author_entity WHERE author_id IN ({placeholders}) "
+                "ORDER BY author_id",
+                mapped_square_uids,
+            ).fetchall()
+            self.assertEqual(2, len(authors))
+            self.assertTrue(
+                all(
+                    row["identity_source"]
+                    == "BINANCE_SQUARE_UID_DIRECT_IDENTITY_EVIDENCE"
+                    for row in authors
+                )
+            )
+            artifacts = ledger._connection.execute(  # noqa: SLF001 - audit receipt
+                "SELECT * FROM smart_money_identity_artifact ORDER BY artifact_path"
+            ).fetchall()
+            self.assertEqual(2, len(artifacts))
+            self.assertEqual(
+                {str(path.resolve()) for path, _ in members},
+                {row["artifact_path"] for row in artifacts},
+            )
+            self.assertTrue(
+                all(
+                    row["promotion_status"] == "APPROVED"
+                    and row["verification_status"] == "DIRECT_VERIFIED"
+                    and row["request_manifest_sha256"]
+                    and row["raw_response_sha256"]
+                    and row["top_trader_id_pointer"] == "/data/topTraderId"
+                    and row["square_uid_pointer"] == "/data/squareUid"
+                    and json.loads(row["review_json"])["decision"] == "APPROVE"
+                    for row in artifacts
+                )
+            )
+            self.assertEqual(
+                2,
+                ledger._connection.execute(  # noqa: SLF001 - audit receipt
+                    "SELECT COUNT(*) FROM smart_money_identity_mapping_event "
+                    "WHERE event_type = 'LINK'"
+                ).fetchone()[0],
+            )
+            self.assertEqual(
+                sorted(trader_ids),
+                sorted(
+                    item.top_trader_id
+                    for item in ledger.list_smart_money_square_identity_mappings()
+                ),
+            )
+
+    def test_identity_catalog_proposed_conflict_and_missing_trader_fail_closed(self) -> None:
+        evidence = self._smart_money_evidence()
+        known_traders = [
+            evidence["rankings"][0]["rows"][index]["source_id"]
+            for index in range(2)
+        ]
+        for case in ("proposed", "conflict", "missing_trader"):
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                members: list[Path] = []
+                if case == "proposed":
+                    member = root / "member-proposed"
+                    member.mkdir()
+                    path, _, _ = write_v2_identity_evidence(
+                        str(member),
+                        top_trader_id=known_traders[0],
+                        square_uid="fixture-square-proposed",
+                        provenance="FIXTURE_REPLAY",
+                    )
+                    members.append(path)
+                elif case == "conflict":
+                    for index, trader_id in enumerate(known_traders):
+                        member = root / f"member-conflict-{index}"
+                        member.mkdir()
+                        path, _, _ = write_v2_identity_evidence(
+                            str(member),
+                            promotion_status="APPROVED",
+                            top_trader_id=trader_id,
+                            square_uid="fixture-square-conflict",
+                            provenance="FIXTURE_REPLAY",
+                        )
+                        members.append(path)
+                else:
+                    member = root / "member-missing"
+                    member.mkdir()
+                    path, _, _ = write_v2_identity_evidence(
+                        str(member),
+                        promotion_status="APPROVED",
+                        top_trader_id="fixture-trader-not-in-smart-money",
+                        square_uid="fixture-square-missing",
+                        provenance="FIXTURE_REPLAY",
+                    )
+                    members.append(path)
+                catalog_path = root / "identity-catalog.json"
+                catalog_path.write_text(
+                    json.dumps(
+                        {
+                            "schema": "binance-smart-money-square-identity-catalog/v1",
+                            "tenant_id": "fixture-tenant",
+                            "provenance": "FIXTURE_REPLAY",
+                            "artifacts": [
+                                {
+                                    "path": str(path),
+                                    "sha256": sha256(path.read_bytes()).hexdigest(),
+                                }
+                                for path in members
+                            ],
+                        },
+                        sort_keys=True,
+                    ),
+                    encoding="utf-8",
+                )
+
+                with self.assertRaises(ContractViolation):
+                    run_shadow_radar(
+                        PipelineConfig(
+                            mode="fixture",
+                            output_dir=root / "runs",
+                            database=root / "radar.sqlite",
+                            decision_at="2026-07-31T05:48:36Z",
+                            fixture_dir=FIXTURE,
+                            smart_money_enabled=True,
+                            smart_money_square_mapping_catalog=catalog_path,
+                            limit=5,
+                        ),
+                        smart_money_collector=lambda: deepcopy(evidence),
+                    )
+
+                ledger = SQLiteRunLedger(root / "radar.sqlite", MIGRATION)
+                self.addCleanup(ledger.close)
+                self.assertEqual(
+                    ["FAILED"],
+                    [
+                        row[0]
+                        for row in ledger._connection.execute(  # noqa: SLF001
+                            "SELECT status FROM run_attempt ORDER BY attempt_no"
+                        )
+                    ],
+                )
+                self.assertEqual(
+                    (0, 0, 0),
+                    (
+                        ledger._connection.execute(  # noqa: SLF001
+                            "SELECT COUNT(*) FROM smart_money_identity_artifact"
+                        ).fetchone()[0],
+                        ledger._connection.execute(  # noqa: SLF001
+                            "SELECT COUNT(*) FROM smart_money_identity_mapping_event"
+                        ).fetchone()[0],
+                        len(ledger.list_smart_money_square_identity_mappings()),
+                    ),
+                )
+
+    def test_seed_profiles_fetch_independently_while_zero_smart_money_mapping_stays_blocked(self) -> None:
+        evidence = self._smart_money_evidence()
+        seed_uids = {
+            profile.author_id
+            for profile in load_seed_profile_evidence(SEED_EVIDENCE).profiles
+        }
+        requested: list[tuple[str, int]] = []
+
+        def fetch_profile(square_uid: str, offset: int) -> dict[str, object]:
+            requested.append((square_uid, offset))
+            return {
+                "success": True,
+                "data": {"contents": [], "nextTimeOffset": None},
+            }
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            result = run_shadow_radar(
+                PipelineConfig(
+                    mode="fixture",
+                    output_dir=root / "runs",
+                    database=root / "radar.sqlite",
+                    decision_at="2026-07-31T05:48:36Z",
+                    fixture_dir=FIXTURE,
+                    leaderboard_seed_evidence=SEED_EVIDENCE,
+                    smart_money_enabled=True,
+                    limit=5,
+                ),
+                smart_money_collector=lambda: deepcopy(evidence),
+                profile_content_fetcher=fetch_profile,
+                profile_capture_time="2026-07-31T05:48:35Z",
+            )
+            report = json.loads(result.report_json.read_text(encoding="utf-8"))
+
+        self.assertEqual(seed_uids, {uid for uid, _ in requested})
+        self.assertEqual(len(seed_uids), len(requested))
+        self.assertTrue(all(offset == -1 for _, offset in requested))
+        cohorts = report["profile_channel"]
+        self.assertEqual("PARTIAL", cohorts["status"])
+        self.assertEqual(
+            {"smart_money_profiles": 60, "seed_profiles": 9},
+            cohorts["cohort_denominators"],
+        )
+        self.assertEqual(9, cohorts["seed_profiles"]["planned_authors"])
+        self.assertEqual("EMPTY", cohorts["seed_profiles"]["status"])
+        self.assertEqual(60, cohorts["smart_money_profiles"]["planned_authors"])
+        self.assertEqual(
+            "BLOCKED_IDENTITY_MAPPING",
+            cohorts["smart_money_profiles"]["reason"],
+        )
+        self.assertEqual(0, report["smart_money"]["square_identity_mapping_coverage"]["covered"])
+
     def _smart_money_evidence(
         self, ranking_types: tuple[str, ...] = ("PNL", "ROI")
     ) -> dict[str, object]:
@@ -715,6 +1018,14 @@ class ShadowPipelineTests(unittest.TestCase):
                 "COMPLETE",
                 report["source_coverage"]["BINANCE_OFFICIAL_NEWS"]["status"],
             )
+            self.assertEqual(
+                ("PARTIAL", "LEGACY_UNVERIFIED", "LEGACY_UNVERIFIED"),
+                (
+                    report["source_coverage"]["FEED"]["status"],
+                    report["source_coverage"]["FEED"]["coverage_status"],
+                    report["source_coverage"]["FEED"]["termination_reason"],
+                ),
+            )
             ledger = SQLiteRunLedger(root / "radar.sqlite", MIGRATION)
             self.addCleanup(ledger.close)
             self.assertEqual(
@@ -864,7 +1175,13 @@ class ShadowPipelineTests(unittest.TestCase):
             )
             discovered = _real_discovery(config, _load_legacy_signals(signals))
 
-            self.assertEqual((signal_url,), discovered)
+            self.assertEqual(
+                (signal_url,),
+                tuple(post.post_url for post in discovered.posts),
+            )
+            self.assertEqual(
+                ("CURATED_SIGNAL",), discovered.posts[0].channels
+            )
 
     def test_pipeline_and_cli_limit_default_covers_current_full_capture(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -904,6 +1221,8 @@ class ShadowPipelineTests(unittest.TestCase):
             "decision_at_utc": "2026-08-01T00:00:00Z",
             "counts": {
                 "discovered_source_records": 1,
+                "deduplicated_post_candidates": 1,
+                "duplicate_source_records": 0,
                 "accepted_observations": 1,
                 "quarantined_source_records": 0,
                 "dq_quarantined_source_records": 0,
@@ -924,6 +1243,19 @@ class ShadowPipelineTests(unittest.TestCase):
                 "source_class": "SQUARE_UGC",
                 "observed_at": "2026-07-31T23:01:00Z",
                 "edit_count": 0,
+            }],
+            "discovery_observations": [{
+                "post_id": "990000000000101",
+                "canonical_post_url": (
+                    "https://www.binance.com/en/square/post/990000000000101"
+                ),
+                "source_channel": "PROFILE",
+                "source_record_ordinal": 0,
+                "expected_author_id": "opaque-author",
+                "expected_first_release_time_ms": 1785538800000,
+                "source_profile_url": (
+                    "https://www.binance.com/en/square/profile/author"
+                ),
             }],
             "quarantine": [],
             "authors": [],
@@ -1254,12 +1586,15 @@ class ShadowPipelineTests(unittest.TestCase):
             "decision_at_utc": "2026-08-01T08:00:07Z",
             "counts": {
                 "discovered_source_records": 0,
+                "deduplicated_post_candidates": 0,
+                "duplicate_source_records": 0,
                 "accepted_observations": 0,
                 "quarantined_source_records": 0,
                 "dq_quarantined_source_records": 0,
                 "window_excluded_source_records": 0,
             },
             "accepted": [],
+            "discovery_observations": [],
             "quarantine": [],
             "authors": [],
             "ranking_discovery_status": "BLOCKED",
@@ -1354,6 +1689,49 @@ class ShadowPipelineTests(unittest.TestCase):
                 json.loads(recovered.raw_json.read_text())["decision_at_utc"],
             )
 
+    def test_real_pipeline_rejects_missing_discovery_lineage(self) -> None:
+        raw = {
+            "schema_version": "4.1.0",
+            "source_system": "test",
+            "source_mode": "test-missing-lineage",
+            "decision_at_utc": "2026-08-01T08:00:07Z",
+            "counts": {
+                "discovered_source_records": 0,
+                "deduplicated_post_candidates": 0,
+                "duplicate_source_records": 0,
+                "accepted_observations": 0,
+                "quarantined_source_records": 0,
+                "dq_quarantined_source_records": 0,
+                "window_excluded_source_records": 0,
+            },
+            "accepted": [],
+            "quarantine": [],
+            "authors": [],
+            "ranking_discovery_status": "BLOCKED",
+        }
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "scanner.pipeline._collect_live_urls", return_value=raw
+        ):
+            root = Path(directory)
+            with self.assertRaisesRegex(
+                ContractViolation,
+                "discovery_observations",
+            ):
+                run_shadow_radar(
+                    PipelineConfig(
+                        mode="real",
+                        output_dir=root / "runs",
+                        database=root / "radar.sqlite",
+                        decision_at="2026-08-01T08:00:07Z",
+                        input_snapshot=None,
+                        signals_json=None,
+                    ),
+                    market_client=catalog_only("2026-08-01T08:00:07Z"),  # type: ignore[arg-type]
+                    clock=lambda: datetime(
+                        2026, 8, 1, 8, 0, 7, tzinfo=timezone.utc
+                    ),
+                )
+
     def test_binance_server_time_failure_is_a_durable_catalog_failure(self) -> None:
         class FailedCatalog:
             def fetch_futures_catalog(self) -> object:
@@ -1428,6 +1806,8 @@ class ShadowPipelineTests(unittest.TestCase):
             "decision_at_utc": decision_at,
             "counts": {
                 "discovered_source_records": 2,
+                "deduplicated_post_candidates": 2,
+                "duplicate_source_records": 0,
                 "accepted_observations": 2,
                 "quarantined_source_records": 0,
                 "dq_quarantined_source_records": 0,
@@ -1458,6 +1838,24 @@ class ShadowPipelineTests(unittest.TestCase):
                     "source_class": "SQUARE_UGC",
                     "observed_at": "2026-08-01T07:01:00Z",
                     "edit_count": 0,
+                }
+                for index in range(2)
+            ],
+            "discovery_observations": [
+                {
+                    "post_id": str(9001 + index),
+                    "canonical_post_url": (
+                        "https://www.binance.com/en/square/post/"
+                        f"{9001 + index}"
+                    ),
+                    "source_channel": "PROFILE" if index == 0 else "FEED",
+                    "source_record_ordinal": index,
+                    "expected_author_id": f"stable-author-{index}",
+                    "expected_first_release_time_ms": 1785567600000,
+                    "source_profile_url": (
+                        "https://www.binance.com/en/square/profile/"
+                        f"author-{index}"
+                    ),
                 }
                 for index in range(2)
             ],

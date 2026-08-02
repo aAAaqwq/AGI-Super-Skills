@@ -17,6 +17,7 @@ from .contracts import (
     ContractViolation,
     RunNamespace,
     SCHEMA_VERSION,
+    canonical_post_id,
     format_utc,
     parse_utc,
     serialize_decimal,
@@ -110,6 +111,70 @@ class StoredPostObservation:
     source_channel: str
     source_record_ordinal: int
     observation_status: str
+    schema_version: str
+    source_system: str
+    created_at_utc: str
+    updated_at_utc: str
+
+
+@dataclass(frozen=True, slots=True)
+class ProfileFetchOutcomeInput:
+    profile_cohort: str
+    planned_author_id: str
+    planned_id_type: str
+    resolved_author_id: str | None
+    fetch_status: str
+    post_count: int
+    pages_fetched: int
+    termination_reason: str | None = None
+    error_detail: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class StoredProfileFetchOutcome:
+    profile_fetch_outcome_id: str
+    logical_run_id: str
+    attempt_id: str
+    profile_cohort: str
+    planned_author_id: str
+    planned_id_type: str
+    resolved_author_id: str | None
+    fetch_status: str
+    post_count: int
+    pages_fetched: int
+    termination_reason: str | None
+    error_detail: str | None
+    observed_at_utc: str
+    schema_version: str
+    source_system: str
+    created_at_utc: str
+    updated_at_utc: str
+
+
+@dataclass(frozen=True, slots=True)
+class PostDiscoveryObservationInput:
+    post_id: str
+    canonical_post_url: str
+    source_channel: str
+    source_record_ordinal: int
+    expected_author_id: str | None = None
+    expected_first_release_time_ms: int | None = None
+    source_profile_url: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class StoredPostDiscoveryObservation:
+    post_discovery_observation_id: str
+    logical_run_id: str
+    attempt_id: str
+    post_id: str
+    canonical_post_url: str
+    source_channel: str
+    source_record_ordinal: int
+    expected_author_id: str | None
+    expected_first_release_time_ms: int | None
+    source_profile_url: str | None
+    observed_at_utc: str
     schema_version: str
     source_system: str
     created_at_utc: str
@@ -266,12 +331,37 @@ class SmartMoneyProfileObservation:
 
 @dataclass(frozen=True, slots=True)
 class SmartMoneySquareIdentityMapping:
+    mapping_event_id: str
+    tenant_id: str
     top_trader_id: str
     author_id: str
     verification_method: str
+    verification_status: str
+    promotion_status: str
     verified_at_utc: str
     evidence_path: str
     evidence_sha256: str
+    request_manifest_path: str | None
+    request_manifest_sha256: str | None
+    raw_response_path: str | None
+    raw_response_sha256: str | None
+    review: Any
+    schema_version: str
+    source_system: str
+    created_at_utc: str
+    updated_at_utc: str
+
+
+@dataclass(frozen=True, slots=True)
+class SmartMoneyIdentityMappingEvent:
+    mapping_event_id: str
+    tenant_id: str
+    top_trader_id: str
+    author_id: str
+    event_type: str
+    artifact_sha256: str | None
+    effective_at_utc: str
+    reason: str | None
     schema_version: str
     source_system: str
     created_at_utc: str
@@ -996,6 +1086,457 @@ class SQLiteRunLedger:
             (logical_run_id,),
         ).fetchall()
         return [self._bronze_manifest(row) for row in rows]
+
+    def record_post_discovery_observations(
+        self,
+        *,
+        logical_run_id: str,
+        attempt_id: str,
+        observations: Iterable[PostDiscoveryObservationInput],
+        canonical_candidate_count: int,
+        same_run_duplicate_count: int,
+        observed_at: datetime | str,
+        source_system: str = "binance_square_discovery_queue",
+    ) -> list[StoredPostDiscoveryObservation]:
+        """Atomically persist the selected source records behind a detail queue."""
+
+        run_id = _required(logical_run_id, "logical_run_id")
+        actual_attempt_id = _required(attempt_id, "attempt_id")
+        observed = format_utc(observed_at)
+        source = _required(source_system, "source_system")
+        for count, field_name in (
+            (canonical_candidate_count, "canonical_candidate_count"),
+            (same_run_duplicate_count, "same_run_duplicate_count"),
+        ):
+            if (
+                not isinstance(count, int)
+                or isinstance(count, bool)
+                or count < 0
+            ):
+                raise ContractViolation(
+                    f"{field_name} must be a non-negative integer"
+                )
+        values = list(observations)
+        normalized: list[dict[str, Any]] = []
+        for value in values:
+            if not isinstance(value, PostDiscoveryObservationInput):
+                raise ContractViolation(
+                    "observations must use PostDiscoveryObservationInput contracts"
+                )
+            post_id = _required(value.post_id, "post_id")
+            if not post_id.isdecimal():
+                raise ContractViolation("post_id must be a stable numeric ID")
+            canonical_url = _required(
+                value.canonical_post_url, "canonical_post_url"
+            )
+            if canonical_post_id(canonical_url) != post_id:
+                raise ContractViolation(
+                    "canonical_post_url must identify the observation post_id"
+                )
+            channel = _enum_value(value.source_channel, "source_channel")
+            if channel not in {
+                "PROFILE",
+                "FEED",
+                "CURATED_SIGNAL",
+                "DIRECT",
+                "FIXTURE_DETAIL",
+            }:
+                raise ContractViolation("source_channel is not supported")
+            ordinal = value.source_record_ordinal
+            if (
+                not isinstance(ordinal, int)
+                or isinstance(ordinal, bool)
+                or ordinal < 0
+            ):
+                raise ContractViolation(
+                    "source_record_ordinal must be a non-negative integer"
+                )
+            expected_author_id = (
+                _required(value.expected_author_id, "expected_author_id")
+                if value.expected_author_id is not None
+                else None
+            )
+            expected_release = value.expected_first_release_time_ms
+            if expected_release is not None and (
+                not isinstance(expected_release, int)
+                or isinstance(expected_release, bool)
+                or expected_release < 0
+            ):
+                raise ContractViolation(
+                    "expected_first_release_time_ms must be non-negative or None"
+                )
+            source_profile_url = (
+                _required(value.source_profile_url, "source_profile_url")
+                if value.source_profile_url is not None
+                else None
+            )
+            normalized.append(
+                {
+                    "post_discovery_observation_id": _stable_id(
+                        "postdiscovery", actual_attempt_id, str(ordinal)
+                    ),
+                    "logical_run_id": run_id,
+                    "attempt_id": actual_attempt_id,
+                    "post_id": post_id,
+                    "canonical_post_url": canonical_url,
+                    "source_channel": channel,
+                    "source_record_ordinal": ordinal,
+                    "expected_author_id": expected_author_id,
+                    "expected_first_release_time_ms": expected_release,
+                    "source_profile_url": source_profile_url,
+                    "observed_at_utc": observed,
+                    "schema_version": SCHEMA_VERSION,
+                    "source_system": source,
+                }
+            )
+        normalized.sort(key=lambda row: row["source_record_ordinal"])
+        ordinals = [row["source_record_ordinal"] for row in normalized]
+        if ordinals != list(range(len(normalized))):
+            raise ContractViolation(
+                "source_record_ordinal values must be unique and contiguous"
+            )
+        unique_post_count = len({row["post_id"] for row in normalized})
+        if unique_post_count != canonical_candidate_count:
+            raise ContractViolation(
+                "canonical candidate count does not match discovery observations"
+            )
+        if len(normalized) != canonical_candidate_count + same_run_duplicate_count:
+            raise ContractViolation(
+                "source observations must equal candidates plus same-run duplicates"
+            )
+
+        try:
+            self._connection.execute("BEGIN IMMEDIATE")
+            attempt = self._connection.execute(
+                """
+                SELECT status FROM run_attempt
+                WHERE logical_run_id = ? AND attempt_id = ?
+                """,
+                (run_id, actual_attempt_id),
+            ).fetchone()
+            if attempt is None:
+                raise ContractViolation(
+                    "discovery observations must reference their exact run attempt"
+                )
+            if attempt["status"] != "RUNNING":
+                raise ContractViolation(
+                    "discovery observations require a RUNNING attempt"
+                )
+            persisted: list[sqlite3.Row] = []
+            for expected in normalized:
+                existing = self._connection.execute(
+                    """
+                    SELECT * FROM post_discovery_observation
+                    WHERE attempt_id = ? AND source_record_ordinal = ?
+                    """,
+                    (
+                        actual_attempt_id,
+                        expected["source_record_ordinal"],
+                    ),
+                ).fetchone()
+                if existing is not None:
+                    if any(
+                        existing[field] != value
+                        for field, value in expected.items()
+                    ):
+                        raise ContractViolation(
+                            "discovery observation idempotency key has different evidence"
+                        )
+                    persisted.append(existing)
+                    continue
+                self._connection.execute(
+                    """
+                    INSERT INTO post_discovery_observation (
+                        post_discovery_observation_id, logical_run_id,
+                        attempt_id, post_id, canonical_post_url,
+                        source_channel, source_record_ordinal,
+                        expected_author_id, expected_first_release_time_ms,
+                        source_profile_url, observed_at_utc, schema_version,
+                        source_system, created_at_utc, updated_at_utc
+                    ) VALUES (
+                        :post_discovery_observation_id, :logical_run_id,
+                        :attempt_id, :post_id, :canonical_post_url,
+                        :source_channel, :source_record_ordinal,
+                        :expected_author_id, :expected_first_release_time_ms,
+                        :source_profile_url, :observed_at_utc, :schema_version,
+                        :source_system, :observed_at_utc, :observed_at_utc
+                    )
+                    """,
+                    expected,
+                )
+                row = self._connection.execute(
+                    "SELECT * FROM post_discovery_observation "
+                    "WHERE post_discovery_observation_id = ?",
+                    (expected["post_discovery_observation_id"],),
+                ).fetchone()
+                if row is None:
+                    raise RuntimeError(
+                        "discovery observation insert was not observable"
+                    )
+                persisted.append(row)
+            self._connection.commit()
+        except sqlite3.IntegrityError as exc:
+            self._connection.rollback()
+            raise ContractViolation(
+                "discovery observation batch violated storage contract"
+            ) from exc
+        except Exception:
+            self._connection.rollback()
+            raise
+        return [self._stored_post_discovery_observation(row) for row in persisted]
+
+    def list_post_discovery_observations(
+        self,
+        *,
+        logical_run_id: str | None = None,
+        attempt_id: str | None = None,
+    ) -> list[StoredPostDiscoveryObservation]:
+        predicates: list[str] = []
+        parameters: list[str] = []
+        if logical_run_id is not None:
+            predicates.append("logical_run_id = ?")
+            parameters.append(_required(logical_run_id, "logical_run_id"))
+        if attempt_id is not None:
+            predicates.append("attempt_id = ?")
+            parameters.append(_required(attempt_id, "attempt_id"))
+        where = f"WHERE {' AND '.join(predicates)}" if predicates else ""
+        rows = self._connection.execute(
+            f"""
+            SELECT * FROM post_discovery_observation {where}
+            ORDER BY source_record_ordinal
+            """,
+            parameters,
+        ).fetchall()
+        return [self._stored_post_discovery_observation(row) for row in rows]
+
+    def record_profile_fetch_outcomes(
+        self,
+        *,
+        logical_run_id: str,
+        attempt_id: str,
+        outcomes: Iterable[ProfileFetchOutcomeInput],
+        observed_at: datetime | str,
+        source_system: str = "binance_square_profile_public_api",
+    ) -> list[StoredProfileFetchOutcome]:
+        """Atomically persist one terminal Profile fetch result per planned author."""
+
+        run_id = _required(logical_run_id, "logical_run_id")
+        actual_attempt_id = _required(attempt_id, "attempt_id")
+        observed = format_utc(observed_at)
+        source = _required(source_system, "source_system")
+        values = list(outcomes)
+        normalized: list[dict[str, Any]] = []
+        seen_keys: set[tuple[str, str]] = set()
+        for value in values:
+            if not isinstance(value, ProfileFetchOutcomeInput):
+                raise ContractViolation(
+                    "outcomes must use ProfileFetchOutcomeInput contracts"
+                )
+            cohort = _enum_value(value.profile_cohort, "profile_cohort")
+            id_type = _enum_value(value.planned_id_type, "planned_id_type")
+            expected_id_type = {
+                "SMART_MONEY_PROFILE": "TOP_TRADER_ID",
+                "SEED_PROFILE": "SQUARE_UID",
+            }.get(cohort)
+            if expected_id_type is None:
+                raise ContractViolation(
+                    "profile_cohort must be SMART_MONEY_PROFILE or SEED_PROFILE"
+                )
+            if id_type != expected_id_type:
+                raise ContractViolation(
+                    f"{cohort} planned_id_type must be {expected_id_type}"
+                )
+            planned_author_id = _required(
+                value.planned_author_id, "planned_author_id"
+            )
+            key = (cohort, planned_author_id)
+            if key in seen_keys:
+                raise ContractViolation(
+                    "outcomes must contain one result per cohort and planned author"
+                )
+            seen_keys.add(key)
+            resolved_author_id = (
+                _required(value.resolved_author_id, "resolved_author_id")
+                if value.resolved_author_id is not None
+                else None
+            )
+            status = _enum_value(value.fetch_status, "fetch_status")
+            if status not in {
+                "COMPLETE",
+                "EMPTY",
+                "PARTIAL",
+                "FAILED",
+                "NOT_ATTEMPTED",
+            }:
+                raise ContractViolation("fetch_status is not a terminal Profile status")
+            for count, field_name in (
+                (value.post_count, "post_count"),
+                (value.pages_fetched, "pages_fetched"),
+            ):
+                if (
+                    not isinstance(count, int)
+                    or isinstance(count, bool)
+                    or count < 0
+                ):
+                    raise ContractViolation(
+                        f"{field_name} must be a non-negative integer"
+                    )
+            if status == "COMPLETE" and (
+                value.post_count == 0 or value.pages_fetched == 0
+            ):
+                raise ContractViolation(
+                    "COMPLETE fetch requires posts and at least one fetched page"
+                )
+            if status == "EMPTY" and (
+                value.post_count != 0 or value.pages_fetched == 0
+            ):
+                raise ContractViolation(
+                    "EMPTY fetch requires zero posts and at least one fetched page"
+                )
+            if status in {"FAILED", "NOT_ATTEMPTED"} and value.post_count != 0:
+                raise ContractViolation(f"{status} fetch cannot contain posts")
+            if status == "NOT_ATTEMPTED" and value.pages_fetched != 0:
+                raise ContractViolation(
+                    "NOT_ATTEMPTED fetch cannot contain fetched pages"
+                )
+            termination_reason = (
+                _required(value.termination_reason, "termination_reason")
+                if value.termination_reason is not None
+                else None
+            )
+            error_detail = (
+                _required(value.error_detail, "error_detail")
+                if value.error_detail is not None
+                else None
+            )
+            normalized.append(
+                {
+                    "profile_fetch_outcome_id": _stable_id(
+                        "profilefetch", actual_attempt_id, cohort, planned_author_id
+                    ),
+                    "logical_run_id": run_id,
+                    "attempt_id": actual_attempt_id,
+                    "profile_cohort": cohort,
+                    "planned_author_id": planned_author_id,
+                    "planned_id_type": id_type,
+                    "resolved_author_id": resolved_author_id,
+                    "fetch_status": status,
+                    "post_count": value.post_count,
+                    "pages_fetched": value.pages_fetched,
+                    "termination_reason": termination_reason,
+                    "error_detail": error_detail,
+                    "observed_at_utc": observed,
+                    "schema_version": SCHEMA_VERSION,
+                    "source_system": source,
+                }
+            )
+
+        normalized.sort(
+            key=lambda row: (row["profile_cohort"], row["planned_author_id"])
+        )
+        try:
+            self._connection.execute("BEGIN IMMEDIATE")
+            attempt = self._connection.execute(
+                """
+                SELECT status FROM run_attempt
+                WHERE logical_run_id = ? AND attempt_id = ?
+                """,
+                (run_id, actual_attempt_id),
+            ).fetchone()
+            if attempt is None:
+                raise ContractViolation(
+                    "Profile outcomes must reference their exact run attempt"
+                )
+            if attempt["status"] != "RUNNING":
+                raise ContractViolation(
+                    "Profile outcomes can only be added to a RUNNING attempt"
+                )
+            persisted: list[sqlite3.Row] = []
+            for expected in normalized:
+                existing = self._connection.execute(
+                    """
+                    SELECT * FROM profile_fetch_outcome
+                    WHERE attempt_id = ? AND profile_cohort = ?
+                      AND planned_author_id = ?
+                    """,
+                    (
+                        actual_attempt_id,
+                        expected["profile_cohort"],
+                        expected["planned_author_id"],
+                    ),
+                ).fetchone()
+                if existing is not None:
+                    if any(
+                        existing[field] != value
+                        for field, value in expected.items()
+                    ):
+                        raise ContractViolation(
+                            "Profile outcome idempotency key has different evidence"
+                        )
+                    persisted.append(existing)
+                    continue
+                self._connection.execute(
+                    """
+                    INSERT INTO profile_fetch_outcome (
+                        profile_fetch_outcome_id, logical_run_id, attempt_id,
+                        profile_cohort, planned_author_id, planned_id_type,
+                        resolved_author_id, fetch_status, post_count,
+                        pages_fetched, termination_reason, error_detail,
+                        observed_at_utc, schema_version, source_system,
+                        created_at_utc, updated_at_utc
+                    ) VALUES (
+                        :profile_fetch_outcome_id, :logical_run_id, :attempt_id,
+                        :profile_cohort, :planned_author_id, :planned_id_type,
+                        :resolved_author_id, :fetch_status, :post_count,
+                        :pages_fetched, :termination_reason, :error_detail,
+                        :observed_at_utc, :schema_version, :source_system,
+                        :observed_at_utc, :observed_at_utc
+                    )
+                    """,
+                    expected,
+                )
+                row = self._connection.execute(
+                    "SELECT * FROM profile_fetch_outcome "
+                    "WHERE profile_fetch_outcome_id = ?",
+                    (expected["profile_fetch_outcome_id"],),
+                ).fetchone()
+                if row is None:
+                    raise RuntimeError("Profile outcome insert was not observable")
+                persisted.append(row)
+            self._connection.commit()
+        except sqlite3.IntegrityError as exc:
+            self._connection.rollback()
+            raise ContractViolation(
+                "Profile outcome batch violated storage contract"
+            ) from exc
+        except Exception:
+            self._connection.rollback()
+            raise
+        return [self._stored_profile_fetch_outcome(row) for row in persisted]
+
+    def list_profile_fetch_outcomes(
+        self,
+        *,
+        logical_run_id: str | None = None,
+        attempt_id: str | None = None,
+    ) -> list[StoredProfileFetchOutcome]:
+        predicates: list[str] = []
+        parameters: list[str] = []
+        if logical_run_id is not None:
+            predicates.append("logical_run_id = ?")
+            parameters.append(_required(logical_run_id, "logical_run_id"))
+        if attempt_id is not None:
+            predicates.append("attempt_id = ?")
+            parameters.append(_required(attempt_id, "attempt_id"))
+        where = f"WHERE {' AND '.join(predicates)}" if predicates else ""
+        rows = self._connection.execute(
+            f"""
+            SELECT * FROM profile_fetch_outcome {where}
+            ORDER BY profile_cohort, planned_author_id
+            """,
+            parameters,
+        ).fetchall()
+        return [self._stored_profile_fetch_outcome(row) for row in rows]
 
     def record_accepted_post_observations(
         self,
@@ -2212,7 +2753,13 @@ class SQLiteRunLedger:
         source_system: str = "binance_identity_evidence",
         now: datetime | str | None = None,
     ) -> SmartMoneySquareIdentityMapping:
-        """Record only explicit ID evidence; display-name mapping is unsupported."""
+        """Record a hash-bound link event after revalidating its evidence graph.
+
+        Caller-supplied IDs, timestamps, status, and paths are never sufficient:
+        v2 storage writes re-run raw-response, manifest, pointer, tenant, and
+        approval validation.  Legacy v1 evidence is retained only as inactive
+        ``PROPOSED`` history.
+        """
 
         trader_id = _required(top_trader_id, "top_trader_id")
         square_author_id = _required(author_id, "author_id")
@@ -2226,22 +2773,103 @@ class SQLiteRunLedger:
         if parse_utc(verified) > parse_utc(observed_at):
             raise ContractViolation("verified_at cannot be in the future")
         path = _required(evidence_path, "evidence_path")
-        digest = _verified_identity_mapping_digest(
-            path,
-            evidence_sha256,
-            top_trader_id=trader_id,
-            square_uid=square_author_id,
+        digest, artifact_content = _read_verified_file(
+            path, evidence_sha256, digest_field="evidence_sha256"
         )
+        try:
+            artifact_payload = json.loads(artifact_content)
+        except (UnicodeError, json.JSONDecodeError) as exc:
+            raise ContractViolation("identity mapping evidence must be readable JSON") from exc
+        artifact_schema = (
+            artifact_payload.get("schema")
+            if isinstance(artifact_payload, dict)
+            else None
+        )
+        if artifact_schema == "binance-smart-money-square-identity-mapping/v2":
+            # Local import avoids making the core storage module a dependency
+            # of the author evidence parser.
+            from .authors import load_smart_money_square_identity_evidence
+
+            evidence = load_smart_money_square_identity_evidence(
+                path, expected_sha256=digest
+            )
+            matching = [
+                value
+                for value in evidence.mappings
+                if value.top_trader_id == trader_id
+                and value.square_uid == square_author_id
+            ]
+            if len(matching) != 1:
+                raise ContractViolation(
+                    "identity mapping evidence does not bind the requested topTraderId and squareUid"
+                )
+            identity = matching[0]
+            if identity.verified_at != verified:
+                raise ContractViolation("verified_at does not match identity evidence")
+            tenant_id = evidence.tenant_id
+            verification_status = evidence.verification_status
+            promotion_status = evidence.promotion_status
+            captured_at = evidence.captured_at
+            manifest_path = evidence.request_manifest_path
+            manifest_sha256 = evidence.request_manifest_sha256
+            raw_response_path = identity.raw_response_path
+            raw_response_sha256 = identity.raw_response_sha256
+            top_pointer = identity.top_trader_id_pointer
+            square_pointer = identity.square_uid_pointer
+            review_value = (
+                {
+                    "version": evidence.review.version,
+                    "reviewer": evidence.review.reviewer,
+                    "reviewed_at": evidence.review.reviewed_at,
+                    "decision": evidence.review.decision,
+                    "reason": evidence.review.reason,
+                }
+                if evidence.review is not None
+                else None
+            )
+        elif artifact_schema == "binance-smart-money-square-identity-mapping/v1":
+            _verified_identity_mapping_digest(
+                path,
+                digest,
+                top_trader_id=trader_id,
+                square_uid=square_author_id,
+            )
+            tenant_id = "legacy-global"
+            verification_status = "LEGACY_SELF_REPORTED"
+            promotion_status = "PROPOSED"
+            captured_at = verified
+            manifest_path = None
+            manifest_sha256 = None
+            raw_response_path = None
+            raw_response_sha256 = None
+            top_pointer = None
+            square_pointer = None
+            review_value = None
+        else:
+            raise ContractViolation("unsupported identity mapping evidence schema")
         source = _required(source_system, "source_system")
-        expected = {
-            "top_trader_id": trader_id,
-            "author_id": square_author_id,
-            "verification_method": method,
-            "verified_at_utc": verified,
-            "evidence_path": path,
-            "evidence_sha256": digest,
+        review_json = (
+            json.dumps(review_value, sort_keys=True, separators=(",", ":"))
+            if review_value is not None
+            else None
+        )
+        artifact_expected = {
+            "artifact_schema": artifact_schema,
+            "tenant_id": tenant_id,
+            "verification_status": verification_status,
+            "promotion_status": promotion_status,
+            "captured_at_utc": captured_at,
+            "artifact_path": path,
+            "request_manifest_path": manifest_path,
+            "request_manifest_sha256": manifest_sha256,
+            "raw_response_path": raw_response_path,
+            "raw_response_sha256": raw_response_sha256,
+            "top_trader_id_pointer": top_pointer,
+            "square_uid_pointer": square_pointer,
+            "review_json": review_json,
             "source_system": source,
         }
+        event_id = _stable_id("identitymappingevent", digest, tenant_id, trader_id, square_author_id, "LINK")
         try:
             self._connection.execute("BEGIN IMMEDIATE")
             trader = self._connection.execute(
@@ -2252,46 +2880,118 @@ class SQLiteRunLedger:
                 "SELECT 1 FROM author_entity WHERE author_id = ?",
                 (square_author_id,),
             ).fetchone()
-            if trader is None or author is None:
+            if trader is None:
                 raise ContractViolation(
                     "identity mapping requires existing source-specific entities"
                 )
-            existing = self._connection.execute(
-                "SELECT * FROM smart_money_square_identity_mapping "
-                "WHERE top_trader_id = ? OR author_id = ?",
-                (trader_id, square_author_id),
-            ).fetchone()
-            if existing is not None:
-                if any(existing[field] != value for field, value in expected.items()):
-                    raise ContractViolation("Smart Money/Square identity mapping conflict")
-                mapping_row = existing
-            else:
+            if author is None:
+                if not (
+                    artifact_schema
+                    == "binance-smart-money-square-identity-mapping/v2"
+                    and verification_status == "DIRECT_VERIFIED"
+                    and promotion_status == "APPROVED"
+                    and review_value is not None
+                ):
+                    raise ContractViolation(
+                        "identity mapping requires existing source-specific entities"
+                    )
                 self._connection.execute(
                     """
-                    INSERT INTO smart_money_square_identity_mapping (
-                        top_trader_id, author_id, verification_method,
-                        verified_at_utc, evidence_path, evidence_sha256,
-                        schema_version, source_system, created_at_utc, updated_at_utc
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO author_entity (
+                        author_id, identity_source, schema_version, source_system,
+                        created_at_utc, updated_at_utc
+                    ) VALUES (?, ?, ?, ?, ?, ?)
                     """,
                     (
-                        trader_id,
                         square_author_id,
-                        method,
-                        verified,
-                        path,
-                        digest,
+                        "BINANCE_SQUARE_UID_DIRECT_IDENTITY_EVIDENCE",
                         SCHEMA_VERSION,
                         source,
                         observed_at,
                         observed_at,
                     ),
                 )
-                mapping_row = self._connection.execute(
-                    "SELECT * FROM smart_money_square_identity_mapping "
-                    "WHERE top_trader_id = ?",
-                    (trader_id,),
-                ).fetchone()
+            existing_artifact = self._connection.execute(
+                "SELECT * FROM smart_money_identity_artifact WHERE artifact_sha256 = ?",
+                (digest,),
+            ).fetchone()
+            if existing_artifact is not None and any(
+                existing_artifact[field] != value
+                for field, value in artifact_expected.items()
+            ):
+                raise ContractViolation("identity artifact digest metadata conflict")
+            if existing_artifact is None:
+                self._connection.execute(
+                    """
+                    INSERT INTO smart_money_identity_artifact (
+                        artifact_sha256, artifact_schema, tenant_id,
+                        verification_status, promotion_status, captured_at_utc,
+                        artifact_path, request_manifest_path,
+                        request_manifest_sha256, raw_response_path,
+                        raw_response_sha256, top_trader_id_pointer,
+                        square_uid_pointer, review_json,
+                        schema_version, source_system, created_at_utc, updated_at_utc
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        digest,
+                        artifact_schema,
+                        tenant_id,
+                        verification_status,
+                        promotion_status,
+                        captured_at,
+                        path,
+                        manifest_path,
+                        manifest_sha256,
+                        raw_response_path,
+                        raw_response_sha256,
+                        top_pointer,
+                        square_pointer,
+                        review_json,
+                        SCHEMA_VERSION,
+                        source,
+                        observed_at,
+                        observed_at,
+                    ),
+                )
+            existing_event = self._connection.execute(
+                "SELECT * FROM smart_money_identity_mapping_event WHERE mapping_event_id = ?",
+                (event_id,),
+            ).fetchone()
+            if existing_event is None:
+                if promotion_status == "APPROVED":
+                    active = self._identity_mapping_projection(
+                        include_inactive=False, tenant_id=tenant_id
+                    )
+                    if any(
+                        item.top_trader_id == trader_id
+                        or item.author_id == square_author_id
+                        for item in active
+                    ):
+                        raise ContractViolation(
+                            "Smart Money/Square identity mapping conflict"
+                        )
+                self._connection.execute(
+                    """
+                    INSERT INTO smart_money_identity_mapping_event (
+                        mapping_event_id, tenant_id, top_trader_id, author_id,
+                        event_type, artifact_sha256, effective_at_utc, reason,
+                        schema_version, source_system, created_at_utc, updated_at_utc
+                    ) VALUES (?, ?, ?, ?, 'LINK', ?, ?, NULL, ?, ?, ?, ?)
+                    """,
+                    (
+                        event_id,
+                        tenant_id,
+                        trader_id,
+                        square_author_id,
+                        digest,
+                        verified,
+                        SCHEMA_VERSION,
+                        source,
+                        observed_at,
+                        observed_at,
+                    ),
+                )
             self._connection.commit()
         except sqlite3.IntegrityError as exc:
             self._connection.rollback()
@@ -2299,18 +2999,186 @@ class SQLiteRunLedger:
         except Exception:
             self._connection.rollback()
             raise
-        if mapping_row is None:
+        mapping = next(
+            (
+                item
+                for item in self._identity_mapping_projection(
+                    include_inactive=True, tenant_id=tenant_id
+                )
+                if item.top_trader_id == trader_id
+                and item.author_id == square_author_id
+            ),
+            None,
+        )
+        if mapping is None:
             raise RuntimeError("identity mapping insert was not observable")
-        return self._smart_money_identity_mapping(mapping_row)
+        return mapping
 
     def list_smart_money_square_identity_mappings(
         self,
+        *,
+        include_inactive: bool = False,
+        tenant_id: str | None = None,
     ) -> list[SmartMoneySquareIdentityMapping]:
+        return self._identity_mapping_projection(
+            include_inactive=include_inactive,
+            tenant_id=(
+                _required(tenant_id, "tenant_id") if tenant_id is not None else None
+            ),
+        )
+
+    def revoke_smart_money_square_identity_mapping(
+        self,
+        *,
+        tenant_id: str,
+        top_trader_id: str,
+        author_id: str,
+        revoked_at: datetime | str,
+        reason: str,
+        source_system: str = "identity_mapping_review",
+        now: datetime | str | None = None,
+    ) -> SmartMoneyIdentityMappingEvent:
+        tenant = _required(tenant_id, "tenant_id")
+        trader = _required(top_trader_id, "top_trader_id")
+        author = _required(author_id, "author_id")
+        effective = format_utc(revoked_at)
+        observed = format_utc(now or datetime.now(timezone.utc))
+        if parse_utc(effective) > parse_utc(observed):
+            raise ContractViolation("revoked_at cannot be in the future")
+        explanation = _required(reason, "reason")
+        source = _required(source_system, "source_system")
+        event_id = _stable_id(
+            "identitymappingevent", tenant, trader, author, "REVOKE", effective, explanation
+        )
+        try:
+            self._connection.execute("BEGIN IMMEDIATE")
+            active = self._identity_mapping_projection(
+                include_inactive=False, tenant_id=tenant
+            )
+            target = next(
+                (
+                    item
+                    for item in active
+                    if item.top_trader_id == trader and item.author_id == author
+                ),
+                None,
+            )
+            if target is None:
+                raise ContractViolation("cannot revoke an inactive identity mapping")
+            if parse_utc(effective) < parse_utc(target.verified_at_utc):
+                raise ContractViolation("revoked_at cannot precede the active LINK")
+            self._connection.execute(
+                """
+                INSERT OR IGNORE INTO smart_money_identity_mapping_event (
+                    mapping_event_id, tenant_id, top_trader_id, author_id,
+                    event_type, artifact_sha256, effective_at_utc, reason,
+                    schema_version, source_system, created_at_utc, updated_at_utc
+                ) VALUES (?, ?, ?, ?, 'REVOKE', NULL, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    event_id,
+                    tenant,
+                    trader,
+                    author,
+                    effective,
+                    explanation,
+                    SCHEMA_VERSION,
+                    source,
+                    observed,
+                    observed,
+                ),
+            )
+            row = self._connection.execute(
+                "SELECT * FROM smart_money_identity_mapping_event WHERE mapping_event_id = ?",
+                (event_id,),
+            ).fetchone()
+            self._connection.commit()
+        except Exception:
+            self._connection.rollback()
+            raise
+        if row is None:
+            raise RuntimeError("identity revocation was not observable")
+        return self._smart_money_identity_event(row)
+
+    def list_identity_mapping_events(
+        self, *, tenant_id: str | None = None
+    ) -> list[SmartMoneyIdentityMappingEvent]:
+        parameters: tuple[str, ...] = ()
+        predicate = ""
+        if tenant_id is not None:
+            predicate = "WHERE event.tenant_id = ?"
+            parameters = (_required(tenant_id, "tenant_id"),)
         rows = self._connection.execute(
-            "SELECT * FROM smart_money_square_identity_mapping "
-            "ORDER BY top_trader_id"
+            f"""
+            SELECT event.*
+            FROM smart_money_identity_mapping_event AS event
+            LEFT JOIN smart_money_identity_artifact AS artifact
+              ON artifact.artifact_sha256 = event.artifact_sha256
+            {predicate}
+            ORDER BY event.tenant_id, julianday(event.effective_at_utc),
+                     CASE
+                       WHEN event.event_type = 'REVOKE' THEN 2
+                       WHEN artifact.promotion_status = 'APPROVED' THEN 1
+                       ELSE 0
+                     END,
+                     event.mapping_event_id
+            """,
+            parameters,
         ).fetchall()
-        return [self._smart_money_identity_mapping(row) for row in rows]
+        return [self._smart_money_identity_event(row) for row in rows]
+
+    def _identity_mapping_projection(
+        self, *, include_inactive: bool, tenant_id: str | None
+    ) -> list[SmartMoneySquareIdentityMapping]:
+        parameters: tuple[str, ...] = ()
+        predicate = ""
+        if tenant_id is not None:
+            predicate = "WHERE event.tenant_id = ?"
+            parameters = (tenant_id,)
+        rows = self._connection.execute(
+            f"""
+            SELECT event.*, artifact.artifact_schema,
+                   artifact.verification_status, artifact.promotion_status,
+                   artifact.artifact_path, artifact.request_manifest_path,
+                   artifact.request_manifest_sha256, artifact.raw_response_path,
+                   artifact.raw_response_sha256, artifact.review_json
+            FROM smart_money_identity_mapping_event AS event
+            LEFT JOIN smart_money_identity_artifact AS artifact
+              ON artifact.artifact_sha256 = event.artifact_sha256
+            {predicate}
+            ORDER BY event.tenant_id, julianday(event.effective_at_utc),
+                     CASE
+                       WHEN event.event_type = 'REVOKE' THEN 2
+                       WHEN artifact.promotion_status = 'APPROVED' THEN 1
+                       ELSE 0
+                     END,
+                     event.mapping_event_id
+            """,
+            parameters,
+        ).fetchall()
+        current: dict[tuple[str, str, str], sqlite3.Row] = {}
+        for row in rows:
+            key = (str(row["tenant_id"]), str(row["top_trader_id"]), str(row["author_id"]))
+            if row["event_type"] == "REVOKE":
+                current.pop(key, None)
+            else:
+                current[key] = row
+        projected = [
+            self._smart_money_identity_mapping(row)
+            for _, row in sorted(current.items())
+            if include_inactive or row["promotion_status"] == "APPROVED"
+        ]
+        if not include_inactive:
+            seen_traders: set[tuple[str, str]] = set()
+            seen_authors: set[tuple[str, str]] = set()
+            for mapping in projected:
+                trader_key = (mapping.tenant_id, mapping.top_trader_id)
+                author_key = (mapping.tenant_id, mapping.author_id)
+                if trader_key in seen_traders or author_key in seen_authors:
+                    raise ContractViolation("Smart Money/Square identity mapping conflict")
+                seen_traders.add(trader_key)
+                seen_authors.add(author_key)
+        return projected
 
     def _legal_attempt(self, logical_run_id: str, attempt_id: str) -> sqlite3.Row:
         run_id = _required(logical_run_id, "logical_run_id")
@@ -2611,6 +3479,56 @@ class SQLiteRunLedger:
         )
 
     @staticmethod
+    def _stored_post_discovery_observation(
+        row: sqlite3.Row,
+    ) -> StoredPostDiscoveryObservation:
+        return StoredPostDiscoveryObservation(
+            post_discovery_observation_id=row[
+                "post_discovery_observation_id"
+            ],
+            logical_run_id=row["logical_run_id"],
+            attempt_id=row["attempt_id"],
+            post_id=row["post_id"],
+            canonical_post_url=row["canonical_post_url"],
+            source_channel=row["source_channel"],
+            source_record_ordinal=row["source_record_ordinal"],
+            expected_author_id=row["expected_author_id"],
+            expected_first_release_time_ms=row[
+                "expected_first_release_time_ms"
+            ],
+            source_profile_url=row["source_profile_url"],
+            observed_at_utc=row["observed_at_utc"],
+            schema_version=row["schema_version"],
+            source_system=row["source_system"],
+            created_at_utc=row["created_at_utc"],
+            updated_at_utc=row["updated_at_utc"],
+        )
+
+    @staticmethod
+    def _stored_profile_fetch_outcome(
+        row: sqlite3.Row,
+    ) -> StoredProfileFetchOutcome:
+        return StoredProfileFetchOutcome(
+            profile_fetch_outcome_id=row["profile_fetch_outcome_id"],
+            logical_run_id=row["logical_run_id"],
+            attempt_id=row["attempt_id"],
+            profile_cohort=row["profile_cohort"],
+            planned_author_id=row["planned_author_id"],
+            planned_id_type=row["planned_id_type"],
+            resolved_author_id=row["resolved_author_id"],
+            fetch_status=row["fetch_status"],
+            post_count=row["post_count"],
+            pages_fetched=row["pages_fetched"],
+            termination_reason=row["termination_reason"],
+            error_detail=row["error_detail"],
+            observed_at_utc=row["observed_at_utc"],
+            schema_version=row["schema_version"],
+            source_system=row["source_system"],
+            created_at_utc=row["created_at_utc"],
+            updated_at_utc=row["updated_at_utc"],
+        )
+
+    @staticmethod
     def _smart_money_capture(row: sqlite3.Row) -> SmartMoneyLeaderboardCapture:
         return SmartMoneyLeaderboardCapture(
             smart_money_capture_id=row["smart_money_capture_id"],
@@ -2662,7 +3580,9 @@ class SQLiteRunLedger:
 
     @staticmethod
     def _smart_money_profile(row: sqlite3.Row) -> SmartMoneyProfileObservation:
-        load_optional = lambda value: json.loads(value) if value is not None else None
+        def load_optional(value: str | None) -> Any:
+            return json.loads(value) if value is not None else None
+
         return SmartMoneyProfileObservation(
             smart_money_profile_observation_id=row[
                 "smart_money_profile_observation_id"
@@ -2706,12 +3626,44 @@ class SQLiteRunLedger:
         row: sqlite3.Row,
     ) -> SmartMoneySquareIdentityMapping:
         return SmartMoneySquareIdentityMapping(
+            mapping_event_id=row["mapping_event_id"],
+            tenant_id=row["tenant_id"],
             top_trader_id=row["top_trader_id"],
             author_id=row["author_id"],
-            verification_method=row["verification_method"],
-            verified_at_utc=row["verified_at_utc"],
-            evidence_path=row["evidence_path"],
-            evidence_sha256=row["evidence_sha256"],
+            verification_method="EXPLICIT_SOURCE_EVIDENCE",
+            verification_status=row["verification_status"],
+            promotion_status=row["promotion_status"],
+            verified_at_utc=row["effective_at_utc"],
+            evidence_path=row["artifact_path"],
+            evidence_sha256=row["artifact_sha256"],
+            request_manifest_path=row["request_manifest_path"],
+            request_manifest_sha256=row["request_manifest_sha256"],
+            raw_response_path=row["raw_response_path"],
+            raw_response_sha256=row["raw_response_sha256"],
+            review=(
+                json.loads(row["review_json"])
+                if row["review_json"] is not None
+                else None
+            ),
+            schema_version=row["schema_version"],
+            source_system=row["source_system"],
+            created_at_utc=row["created_at_utc"],
+            updated_at_utc=row["updated_at_utc"],
+        )
+
+    @staticmethod
+    def _smart_money_identity_event(
+        row: sqlite3.Row,
+    ) -> SmartMoneyIdentityMappingEvent:
+        return SmartMoneyIdentityMappingEvent(
+            mapping_event_id=row["mapping_event_id"],
+            tenant_id=row["tenant_id"],
+            top_trader_id=row["top_trader_id"],
+            author_id=row["author_id"],
+            event_type=row["event_type"],
+            artifact_sha256=row["artifact_sha256"],
+            effective_at_utc=row["effective_at_utc"],
+            reason=row["reason"],
             schema_version=row["schema_version"],
             source_system=row["source_system"],
             created_at_utc=row["created_at_utc"],

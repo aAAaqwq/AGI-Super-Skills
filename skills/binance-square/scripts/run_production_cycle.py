@@ -11,19 +11,25 @@ import subprocess
 import sys
 from typing import Callable
 
-
 PROJECT_DIR = Path(__file__).resolve().parents[1]
+if str(PROJECT_DIR) not in sys.path:
+    sys.path.insert(0, str(PROJECT_DIR))
+
+from scanner.contracts import ContractViolation
+from scanner.discovery import validate_feed_discovery_result
 
 
 @dataclass(frozen=True, slots=True)
 class ProductionCycleConfig:
     project_dir: Path = PROJECT_DIR
     signals_json: Path = PROJECT_DIR / "data" / "signal_check_input.json"
+    leaderboard_seed_evidence: Path | None = None
     output_dir: Path = PROJECT_DIR / "data" / "v4" / "runs"
     database: Path = PROJECT_DIR / "data" / "v4" / "radar.sqlite"
     job_namespace: str = "production"
     production_job_id: str = "binance-square-shadow-v4"
     smart_money_square_mapping_evidence: Path | None = None
+    smart_money_square_mapping_catalog: Path | None = None
     limit: int = 200
 
 
@@ -51,6 +57,10 @@ def run_production_cycle(
         raise RuntimeError("Feed refresh did not produce an immutable snapshot") from exc
     if latest_payload.get("status") != "ok" or not latest_payload.get("scanned_at"):
         raise RuntimeError("Feed refresh result is not a successful timestamped snapshot")
+    try:
+        validate_feed_discovery_result(latest_payload, allow_legacy=False)
+    except ContractViolation as exc:
+        raise RuntimeError("Feed refresh result has no valid coverage contract") from exc
     if immutable_content != latest_content:
         raise RuntimeError("immutable Feed snapshot differs from the refreshed latest payload")
     radar_command = [
@@ -63,19 +73,42 @@ def run_production_cycle(
         str(immutable_snapshot),
         "--signals-json",
         str(config.signals_json),
-        "--output-dir",
-        str(config.output_dir),
-        "--database",
-        str(config.database),
-        "--job-namespace",
-        config.job_namespace,
-        "--production-job-id",
-        config.production_job_id,
-        "--limit",
-        str(config.limit),
-        "--no-send",
     ]
-    if config.smart_money_square_mapping_evidence is not None:
+    if config.leaderboard_seed_evidence is not None:
+        radar_command.extend(
+            [
+                "--leaderboard-seed-evidence",
+                str(config.leaderboard_seed_evidence),
+            ]
+        )
+    radar_command.extend(
+        [
+            "--output-dir",
+            str(config.output_dir),
+            "--database",
+            str(config.database),
+            "--job-namespace",
+            config.job_namespace,
+            "--production-job-id",
+            config.production_job_id,
+            "--limit",
+            str(config.limit),
+            "--no-send",
+        ]
+    )
+    if (
+        config.smart_money_square_mapping_evidence is not None
+        and config.smart_money_square_mapping_catalog is not None
+    ):
+        raise ValueError("use either one Smart Money mapping artifact or one catalog")
+    if config.smart_money_square_mapping_catalog is not None:
+        radar_command.extend(
+            [
+                "--smart-money-square-mapping-catalog",
+                str(config.smart_money_square_mapping_catalog),
+            ]
+        )
+    elif config.smart_money_square_mapping_evidence is not None:
         radar_command.extend(
             [
                 "--smart-money-square-mapping-evidence",
@@ -88,11 +121,14 @@ def run_production_cycle(
 def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--signals-json", type=Path, default=ProductionCycleConfig.signals_json)
+    parser.add_argument("--leaderboard-seed-evidence", type=Path)
     parser.add_argument("--output-dir", type=Path, default=ProductionCycleConfig.output_dir)
     parser.add_argument("--database", type=Path, default=ProductionCycleConfig.database)
     parser.add_argument("--job-namespace", default="production")
     parser.add_argument("--production-job-id", default="binance-square-shadow-v4")
-    parser.add_argument("--smart-money-square-mapping-evidence", type=Path)
+    identity_mapping = parser.add_mutually_exclusive_group()
+    identity_mapping.add_argument("--smart-money-square-mapping-evidence", type=Path)
+    identity_mapping.add_argument("--smart-money-square-mapping-catalog", type=Path)
     parser.add_argument("--limit", type=int, default=200)
     parser.add_argument("--no-send", action="store_true", default=True)
     return parser.parse_args(argv)
@@ -105,12 +141,16 @@ def main(argv: list[str] | None = None) -> int:
     run_production_cycle(
         ProductionCycleConfig(
             signals_json=args.signals_json,
+            leaderboard_seed_evidence=args.leaderboard_seed_evidence,
             output_dir=args.output_dir,
             database=args.database,
             job_namespace=args.job_namespace,
             production_job_id=args.production_job_id,
             smart_money_square_mapping_evidence=(
                 args.smart_money_square_mapping_evidence
+            ),
+            smart_money_square_mapping_catalog=(
+                args.smart_money_square_mapping_catalog
             ),
             limit=args.limit,
         )

@@ -91,6 +91,86 @@ def smart_money_input() -> dict[str, object]:
 
 
 class LocalReportContractTests(unittest.TestCase):
+    def test_profile_cohorts_render_separate_complete_count_lines(self) -> None:
+        profile_channel = {
+            "status": "PARTIAL",
+            "planned_authors": 69,
+            "complete_authors": 8,
+            "empty_authors": 4,
+            "partial_authors": 3,
+            "failed_authors": 4,
+            "not_attempted_authors": 50,
+            "source_records": 24,
+            "smart_money_profiles": {
+                "planned_authors": 60,
+                "complete_authors": 1,
+                "empty_authors": 2,
+                "partial_authors": 3,
+                "failed_authors": 4,
+                "not_attempted_authors": 50,
+                "source_records": 13,
+                "square_identity_mapping_coverage": {
+                    "covered": 1,
+                    "expected": 60,
+                    "label": "1/60 (1.7%)",
+                },
+            },
+            "seed_profiles": {
+                "planned_authors": 9,
+                "complete_authors": 7,
+                "empty_authors": 2,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+                "source_records": 11,
+            },
+        }
+
+        markdown = render_local_markdown(
+            build_local_report(report_input(profile_channel=profile_channel))
+        )
+
+        self.assertIn(
+            "Profile主通道：PARTIAL｜计划作者 69｜完成 8｜未尝试 50",
+            markdown,
+        )
+        self.assertIn(
+            "Smart Money Profiles：计划 60｜完成 1｜空 2｜部分 3｜失败 4｜"
+            "未尝试 50｜来源记录 13｜mapping 1/60 (1.7%)",
+            markdown,
+        )
+        self.assertIn(
+            "Seed Profiles：计划 9｜完成 7｜空 2｜部分 0｜失败 0｜"
+            "未尝试 0｜来源记录 11",
+            markdown,
+        )
+
+    def test_feed_coverage_contract_is_visible_in_json_and_markdown(self) -> None:
+        report = build_local_report(
+            report_input(
+                report_generated_at="2026-08-01T08:02:00Z",
+                source_coverage={
+                    "FEED": {
+                        "status": "PARTIAL",
+                        "provenance": "LIVE_CAPTURE",
+                        "source_capture_time_utc": "2026-08-01T08:01:00Z",
+                        "coverage_contract_version": "square-feed-coverage/v1",
+                        "coverage_status": "PARTIAL",
+                        "termination_reason": "SCROLL_LIMIT",
+                        "reason": "scroll budget reached",
+                    }
+                },
+            )
+        )
+
+        feed = report["source_coverage"]["FEED"]
+        self.assertEqual("PARTIAL", feed["coverage_status"])
+        self.assertEqual("SCROLL_LIMIT", feed["termination_reason"])
+        self.assertIn(
+            "coverage PARTIAL｜termination SCROLL_LIMIT",
+            render_local_markdown(report),
+        )
+
     def test_source_coverage_keeps_capture_time_separate_from_report_time(self) -> None:
         report = build_local_report(
             report_input(
@@ -268,6 +348,9 @@ class LocalReportContractTests(unittest.TestCase):
                 "new": 5,
                 "duplicate": 2,
                 "dedup_status": "COMPUTED",
+                "source_observations": 9,
+                "deduplicated_candidates": 9,
+                "same_run_duplicates": 0,
             },
             report["post_counts"],
         )

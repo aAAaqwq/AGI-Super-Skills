@@ -3,7 +3,7 @@
 > 本文件包含源项目实施历史和设计门。仓库同步只发布可复现代码、迁移和测试；历史动态证据、账号状态和报告不构成当前提交的运行时验证凭证。
 
 > 规划日期：2026-07-31（America/Los_Angeles）/ 2026-08-01（UTC）
-> 状态：v4.1 只读影子实现已形成；Smart Money PNL/ROI 已接入，发布门仍未通过
+> 状态：v4.2 只读影子实现已形成；Feed有界覆盖、真实Profile分页与identity mapping/v2已接入，发布门仍未通过
 > 产品合同：`GRILL_DECISIONS.md` 的 26 项已确认决策
 > 运行基线：v3.1；继续保留并兼容，不原地覆盖历史数据
 > 安全边界：只生成研究雷达，不连接交易账户、不自动下单、不输出仓位或杠杆
@@ -12,11 +12,11 @@
 
 本节是当前事实优先的状态覆盖；下文 WBS 保留为完整目标与历史决策记录。
 
-- 200项离线测试已覆盖顺序生产影子入口、Feed不可变快照与10分钟新鲜度、显式job namespace和dedup基线隔离、完整Futures合约目录、官方新闻失败关闭、Smart Money双ID映射、Profile计划/解析边界、五类来源血缘和严格TOP报告schema。
-- 量化门新增：发布后到决策时点的SL/TP保守回放、发布前结构 + ATR止损合理性、独立作者/内容簇共识、布林收缩突破确认，以及手续费/滑点/资金费率/深度后的RR门。
+- 当前全量离线测试覆盖顺序生产影子入口、Feed不可变快照与有界停止证据、真实Profile分页、显式job namespace和dedup基线隔离、完整Futures合约目录、官方新闻失败关闭、Smart Money双ID mapping/v2与catalog、五类来源血缘和严格TOP报告schema。确切测试项数以发布回执为准。
+- 量化门保留发布后到决策时点的SL/TP保守回放、发布前结构 + ATR止损合理性、独立作者/内容簇共识和布林收缩突破确认。本轮帖子覆盖改造明确不新增手续费、滑点、资金费率或深度接口。
 - 成本模型未配置时强制 `WATCH`，不再允许名义RR直接成为可执行TOP。
-- 组件级只读观测已看到 Smart Money `PNL/ROI` 60个唯一交易员详情和一次74条有效Feed快照；这不是合法UTC时槽内的完整生产canary。官方新闻实测遭遇HTTP 429，按失败处理。
-- `topTraderId → squareUid` 仍为0/60；默认真实Profile抓取器、60天point-in-time作者表现和生产CLI成本配置仍缺失。完整发布门继续阻塞，详见 `OPTIMIZATION_VERIFICATION.md`。
+- 组件级只读观测已看到 Smart Money `PNL/ROI` 60个唯一交易员详情；当前Feed surface仅4条并正确标为`PARTIAL`。9个独立seed Profile已取得9/9分页终止证明和12条严格24h帖子。这些都不是合法UTC时槽内的完整生产canary。
+- 两份同响应双ID证据已独立批准并进入本地catalog，`topTraderId → squareUid` 为2/60；其余58条保持未映射。默认真实Profile抓取器已经接入，60天point-in-time作者表现仍缺失。完整发布门继续阻塞，详见 `OPTIMIZATION_VERIFICATION.md`。
 
 ## 一、结果与成功标准
 
@@ -72,7 +72,7 @@
 
 - 源项目运行曾产生不可变 Smart Money 证据，但动态响应、运行数据库和操作者环境回执不随公共 Skill 发布；安装者必须自行重新采集并保存当次哈希。
 - 证据封装时间 `13:08:02.218117Z`；榜单数据更新时间 `09:59:59Z`；排行 `OBSERVED_WINDOW=13:06:40.786480Z → 13:06:46.944740Z`，不是原子快照。
-- PNL/ROI各30行、unique `topTraderId`=60，公开交易员详情60/60；`topTraderId → squareUid` 显式映射0/60，Tier A eligible=0。
+- PNL/ROI各30行、unique `topTraderId`=60，公开交易员详情60/60；本地动态证据已批准2/60显式映射，发布包默认不携带这些动态artifact，Tier A eligible仍为0。
 - ROI小额高倍排名不能独立满足Tier A准入；内容质量、交易时长、至少20条已触发信号以及60天前向结果门保持不变。
 - Fixture导入执行语义级兼容门：固定 `30D`、`DESC`、`PNL+ROI`、10行×3页及两个 `onlyShow* = false` filter；payload hash正确但合同语义被改写时仍拒绝。
 - 身份映射证据门要求真实文件、文件实际 SHA-256，以及schema对 `topTraderId`/`squareUid` 双ID的显式绑定，不能用声明路径或自行填写hash代替证据。

@@ -70,12 +70,21 @@ def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
             "of making Smart Money network requests"
         ),
     )
-    parser.add_argument(
+    identity_mapping = parser.add_mutually_exclusive_group()
+    identity_mapping.add_argument(
         "--smart-money-square-mapping-evidence",
         type=Path,
         help=(
             "explicit SHA-verified topTraderId-to-squareUid evidence; names are "
             "never used for identity mapping"
+        ),
+    )
+    identity_mapping.add_argument(
+        "--smart-money-square-mapping-catalog",
+        type=Path,
+        help=(
+            "immutable catalog of SHA-verified APPROVED mapping/v2 artifacts; "
+            "each member is fully revalidated before Profile use"
         ),
     )
     parser.add_argument(
@@ -141,6 +150,9 @@ def main(argv: list[str] | None = None) -> int:
             smart_money_fixture=args.smart_money_fixture,
             smart_money_square_mapping_evidence=(
                 args.smart_money_square_mapping_evidence
+            ),
+            smart_money_square_mapping_catalog=(
+                args.smart_money_square_mapping_catalog
             ),
             official_news_enabled=args.official_news,
             limit=args.limit,

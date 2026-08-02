@@ -19,8 +19,20 @@ from .contracts import (
 )
 
 
-SMART_MONEY_SQUARE_MAPPING_SCHEMA = (
+SMART_MONEY_SQUARE_MAPPING_SCHEMA_V1 = (
     "binance-smart-money-square-identity-mapping/v1"
+)
+SMART_MONEY_SQUARE_MAPPING_SCHEMA = (
+    "binance-smart-money-square-identity-mapping/v2"
+)
+SMART_MONEY_SQUARE_IDENTITY_CATALOG_SCHEMA = (
+    "binance-smart-money-square-identity-catalog/v1"
+)
+PUBLIC_PROFILE_REQUEST_MANIFEST_SCHEMA = (
+    "binance-public-profile-request-manifest/v1"
+)
+PUBLIC_PROFILE_ENDPOINT = (
+    "https://www.binance.com/bapi/composite/v3/friendly/pgc/user/client"
 )
 IDENTITY_EVIDENCE_PROVENANCE = frozenset({"LIVE_CAPTURE", "FIXTURE_REPLAY"})
 
@@ -80,6 +92,20 @@ class SmartMoneySquareIdentityMapping:
     top_trader_id: str
     square_uid: str
     verified_at: str
+    username: str | None = None
+    raw_response_path: str | None = None
+    raw_response_sha256: str | None = None
+    top_trader_id_pointer: str | None = None
+    square_uid_pointer: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class IdentityMappingReview:
+    version: str
+    reviewer: str
+    reviewed_at: str
+    decision: str
+    reason: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -92,11 +118,24 @@ class SmartMoneySquareIdentityEvidence:
     evidence_path: str
     evidence_sha256: str
     mappings: tuple[SmartMoneySquareIdentityMapping, ...]
+    tenant_id: str = "legacy-global"
+    verification_status: str = "LEGACY_SELF_REPORTED"
+    promotion_status: str = "PROPOSED"
+    request_manifest_path: str | None = None
+    request_manifest_sha256: str | None = None
+    review: IdentityMappingReview | None = None
+    catalog_members: tuple[tuple[str, str], ...] = ()
 
     def square_uid_for(self, top_trader_id: str) -> str | None:
         if not isinstance(top_trader_id, str) or not top_trader_id.strip():
             return None
         requested = top_trader_id.strip()
+        is_active = self.promotion_status == "APPROVED" or (
+            self.schema == SMART_MONEY_SQUARE_MAPPING_SCHEMA_V1
+            and self.provenance == "FIXTURE_REPLAY"
+        )
+        if not is_active:
+            return None
         return next(
             (
                 mapping.square_uid
@@ -673,9 +712,15 @@ def load_smart_money_square_identity_evidence(
         raise ContractViolation("Smart Money identity mapping evidence SHA256 mismatch")
     if not isinstance(payload, dict):
         raise ContractViolation("Smart Money identity mapping evidence must be an object")
-    if payload.get("schema") != SMART_MONEY_SQUARE_MAPPING_SCHEMA:
+    schema = payload.get("schema")
+    if schema not in {
+        SMART_MONEY_SQUARE_MAPPING_SCHEMA_V1,
+        SMART_MONEY_SQUARE_MAPPING_SCHEMA,
+    }:
         raise ContractViolation(
-            f"Smart Money identity mapping schema must be {SMART_MONEY_SQUARE_MAPPING_SCHEMA}"
+            "Smart Money identity mapping schema must be "
+            f"{SMART_MONEY_SQUARE_MAPPING_SCHEMA_V1} or "
+            f"{SMART_MONEY_SQUARE_MAPPING_SCHEMA}"
         )
     captured_raw = payload.get("captured_at_utc", payload.get("verified_at_utc"))
     try:
@@ -689,6 +734,16 @@ def load_smart_money_square_identity_evidence(
         raise ContractViolation(
             "Smart Money identity mapping provenance must be LIVE_CAPTURE or FIXTURE_REPLAY"
         )
+    if schema == SMART_MONEY_SQUARE_MAPPING_SCHEMA:
+        return _load_v2_identity_evidence(
+            evidence_path=evidence_path,
+            content=content,
+            digest=digest,
+            payload=payload,
+            captured_at=captured_at,
+            provenance=provenance,
+        )
+
     raw_mappings = payload.get("mappings")
     if raw_mappings is None and (
         "topTraderId" in payload or "squareUid" in payload
@@ -738,12 +793,357 @@ def load_smart_money_square_identity_evidence(
             )
         )
     return SmartMoneySquareIdentityEvidence(
-        schema=SMART_MONEY_SQUARE_MAPPING_SCHEMA,
+        schema=SMART_MONEY_SQUARE_MAPPING_SCHEMA_V1,
         captured_at=captured_at,
         provenance=provenance,
         evidence_path=str(evidence_path),
         evidence_sha256=digest,
         mappings=tuple(mappings),
+        verification_status="LEGACY_SELF_REPORTED",
+        promotion_status="PROPOSED",
+    )
+
+
+def load_smart_money_square_identity_catalog(
+    path: str | Path,
+    *,
+    expected_sha256: str | None = None,
+) -> SmartMoneySquareIdentityEvidence:
+    """Load and aggregate an immutable catalog of APPROVED mapping/v2 files."""
+
+    catalog_path = Path(path)
+    try:
+        content = catalog_path.read_bytes()
+        payload = json.loads(content)
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ContractViolation(
+            f"cannot read Smart Money identity catalog: {catalog_path}"
+        ) from exc
+    digest = sha256(content).hexdigest()
+    if expected_sha256 is not None and (
+        not isinstance(expected_sha256, str)
+        or expected_sha256.casefold() != digest
+    ):
+        raise ContractViolation("Smart Money identity catalog SHA256 mismatch")
+    if not isinstance(payload, dict) or payload.get("schema") != (
+        SMART_MONEY_SQUARE_IDENTITY_CATALOG_SCHEMA
+    ):
+        raise ContractViolation(
+            "Smart Money identity catalog schema must be "
+            f"{SMART_MONEY_SQUARE_IDENTITY_CATALOG_SCHEMA}"
+        )
+    if {"catalog_sha256", "receipt"}.intersection(payload):
+        raise ContractViolation("catalog hash belongs in an external receipt")
+    tenant_id = _required_text(payload.get("tenant_id"), "catalog.tenant_id")
+    provenance = _required_text(
+        payload.get("provenance"), "catalog.provenance"
+    ).upper()
+    if provenance not in IDENTITY_EVIDENCE_PROVENANCE:
+        raise ContractViolation("identity catalog provenance is invalid")
+    raw_artifacts = payload.get("artifacts")
+    if not isinstance(raw_artifacts, list) or not raw_artifacts:
+        raise ContractViolation("identity catalog requires non-empty artifacts")
+
+    combined: list[
+        tuple[SmartMoneySquareIdentityMapping, SmartMoneySquareIdentityEvidence]
+    ] = []
+    seen_paths: set[Path] = set()
+    seen_traders: set[str] = set()
+    seen_square_uids: set[str] = set()
+    for index, raw in enumerate(raw_artifacts):
+        if not isinstance(raw, dict) or set(raw) != {"path", "sha256"}:
+            raise ContractViolation(
+                f"catalog artifacts[{index}] must contain only path and sha256"
+            )
+        member_path = _resolved_evidence_path(
+            catalog_path, raw.get("path"), f"catalog artifacts[{index}].path"
+        )
+        member_path = member_path.resolve()
+        if member_path in seen_paths:
+            raise ContractViolation("identity catalog contains duplicate artifact path")
+        seen_paths.add(member_path)
+        member_digest = _sha256_reference(
+            raw.get("sha256"), f"catalog artifacts[{index}].sha256"
+        )
+        evidence = load_smart_money_square_identity_evidence(
+            member_path, expected_sha256=member_digest
+        )
+        if evidence.schema != SMART_MONEY_SQUARE_MAPPING_SCHEMA:
+            raise ContractViolation("identity catalog accepts only mapping/v2 artifacts")
+        if (
+            evidence.verification_status != "DIRECT_VERIFIED"
+            or evidence.promotion_status != "APPROVED"
+        ):
+            raise ContractViolation(
+                "identity catalog accepts only DIRECT_VERIFIED APPROVED artifacts"
+            )
+        if evidence.tenant_id != tenant_id:
+            raise ContractViolation("identity catalog members must share one tenant")
+        if evidence.provenance != provenance:
+            raise ContractViolation("identity catalog members must share one provenance")
+        if len(evidence.mappings) != 1:
+            raise ContractViolation("identity catalog members must bind exactly one pair")
+        mapping = evidence.mappings[0]
+        if mapping.top_trader_id in seen_traders:
+            raise ContractViolation("identity catalog topTraderId is not one-to-one")
+        if mapping.square_uid in seen_square_uids:
+            raise ContractViolation("identity catalog squareUid is not one-to-one")
+        seen_traders.add(mapping.top_trader_id)
+        seen_square_uids.add(mapping.square_uid)
+        combined.append((mapping, evidence))
+
+    combined.sort(
+        key=lambda item: (
+            item[0].top_trader_id,
+            item[0].square_uid,
+            str(Path(item[1].evidence_path).resolve()),
+        )
+    )
+    return SmartMoneySquareIdentityEvidence(
+        schema=SMART_MONEY_SQUARE_IDENTITY_CATALOG_SCHEMA,
+        captured_at=max(evidence.captured_at for _, evidence in combined),
+        provenance=provenance,
+        evidence_path=str(catalog_path),
+        evidence_sha256=digest,
+        mappings=tuple(mapping for mapping, _ in combined),
+        tenant_id=tenant_id,
+        verification_status="DIRECT_VERIFIED",
+        promotion_status="APPROVED",
+        catalog_members=tuple(
+            (
+                str(Path(evidence.evidence_path).resolve()),
+                evidence.evidence_sha256,
+            )
+            for _, evidence in combined
+        ),
+    )
+
+
+def _resolved_evidence_path(base: Path, value: Any, field_name: str) -> Path:
+    raw = _required_text(value, field_name)
+    path = Path(raw)
+    return path if path.is_absolute() else base.parent / path
+
+
+def _sha256_reference(value: Any, field_name: str) -> str:
+    digest = _required_text(value, field_name).casefold()
+    if len(digest) != 64 or any(character not in "0123456789abcdef" for character in digest):
+        raise ContractViolation(f"{field_name} must be a lowercase SHA256")
+    return digest
+
+
+def _read_hash_bound_file(path: Path, digest: str, field_name: str) -> bytes:
+    try:
+        content = path.read_bytes()
+    except OSError as exc:
+        raise ContractViolation(f"{field_name} must reference a readable file") from exc
+    if sha256(content).hexdigest() != digest:
+        raise ContractViolation(f"{field_name} SHA256 mismatch")
+    return content
+
+
+def _json_pointer(document: Any, pointer: str) -> Any:
+    if not isinstance(pointer, str) or not pointer.startswith("/"):
+        raise ContractViolation("identity evidence JSON Pointer is invalid")
+    value = document
+    for raw_token in pointer[1:].split("/"):
+        token = raw_token.replace("~1", "/").replace("~0", "~")
+        if isinstance(value, dict) and token in value:
+            value = value[token]
+        else:
+            raise ContractViolation(f"identity evidence JSON Pointer not found: {pointer}")
+    return value
+
+
+def _load_v2_identity_evidence(
+    *,
+    evidence_path: Path,
+    content: bytes,
+    digest: str,
+    payload: dict[str, Any],
+    captured_at: str,
+    provenance: str,
+) -> SmartMoneySquareIdentityEvidence:
+    forbidden_self_hashes = {"artifact_sha256", "mapping_sha256", "receipt"}
+    if forbidden_self_hashes.intersection(payload):
+        raise ContractViolation("mapping artifact hash belongs in an external receipt")
+    tenant_id = _required_text(payload.get("tenant_id"), "tenant_id")
+    verification_status = str(payload.get("verification_status") or "").upper()
+    if verification_status != "DIRECT_VERIFIED":
+        raise ContractViolation("verification_status must be DIRECT_VERIFIED")
+    promotion_status = str(payload.get("promotion_status") or "").upper()
+    if promotion_status not in {"PROPOSED", "APPROVED"}:
+        raise ContractViolation("promotion_status must be PROPOSED or APPROVED")
+
+    manifest_ref = payload.get("request_manifest")
+    if not isinstance(manifest_ref, dict):
+        raise ContractViolation("v2 identity evidence requires request_manifest")
+    manifest_path = _resolved_evidence_path(
+        evidence_path, manifest_ref.get("path"), "request_manifest.path"
+    )
+    manifest_digest = _sha256_reference(
+        manifest_ref.get("sha256"), "request_manifest.sha256"
+    )
+    manifest_content = _read_hash_bound_file(
+        manifest_path, manifest_digest, "request_manifest"
+    )
+    try:
+        manifest = json.loads(manifest_content)
+    except (UnicodeError, json.JSONDecodeError) as exc:
+        raise ContractViolation("request manifest must be readable JSON") from exc
+    if not isinstance(manifest, dict) or manifest.get("schema") != (
+        PUBLIC_PROFILE_REQUEST_MANIFEST_SCHEMA
+    ):
+        raise ContractViolation("request manifest schema is invalid")
+    if format_utc(manifest.get("captured_at_utc")) != captured_at:
+        raise ContractViolation("mapping and request manifest capture times differ")
+    if manifest.get("tenant_id") != tenant_id:
+        raise ContractViolation("mapping and request manifest tenants differ")
+
+    request = manifest.get("request")
+    if not isinstance(request, dict):
+        raise ContractViolation("request manifest requires request metadata")
+    if request.get("method") != "POST" or request.get("url") != PUBLIC_PROFILE_ENDPOINT:
+        raise ContractViolation("request manifest endpoint contract is invalid")
+    body = request.get("body")
+    required_body = {
+        "getFollowCount": True,
+        "queryFollowersInfo": True,
+        "queryRelationTokens": True,
+    }
+    if not isinstance(body, dict) or any(body.get(key) is not value for key, value in required_body.items()):
+        raise ContractViolation("request manifest body contract is invalid")
+    username = _required_text(body.get("username"), "request.body.username")
+    if set(body) != {"username", *required_body}:
+        raise ContractViolation("request manifest body contains unsupported fields")
+    headers = request.get("headers")
+    allowed_headers = {"accept", "content-type", "user-agent"}
+    if not isinstance(headers, dict) or {
+        str(key).casefold() for key in headers
+    } != allowed_headers:
+        raise ContractViolation("request manifest headers violate the anonymous allowlist")
+    normalized_headers = {str(key).casefold(): value for key, value in headers.items()}
+    if normalized_headers.get("content-type") != "application/json":
+        raise ContractViolation("request manifest Content-Type must be application/json")
+    credential_metadata = request.get("credential_metadata")
+    if credential_metadata != {
+        "mode": "ANONYMOUS",
+        "cookie_jar_used": False,
+        "authorization_used": False,
+        "browser_session_used": False,
+    }:
+        raise ContractViolation("credential metadata must prove an anonymous independent client")
+
+    response = manifest.get("response")
+    if not isinstance(response, dict):
+        raise ContractViolation("request manifest requires response metadata")
+    if response.get("http_status") != 200:
+        raise ContractViolation("identity response HTTP status must be 200")
+    api_status = response.get("api_status")
+    if not isinstance(api_status, dict) or api_status.get("success") is not True:
+        raise ContractViolation("identity response API status was not successful")
+    raw_path_from_manifest = _resolved_evidence_path(
+        manifest_path, response.get("raw_path"), "response.raw_path"
+    )
+    raw_digest_from_manifest = _sha256_reference(
+        response.get("raw_sha256"), "response.raw_sha256"
+    )
+    raw_content = _read_hash_bound_file(
+        raw_path_from_manifest, raw_digest_from_manifest, "raw_response"
+    )
+    try:
+        raw_payload = json.loads(raw_content)
+    except (UnicodeError, json.JSONDecodeError) as exc:
+        raise ContractViolation("raw identity response must be readable JSON") from exc
+    if not isinstance(raw_payload, dict) or raw_payload.get("success") is not True:
+        raise ContractViolation("raw identity response was not successful")
+    if api_status.get("code") != raw_payload.get("code") or api_status.get("message") != raw_payload.get("message"):
+        raise ContractViolation("manifest API status does not match raw response")
+
+    raw_mappings = payload.get("mappings")
+    if not isinstance(raw_mappings, list) or len(raw_mappings) != 1:
+        raise ContractViolation("each v2 artifact must bind exactly one anonymous response")
+    raw_mapping = raw_mappings[0]
+    if not isinstance(raw_mapping, dict):
+        raise ContractViolation("identity mapping must be an object")
+    mapping_username = _required_text(raw_mapping.get("username"), "mappings[0].username")
+    if mapping_username != username:
+        raise ContractViolation("mapping username does not match request body")
+    top_trader_id = _required_text(raw_mapping.get("topTraderId"), "mappings[0].topTraderId")
+    square_uid = _required_text(raw_mapping.get("squareUid"), "mappings[0].squareUid")
+    verified_at = format_utc(raw_mapping.get("verified_at_utc"))
+    if verified_at != captured_at:
+        raise ContractViolation("mapping verified_at must equal capture time")
+    raw_ref = raw_mapping.get("raw_response")
+    if not isinstance(raw_ref, dict):
+        raise ContractViolation("mapping requires raw_response reference")
+    raw_path_from_mapping = _resolved_evidence_path(
+        evidence_path, raw_ref.get("path"), "mappings[0].raw_response.path"
+    )
+    raw_digest_from_mapping = _sha256_reference(
+        raw_ref.get("sha256"), "mappings[0].raw_response.sha256"
+    )
+    if (
+        raw_path_from_mapping.resolve() != raw_path_from_manifest.resolve()
+        or raw_digest_from_mapping != raw_digest_from_manifest
+    ):
+        raise ContractViolation("mapping and manifest raw response references differ")
+    pointers = raw_mapping.get("json_pointers")
+    expected_pointers = {
+        "topTraderId": "/data/topTraderId",
+        "squareUid": "/data/squareUid",
+    }
+    if pointers != expected_pointers:
+        raise ContractViolation("identity mapping JSON Pointers are not authoritative")
+    if _json_pointer(raw_payload, pointers["topTraderId"]) != top_trader_id:
+        raise ContractViolation("raw topTraderId does not match mapping")
+    if _json_pointer(raw_payload, pointers["squareUid"]) != square_uid:
+        raise ContractViolation("raw squareUid does not match mapping")
+
+    raw_review = payload.get("review")
+    review: IdentityMappingReview | None = None
+    if promotion_status == "PROPOSED":
+        if raw_review is not None:
+            raise ContractViolation("PROPOSED mapping must not carry an approval review")
+    else:
+        if not isinstance(raw_review, dict):
+            raise ContractViolation("APPROVED mapping requires review metadata")
+        reviewed_at = format_utc(raw_review.get("reviewed_at"))
+        if reviewed_at < captured_at:
+            raise ContractViolation("identity review cannot precede capture")
+        review = IdentityMappingReview(
+            version=_required_text(raw_review.get("version"), "review.version"),
+            reviewer=_required_text(raw_review.get("reviewer"), "review.reviewer"),
+            reviewed_at=reviewed_at,
+            decision=_required_text(raw_review.get("decision"), "review.decision").upper(),
+            reason=_required_text(raw_review.get("reason"), "review.reason"),
+        )
+        if review.decision != "APPROVE":
+            raise ContractViolation("APPROVED mapping review decision must be APPROVE")
+
+    mapping = SmartMoneySquareIdentityMapping(
+        top_trader_id=top_trader_id,
+        square_uid=square_uid,
+        verified_at=verified_at,
+        username=mapping_username,
+        raw_response_path=str(raw_path_from_manifest),
+        raw_response_sha256=raw_digest_from_manifest,
+        top_trader_id_pointer=expected_pointers["topTraderId"],
+        square_uid_pointer=expected_pointers["squareUid"],
+    )
+    return SmartMoneySquareIdentityEvidence(
+        schema=SMART_MONEY_SQUARE_MAPPING_SCHEMA,
+        captured_at=captured_at,
+        provenance=provenance,
+        evidence_path=str(evidence_path),
+        evidence_sha256=digest,
+        mappings=(mapping,),
+        tenant_id=tenant_id,
+        verification_status=verification_status,
+        promotion_status=promotion_status,
+        request_manifest_path=str(manifest_path),
+        request_manifest_sha256=manifest_digest,
+        review=review,
     )
 
 
@@ -859,18 +1259,25 @@ def load_seed_profile_evidence(path: str | Path) -> SeedProfileEvidence:
 
 __all__ = [
     "AuthorProfile",
+    "IdentityMappingReview",
     "LEADERBOARD_METRICS",
     "LeaderboardCoverage",
     "LeaderboardParseResult",
     "LeaderboardRow",
+    "PUBLIC_PROFILE_ENDPOINT",
+    "PUBLIC_PROFILE_REQUEST_MANIFEST_SCHEMA",
     "RejectedLeaderboardRow",
     "SeedAuthorIdentity",
     "SeedProfileEvidence",
     "SmartMoneySquareIdentityEvidence",
     "SmartMoneySquareIdentityMapping",
+    "SMART_MONEY_SQUARE_IDENTITY_CATALOG_SCHEMA",
+    "SMART_MONEY_SQUARE_MAPPING_SCHEMA",
+    "SMART_MONEY_SQUARE_MAPPING_SCHEMA_V1",
     "duration_tier",
     "assess_leaderboard_coverage",
     "load_seed_profile_evidence",
+    "load_smart_money_square_identity_catalog",
     "load_smart_money_square_identity_evidence",
     "parse_30d_leaderboard",
     "parse_30d_leaderboards",
