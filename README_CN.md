@@ -29,7 +29,7 @@ npx -y agi-super-team@latest --tool claude-code --doctor
 
 以上命令直接使用公开 npm 包。自动化场景建议把 `@latest` 换成明确版本，例如 `@1.4.0`，以获得可复现安装。
 
-npm 发行包保留全部 816 个 `SKILL.md` 入口，并完整携带 `config/team-manifest.json` 实际分配的所有 Skills；如果需要整个 Skill 库的全部辅助素材，请克隆仓库。
+npm 发行包保留全部 817 个 `SKILL.md` 入口，并完整携带 `config/team-manifest.json` 实际分配的所有 Skills。经过来源审查的第一方作品可在 [Daniel 的原创 Skills](./skills/original/) 分类中查看；如果需要整个 Skill 库的全部辅助素材，请克隆仓库。
 
 把 `claude-code` 换成 `--list-tools` 输出的目标 ID。只有在确实要同时写入全部全局和项目适配目标时，才使用 `--all-tools`。不带参数仍保留旧版 Codex 预览行为；新脚本应明确写出 `--tool` 或 `--all-tools`。
 

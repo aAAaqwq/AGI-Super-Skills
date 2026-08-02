@@ -196,6 +196,166 @@
       "local_tree_digest": "sha256:1da39355c5d9073689b7d9ebd4f09999e5e847d1c50840152db3d8980370e78d",
       "declared_hints": ["Created in this repository to translate the canonical Team contract into evidence-bounded execution modes for four Agent frameworks; no upstream prompt was copied."],
       "evidence": ["commit:44e0092bcf4f02d1c6c59154a709cde313019cb5", "skills/orchestrate-agi-super-team/SKILL.md", "skills/orchestrate-agi-super-team/agents/openai.yaml", "skills/orchestrate-agi-super-team/references/execution-contract.md", "skills/orchestrate-agi-super-team/references/framework-mechanisms.md"]
+    },
+    {
+      "skill_id": "5minbtc",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "creation_commit": "aae3f692c9dedb348e35da534026281e73ebc30c",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:294effb8976789998d3d9a9be8e1b615bbbc847fb04c6a6c1930533cc07dc5ca",
+      "declared_hints": ["Created as a first-party CQO Skill and iterated in this repository; the maintainer explicitly identifies it as an original Skill."],
+      "evidence": ["commit:aae3f692c9dedb348e35da534026281e73ebc30c", "skills/5minbtc/SKILL.md", "skills/5minbtc/README.md"]
+    },
+    {
+      "skill_id": "binance-square",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "creation_commit": "da4e86d351b5c8d0c3d5b2a81602b93de24fe605",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:df54bcc827201be812130c54c7bab547b9fc6aad5f688489f64f8e1f0484b7e5",
+      "declared_hints": ["The v4 shadow implementation and subsequent production-gate hardening were built in this repository under the maintainer's direction."],
+      "evidence": ["commit:da4e86d351b5c8d0c3d5b2a81602b93de24fe605", "commit:437b26c2f3146c61cf9cab6799ac7f01ca659af1", "commit:2f733c5f97c7783c314878b5b3ea3ed39117c9ab", "skills/binance-square/SKILL.md", "skills/binance-square/OPTIMIZATION_VERIFICATION.md"]
+    },
+    {
+      "skill_id": "daniel-x-writer",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "creation_commit": "2f733c5f97c7783c314878b5b3ea3ed39117c9ab",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:3ff13c7e0195c86d3654e373fd1febaa2a258de267fc5f624a59d77dfa949391",
+      "declared_hints": ["The Skill was created in Daniel's personal Codex Skill root for his first-person X voice and then reviewed as a complete normalized copy."],
+      "evidence": ["commit:2f733c5f97c7783c314878b5b3ea3ed39117c9ab", "skills/daniel-x-writer/SKILL.md", "skills/daniel-x-writer/references/style-examples.md", "skills/daniel-x-writer/scripts/check_x_length.py", "skills/daniel-x-writer/scripts/test_check_x_length.py"]
+    },
+    {
+      "skill_id": "content-cover-gen",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li"],
+      "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:0dd2b233349adac95505e47f7a81d9c23e7a1d9129a5680b4b1b4daa6d570716",
+      "declared_hints": ["The creation commit identifies this batch as self-built content tools."],
+      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/content-cover-gen/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "content-illustration-strategy",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li"],
+      "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:f0f140932aca3697369429c781bfc89f7f474f261d77e07619794268396a66fe",
+      "declared_hints": ["The creation commit identifies this batch as self-built content tools."],
+      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/content-illustration-strategy/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "daily-douyin-content",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:c6512c802d8aa86df231dbfb6e6f1152abf3ef3809f2538c803dffb70f4571d8",
+      "declared_hints": ["Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."],
+      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/daily-douyin-content/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "daily-gzh-content",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:b739f4788e006b4d1bea7c81b4a06a016965dc148aa041bc1535ea69639f20a9",
+      "declared_hints": ["Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."],
+      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/daily-gzh-content/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "daily-xhs-content",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:7511ef99e4aa9ab651b41c46f1c2c5ad6c4426563125c327eaa52d627f7e4f11",
+      "declared_hints": ["Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."],
+      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/daily-xhs-content/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "relay-image-gen",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li"],
+      "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:cc9a73737201023d8b79fdb6686d0a359da0a3fc32b007c3a04e808217b9ba4f",
+      "declared_hints": ["The creation commit identifies this batch as self-built content tools."],
+      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/relay-image-gen/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "relay-video-gen",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li"],
+      "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:b4c582898020b7a021db9b7828606dace1800f455d76d7f3375fea094bd00712",
+      "declared_hints": ["The creation commit identifies this batch as self-built content tools."],
+      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/relay-video-gen/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "douyin-smart-publish",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li"],
+      "creation_commit": "3ab7cdfc8db464b3cc6fdc4775d70d4bf1e32fa1",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:5fe4a13828b3f00bf8de704284170a503643e95b2df285c239001836b6bf6547",
+      "declared_hints": ["The Skill declares Daniel Li as author and was retained by the historical conservative original-Skills index."],
+      "evidence": ["commit:3ab7cdfc8db464b3cc6fdc4775d70d4bf1e32fa1", "skills/douyin-smart-publish/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "weixin-channels-publish",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li"],
+      "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:d688d82795c9d2b2cfae4edffca7bda1647efaee285b0d5e6e2fb08902c90876",
+      "declared_hints": ["Created in the maintainer's first-party Jimeng and publishing workflow commit and retained by the historical conservative original-Skills index."],
+      "evidence": ["commit:02262c4ef67b43de4622652f0c10a4718ed3715d", "skills/weixin-channels-publish/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "meta-cognition",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li"],
+      "creation_commit": "8b4010dd6c07cb9809363bd7e733fce70e2992ca",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:5b10ca945c7d36e9344659bcc28f9bfa80288775ba115091a2be852137a5630c",
+      "declared_hints": ["Created by the maintainer and retained by the historical conservative original-Skills index."],
+      "evidence": ["commit:8b4010dd6c07cb9809363bd7e733fce70e2992ca", "skills/meta-cognition/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "jimeng-login",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li"],
+      "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:c5dbc56c86d5067c61552820cdcee81c420b4ab6bc3db1e5e19cc338cd4df78b",
+      "declared_hints": ["Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."],
+      "evidence": ["commit:02262c4ef67b43de4622652f0c10a4718ed3715d", "skills/jimeng-login/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "jimeng-digital-human",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li"],
+      "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:a059dbbd44070620d4d144dbad6a4c814676073e468d02f67c023694778de885",
+      "declared_hints": ["Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."],
+      "evidence": ["commit:02262c4ef67b43de4622652f0c10a4718ed3715d", "skills/jimeng-digital-human/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+    },
+    {
+      "skill_id": "video-merge-send",
+      "origin_kind": "project-original", "review_state": "reviewed",
+      "authors": ["Daniel Li"],
+      "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
+      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "local_tree_digest": "sha256:3f76f0b44fa8446f1ddbaa17754ee53e0864a0c25287b37e5cff7a6221768203",
+      "declared_hints": ["Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."],
+      "evidence": ["commit:02262c4ef67b43de4622652f0c10a4718ed3715d", "skills/video-merge-send/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
     }
   ]
 }

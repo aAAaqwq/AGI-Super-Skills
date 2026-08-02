@@ -8,6 +8,8 @@ Find a skill by the outcome you need. This index is generated from tracked, phys
 
 **Curation evidence:** origin labels and the separate **Curation evidence score** come from reviewed authored contracts. `Unknown` and `Unscored` are honest defaults; runtime evidence remains a separate field. See the [methodology](../docs/skill-provenance-and-scoring.md).
 
+**First-party collection:** browse the generated [Daniel's Original Skills](../skills/original/) view. It includes only digest-backed `project-original + reviewed` provenance and does not imply runtime verification.
+
 ## 🚀 Selected starting points
 
 Only digest-matched, structurally valid Skills with reviewed provenance and a Curation evidence score of at least 75 appear here. Selection is not runtime verification.
@@ -33,7 +35,7 @@ Only digest-matched, structurally valid Skills with reviewed provenance and a Cu
 
 ## 🗂️ Browse by outcome
 
-This revision contains 816 canonical catalog entries. The number is generated here rather than used as a product claim.
+This revision contains 817 canonical catalog entries. The number is generated here rather than used as a product claim.
 
 | Category | Use it for | Entries |
 |---|---|---:|
@@ -44,12 +46,12 @@ This revision contains 816 canonical catalog entries. The number is generated he
 | [🛡️ Security, Privacy & Legal](#security-privacy-legal) | Review security, privacy, compliance, permissions, contracts, and legal risk. | 34 |
 | [🎨 Product, Design & UX](#product-design-ux) | Shape product requirements, interfaces, design systems, and user experience. | 22 |
 | [📈 Marketing, SEO & Growth](#marketing-seo-growth) | Acquire audiences through positioning, campaigns, search, ads, and social growth. | 48 |
-| [✍️ Content, Media & Publishing](#content-media-publishing) | Create, edit, repurpose, and publish writing, images, audio, and video. | 83 |
+| [✍️ Content, Media & Publishing](#content-media-publishing) | Create, edit, repurpose, and publish writing, images, audio, and video. | 84 |
 | [🤝 Sales, CRM & Customer Success](#sales-crm-customer-success) | Find, win, onboard, support, and retain customers with accountable workflows. | 40 |
-| [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 67 |
+| [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 68 |
 | [🧭 Business Operations & Strategy](#business-operations-strategy) | Plan work, make decisions, manage teams, and improve operating systems. | 74 |
 | [⚙️ Apps & Workflow Automation](#apps-workflow-automation) | Connect everyday apps, browsers, messaging systems, and repeatable workflows. | 89 |
-| [🇨🇳 Chinese Platform Workflows](#chinese-platform-workflows) | Create, analyze, and publish for major Chinese-language platforms and channels. | 39 |
+| [🇨🇳 Chinese Platform Workflows](#chinese-platform-workflows) | Create, analyze, and publish for major Chinese-language platforms and channels. | 38 |
 | [🧰 Specialized Domains & Utilities](#general-utilities) | Domain-specific helpers and cross-functional tools that need a dedicated review path. | 44 |
 
 <a id="ai-agents-orchestration"></a>
@@ -105,7 +107,7 @@ Coordinate agents, context, memory, models, prompts, and tool protocols.
 | [`memory`](../skills/memory/) | Persistent memory: observations, session summaries, search | Unknown · unreviewed | Unscored | Catalog only |
 | [`memory-hygiene`](../skills/memory-hygiene/) | Audit, clean, and optimize Clawdbot's vector memory (LanceDB). Use when memory is bloated with junk, token usage is high from irrelevant auto-recalls, or setting up memory… | Unknown · unreviewed | Unscored | Catalog only |
 | [`memory-router`](../skills/memory-router/) | Team-wide memory routing skill — routes agent queries to the optimal | Unknown · unreviewed | Unscored | Catalog only |
-| [`meta-cognition`](../skills/meta-cognition/) | Meta-cognitive framing for analyze-before-doing, ownership routing, risk gating, minimum-closure planning, and retrospective extraction in multi-agent work. Use when the user… | Unknown · unreviewed | Unscored | Catalog only |
+| [`meta-cognition`](../skills/meta-cognition/) | Meta-cognitive framing for analyze-before-doing, ownership routing, risk gating, minimum-closure planning, and retrospective extraction in multi-agent work. Use when the user… | Project original · reviewed | Unscored | Catalog only |
 | [`model-fallback`](../skills/model-fallback/) | 模型自动降级与故障切换。当主模型请求失败、超时、达到速率限制或配额耗尽时，自动切换到备用模型，确保服务连续性。支持多供应商、多优先级的智能模型选择，提供健康监控、自动重试和错误恢复机制。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`model-health-check`](../skills/model-health-check/) | 检查已配置模型供应商的连通性、延迟和可用性，用于快速诊断模型侧故障。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`model-provider-manager`](../skills/model-provider-manager/) | Unified LLM provider and model configuration, health monitoring, and key management | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CTO |
@@ -505,11 +507,11 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`article-to-infographic`](../skills/article-to-infographic/) | 长文/测评文章 → 知识视觉笔记套图（3-5张）。自动提炼核心逻辑、规划分镜、生成高阶图像Prompt（4模块结构）。支持手写笔记/思维导图/架构图/对比矩阵四种风格。Use when: 文章转知识笔记、知识笔记图片、思维导图、视觉笔记、长文转图、知识卡片、文章可视化、article to infographic、knowledge… | Unknown · unreviewed | Unscored | Catalog only |
 | [`cinematic-video-gen`](../skills/cinematic-video-gen/) | AI视频生成质量增强引擎。解决AI视频角色僵硬、表情空白、动作机械的问题。通过高级prompt工程+角色卡+运镜指令+表情库，让AI视频角色活起来。触发词：视频质量、角色僵硬、灵动、表情、动作、cinematic video、视频生成增强、MV视频、角色动画 | Unknown · unreviewed | Unscored | Catalog only |
 | [`code-to-image`](../skills/code-to-image/) | 最强免费生图方案：用前端代码(HTML/CSS/JS/Canvas/SVG)设计画面，通过 Playwright 渲染为任意分辨率高清 PNG。 零API成本、无限分辨率、中文100%准确、代码可复用、Git可追踪。 配合 frontend-design / canvas-design / frontend-design-ultimate 产出 HTML… | Unknown · unreviewed | Unscored | Catalog only |
-| [`content-cover-gen`](../skills/content-cover-gen/) | 内容驱动封面生成:从文章标题/核心观点自动生成视觉隐喻提示词,调用 relay-image-gen 出图。 每张封面3秒内传达文章核心观点,杜绝通用背景。 支持小红书(3:4)、抖音(9:16)、公众号(16:9)、知识星球(1:1)、掘金(16:9)。 触发:'生成封面'、'封面生成'、'cover'、'thumbnail'、'封面图'、'缩略图'。 | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
+| [`content-cover-gen`](../skills/content-cover-gen/) | 内容驱动封面生成:从文章标题/核心观点自动生成视觉隐喻提示词,调用 relay-image-gen 出图。 每张封面3秒内传达文章核心观点,杜绝通用背景。 支持小红书(3:4)、抖音(9:16)、公众号(16:9)、知识星球(1:1)、掘金(16:9)。 触发:'生成封面'、'封面生成'、'cover'、'thumbnail'、'封面图'、'缩略图'。 | Project original · reviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
 | [`content-creator`](../skills/content-creator/) | Create SEO-optimized marketing content with consistent brand voice. Includes brand voice analyzer, SEO optimizer, content frameworks, and social media templates. Use when writing… | Unknown · unreviewed | Unscored | Catalog only |
 | [`content-extract`](../skills/content-extract/) | Robust URL-to-Markdown extraction for OpenClaw workflows. Use when the | Unknown · unreviewed | Unscored | Catalog only |
 | [`content-factory`](../skills/content-factory/) | Description needs review; inspect source. | Unknown · unreviewed | Unscored | Catalog only |
-| [`content-illustration-strategy`](../skills/content-illustration-strategy/) | 文章配图决策 skill：根据文章内容判断该配什么图、图从哪里来、什么时候该用 Telegram 真实对话截图，什么时候该用工具界面图、官网图、生成插图或流程图。 适用于公众号、小红书长图文、知识星球、掘金、博客等内容配图。触发词包括：'配图'、'插图'、'素材图'、'这篇文章该配什么图'、'截图进素材库'、'给这篇稿子补图'、'根据内容选图'。 | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
+| [`content-illustration-strategy`](../skills/content-illustration-strategy/) | 文章配图决策 skill：根据文章内容判断该配什么图、图从哪里来、什么时候该用 Telegram 真实对话截图，什么时候该用工具界面图、官网图、生成插图或流程图。 适用于公众号、小红书长图文、知识星球、掘金、博客等内容配图。触发词包括：'配图'、'插图'、'素材图'、'这篇文章该配什么图'、'截图进素材库'、'给这篇稿子补图'、'根据内容选图'。 | Project original · reviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
 | [`content-marketer`](../skills/content-marketer/) | You are an elite content marketing strategist specializing in AI-powered content creation, omnichannel marketing, and data-driven content optimization | Unknown · unreviewed | Unscored | Catalog only |
 | [`content-ops-toolkit`](../skills/content-ops-toolkit/) | Analyze topics, score headlines, adapt drafts across platforms, and review content performance. Use for 选题分析、标题优化、多平台适配、内容复盘, or content review. | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
 | [`content-repurposing`](../skills/content-repurposing/) | Content atomization — turn one piece of content into many formats. Covers blog-to-thread, blog-to-carousel, podcast-to-blog, video-to-quotes, and more. Use for: content… | Unknown · unreviewed | Unscored | Catalog only |
@@ -521,6 +523,7 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`copy-editing`](../skills/copy-editing/) | When the user wants to edit, review, or improve existing marketing copy. Also use when the user mentions 'edit this copy,' 'review my copy,' 'copy feedback,' 'proofread,' 'polish… | Unknown · unreviewed | Unscored | Portable required assignment · structure checked · CCO |
 | [`copywriting`](../skills/copywriting/) | Write, rewrite, or improve marketing copy for homepages, landing pages, pricing pages, feature pages, and about pages. Use when the user needs conversion-focused copy with clear… | Unknown · unreviewed | Unscored | Portable required assignment · structure checked · CCO, CMO |
 | [`cross-platform-poster`](../skills/cross-platform-poster/) | Publish one piece of content across MoltX, Twitter/X, Discord, and Telegram | Unknown · unreviewed | Unscored | Catalog only |
+| [`daniel-x-writer`](../skills/daniel-x-writer/) | Use for concise Chinese X/Twitter posts in Daniel's first-person voice, mixing human tension, numerical evidence, explicit decision rules, and a sharp reflective ending. | Project original · reviewed | Unscored | Catalog only |
 | [`doc-coauthoring`](../skills/doc-coauthoring/) | Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar… | Unknown · unreviewed | Unscored | Portable optional assignment · structure checked · CCO, CMO, CPO, CSO |
 | [`docx`](../skills/docx/) | Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with… | Unknown · unreviewed | Unscored | Catalog only |
 | [`docx-perfect`](../skills/docx-perfect/) | Word文档美化与格式化专家。专门用于将Word文档中的文本内容转换为专业表格格式，应用一致的样式（深蓝色表头、斑马纹数据行、边框），支持版本化迭代管理。当用户需要美化Word文档、创建专业表格、或递增式优化文档章节时使用此技能。 | Unknown · unreviewed | Unscored | Catalog only |
@@ -544,8 +547,8 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`podcast-generation`](../skills/podcast-generation/) | Generate AI-powered podcast-style audio narratives using Azure OpenAI's GPT Realtime Mini model via WebSocket. Use when building text-to-speech features, audio narrative… | Unknown · unreviewed | Unscored | Catalog only |
 | [`postmortem-writer`](../skills/postmortem-writer/) | Creates comprehensive post-incident documents with timeline, root cause analysis, contributing factors, action items, and ownership. Follows SRE best practices for blameless… | Unknown · unreviewed | Unscored | Portable optional assignment · structure checked · COO, CTO |
 | [`pptx`](../skills/pptx/) | Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content,… | Unknown · unreviewed | Unscored | Catalog only |
-| [`relay-image-gen`](../skills/relay-image-gen/) | Multi-provider image generation with automatic priority fallback | Unknown · unreviewed | Unscored | Catalog only |
-| [`relay-video-gen`](../skills/relay-video-gen/) | Multi-provider video generation with async polling and automatic model fallback | Unknown · unreviewed | Unscored | Catalog only |
+| [`relay-image-gen`](../skills/relay-image-gen/) | Multi-provider image generation with automatic priority fallback | Project original · reviewed | Unscored | Catalog only |
+| [`relay-video-gen`](../skills/relay-video-gen/) | Multi-provider video generation with async polling and automatic model fallback | Project original · reviewed | Unscored | Catalog only |
 | [`seo-content-writer`](../skills/seo-content-writer/) | Write SEO blog posts, articles, landing pages with keyword integration, header optimization, and snippet targeting. SEO文章写作/内容优化 | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
 | [`showcase-video-builder`](../skills/showcase-video-builder/) | Build polished showcase and demo videos from screenshots, avatars, and text overlays using ffmpeg. Use when creating demo reels, hackathon presentations, product walkthroughs, or… | Unknown · unreviewed | Unscored | Catalog only |
 | [`slidev-agent-skill`](../skills/slidev-agent-skill/) | Create, edit, theme, build, and export Slidev presentations using a script-first workflow with detailed local references. Use when working on Slidev decks, themes, layouts,… | Unknown · unreviewed | Unscored | Catalog only |
@@ -562,7 +565,7 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`video-downloader`](../skills/video-downloader/) | Download YouTube videos with customizable quality and format options. Use this skill when the user asks to download, save, or grab YouTube videos. Supports various quality… | Unknown · unreviewed | Unscored | Catalog only |
 | [`video-generation`](../skills/video-generation/) | Use this skill when the user requests to generate, create, or imagine videos. Supports structured prompts and reference image for guided generation. | Unknown · unreviewed | Unscored | Catalog only |
 | [`video-lyrics-subtitle`](../skills/video-lyrics-subtitle/) | Video lyrics subtitle generator — create synchronized subtitle files for music videos | Unknown · unreviewed | Unscored | Catalog only |
-| [`video-merge-send`](../skills/video-merge-send/) | 合并多个分段视频为一个完整视频，并发送到飞书。使用ffmpeg拼接视频片段，支持淡入淡出转场。触发场景：用户需要合并视频片段、拼接分镜视频、视频合并后发飞书、把多个短视频合成一个、分段视频合并发送。配合 jimeng-storyboard skill 使用，完成数字人视频全流程。 | Unknown · unreviewed | Unscored | Catalog only |
+| [`video-merge-send`](../skills/video-merge-send/) | 合并多个分段视频为一个完整视频，并发送到飞书。使用ffmpeg拼接视频片段，支持淡入淡出转场。触发场景：用户需要合并视频片段、拼接分镜视频、视频合并后发飞书、把多个短视频合成一个、分段视频合并发送。配合 jimeng-storyboard skill 使用，完成数字人视频全流程。 | Project original · reviewed | Unscored | Catalog only |
 | [`video-script`](../skills/video-script/) | Create video scripts and publishing materials for YouTubers/UP主. Use when user wants to prepare a video, write a script (口播稿), generate video title, description, tags, or chapter… | Unknown · unreviewed | Unscored | Catalog only |
 | [`video-subtitles`](../skills/video-subtitles/) | Generate SRT subtitles from video/audio with translation support. Transcribes Hebrew (ivrit.ai) and English (whisper), translates between languages, burns subtitles into video.… | Unknown · unreviewed | Unscored | Catalog only |
 | [`video-transcriber`](../skills/video-transcriber/) | 视频转写工作流，支持B站和YouTube视频。自动判断有字幕/无字幕，有字幕则获取字幕，无字幕则下载音频+whisper转写。触发场景：(1) 用户要求总结视频内容 (2) 用户要求获取视频字幕 (3) 用户要求转写视频 (4) 处理B站/YouTube视频 | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
@@ -634,7 +637,7 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 
 | Skill | What it helps with | Origin | Curation evidence | Support / review signals |
 |---|---|---|---|---|
-| [`5minbtc`](../skills/5minbtc/) | BTC 5分钟K线实时方向预测。v5.7.3引擎HTTP并行化(4路ThreadPoolExecutor→~3s,原12-18s)。半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt… | Unknown · unreviewed | Unscored | Catalog only |
+| [`5minbtc`](../skills/5minbtc/) | BTC 5分钟K线实时方向预测。v5.7.3引擎HTTP并行化(4路ThreadPoolExecutor→~3s,原12-18s)。半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt… | Project original · reviewed | Unscored | Catalog only |
 | [`a-fund-monitor`](../skills/a-fund-monitor/) | A股基金净值监控：盘中实时估值 + 盘后实际净值，定时推送到 Telegram。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`a-share-analysis`](../skills/a-share-analysis/) | 此Skill实现了三层分析体系： 1. 情报采集层 — 7路并发多源新闻采集，自动匹配板块和个股 2. 盘面阅读层 — 美股映射 + 大盘多空判断 + 实时主线(&gt;9%题材分析) 3. 个股精选层 — 产业逻辑 + 形态8分类 + 盘口分析 + 题材排名 + 综合评分 4. 原始新闻浏览 (news.py) — 分类展示影响股票的新闻，源信息不做任何修改 | Unknown · unreviewed | Unscored | Catalog only |
 | [`afrexai-personal-finance`](../skills/afrexai-personal-finance/) | Complete personal finance system — budgeting, debt payoff, investing, tax optimization, net worth tracking, and financial independence planning. Use when managing money, building… | Unknown · unreviewed | Unscored | Catalog only |
@@ -646,6 +649,7 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 | [`bankr`](../skills/bankr/) | AI-powered crypto trading agent and LLM gateway via natural language. Use when the user wants to trade crypto, check portfolio balances, view token prices, transfer crypto,… | Unknown · unreviewed | Unscored | Catalog only |
 | [`bankr-signals`](../skills/bankr-signals/) | Transaction-verified trading signals on Base blockchain. Agents publish trades | Unknown · unreviewed | Unscored | Catalog only |
 | [`billing-automation`](../skills/billing-automation/) | Build automated billing systems for recurring payments, invoicing, subscription lifecycle, and dunning management. Use when implementing subscription billing, automating… | Unknown · unreviewed | Unscored | Catalog only |
+| [`binance-square`](../skills/binance-square/) | 币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达 | Project original · reviewed | Unscored | Catalog only |
 | [`binance-trending`](../skills/binance-trending/) | Description needs review; inspect source. | Unknown · unreviewed | Unscored | Catalog only |
 | [`bookkeeping-basics`](../skills/bookkeeping-basics/) | Set up and maintain basic bookkeeping for a solopreneur business. Use when tracking income and expenses, preparing for taxes, managing invoices and receipts, understanding cash… | Unknown · unreviewed | Unscored | Portable optional assignment · structure checked · CFO |
 | [`btc-5min-scalper`](../skills/btc-5min-scalper/) | BTC 5-minute Up/Down paper trading on Polymarket. Scans Binance 1m candles for momentum/mean-reversion/volume signals, makes virtual trades on Polymarket 5-min markets, tracks… | Unknown · unreviewed | Unscored | Catalog only |
@@ -890,14 +894,13 @@ Create, analyze, and publish for major Chinese-language platforms and channels.
 |---|---|---|---|---|
 | [`baidu-hot-cn`](../skills/baidu-hot-cn/) | 百度热榜监控 \| Baidu Hot Topics Monitor. 获取百度热搜榜、搜索趋势、关键词热度 \| Get Baidu trending searches, trends, keyword popularity. 触发词：百度、热搜、baidu. | Unknown · unreviewed | Unscored | Catalog only |
 | [`baoyu-xhs-images`](../skills/baoyu-xhs-images/) | Generates Xiaohongshu (Little Red Book) infographic series with 10 visual styles and 8 layouts. Breaks content into 1-10 cartoon-style images optimized for XHS engagement. Use… | Unknown · unreviewed | Unscored | Catalog only |
-| [`binance-square`](../skills/binance-square/) | 从 Binance Square 热门话题排行榜获取话题列表，逐个进入话题页抓取最新帖子，提取社区交易信号、情绪方向和小币提及统计。 | Unknown · unreviewed | Unscored | Catalog only |
-| [`daily-douyin-content`](../skills/daily-douyin-content/) | 你是 CCO，Daniel Li 的内容 Agent。 | Unknown · unreviewed | Unscored | Catalog only |
-| [`daily-gzh-content`](../skills/daily-gzh-content/) | 公众号每日内容生产：选题→创作→素材生成→质量检查→保存→发布草稿 | Unknown · unreviewed | Unscored | Catalog only |
-| [`daily-xhs-content`](../skills/daily-xhs-content/) | 你是 CCO，Daniel Li 的内容 Agent。 | Unknown · unreviewed | Unscored | Catalog only |
+| [`daily-douyin-content`](../skills/daily-douyin-content/) | 你是 CCO，Daniel Li 的内容 Agent。 | Project original · reviewed | Unscored | Catalog only |
+| [`daily-gzh-content`](../skills/daily-gzh-content/) | 公众号每日内容生产：选题→创作→素材生成→质量检查→保存→发布草稿 | Project original · reviewed | Unscored | Catalog only |
+| [`daily-xhs-content`](../skills/daily-xhs-content/) | 你是 CCO，Daniel Li 的内容 Agent。 | Project original · reviewed | Unscored | Catalog only |
 | [`douyin-creator`](../skills/douyin-creator/) | Description needs review; inspect source. | Unknown · unreviewed | Unscored | Catalog only |
 | [`douyin-hot-trend`](../skills/douyin-hot-trend/) | 获取抖音热榜/热搜榜数据，包含热门视频、挑战赛、音乐等多领域热门内容，并输出标题、热度值、跳转链接及封面图（如有）。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`douyin-publisher`](../skills/douyin-publisher/) | 抖音图文/视频发布（OpenClaw Browser 自动化）：登录检测→内容校验→上传页导航→填标题/正文→上传封面+素材→暂存离开。 | Unknown · unreviewed | Unscored | Catalog only · review: credentials, external-write |
-| [`douyin-smart-publish`](../skills/douyin-smart-publish/) | 抖音创作者平台智能发布（视频/图文）：内容适配→上传→填描述/#话题→封面→存草稿→截图回传确认。默认只存草稿；只有在 Daniel 明确确认后才允许点击发布。覆盖标题(≤55字)、描述(建议≤200字)、#话题标签(3-5个)、封面设置、定时发布、可见性、合拍/下载开关。Playwright 自动化。触发：'发抖音'、'抖音发布'、'douyin… | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
+| [`douyin-smart-publish`](../skills/douyin-smart-publish/) | 抖音创作者平台智能发布（视频/图文）：内容适配→上传→填描述/#话题→封面→存草稿→截图回传确认。默认只存草稿；只有在 Daniel 明确确认后才允许点击发布。覆盖标题(≤55字)、描述(建议≤200字)、#话题标签(3-5个)、封面设置、定时发布、可见性、合拍/下载开关。Playwright 自动化。触发：'发抖音'、'抖音发布'、'douyin… | Project original · reviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
 | [`douyin-video-analyst`](../skills/douyin-video-analyst/) | 抖音账号视频批量采集与文案分析工作流。当用户提供抖音账号主页链接、要求抓取最新 N 条视频链接、提取视频文案（语音转文字）、或对视频内容进行总结归纳时，激活此 skill。依赖 browser 工具（抓取视频列表）和 mcporter + douyin-mcp（文案提取）。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`feishu-automation`](../skills/feishu-automation/) | 飞书（Lark）全通道自动化。使用 lark-mcp 工具操作飞书多维表格（Bitable）、发送消息、管理文档、创建群组、自动化工作流等。当用户需要操作飞书平台、同步数据到飞书表格、发送飞书通知、管理飞书文档或自动化飞书业务流程时使用此技能。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`feishu-channel`](../skills/feishu-channel/) | 飞书 (Lark/Feishu) 与 OpenClaw 的双向集成通道。通过飞书机器人实现消息的接收和发送，支持私聊、群聊、@提及检测、卡片消息、文件传输。当需要通过飞书与 AI 助手交互、接收飞书消息触发 AI 响应、或从 OpenClaw 发送消息到飞书时使用此技能。与 feishu-automation 的区别：本 skill… | Unknown · unreviewed | Unscored | Catalog only |
@@ -916,7 +919,7 @@ Create, analyze, and publish for major Chinese-language platforms and channels.
 | [`wecom-automation`](../skills/wecom-automation/) | 企业微信个人账号直连自动化。基于 Wechaty 框架实现企业微信消息接收、自动同意好友、知识库问答、人工介入提醒。适用于企业微信个人机器人和自动化助手场景。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`wecom-cs-automation`](../skills/wecom-cs-automation/) | 企业微信客服自动化系统。自动同意好友添加、基于知识库的智能问答、未知问题人工介入提醒。适用于企业微信客服场景的 AI 助手机器人。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`weibo-hot-trend`](../skills/weibo-hot-trend/) | 获取微博热搜榜数据，返回热搜标题、热度值和跳转链接。当用户需要查看微博热搜、微博热点、微博热榜时使用此技能。支持自定义获取条数（默认50条）。 | Unknown · unreviewed | Unscored | Catalog only |
-| [`weixin-channels-publish`](../skills/weixin-channels-publish/) | 微信视频号助手网页版视频发布全流程。通过浏览器自动化操控 channels.weixin.qq.com 完成登录检测、扫码登录、上传视频、填写描述和短标题、截图确认后发布或保存草稿。触发场景：用户需要发布视频到视频号、视频号发布、视频号上传视频、发视频号。 | Unknown · unreviewed | Unscored | Catalog only · review: credentials, external-write |
+| [`weixin-channels-publish`](../skills/weixin-channels-publish/) | 微信视频号助手网页版视频发布全流程。通过浏览器自动化操控 channels.weixin.qq.com 完成登录检测、扫码登录、上传视频、填写描述和短标题、截图确认后发布或保存草稿。触发场景：用户需要发布视频到视频号、视频号发布、视频号上传视频、发视频号。 | Project original · reviewed | Unscored | Catalog only · review: credentials, external-write |
 | [`wemp-operator`](../skills/wemp-operator/) | // 发布草稿 const { publishId } = await publishDraft(mediaId); | Unknown · unreviewed | Unscored | Catalog only |
 | [`x-tweet-fetcher`](../skills/x-tweet-fetcher/) | Fetch tweets, replies, and user timelines from X/Twitter without login or API keys. Also supports Chinese platforms (Weibo, Bilibili, CSDN, WeChat). Includes camofox_search() for… | Unknown · unreviewed | Unscored | Catalog only |
 | [`xhs-content-creator`](../skills/xhs-content-creator/) | Generate Xiaohongshu (小红书/RED) content optimized for the platform''s CES algorithm. Use when: (1) creating xiaohongshu/小红书 posts, (2) writing Chinese social media content for… | Unknown · unreviewed | Unscored | Catalog only |
@@ -948,8 +951,8 @@ Domain-specific helpers and cross-functional tools that need a dedicated review 
 | [`google-auth`](../skills/google-auth/) | Google OAuth setup, refresh tokens | Unknown · unreviewed | Unscored | Catalog only |
 | [`healthcare-monitor`](../skills/healthcare-monitor/) | 医疗行业企业融资监控系统。实时监控医疗健康企业的工商变更，识别融资信号，自动推送告警。支持天眼查/企查查数据采集、AI融资判断、多渠道推送。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`hookify-rules`](../skills/hookify-rules/) | This skill should be used when the user asks to create a hookify rule, write a hook rule, configure hookify, add a hookify rule, or needs guidance on hookify rule syntax and… | Unknown · unreviewed | Unscored | Catalog only |
-| [`jimeng-digital-human`](../skills/jimeng-digital-human/) | 即梦AI数字人视频生成全流程自动化。通过浏览器自动化操控 jimeng.jianying.com 数字人界面，完成角色上传、音色选择、台词填入、视频生成和下载。触发场景：用户需要生成数字人视频、即梦数字人、AI数字人口播视频、数字人视频制作。依赖 jimeng-login skill 处理登录。 | Unknown · unreviewed | Unscored | Catalog only |
-| [`jimeng-login`](../skills/jimeng-login/) | 即梦AI平台(jimeng.jianying.com)浏览器登录。当需要操作即梦数字人、视频生成等功能前检测到未登录时触发。处理协议同意、抖音OAuth扫码、登录态持久化。 | Unknown · unreviewed | Unscored | Catalog only |
+| [`jimeng-digital-human`](../skills/jimeng-digital-human/) | 即梦AI数字人视频生成全流程自动化。通过浏览器自动化操控 jimeng.jianying.com 数字人界面，完成角色上传、音色选择、台词填入、视频生成和下载。触发场景：用户需要生成数字人视频、即梦数字人、AI数字人口播视频、数字人视频制作。依赖 jimeng-login skill 处理登录。 | Project original · reviewed | Unscored | Catalog only |
+| [`jimeng-login`](../skills/jimeng-login/) | 即梦AI平台(jimeng.jianying.com)浏览器登录。当需要操作即梦数字人、视频生成等功能前检测到未登录时触发。处理协议同意、抖音OAuth扫码、登录态持久化。 | Project original · reviewed | Unscored | Catalog only |
 | [`kanxiang`](../skills/kanxiang/) | 看相分析技能。通过用户上传的人体部位图片，识别图片类型（面相/手相/体相/骨相），调用相应的相术规则知识库，结合图片内容进行专业分析。支持面相（五官、三庭、十二宫）、手相（掌线、指形、掌丘）、骨相（头骨、体骨、九骨）、体相（体型、体态、气质）的综合分析。基于《麻衣神相》《柳庄相法》《神相全编》《水镜神相》《冰鉴》等经典相书整理。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`liuyao`](../skills/liuyao/) | 六爻铜钱卦占卜技能。核心理念："解一卦就是传一道，说一言就是传一智"。支持真实/虚拟起卦，集成儒道哲学。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`liuyao-yijing`](../skills/liuyao-yijing/) | 六爻易经占卜器，基于京房纳甲体系，模拟铜钱起卦，完成纳甲装卦（天干地支、世应、六亲、六神）， 通过用神旺衰和生克制化断卦。当用户提及「六爻」「易经占卜」「铜钱起卦」「纳甲」「帮我起一卦」 「六爻预测」时触发。装卦为确定性计算 + LLM 综合断卦，无外部 API 依赖。 不适用于：梅花易数、奇门遁甲、星座运势、塔罗占卜、八字命理等其他领域 → 建议使用… | Unknown · unreviewed | Unscored | Catalog only |

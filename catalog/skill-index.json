@@ -51,7 +51,7 @@
       "title": "Marketing, SEO & Growth"
     },
     {
-      "count": 83,
+      "count": 84,
       "description": "Create, edit, repurpose, and publish writing, images, audio, and video.",
       "emoji": "✍️",
       "id": "content-media-publishing",
@@ -65,7 +65,7 @@
       "title": "Sales, CRM & Customer Success"
     },
     {
-      "count": 67,
+      "count": 68,
       "description": "Analyze markets, backtest strategies, track portfolios, and review financial risk.",
       "emoji": "💹",
       "id": "finance-trading-markets",
@@ -86,7 +86,7 @@
       "title": "Apps & Workflow Automation"
     },
     {
-      "count": 39,
+      "count": 38,
       "description": "Create, analyze, and publish for major Chinese-language platforms and channels.",
       "emoji": "🇨🇳",
       "id": "chinese-platform-workflows",
@@ -100,7 +100,7 @@
       "title": "Specialized Domains & Utilities"
     }
   ],
-  "inventoryCount": 816,
+  "inventoryCount": 817,
   "inventorySemantics": "tracked physical top-level directories with SKILL.md",
   "schemaVersion": 2,
   "skills": [
@@ -135,8 +135,25 @@
       "path": "skills/5minbtc/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li",
+          "AGI Super Team contributors"
+        ],
+        "creation_commit": "aae3f692c9dedb348e35da534026281e73ebc30c",
+        "declared_hints": [
+          "Created as a first-party CQO Skill and iterated in this repository; the maintainer explicitly identifies it as an original Skill."
+        ],
+        "evidence": [
+          "commit:aae3f692c9dedb348e35da534026281e73ebc30c",
+          "skills/5minbtc/SKILL.md",
+          "skills/5minbtc/README.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "5minbtc",
@@ -3840,16 +3857,19 @@
     },
     {
       "assignments": [],
-      "category_id": "chinese-platform-workflows",
-      "classification": "slug:binance-square;metadata:fallback",
+      "category_id": "finance-trading-markets",
+      "classification": "override;metadata:frontmatter",
       "classification_details": {
-        "matched_signals": [
-          "binance-square"
-        ],
-        "method": "slug",
-        "resolution_status": "priority-tie",
-        "review_state": "unreviewed",
-        "runner_ups": [
+        "base_candidates": [
+          {
+            "category_id": "chinese-platform-workflows",
+            "match_count": 1,
+            "matched_signals": [
+              "binance-square"
+            ],
+            "priority": 130,
+            "tied_for_first": true
+          },
           {
             "category_id": "finance-trading-markets",
             "match_count": 1,
@@ -3860,27 +3880,51 @@
             "tied_for_first": true
           }
         ],
+        "base_method": "slug",
+        "matched_signals": [],
+        "method": "override",
+        "rationale": "The primary outcome is contract-market research and risk-gated trade-plan analysis; Binance Square is an evidence source rather than a publishing destination.",
+        "resolution_status": "override",
+        "review_state": "unreviewed",
+        "runner_ups": [],
         "winner": {
-          "category_id": "chinese-platform-workflows",
-          "match_count": 1,
-          "matched_signals": [
-            "binance-square"
-          ],
-          "priority": 130,
-          "tie_detected": true
+          "category_id": "finance-trading-markets",
+          "match_count": 0,
+          "matched_signals": [],
+          "priority": 120,
+          "tie_detected": false
         }
       },
       "curation": {
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "从 Binance Square 热门话题排行榜获取话题列表，逐个进入话题页抓取最新帖子，提取社区交易信号、情绪方向和小币提及统计。",
+      "description": "币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达",
       "description_status": "source-text",
       "path": "skills/binance-square/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li",
+          "AGI Super Team contributors"
+        ],
+        "creation_commit": "da4e86d351b5c8d0c3d5b2a81602b93de24fe605",
+        "declared_hints": [
+          "The v4 shadow implementation and subsequent production-gate hardening were built in this repository under the maintainer's direction."
+        ],
+        "evidence": [
+          "commit:da4e86d351b5c8d0c3d5b2a81602b93de24fe605",
+          "commit:437b26c2f3146c61cf9cab6799ac7f01ca659af1",
+          "commit:2f733c5f97c7783c314878b5b3ea3ed39117c9ab",
+          "skills/binance-square/SKILL.md",
+          "skills/binance-square/OPTIMIZATION_VERIFICATION.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "binance-square",
@@ -6878,8 +6922,24 @@
       "path": "skills/content-cover-gen/SKILL.md",
       "portability_class": "harness-specific",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "declared_hints": [
+          "The creation commit identifies this batch as self-built content tools."
+        ],
+        "evidence": [
+          "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+          "skills/content-cover-gen/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "content-cover-gen",
@@ -7051,8 +7111,24 @@
       "path": "skills/content-illustration-strategy/SKILL.md",
       "portability_class": "harness-specific",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "declared_hints": [
+          "The creation commit identifies this batch as self-built content tools."
+        ],
+        "evidence": [
+          "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+          "skills/content-illustration-strategy/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "content-illustration-strategy",
@@ -9081,8 +9157,25 @@
       "path": "skills/daily-douyin-content/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li",
+          "AGI Super Team contributors"
+        ],
+        "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "declared_hints": [
+          "Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."
+        ],
+        "evidence": [
+          "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+          "skills/daily-douyin-content/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "daily-douyin-content",
@@ -9130,8 +9223,25 @@
       "path": "skills/daily-gzh-content/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li",
+          "AGI Super Team contributors"
+        ],
+        "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "declared_hints": [
+          "Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."
+        ],
+        "evidence": [
+          "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+          "skills/daily-gzh-content/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "daily-gzh-content",
@@ -9296,11 +9406,86 @@
       "path": "skills/daily-xhs-content/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li",
+          "AGI Super Team contributors"
+        ],
+        "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "declared_hints": [
+          "Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."
+        ],
+        "evidence": [
+          "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+          "skills/daily-xhs-content/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "daily-xhs-content",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "content-media-publishing",
+      "classification": "slug:writer;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "writer"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "content-media-publishing",
+          "match_count": 1,
+          "matched_signals": [
+            "writer"
+          ],
+          "priority": 100,
+          "tie_detected": false
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "Use for concise Chinese X/Twitter posts in Daniel's first-person voice, mixing human tension, numerical evidence, explicit decision rules, and a sharp reflective ending.",
+      "description_status": "source-text",
+      "path": "skills/daniel-x-writer/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "authors": [
+          "Daniel Li",
+          "AGI Super Team contributors"
+        ],
+        "creation_commit": "2f733c5f97c7783c314878b5b3ea3ed39117c9ab",
+        "declared_hints": [
+          "The Skill was created in Daniel's personal Codex Skill root for his first-person X voice and then reviewed as a complete normalized copy."
+        ],
+        "evidence": [
+          "commit:2f733c5f97c7783c314878b5b3ea3ed39117c9ab",
+          "skills/daniel-x-writer/SKILL.md",
+          "skills/daniel-x-writer/references/style-examples.md",
+          "skills/daniel-x-writer/scripts/check_x_length.py",
+          "skills/daniel-x-writer/scripts/test_check_x_length.py"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
+      },
+      "review_signals": [],
+      "skill_id": "daniel-x-writer",
       "support_level": "catalog",
       "used_by": []
     },
@@ -10904,8 +11089,24 @@
       "path": "skills/douyin-smart-publish/SKILL.md",
       "portability_class": "harness-specific",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "3ab7cdfc8db464b3cc6fdc4775d70d4bf1e32fa1",
+        "declared_hints": [
+          "The Skill declares Daniel Li as author and was retained by the historical conservative original-Skills index."
+        ],
+        "evidence": [
+          "commit:3ab7cdfc8db464b3cc6fdc4775d70d4bf1e32fa1",
+          "skills/douyin-smart-publish/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "douyin-smart-publish",
@@ -15933,8 +16134,24 @@
       "path": "skills/jimeng-digital-human/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
+        "declared_hints": [
+          "Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."
+        ],
+        "evidence": [
+          "commit:02262c4ef67b43de4622652f0c10a4718ed3715d",
+          "skills/jimeng-digital-human/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "jimeng-digital-human",
@@ -15968,8 +16185,24 @@
       "path": "skills/jimeng-login/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
+        "declared_hints": [
+          "Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."
+        ],
+        "evidence": [
+          "commit:02262c4ef67b43de4622652f0c10a4718ed3715d",
+          "skills/jimeng-login/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "jimeng-login",
@@ -18524,8 +18757,24 @@
       "path": "skills/meta-cognition/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "8b4010dd6c07cb9809363bd7e733fce70e2992ca",
+        "declared_hints": [
+          "Created by the maintainer and retained by the historical conservative original-Skills index."
+        ],
+        "evidence": [
+          "commit:8b4010dd6c07cb9809363bd7e733fce70e2992ca",
+          "skills/meta-cognition/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "meta-cognition",
@@ -23602,8 +23851,24 @@
       "path": "skills/relay-image-gen/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "declared_hints": [
+          "The creation commit identifies this batch as self-built content tools."
+        ],
+        "evidence": [
+          "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+          "skills/relay-image-gen/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "relay-image-gen",
@@ -23641,8 +23906,24 @@
       "path": "skills/relay-video-gen/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "declared_hints": [
+          "The creation commit identifies this batch as self-built content tools."
+        ],
+        "evidence": [
+          "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+          "skills/relay-video-gen/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "relay-video-gen",
@@ -33287,8 +33568,24 @@
       "path": "skills/video-merge-send/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
+        "declared_hints": [
+          "Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."
+        ],
+        "evidence": [
+          "commit:02262c4ef67b43de4622652f0c10a4718ed3715d",
+          "skills/video-merge-send/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "video-merge-send",
@@ -34495,8 +34792,24 @@
       "path": "skills/weixin-channels-publish/SKILL.md",
       "portability_class": "catalog-only",
       "provenance": {
-        "origin_kind": "unknown",
-        "review_state": "unreviewed"
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
+        "declared_hints": [
+          "Created in the maintainer's first-party Jimeng and publishing workflow commit and retained by the historical conservative original-Skills index."
+        ],
+        "evidence": [
+          "commit:02262c4ef67b43de4622652f0c10a4718ed3715d",
+          "skills/weixin-channels-publish/SKILL.md",
+          "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
       },
       "review_signals": [
         "credentials",

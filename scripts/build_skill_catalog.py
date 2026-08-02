@@ -501,6 +501,8 @@ def render_markdown(entries: list[SkillEntry], taxonomy: dict[str, Any]) -> str:
         "",
         "**Curation evidence:** origin labels and the separate **Curation evidence score** come from reviewed authored contracts. `Unknown` and `Unscored` are honest defaults; runtime evidence remains a separate field. See the [methodology](../docs/skill-provenance-and-scoring.md).",
         "",
+        "**First-party collection:** browse the generated [Daniel's Original Skills](../skills/original/) view. It includes only digest-backed `project-original + reviewed` provenance and does not imply runtime verification.",
+        "",
         "## 🚀 Selected starting points",
         "",
         "Only digest-matched, structurally valid Skills with reviewed provenance and a Curation evidence score of at least 75 appear here. Selection is not runtime verification.",
