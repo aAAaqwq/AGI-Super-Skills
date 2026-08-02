@@ -1,4 +1,5 @@
 import json
+from hashlib import sha256
 from pathlib import Path
 import tempfile
 import unittest
@@ -8,6 +9,7 @@ from scanner.authors import (
     assess_leaderboard_coverage,
     load_seed_profile_evidence,
     load_smart_money_square_identity_evidence,
+    load_smart_money_square_identity_catalog,
     parse_30d_leaderboard,
     parse_author_profile,
 )
@@ -21,7 +23,308 @@ SEED_EVIDENCE = (
 )
 
 
+def write_v2_identity_evidence(
+    directory: str,
+    *,
+    promotion_status: str = "PROPOSED",
+    top_trader_id: str = "fixture-trader-01",
+    square_uid: str = "fixture-square-01",
+    tenant_id: str = "fixture-tenant",
+    provenance: str = "LIVE_CAPTURE",
+) -> tuple[Path, Path, Path]:
+    root = Path(directory)
+    raw_path = root / "response.bin"
+    raw = json.dumps(
+        {
+            "success": True,
+            "code": "000000",
+            "data": {
+                "username": "fixture-user",
+                "topTraderId": top_trader_id,
+                "squareUid": square_uid,
+            },
+        },
+        separators=(",", ":"),
+    ).encode("utf-8")
+    raw_path.write_bytes(raw)
+    manifest_path = root / "request-manifest.json"
+    manifest = {
+        "schema": "binance-public-profile-request-manifest/v1",
+        "captured_at_utc": "2026-08-01T12:06:00Z",
+        "tenant_id": tenant_id,
+        "request": {
+            "method": "POST",
+            "url": "https://www.binance.com/bapi/composite/v3/friendly/pgc/user/client",
+            "body": {
+                "username": "fixture-user",
+                "getFollowCount": True,
+                "queryFollowersInfo": True,
+                "queryRelationTokens": True,
+            },
+            "headers": {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "User-Agent": "binance-square-identity-evidence/1",
+            },
+            "credential_metadata": {
+                "mode": "ANONYMOUS",
+                "cookie_jar_used": False,
+                "authorization_used": False,
+                "browser_session_used": False,
+            },
+        },
+        "response": {
+            "raw_path": raw_path.name,
+            "raw_sha256": sha256(raw).hexdigest(),
+            "http_status": 200,
+            "api_status": {"success": True, "code": "000000", "message": None},
+        },
+    }
+    manifest_bytes = json.dumps(manifest, sort_keys=True).encode("utf-8")
+    manifest_path.write_bytes(manifest_bytes)
+    mapping_path = root / "mapping.json"
+    mapping = {
+        "schema": "binance-smart-money-square-identity-mapping/v2",
+        "captured_at_utc": "2026-08-01T12:06:00Z",
+        "provenance": provenance,
+        "tenant_id": tenant_id,
+        "verification_status": "DIRECT_VERIFIED",
+        "promotion_status": promotion_status,
+        "request_manifest": {
+            "path": manifest_path.name,
+            "sha256": sha256(manifest_bytes).hexdigest(),
+        },
+        "mappings": [
+            {
+                "username": "fixture-user",
+                "topTraderId": top_trader_id,
+                "squareUid": square_uid,
+                "verified_at_utc": "2026-08-01T12:06:00Z",
+                "raw_response": {
+                    "path": raw_path.name,
+                    "sha256": sha256(raw).hexdigest(),
+                },
+                "json_pointers": {
+                    "topTraderId": "/data/topTraderId",
+                    "squareUid": "/data/squareUid",
+                },
+            }
+        ],
+        "review": (
+            {
+                "version": "review/v1",
+                "reviewer": "fixture-reviewer",
+                "reviewed_at": "2026-08-01T12:07:00Z",
+                "decision": "APPROVE",
+                "reason": "Both IDs are bound by the same anonymous response.",
+            }
+            if promotion_status == "APPROVED"
+            else None
+        ),
+    }
+    mapping_path.write_text(json.dumps(mapping, sort_keys=True), encoding="utf-8")
+    return mapping_path, manifest_path, raw_path
+
+
 class AuthorProfileTests(unittest.TestCase):
+    def test_catalog_aggregates_two_approved_v2_artifacts_in_deterministic_order(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            paths = []
+            for name, trader, square in (
+                ("z", "fixture-trader-02", "fixture-square-02"),
+                ("a", "fixture-trader-01", "fixture-square-01"),
+            ):
+                member = root / name
+                member.mkdir()
+                path, _, _ = write_v2_identity_evidence(
+                    str(member),
+                    promotion_status="APPROVED",
+                    top_trader_id=trader,
+                    square_uid=square,
+                )
+                paths.append(path)
+            catalog_path = root / "catalog.json"
+            catalog = {
+                "schema": "binance-smart-money-square-identity-catalog/v1",
+                "tenant_id": "fixture-tenant",
+                "provenance": "LIVE_CAPTURE",
+                "artifacts": [
+                    {"path": str(path), "sha256": sha256(path.read_bytes()).hexdigest()}
+                    for path in paths
+                ],
+            }
+            catalog_bytes = json.dumps(catalog, sort_keys=True).encode("utf-8")
+            catalog_path.write_bytes(catalog_bytes)
+
+            evidence = load_smart_money_square_identity_catalog(
+                catalog_path, expected_sha256=sha256(catalog_bytes).hexdigest()
+            )
+
+        self.assertEqual(
+            ("fixture-trader-01", "fixture-trader-02"),
+            tuple(mapping.top_trader_id for mapping in evidence.mappings),
+        )
+        self.assertEqual("fixture-square-01", evidence.square_uid_for("fixture-trader-01"))
+        self.assertEqual("fixture-square-02", evidence.square_uid_for("fixture-trader-02"))
+        self.assertEqual(str(catalog_path), evidence.evidence_path)
+        self.assertEqual(2, len(evidence.catalog_members))
+
+    def test_catalog_rejects_unapproved_cross_tenant_provenance_conflict_and_hash_tamper(self) -> None:
+        cases = ("proposed", "tenant", "provenance", "conflict", "hash")
+        for case in cases:
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                members = []
+                definitions = [
+                    ("one", "fixture-trader-01", "fixture-square-01", "fixture-tenant", "LIVE_CAPTURE", "APPROVED"),
+                    (
+                        "two",
+                        "fixture-trader-02",
+                        "fixture-square-01" if case == "conflict" else "fixture-square-02",
+                        "other-tenant" if case == "tenant" else "fixture-tenant",
+                        "FIXTURE_REPLAY" if case == "provenance" else "LIVE_CAPTURE",
+                        "PROPOSED" if case == "proposed" else "APPROVED",
+                    ),
+                ]
+                for name, trader, square, tenant, provenance, status in definitions:
+                    member = root / name
+                    member.mkdir()
+                    path, _, _ = write_v2_identity_evidence(
+                        str(member),
+                        promotion_status=status,
+                        top_trader_id=trader,
+                        square_uid=square,
+                        tenant_id=tenant,
+                        provenance=provenance,
+                    )
+                    members.append(path)
+                catalog_path = root / "catalog.json"
+                catalog = {
+                    "schema": "binance-smart-money-square-identity-catalog/v1",
+                    "tenant_id": "fixture-tenant",
+                    "provenance": "LIVE_CAPTURE",
+                    "artifacts": [
+                        {
+                            "path": str(path),
+                            "sha256": (
+                                "0" * 64
+                                if case == "hash" and index == 1
+                                else sha256(path.read_bytes()).hexdigest()
+                            ),
+                        }
+                        for index, path in enumerate(members)
+                    ],
+                }
+                catalog_path.write_text(json.dumps(catalog), encoding="utf-8")
+                with self.assertRaises(ContractViolation):
+                    load_smart_money_square_identity_catalog(catalog_path)
+
+    def test_v2_proposed_is_directly_verified_but_not_active(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            mapping_path, _, _ = write_v2_identity_evidence(directory)
+            evidence = load_smart_money_square_identity_evidence(mapping_path)
+
+        self.assertEqual("DIRECT_VERIFIED", evidence.verification_status)
+        self.assertEqual("PROPOSED", evidence.promotion_status)
+        self.assertIsNone(evidence.square_uid_for("fixture-trader-01"))
+        self.assertEqual("fixture-square-01", evidence.mappings[0].square_uid)
+
+    def test_v2_approved_review_is_active(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            mapping_path, _, _ = write_v2_identity_evidence(
+                directory, promotion_status="APPROVED"
+            )
+            evidence = load_smart_money_square_identity_evidence(mapping_path)
+
+        self.assertEqual("APPROVED", evidence.promotion_status)
+        self.assertEqual("fixture-reviewer", evidence.review.reviewer)
+        self.assertEqual(
+            "fixture-square-01", evidence.square_uid_for("fixture-trader-01")
+        )
+
+    def test_v2_rejects_any_evidence_tampering(self) -> None:
+        mutations = (
+            "raw_bytes",
+            "raw_hash",
+            "pointer",
+            "value",
+            "capture_time",
+            "tenant",
+            "credential_metadata",
+        )
+        for mutation in mutations:
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
+                mapping_path, manifest_path, raw_path = write_v2_identity_evidence(
+                    directory, promotion_status="APPROVED"
+                )
+                mapping = json.loads(mapping_path.read_text(encoding="utf-8"))
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                if mutation == "raw_bytes":
+                    raw_path.write_bytes(raw_path.read_bytes() + b" ")
+                elif mutation == "raw_hash":
+                    mapping["mappings"][0]["raw_response"]["sha256"] = "0" * 64
+                elif mutation == "pointer":
+                    mapping["mappings"][0]["json_pointers"]["squareUid"] = "/data/username"
+                elif mutation == "value":
+                    mapping["mappings"][0]["squareUid"] = "tampered-square"
+                elif mutation == "capture_time":
+                    mapping["captured_at_utc"] = "2026-08-01T12:06:01Z"
+                elif mutation == "tenant":
+                    mapping["tenant_id"] = "another-tenant"
+                elif mutation == "credential_metadata":
+                    manifest["request"]["credential_metadata"]["cookie_jar_used"] = True
+                if mutation == "credential_metadata":
+                    manifest_bytes = json.dumps(manifest, sort_keys=True).encode("utf-8")
+                    manifest_path.write_bytes(manifest_bytes)
+                    mapping["request_manifest"]["sha256"] = sha256(manifest_bytes).hexdigest()
+                mapping_path.write_text(json.dumps(mapping, sort_keys=True), encoding="utf-8")
+
+                with self.assertRaises(ContractViolation):
+                    load_smart_money_square_identity_evidence(mapping_path)
+
+    def test_v2_rejects_same_tenant_one_to_many_and_name_badge_only(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            mapping_path, _, _ = write_v2_identity_evidence(directory)
+            mapping = json.loads(mapping_path.read_text(encoding="utf-8"))
+            duplicate = dict(mapping["mappings"][0])
+            duplicate["squareUid"] = "fixture-square-02"
+            mapping["mappings"].append(duplicate)
+            mapping_path.write_text(json.dumps(mapping, sort_keys=True), encoding="utf-8")
+            with self.assertRaises(ContractViolation):
+                load_smart_money_square_identity_evidence(mapping_path)
+
+            mapping["mappings"] = [
+                {"username": "same", "badges": ["Top Trader", "Verified"]}
+            ]
+            mapping_path.write_text(json.dumps(mapping, sort_keys=True), encoding="utf-8")
+            with self.assertRaises(ContractViolation):
+                load_smart_money_square_identity_evidence(mapping_path)
+
+    def test_v1_live_self_report_never_auto_promotes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "legacy.json"
+            path.write_text(
+                json.dumps(
+                    {
+                        "schema": "binance-smart-money-square-identity-mapping/v1",
+                        "captured_at_utc": "2026-08-01T12:06:00Z",
+                        "provenance": "LIVE_CAPTURE",
+                        "mappings": [
+                            {
+                                "topTraderId": "fixture-trader-01",
+                                "squareUid": "fixture-square-01",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            evidence = load_smart_money_square_identity_evidence(path)
+
+        self.assertEqual("PROPOSED", evidence.promotion_status)
+        self.assertIsNone(evidence.square_uid_for("fixture-trader-01"))
+
     def test_explicit_smart_money_to_square_mapping_is_file_verified(self) -> None:
         payload = {
             "schema": "binance-smart-money-square-identity-mapping/v1",

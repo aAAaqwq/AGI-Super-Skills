@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 from datetime import timedelta
 from hashlib import sha256
 from pathlib import Path
@@ -8,10 +9,12 @@ import unittest
 
 from scanner.authors import load_seed_profile_evidence
 from scanner.discovery import (
+    ChannelObservation,
     ProfileFetchOutcome,
     deduplicate_post_observations,
     observations_from_feed_cards,
     parse_profile_content_response,
+    profile_first_detail_queue,
     plan_profile_fetches,
     reconcile_profile_fetch_plan,
     validate_feed_snapshot,
@@ -62,6 +65,13 @@ class ProfileFetchPlanTests(unittest.TestCase):
                 ProfileFetchOutcome(second, "EMPTY", 0),
             ),
         )
+        mixed_success = reconcile_profile_fetch_plan(
+            plan,
+            (
+                ProfileFetchOutcome(first, "COMPLETE", 2),
+                ProfileFetchOutcome(second, "EMPTY", 0),
+            ),
+        )
         failed = reconcile_profile_fetch_plan(
             plan,
             (
@@ -77,6 +87,7 @@ class ProfileFetchPlanTests(unittest.TestCase):
 
         self.assertEqual("COMPLETE", complete.status)
         self.assertEqual("EMPTY", empty.status)
+        self.assertEqual("COMPLETE", mixed_success.status)
         self.assertEqual("FAILED", failed.status)
         self.assertEqual("PARTIAL", partial.status)
         self.assertEqual("NOT_ATTEMPTED", not_attempted.status)
@@ -85,6 +96,189 @@ class ProfileFetchPlanTests(unittest.TestCase):
 
 
 class CrossChannelDiscoveryTests(unittest.TestCase):
+    def test_profile_parser_rejects_uid_and_url_id_conflicts(self) -> None:
+        base = {
+            "success": True,
+            "data": {
+                "contents": [
+                    {
+                        "id": "123",
+                        "webLink": "https://www.binance.com/en/square/post/456",
+                        "squareUid": "mapped-uid",
+                        "contentType": "POST",
+                        "firstReleaseTime": 1785585599000,
+                    }
+                ]
+            },
+        }
+        with self.assertRaisesRegex(ContractViolation, "post ID conflicts"):
+            parse_profile_content_response(base, author_id="mapped-uid")
+        base["data"]["contents"][0]["webLink"] = "https://www.binance.com/en/square/post/123"
+        base["data"]["contents"][0]["squareUid"] = "other-uid"
+        with self.assertRaisesRegex(ContractViolation, "squareUid"):
+            parse_profile_content_response(base, author_id="mapped-uid")
+
+    def test_profile_first_queue_keeps_all_profile_candidates_and_only_supplements_from_feed(self) -> None:
+        profile = tuple(
+            ChannelObservation(
+                str(index),
+                f"https://www.binance.com/en/square/post/{index}",
+                "PROFILE",
+                author_id="mapped-uid",
+                first_release_time_ms=1785585599000 - index,
+            )
+            for index in range(100, 103)
+        )
+        feed = tuple(
+            ChannelObservation(
+                str(index),
+                f"https://www.binance.com/en/square/post/{index}",
+                "FEED",
+            )
+            for index in (101, 200, 201, 202)
+        )
+
+        queued = profile_first_detail_queue(profile, feed, feed_limit=2)
+
+        self.assertEqual(("100", "101", "102", "200", "201"), tuple(x.post_id for x in queued.posts))
+        shared = next(item for item in queued.posts if item.post_id == "101")
+        self.assertEqual(("PROFILE", "FEED"), shared.channels)
+    def test_fresh_legacy_feed_snapshot_is_unverified_not_complete(self) -> None:
+        capture = validate_feed_snapshot(
+            {
+                "status": "ok",
+                "scanned_at": "2026-08-01T08:00:00Z",
+                "count": 4,
+                "posts": [
+                    {
+                        "url": (
+                            "https://www.binance.com/en/square/post/"
+                            f"99000000000020{index}"
+                        )
+                    }
+                    for index in range(1, 5)
+                ],
+            },
+            consumed_at="2026-08-01T08:01:00Z",
+            maximum_age=timedelta(minutes=10),
+        )
+
+        self.assertEqual("PARTIAL", capture.source_status)
+        self.assertEqual("LEGACY_UNVERIFIED", capture.coverage_status)
+        self.assertEqual("LEGACY_UNVERIFIED", capture.termination_reason)
+
+    def test_bounded_complete_feed_snapshot_requires_exhaustion_evidence(self) -> None:
+        payload = {
+            "status": "ok",
+            "scanned_at": "2026-08-01T08:00:00Z",
+            "count": 4,
+            "posts": [
+                {
+                    "url": (
+                        "https://www.binance.com/en/square/post/"
+                        f"99000000000020{index}"
+                    )
+                }
+                for index in range(1, 5)
+            ],
+            "coverage_contract_version": "square-feed-coverage/v1",
+            "discovery_result": {
+                "coverage_scope": "BINANCE_SQUARE_DISCOVER_DOM",
+                "global_denominator_known": False,
+                "pagination_api_exhaustion_verified": False,
+                "coverage_status": "BOUNDED_COMPLETE",
+                "termination_reason": "EXHAUSTED",
+                "started_from_top": True,
+                "reached_bottom": True,
+                "bottom_geometry_stable": True,
+                "source_observation_count": 12,
+                "valid_url_observation_count": 12,
+                "invalid_url_observation_count": 0,
+                "unique_candidate_post_count": 4,
+                "same_run_duplicate_observation_count": 8,
+                "preferred_minimum": 4,
+                "hard_limit": 200,
+                "minimum_target_met": True,
+                "truncated": False,
+                "scroll_rounds": 3,
+                "consecutive_no_new": 2,
+                "required_consecutive_no_new": 2,
+                "scroll_observations": [],
+            },
+        }
+
+        capture = validate_feed_snapshot(
+            payload,
+            consumed_at="2026-08-01T08:01:00Z",
+            maximum_age=timedelta(minutes=10),
+        )
+
+        self.assertEqual("COMPLETE", capture.source_status)
+        self.assertEqual("BOUNDED_COMPLETE", capture.coverage_status)
+        self.assertEqual("EXHAUSTED", capture.termination_reason)
+
+        missing_scope = deepcopy(payload)
+        for field in (
+            "coverage_scope",
+            "global_denominator_known",
+            "pagination_api_exhaustion_verified",
+        ):
+            missing_scope["discovery_result"].pop(field)
+        with self.assertRaisesRegex(ContractViolation, "DOM-only coverage scope"):
+            validate_feed_snapshot(
+                missing_scope,
+                consumed_at="2026-08-01T08:01:00Z",
+                maximum_age=timedelta(minutes=10),
+            )
+
+        api_exhaustion_claim = deepcopy(payload)
+        api_exhaustion_claim["discovery_result"][
+            "pagination_api_exhaustion_verified"
+        ] = True
+        with self.assertRaisesRegex(ContractViolation, "non-global Discover DOM"):
+            validate_feed_snapshot(
+                api_exhaustion_claim,
+                consumed_at="2026-08-01T08:01:00Z",
+                maximum_age=timedelta(minutes=10),
+            )
+
+    def test_empty_feed_error_contract_is_blocked(self) -> None:
+        payload = {
+            "status": "error",
+            "scanned_at": "2026-08-01T08:00:00Z",
+            "count": 0,
+            "posts": [],
+            "coverage_contract_version": "square-feed-coverage/v1",
+            "discovery_result": {
+                "coverage_status": "BLOCKED",
+                "termination_reason": "ERROR",
+                "started_from_top": False,
+                "reached_bottom": False,
+                "bottom_geometry_stable": False,
+                "source_observation_count": 0,
+                "valid_url_observation_count": 0,
+                "invalid_url_observation_count": 0,
+                "unique_candidate_post_count": 0,
+                "same_run_duplicate_observation_count": 0,
+                "preferred_minimum": 100,
+                "hard_limit": 200,
+                "minimum_target_met": False,
+                "truncated": False,
+                "scroll_rounds": 0,
+                "consecutive_no_new": 0,
+                "required_consecutive_no_new": 10,
+            },
+        }
+
+        capture = validate_feed_snapshot(
+            payload,
+            consumed_at="2026-08-01T08:01:00Z",
+            maximum_age=timedelta(minutes=10),
+        )
+
+        self.assertEqual("FAILED", capture.source_status)
+        self.assertEqual("BLOCKED", capture.coverage_status)
+
     def test_feed_snapshot_must_be_fresh_and_not_from_the_future(self) -> None:
         payload = {
             "status": "ok",

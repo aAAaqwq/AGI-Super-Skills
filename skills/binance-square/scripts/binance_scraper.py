@@ -13,9 +13,10 @@ import json
 import os
 import re
 import sys
-import time
 import urllib.request
+from dataclasses import dataclass
 from datetime import datetime, timezone
+from typing import Any, Awaitable, Callable
 from urllib.parse import urlsplit, urlunsplit
 from zoneinfo import ZoneInfo
 
@@ -28,6 +29,11 @@ LOCAL_TIMEZONE = "America/Los_Angeles"
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SKILL_DIR = os.path.dirname(SCRIPT_DIR)
+if SKILL_DIR not in sys.path:
+    sys.path.insert(0, SKILL_DIR)
+
+from scanner.discovery import FEED_COVERAGE_CONTRACT_VERSION, FEED_COVERAGE_SCOPE
+
 DATA_DIR = os.path.join(SKILL_DIR, "data")
 HISTORY_DIR = os.path.join(DATA_DIR, "history")
 OUTPUT_FILE = os.path.join(DATA_DIR, "binance_raw_posts.json")
@@ -61,6 +67,9 @@ MAX_SCROLLS = env_int("BINANCE_SQUARE_MAX_SCROLLS", 80, 1, 200)
 STAGNANT_ROUNDS = env_int("BINANCE_SQUARE_STAGNANT_ROUNDS", 10, 2, 30)
 SCROLL_PIXELS = env_int("BINANCE_SQUARE_SCROLL_PIXELS", 1200, 200, 4000)
 SCROLL_DELAY = env_float("BINANCE_SQUARE_SCROLL_DELAY", 1.0, 0.3, 5.0)
+LOAD_TRIGGER_DELAY = env_float(
+    "BINANCE_SQUARE_LOAD_TRIGGER_DELAY", 0.35, 0.1, 2.0
+)
 CDP_RESPONSE_TIMEOUT = env_float("BINANCE_SQUARE_CDP_TIMEOUT", 15.0, 3.0, 60.0)
 SCRAPE_TIMEOUT = env_float("BINANCE_SQUARE_RUN_TIMEOUT", 240.0, 30.0, 300.0)
 CDP_MESSAGE_IDS = itertools.count(1)
@@ -246,30 +255,74 @@ COLLECT_POSTS_JS = r"""
             continue;
         }
         const card = findCard(anchor);
-        if (!card) continue;
-        const text = (card.textContent || '').trim().replace(/\n{3,}/g, '\n\n');
-        if (text.length < 30) continue;
-        const authorElement = card.querySelector(
+        const text = card ? (card.textContent || '').trim().replace(/\n{3,}/g, '\n\n') : '';
+        const authorElement = card ? card.querySelector(
             'a[href*="/square/profile/"], [class*="author"], [class*="Author"], ' +
             '[class*="nickname"], [class*="user-name"], [class*="username"]'
-        );
+        ) : null;
         posts.push({
             url,
             text: text.slice(0, 1200),
-            time: findTime(card),
+            time: card ? findTime(card) : '',
             author: authorElement ? (authorElement.textContent || '').trim() : ''
         });
     }
 
+    const scrolling = document.scrollingElement || document.documentElement || document.body;
+    const scrollTop = scrolling ? scrolling.scrollTop : window.scrollY;
+    const viewportHeight = scrolling ? scrolling.clientHeight : window.innerHeight;
+    const documentHeight = Math.max(
+        document.body ? document.body.scrollHeight : 0,
+        document.documentElement ? document.documentElement.scrollHeight : 0
+    );
     return {
         candidateLinks: anchors.length,
         candidateBlocks: posts.length,
         invalidUrls: invalidUrls.length,
         posts,
-        documentHeight: Math.max(
-            document.body ? document.body.scrollHeight : 0,
-            document.documentElement ? document.documentElement.scrollHeight : 0
-        )
+        documentHeight,
+        scrollTop,
+        viewportHeight,
+        reachedBottom: scrollTop + viewportHeight >= documentHeight - 2
+    };
+})()
+"""
+
+
+SCROLL_TO_TOP_JS = r"""
+(() => {
+    const candidates = [
+        document.scrollingElement,
+        document.documentElement,
+        document.body,
+        document.querySelector('main'),
+        document.querySelector('[class*="feed-layout-main"]'),
+        document.querySelector('[class*="Feed"]'),
+        document.querySelector('[class*="feed"]')
+    ].filter(Boolean);
+    let target = candidates[0];
+    let bestRange = -1;
+    for (const element of candidates) {
+        const range = Math.max(0, element.scrollHeight - element.clientHeight);
+        if (range > bestRange) {
+            bestRange = range;
+            target = element;
+        }
+    }
+    const isDocument = target === document.body || target === document.documentElement ||
+        target === document.scrollingElement;
+    const before = isDocument ? window.scrollY : target.scrollTop;
+    if (isDocument) window.scrollTo(0, 0);
+    else target.scrollTo(0, 0);
+    const after = isDocument ? window.scrollY : target.scrollTop;
+    const documentHeight = target.scrollHeight;
+    const viewportHeight = target.clientHeight;
+    return {
+        before,
+        after,
+        documentHeight,
+        viewportHeight,
+        reachedBottom: after + viewportHeight >= documentHeight - 2
     };
 })()
 """
@@ -298,11 +351,103 @@ SCROLL_JS = f"""
     const isDocument = target === document.body || target === document.documentElement ||
         target === document.scrollingElement;
     const before = isDocument ? window.scrollY : target.scrollTop;
+    const viewportHeight = target.clientHeight;
+    const documentHeight = target.scrollHeight;
     if (isDocument) window.scrollBy(0, {SCROLL_PIXELS});
     else target.scrollBy(0, {SCROLL_PIXELS});
     const after = isDocument ? window.scrollY : target.scrollTop;
-    return {{before, after, scrollRange: bestRange}};
+    const afterHeight = target.scrollHeight;
+    const afterViewport = target.clientHeight;
+    return {{
+        before,
+        after,
+        scrollRange: Math.max(0, afterHeight - afterViewport),
+        documentHeight: afterHeight,
+        viewportHeight: afterViewport,
+        reachedBottom: after + afterViewport >= afterHeight - 2,
+        backoffApplied: false
+    }};
 }})()
+"""
+
+
+LEAVE_BOTTOM_JS = r"""
+(() => {
+    const candidates = [
+        document.scrollingElement,
+        document.documentElement,
+        document.body,
+        document.querySelector('main'),
+        document.querySelector('[class*="feed-layout-main"]'),
+        document.querySelector('[class*="Feed"]'),
+        document.querySelector('[class*="feed"]')
+    ].filter(Boolean);
+    let target = candidates[0];
+    let bestRange = -1;
+    for (const element of candidates) {
+        const range = Math.max(0, element.scrollHeight - element.clientHeight);
+        if (range > bestRange) {
+            bestRange = range;
+            target = element;
+        }
+    }
+    const isDocument = target === document.body || target === document.documentElement ||
+        target === document.scrollingElement;
+    const before = isDocument ? window.scrollY : target.scrollTop;
+    const viewportHeight = target.clientHeight;
+    const retreat = Math.max(600, Math.min(1600, viewportHeight));
+    if (isDocument) window.scrollTo(0, Math.max(0, before - retreat));
+    else target.scrollTo(0, Math.max(0, before - retreat));
+    const after = isDocument ? window.scrollY : target.scrollTop;
+    const documentHeight = target.scrollHeight;
+    const afterViewport = target.clientHeight;
+    return {
+        before,
+        after,
+        documentHeight,
+        viewportHeight: afterViewport,
+        reachedBottom: after + afterViewport >= documentHeight - 2
+    };
+})()
+"""
+
+
+RETURN_TO_BOTTOM_JS = r"""
+(() => {
+    const candidates = [
+        document.scrollingElement,
+        document.documentElement,
+        document.body,
+        document.querySelector('main'),
+        document.querySelector('[class*="feed-layout-main"]'),
+        document.querySelector('[class*="Feed"]'),
+        document.querySelector('[class*="feed"]')
+    ].filter(Boolean);
+    let target = candidates[0];
+    let bestRange = -1;
+    for (const element of candidates) {
+        const range = Math.max(0, element.scrollHeight - element.clientHeight);
+        if (range > bestRange) {
+            bestRange = range;
+            target = element;
+        }
+    }
+    const isDocument = target === document.body || target === document.documentElement ||
+        target === document.scrollingElement;
+    const before = isDocument ? window.scrollY : target.scrollTop;
+    if (isDocument) window.scrollTo(0, target.scrollHeight);
+    else target.scrollTo(0, target.scrollHeight);
+    const after = isDocument ? window.scrollY : target.scrollTop;
+    const documentHeight = target.scrollHeight;
+    const viewportHeight = target.clientHeight;
+    return {
+        before,
+        after,
+        documentHeight,
+        viewportHeight,
+        reachedBottom: after + viewportHeight >= documentHeight - 2
+    };
+})()
 """
 
 
@@ -312,7 +457,22 @@ async def evaluate_value(websocket, expression):
         "Runtime.evaluate",
         {"expression": expression, "returnByValue": True, "awaitPromise": True},
     )
-    return result.get("result", {}).get("value", {})
+    if result.get("exceptionDetails"):
+        details = result["exceptionDetails"]
+        description = (
+            details.get("exception", {}).get("description")
+            if isinstance(details, dict)
+            else None
+        )
+        raise RuntimeError(
+            f"Runtime.evaluate failed: {description or details}"
+        )
+    remote = result.get("result", {})
+    if isinstance(remote, dict) and remote.get("subtype") == "error":
+        raise RuntimeError(
+            f"Runtime.evaluate failed: {remote.get('description') or 'JavaScript error'}"
+        )
+    return remote.get("value", {})
 
 
 def merge_posts(collected, incoming):
@@ -327,8 +487,6 @@ def merge_posts(collected, incoming):
             "time": (raw_post.get("time") or "").strip(),
             "author": (raw_post.get("author") or "").strip(),
         }
-        if len(item["text"]) < 30:
-            continue
         previous = collected.get(url)
         if previous is None:
             collected[url] = item
@@ -342,6 +500,195 @@ def merge_posts(collected, incoming):
             if not previous.get("time") and item["time"]:
                 previous["time"] = item["time"]
     return added
+
+
+@dataclass(frozen=True, slots=True)
+class FeedDiscoveryCollection:
+    posts: tuple[dict[str, str], ...]
+    discovery_result: dict[str, Any]
+    stats: dict[str, Any]
+
+
+async def collect_feed_discovery(
+    websocket: Any,
+    *,
+    evaluator: Callable[[Any, str], Awaitable[Any]] = evaluate_value,
+    sleeper: Callable[[float], Awaitable[None]] = asyncio.sleep,
+    preferred_minimum: int = MIN_TARGET,
+    hard_limit: int = MAX_POSTS,
+    max_scrolls: int = MAX_SCROLLS,
+    stagnant_rounds: int = STAGNANT_ROUNDS,
+    scroll_delay: float = SCROLL_DELAY,
+    load_trigger_delay: float = LOAD_TRIGGER_DELAY,
+) -> FeedDiscoveryCollection:
+    """Collect one bounded DOM surface and return its auditable stop contract."""
+
+    top_reset = await evaluator(websocket, SCROLL_TO_TOP_JS)
+    started_from_top = abs(float(top_reset.get("after") or 0)) <= 1
+    collected: dict[str, dict[str, str]] = {}
+    source_observations = 0
+    valid_url_observations = 0
+    invalid_url_observations = 0
+    candidate_block_observations = 0
+    scroll_observations: list[dict[str, Any]] = []
+    load_trigger_observations: list[dict[str, Any]] = []
+    load_trigger_attempts = 0
+    consecutive_no_new = 0
+    last_bottom_height: int | None = None
+    reached_bottom = False
+    bottom_geometry_stable = False
+    scroll_rounds = 0
+    termination_reason = "SCROLL_LIMIT"
+
+    for round_number in range(max_scrolls + 1):
+        batch = await evaluator(websocket, COLLECT_POSTS_JS)
+        candidate_links = max(0, int(batch.get("candidateLinks") or 0))
+        invalid_urls = max(0, int(batch.get("invalidUrls") or 0))
+        source_observations += candidate_links
+        invalid_url_observations += min(candidate_links, invalid_urls)
+        valid_url_observations += max(0, candidate_links - invalid_urls)
+        candidate_block_observations += max(
+            0, int(batch.get("candidateBlocks") or 0)
+        )
+        added = merge_posts(collected, batch.get("posts") or [])
+
+        at_bottom = bool(batch.get("reachedBottom"))
+        height = max(0, int(batch.get("documentHeight") or 0))
+        if at_bottom:
+            reached_bottom = True
+            if added:
+                consecutive_no_new = 0
+            elif last_bottom_height == height:
+                consecutive_no_new += 1
+            else:
+                consecutive_no_new = 1
+            last_bottom_height = height
+        else:
+            # Long virtualized feeds can expose no new anchors for many moving
+            # rounds.  Only stable bottom observations count toward exhaustion.
+            consecutive_no_new = 0
+            last_bottom_height = None
+        bottom_geometry_stable = bool(
+            at_bottom and consecutive_no_new >= stagnant_rounds
+        )
+
+        if len(collected) >= hard_limit:
+            termination_reason = "HARD_LIMIT"
+            break
+        if bottom_geometry_stable:
+            termination_reason = (
+                "EXHAUSTED"
+                if started_from_top and len(collected) >= preferred_minimum
+                else "STAGNANT"
+            )
+            break
+        if round_number >= max_scrolls:
+            termination_reason = "SCROLL_LIMIT"
+            break
+
+        if at_bottom:
+            leave = await evaluator(websocket, LEAVE_BOTTOM_JS)
+            load_trigger_attempts += 1
+            leave_evidence = {
+                "round": scroll_rounds + 1,
+                "attempt": load_trigger_attempts,
+                "phase": "LEAVE_BOTTOM",
+                "before": leave.get("before"),
+                "after": leave.get("after"),
+                "document_height": leave.get("documentHeight"),
+                "viewport_height": leave.get("viewportHeight"),
+                "reached_bottom": bool(leave.get("reachedBottom")),
+            }
+            load_trigger_observations.append(leave_evidence)
+            await sleeper(load_trigger_delay)
+            scroll = await evaluator(websocket, RETURN_TO_BOTTOM_JS)
+            return_evidence = {
+                "round": scroll_rounds + 1,
+                "attempt": load_trigger_attempts,
+                "phase": "RETURN_TO_BOTTOM",
+                "before": scroll.get("before"),
+                "after": scroll.get("after"),
+                "document_height": scroll.get("documentHeight"),
+                "viewport_height": scroll.get("viewportHeight"),
+                "reached_bottom": bool(scroll.get("reachedBottom")),
+            }
+            load_trigger_observations.append(return_evidence)
+        else:
+            leave_evidence = None
+            return_evidence = None
+            scroll = await evaluator(websocket, SCROLL_JS)
+        scroll_rounds += 1
+        evidence = {
+            "round": scroll_rounds,
+            "before": scroll.get("before"),
+            "after": scroll.get("after"),
+            "document_height": scroll.get("documentHeight"),
+            "viewport_height": scroll.get("viewportHeight"),
+            "scroll_range": scroll.get("scrollRange"),
+            "reached_bottom": bool(scroll.get("reachedBottom")),
+            "backoff_applied": at_bottom,
+            "load_trigger_attempt": load_trigger_attempts if at_bottom else None,
+            "load_trigger_phases": (
+                [leave_evidence, return_evidence] if at_bottom else []
+            ),
+        }
+        scroll_observations.append(evidence)
+        reached_bottom = reached_bottom or evidence["reached_bottom"]
+        await sleeper(scroll_delay)
+
+    posts = tuple(list(collected.values())[:hard_limit])
+    truncated = termination_reason == "HARD_LIMIT"
+    if termination_reason == "EXHAUSTED":
+        coverage_status = "BOUNDED_COMPLETE"
+    elif termination_reason == "HARD_LIMIT":
+        coverage_status = "CAPPED"
+    else:
+        coverage_status = "PARTIAL"
+    discovery_result = {
+        # This collector proves only the currently rendered Discover DOM
+        # surface. It does not prove exhaustion of Binance's internal feed API
+        # or a platform-wide denominator.
+        "coverage_scope": FEED_COVERAGE_SCOPE,
+        "global_denominator_known": False,
+        "pagination_api_exhaustion_verified": False,
+        "coverage_status": coverage_status,
+        "termination_reason": termination_reason,
+        "started_from_top": started_from_top,
+        "reached_bottom": reached_bottom,
+        "bottom_geometry_stable": bottom_geometry_stable,
+        "source_observation_count": source_observations,
+        "valid_url_observation_count": valid_url_observations,
+        "invalid_url_observation_count": invalid_url_observations,
+        "unique_candidate_post_count": len(posts),
+        "same_run_duplicate_observation_count": max(
+            0, valid_url_observations - len(posts)
+        ),
+        "preferred_minimum": preferred_minimum,
+        "hard_limit": hard_limit,
+        "minimum_target_met": len(posts) >= preferred_minimum,
+        "truncated": truncated,
+        "scroll_rounds": scroll_rounds,
+        "consecutive_no_new": consecutive_no_new,
+        "required_consecutive_no_new": stagnant_rounds,
+        "top_reset": dict(top_reset),
+        "scroll_observations": scroll_observations,
+        "load_trigger_attempts": load_trigger_attempts,
+        "load_trigger_observations": load_trigger_observations,
+    }
+    stats = {
+        "candidate_link_observations": source_observations,
+        "candidate_block_observations": candidate_block_observations,
+        "invalid_url_observations": invalid_url_observations,
+        "unique_valid_posts": len(posts),
+        "scroll_rounds": scroll_rounds,
+        "preferred_minimum": preferred_minimum,
+        "hard_limit": hard_limit,
+        "stopped_after_stagnant_rounds": consecutive_no_new,
+        "scroll_observations": scroll_observations,
+        "load_trigger_attempts": load_trigger_attempts,
+        "load_trigger_observations": load_trigger_observations,
+    }
+    return FeedDiscoveryCollection(posts, discovery_result, stats)
 
 
 async def scrape():
@@ -377,45 +724,14 @@ async def scrape_connected(websocket):
             await cdp(websocket, "Page.navigate", {"url": BINANCE_SQUARE})
         await asyncio.sleep(8)
 
-        collected = {}
-        candidate_link_observations = 0
-        candidate_block_observations = 0
-        invalid_url_observations = 0
-        stagnant_rounds = 0
-        scroll_rounds = 0
-
         print(
             f"[*] Dynamic collection: target={MIN_TARGET}, max={MAX_POSTS}, "
             f"scrolls<={MAX_SCROLLS}",
             file=sys.stderr,
         )
 
-        for round_number in range(MAX_SCROLLS + 1):
-            batch = await evaluate_value(websocket, COLLECT_POSTS_JS)
-            candidate_link_observations += int(batch.get("candidateLinks") or 0)
-            candidate_block_observations += int(batch.get("candidateBlocks") or 0)
-            invalid_url_observations += int(batch.get("invalidUrls") or 0)
-            added = merge_posts(collected, batch.get("posts") or [])
-
-            if added:
-                stagnant_rounds = 0
-            else:
-                stagnant_rounds += 1
-
-            if len(collected) >= MAX_POSTS:
-                break
-            if stagnant_rounds >= STAGNANT_ROUNDS:
-                # Stop on a genuinely exhausted/lazy-load-stalled feed, even when
-                # Binance exposes fewer than the preferred 100 posts.
-                break
-            if round_number >= MAX_SCROLLS:
-                break
-
-            await evaluate_value(websocket, SCROLL_JS)
-            scroll_rounds += 1
-            await asyncio.sleep(SCROLL_DELAY)
-
-        posts = list(collected.values())[:MAX_POSTS]
+        collection = await collect_feed_discovery(websocket)
+        posts = list(collection.posts)
         state = load_dedup_state()
         annotated_posts, new_posts = annotate_against_history(posts, state)
 
@@ -425,19 +741,14 @@ async def scrape_connected(websocket):
         snapshot_path = os.path.join(HISTORY_DIR, snapshot_name)
 
         stats = {
-            "candidate_link_observations": candidate_link_observations,
-            "candidate_block_observations": candidate_block_observations,
-            "invalid_url_observations": invalid_url_observations,
-            "unique_valid_posts": len(annotated_posts),
+            **collection.stats,
             "duplicate_posts": len(annotated_posts) - len(new_posts),
             "new_posts": len(new_posts),
-            "scroll_rounds": scroll_rounds,
-            "preferred_minimum": MIN_TARGET,
-            "hard_limit": MAX_POSTS,
-            "stopped_after_stagnant_rounds": stagnant_rounds,
         }
         output = {
             "status": "ok",
+            "coverage_contract_version": FEED_COVERAGE_CONTRACT_VERSION,
+            "discovery_result": collection.discovery_result,
             "scanned_at": scanned_at_utc,
             "scanned_at_local": scanned_at_local,
             "timezone": LOCAL_TIMEZONE,
@@ -467,10 +778,36 @@ def write_error(error):
     attempted_at_utc, attempted_at_local = timestamp_pair()
     payload = {
         "status": "error",
+        "coverage_contract_version": FEED_COVERAGE_CONTRACT_VERSION,
+        "discovery_result": {
+            "coverage_status": "BLOCKED",
+            "termination_reason": "ERROR",
+            "started_from_top": False,
+            "reached_bottom": False,
+            "bottom_geometry_stable": False,
+            "source_observation_count": 0,
+            "valid_url_observation_count": 0,
+            "invalid_url_observation_count": 0,
+            "unique_candidate_post_count": 0,
+            "same_run_duplicate_observation_count": 0,
+            "preferred_minimum": MIN_TARGET,
+            "hard_limit": MAX_POSTS,
+            "minimum_target_met": False,
+            "truncated": False,
+            "scroll_rounds": 0,
+            "consecutive_no_new": 0,
+            "required_consecutive_no_new": STAGNANT_ROUNDS,
+            "scroll_observations": [],
+            "load_trigger_attempts": 0,
+            "load_trigger_observations": [],
+        },
         "attempted_at": attempted_at_utc,
         "attempted_at_local": attempted_at_local,
         "timezone": LOCAL_TIMEZONE,
         "error": str(error)[:500],
+        "count": 0,
+        "posts": [],
+        "stats": {},
     }
     atomic_write_json(ERROR_FILE, payload)
     return payload

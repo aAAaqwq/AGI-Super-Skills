@@ -164,6 +164,11 @@ def render_local_markdown(report: Mapping[str, Any]) -> str:
             line += f"｜start {source['capture_started_at_utc']}"
         if source.get("evidence_path"):
             line += f"｜evidence {source['evidence_path']}"
+        if source.get("coverage_status"):
+            line += (
+                f"｜coverage {source['coverage_status']}｜"
+                f"termination {_display(source.get('termination_reason'))}"
+            )
         if source.get("reason"):
             line += f"｜{source['reason']}"
         lines.append(line)
@@ -266,7 +271,42 @@ def render_local_markdown(report: Mapping[str, Any]) -> str:
             f"完成 {profile_channel.get('complete_authors', 0)}｜"
             f"未尝试 {profile_channel.get('not_attempted_authors', 0)}"
         )
-        lines.insert(lines.index("## TOP 3") - 1, profile_line)
+        profile_lines = [profile_line]
+        cohort_specs = (
+            ("smart_money_profiles", "Smart Money Profiles", True),
+            ("seed_profiles", "Seed Profiles", False),
+        )
+        for field, label, show_mapping in cohort_specs:
+            cohort = profile_channel.get(field)
+            if not isinstance(cohort, Mapping):
+                continue
+            cohort_line = (
+                f"- {label}：计划 {cohort.get('planned_authors', 0)}｜"
+                f"完成 {cohort.get('complete_authors', 0)}｜"
+                f"空 {cohort.get('empty_authors', 0)}｜"
+                f"部分 {cohort.get('partial_authors', 0)}｜"
+                f"失败 {cohort.get('failed_authors', 0)}｜"
+                f"未尝试 {cohort.get('not_attempted_authors', 0)}｜"
+                f"来源记录 {cohort.get('source_records', 0)}"
+            )
+            mapping = cohort.get("square_identity_mapping_coverage")
+            if show_mapping and isinstance(mapping, Mapping):
+                mapping_label = mapping.get("label")
+                if not isinstance(mapping_label, str) or not mapping_label.strip():
+                    covered = mapping.get("covered")
+                    expected = mapping.get("expected")
+                    if (
+                        isinstance(covered, int)
+                        and not isinstance(covered, bool)
+                        and isinstance(expected, int)
+                        and not isinstance(expected, bool)
+                    ):
+                        mapping_label = f"{covered}/{expected}"
+                if isinstance(mapping_label, str) and mapping_label.strip():
+                    cohort_line += f"｜mapping {mapping_label.strip()}"
+            profile_lines.append(cohort_line)
+        insertion = lines.index("## TOP 3") - 1
+        lines[insertion:insertion] = profile_lines
 
     opportunities = report.get("top_opportunities") or []
     if not opportunities:
@@ -380,7 +420,18 @@ def render_telegram(report: Mapping[str, Any]) -> str:
     lines.append(
         "来源 "
         + " / ".join(
-            f"{name}={_mapping(source_coverage.get(name), f'source_coverage.{name}').get('status')}"
+            (
+                f"{name}="
+                f"{_mapping(source_coverage.get(name), f'source_coverage.{name}').get('status')}"
+                + (
+                    f"({_mapping(source_coverage.get(name), f'source_coverage.{name}').get('coverage_status')}/"
+                    f"{_mapping(source_coverage.get(name), f'source_coverage.{name}').get('termination_reason')})"
+                    if _mapping(source_coverage.get(name), f"source_coverage.{name}").get(
+                        "coverage_status"
+                    )
+                    else ""
+                )
+            )
             for name in _REPORT_SOURCES
         )
     )
@@ -509,7 +560,7 @@ def _counts(value: Any) -> dict[str, Any]:
     raw_dedup_status = source.get("dedup_status", DedupStatus.COMPUTED.value)
     try:
         dedup_status = DedupStatus(raw_dedup_status)
-    except (TypeError, ValueError) as exc:
+    except (TypeError, ValueError):
         raise ReportValidationError("post_counts.dedup_status is invalid")
     try:
         contract = PostCountContract(
@@ -526,7 +577,32 @@ def _counts(value: Any) -> dict[str, Any]:
         )
     except ContractViolation as exc:
         raise ReportValidationError(f"post_counts {exc}") from exc
-    return contract.as_dict()
+    source_observations = source.get("source_observations", discovered)
+    deduplicated_candidates = source.get(
+        "deduplicated_candidates", discovered
+    )
+    same_run_duplicates = source.get("same_run_duplicates", 0)
+    for field, count in (
+        ("source_observations", source_observations),
+        ("deduplicated_candidates", deduplicated_candidates),
+        ("same_run_duplicates", same_run_duplicates),
+    ):
+        if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+            raise ReportValidationError(f"post_counts.{field} must be non-negative")
+    if deduplicated_candidates != discovered:
+        raise ReportValidationError(
+            "post_counts.deduplicated_candidates must equal discovered"
+        )
+    if source_observations != deduplicated_candidates + same_run_duplicates:
+        raise ReportValidationError(
+            "post_counts source observations do not reconcile after deduplication"
+        )
+    return {
+        **contract.as_dict(),
+        "source_observations": source_observations,
+        "deduplicated_candidates": deduplicated_candidates,
+        "same_run_duplicates": same_run_duplicates,
+    }
 
 
 def _display_count(value: Any) -> str:
@@ -1134,12 +1210,57 @@ def _normalize_source_coverage(value: Any, name: str) -> dict[str, Any]:
         not isinstance(evidence_path, str) or not evidence_path.strip()
     ):
         raise ReportValidationError(f"{name}.evidence_path must be a non-empty string")
+    coverage_version = source.get("coverage_contract_version")
+    coverage_status = source.get("coverage_status")
+    termination_reason = source.get("termination_reason")
+    coverage_fields_present = any(
+        value is not None
+        for value in (coverage_version, coverage_status, termination_reason)
+    )
+    if coverage_fields_present and name != "source_coverage.FEED":
+        raise ReportValidationError(f"{name} cannot declare Feed coverage fields")
+    if coverage_fields_present:
+        coverage_status = str(coverage_status or "").upper()
+        termination_reason = str(termination_reason or "").upper()
+        if coverage_version not in {None, "square-feed-coverage/v1"}:
+            raise ReportValidationError(f"{name}.coverage_contract_version is invalid")
+        if coverage_status not in {
+            "BOUNDED_COMPLETE",
+            "PARTIAL",
+            "CAPPED",
+            "BLOCKED",
+            "LEGACY_UNVERIFIED",
+        }:
+            raise ReportValidationError(f"{name}.coverage_status is invalid")
+        if termination_reason not in {
+            "EXHAUSTED",
+            "STAGNANT",
+            "HARD_LIMIT",
+            "SCROLL_LIMIT",
+            "ERROR",
+            "LEGACY_UNVERIFIED",
+        }:
+            raise ReportValidationError(f"{name}.termination_reason is invalid")
+        expected_source_status = (
+            "COMPLETE"
+            if coverage_status == "BOUNDED_COMPLETE"
+            else "FAILED"
+            if coverage_status == "BLOCKED"
+            else "PARTIAL"
+        )
+        if status != expected_source_status:
+            raise ReportValidationError(
+                f"{name}.status conflicts with bounded coverage status"
+            )
     return {
         "status": status,
         "provenance": provenance,
         **normalized_times,
         "reason": reason,
         "evidence_path": evidence_path,
+        "coverage_contract_version": coverage_version,
+        "coverage_status": coverage_status,
+        "termination_reason": termination_reason,
     }
 
 

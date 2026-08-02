@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import timedelta
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
 from .contracts import (
     ContractViolation,
@@ -17,6 +17,14 @@ from .contracts import (
 
 PROFILE_FETCH_STATUSES = frozenset(
     {"COMPLETE", "EMPTY", "PARTIAL", "FAILED", "NOT_ATTEMPTED"}
+)
+FEED_COVERAGE_CONTRACT_VERSION = "square-feed-coverage/v1"
+FEED_COVERAGE_SCOPE = "BINANCE_SQUARE_DISCOVER_DOM"
+FEED_COVERAGE_STATUSES = frozenset(
+    {"BOUNDED_COMPLETE", "PARTIAL", "CAPPED", "BLOCKED"}
+)
+FEED_TERMINATION_REASONS = frozenset(
+    {"EXHAUSTED", "STAGNANT", "HARD_LIMIT", "SCROLL_LIMIT", "ERROR"}
 )
 
 
@@ -89,6 +97,7 @@ class ChannelObservation:
     channel: str
     author_id: str | None = None
     profile_url: str | None = None
+    first_release_time_ms: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -117,6 +126,153 @@ class FeedSnapshotCapture:
 
     captured_at_utc: str
     record_count: int
+    source_status: str
+    coverage_status: str
+    termination_reason: str
+    discovery_result: Mapping[str, Any] | None
+
+
+def _feed_non_negative_int(value: Any, field: str) -> int:
+    if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+        raise ContractViolation(f"Feed discovery_result.{field} must be non-negative")
+    return value
+
+
+def validate_feed_discovery_result(
+    payload: Any,
+    *,
+    allow_legacy: bool = True,
+) -> tuple[str, str, str, Mapping[str, Any] | None]:
+    """Validate the bounded Feed coverage contract without upgrading old evidence."""
+
+    if not isinstance(payload, dict):
+        raise ContractViolation("Feed snapshot must be an object")
+    discovery = payload.get("discovery_result")
+    version = payload.get("coverage_contract_version")
+    if discovery is None and version is None:
+        if not allow_legacy:
+            raise ContractViolation("Feed snapshot is missing the v1 coverage contract")
+        return "PARTIAL", "LEGACY_UNVERIFIED", "LEGACY_UNVERIFIED", None
+    if version != FEED_COVERAGE_CONTRACT_VERSION:
+        raise ContractViolation("Feed coverage contract version is unsupported")
+    if not isinstance(discovery, Mapping):
+        raise ContractViolation("Feed discovery_result must be an object")
+
+    coverage_status = str(discovery.get("coverage_status") or "").upper()
+    termination_reason = str(discovery.get("termination_reason") or "").upper()
+    if coverage_status not in FEED_COVERAGE_STATUSES:
+        raise ContractViolation("Feed discovery_result.coverage_status is invalid")
+    if termination_reason not in FEED_TERMINATION_REASONS:
+        raise ContractViolation("Feed discovery_result.termination_reason is invalid")
+    scope = discovery.get("coverage_scope")
+    global_denominator_known = discovery.get("global_denominator_known")
+    pagination_api_exhaustion_verified = discovery.get(
+        "pagination_api_exhaustion_verified"
+    )
+    scope_values_present = any(
+        value is not None
+        for value in (
+            scope,
+            global_denominator_known,
+            pagination_api_exhaustion_verified,
+        )
+    )
+    if scope_values_present and not (
+        scope == FEED_COVERAGE_SCOPE
+        and global_denominator_known is False
+        and pagination_api_exhaustion_verified is False
+    ):
+        raise ContractViolation(
+            "Feed coverage scope must be the non-global Discover DOM surface"
+        )
+    for field in ("started_from_top", "reached_bottom", "minimum_target_met", "truncated"):
+        if not isinstance(discovery.get(field), bool):
+            raise ContractViolation(f"Feed discovery_result.{field} must be boolean")
+    bottom_geometry_stable = discovery.get("bottom_geometry_stable")
+    if not isinstance(bottom_geometry_stable, bool):
+        raise ContractViolation(
+            "Feed discovery_result.bottom_geometry_stable must be boolean"
+        )
+
+    counts = {
+        field: _feed_non_negative_int(discovery.get(field), field)
+        for field in (
+            "source_observation_count",
+            "valid_url_observation_count",
+            "invalid_url_observation_count",
+            "unique_candidate_post_count",
+            "same_run_duplicate_observation_count",
+            "preferred_minimum",
+            "hard_limit",
+            "scroll_rounds",
+            "consecutive_no_new",
+            "required_consecutive_no_new",
+        )
+    }
+    if counts["preferred_minimum"] < 1 or counts["hard_limit"] < 1:
+        raise ContractViolation("Feed discovery limits must be positive")
+    if counts["preferred_minimum"] > counts["hard_limit"]:
+        raise ContractViolation("Feed preferred minimum exceeds hard limit")
+    if counts["required_consecutive_no_new"] < 2:
+        raise ContractViolation("Feed exhaustion threshold must be at least two rounds")
+    if (
+        counts["source_observation_count"]
+        != counts["valid_url_observation_count"]
+        + counts["invalid_url_observation_count"]
+    ):
+        raise ContractViolation("Feed source observations do not reconcile")
+    if (
+        counts["same_run_duplicate_observation_count"]
+        != counts["valid_url_observation_count"]
+        - counts["unique_candidate_post_count"]
+    ):
+        raise ContractViolation("Feed duplicate observations do not reconcile")
+    posts = payload.get("posts")
+    if not isinstance(posts, list):
+        raise ContractViolation("Feed snapshot posts must be a list")
+    if counts["unique_candidate_post_count"] != len(posts):
+        raise ContractViolation("Feed unique candidate count does not match posts")
+    if discovery["minimum_target_met"] != (
+        len(posts) >= counts["preferred_minimum"]
+    ):
+        raise ContractViolation("Feed minimum_target_met does not match post count")
+
+    if coverage_status == "BOUNDED_COMPLETE":
+        if not scope_values_present:
+            raise ContractViolation(
+                "Feed BOUNDED_COMPLETE requires an explicit DOM-only coverage scope"
+            )
+        if not (
+            termination_reason == "EXHAUSTED"
+            and discovery["started_from_top"]
+            and discovery["reached_bottom"]
+            and bottom_geometry_stable
+            and discovery["minimum_target_met"]
+            and not discovery["truncated"]
+            and counts["consecutive_no_new"]
+            >= counts["required_consecutive_no_new"]
+        ):
+            raise ContractViolation("Feed BOUNDED_COMPLETE evidence is insufficient")
+        source_status = "COMPLETE"
+    elif coverage_status == "CAPPED":
+        if not (
+            termination_reason == "HARD_LIMIT"
+            and discovery["truncated"]
+            and len(posts) == counts["hard_limit"]
+        ):
+            raise ContractViolation("Feed CAPPED evidence is inconsistent")
+        source_status = "PARTIAL"
+    elif coverage_status == "BLOCKED":
+        if termination_reason != "ERROR" or posts:
+            raise ContractViolation("Feed BLOCKED requires an empty error result")
+        source_status = "FAILED"
+    else:
+        if termination_reason not in {"STAGNANT", "SCROLL_LIMIT", "ERROR"}:
+            raise ContractViolation("Feed PARTIAL termination reason is inconsistent")
+        if termination_reason == "ERROR" and not posts:
+            raise ContractViolation("Feed empty error result must be BLOCKED")
+        source_status = "PARTIAL"
+    return source_status, coverage_status, termination_reason, dict(discovery)
 
 
 def validate_feed_snapshot(
@@ -143,9 +299,16 @@ def validate_feed_snapshot(
     posts = payload.get("posts")
     if not isinstance(posts, list):
         raise ContractViolation("Feed snapshot posts must be a list")
+    source_status, coverage_status, termination_reason, discovery = (
+        validate_feed_discovery_result(payload)
+    )
     return FeedSnapshotCapture(
         captured_at_utc=format_utc(captured),
         record_count=len(posts),
+        source_status=source_status,
+        coverage_status=coverage_status,
+        termination_reason=termination_reason,
+        discovery_result=discovery,
     )
 
 
@@ -285,10 +448,10 @@ def reconcile_profile_fetch_plan(
         status, reason = "EMPTY", "profile_registry_empty"
     elif counts["NOT_ATTEMPTED"] == len(reconciled):
         status, reason = "NOT_ATTEMPTED", "profile_fetch_not_attempted"
-    elif counts["COMPLETE"] == len(reconciled):
-        status, reason = "COMPLETE", "all_planned_profiles_returned_posts"
     elif counts["EMPTY"] == len(reconciled):
         status, reason = "EMPTY", "all_planned_profiles_returned_no_posts"
+    elif counts["COMPLETE"] + counts["EMPTY"] == len(reconciled):
+        status, reason = "COMPLETE", "all_planned_profiles_reconciled"
     elif counts["FAILED"] == len(reconciled):
         status, reason = "FAILED", "all_planned_profile_fetches_failed"
     else:
@@ -431,6 +594,17 @@ def parse_profile_content_response(
             continue
         if not post_id.isdecimal():
             continue
+        first_release_time = item.get(
+            "firstReleaseTime", raw_item.get("firstReleaseTime")
+        )
+        if first_release_time is not None and (
+            not isinstance(first_release_time, int)
+            or isinstance(first_release_time, bool)
+            or first_release_time < 0
+        ):
+            raise ContractViolation(
+                f"profile content item[{index}] firstReleaseTime is invalid"
+            )
         canonical_url = f"https://www.binance.com/en/square/post/{post_id}"
         observations.append(
             ChannelObservation(
@@ -439,6 +613,7 @@ def parse_profile_content_response(
                 channel="PROFILE",
                 author_id=stable_id,
                 profile_url=profile_url,
+                first_release_time_ms=first_release_time,
             )
         )
     return tuple(observations)
@@ -502,6 +677,16 @@ def deduplicate_post_observations(
             raise ContractViolation(
                 f"post {post_id} was observed with conflicting stable authors"
             )
+        profile_times = {
+            record.first_release_time_ms
+            for record in records
+            if record.channel == "PROFILE"
+            and record.first_release_time_ms is not None
+        }
+        if len(profile_times) > 1:
+            raise ContractViolation(
+                f"post {post_id} was observed with conflicting Profile release times"
+            )
         posts.append(
             CanonicalPostDiscovery(
                 post_id=post_id,
@@ -519,6 +704,40 @@ def deduplicate_post_observations(
     )
 
 
+def profile_first_detail_queue(
+    profile_observations: Iterable[ChannelObservation],
+    feed_observations: Iterable[ChannelObservation],
+    *,
+    feed_limit: int,
+) -> DeduplicatedDiscovery:
+    """Keep every Profile candidate, then add a bounded Feed supplement.
+
+    A Feed observation for a post already found on Profile is retained for
+    lineage and does not consume the supplement budget.  ``feed_limit`` never
+    truncates the mapped Profile set.
+    """
+
+    if not isinstance(feed_limit, int) or isinstance(feed_limit, bool) or feed_limit < 0:
+        raise ContractViolation("Profile-first Feed limit must be non-negative")
+    selected = list(profile_observations)
+    profile_ids = {item.post_id for item in selected}
+    feed_supplements: set[str] = set()
+    for observation in feed_observations:
+        if not isinstance(observation, ChannelObservation):
+            raise ContractViolation("Feed records must be ChannelObservation")
+        if observation.post_id in profile_ids:
+            selected.append(observation)
+            continue
+        if observation.post_id in feed_supplements:
+            selected.append(observation)
+            continue
+        if len(feed_supplements) >= feed_limit:
+            continue
+        feed_supplements.add(observation.post_id)
+        selected.append(observation)
+    return deduplicate_post_observations(selected)
+
+
 __all__ = [
     "PROFILE_FETCH_STATUSES",
     "CanonicalPostDiscovery",
@@ -533,6 +752,7 @@ __all__ = [
     "feed_snapshot_post_urls",
     "observations_from_feed_cards",
     "parse_profile_content_response",
+    "profile_first_detail_queue",
     "plan_profile_fetches",
     "reconcile_profile_fetch_plan",
     "validate_feed_snapshot",

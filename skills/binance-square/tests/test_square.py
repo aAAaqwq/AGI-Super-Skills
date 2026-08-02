@@ -17,6 +17,7 @@ from scanner.square import (
     select_strict_24h,
     try_parse_post_detail,
 )
+from scripts.collect_square_v4 import _collect_live_urls
 
 
 FIXTURES = Path(__file__).parent / "fixtures" / "m1b"
@@ -125,6 +126,61 @@ class SquarePostDetailTests(unittest.TestCase):
 
 
 class SquareCollectorTests(unittest.TestCase):
+    def test_profile_first_duplicate_fetches_detail_once_and_conflicts_are_quarantined(self) -> None:
+        payload = json.loads((FIXTURES / "post_detail_public.json").read_text(encoding="utf-8"))
+        expected_id = payload["response"]["data"]["id"]
+        url = f"https://www.binance.com/en/square/post/{expected_id}"
+        calls: list[str] = []
+
+        result = _collect_live_urls(
+            [url, url],
+            decision_at="2026-07-31T05:48:36Z",
+            source_mode="fixture_profile_first",
+            fetch_detail=lambda value: calls.append(value) or payload,
+            profile_expectations={
+                expected_id: {
+                    "author_id": "conflicting-profile-uid",
+                    "first_release_time_ms": payload["response"]["data"]["firstReleaseTime"],
+                }
+            },
+        )
+
+        self.assertEqual([url], calls)
+        self.assertEqual(0, result["counts"]["accepted_observations"])
+        self.assertEqual("profile_detail_author_conflict", result["quarantine"][0]["reason"])
+
+        calls.clear()
+        result = _collect_live_urls(
+            [url, url],
+            decision_at="2026-07-31T05:48:36Z",
+            source_mode="fixture_profile_first",
+            fetch_detail=lambda value: calls.append(value) or payload,
+            profile_expectations={
+                expected_id: {
+                    "author_id": payload["response"]["data"]["squareUid"],
+                    "first_release_time_ms": payload["response"]["data"]["firstReleaseTime"] + 1,
+                }
+            },
+        )
+        self.assertEqual([url], calls)
+        self.assertEqual("profile_detail_time_conflict", result["quarantine"][0]["reason"])
+
+    def test_decision_boundary_post_is_dq_not_window_excluded(self) -> None:
+        payload = json.loads(
+            (FIXTURES / "post_detail_public.json").read_text(encoding="utf-8")
+        )
+        post_id = payload["response"]["data"]["id"]
+        result = _collect_live_urls(
+            [f"https://www.binance.com/en/square/post/{post_id}"],
+            decision_at="2026-07-30T05:48:36Z",
+            source_mode="fixture_decision_boundary",
+            fetch_detail=lambda _value: payload,
+        )
+
+        self.assertEqual("not_before_decision_at", result["quarantine"][0]["reason"])
+        self.assertEqual(1, result["counts"]["dq_quarantined_source_records"])
+        self.assertEqual(0, result["counts"]["window_excluded_source_records"])
+
     def test_v3_snapshot_is_a_bounded_discovery_source(self) -> None:
         project = Path(__file__).parents[1]
 

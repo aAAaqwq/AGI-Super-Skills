@@ -348,3 +348,19 @@
 - 身份映射安全门：每条 `topTraderId → squareUid` 映射必须指向真实证据文件，保存并核验文件实际 SHA-256，同时由schema绑定源/目标双ID；伪路径、错hash或单边ID均拒绝。
 - 接入完成时已超过 `12:00Z + 10m` 生产准入窗，没有补写或伪造真实生产轮；下一合法时槽是 `16:00Z`。本记录不授权发送、安装调度或交易。
 - 该canary只验证采集、完整性、持久化与报告合同，不证明排行作者能产出合格Square信号，也不证明策略有效。Square身份/Profile内容映射和至少60天前向绩效仍未完成。
+
+## 十八、v4.2 帖子覆盖优先改造（2026-08-02）
+
+- 本轮优先级冻结为：先扩大并证明帖子发现覆盖，再补作者身份/Profile链；手续费、滑点、资金费率、深度和自动交易不在本轮范围，既有名义/净值边界不得被误写成已完成成本模型。
+- “覆盖全”只能解释为声明来源面的有界覆盖，不能宣称币安广场平台级全集。Feed 必须显示 `BOUNDED_COMPLETE/PARTIAL/CAPPED/BLOCKED` 和具体停止原因；旧快照不能因新鲜就自动标完成。
+- 当前真实 Feed surface 在两相懒加载触发后仍只暴露4条，结果为`PARTIAL/STAGNANT`。历史上同一页面曾出现更大集合，说明surface可变；不得用任一单次数量伪造全站分母。
+- Profile 是专业作者帖主通道：匿名公共分页、严格 `[decision_at-24h, decision_at)`、置顶旧帖容错、cursor锚点验证、Profile-first去重和每post单详情回源均已接入。
+- 9个独立seed Profile与Smart Money cohort必须分开记账。组件canary在`2026-08-02T06:50:57Z`取得seed `9/9`终止证明和12条窗口内帖子；这不等于Smart Money `60/60`。
+- 对Smart Money剩余58人的匿名直接绑定采集已逐一执行：最小5秒间隔、零重试，58/58均因响应缺少`/data/topTraderId`失败关闭，未产生名称猜测映射；连同2个既有批准件形成60/60身份采集审计，但活动映射覆盖仍是2/60。
+- 两份同一匿名响应的双ID证据经Governor独立复核并生成APPROVED artifact：`5002917326304805120 → GQUlO4HbUDkRVzImNKf5Wg`、`4653587280651442944 → QsDXDJe8oPVDORHkTMgozw`。本地catalog覆盖`2/60`；其余58条保持`NOT_ATTEMPTED`，名称、头像、徽章、粉丝和标签不能补齐映射。
+- identity collector只生成`PROPOSED`；审批必须显式、离线、不可变，并保留raw/manifest/mapping/catalog/receipt的SHA-256。只有APPROVED占用活动双射，撤销不得早于有效LINK。
+- 本轮仍不安装调度、不发送Telegram、不发布、不下单；最终结论必须来自合法UTC时槽内的当次no-send报告和独立发布Gate。
+- `2026-08-02T08:01:33.093818Z` 的合法 `08:00Z` no-send生产canary已完成：Feed 83 unique / 2855 valid observations / 2772 same-run repeats，因低于100且`STAGNANT`保持`PARTIAL`；跨通道97候选严格对账为61窗口内、36窗口外、0 DQ。Smart Money排行2/2、详情60/60、身份映射2/60；seed Profile 9/9终态并贡献12条source records；最终`WAIT`，TOP/WATCH/发送均为0。
+- canary之后发现身份映射和逐作者Profile终态只进入报告manifest、未进入专用数据库表；本轮以TDD补齐approved member artifact/LINK与每个planned author的五状态落库。由于该接线发生在08:00 canary之后，最终冻结tree仍需在后续合法UTC时槽复跑，不能把旧数据库回填冒充新管线运行证据。
+- 进一步独立审计发现跨Profile/Feed/参数帖的source observation曾在详情前被压成URL，accepted SQLite行也无法还原来源。已新增`post_discovery_observation`逐来源账本并冻结`O=C+D`，raw与DB逐字段对账，每个canonical post仍只回源一次；Feed DOM anchor observations与selected detail queue observations分层报告。
+- Feed的`BOUNDED_COMPLETE`仅允许解释为`BINANCE_SQUARE_DISCOVER_DOM`有界完成；`global_denominator_known=false`、`pagination_api_exhaustion_verified=false`。缺scope或声称已穷尽内部feed API的v1快照失败关闭，任何报告均不得把DOM完成改写为币安广场全站全量。

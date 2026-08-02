@@ -12,6 +12,7 @@ from scanner.contracts import AcceptedPostObservation, ContractViolation, RunNam
 from scanner.opportunities import Direction, ParameterSource
 from scanner.storage import SQLiteRunLedger, SmartMoneyLeaderboardRowInput
 from scanner.tracking import Outcome
+from tests.test_authors import write_v2_identity_evidence
 
 
 MIGRATION = Path(__file__).parents[1] / "migrations"
@@ -27,11 +28,13 @@ def file_sha256(path: Path) -> str:
     return sha256(path.read_bytes()).hexdigest()
 
 
-def accepted(post_id: str, ordinal: int = 0) -> AcceptedPostObservation:
+def accepted(
+    post_id: str, ordinal: int = 0, author_id: str = "opaque-author-id"
+) -> AcceptedPostObservation:
     return AcceptedPostObservation(
         post_id=post_id,
         canonical_post_url=f"https://www.binance.com/en/square/post/{post_id}",
-        author_id="opaque-author-id",
+        author_id=author_id,
         published_at=datetime(2026, 8, 1, 3, tzinfo=timezone.utc),
         observed_at=datetime(2026, 8, 1, 3, 1, tzinfo=timezone.utc),
         content_hash=(post_id[-1] if post_id[-1] in "abcdef" else "a") * 64,
@@ -87,6 +90,378 @@ def smart_money_rows() -> list[SmartMoneyLeaderboardRowInput]:
 
 
 class RunLedgerTests(unittest.TestCase):
+    def test_approved_identity_evidence_creates_author_and_audit_rows_atomically(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            ledger = SQLiteRunLedger(root / "radar.sqlite", MIGRATION)
+            self.addCleanup(ledger.close)
+            run = ledger.create_or_open_production_run(
+                production_job_id="identity-author-audit",
+                scheduled_for_utc="2026-08-01T12:00:00Z",
+                pipeline_version="4.2.0",
+            )
+            attempt = ledger.start_next_attempt(
+                run.logical_run_id, started_at="2026-08-01T12:00:01Z"
+            )
+
+            def create_trader(top_trader_id: str) -> None:
+                ledger.record_smart_money_profile_observation(
+                    logical_run_id=run.logical_run_id,
+                    attempt_id=attempt.attempt_id,
+                    top_trader_id=top_trader_id,
+                    observation_status="FAILED",
+                    captured_at="2026-08-01T12:00:02Z",
+                    evidence_path=str(SMART_MONEY_PROFILE_FIXTURE),
+                    evidence_file_sha256=file_sha256(SMART_MONEY_PROFILE_FIXTURE),
+                    failure_reason="NO_PROFILE",
+                    now="2026-08-01T12:00:03Z",
+                )
+
+            create_trader("fixture-trader-01")
+            approved_dir = root / "approved"
+            approved_dir.mkdir()
+            approved_path, manifest_path, raw_path = write_v2_identity_evidence(
+                str(approved_dir), promotion_status="APPROVED"
+            )
+
+            mapping = ledger.record_smart_money_square_identity_mapping(
+                top_trader_id="fixture-trader-01",
+                author_id="fixture-square-01",
+                verified_at="2026-08-01T12:06:00Z",
+                evidence_path=str(approved_path),
+                evidence_sha256=file_sha256(approved_path),
+                now="2026-08-01T12:08:00Z",
+            )
+
+            author = ledger._connection.execute(  # noqa: SLF001 - audit receipt
+                "SELECT * FROM author_entity WHERE author_id = ?",
+                ("fixture-square-01",),
+            ).fetchone()
+            self.assertIsNotNone(author)
+            self.assertEqual(
+                "BINANCE_SQUARE_UID_DIRECT_IDENTITY_EVIDENCE",
+                author["identity_source"],
+            )
+            self.assertEqual("binance_identity_evidence", author["source_system"])
+            artifact = ledger._connection.execute(  # noqa: SLF001 - audit receipt
+                "SELECT * FROM smart_money_identity_artifact"
+            ).fetchone()
+            self.assertEqual("APPROVED", artifact["promotion_status"])
+            self.assertEqual(str(approved_path), artifact["artifact_path"])
+            self.assertEqual(str(manifest_path), artifact["request_manifest_path"])
+            self.assertEqual(str(raw_path), artifact["raw_response_path"])
+            self.assertEqual("/data/topTraderId", artifact["top_trader_id_pointer"])
+            self.assertEqual("/data/squareUid", artifact["square_uid_pointer"])
+            self.assertEqual("APPROVE", json.loads(artifact["review_json"])["decision"])
+            self.assertEqual("APPROVED", mapping.promotion_status)
+            self.assertEqual(
+                {"author_entity": 1, "smart_money_identity_artifact": 1,
+                 "smart_money_identity_mapping_event": 1},
+                {
+                    table: ledger._connection.execute(  # noqa: SLF001 - audit receipt
+                        f"SELECT COUNT(*) FROM {table}"
+                    ).fetchone()[0]
+                    for table in (
+                        "author_entity",
+                        "smart_money_identity_artifact",
+                        "smart_money_identity_mapping_event",
+                    )
+                },
+            )
+            self.assertEqual(
+                [mapping], ledger.list_smart_money_square_identity_mappings()
+            )
+
+            create_trader("fixture-trader-02")
+            proposed_dir = root / "proposed"
+            proposed_dir.mkdir()
+            proposed_path, _, _ = write_v2_identity_evidence(
+                str(proposed_dir),
+                top_trader_id="fixture-trader-02",
+                square_uid="fixture-square-proposed",
+            )
+            with self.assertRaisesRegex(ContractViolation, "source-specific entities"):
+                ledger.record_smart_money_square_identity_mapping(
+                    top_trader_id="fixture-trader-02",
+                    author_id="fixture-square-proposed",
+                    verified_at="2026-08-01T12:06:00Z",
+                    evidence_path=str(proposed_path),
+                    evidence_sha256=file_sha256(proposed_path),
+                    now="2026-08-01T12:08:00Z",
+                )
+
+            missing_source_dir = root / "missing-source"
+            missing_source_dir.mkdir()
+            missing_source_path, _, _ = write_v2_identity_evidence(
+                str(missing_source_dir),
+                promotion_status="APPROVED",
+                top_trader_id="fixture-trader-missing",
+                square_uid="fixture-square-missing",
+            )
+            with self.assertRaisesRegex(ContractViolation, "source-specific entities"):
+                ledger.record_smart_money_square_identity_mapping(
+                    top_trader_id="fixture-trader-missing",
+                    author_id="fixture-square-missing",
+                    verified_at="2026-08-01T12:06:00Z",
+                    evidence_path=str(missing_source_path),
+                    evidence_sha256=file_sha256(missing_source_path),
+                    now="2026-08-01T12:08:00Z",
+                )
+
+            conflict_dir = root / "conflict"
+            conflict_dir.mkdir()
+            conflict_path, _, _ = write_v2_identity_evidence(
+                str(conflict_dir),
+                promotion_status="APPROVED",
+                top_trader_id="fixture-trader-01",
+                square_uid="fixture-square-conflict",
+            )
+            with self.assertRaisesRegex(ContractViolation, "conflict"):
+                ledger.record_smart_money_square_identity_mapping(
+                    top_trader_id="fixture-trader-01",
+                    author_id="fixture-square-conflict",
+                    verified_at="2026-08-01T12:06:00Z",
+                    evidence_path=str(conflict_path),
+                    evidence_sha256=file_sha256(conflict_path),
+                    now="2026-08-01T12:08:00Z",
+                )
+            self.assertIsNone(
+                ledger._connection.execute(  # noqa: SLF001 - rollback receipt
+                    "SELECT 1 FROM author_entity WHERE author_id IN (?, ?, ?)",
+                    (
+                        "fixture-square-proposed",
+                        "fixture-square-missing",
+                        "fixture-square-conflict",
+                    ),
+                ).fetchone()
+            )
+            self.assertEqual(
+                (1, 1),
+                (
+                    ledger._connection.execute(  # noqa: SLF001 - rollback receipt
+                        "SELECT COUNT(*) FROM smart_money_identity_artifact"
+                    ).fetchone()[0],
+                    ledger._connection.execute(  # noqa: SLF001 - rollback receipt
+                        "SELECT COUNT(*) FROM smart_money_identity_mapping_event"
+                    ).fetchone()[0],
+                ),
+            )
+
+    def test_mapping_v2_approval_conflicts_idempotency_and_revoke_are_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            ledger = SQLiteRunLedger(root / "radar.sqlite", MIGRATION)
+            self.addCleanup(ledger.close)
+            run = ledger.create_or_open_production_run(
+                production_job_id="smart-money-v2",
+                scheduled_for_utc="2026-08-01T12:00:00Z",
+                pipeline_version="4.2.0",
+            )
+            attempt = ledger.start_next_attempt(
+                run.logical_run_id, started_at="2026-08-01T12:00:01Z"
+            )
+            for trader_id in ("fixture-trader-01", "fixture-trader-02"):
+                ledger.record_smart_money_profile_observation(
+                    logical_run_id=run.logical_run_id,
+                    attempt_id=attempt.attempt_id,
+                    top_trader_id=trader_id,
+                    observation_status="FAILED",
+                    captured_at="2026-08-01T12:00:02Z",
+                    evidence_path=str(SMART_MONEY_PROFILE_FIXTURE),
+                    evidence_file_sha256=file_sha256(SMART_MONEY_PROFILE_FIXTURE),
+                    failure_reason="NO_PROFILE",
+                    now="2026-08-01T12:00:03Z",
+                )
+            ledger.record_accepted_post_observations(
+                logical_run_id=run.logical_run_id,
+                attempt_id=attempt.attempt_id,
+                observations=[
+                    accepted("2001", author_id="fixture-square-01"),
+                    accepted("2002", 1, author_id="fixture-square-02"),
+                ],
+                now="2026-08-01T12:00:03Z",
+            )
+
+            proposed_dir = root / "proposed"
+            proposed_dir.mkdir()
+            proposed_path, _, _ = write_v2_identity_evidence(str(proposed_dir))
+            proposed = ledger.record_smart_money_square_identity_mapping(
+                top_trader_id="fixture-trader-01",
+                author_id="fixture-square-01",
+                verified_at="2026-08-01T12:06:00Z",
+                evidence_path=str(proposed_path),
+                evidence_sha256=file_sha256(proposed_path),
+                now="2026-08-01T12:08:00Z",
+            )
+            self.assertEqual("PROPOSED", proposed.promotion_status)
+            self.assertEqual([], ledger.list_smart_money_square_identity_mappings())
+            self.assertEqual(
+                [proposed],
+                ledger.list_smart_money_square_identity_mappings(include_inactive=True),
+            )
+
+            approved_dir = root / "approved"
+            approved_dir.mkdir()
+            approved_path, _, raw_path = write_v2_identity_evidence(
+                str(approved_dir), promotion_status="APPROVED"
+            )
+            approved = ledger.record_smart_money_square_identity_mapping(
+                top_trader_id="fixture-trader-01",
+                author_id="fixture-square-01",
+                verified_at="2026-08-01T12:06:00Z",
+                evidence_path=str(approved_path),
+                evidence_sha256=file_sha256(approved_path),
+                now="2026-08-01T12:08:00Z",
+            )
+            same = ledger.record_smart_money_square_identity_mapping(
+                top_trader_id="fixture-trader-01",
+                author_id="fixture-square-01",
+                verified_at="2026-08-01T12:06:00Z",
+                evidence_path=str(approved_path),
+                evidence_sha256=file_sha256(approved_path),
+                now="2026-08-01T12:09:00Z",
+            )
+            self.assertEqual(approved, same)
+            self.assertEqual([approved], ledger.list_smart_money_square_identity_mappings())
+
+            inactive_collision_dir = root / "inactive-collision"
+            inactive_collision_dir.mkdir()
+            inactive_collision_path, _, _ = write_v2_identity_evidence(
+                str(inactive_collision_dir),
+                top_trader_id="fixture-trader-02",
+                square_uid="fixture-square-01",
+            )
+            inactive_collision = ledger.record_smart_money_square_identity_mapping(
+                top_trader_id="fixture-trader-02",
+                author_id="fixture-square-01",
+                verified_at="2026-08-01T12:06:00Z",
+                evidence_path=str(inactive_collision_path),
+                evidence_sha256=file_sha256(inactive_collision_path),
+                now="2026-08-01T12:09:00Z",
+            )
+            self.assertEqual("PROPOSED", inactive_collision.promotion_status)
+            self.assertEqual([approved], ledger.list_smart_money_square_identity_mappings())
+            self.assertEqual(
+                2,
+                len(
+                    ledger.list_smart_money_square_identity_mappings(
+                        include_inactive=True
+                    )
+                ),
+            )
+
+            conflict_dir = root / "conflict"
+            conflict_dir.mkdir()
+            conflict_path, _, _ = write_v2_identity_evidence(
+                str(conflict_dir),
+                promotion_status="APPROVED",
+                top_trader_id="fixture-trader-02",
+                square_uid="fixture-square-01",
+            )
+            with self.assertRaisesRegex(ContractViolation, "conflict"):
+                ledger.record_smart_money_square_identity_mapping(
+                    top_trader_id="fixture-trader-02",
+                    author_id="fixture-square-01",
+                    verified_at="2026-08-01T12:06:00Z",
+                    evidence_path=str(conflict_path),
+                    evidence_sha256=file_sha256(conflict_path),
+                    now="2026-08-01T12:09:00Z",
+                )
+
+            one_to_many_dir = root / "one-to-many"
+            one_to_many_dir.mkdir()
+            one_to_many_path, _, _ = write_v2_identity_evidence(
+                str(one_to_many_dir),
+                promotion_status="APPROVED",
+                top_trader_id="fixture-trader-01",
+                square_uid="fixture-square-02",
+            )
+            with self.assertRaisesRegex(ContractViolation, "conflict"):
+                ledger.record_smart_money_square_identity_mapping(
+                    top_trader_id="fixture-trader-01",
+                    author_id="fixture-square-02",
+                    verified_at="2026-08-01T12:06:00Z",
+                    evidence_path=str(one_to_many_path),
+                    evidence_sha256=file_sha256(one_to_many_path),
+                    now="2026-08-01T12:09:00Z",
+                )
+
+            second_dir = root / "second"
+            second_dir.mkdir()
+            second_path, _, _ = write_v2_identity_evidence(
+                str(second_dir),
+                promotion_status="APPROVED",
+                top_trader_id="fixture-trader-02",
+                square_uid="fixture-square-02",
+            )
+            ledger.record_smart_money_square_identity_mapping(
+                top_trader_id="fixture-trader-02",
+                author_id="fixture-square-02",
+                verified_at="2026-08-01T12:06:00Z",
+                evidence_path=str(second_path),
+                evidence_sha256=file_sha256(second_path),
+                now="2026-08-01T12:09:00Z",
+            )
+            first_order = ledger.list_smart_money_square_identity_mappings()
+            second_order = ledger.list_smart_money_square_identity_mappings()
+            self.assertEqual(first_order, second_order)
+            self.assertEqual(
+                ("fixture-trader-01", "fixture-trader-02"),
+                tuple(item.top_trader_id for item in first_order),
+            )
+            self.assertEqual(
+                3,
+                len(
+                    ledger.list_smart_money_square_identity_mappings(
+                        include_inactive=True
+                    )
+                ),
+            )
+
+            raw_path.write_bytes(raw_path.read_bytes() + b" ")
+            with self.assertRaises(ContractViolation):
+                ledger.record_smart_money_square_identity_mapping(
+                    top_trader_id="fixture-trader-01",
+                    author_id="fixture-square-01",
+                    verified_at="2026-08-01T12:06:00Z",
+                    evidence_path=str(approved_path),
+                    evidence_sha256=file_sha256(approved_path),
+                    now="2026-08-01T12:10:00Z",
+                )
+            raw_path.write_bytes(raw_path.read_bytes()[:-1])
+
+            with self.assertRaisesRegex(ContractViolation, "precede"):
+                ledger.revoke_smart_money_square_identity_mapping(
+                    tenant_id="fixture-tenant",
+                    top_trader_id="fixture-trader-01",
+                    author_id="fixture-square-01",
+                    revoked_at="2026-08-01T12:05:59Z",
+                    reason="Backdated revocation must fail.",
+                    now="2026-08-01T12:10:00Z",
+                )
+
+            revoked = ledger.revoke_smart_money_square_identity_mapping(
+                tenant_id="fixture-tenant",
+                top_trader_id="fixture-trader-01",
+                author_id="fixture-square-01",
+                revoked_at="2026-08-01T12:10:00Z",
+                reason="Identity requires re-review.",
+                now="2026-08-01T12:10:00Z",
+            )
+            self.assertEqual("REVOKE", revoked.event_type)
+            self.assertEqual(
+                ["fixture-trader-02"],
+                [
+                    item.top_trader_id
+                    for item in ledger.list_smart_money_square_identity_mappings()
+                ],
+            )
+            self.assertTrue(raw_path.exists())
+            self.assertEqual(
+                ("LINK", "LINK", "LINK", "LINK", "REVOKE"),
+                tuple(event.event_type for event in ledger.list_identity_mapping_events()),
+            )
+
     def test_production_identity_is_scoped_by_explicit_job_namespace(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             ledger = SQLiteRunLedger(
@@ -955,7 +1330,13 @@ class RunLedgerTests(unittest.TestCase):
                 now="2026-08-01T08:00:05Z",
             )
             self.assertEqual(mapping, same)
-            self.assertEqual([mapping], ledger.list_smart_money_square_identity_mappings())
+            self.assertEqual([], ledger.list_smart_money_square_identity_mappings())
+            self.assertEqual(
+                [mapping],
+                ledger.list_smart_money_square_identity_mappings(
+                    include_inactive=True
+                ),
+            )
             with self.assertRaisesRegex(ContractViolation, "explicit source evidence"):
                 ledger.record_smart_money_square_identity_mapping(
                     top_trader_id="top-01",
@@ -966,20 +1347,31 @@ class RunLedgerTests(unittest.TestCase):
                     verification_method="NAME_MATCH",
                     now="2026-08-01T08:00:06Z",
                 )
-            with self.assertRaisesRegex(ContractViolation, "conflict"):
-                conflicting_evidence = Path(temporary_directory) / "different-link.json"
-                conflicting_evidence.write_text(
-                    evidence_file.read_text(encoding="utf-8") + "\n",
-                    encoding="utf-8",
-                )
-                ledger.record_smart_money_square_identity_mapping(
-                    top_trader_id="top-01",
-                    author_id="opaque-author-id",
-                    verified_at="2026-08-01T08:00:03Z",
-                    evidence_path=str(conflicting_evidence),
-                    evidence_sha256=file_sha256(conflicting_evidence),
-                    now="2026-08-01T08:00:06Z",
-                )
+            conflicting_evidence = Path(temporary_directory) / "different-link.json"
+            conflicting_evidence.write_text(
+                evidence_file.read_text(encoding="utf-8") + "\n",
+                encoding="utf-8",
+            )
+            second_proposal = ledger.record_smart_money_square_identity_mapping(
+                top_trader_id="top-01",
+                author_id="opaque-author-id",
+                verified_at="2026-08-01T08:00:03Z",
+                evidence_path=str(conflicting_evidence),
+                evidence_sha256=file_sha256(conflicting_evidence),
+                now="2026-08-01T08:00:06Z",
+            )
+            self.assertEqual("PROPOSED", second_proposal.promotion_status)
+            self.assertEqual([], ledger.list_smart_money_square_identity_mappings())
+            self.assertEqual(
+                2,
+                len(
+                    [
+                        event
+                        for event in ledger.list_identity_mapping_events()
+                        if event.event_type == "LINK"
+                    ]
+                ),
+            )
 
     def test_production_decision_cutoff_is_immutable_across_retry(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
