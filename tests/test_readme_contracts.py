@@ -33,7 +33,7 @@ class ReadmeContractTests(unittest.TestCase):
             for tier in ("required", "optional", "harnessSpecific")
             for skill in agent["skills"][tier]
         }
-        self.assertEqual(len(assigned_skills), 168)
+        self.assertEqual(len(assigned_skills), 169)
         packaged_skill_roots = {
             entry.removeprefix("skills/").removesuffix("/")
             for entry in package["files"]
