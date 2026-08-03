@@ -32,11 +32,15 @@ SKILL_DIR = os.path.dirname(SCRIPT_DIR)
 if SKILL_DIR not in sys.path:
     sys.path.insert(0, SKILL_DIR)
 
-from scanner.discovery import FEED_COVERAGE_CONTRACT_VERSION, FEED_COVERAGE_SCOPE
+from scanner.discovery import (  # noqa: E402
+    FEED_COVERAGE_CONTRACT_VERSION,
+    FEED_COVERAGE_SCOPE,
+)
 
 DATA_DIR = os.path.join(SKILL_DIR, "data")
 HISTORY_DIR = os.path.join(DATA_DIR, "history")
 OUTPUT_FILE = os.path.join(DATA_DIR, "binance_raw_posts.json")
+ELIGIBLE_OUTPUT_FILE = os.path.join(DATA_DIR, "binance_raw_posts_eligible.json")
 DEDUP_FILE = os.path.join(DATA_DIR, "binance_square_last_scan.json")
 ERROR_FILE = os.path.join(DATA_DIR, "binance_last_error.json")
 # v3.1 uses a separate lock because pre-timeout processes may hang before
@@ -509,6 +513,77 @@ class FeedDiscoveryCollection:
     stats: dict[str, Any]
 
 
+def is_eligible_for_coverage_promotion(
+    collection: FeedDiscoveryCollection,
+) -> bool:
+    """Return whether this exact observation can advance the coverage pointer."""
+
+    discovery = collection.discovery_result
+    unique_count = discovery.get("unique_candidate_post_count")
+    preferred_minimum = discovery.get("preferred_minimum")
+    valid_counts = all(
+        isinstance(value, int) and not isinstance(value, bool)
+        for value in (unique_count, preferred_minimum)
+    )
+    return bool(
+        discovery.get("coverage_status") == "BOUNDED_COMPLETE"
+        and discovery.get("termination_reason") == "EXHAUSTED"
+        and discovery.get("minimum_target_met") is True
+        and discovery.get("coverage_scope") == FEED_COVERAGE_SCOPE
+        and valid_counts
+        and unique_count >= preferred_minimum
+        and unique_count == len(collection.posts)
+    )
+
+
+def persist_successful_collection(
+    collection: FeedDiscoveryCollection,
+    *,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Persist one real observation and conditionally advance coverage evidence."""
+
+    posts = list(collection.posts)
+    state = load_dedup_state()
+    annotated_posts, new_posts = annotate_against_history(posts, state)
+
+    now = now or datetime.now(timezone.utc)
+    scanned_at_utc, scanned_at_local = timestamp_pair(now)
+    snapshot_name = now.strftime("binance_raw_posts_%Y%m%dT%H%M%S.%fZ.json")
+    snapshot_path = os.path.join(HISTORY_DIR, snapshot_name)
+    eligible_for_promotion = is_eligible_for_coverage_promotion(collection)
+
+    stats = {
+        **collection.stats,
+        "duplicate_posts": len(annotated_posts) - len(new_posts),
+        "new_posts": len(new_posts),
+    }
+    output = {
+        "status": "ok",
+        "coverage_contract_version": FEED_COVERAGE_CONTRACT_VERSION,
+        "discovery_result": collection.discovery_result,
+        "eligible_for_coverage_promotion": eligible_for_promotion,
+        "eligible_snapshot_file": snapshot_path if eligible_for_promotion else None,
+        "scanned_at": scanned_at_utc,
+        "scanned_at_local": scanned_at_local,
+        "timezone": LOCAL_TIMEZONE,
+        "source_url": BINANCE_SQUARE,
+        "snapshot_file": snapshot_path,
+        "previous_successful_scan": state["last_scan"],
+        "count": len(annotated_posts),
+        "new_count": len(new_posts),
+        "stats": stats,
+        "new_posts": new_posts,
+        "posts": annotated_posts,
+    }
+
+    atomic_write_json(snapshot_path, output)
+    atomic_write_json(OUTPUT_FILE, output)
+    if eligible_for_promotion:
+        atomic_write_json(ELIGIBLE_OUTPUT_FILE, output)
+    return output
+
+
 async def collect_feed_discovery(
     websocket: Any,
     *,
@@ -731,44 +806,15 @@ async def scrape_connected(websocket):
         )
 
         collection = await collect_feed_discovery(websocket)
-        posts = list(collection.posts)
-        state = load_dedup_state()
-        annotated_posts, new_posts = annotate_against_history(posts, state)
-
-        now = datetime.now(timezone.utc)
-        scanned_at_utc, scanned_at_local = timestamp_pair(now)
-        snapshot_name = now.strftime("binance_raw_posts_%Y%m%dT%H%M%S.%fZ.json")
-        snapshot_path = os.path.join(HISTORY_DIR, snapshot_name)
-
-        stats = {
-            **collection.stats,
-            "duplicate_posts": len(annotated_posts) - len(new_posts),
-            "new_posts": len(new_posts),
-        }
-        output = {
-            "status": "ok",
-            "coverage_contract_version": FEED_COVERAGE_CONTRACT_VERSION,
-            "discovery_result": collection.discovery_result,
-            "scanned_at": scanned_at_utc,
-            "scanned_at_local": scanned_at_local,
-            "timezone": LOCAL_TIMEZONE,
-            "source_url": BINANCE_SQUARE,
-            "snapshot_file": snapshot_path,
-            "previous_successful_scan": state["last_scan"],
-            "count": len(annotated_posts),
-            "new_count": len(new_posts),
-            "stats": stats,
-            "new_posts": new_posts,
-            "posts": annotated_posts,
-        }
-
-        atomic_write_json(snapshot_path, output)
-        atomic_write_json(OUTPUT_FILE, output)
+        output = persist_successful_collection(collection)
+        stats = output["stats"]
 
         print(
-            f"[OK] latest={scanned_at_utc} local={scanned_at_local} | "
+            f"[OK] latest={output['scanned_at']} "
+            f"local={output['scanned_at_local']} | "
             f"valid={stats['unique_valid_posts']} new={stats['new_posts']} "
-            f"duplicates={stats['duplicate_posts']} | snapshot={snapshot_path}",
+            f"duplicates={stats['duplicate_posts']} | "
+            f"snapshot={output['snapshot_file']}",
             file=sys.stderr,
         )
         return output
@@ -822,8 +868,11 @@ async def main():
         try:
             fcntl.flock(lock_handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            print("[SKIP] Another Binance Square scan is already running.", file=sys.stderr)
-            return True
+            print(
+                "[LOCK_BUSY] Another Binance Square scan is already running.",
+                file=sys.stderr,
+            )
+            return False
 
         try:
             with urllib.request.urlopen(f"{CDP_BASE}/json/version", timeout=3):

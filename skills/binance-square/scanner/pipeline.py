@@ -1410,6 +1410,31 @@ def run_shadow_radar(
         latest_markdown = config.output_dir / "latest.md"
         latest_pointer = config.output_dir / "latest"
 
+        catalog = None
+        market_failures: Counter[str] = Counter()
+        if config.mode == "real":
+            current_stage = "market_catalog"
+            if client is None:
+                raise ContractViolation("real radar requires a market client")
+            catalog = client.fetch_futures_catalog()
+            server_time = datetime.fromtimestamp(
+                catalog.server_time_ms / 1000,
+                tz=timezone.utc,
+            )
+            if not config.scheduled_retry:
+                if abs(server_time - parse_utc(decision_at)) > MAX_DECISION_CLOCK_SKEW:
+                    raise ContractViolation(
+                        "attempt-start decision_at is not validated by Binance server time"
+                    )
+                if _four_hour_slot(server_time) != logical_run.scheduled_for_utc:
+                    raise ContractViolation(
+                        "Binance server time crossed into a different UTC slot"
+                    )
+            elif server_time < parse_utc(decision_at):
+                raise ContractViolation(
+                    "retry Binance server time precedes the frozen decision_at"
+                )
+
         current_stage = "input"
         if config.mode == "real" and config.input_snapshot is not None:
             try:
@@ -1572,31 +1597,6 @@ def run_shadow_radar(
                 "tier_a_eligible": 0,
                 "outcomes": seed_page_results,
             }
-
-        catalog = None
-        market_failures: Counter[str] = Counter()
-        if config.mode == "real":
-            current_stage = "market_catalog"
-            if client is None:
-                raise ContractViolation("real radar requires a market client")
-            catalog = client.fetch_futures_catalog()
-            server_time = datetime.fromtimestamp(
-                catalog.server_time_ms / 1000,
-                tz=timezone.utc,
-            )
-            if not config.scheduled_retry:
-                if abs(server_time - parse_utc(decision_at)) > MAX_DECISION_CLOCK_SKEW:
-                    raise ContractViolation(
-                        "attempt-start decision_at is not validated by Binance server time"
-                    )
-                if _four_hour_slot(server_time) != logical_run.scheduled_for_utc:
-                    raise ContractViolation(
-                        "Binance server time crossed into a different UTC slot"
-                    )
-            elif server_time < parse_utc(decision_at):
-                raise ContractViolation(
-                    "retry Binance server time precedes the frozen decision_at"
-                )
 
         smart_money_document: dict[str, Any] | None = None
         smart_money_summary: dict[str, Any] | None = None

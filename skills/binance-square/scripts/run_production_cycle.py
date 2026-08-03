@@ -15,14 +15,14 @@ PROJECT_DIR = Path(__file__).resolve().parents[1]
 if str(PROJECT_DIR) not in sys.path:
     sys.path.insert(0, str(PROJECT_DIR))
 
-from scanner.contracts import ContractViolation
-from scanner.discovery import validate_feed_discovery_result
+from scanner.contracts import ContractViolation  # noqa: E402
+from scanner.discovery import validate_feed_discovery_result  # noqa: E402
 
 
 @dataclass(frozen=True, slots=True)
 class ProductionCycleConfig:
     project_dir: Path = PROJECT_DIR
-    signals_json: Path = PROJECT_DIR / "data" / "signal_check_input.json"
+    signals_json: Path | None = None
     leaderboard_seed_evidence: Path | None = None
     output_dir: Path = PROJECT_DIR / "data" / "v4" / "runs"
     database: Path = PROJECT_DIR / "data" / "v4" / "radar.sqlite"
@@ -46,8 +46,12 @@ def run_production_cycle(
 
     scraper = config.project_dir / "scripts" / "binance_scraper.py"
     radar = config.project_dir / "scripts" / "run_radar.py"
-    runner([sys.executable, str(scraper)])
     latest_snapshot = config.project_dir / "data" / "binance_raw_posts.json"
+    try:
+        previous_latest_content = latest_snapshot.read_bytes()
+    except OSError:
+        previous_latest_content = None
+    runner([sys.executable, str(scraper)])
     try:
         latest_content = latest_snapshot.read_bytes()
         latest_payload = json.loads(latest_content)
@@ -55,14 +59,42 @@ def run_production_cycle(
         immutable_content = immutable_snapshot.read_bytes()
     except (OSError, KeyError, TypeError, UnicodeError, json.JSONDecodeError) as exc:
         raise RuntimeError("Feed refresh did not produce an immutable snapshot") from exc
+    if (
+        previous_latest_content is not None
+        and latest_content == previous_latest_content
+    ):
+        raise RuntimeError("Feed scraper did not refresh the observed latest snapshot")
     if latest_payload.get("status") != "ok" or not latest_payload.get("scanned_at"):
         raise RuntimeError("Feed refresh result is not a successful timestamped snapshot")
     try:
-        validate_feed_discovery_result(latest_payload, allow_legacy=False)
+        _, coverage_status, termination_reason, discovery_result = (
+            validate_feed_discovery_result(latest_payload, allow_legacy=False)
+        )
     except ContractViolation as exc:
         raise RuntimeError("Feed refresh result has no valid coverage contract") from exc
+    if not (
+        latest_payload.get("eligible_for_coverage_promotion") is True
+        and coverage_status == "BOUNDED_COMPLETE"
+        and termination_reason == "EXHAUSTED"
+        and discovery_result is not None
+        and discovery_result.get("minimum_target_met") is True
+        and latest_payload.get("eligible_snapshot_file")
+        == latest_payload.get("snapshot_file")
+    ):
+        raise RuntimeError("Feed refresh result is not eligible for coverage promotion")
     if immutable_content != latest_content:
         raise RuntimeError("immutable Feed snapshot differs from the refreshed latest payload")
+    eligible_pointer = (
+        config.project_dir / "data" / "binance_raw_posts_eligible.json"
+    )
+    try:
+        eligible_content = eligible_pointer.read_bytes()
+    except OSError as exc:
+        raise RuntimeError("Feed refresh did not produce an eligible Feed pointer") from exc
+    if eligible_content != latest_content:
+        raise RuntimeError(
+            "eligible Feed pointer differs from the refreshed latest payload"
+        )
     radar_command = [
         sys.executable,
         str(radar),
@@ -71,9 +103,9 @@ def run_production_cycle(
         "--official-news",
         "--input-snapshot",
         str(immutable_snapshot),
-        "--signals-json",
-        str(config.signals_json),
     ]
+    if config.signals_json is not None:
+        radar_command.extend(["--signals-json", str(config.signals_json)])
     if config.leaderboard_seed_evidence is not None:
         radar_command.extend(
             [
@@ -120,10 +152,18 @@ def run_production_cycle(
 
 def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--signals-json", type=Path, default=ProductionCycleConfig.signals_json)
+    parser.add_argument("--signals-json", type=Path)
     parser.add_argument("--leaderboard-seed-evidence", type=Path)
-    parser.add_argument("--output-dir", type=Path, default=ProductionCycleConfig.output_dir)
-    parser.add_argument("--database", type=Path, default=ProductionCycleConfig.database)
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=PROJECT_DIR / "data" / "v4" / "runs",
+    )
+    parser.add_argument(
+        "--database",
+        type=Path,
+        default=PROJECT_DIR / "data" / "v4" / "radar.sqlite",
+    )
     parser.add_argument("--job-namespace", default="production")
     parser.add_argument("--production-job-id", default="binance-square-shadow-v4")
     identity_mapping = parser.add_mutually_exclusive_group()

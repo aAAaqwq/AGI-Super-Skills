@@ -8,7 +8,7 @@ Scope: public, credential-free Binance Square shadow Skill. This record separate
 
 ## Verified in this optimization
 
-- The full Skill suite passes 255 offline unit, contract, integration, report, storage, migration, CLI, and production-cycle tests on the frozen candidate tree.
+- The full Skill suite passes 277 offline unit, contract, integration, report, storage, migration, CLI, and production-cycle tests on the current candidate tree.
 - Feed discovery now emits `square-feed-coverage/v1`, starts from the top, records scroll geometry and two-phase lazy-load triggers, and distinguishes `BOUNDED_COMPLETE`, `PARTIAL`, `CAPPED`, and `BLOCKED`. A fresh legacy snapshot is `LEGACY_UNVERIFIED`, never silently `COMPLETE`.
 - The previous false-stagnation defect is covered: moving rounds with no new post do not count as exhaustion, and leaving/returning to the bottom occurs in separate browser evaluation phases.
 - Public Square Profile pagination is wired into the real pipeline with an independent anonymous HTTP client. It filters each item by `firstReleaseTime` in `[decision_at-24h, decision_at)`, handles pinned old posts, validates cursor anchors, and fails closed on offset/schema/request/page-budget uncertainty.
@@ -24,6 +24,10 @@ Scope: public, credential-free Binance Square shadow Skill. This record separate
 - The production wrapper remains foreground-only and `--no-send`. No scheduler, message delivery, account mutation, trading credential access, or order placement was added.
 - Fees and slippage were intentionally excluded from this coverage milestone; the existing nominal-versus-net reporting boundary was not expanded or weakened.
 - Feed completion is explicitly DOM-surface-only: current captures emit `coverage_scope=BINANCE_SQUARE_DISCOVER_DOM`, `global_denominator_known=false`, and `pagination_api_exhaustion_verified=false`. A `BOUNDED_COMPLETE` result without that exact fail-closed scope is rejected.
+- Feed persistence now separates the current observed capture from the last coverage-eligible capture. Partial observations remain immutable and visible, but cannot advance the eligible pointer; lock contention returns a non-zero result and cannot consume stale latest state.
+- The production wrapper no longer consumes the mutable legacy signal file by default, and its CLI path defaults no longer depend on slotted-dataclass member descriptors. Binance server-time validation now happens before Profile, Smart Money, or detail network collection and the verified catalog is reused.
+- The production wrapper now fails before radar unless the current observation itself advances the strict Feed coverage-eligible pointer. Observed latest, immutable snapshot, and eligible pointer must be byte-identical; a partial capture, stale pointer, missing pointer, lock conflict, or unchanged latest can never fall back to older eligible evidence.
+- Profile reports now fail closed on missing cohort denominators, mismatched planned/status totals, missing attempted-author outcomes, duplicate outcome identities, summary/detail disagreement, or a top-level/source status that contradicts the cohort aggregate. Coverage is reported as `(COMPLETE + EMPTY) / planned`; `PARTIAL` never enters the completed numerator, while an exhausted all-`EMPTY` cohort is normalized to `COMPLETE`.
 
 ## Bounded live component evidence
 
@@ -49,6 +53,7 @@ These artifacts are local operational evidence and are not bundled into the publ
 3. The time-legal canary preceded the final identity/Profile persistence wiring. The report content is real, but a later legal UTC slot is still required to prove those new database rows on the final frozen tree; offline production integration requires exactly 69 Profile terminal rows and 2 approved identity mappings.
 4. No real 60-day point-in-time author performance history has been wired into production scoring, and strategy profitability remains unverified.
 5. Dynamic identity, Profile, Feed, report, and SQLite artifacts remain local by publication design; a clean install defaults to no active mapping evidence.
+6. The 2026-08-03 12:00Z live canary attempts exposed the production-wrapper default-path and late server-time defects fixed above. Those attempts failed closed before report publication and produced no delivery, but a later legal UTC slot is still required to prove the fixes and the final persistence path together.
 
 ## Current decision
 

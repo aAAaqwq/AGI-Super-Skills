@@ -886,6 +886,127 @@ class ShadowPipelineTests(unittest.TestCase):
             )
             self.assertEqual("NOT_ATTEMPTED", report["profile_channel"]["status"])
 
+    def test_real_mode_validates_server_time_before_network_collectors_and_reuses_catalog(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            post_url = "https://www.binance.com/en/square/post/990000000000101"
+            snapshot = root / "snapshot.json"
+            snapshot.write_text(
+                json.dumps(
+                    {
+                        "count": 1,
+                        "posts": [{"url": post_url}],
+                        "new_posts": [],
+                        "scanned_at": "2026-08-01T11:59:30Z",
+                        "snapshot_file": str(snapshot),
+                    }
+                ),
+                encoding="utf-8",
+            )
+            signals = root / "signals.json"
+            signals.write_text(
+                json.dumps(
+                    [
+                        {
+                            "source_url": post_url,
+                            "symbol": "BTC",
+                            "direction": "long",
+                            "entry": "62000 - 62500",
+                            "sl": "61000",
+                            "tp": "65000 / 67000",
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            detail_payload = json.loads(
+                (FIXTURE / "post_detail_public.json").read_text(encoding="utf-8")
+            )
+            events: list[str] = []
+
+            class CatalogProbe:
+                captured_at = datetime(2026, 8, 1, 12, 0, tzinfo=timezone.utc)
+                contracts: dict[str, object] = {}
+
+                @property
+                def server_time_ms(self) -> int:
+                    events.append("server_time")
+                    return 1785585600000
+
+            expected_catalog = CatalogProbe()
+
+            class OrderedMarket:
+                def fetch_futures_catalog(self) -> SimpleNamespace:
+                    events.append("catalog")
+                    return expected_catalog
+
+                def fetch_snapshot(
+                    self,
+                    symbol: str,
+                    *,
+                    catalog: object,
+                    decision_time_ms: int,
+                ) -> object:
+                    events.append("market")
+                    self.assert_catalog = catalog
+                    self.assert_symbol = symbol
+                    self.assert_decision_time_ms = decision_time_ms
+                    return complete_market()
+
+            market = OrderedMarket()
+
+            def fetch_profile(_square_uid: str, _offset: int) -> dict[str, object]:
+                events.append("profile")
+                return {
+                    "success": True,
+                    "data": {"contents": [], "nextTimeOffset": None},
+                }
+
+            smart_money_evidence = self._smart_money_evidence()
+
+            def fetch_smart_money() -> dict[str, object]:
+                events.append("smart_money")
+                return deepcopy(smart_money_evidence)
+
+            def fetch_detail(url: str) -> dict[str, object]:
+                events.append("detail")
+                payload = deepcopy(detail_payload)
+                payload["response"]["data"].update({
+                    "id": int(url.rsplit("/", 1)[1]),
+                    "webLink": url,
+                    "firstReleaseTime": 1785582000000,
+                })
+                return payload
+
+            run_shadow_radar(
+                PipelineConfig(
+                    mode="real",
+                    output_dir=root / "runs",
+                    database=root / "radar.sqlite",
+                    decision_at="2026-08-01T12:00:00Z",
+                    input_snapshot=snapshot,
+                    signals_json=signals,
+                    leaderboard_seed_evidence=SEED_EVIDENCE,
+                    smart_money_enabled=True,
+                    limit=1,
+                ),
+                detail_fetcher=fetch_detail,
+                market_client=market,  # type: ignore[arg-type]
+                smart_money_collector=fetch_smart_money,
+                profile_content_fetcher=fetch_profile,
+                clock=lambda: datetime(2026, 8, 1, 12, 0, tzinfo=timezone.utc),
+            )
+
+            self.assertEqual("catalog", events[0])
+            self.assertLess(events.index("server_time"), events.index("profile"))
+            self.assertLess(events.index("server_time"), events.index("smart_money"))
+            self.assertLess(events.index("server_time"), events.index("detail"))
+            self.assertLess(events.index("catalog"), events.index("profile"))
+            self.assertLess(events.index("catalog"), events.index("smart_money"))
+            self.assertLess(events.index("catalog"), events.index("detail"))
+            self.assertEqual(1, events.count("catalog"))
+            self.assertIs(expected_catalog, market.assert_catalog)
+
     def test_real_mode_merges_urls_refreshes_details_and_uses_market_seam(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

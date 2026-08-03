@@ -24,11 +24,14 @@ metadata: {"version":"4.2.0","mode":"shadow","runtime_effects":"read-only-no-sen
 
 - 标准入口默认容量 200；Profile 是专业作者帖主通道，Feed 与经过人工/模型提取的参数信号 URL 作有界补充，按 canonical `post_id` 去重且保留全部来源 observation。
 - Feed 使用 `square-feed-coverage/v1`：必须从顶部开始，并记录滚动几何、两相懒加载触发、停止原因和覆盖状态。当前 scope 固定为 `BINANCE_SQUARE_DISCOVER_DOM`，`global_denominator_known=false` 且 `pagination_api_exhaustion_verified=false`；即使达到声明下限并稳定穷尽 DOM 而标 `BOUNDED_COMPLETE`，也只代表该次 DOM surface，不代表内部 feed API 或整个平台。容量、滚动预算、错误或未验证旧快照分别标 `CAPPED/PARTIAL/BLOCKED/LEGACY_UNVERIFIED`。
+- Feed 每次成功观察都写不可变快照和 `binance_raw_posts.json` observed latest；只有严格满足 `BOUNDED_COMPLETE + EXHAUSTED + minimum_target_met + unique>=preferred_minimum` 的 Discover DOM 捕获才推进独立 `binance_raw_posts_eligible.json`。PARTIAL 证据必须保存但不得覆盖既有 eligible 指针；抓取锁忙以非零状态失败，不能复用旧 latest 冒充本轮成功。
+- 生产wrapper只接受本轮自身推进eligible的捕获，并要求observed latest、immutable snapshot与eligible pointer逐字节一致；PARTIAL、旧指针、缺指针或未刷新latest一律在radar前失败。
 - 逐帖请求币安公开详情接口，使用稳定 `post_id`、`author_id`、权威正文与精确发布时间。
 - Profile + Feed 双通道已接入真实只读 pipeline：Profile 计划只认稳定 `squareUid`，通过匿名公共 GET 从 `timeOffset=-1` 分页；逐条用 `firstReleaseTime` 执行严格24小时窗口，并以可验证 cursor 水位、空页或无 next 作为终止证明。置顶旧帖不会造成提前停止，cursor 停滞/上升、锚点不匹配、schema 漂移、请求失败或页预算耗尽均失败关闭为 `PARTIAL`。
 - 历史 fixture 保留 30D `PNL/ROI/VOLUME/WIN_RATE` 四榜解析合同；当前真实 Smart Money 接入只支持官方 Web UI 已观测的 `PNL/ROI`，每榜必须恰好30个唯一排名与 `topTraderId` 才可标记 `COMPLETE`。
 - Smart Money 公共只读 API 已接入标准 pipeline：`--smart-money` 在线采集，`--smart-money-fixture` 注入带完整性校验的证据；排行、交易员详情与 Square 身份映射分别计数，不能相互代替。
 - 单次生产影子入口 `scripts/run_production_cycle.py` 会先刷新 Feed，再验证 `latest` 与不可变快照逐字节一致，最后以前台、顺序、`--no-send` 方式运行 Smart Money、官方新闻与雷达；Feed 快照超过10分钟或来自未来时失败关闭。
+- 生产入口默认不再消费旧版可变 `data/signal_check_input.json`；只有显式传入 `--signals-json` 才把它作为有manifest的补充来源。真实 pipeline 在任何 Profile、Smart Money 或帖子详情网络请求之前获取一次 Futures catalog 并完成 Binance server-time 校验，后续行情复用同一 catalog。
 - 官方 Binance 公告可用 `--official-news` 纳入严格前24小时来源覆盖；列表缺发布时间时必须回源详情，响应 envelope、文章 code、新到旧排序和窗口穷尽性均受合同约束，限流或解析失败会留下 `FAILED` 来源状态而不是伪造空新闻。
 - Smart Money fixture 导入不只校验可重签的 payload hash，还会重新验证固定语义：`30D`、`DESC`、恰好 `PNL+ROI`、每页10行×3页，以及两个 `onlyShow*` filter 均为 `false`；任一不符即拒绝。
 - `topTraderId → squareUid` 身份映射 v2 必须来自同一匿名 Binance 响应，并绑定 raw bytes、request manifest、实际 SHA-256 和 `/data/topTraderId`、`/data/squareUid` JSON Pointer。采集器只能生成 `PROPOSED`；只有经独立、显式 review 生成的不可变 `APPROVED` artifact 才能进入活动投影，且支持事件化撤销。
@@ -56,6 +59,7 @@ metadata: {"version":"4.2.0","mode":"shadow","runtime_effects":"read-only-no-sen
 - UTC 六时槽、一次 +10 分钟重试、静默恢复与二次失败分类告警已有纯 shadow runner；重试成功仍生成该轮唯一的常规 `HELD/NO_SEND` 报告 intent，但不生成恢复告警；不安装任务、不发送。
 - 报告分别记录广场抓取开始/完成、行情最新和报告生成时间；K线请求冻结 `endTime=decision_time_ms-1`，跨周期边界仍保持点时一致。
 - 报告固定对账 Feed、Profile、Smart Money、官方新闻、行情目录五类来源；每类都显示 `COMPLETE/PARTIAL/FAILED/NOT_ATTEMPTED`、provenance、采集时间和证据清单，不能用一个来源替代另一个来源的完成度。
+- Profile报告必须同时携带Smart Money与seed cohort分母；planned、五类终态、逐作者outcome、稳定身份、顶层状态与source coverage必须对账且唯一。覆盖率分子仅为`COMPLETE+EMPTY`，任何`PARTIAL`都不算完成；全EMPTY表示已穷尽无帖，归一为`COMPLETE`。
 
 ## 尚未生产化
 
