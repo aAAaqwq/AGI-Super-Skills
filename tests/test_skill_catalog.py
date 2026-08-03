@@ -200,6 +200,11 @@ class SkillCatalogTests(unittest.TestCase):
         self.assertNotIn("/home/", catalog)
         self.assertIn("review: system-change", catalog)
         self.assertIn("Description needs review; inspect source.", catalog)
+        self.assertIn('<a id="project-original-skills"></a>', catalog)
+        self.assertIn('<a id="adapted-skills"></a>', catalog)
+        self.assertIn('<a id="collected-skills"></a>', catalog)
+        self.assertIn('<a id="unknown-origin-skills"></a>', catalog)
+        self.assertIn("## ✨ Browse by provenance", catalog)
         for category in self.taxonomy["categories"]:
             self.assertIn(f'<a id="{category["id"]}"></a>', catalog)
 
