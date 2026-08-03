@@ -364,3 +364,7 @@
 - canary之后发现身份映射和逐作者Profile终态只进入报告manifest、未进入专用数据库表；本轮以TDD补齐approved member artifact/LINK与每个planned author的五状态落库。由于该接线发生在08:00 canary之后，最终冻结tree仍需在后续合法UTC时槽复跑，不能把旧数据库回填冒充新管线运行证据。
 - 进一步独立审计发现跨Profile/Feed/参数帖的source observation曾在详情前被压成URL，accepted SQLite行也无法还原来源。已新增`post_discovery_observation`逐来源账本并冻结`O=C+D`，raw与DB逐字段对账，每个canonical post仍只回源一次；Feed DOM anchor observations与selected detail queue observations分层报告。
 - Feed的`BOUNDED_COMPLETE`仅允许解释为`BINANCE_SQUARE_DISCOVER_DOM`有界完成；`global_denominator_known=false`、`pagination_api_exhaustion_verified=false`。缺scope或声称已穷尽内部feed API的v1快照失败关闭，任何报告均不得把DOM完成改写为币安广场全站全量。
+- 2026-08-03 12:00Z最终树真实canary连续暴露两个P0并失败关闭：生产CLI把slots dataclass类属性误作默认Path；显式输入后又因Futures server-time校验晚于Profile网络采集而超过30秒门。两者均已加入回归测试并修复；失败attempt没有发布报告、切换latest或发送消息，后续合法UTC时槽仍需复跑。
+- Feed发布语义进一步冻结为双指针：`binance_raw_posts.json`永远表示本轮observed证据；`binance_raw_posts_eligible.json`只在Discover DOM达到严格有界完成门时推进。PARTIAL不得伪装成功，也不得删除；锁忙必须非零退出。
+- 生产入口不得读取旧eligible来挽救本轮PARTIAL：本轮observed、immutable与eligible必须逐字节一致才进入radar。Profile报告缺分母、缺已尝试作者outcome、状态汇总/source coverage不一致或身份重复时必须失败关闭；`PARTIAL`不计入完成覆盖率，全EMPTY归一为`COMPLETE`。
+- OpenClaw生产迁移采用直接command job，不再由大模型自由分类、决定重试或直接调用消息工具。影子阶段只能运行确定性v4.2 CLI、`--no-send`、无delivery；旧v2.1外发任务必须保持停用。

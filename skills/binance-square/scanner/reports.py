@@ -28,6 +28,20 @@ _REPORT_SOURCES = (
 )
 _SOURCE_STATUSES = frozenset({"COMPLETE", "PARTIAL", "FAILED", "NOT_ATTEMPTED"})
 _SOURCE_PROVENANCE = frozenset({"LIVE_CAPTURE", "FIXTURE_REPLAY", "UNKNOWN"})
+_PROFILE_COUNT_FIELDS = (
+    "complete_authors",
+    "empty_authors",
+    "partial_authors",
+    "failed_authors",
+    "not_attempted_authors",
+)
+_PROFILE_STATUS_COUNTS = {
+    "COMPLETE": "complete_authors",
+    "EMPTY": "empty_authors",
+    "PARTIAL": "partial_authors",
+    "FAILED": "failed_authors",
+    "NOT_ATTEMPTED": "not_attempted_authors",
+}
 
 
 class ReportValidationError(ValueError):
@@ -56,6 +70,8 @@ def build_local_report(payload: Mapping[str, Any]) -> dict[str, Any]:
         raise ReportValidationError("snapshot_path is required")
 
     report = dict(payload)
+    if "profile_channel" in payload:
+        report["profile_channel"] = _profile_channel(payload.get("profile_channel"))
     generated_at = payload.get("report_generated_at")
     capture_timing_value = payload.get("capture_timing")
     if generated_at is None and isinstance(capture_timing_value, Mapping):
@@ -92,7 +108,7 @@ def build_local_report(payload: Mapping[str, Any]) -> dict[str, Any]:
         "snapshot_path": snapshot_path,
     })
     report["source_coverage"] = _source_coverage(
-        payload,
+        report,
         normalized_smart_money,
     )
     if report["report_generated_at"] is not None:
@@ -265,11 +281,18 @@ def render_local_markdown(report: Mapping[str, Any]) -> str:
         insertion = lines.index("## TOP 3") - 1
         lines[insertion:insertion] = smart_lines
     if isinstance(profile_channel, Mapping):
+        profile_coverage = profile_channel.get("coverage")
+        profile_coverage_label = (
+            profile_coverage.get("label")
+            if isinstance(profile_coverage, Mapping)
+            else "coverage unavailable"
+        )
         profile_line = (
             f"- Profile主通道：{_display(profile_channel.get('status'))}｜"
             f"计划作者 {profile_channel.get('planned_authors', 0)}｜"
             f"完成 {profile_channel.get('complete_authors', 0)}｜"
-            f"未尝试 {profile_channel.get('not_attempted_authors', 0)}"
+            f"未尝试 {profile_channel.get('not_attempted_authors', 0)}｜"
+            f"coverage {profile_coverage_label}"
         )
         profile_lines = [profile_line]
         cohort_specs = (
@@ -280,8 +303,16 @@ def render_local_markdown(report: Mapping[str, Any]) -> str:
             cohort = profile_channel.get(field)
             if not isinstance(cohort, Mapping):
                 continue
+            coverage = cohort.get("coverage")
+            coverage_label = (
+                coverage.get("label")
+                if isinstance(coverage, Mapping)
+                else "coverage unavailable"
+            )
             cohort_line = (
-                f"- {label}：计划 {cohort.get('planned_authors', 0)}｜"
+                f"- {label}：状态 {_display(cohort.get('status'))}｜"
+                f"coverage {coverage_label}｜"
+                f"计划 {cohort.get('planned_authors', 0)}｜"
                 f"完成 {cohort.get('complete_authors', 0)}｜"
                 f"空 {cohort.get('empty_authors', 0)}｜"
                 f"部分 {cohort.get('partial_authors', 0)}｜"
@@ -859,6 +890,176 @@ def _coverage(value: Any, name: str) -> dict[str, Any]:
     return result
 
 
+def _profile_channel(value: Any) -> dict[str, Any]:
+    source = _mapping(value, "profile_channel")
+    normalized = dict(source)
+    denominators_value = source.get("cohort_denominators")
+    if denominators_value is None:
+        raise ReportValidationError(
+            "profile_channel.cohort_denominators is required"
+        )
+
+    denominators = _mapping(
+        denominators_value,
+        "profile_channel.cohort_denominators",
+    )
+    required_cohorts = {"smart_money_profiles", "seed_profiles"}
+    if set(denominators) != required_cohorts:
+        raise ReportValidationError(
+            "profile_channel.cohort_denominators must declare both profile cohorts"
+        )
+    aggregate_counts = {field: 0 for field in _PROFILE_COUNT_FIELDS}
+    aggregate_denominator = 0
+    for cohort_name, denominator in denominators.items():
+        path = f"profile_channel.{cohort_name}"
+        if not isinstance(denominator, int) or isinstance(denominator, bool) or denominator < 0:
+            raise ReportValidationError(f"{path} denominator must be non-negative")
+        cohort = _mapping(source.get(cohort_name), path)
+        normalized_cohort = dict(cohort)
+        planned = cohort.get("planned_authors")
+        if planned != denominator:
+            raise ReportValidationError(f"{path}.planned_authors must equal denominator")
+        counts: dict[str, int] = {}
+        for field in _PROFILE_COUNT_FIELDS:
+            count = cohort.get(field)
+            if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+                raise ReportValidationError(f"{path}.{field} must be non-negative")
+            counts[field] = count
+        if sum(counts.values()) != denominator:
+            raise ReportValidationError(
+                f"{path} terminal status counts must sum to denominator"
+            )
+        aggregate_denominator += denominator
+        for field, count in counts.items():
+            aggregate_counts[field] += count
+        outcomes_value = cohort.get("outcomes")
+        if outcomes_value is None and counts["not_attempted_authors"] != denominator:
+            raise ReportValidationError(
+                f"{path}.outcomes is required for attempted authors"
+            )
+        if outcomes_value is not None:
+            outcomes = _sequence(outcomes_value, f"{path}.outcomes")
+            if len(outcomes) != denominator:
+                raise ReportValidationError(
+                    f"{path}.outcomes must contain {denominator} rows"
+                )
+            outcome_counts = {status: 0 for status in _PROFILE_STATUS_COUNTS}
+            for index, outcome_value in enumerate(outcomes):
+                outcome = _mapping(outcome_value, f"{path}.outcomes[{index}]")
+                status = str(outcome.get("status") or "").upper()
+                if status not in outcome_counts:
+                    raise ReportValidationError(
+                        f"{path}.outcomes[{index}].status is invalid"
+                    )
+                outcome_counts[status] += 1
+            if any(
+                outcome_counts[status] != counts[field]
+                for status, field in _PROFILE_STATUS_COUNTS.items()
+            ):
+                raise ReportValidationError(
+                    f"{path} outcomes do not match summary counts"
+                )
+            identities: list[str] = []
+            for index, outcome_value in enumerate(outcomes):
+                outcome = _mapping(outcome_value, f"{path}.outcomes[{index}]")
+                identity = next(
+                    (
+                        outcome.get(field)
+                        for field in (
+                            "top_trader_id",
+                            "author_id",
+                            "planned_author_id",
+                        )
+                        if isinstance(outcome.get(field), str)
+                        and str(outcome.get(field)).strip()
+                    ),
+                    None,
+                )
+                if identity is None:
+                    raise ReportValidationError(
+                        f"{path}.outcomes[{index}] has no stable author identity"
+                    )
+                identities.append(str(identity).strip())
+            if len(set(identities)) != len(identities):
+                raise ReportValidationError(
+                    f"{path} outcome identities must be unique"
+                )
+        completed = counts["complete_authors"] + counts["empty_authors"]
+        status = str(cohort.get("status") or "NOT_ATTEMPTED").upper()
+        if denominator == 0:
+            allowed_statuses = {"EMPTY", "NOT_ATTEMPTED"}
+        elif counts["not_attempted_authors"] == denominator:
+            allowed_statuses = {"NOT_ATTEMPTED"}
+        elif counts["failed_authors"] == denominator:
+            allowed_statuses = {"FAILED"}
+        elif completed == denominator:
+            allowed_statuses = {"COMPLETE", "EMPTY"}
+        else:
+            allowed_statuses = {"PARTIAL"}
+        if status not in allowed_statuses:
+            raise ReportValidationError(
+                f"{path}.status is inconsistent with terminal status counts"
+            )
+        normalized_cohort["status"] = status
+        normalized_cohort["coverage"] = _coverage(
+            {"covered": completed, "expected": denominator},
+            f"{path}.coverage",
+        )
+        normalized[cohort_name] = normalized_cohort
+    supplied_aggregate = {
+        "planned_authors": source.get("planned_authors"),
+        **{field: source.get(field) for field in _PROFILE_COUNT_FIELDS},
+    }
+    expected_aggregate = {
+        "planned_authors": aggregate_denominator,
+        **aggregate_counts,
+    }
+    if any(
+        supplied_aggregate[field] is not None
+        and supplied_aggregate[field] != expected
+        for field, expected in expected_aggregate.items()
+    ):
+        raise ReportValidationError(
+            "profile_channel aggregate counts do not match cohort totals"
+        )
+    normalized.update(expected_aggregate)
+    aggregate_completed = (
+        aggregate_counts["complete_authors"]
+        + aggregate_counts["empty_authors"]
+    )
+    supplied_status = str(source.get("status") or "NOT_ATTEMPTED").upper()
+    canonical_supplied_status = (
+        "COMPLETE" if supplied_status == "EMPTY" else supplied_status
+    )
+    if aggregate_denominator == 0:
+        derived_status = (
+            "COMPLETE"
+            if canonical_supplied_status == "COMPLETE"
+            else "NOT_ATTEMPTED"
+        )
+    elif aggregate_counts["not_attempted_authors"] == aggregate_denominator:
+        derived_status = "NOT_ATTEMPTED"
+    elif aggregate_counts["failed_authors"] == aggregate_denominator:
+        derived_status = "FAILED"
+    elif aggregate_completed == aggregate_denominator:
+        derived_status = "COMPLETE"
+    else:
+        derived_status = "PARTIAL"
+    if canonical_supplied_status != derived_status:
+        raise ReportValidationError(
+            "profile_channel.status is inconsistent with aggregate terminal status counts"
+        )
+    normalized["status"] = derived_status
+    normalized["coverage"] = _coverage(
+        {
+            "covered": aggregate_completed,
+            "expected": aggregate_denominator,
+        },
+        "profile_channel.coverage",
+    )
+    return normalized
+
+
 def _smart_money(
     value: Any,
     leaderboard_coverage: Mapping[str, Any],
@@ -1009,13 +1210,41 @@ def _source_coverage(
         if canonical in explicit:
             raise ReportValidationError(f"duplicate report source: {canonical}")
         explicit[canonical] = value
-    return {
+    if "PROFILE" in explicit:
+        explicit_profile = _mapping(
+            explicit["PROFILE"],
+            "source_coverage.PROFILE",
+        )
+        explicit_profile_status = str(
+            explicit_profile.get("status") or ""
+        ).upper()
+        if (
+            explicit_profile_status == "EMPTY"
+            and derived["PROFILE"]["status"] == "COMPLETE"
+        ):
+            explicit_profile = dict(explicit_profile)
+            explicit_profile["status"] = "COMPLETE"
+            explicit["PROFILE"] = explicit_profile
+            explicit_profile_status = "COMPLETE"
+        if explicit_profile_status != derived["PROFILE"]["status"]:
+            raise ReportValidationError(
+                "source_coverage.PROFILE.status must match normalized profile status"
+            )
+    normalized = {
         name: _normalize_source_coverage(
             explicit.get(name, derived[name]),
             f"source_coverage.{name}",
         )
         for name in _REPORT_SOURCES
     }
+    if (
+        "PROFILE" in explicit
+        and normalized["PROFILE"]["status"] != derived["PROFILE"]["status"]
+    ):
+        raise ReportValidationError(
+            "source_coverage.PROFILE.status must match normalized profile status"
+        )
+    return normalized
 
 
 def _first_time(source: Mapping[str, Any], *names: str) -> Any:

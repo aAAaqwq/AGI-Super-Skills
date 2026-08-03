@@ -1,4 +1,11 @@
+import fcntl
+import io
+import json
+import tempfile
 import unittest
+from contextlib import redirect_stderr
+from datetime import datetime, timezone
+from pathlib import Path
 from unittest.mock import AsyncMock, patch
 
 from scripts import binance_scraper
@@ -362,6 +369,189 @@ class FeedCollectionTests(unittest.IsolatedAsyncioTestCase):
                 RuntimeError, "ReferenceError: feed is not defined"
             ):
                 await binance_scraper.evaluate_value(object(), "feed")
+
+
+class FeedSnapshotPersistenceTests(unittest.TestCase):
+    def test_partial_observation_writes_latest_and_immutable_without_eligible_pointer(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            data_dir = Path(directory) / "data"
+            history_dir = data_dir / "history"
+            latest = data_dir / "binance_raw_posts.json"
+            eligible = data_dir / "binance_raw_posts_eligible.json"
+            dedup = data_dir / "binance_square_last_scan.json"
+            collection = binance_scraper.FeedDiscoveryCollection(
+                posts=tuple(_post(index) for index in range(1, 5)),
+                discovery_result={
+                    "coverage_scope": "BINANCE_SQUARE_DISCOVER_DOM",
+                    "coverage_status": "PARTIAL",
+                    "termination_reason": "SCROLL_LIMIT",
+                    "minimum_target_met": False,
+                    "unique_candidate_post_count": 4,
+                    "preferred_minimum": 100,
+                },
+                stats={"unique_valid_posts": 4},
+            )
+
+            with patch.multiple(
+                binance_scraper,
+                HISTORY_DIR=str(history_dir),
+                OUTPUT_FILE=str(latest),
+                ELIGIBLE_OUTPUT_FILE=str(eligible),
+                DEDUP_FILE=str(dedup),
+            ):
+                payload = binance_scraper.persist_successful_collection(
+                    collection,
+                    now=datetime(2026, 8, 3, 12, 34, 56, tzinfo=timezone.utc),
+                )
+
+            immutable = Path(payload["snapshot_file"])
+            self.assertTrue(latest.is_file())
+            self.assertTrue(immutable.is_file())
+            self.assertEqual(latest.read_bytes(), immutable.read_bytes())
+            self.assertEqual(payload, json.loads(latest.read_text(encoding="utf-8")))
+            self.assertFalse(payload["eligible_for_coverage_promotion"])
+            self.assertIsNone(payload["eligible_snapshot_file"])
+            self.assertFalse(eligible.exists())
+
+    def test_partial_observation_preserves_existing_eligible_pointer(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            data_dir = Path(directory) / "data"
+            eligible = data_dir / "binance_raw_posts_eligible.json"
+            eligible.parent.mkdir(parents=True)
+            previous_eligible = b'{"snapshot_file":"previous-eligible.json"}\n'
+            eligible.write_bytes(previous_eligible)
+            collection = binance_scraper.FeedDiscoveryCollection(
+                posts=tuple(_post(index) for index in range(1, 5)),
+                discovery_result={
+                    "coverage_scope": "BINANCE_SQUARE_DISCOVER_DOM",
+                    "coverage_status": "PARTIAL",
+                    "termination_reason": "STAGNANT",
+                    "minimum_target_met": False,
+                    "unique_candidate_post_count": 4,
+                    "preferred_minimum": 100,
+                },
+                stats={"unique_valid_posts": 4},
+            )
+
+            with patch.multiple(
+                binance_scraper,
+                HISTORY_DIR=str(data_dir / "history"),
+                OUTPUT_FILE=str(data_dir / "binance_raw_posts.json"),
+                ELIGIBLE_OUTPUT_FILE=str(eligible),
+                DEDUP_FILE=str(data_dir / "binance_square_last_scan.json"),
+            ):
+                payload = binance_scraper.persist_successful_collection(
+                    collection,
+                    now=datetime(2026, 8, 3, 12, 35, tzinfo=timezone.utc),
+                )
+
+            self.assertFalse(payload["eligible_for_coverage_promotion"])
+            self.assertEqual(previous_eligible, eligible.read_bytes())
+
+    def test_exact_bounded_complete_observation_advances_eligible_pointer(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            data_dir = Path(directory) / "data"
+            latest = data_dir / "binance_raw_posts.json"
+            eligible = data_dir / "binance_raw_posts_eligible.json"
+            collection = binance_scraper.FeedDiscoveryCollection(
+                posts=tuple(_post(index) for index in range(1, 5)),
+                discovery_result={
+                    "coverage_scope": "BINANCE_SQUARE_DISCOVER_DOM",
+                    "coverage_status": "BOUNDED_COMPLETE",
+                    "termination_reason": "EXHAUSTED",
+                    "minimum_target_met": True,
+                    "unique_candidate_post_count": 4,
+                    "preferred_minimum": 4,
+                },
+                stats={"unique_valid_posts": 4},
+            )
+
+            with patch.multiple(
+                binance_scraper,
+                HISTORY_DIR=str(data_dir / "history"),
+                OUTPUT_FILE=str(latest),
+                ELIGIBLE_OUTPUT_FILE=str(eligible),
+                DEDUP_FILE=str(data_dir / "binance_square_last_scan.json"),
+            ):
+                payload = binance_scraper.persist_successful_collection(
+                    collection,
+                    now=datetime(2026, 8, 3, 12, 36, tzinfo=timezone.utc),
+                )
+
+            immutable = Path(payload["snapshot_file"])
+            self.assertTrue(payload["eligible_for_coverage_promotion"])
+            self.assertEqual(str(immutable), payload["eligible_snapshot_file"])
+            self.assertEqual(immutable.read_bytes(), latest.read_bytes())
+            self.assertEqual(immutable.read_bytes(), eligible.read_bytes())
+
+    def test_promotion_gate_requires_every_declared_coverage_condition(self) -> None:
+        posts = tuple(_post(index) for index in range(1, 5))
+        discovery = {
+            "coverage_scope": "BINANCE_SQUARE_DISCOVER_DOM",
+            "coverage_status": "BOUNDED_COMPLETE",
+            "termination_reason": "EXHAUSTED",
+            "minimum_target_met": True,
+            "unique_candidate_post_count": 4,
+            "preferred_minimum": 4,
+        }
+        eligible = binance_scraper.FeedDiscoveryCollection(
+            posts=posts,
+            discovery_result=discovery,
+            stats={"unique_valid_posts": 4},
+        )
+        self.assertTrue(binance_scraper.is_eligible_for_coverage_promotion(eligible))
+
+        invalid_changes = {
+            "coverage status": {"coverage_status": "PARTIAL"},
+            "termination": {"termination_reason": "STAGNANT"},
+            "minimum flag": {"minimum_target_met": False},
+            "preferred minimum": {"preferred_minimum": 5},
+            "scope": {"coverage_scope": "GLOBAL_BINANCE_SQUARE"},
+        }
+        for label, change in invalid_changes.items():
+            with self.subTest(label):
+                invalid_discovery = {**discovery, **change}
+                candidate = binance_scraper.FeedDiscoveryCollection(
+                    posts=posts,
+                    discovery_result=invalid_discovery,
+                    stats={"unique_valid_posts": 4},
+                )
+                self.assertFalse(
+                    binance_scraper.is_eligible_for_coverage_promotion(candidate)
+                )
+
+
+class FeedLockingTests(unittest.IsolatedAsyncioTestCase):
+    async def test_lock_busy_fails_and_does_not_overwrite_observed_latest(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            data_dir = Path(directory) / "data"
+            data_dir.mkdir()
+            lock_file = data_dir / ".binance_scraper_v3_1.lock"
+            latest = data_dir / "binance_raw_posts.json"
+            previous = b'{"scanned_at":"previous-real-observation"}\n'
+            latest.write_bytes(previous)
+
+            with lock_file.open("a+", encoding="utf-8") as lock_holder:
+                fcntl.flock(lock_holder.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                with patch.multiple(
+                    binance_scraper,
+                    DATA_DIR=str(data_dir),
+                    LOCK_FILE=str(lock_file),
+                    OUTPUT_FILE=str(latest),
+                ):
+                    stderr = io.StringIO()
+                    with redirect_stderr(stderr):
+                        success = await binance_scraper.main()
+
+            self.assertFalse(success)
+            self.assertEqual(previous, latest.read_bytes())
+            self.assertIn("LOCK_BUSY", stderr.getvalue())
 
 
 async def _no_wait() -> None:

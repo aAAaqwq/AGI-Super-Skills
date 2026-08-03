@@ -91,6 +91,407 @@ def smart_money_input() -> dict[str, object]:
 
 
 class LocalReportContractTests(unittest.TestCase):
+    def test_profile_cohort_counts_must_reconcile_to_declared_denominator(self) -> None:
+        profile_channel = {
+            "status": "PARTIAL",
+            "smart_money_profiles": {
+                "status": "PARTIAL",
+                "planned_authors": 60,
+                "complete_authors": 1,
+                "empty_authors": 2,
+                "partial_authors": 3,
+                "failed_authors": 4,
+                "not_attempted_authors": 49,
+            },
+            "seed_profiles": {
+                "status": "EMPTY",
+                "planned_authors": 9,
+                "complete_authors": 0,
+                "empty_authors": 9,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+            },
+            "cohort_denominators": {
+                "smart_money_profiles": 60,
+                "seed_profiles": 9,
+            },
+        }
+
+        with self.assertRaisesRegex(
+            ReportValidationError,
+            "profile_channel.smart_money_profiles.*sum to denominator",
+        ):
+            build_local_report(report_input(profile_channel=profile_channel))
+
+    def test_profile_cohort_outcome_rows_must_reconcile_to_denominator(self) -> None:
+        profile_channel = {
+            "status": "COMPLETE",
+            "smart_money_profiles": {
+                "status": "COMPLETE",
+                "planned_authors": 2,
+                "complete_authors": 1,
+                "empty_authors": 1,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+                "outcomes": [
+                    {"top_trader_id": "trader-1", "status": "COMPLETE"},
+                ],
+            },
+            "seed_profiles": {
+                "status": "EMPTY",
+                "planned_authors": 0,
+                "complete_authors": 0,
+                "empty_authors": 0,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+            },
+            "cohort_denominators": {
+                "smart_money_profiles": 2,
+                "seed_profiles": 0,
+            },
+        }
+
+        with self.assertRaisesRegex(
+            ReportValidationError,
+            "profile_channel.smart_money_profiles.outcomes must contain 2 rows",
+        ):
+            build_local_report(report_input(profile_channel=profile_channel))
+
+    def test_profile_cohort_outcome_statuses_must_match_summary_counts(self) -> None:
+        profile_channel = {
+            "status": "COMPLETE",
+            "smart_money_profiles": {
+                "status": "COMPLETE",
+                "planned_authors": 2,
+                "complete_authors": 1,
+                "empty_authors": 1,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+                "outcomes": [
+                    {"top_trader_id": "trader-1", "status": "COMPLETE"},
+                    {"top_trader_id": "trader-2", "status": "PARTIAL"},
+                ],
+            },
+            "seed_profiles": {
+                "status": "EMPTY",
+                "planned_authors": 0,
+                "complete_authors": 0,
+                "empty_authors": 0,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+            },
+            "cohort_denominators": {
+                "smart_money_profiles": 2,
+                "seed_profiles": 0,
+            },
+        }
+
+        with self.assertRaisesRegex(
+            ReportValidationError,
+            "profile_channel.smart_money_profiles outcomes do not match summary counts",
+        ):
+            build_local_report(report_input(profile_channel=profile_channel))
+
+    def test_profile_cohort_coverage_counts_complete_and_empty_but_not_partial(self) -> None:
+        profile_channel = {
+            "status": "PARTIAL",
+            "smart_money_profiles": {
+                "status": "PARTIAL",
+                "planned_authors": 4,
+                "complete_authors": 1,
+                "empty_authors": 1,
+                "partial_authors": 2,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+                "outcomes": [
+                    {"top_trader_id": "trader-1", "status": "COMPLETE"},
+                    {"top_trader_id": "trader-2", "status": "EMPTY"},
+                    {"top_trader_id": "trader-3", "status": "PARTIAL"},
+                    {"top_trader_id": "trader-4", "status": "PARTIAL"},
+                ],
+            },
+            "seed_profiles": {
+                "status": "EMPTY",
+                "planned_authors": 0,
+                "complete_authors": 0,
+                "empty_authors": 0,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+            },
+            "cohort_denominators": {
+                "smart_money_profiles": 4,
+                "seed_profiles": 0,
+            },
+        }
+
+        report = build_local_report(report_input(profile_channel=profile_channel))
+        smart_money_profiles = report["profile_channel"]["smart_money_profiles"]
+
+        self.assertEqual("PARTIAL", smart_money_profiles["status"])
+        self.assertEqual(
+            {
+                "covered": 2,
+                "expected": 4,
+                "label": "2/4 (50.0%)",
+            },
+            smart_money_profiles["coverage"],
+        )
+        self.assertEqual(
+            {
+                "covered": 2,
+                "expected": 4,
+                "label": "2/4 (50.0%)",
+            },
+            report["profile_channel"]["coverage"],
+        )
+        self.assertIn(
+            "Smart Money Profiles：状态 PARTIAL｜coverage 2/4 (50.0%)",
+            render_local_markdown(report),
+        )
+
+    def test_profile_aggregate_status_cannot_claim_complete_over_partial_cohort(self) -> None:
+        profile_channel = {
+            "status": "COMPLETE",
+            "smart_money_profiles": {
+                "status": "PARTIAL",
+                "planned_authors": 2,
+                "complete_authors": 1,
+                "empty_authors": 0,
+                "partial_authors": 1,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+                "outcomes": [
+                    {"top_trader_id": "trader-1", "status": "COMPLETE"},
+                    {"top_trader_id": "trader-2", "status": "PARTIAL"},
+                ],
+            },
+            "seed_profiles": {
+                "status": "EMPTY",
+                "planned_authors": 0,
+                "complete_authors": 0,
+                "empty_authors": 0,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+            },
+            "cohort_denominators": {
+                "smart_money_profiles": 2,
+                "seed_profiles": 0,
+            },
+        }
+
+        with self.assertRaisesRegex(
+            ReportValidationError,
+            "profile_channel.status.*aggregate terminal status counts",
+        ):
+            build_local_report(report_input(profile_channel=profile_channel))
+
+    def test_explicit_profile_source_status_must_match_normalized_profile_status(self) -> None:
+        profile_channel = {
+            "status": "PARTIAL",
+            "smart_money_profiles": {
+                "status": "PARTIAL",
+                "planned_authors": 2,
+                "complete_authors": 1,
+                "empty_authors": 0,
+                "partial_authors": 1,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+                "outcomes": [
+                    {"top_trader_id": "trader-1", "status": "COMPLETE"},
+                    {"top_trader_id": "trader-2", "status": "PARTIAL"},
+                ],
+            },
+            "seed_profiles": {
+                "status": "EMPTY",
+                "planned_authors": 0,
+                "complete_authors": 0,
+                "empty_authors": 0,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+            },
+            "cohort_denominators": {
+                "smart_money_profiles": 2,
+                "seed_profiles": 0,
+            },
+        }
+
+        with self.assertRaisesRegex(
+            ReportValidationError,
+            "source_coverage.PROFILE.status must match normalized profile status",
+        ):
+            build_local_report(
+                report_input(
+                    profile_channel=profile_channel,
+                    source_coverage={
+                        "PROFILE": {
+                            "status": "COMPLETE",
+                            "provenance": "UNKNOWN",
+                            "source_capture_time_utc": None,
+                        }
+                    },
+                )
+            )
+
+    def test_all_empty_profile_aggregate_maps_to_complete_source_status(self) -> None:
+        captured_at = "2026-08-01T07:14:00Z"
+        profile_channel = {
+            "status": "EMPTY",
+            "provenance": "LIVE_CAPTURE",
+            "source_capture_time_utc": captured_at,
+            "smart_money_profiles": {
+                "status": "EMPTY",
+                "planned_authors": 2,
+                "complete_authors": 0,
+                "empty_authors": 2,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+                "outcomes": [
+                    {"top_trader_id": "trader-1", "status": "EMPTY"},
+                    {"top_trader_id": "trader-2", "status": "EMPTY"},
+                ],
+            },
+            "seed_profiles": {
+                "status": "EMPTY",
+                "planned_authors": 0,
+                "complete_authors": 0,
+                "empty_authors": 0,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+            },
+            "cohort_denominators": {
+                "smart_money_profiles": 2,
+                "seed_profiles": 0,
+            },
+        }
+
+        report = build_local_report(
+            report_input(
+                profile_channel=profile_channel,
+                source_coverage={
+                    "PROFILE": {
+                        "status": "EMPTY",
+                        "provenance": "LIVE_CAPTURE",
+                        "source_capture_time_utc": captured_at,
+                    }
+                },
+            )
+        )
+
+        self.assertEqual("COMPLETE", report["profile_channel"]["status"])
+        self.assertEqual("COMPLETE", report["source_coverage"]["PROFILE"]["status"])
+        self.assertEqual(
+            "2/2 (100.0%)",
+            report["profile_channel"]["coverage"]["label"],
+        )
+
+    def test_zero_denominator_profile_aggregate_stays_not_attempted(self) -> None:
+        profile_channel = {
+            "status": "NOT_ATTEMPTED",
+            "smart_money_profiles": {
+                "status": "NOT_ATTEMPTED",
+                "planned_authors": 0,
+                "complete_authors": 0,
+                "empty_authors": 0,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+            },
+            "seed_profiles": {
+                "status": "EMPTY",
+                "planned_authors": 0,
+                "complete_authors": 0,
+                "empty_authors": 0,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+            },
+            "cohort_denominators": {
+                "smart_money_profiles": 0,
+                "seed_profiles": 0,
+            },
+        }
+
+        report = build_local_report(report_input(profile_channel=profile_channel))
+
+        self.assertEqual("NOT_ATTEMPTED", report["profile_channel"]["status"])
+        self.assertEqual(
+            "NOT_ATTEMPTED",
+            report["source_coverage"]["PROFILE"]["status"],
+        )
+        self.assertEqual(
+            "0/0 (coverage unavailable)",
+            report["profile_channel"]["coverage"]["label"],
+        )
+
+    def test_profile_structure_without_denominators_fails_closed(self) -> None:
+        with self.assertRaisesRegex(
+            ReportValidationError,
+            "profile_channel.cohort_denominators is required",
+        ):
+            build_local_report(
+                report_input(
+                    profile_channel={
+                        "status": "COMPLETE",
+                        "planned_authors": 20,
+                        "complete_authors": 19,
+                        "partial_authors": 1,
+                    }
+                )
+            )
+
+    def test_profile_outcome_identities_must_be_unique(self) -> None:
+        profile_channel = {
+            "status": "COMPLETE",
+            "planned_authors": 2,
+            "complete_authors": 2,
+            "empty_authors": 0,
+            "partial_authors": 0,
+            "failed_authors": 0,
+            "not_attempted_authors": 0,
+            "smart_money_profiles": {
+                "status": "COMPLETE",
+                "planned_authors": 2,
+                "complete_authors": 2,
+                "empty_authors": 0,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+                "outcomes": [
+                    {"top_trader_id": "duplicate", "status": "COMPLETE"},
+                    {"top_trader_id": "duplicate", "status": "COMPLETE"},
+                ],
+            },
+            "seed_profiles": {
+                "status": "EMPTY",
+                "planned_authors": 0,
+                "complete_authors": 0,
+                "empty_authors": 0,
+                "partial_authors": 0,
+                "failed_authors": 0,
+                "not_attempted_authors": 0,
+            },
+            "cohort_denominators": {
+                "smart_money_profiles": 2,
+                "seed_profiles": 0,
+            },
+        }
+
+        with self.assertRaisesRegex(
+            ReportValidationError,
+            "outcome identities must be unique",
+        ):
+            build_local_report(report_input(profile_channel=profile_channel))
+
     def test_profile_cohorts_render_separate_complete_count_lines(self) -> None:
         profile_channel = {
             "status": "PARTIAL",
@@ -102,6 +503,7 @@ class LocalReportContractTests(unittest.TestCase):
             "not_attempted_authors": 50,
             "source_records": 24,
             "smart_money_profiles": {
+                "status": "PARTIAL",
                 "planned_authors": 60,
                 "complete_authors": 1,
                 "empty_authors": 2,
@@ -114,8 +516,34 @@ class LocalReportContractTests(unittest.TestCase):
                     "expected": 60,
                     "label": "1/60 (1.7%)",
                 },
+                "outcomes": [
+                    *(
+                        {"top_trader_id": f"complete-{index}", "status": "COMPLETE"}
+                        for index in range(1)
+                    ),
+                    *(
+                        {"top_trader_id": f"empty-{index}", "status": "EMPTY"}
+                        for index in range(2)
+                    ),
+                    *(
+                        {"top_trader_id": f"partial-{index}", "status": "PARTIAL"}
+                        for index in range(3)
+                    ),
+                    *(
+                        {"top_trader_id": f"failed-{index}", "status": "FAILED"}
+                        for index in range(4)
+                    ),
+                    *(
+                        {
+                            "top_trader_id": f"pending-{index}",
+                            "status": "NOT_ATTEMPTED",
+                        }
+                        for index in range(50)
+                    ),
+                ],
             },
             "seed_profiles": {
+                "status": "COMPLETE",
                 "planned_authors": 9,
                 "complete_authors": 7,
                 "empty_authors": 2,
@@ -123,6 +551,20 @@ class LocalReportContractTests(unittest.TestCase):
                 "failed_authors": 0,
                 "not_attempted_authors": 0,
                 "source_records": 11,
+                "outcomes": [
+                    *(
+                        {"author_id": f"seed-complete-{index}", "status": "COMPLETE"}
+                        for index in range(7)
+                    ),
+                    *(
+                        {"author_id": f"seed-empty-{index}", "status": "EMPTY"}
+                        for index in range(2)
+                    ),
+                ],
+            },
+            "cohort_denominators": {
+                "smart_money_profiles": 60,
+                "seed_profiles": 9,
             },
         }
 
@@ -135,12 +577,14 @@ class LocalReportContractTests(unittest.TestCase):
             markdown,
         )
         self.assertIn(
-            "Smart Money Profiles：计划 60｜完成 1｜空 2｜部分 3｜失败 4｜"
+            "Smart Money Profiles：状态 PARTIAL｜coverage 3/60 (5.0%)｜"
+            "计划 60｜完成 1｜空 2｜部分 3｜失败 4｜"
             "未尝试 50｜来源记录 13｜mapping 1/60 (1.7%)",
             markdown,
         )
         self.assertIn(
-            "Seed Profiles：计划 9｜完成 7｜空 2｜部分 0｜失败 0｜"
+            "Seed Profiles：状态 COMPLETE｜coverage 9/9 (100.0%)｜"
+            "计划 9｜完成 7｜空 2｜部分 0｜失败 0｜"
             "未尝试 0｜来源记录 11",
             markdown,
         )

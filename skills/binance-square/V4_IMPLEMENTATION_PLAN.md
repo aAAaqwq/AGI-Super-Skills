@@ -13,6 +13,7 @@
 本节是当前事实优先的状态覆盖；下文 WBS 保留为完整目标与历史决策记录。
 
 - 当前全量离线测试覆盖顺序生产影子入口、Feed不可变快照与有界停止证据、真实Profile分页、显式job namespace和dedup基线隔离、完整Futures合约目录、官方新闻失败关闭、Smart Money双ID mapping/v2与catalog、五类来源血缘和严格TOP报告schema。确切测试项数以发布回执为准。
+- 2026-08-03真实预检后，生产CLI默认不再消费旧版可变signal文件；Futures catalog/server-time门已前移到任何Profile、Smart Money和详情网络请求之前。Feed observed latest与coverage-eligible指针已经分离，锁忙改为失败；生产wrapper也已强制本轮observed/immutable/eligible三者逐字节一致，否则在radar前失败。Profile报告现强制分母、五状态、逐作者outcome、身份唯一性、顶层汇总状态与source coverage对账，完成覆盖率只计`COMPLETE+EMPTY`，全EMPTY按已完成处理。下一合法UTC canary仍是运行发布门。
 - 量化门保留发布后到决策时点的SL/TP保守回放、发布前结构 + ATR止损合理性、独立作者/内容簇共识和布林收缩突破确认。本轮帖子覆盖改造明确不新增手续费、滑点、资金费率或深度接口。
 - 成本模型未配置时强制 `WATCH`，不再允许名义RR直接成为可执行TOP。
 - 组件级只读观测已看到 Smart Money `PNL/ROI` 60个唯一交易员详情；当前Feed surface仅4条并正确标为`PARTIAL`。9个独立seed Profile已取得9/9分页终止证明和12条严格24h帖子。这些都不是合法UTC时槽内的完整生产canary。
