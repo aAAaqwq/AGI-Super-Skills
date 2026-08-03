@@ -1,4 +1,4 @@
-<p align="right"><a href="./README_CN.md">中文</a></p>
+<p align="right"><a href="./README_CN.md">🇨🇳 中文</a></p>
 
 # 🧰 Skills library
 
@@ -34,6 +34,17 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool codex --all-subagents --install
 ```
 
 The 136-role Codex package consists of 31 general engineering/review Agents, 13 C-suite Agent files, and 92 executive specialists. CEO remains the parent coordinator, Governor remains independent, and PE remains CTO's canonical delivery leaf.
+
+## ✨ Browse by provenance
+
+| Origin | Meaning |
+|---|---|
+| [Project original](../catalog/#project-original-skills) | Digest-backed first-party work with reviewed authorship |
+| [Adapted](../catalog/#adapted-skills) | Modified from a named source with the adaptation recorded |
+| [Collected](../catalog/#collected-skills) | Preserved from a named source with provenance recorded |
+| [Unknown origin](../catalog/#unknown-origin-skills) | Source review is incomplete; inspect before use |
+
+Provenance and curation evidence are separate from runtime verification.
 
 ## 🧭 Browse skills by outcome
 
