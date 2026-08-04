@@ -6,6 +6,7 @@ from decimal import Decimal
 from hashlib import sha256
 import json
 from pathlib import Path
+import signal
 import subprocess
 import sys
 import tempfile
@@ -28,7 +29,10 @@ from tests.test_derivation import complete_market
 from tests.test_smart_money import FakeSmartMoneyApi
 from tests.test_authors import write_v2_identity_evidence
 from scripts.build_identity_mapping_catalog import build_identity_mapping_catalog
-from scripts.run_radar import _arguments as radar_arguments
+from scripts.run_radar import (
+    _arguments as radar_arguments,
+    _sigterm_as_exception,
+)
 
 
 PROJECT = Path(__file__).parents[1]
@@ -67,7 +71,14 @@ def resign_smart_money(document: dict[str, object]) -> dict[str, object]:
 
 
 class ShadowPipelineTests(unittest.TestCase):
-    def test_cli_accepts_one_catalog_and_rejects_catalog_plus_single_mapping(self) -> None:
+    def test_sigterm_becomes_a_catchable_pipeline_failure(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "SIGTERM"):
+            with _sigterm_as_exception():
+                signal.raise_signal(signal.SIGTERM)
+
+    def test_cli_accepts_one_catalog_and_rejects_catalog_plus_single_mapping(
+        self,
+    ) -> None:
         catalog = Path("fixture-catalog.json")
         parsed = radar_arguments(
             [
@@ -93,8 +104,7 @@ class ShadowPipelineTests(unittest.TestCase):
     def test_smart_money_catalog_fetches_two_approved_square_profiles(self) -> None:
         evidence = self._smart_money_evidence()
         trader_ids = [
-            evidence["rankings"][0]["rows"][index]["source_id"]
-            for index in range(2)
+            evidence["rankings"][0]["rows"][index]["source_id"] for index in range(2)
         ]
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -159,7 +169,10 @@ class ShadowPipelineTests(unittest.TestCase):
                 if item.artifact_path == str(catalog_path)
             )
             self.assertEqual(2, catalog_manifest.record_count)
-            self.assertEqual(sha256(catalog_path.read_bytes()).hexdigest(), catalog_manifest.sha256_hex)
+            self.assertEqual(
+                sha256(catalog_path.read_bytes()).hexdigest(),
+                catalog_manifest.sha256_hex,
+            )
             mapped_square_uids = tuple(
                 sorted(f"fixture-square-{value}" for value in trader_ids)
             )
@@ -212,11 +225,12 @@ class ShadowPipelineTests(unittest.TestCase):
                 ),
             )
 
-    def test_identity_catalog_proposed_conflict_and_missing_trader_fail_closed(self) -> None:
+    def test_identity_catalog_proposed_conflict_and_missing_trader_fail_closed(
+        self,
+    ) -> None:
         evidence = self._smart_money_evidence()
         known_traders = [
-            evidence["rankings"][0]["rows"][index]["source_id"]
-            for index in range(2)
+            evidence["rankings"][0]["rows"][index]["source_id"] for index in range(2)
         ]
         for case in ("proposed", "conflict", "missing_trader"):
             with self.subTest(case=case), tempfile.TemporaryDirectory() as directory:
@@ -314,7 +328,9 @@ class ShadowPipelineTests(unittest.TestCase):
                     ),
                 )
 
-    def test_seed_profiles_fetch_independently_while_zero_smart_money_mapping_stays_blocked(self) -> None:
+    def test_seed_profiles_fetch_independently_while_zero_smart_money_mapping_stays_blocked(
+        self,
+    ) -> None:
         evidence = self._smart_money_evidence()
         seed_uids = {
             profile.author_id
@@ -364,7 +380,9 @@ class ShadowPipelineTests(unittest.TestCase):
             "BLOCKED_IDENTITY_MAPPING",
             cohorts["smart_money_profiles"]["reason"],
         )
-        self.assertEqual(0, report["smart_money"]["square_identity_mapping_coverage"]["covered"])
+        self.assertEqual(
+            0, report["smart_money"]["square_identity_mapping_coverage"]["covered"]
+        )
 
     def _smart_money_evidence(
         self, ranking_types: tuple[str, ...] = ("PNL", "ROI")
@@ -531,11 +549,22 @@ class ShadowPipelineTests(unittest.TestCase):
             )
             self.assertEqual(
                 [30, 30],
-                [len(ledger.list_smart_money_leaderboard_rows(item.smart_money_capture_id)) for item in captures],
+                [
+                    len(
+                        ledger.list_smart_money_leaderboard_rows(
+                            item.smart_money_capture_id
+                        )
+                    )
+                    for item in captures
+                ],
             )
             self.assertEqual(
                 60,
-                len(ledger.list_smart_money_profile_observations(attempt_id=result.attempt_id)),
+                len(
+                    ledger.list_smart_money_profile_observations(
+                        attempt_id=result.attempt_id
+                    )
+                ),
             )
             manifest = next(
                 item
@@ -548,7 +577,10 @@ class ShadowPipelineTests(unittest.TestCase):
                 sha256(result.smart_money_json.read_bytes()).hexdigest(),
             )
             self.assertTrue(
-                all(item.evidence_file_sha256 == manifest.sha256_hex for item in captures)
+                all(
+                    item.evidence_file_sha256 == manifest.sha256_hex
+                    for item in captures
+                )
             )
             self.assertTrue(
                 all(
@@ -557,7 +589,9 @@ class ShadowPipelineTests(unittest.TestCase):
                 )
             )
 
-    def test_smart_money_profile_mapping_is_consumed_without_name_inference(self) -> None:
+    def test_smart_money_profile_mapping_is_consumed_without_name_inference(
+        self,
+    ) -> None:
         evidence = self._smart_money_evidence()
         top_trader_id = evidence["rankings"][0]["rows"][0]["source_id"]
         with tempfile.TemporaryDirectory() as directory:
@@ -729,7 +763,9 @@ class ShadowPipelineTests(unittest.TestCase):
                 item for item in manifests if item.artifact_path == str(result.raw_json)
             )
             report_manifest = next(
-                item for item in manifests if item.artifact_path == str(result.report_json)
+                item
+                for item in manifests
+                if item.artifact_path == str(result.report_json)
             )
             self.assertEqual(4, raw_manifest.record_count)
             self.assertEqual("2026-07-30T05:48:36Z", raw_manifest.event_start_utc)
@@ -741,7 +777,9 @@ class ShadowPipelineTests(unittest.TestCase):
             self.assertEqual("SUCCEEDED", attempts[0].status)
             self.assertIsNotNone(attempts[0].finished_at_utc)
             observations = ledger.list_post_observations(result.logical_run_id)
-            self.assertEqual(["990000000000101"], [item.post_id for item in observations])
+            self.assertEqual(
+                ["990000000000101"], [item.post_id for item in observations]
+            )
 
     def test_seed_evidence_is_manifested_but_never_adds_author_score(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -764,11 +802,11 @@ class ShadowPipelineTests(unittest.TestCase):
                 "PARTIAL_SEED_DISCOVERY",
                 report["leaderboard_coverage"]["status"],
             )
-            self.assertEqual(9, report["leaderboard_coverage"]["verified_seed_profiles"])
-            self.assertEqual(0, report["leaderboard_coverage"]["rendered_rank_rows"])
             self.assertEqual(
-                0, report["candidate_audit"][0]["author_score_assumption"]
+                9, report["leaderboard_coverage"]["verified_seed_profiles"]
             )
+            self.assertEqual(0, report["leaderboard_coverage"]["rendered_rank_rows"])
+            self.assertEqual(0, report["candidate_audit"][0]["author_score_assumption"])
 
             ledger = SQLiteRunLedger(database, MIGRATION)
             self.addCleanup(ledger.close)
@@ -778,9 +816,7 @@ class ShadowPipelineTests(unittest.TestCase):
                 item for item in manifests if item.artifact_path == str(SEED_EVIDENCE)
             )
             self.assertEqual(9, seed_manifest.record_count)
-            self.assertEqual(
-                "2026-08-01T08:50:34Z", seed_manifest.event_start_utc
-            )
+            self.assertEqual("2026-08-01T08:50:34Z", seed_manifest.event_start_utc)
 
     def test_cli_fixture_defaults_to_local_no_send_outputs(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -886,7 +922,9 @@ class ShadowPipelineTests(unittest.TestCase):
             )
             self.assertEqual("NOT_ATTEMPTED", report["profile_channel"]["status"])
 
-    def test_real_mode_validates_server_time_before_network_collectors_and_reuses_catalog(self) -> None:
+    def test_real_mode_validates_server_time_before_network_collectors_and_reuses_catalog(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             post_url = "https://www.binance.com/en/square/post/990000000000101"
@@ -971,11 +1009,13 @@ class ShadowPipelineTests(unittest.TestCase):
             def fetch_detail(url: str) -> dict[str, object]:
                 events.append("detail")
                 payload = deepcopy(detail_payload)
-                payload["response"]["data"].update({
-                    "id": int(url.rsplit("/", 1)[1]),
-                    "webLink": url,
-                    "firstReleaseTime": 1785582000000,
-                })
+                payload["response"]["data"].update(
+                    {
+                        "id": int(url.rsplit("/", 1)[1]),
+                        "webLink": url,
+                        "firstReleaseTime": 1785582000000,
+                    }
+                )
                 return payload
 
             run_shadow_radar(
@@ -1013,31 +1053,60 @@ class ShadowPipelineTests(unittest.TestCase):
             snapshot_url = "https://www.binance.com/en/square/post/990000000000101"
             signal_url = "https://www.binance.com/en/square/post/990000000000102"
             snapshot = root / "snapshot.json"
-            snapshot.write_text(json.dumps({
-                "count": 1,
-                "posts": [{"url": snapshot_url, "text": "old", "time": "old", "author": "LIVE", "is_new": True}],
-                "new_posts": [],
-                "scanned_at": "2026-07-31T07:59:30Z",
-                "snapshot_file": str(snapshot),
-            }), encoding="utf-8")
+            snapshot.write_text(
+                json.dumps(
+                    {
+                        "count": 1,
+                        "posts": [
+                            {
+                                "url": snapshot_url,
+                                "text": "old",
+                                "time": "old",
+                                "author": "LIVE",
+                                "is_new": True,
+                            }
+                        ],
+                        "new_posts": [],
+                        "scanned_at": "2026-07-31T07:59:30Z",
+                        "snapshot_file": str(snapshot),
+                    }
+                ),
+                encoding="utf-8",
+            )
             signals = root / "signals.json"
-            signals.write_text(json.dumps([{
-                "source_url": signal_url, "symbol": "BTC", "direction": "long",
-                "entry": "62000 - 62500", "sl": "61000",
-                "tp": "65000 / 67000", "time": "old", "author": "untrusted",
-            }]), encoding="utf-8")
-            base = json.loads((FIXTURE / "post_detail_public.json").read_text(encoding="utf-8"))
+            signals.write_text(
+                json.dumps(
+                    [
+                        {
+                            "source_url": signal_url,
+                            "symbol": "BTC",
+                            "direction": "long",
+                            "entry": "62000 - 62500",
+                            "sl": "61000",
+                            "tp": "65000 / 67000",
+                            "time": "old",
+                            "author": "untrusted",
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            base = json.loads(
+                (FIXTURE / "post_detail_public.json").read_text(encoding="utf-8")
+            )
             refreshed: list[str] = []
 
             def fetch_detail(url: str) -> dict:
                 refreshed.append(url)
                 value = deepcopy(base)
                 post_id = int(url.rsplit("/", 1)[1])
-                value["response"]["data"].update({
-                    "id": post_id,
-                    "webLink": url,
-                    "firstReleaseTime": 1785476916000,
-                })
+                value["response"]["data"].update(
+                    {
+                        "id": post_id,
+                        "webLink": url,
+                        "firstReleaseTime": 1785476916000,
+                    }
+                )
                 if url == snapshot_url:
                     value["response"]["data"]["bodyTextOnly"] = "market news only"
                 return value
@@ -1076,15 +1145,22 @@ class ShadowPipelineTests(unittest.TestCase):
                         last_price=Decimal("63000"),
                         source=MarketSource.FUTURES,
                         captured_at=datetime(2026, 7, 31, 5, 47, tzinfo=timezone.utc),
-                        missing_fields=(), candles={}, decision_time_ms=1785390516000,
+                        missing_fields=(),
+                        candles={},
+                        decision_time_ms=1785390516000,
                     )
 
             market = MarketSeam()
             result = run_shadow_radar(
                 PipelineConfig(
-                    mode="real", output_dir=root / "runs", database=root / "radar.sqlite",
-                    decision_at="2026-07-31T08:00:00Z", input_snapshot=snapshot,
-                    signals_json=signals, limit=2, official_news_enabled=True,
+                    mode="real",
+                    output_dir=root / "runs",
+                    database=root / "radar.sqlite",
+                    decision_at="2026-07-31T08:00:00Z",
+                    input_snapshot=snapshot,
+                    signals_json=signals,
+                    limit=2,
+                    official_news_enabled=True,
                 ),
                 detail_fetcher=fetch_detail,
                 market_client=market,  # type: ignore[arg-type]
@@ -1096,13 +1172,15 @@ class ShadowPipelineTests(unittest.TestCase):
                     "window_start_utc": "2026-07-30T08:00:00Z",
                     "captured_at_utc": "2026-07-31T08:00:01Z",
                     "record_count": 1,
-                    "records": [{
-                        "article_id": "official-one",
-                        "title": "Official market update",
-                        "published_at_utc": "2026-07-31T07:30:00Z",
-                        "captured_at_utc": "2026-07-31T08:00:01Z",
-                        "source_url": "https://www.binance.com/en/support/announcement/detail/official-one",
-                    }],
+                    "records": [
+                        {
+                            "article_id": "official-one",
+                            "title": "Official market update",
+                            "published_at_utc": "2026-07-31T07:30:00Z",
+                            "captured_at_utc": "2026-07-31T08:00:01Z",
+                            "source_url": "https://www.binance.com/en/support/announcement/detail/official-one",
+                        }
+                    ],
                 },
                 clock=lambda: datetime(2026, 7, 31, 8, 0, tzinfo=timezone.utc),
             )
@@ -1111,15 +1189,23 @@ class ShadowPipelineTests(unittest.TestCase):
             self.assertEqual([signal_url, snapshot_url], refreshed)
             self.assertEqual(["BTCUSDT"], market.symbols)
             self.assertEqual(1785484800000, market.decision_time_ms)
-            self.assertEqual("AUTHOR_LEGACY_EXTRACTED", report["candidate_audit"][0]["parameter_mapping"])
+            self.assertEqual(
+                "AUTHOR_LEGACY_EXTRACTED",
+                report["candidate_audit"][0]["parameter_mapping"],
+            )
             self.assertEqual("0/2 (0.0%)", report["leaderboard_coverage"]["label"])
             self.assertNotIn("0/4", result.report_markdown.read_text(encoding="utf-8"))
-            self.assertEqual("2026-07-31T05:47:00Z", report["candidate_audit"][0]["market_captured_at"])
+            self.assertEqual(
+                "2026-07-31T05:47:00Z",
+                report["candidate_audit"][0]["market_captured_at"],
+            )
             market_artifact = json.loads(result.market_json.read_text(encoding="utf-8"))
             self.assertIn("BTCUSDT", market_artifact["snapshots"])
             self.assertIsNotNone(result.market_catalog_json)
             assert result.market_catalog_json is not None
-            catalog_artifact = json.loads(result.market_catalog_json.read_text(encoding="utf-8"))
+            catalog_artifact = json.loads(
+                result.market_catalog_json.read_text(encoding="utf-8")
+            )
             self.assertEqual(1, catalog_artifact["record_count"])
             self.assertEqual(
                 {
@@ -1166,10 +1252,15 @@ class ShadowPipelineTests(unittest.TestCase):
                 "2026-07-31T07:59:30Z",
                 report["input_lineage"]["discovery_snapshot"]["captured_at_utc"],
             )
-            self.assertEqual(str(snapshot), report["input_lineage"]["discovery_snapshot"]["path"])
-            self.assertEqual(str(signals), report["input_lineage"]["signal_input"]["path"])
+            self.assertEqual(
+                str(snapshot), report["input_lineage"]["discovery_snapshot"]["path"]
+            )
+            self.assertEqual(
+                str(signals), report["input_lineage"]["signal_input"]["path"]
+            )
             manifested_paths = {
-                item.artifact_path for item in ledger.list_manifests(result.logical_run_id)
+                item.artifact_path
+                for item in ledger.list_manifests(result.logical_run_id)
             }
             self.assertIn(str(snapshot), manifested_paths)
             self.assertIn(str(signals), manifested_paths)
@@ -1180,31 +1271,51 @@ class ShadowPipelineTests(unittest.TestCase):
             root = Path(directory)
             snapshot_url = "https://www.binance.com/en/square/post/990000000000101"
             snapshot = root / "snapshot.json"
-            snapshot.write_text(json.dumps({
-                "count": 1,
-                "posts": [{"url": snapshot_url}],
-                "new_posts": [],
-                "scanned_at": "2026-07-31T07:59:30Z",
-                "snapshot_file": str(snapshot),
-            }), encoding="utf-8")
+            snapshot.write_text(
+                json.dumps(
+                    {
+                        "count": 1,
+                        "posts": [{"url": snapshot_url}],
+                        "new_posts": [],
+                        "scanned_at": "2026-07-31T07:59:30Z",
+                        "snapshot_file": str(snapshot),
+                    }
+                ),
+                encoding="utf-8",
+            )
             signals = root / "signals.json"
-            signals.write_text(json.dumps([{
-                "url": snapshot_url, "symbol": "BTC", "direction": "long",
-                "entry": "62000", "sl": "61000", "tp": "65000 / 67000",
-            }]), encoding="utf-8")
+            signals.write_text(
+                json.dumps(
+                    [
+                        {
+                            "url": snapshot_url,
+                            "symbol": "BTC",
+                            "direction": "long",
+                            "entry": "62000",
+                            "sl": "61000",
+                            "tp": "65000 / 67000",
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
             runs = root / "runs"
             runs.mkdir()
             (runs / "latest.json").write_bytes(b"previous-json")
             (runs / "latest.md").write_bytes(b"previous-markdown")
-            base = json.loads((FIXTURE / "post_detail_public.json").read_text(encoding="utf-8"))
+            base = json.loads(
+                (FIXTURE / "post_detail_public.json").read_text(encoding="utf-8")
+            )
 
             def fetch_detail(url: str) -> dict:
                 value = deepcopy(base)
-                value["response"]["data"].update({
-                    "id": int(url.rsplit("/", 1)[1]),
-                    "webLink": url,
-                    "firstReleaseTime": 1785476916000,
-                })
+                value["response"]["data"].update(
+                    {
+                        "id": int(url.rsplit("/", 1)[1]),
+                        "webLink": url,
+                        "firstReleaseTime": 1785476916000,
+                    }
+                )
                 return value
 
             class FailingMarket:
@@ -1224,9 +1335,13 @@ class ShadowPipelineTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "injected market failure"):
                 run_shadow_radar(
                     PipelineConfig(
-                        mode="real", output_dir=runs, database=database,
-                        decision_at="2026-07-31T08:00:00Z", input_snapshot=snapshot,
-                        signals_json=signals, limit=1,
+                        mode="real",
+                        output_dir=runs,
+                        database=database,
+                        decision_at="2026-07-31T08:00:00Z",
+                        input_snapshot=snapshot,
+                        signals_json=signals,
+                        limit=1,
                     ),
                     detail_fetcher=fetch_detail,
                     market_client=FailingMarket(),  # type: ignore[arg-type]
@@ -1242,7 +1357,9 @@ class ShadowPipelineTests(unittest.TestCase):
             self.assertEqual("FAILED", attempt.status)
             self.assertEqual("analysis", attempt.failed_stage)
 
-    def test_latest_pointer_atomically_switches_json_and_markdown_as_one_set(self) -> None:
+    def test_latest_pointer_atomically_switches_json_and_markdown_as_one_set(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             first = root / "run-one"
@@ -1257,7 +1374,10 @@ class ShadowPipelineTests(unittest.TestCase):
             self.assertEqual("json-one", (root / "latest.json").read_text())
             self.assertEqual("md-one", (root / "latest.md").read_text())
 
-            with patch("scanner.pipeline.os.replace", side_effect=OSError("injected pointer failure")):
+            with patch(
+                "scanner.pipeline.os.replace",
+                side_effect=OSError("injected pointer failure"),
+            ):
                 with self.assertRaisesRegex(OSError, "injected pointer failure"):
                     _publish_latest(root, second, "attempt-two")
 
@@ -1268,31 +1388,57 @@ class ShadowPipelineTests(unittest.TestCase):
             self.assertEqual("json-two", (root / "latest.json").read_text())
             self.assertEqual("md-two", (root / "latest.md").read_text())
 
-    def test_real_limit_never_evicts_curated_signal_urls_for_snapshot_noise(self) -> None:
+    def test_real_limit_never_evicts_curated_signal_urls_for_snapshot_noise(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             snapshot = root / "snapshot.json"
-            snapshot.write_text(json.dumps({
-                "count": 2,
-                "posts": [
-                    {"url": "https://www.binance.com/en/square/post/990000000000110"},
-                    {"url": "https://www.binance.com/en/square/post/990000000000111"},
-                ],
-                "new_posts": [],
-                "scanned_at": "2026-07-31T05:00:00Z",
-            }), encoding="utf-8")
+            snapshot.write_text(
+                json.dumps(
+                    {
+                        "count": 2,
+                        "posts": [
+                            {
+                                "url": "https://www.binance.com/en/square/post/990000000000110"
+                            },
+                            {
+                                "url": "https://www.binance.com/en/square/post/990000000000111"
+                            },
+                        ],
+                        "new_posts": [],
+                        "scanned_at": "2026-07-31T05:00:00Z",
+                    }
+                ),
+                encoding="utf-8",
+            )
             signals = root / "signals.json"
             signal_url = "https://www.binance.com/en/square/post/990000000000199"
-            signals.write_text(json.dumps([{
-                "url": signal_url, "symbol": "BTC", "direction": "long",
-                "entry": "62000", "sl": "61000", "tp": "65000 / 67000",
-            }]), encoding="utf-8")
+            signals.write_text(
+                json.dumps(
+                    [
+                        {
+                            "url": signal_url,
+                            "symbol": "BTC",
+                            "direction": "long",
+                            "entry": "62000",
+                            "sl": "61000",
+                            "tp": "65000 / 67000",
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
 
             from scanner.pipeline import _load_legacy_signals, _real_discovery
 
             config = PipelineConfig(
-                mode="real", output_dir=root / "runs", database=root / "radar.sqlite",
-                input_snapshot=snapshot, signals_json=signals, limit=1,
+                mode="real",
+                output_dir=root / "runs",
+                database=root / "radar.sqlite",
+                input_snapshot=snapshot,
+                signals_json=signals,
+                limit=1,
             )
             discovered = _real_discovery(config, _load_legacy_signals(signals))
 
@@ -1300,9 +1446,7 @@ class ShadowPipelineTests(unittest.TestCase):
                 (signal_url,),
                 tuple(post.post_url for post in discovered.posts),
             )
-            self.assertEqual(
-                ("CURATED_SIGNAL",), discovered.posts[0].channels
-            )
+            self.assertEqual(("CURATED_SIGNAL",), discovered.posts[0].channels)
 
     def test_pipeline_and_cli_limit_default_covers_current_full_capture(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -1349,35 +1493,39 @@ class ShadowPipelineTests(unittest.TestCase):
                 "dq_quarantined_source_records": 0,
                 "window_excluded_source_records": 0,
             },
-            "accepted": [{
-                "post_id": "990000000000101",
-                "post_url": "https://www.binance.com/en/square/post/990000000000101",
-                "author_id": "opaque-author",
-                "username": "author",
-                "display_name": "Author",
-                "profile_url": "https://www.binance.com/en/square/profile/author",
-                "published_at": "2026-07-31T23:00:00Z",
-                "published_precision": "exact_millisecond",
-                "content": "market commentary without structured parameters",
-                "content_hash": "a" * 64,
-                "text_authority": "detail",
-                "source_class": "SQUARE_UGC",
-                "observed_at": "2026-07-31T23:01:00Z",
-                "edit_count": 0,
-            }],
-            "discovery_observations": [{
-                "post_id": "990000000000101",
-                "canonical_post_url": (
-                    "https://www.binance.com/en/square/post/990000000000101"
-                ),
-                "source_channel": "PROFILE",
-                "source_record_ordinal": 0,
-                "expected_author_id": "opaque-author",
-                "expected_first_release_time_ms": 1785538800000,
-                "source_profile_url": (
-                    "https://www.binance.com/en/square/profile/author"
-                ),
-            }],
+            "accepted": [
+                {
+                    "post_id": "990000000000101",
+                    "post_url": "https://www.binance.com/en/square/post/990000000000101",
+                    "author_id": "opaque-author",
+                    "username": "author",
+                    "display_name": "Author",
+                    "profile_url": "https://www.binance.com/en/square/profile/author",
+                    "published_at": "2026-07-31T23:00:00Z",
+                    "published_precision": "exact_millisecond",
+                    "content": "market commentary without structured parameters",
+                    "content_hash": "a" * 64,
+                    "text_authority": "detail",
+                    "source_class": "SQUARE_UGC",
+                    "observed_at": "2026-07-31T23:01:00Z",
+                    "edit_count": 0,
+                }
+            ],
+            "discovery_observations": [
+                {
+                    "post_id": "990000000000101",
+                    "canonical_post_url": (
+                        "https://www.binance.com/en/square/post/990000000000101"
+                    ),
+                    "source_channel": "PROFILE",
+                    "source_record_ordinal": 0,
+                    "expected_author_id": "opaque-author",
+                    "expected_first_release_time_ms": 1785538800000,
+                    "source_profile_url": (
+                        "https://www.binance.com/en/square/profile/author"
+                    ),
+                }
+            ],
             "quarantine": [],
             "authors": [],
             "ranking_discovery_status": "BLOCKED",
@@ -1387,9 +1535,12 @@ class ShadowPipelineTests(unittest.TestCase):
             root = Path(directory)
             from scanner.contracts import ContractViolation
 
-            with patch("scanner.pipeline._collect_live_urls", return_value=raw), patch(
-                "scanner.pipeline.extract_signal",
-                side_effect=ContractViolation("no structured signal"),
+            with (
+                patch("scanner.pipeline._collect_live_urls", return_value=raw),
+                patch(
+                    "scanner.pipeline.extract_signal",
+                    side_effect=ContractViolation("no structured signal"),
+                ),
             ):
                 first = run_shadow_radar(
                     PipelineConfig(
@@ -1419,14 +1570,20 @@ class ShadowPipelineTests(unittest.TestCase):
             first_report = json.loads(first.report_json.read_text(encoding="utf-8"))
             second_report = json.loads(second.report_json.read_text(encoding="utf-8"))
             self.assertEqual("COMPUTED", first_report["post_counts"]["dedup_status"])
-            self.assertEqual((1, 0), (
-                first_report["post_counts"]["new"],
-                first_report["post_counts"]["duplicate"],
-            ))
-            self.assertEqual((0, 1), (
-                second_report["post_counts"]["new"],
-                second_report["post_counts"]["duplicate"],
-            ))
+            self.assertEqual(
+                (1, 0),
+                (
+                    first_report["post_counts"]["new"],
+                    first_report["post_counts"]["duplicate"],
+                ),
+            )
+            self.assertEqual(
+                (0, 1),
+                (
+                    second_report["post_counts"]["new"],
+                    second_report["post_counts"]["duplicate"],
+                ),
+            )
 
     def test_replay_computes_dedup_only_with_an_explicit_baseline(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -1515,7 +1672,9 @@ class ShadowPipelineTests(unittest.TestCase):
 
             self.assertEqual(["SUCCEEDED"], observed_statuses)
 
-    def test_failed_latest_publication_is_repaired_without_another_attempt(self) -> None:
+    def test_failed_latest_publication_is_repaired_without_another_attempt(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             database = root / "radar.sqlite"
@@ -1533,9 +1692,7 @@ class ShadowPipelineTests(unittest.TestCase):
                 with self.assertRaisesRegex(OSError, "injected publish failure"):
                     run_shadow_radar(
                         config,
-                        clock=lambda: datetime(
-                            2026, 8, 1, 8, tzinfo=timezone.utc
-                        ),
+                        clock=lambda: datetime(2026, 8, 1, 8, tzinfo=timezone.utc),
                     )
 
             ledger = SQLiteRunLedger(database, MIGRATION)
@@ -1642,9 +1799,7 @@ class ShadowPipelineTests(unittest.TestCase):
                         signals_json=None,
                     ),
                     market_client=SimpleNamespace(),  # type: ignore[arg-type]
-                    clock=lambda: datetime(
-                        2026, 8, 1, 11, 5, tzinfo=timezone.utc
-                    ),
+                    clock=lambda: datetime(2026, 8, 1, 11, 5, tzinfo=timezone.utc),
                 )
 
     def test_real_mode_allows_the_single_plus_ten_minute_retry_cutoff(self) -> None:
@@ -1660,9 +1815,7 @@ class ShadowPipelineTests(unittest.TestCase):
                     signals_json=None,
                 ),
                 market_client=catalog_only("2026-08-01T08:10:00Z"),  # type: ignore[arg-type]
-                clock=lambda: datetime(
-                    2026, 8, 1, 8, 10, tzinfo=timezone.utc
-                ),
+                clock=lambda: datetime(2026, 8, 1, 8, 10, tzinfo=timezone.utc),
             )
 
             raw = json.loads(result.raw_json.read_text(encoding="utf-8"))
@@ -1694,9 +1847,7 @@ class ShadowPipelineTests(unittest.TestCase):
                         signals_json=None,
                     ),
                     market_client=SimpleNamespace(),  # type: ignore[arg-type]
-                    clock=lambda: datetime(
-                        2026, 8, 1, 9, 0, tzinfo=timezone.utc
-                    ),
+                    clock=lambda: datetime(2026, 8, 1, 9, 0, tzinfo=timezone.utc),
                 )
 
     def test_fetch_failure_is_durable_and_retry_reuses_frozen_decision(self) -> None:
@@ -1754,7 +1905,9 @@ class ShadowPipelineTests(unittest.TestCase):
             ledger.close()
             self.assertEqual("FAILED", first_attempt.status)
             self.assertEqual("fetch", first_attempt.failed_stage)
-            self.assertEqual(b"previous-json", (output_dir / "latest.json").read_bytes())
+            self.assertEqual(
+                b"previous-json", (output_dir / "latest.json").read_bytes()
+            )
             self.assertEqual(
                 b"previous-markdown",
                 (output_dir / "latest.md").read_bytes(),
@@ -1772,9 +1925,7 @@ class ShadowPipelineTests(unittest.TestCase):
                         scheduled_retry=True,
                     ),
                     market_client=catalog_only("2026-08-01T08:10:07Z"),  # type: ignore[arg-type]
-                    clock=lambda: datetime(
-                        2026, 8, 1, 8, 10, 7, tzinfo=timezone.utc
-                    ),
+                    clock=lambda: datetime(2026, 8, 1, 8, 10, 7, tzinfo=timezone.utc),
                 )
             ledger = SQLiteRunLedger(database, MIGRATION)
             self.assertEqual(
@@ -1795,16 +1946,16 @@ class ShadowPipelineTests(unittest.TestCase):
                         scheduled_retry=True,
                     ),
                     market_client=catalog_only("2026-08-01T08:10:07Z"),  # type: ignore[arg-type]
-                    clock=lambda: datetime(
-                        2026, 8, 1, 8, 10, 7, tzinfo=timezone.utc
-                    ),
+                    clock=lambda: datetime(2026, 8, 1, 8, 10, 7, tzinfo=timezone.utc),
                 )
 
             ledger = SQLiteRunLedger(database, MIGRATION)
             self.addCleanup(ledger.close)
             attempts = ledger.list_attempts(logical_run.logical_run_id)
             self.assertEqual([1, 2], [item.attempt_no for item in attempts])
-            self.assertEqual(["FAILED", "SUCCEEDED"], [item.status for item in attempts])
+            self.assertEqual(
+                ["FAILED", "SUCCEEDED"], [item.status for item in attempts]
+            )
             self.assertEqual(
                 "2026-08-01T08:00:07Z",
                 json.loads(recovered.raw_json.read_text())["decision_at_utc"],
@@ -1830,8 +1981,9 @@ class ShadowPipelineTests(unittest.TestCase):
             "authors": [],
             "ranking_discovery_status": "BLOCKED",
         }
-        with tempfile.TemporaryDirectory() as directory, patch(
-            "scanner.pipeline._collect_live_urls", return_value=raw
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            patch("scanner.pipeline._collect_live_urls", return_value=raw),
         ):
             root = Path(directory)
             with self.assertRaisesRegex(
@@ -1848,9 +2000,7 @@ class ShadowPipelineTests(unittest.TestCase):
                         signals_json=None,
                     ),
                     market_client=catalog_only("2026-08-01T08:00:07Z"),  # type: ignore[arg-type]
-                    clock=lambda: datetime(
-                        2026, 8, 1, 8, 0, 7, tzinfo=timezone.utc
-                    ),
+                    clock=lambda: datetime(2026, 8, 1, 8, 0, 7, tzinfo=timezone.utc),
                 )
 
     def test_binance_server_time_failure_is_a_durable_catalog_failure(self) -> None:
@@ -1871,9 +2021,7 @@ class ShadowPipelineTests(unittest.TestCase):
                         signals_json=None,
                     ),
                     market_client=FailedCatalog(),  # type: ignore[arg-type]
-                    clock=lambda: datetime(
-                        2026, 8, 1, 8, 0, 7, tzinfo=timezone.utc
-                    ),
+                    clock=lambda: datetime(2026, 8, 1, 8, 0, 7, tzinfo=timezone.utc),
                 )
 
             self.assertEqual(FailureKind.UPSTREAM_UNAVAILABLE, caught.exception.kind)
@@ -1913,10 +2061,9 @@ class ShadowPipelineTests(unittest.TestCase):
             manifests = ledger.list_manifests(result.logical_run_id)
             self.assertEqual("2026-08-01T08:00:00Z", attempt.started_at_utc)
             self.assertEqual("2026-08-01T08:03:00Z", attempt.finished_at_utc)
-            self.assertTrue(all(
-                item.created_at_utc == "2026-08-01T08:02:00Z"
-                for item in manifests
-            ))
+            self.assertTrue(
+                all(item.created_at_utc == "2026-08-01T08:02:00Z" for item in manifests)
+            )
 
     def test_real_pipeline_applies_rederivation_and_copy_safe_consensus(self) -> None:
         decision_at = "2026-08-01T08:00:00Z"
@@ -1938,21 +2085,18 @@ class ShadowPipelineTests(unittest.TestCase):
                 {
                     "post_id": str(9001 + index),
                     "post_url": (
-                        "https://www.binance.com/en/square/post/"
-                        f"{9001 + index}"
+                        f"https://www.binance.com/en/square/post/{9001 + index}"
                     ),
                     "author_id": f"stable-author-{index}",
                     "username": f"author-{index}",
                     "display_name": f"Author {index}",
                     "profile_url": (
-                        "https://www.binance.com/en/square/profile/"
-                        f"author-{index}"
+                        f"https://www.binance.com/en/square/profile/author-{index}"
                     ),
                     "published_at": "2026-08-01T07:00:00Z",
                     "published_precision": "exact_millisecond",
                     "content": (
-                        "BTCUSDT LONG\nBullish continuation structure "
-                        f"variant {index}"
+                        f"BTCUSDT LONG\nBullish continuation structure variant {index}"
                     ),
                     "content_hash": str(index + 1) * 64,
                     "text_authority": "detail",
@@ -1966,16 +2110,14 @@ class ShadowPipelineTests(unittest.TestCase):
                 {
                     "post_id": str(9001 + index),
                     "canonical_post_url": (
-                        "https://www.binance.com/en/square/post/"
-                        f"{9001 + index}"
+                        f"https://www.binance.com/en/square/post/{9001 + index}"
                     ),
                     "source_channel": "PROFILE" if index == 0 else "FEED",
                     "source_record_ordinal": index,
                     "expected_author_id": f"stable-author-{index}",
                     "expected_first_release_time_ms": 1785567600000,
                     "source_profile_url": (
-                        "https://www.binance.com/en/square/profile/"
-                        f"author-{index}"
+                        f"https://www.binance.com/en/square/profile/author-{index}"
                     ),
                 }
                 for index in range(2)
@@ -2018,14 +2160,18 @@ class ShadowPipelineTests(unittest.TestCase):
 
             report = json.loads(result.report_json.read_text(encoding="utf-8"))
             self.assertEqual(2, len(report["candidate_audit"]))
-            self.assertTrue(all(
-                item["parameter_mapping"] == "SYSTEM_REDERIVED_V1"
-                for item in report["candidate_audit"]
-            ))
-            self.assertTrue(all(
-                item["derivation_disposition"] == "SYSTEM_REDERIVED"
-                for item in report["candidate_audit"]
-            ))
+            self.assertTrue(
+                all(
+                    item["parameter_mapping"] == "SYSTEM_REDERIVED_V1"
+                    for item in report["candidate_audit"]
+                )
+            )
+            self.assertTrue(
+                all(
+                    item["derivation_disposition"] == "SYSTEM_REDERIVED"
+                    for item in report["candidate_audit"]
+                )
+            )
             self.assertEqual(
                 [1, 1],
                 sorted(
@@ -2034,7 +2180,9 @@ class ShadowPipelineTests(unittest.TestCase):
                 ),
             )
             self.assertEqual("SHADOW_ONLY", report["tracking"]["status"])
-            self.assertEqual("PENDING_MARKET_REPLAY", report["tracking"]["evaluation_status"])
+            self.assertEqual(
+                "PENDING_MARKET_REPLAY", report["tracking"]["evaluation_status"]
+            )
             self.assertEqual(1, report["tracking"]["persisted_revision_count"])
             self.assertEqual(1, report["tracking"]["pending_evaluation_count"])
             ledger = SQLiteRunLedger(root / "radar.sqlite", MIGRATION)

@@ -375,3 +375,11 @@
 - 处理规则冻结为“保留帖子、最小修复字符”：合法 high/low surrogate pair 合并为原 emoji；孤立 high 或 low surrogate 替换为 `U+FFFD`，并在 Feed `stats` 与 `discovery_result` 记录 `malformed_unicode_replacements`。不得因单个异常字符丢弃整帖或整轮。
 - `atomic_write_json` 必须对任意嵌套字符串执行最终 Unicode scalar 兜底，并在 dump、flush、fsync 或 replace 任一阶段失败时清除本轮临时文件；已经发布的 latest/eligible 仍由原子替换和现有失败关闭合同保护。
 - 回归门覆盖孤立 surrogate、合法代理对、中文/阿拉伯文/原生 emoji 保真、嵌套 JSON 兜底与临时文件清理；当前完整离线测试为281项通过。下一合法 UTC 时槽的真实 no-send 运行仍是动态发布回执，离线测试不冒充线上复跑成功。
+
+## 二十、v4.2.2 Cron 活性与外部通知边界（2026-08-04）
+
+- `2026-08-04T08:00Z` 轮在 `08:01:33Z` 已完成123条 Feed 抓取，但下游只在全部结束后输出，连续300秒静默触发 OpenClaw `noOutputTimeoutSeconds`，于 `08:06:33Z` 被 SIGTERM；这不是总时限1200秒耗尽，也不是 Telegram 断线。
+- 生产 wrapper 现在每30秒输出并立即 flush 活性心跳；调度环境仍可保留独立的无输出门和总时限，不能用无限超时掩盖真实挂死。
+- `run_radar.py` 在进程主管 SIGTERM 下进入既有异常清理路径，把已分配 attempt 标为 `FAILED`；wrapper 被其他异常中断时也必须 terminate/kill 并 wait 子进程，禁止孤儿进程。
+- 核心 Skill 继续固定 `--no-send`。成功报告的 Telegram 文本由只读 renderer 从已原子提交的 report JSON 生成；实际 `tianshu` 账号、聊天目标、成功通知和失败告警只允许存在于操作者本机 cron 配置，不能写入公共 Skill 或随仓库授权转移。
+- 当前完整离线测试为284项通过；真实发送只以本机明确授权后的路由测试和下一合法 UTC 时槽回执为准。
