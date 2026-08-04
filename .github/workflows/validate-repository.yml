@@ -43,3 +43,37 @@ jobs:
 
       - name: Enforce repository contracts
         run: npm run validate:strict
+
+  windows-packed-cli-smoke:
+    name: Test packed Windows CLI (Node ${{ matrix.node-version }})
+    runs-on: windows-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["22", "24"]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Pack and install CLI into an isolated prefix
+        id: packed-cli
+        shell: pwsh
+        run: |
+          $packOutput = npm pack --json --ignore-scripts | Out-String
+          if ($LASTEXITCODE -ne 0) { throw "npm pack failed with exit code $LASTEXITCODE" }
+          $pack = $packOutput | ConvertFrom-Json
+          $tarball = Join-Path $PWD $pack[0].filename
+          $prefix = Join-Path $env:RUNNER_TEMP "agi-super-team-prefix"
+          npm install --global --prefix $prefix --ignore-scripts $tarball
+          if ($LASTEXITCODE -ne 0) { throw "npm install failed with exit code $LASTEXITCODE" }
+          "shim=$(Join-Path $prefix 'agi-super-team.cmd')" >> $env:GITHUB_OUTPUT
+
+      - name: Run installed Windows CLI smoke
+        shell: pwsh
+        run: node tests/windows_cli_smoke.mjs "${{ steps.packed-cli.outputs.shim }}"
