@@ -1,4 +1,4 @@
-<p align="right"><a href="./README_CN.md">中文</a> · <a href="./README.es-ES.md">Español</a></p>
+<p align="right"><a href="./README_CN.md">🇨🇳 中文</a> · <a href="./README.es-ES.md">Español</a></p>
 
 <p align="center">
   <img src="assets/banner-v2.png" alt="AGI Super Team: an organized cross-harness team of agents and skills" width="760">
@@ -203,6 +203,14 @@ The generic installer validates every required file before publishing staged wor
 The manifest separates portable `required`/`optional` Skills from `harnessSpecific` catalog entries and unbundled external recommendations. Generic installs copy only classes that pass the current portability contract; the complete copied payload is scanned for known host paths and runtime-only commands.
 
 **Success:** the preview writes nothing; apply creates three inspectable role workspaces without overwriting existing files.
+
+## ✨ Browse Skills by provenance
+
+Choose a trust boundary before browsing by topic. Provenance labels describe reviewed origin evidence; they do not claim runtime verification.
+
+| [Project original](./catalog/#project-original-skills) | [Adapted](./catalog/#adapted-skills) | [Collected](./catalog/#collected-skills) | [Unknown origin](./catalog/#unknown-origin-skills) |
+|---|---|---|---|
+| Digest-backed first-party work | Modified from a named source | Preserved from a named source | Awaiting source review |
 
 ## 🧭 Browse skills by outcome
 

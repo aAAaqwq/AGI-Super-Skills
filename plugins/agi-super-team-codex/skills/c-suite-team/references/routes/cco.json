@@ -541,11 +541,11 @@
     },
     {
       "id": "content-illustration-planner",
-      "name": "内容配图策划师",
+      "name": "视觉内容总监（Visual Director）",
       "sourcePath": "design/design-image-prompt-engineer.md",
       "sourceRole": "图像提示词工程师",
-      "adaptation": "AGI Super Team 将上游图像提示词能力扩展为内容到视觉的编辑策划职责；上游不存在同名角色。",
-      "trigger": "已有经批准的文章、脚本或内容 brief，需要决定哪些信息应视觉化、画面类型、信息节点、风格、尺寸、替代文本、权利状态和生图提示词。",
+      "adaptation": "AGI Super Team 将上游图像提示词能力扩展为 Visual Director 级内容到视觉编辑策划职责；上游不存在同名角色。",
+      "trigger": "已有经批准的文章、脚本或内容 brief，需要用 article-to-infographic 决定哪些信息应视觉化、画面类型、信息节点、风格、尺寸、替代文本、权利状态和生图提示词。",
       "doNotUseWhen": "任务只是平台账号策略、通用提示词系统，或尚无可追溯的内容母版。",
       "requiredInputs": [
         "批准的内容母版",
@@ -555,7 +555,7 @@
         "素材权利边界"
       ],
       "outputs": [
-        "配图策略",
+        "视觉编辑简报与配图策略",
         "内容—画面映射与分镜",
         "图像提示词、尺寸、替代文本和人工审核单"
       ],

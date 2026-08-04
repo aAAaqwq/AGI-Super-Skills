@@ -39,6 +39,7 @@
 这些 Skill 依赖特定 Harness、连接器或外部能力；通用安装器不会自动复制或启用。
 
 - [`ai-marketing-videos`](../../skills/ai-marketing-videos/) — 来源待核 · 尚未评分 · 运行证据：待验证
+- [`article-to-infographic`](../../skills/article-to-infographic/) — 来源待核 · 尚未评分 · 运行证据：待验证
 - [`content-cover-gen`](../../skills/content-cover-gen/) — 项目原创 · 尚未评分 · 运行证据：待验证
 - [`content-illustration-strategy`](../../skills/content-illustration-strategy/) — 项目原创 · 尚未评分 · 运行证据：待验证
 - [`content-ops-toolkit`](../../skills/content-ops-toolkit/) — 来源待核 · 尚未评分 · 运行证据：待验证
