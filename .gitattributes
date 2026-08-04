@@ -1,0 +1,3 @@
+# Agent Markdown is content-addressed by config/agent-sources.lock.json.
+# Keep its bytes stable when the repository is checked out on Windows.
+agents/**/*.md text eol=lf
