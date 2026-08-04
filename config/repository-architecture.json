@@ -94,7 +94,7 @@
       "title": "Governance and decision memory",
       "interface": "CONTEXT.md, ARCHITECTURE.md, ADRs, contribution, security, and governance records.",
       "implementations": ["CONTEXT.md", "ARCHITECTURE.md", "docs/adr"],
-      "ownershipPrefixes": ["AGENTS.md", "ARCHITECTURE.md", "CLAUDE.md", "CODE_OF_CONDUCT.md", "CONTEXT.md", "CONTRIBUTING.md", "LICENSE", "SECURITY.md", ".gitignore", "config", "docs/adr"],
+      "ownershipPrefixes": ["AGENTS.md", "ARCHITECTURE.md", "CLAUDE.md", "CODE_OF_CONDUCT.md", "CONTEXT.md", "CONTRIBUTING.md", "LICENSE", "SECURITY.md", ".gitattributes", ".gitignore", "config", "docs/adr"],
       "depth": "foundational",
       "seams": ["public-navigation", "verification-evidence"],
       "leverage": "Recorded terminology and decisions reduce contradictory future edits.",
@@ -103,6 +103,7 @@
   ],
   "pathOwnership": [
     {"path": ".github", "role": "governance", "module": "verification-evidence", "authority": false},
+    {"path": ".gitattributes", "role": "governance", "module": "governance-memory", "authority": false},
     {"path": ".githooks", "role": "evidence", "module": "verification-evidence", "authority": false},
     {"path": ".gitignore", "role": "governance", "module": "governance-memory", "authority": false},
     {"path": ".npmignore", "role": "implementation", "module": "safe-installation", "authority": false},

@@ -1,6 +1,10 @@
 import { existsSync, lstatSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createHash } from "node:crypto";
+import { isPhysicalStrictDescendant } from "./path-safety.mjs";
+
+
+const SAFE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function regularFile(path, label) {
   if (!existsSync(path) || lstatSync(path).isSymbolicLink() || !statSync(path).isFile()) {
@@ -32,7 +36,7 @@ export function loadCatalog(packageRoot) {
   const ids = new Set();
   const priorityHarnesses = new Set(["claude-code", "codex", "openclaw", "hermes"]);
   for (const tool of adapters.tools) {
-    if (!tool.id || ids.has(tool.id) || !["global", "project"].includes(tool.scope)) {
+    if (!SAFE_ID.test(tool.id || "") || ids.has(tool.id) || !["global", "project"].includes(tool.scope)) {
       throw new Error(`invalid or duplicate CLI adapter: ${tool.id || "<missing>"}`);
     }
     if (!Array.isArray(tool.agentPaths) || !Array.isArray(tool.skillPaths)) {
@@ -48,32 +52,61 @@ export function loadCatalog(packageRoot) {
       ) {
         throw new Error(`priority harness ${tool.id} must declare the external Adapter contract`);
       }
-      regularFile(resolve(packageRoot, tool.adapterModule), `${tool.id} Adapter module`);
+      const adapterPath = resolve(packageRoot, tool.adapterModule);
+      const adapterRoot = resolve(packageRoot, "bin", "adapters");
+      if (
+        tool.adapterModule !== `bin/adapters/${tool.id}.mjs`
+        || !isPhysicalStrictDescendant(adapterRoot, adapterPath)
+      ) {
+        throw new Error(`unsafe ${tool.id} Adapter module: ${tool.adapterModule}`);
+      }
+      regularFile(adapterPath, `${tool.id} Adapter module`);
     }
     ids.add(tool.id);
   }
   if (!Array.isArray(manifest.agents) || manifest.agents.length !== 14) {
     throw new Error("team manifest must contain exactly 14 canonical agents");
   }
+  const agentsRoot = resolve(packageRoot, "agents");
   for (const agent of manifest.agents) {
     const expected = resolve(packageRoot, agent.path);
-    if (!expected.startsWith(`${resolve(packageRoot, "agents")}/`) || !statSync(expected).isDirectory()) {
+    if (
+      !SAFE_ID.test(agent.id || "")
+      || agent.path !== `agents/${agent.id}`
+      || !isPhysicalStrictDescendant(agentsRoot, expected)
+      || !lstatSync(expected).isDirectory()
+    ) {
       throw new Error(`invalid canonical Agent path: ${agent.path}`);
     }
   }
   if (hierarchy.requiredMaxDepth !== 2 || hierarchy.executionPolicy !== "wave" || !hierarchy.managers) {
     throw new Error("Agent hierarchy must define depth-2 wave execution");
   }
-  const sourceByRole = new Map(sourceLock.entries.map((entry) => [`${entry.manager}/${entry.id}`, entry]));
+  const sourceByRole = new Map(sourceLock.entries.map((entry) => {
+    if (
+      !SAFE_ID.test(entry.manager || "")
+      || !SAFE_ID.test(entry.id || "")
+      || entry.vendoredPath !== `agents/${entry.manager}/subagents/${entry.id}/AGENTS.md`
+    ) {
+      throw new Error(`invalid Agent source lock path: ${entry.vendoredPath}`);
+    }
+    return [`${entry.manager}/${entry.id}`, entry];
+  }));
   const specialistGroups = {};
   for (const [manager, settings] of Object.entries(hierarchy.managers)) {
+    if (!SAFE_ID.test(manager) || settings.routingFile !== `config/${manager}-specialists.json`) {
+      throw new Error(`invalid manager routing path: ${manager}`);
+    }
     const routePath = resolve(packageRoot, settings.routingFile);
-    if (!routePath.startsWith(`${resolve(packageRoot, "config")}/`)) throw new Error(`unsafe routing file: ${settings.routingFile}`);
+    if (!isPhysicalStrictDescendant(resolve(packageRoot, "config"), routePath)) {
+      throw new Error(`unsafe routing file: ${settings.routingFile}`);
+    }
     const registry = readJson(routePath, `${manager} specialist routing`);
     if (registry.parent !== manager || registry.requiredMaxDepth !== 2 || registry.maxConcurrentLeaves !== 2) {
       throw new Error(`invalid specialist routing contract: ${manager}`);
     }
     const ids = registry.specialists.map((item) => item.id);
+    if (ids.some((id) => !SAFE_ID.test(id || ""))) throw new Error(`invalid specialist id for manager: ${manager}`);
     if (new Set(ids).size !== ids.length || JSON.stringify(ids) !== JSON.stringify(settings.subagents)) {
       throw new Error(`hierarchy and routing order differ for manager: ${manager}`);
     }
@@ -82,7 +115,12 @@ export function loadCatalog(packageRoot) {
       if (!source || source.sourcePath !== specialist.sourcePath) throw new Error(`missing source lock: ${manager}/${specialist.id}`);
       const vendored = resolve(packageRoot, source.vendoredPath);
       const expectedRoot = resolve(packageRoot, "agents", manager, "subagents");
-      if (!vendored.startsWith(`${expectedRoot}/`)) throw new Error(`unsafe vendored path: ${source.vendoredPath}`);
+      if (
+        !isPhysicalStrictDescendant(agentsRoot, vendored)
+        || !isPhysicalStrictDescendant(expectedRoot, vendored)
+      ) {
+        throw new Error(`unsafe vendored path: ${source.vendoredPath}`);
+      }
       regularFile(vendored, "vendored subagent");
       const digest = createHash("sha256").update(readFileSync(vendored)).digest("hex");
       if (digest !== source.sha256) throw new Error(`vendored subagent drift: ${manager}/${specialist.id}`);
