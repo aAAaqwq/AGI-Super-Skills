@@ -155,6 +155,44 @@ class MultiCliInstallerTests(unittest.TestCase):
                 ],
             )
 
+    def test_spawn_cli_does_not_quote_bare_windows_command_names(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fake_comspec = root / "fake-comspec"
+            log = root / "comspec.json"
+            fake_comspec.write_text(
+                "#!/usr/bin/env python3\n"
+                "import json, os, sys\n"
+                "with open(os.environ['FAKE_COMSPEC_LOG'], 'w', encoding='utf-8') as f:\n"
+                "    json.dump(sys.argv[1:], f)\n",
+                encoding="utf-8",
+            )
+            fake_comspec.chmod(0o755)
+            script = (
+                "import {spawnCli} from './bin/installer/process.mjs';"
+                "const result=spawnCli('openclaw',['--version'],"
+                "{platform:'win32',comspec:process.env.FAKE_COMSPEC,env:process.env});"
+                "process.exit(result.status ?? 1);"
+            )
+            environment = os.environ.copy()
+            environment["FAKE_COMSPEC"] = str(fake_comspec)
+            environment["FAKE_COMSPEC_LOG"] = str(log)
+
+            result = subprocess.run(
+                [NODE, "--input-type=module", "--eval", script],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=environment,
+            )
+
+            self.assert_success(result)
+            self.assertEqual(
+                json.loads(log.read_text(encoding="utf-8")),
+                ["/d", "/s", "/c", "openclaw --version"],
+            )
+
     def test_spawn_cli_rejects_windows_shell_metacharacters(self) -> None:
         script = (
             "import {spawnCli} from './bin/installer/process.mjs';"

@@ -3,6 +3,7 @@ import { spawnSync } from "node:child_process";
 
 const UNSAFE_CMD_COMMAND = /[\0\r\n"%!^&|<>]/u;
 const SAFE_CMD_ARGUMENT = /^[\p{L}\p{N}_./:@+=,\\-]+$/u;
+const BARE_CMD_COMMAND = /^[\p{L}\p{N}_.@+=,-]+$/u;
 
 function windowsCommandLine(command, args) {
   if (typeof command !== "string" || !command || UNSAFE_CMD_COMMAND.test(command)) {
@@ -14,6 +15,11 @@ function windowsCommandLine(command, args) {
     }
   }
   const suffix = args.length ? ` ${args.join(" ")}` : "";
+  // A quoted PATH-resolved batch name without its .cmd suffix can make cmd.exe
+  // expand %~dp0 relative to the caller's working directory. Bare command names
+  // contain no shell metacharacters and do not need quoting; explicit paths stay
+  // quoted so spaces and parentheses remain literal.
+  if (BARE_CMD_COMMAND.test(command)) return `${command}${suffix}`;
   return `""${command}"${suffix}"`;
 }
 
