@@ -5,6 +5,7 @@ import {
   statSync,
 } from "node:fs";
 import { isAbsolute, join, posix, resolve } from "node:path";
+import { isPhysicalStrictDescendant } from "../installer/path-safety.mjs";
 
 
 export const ADAPTER_ID = "openclaw";
@@ -51,7 +52,7 @@ function normalizeAgents(agents, allowEmpty = false) {
     const id = safeId(agent?.id, "agent id");
     if (seen.has(id)) throw new Error(`duplicate agent id: ${id}`);
     seen.add(id);
-    if (typeof agent.path !== "string" || !agent.path.startsWith("agents/")) throw new Error(`unsafe canonical agent path: ${agent.path}`);
+    if (agent.path !== `agents/${id}`) throw new Error(`unsafe canonical agent path: ${agent.path}`);
     return agent;
   });
   for (const required of ["ceo", "governor"]) {
@@ -70,7 +71,7 @@ function normalizeSpecialists(specialists, canonicalIds) {
     const runtimeId = `ast-${manager}-${id}`;
     if (seen.has(runtimeId)) throw new Error(`duplicate specialist id: ${runtimeId}`);
     seen.add(runtimeId);
-    if (typeof specialist.vendoredPath !== "string" || !specialist.vendoredPath.startsWith(`agents/${manager}/subagents/${id}/`)) {
+    if (specialist.vendoredPath !== `agents/${manager}/subagents/${id}/AGENTS.md`) {
       throw new Error(`unsafe specialist source: ${specialist.vendoredPath}`);
     }
     return specialist;
@@ -193,12 +194,13 @@ function renderAgentArtifacts(packageRoot, roots, agents, groups, specialists) {
   for (const agent of agents) {
     const sourceRoot = resolve(packageRoot, agent.path);
     const expectedRoot = resolve(packageRoot, "agents");
-    if (!sourceRoot.startsWith(`${expectedRoot}/`)) throw new Error(`unsafe canonical agent path: ${agent.path}`);
+    if (!isPhysicalStrictDescendant(expectedRoot, sourceRoot)) throw new Error(`unsafe canonical agent path: ${agent.path}`);
     const group = groups?.[agent.id];
     const targets = group ? managerTargets(agent.id, group, selected, canonicalIds) : [];
     for (const filename of ROLE_FILES) {
       const source = join(sourceRoot, filename);
       if (!existsSync(source)) continue;
+      if (!isPhysicalStrictDescendant(sourceRoot, source)) throw new Error(`unsafe role file: ${agent.path}/${filename}`);
       physicalFile(source, "role file");
       const original = readFileSync(source);
       const content = filename === "AGENTS.md" && group
@@ -214,7 +216,7 @@ function renderAgentArtifacts(packageRoot, roots, agents, groups, specialists) {
   for (const specialist of specialists) {
     const source = resolve(packageRoot, specialist.vendoredPath);
     const expectedRoot = resolve(packageRoot, "agents", specialist.manager, "subagents", specialist.id);
-    if (!source.startsWith(`${expectedRoot}/`)) throw new Error(`unsafe specialist source: ${specialist.vendoredPath}`);
+    if (!isPhysicalStrictDescendant(expectedRoot, source)) throw new Error(`unsafe specialist source: ${specialist.vendoredPath}`);
     physicalFile(source, "specialist role file");
     artifacts.push({
       relativePath: posix.join(roots.workspaceRoot, `ast-${specialist.manager}-${specialist.id}`, "AGENTS.md"),

@@ -66,7 +66,7 @@ npx -y agi-super-team@latest --tool claude-code --install --connect
 npx -y agi-super-team@latest --tool claude-code --doctor
 ```
 
-以上命令直接使用公开 npm 包。自动化场景建议把 `@latest` 换成明确版本，例如 `@1.4.0`，以获得可复现安装。
+以上命令直接使用公开 npm 包。自动化场景建议把 `@latest` 换成明确版本，例如 `@1.4.1`，以获得可复现安装。
 
 npm 发行包保留全部 817 个 `SKILL.md` 入口，并完整携带 `config/team-manifest.json` 实际分配的所有 Skills。经过来源审查的第一方作品可在 [Daniel 的原创 Skills](./skills/original/) 分类中查看；如果需要整个 Skill 库的全部辅助素材，请克隆仓库。
 

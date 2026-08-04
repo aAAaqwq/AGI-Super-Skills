@@ -1,6 +1,6 @@
 {
   "name": "agi-super-team",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Evidence-backed AI team packs with preview-first installation and repository contracts",
   "license": "MIT",
   "repository": {
@@ -225,6 +225,7 @@
     "prepublishOnly": "npm test && npm run validate:strict && git diff --check",
     "test": "npm run test:repository && npm run test:installer && npm run check:subagent-sources && npm run check:agent-indexes && npm run check:codex-team && npm run check:skills && npm run check:skill-quality && npm run check:taxonomy-evaluation && npm run check:architecture",
     "test:repository": "python3 -m unittest discover -s tests -p 'test_*.py'",
+    "test:windows-cli": "node tests/windows_cli_smoke.mjs",
     "test:installer": "bash tests/installer/test_install.sh",
     "validate": "python3 scripts/validate_repository.py",
     "validate:strict": "python3 scripts/validate_repository.py --warnings-as-errors",
