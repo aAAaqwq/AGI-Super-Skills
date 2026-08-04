@@ -8,12 +8,15 @@ import {
   mkdtempSync,
   openSync,
   readFileSync,
+  readdirSync,
   realpathSync,
   renameSync,
+  rmdirSync,
   statSync,
   unlinkSync,
   writeFileSync,
 } from "node:fs";
+import * as nativePath from "node:path";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { adapterFor } from "../adapters/index.mjs";
 import {
@@ -32,13 +35,24 @@ import {
   walkFiles,
 } from "./render.mjs";
 
-export function safeRoot(input, label) {
-  const path = resolve(input);
-  if (path === resolve("/") || !input) throw new Error(`refusing unsafe ${label}: ${path}`);
-  if (existsSync(path) && (lstatSync(path).isSymbolicLink() || !statSync(path).isDirectory())) {
-    throw new Error(`invalid ${label}: ${path}`);
+export function safeRoot(input, label, pathApi = nativePath) {
+  const path = pathApi.resolve(input);
+  if (!input || pathApi.parse(path).root === path) throw new Error(`refusing unsafe ${label}: ${path}`);
+  if (pathApi !== nativePath) return path;
+  if (existsSync(path)) {
+    if (lstatSync(path).isSymbolicLink() || !statSync(path).isDirectory()) {
+      throw new Error(`invalid ${label}: ${path}`);
+    }
+    return realpathSync.native(path);
   }
-  return path;
+  let ancestor = path;
+  while (!existsSync(ancestor)) {
+    const parent = dirname(ancestor);
+    if (parent === ancestor) throw new Error(`invalid ${label}: ${path}`);
+    ancestor = parent;
+  }
+  if (!statSync(ancestor).isDirectory()) throw new Error(`invalid ${label}: ${path}`);
+  return resolve(realpathSync.native(ancestor), relative(ancestor, path));
 }
 
 export function readSafe(path) {
@@ -46,6 +60,13 @@ export function readSafe(path) {
   const metadata = lstatSync(path);
   if (metadata.isSymbolicLink() || !metadata.isFile()) throw new Error(`refusing unsafe destination: ${path}`);
   return readFileSync(path);
+}
+
+export function modesEquivalent(actualMode, expectedMode, platform = process.platform) {
+  const actual = actualMode & 0o777;
+  const expected = expectedMode & 0o777;
+  if (platform === "win32") return Boolean(actual & 0o200) === Boolean(expected & 0o200);
+  return actual === expected;
 }
 
 function destination(root, configuredPath, child = "") {
@@ -57,7 +78,7 @@ function destination(root, configuredPath, child = "") {
 
 function assertSafeAncestors(root, path) {
   const rel = relative(root, path);
-  if (rel === ".." || rel.startsWith(`..${process.platform === "win32" ? "\\" : "/"}`)) {
+  if (rel === "" || rel === ".." || rel.startsWith(`..${nativePath.sep}`) || isAbsolute(rel)) {
     throw new Error(`refusing destination outside target root: ${path}`);
   }
   let cursor = root;
@@ -72,9 +93,10 @@ function assertSafeAncestors(root, path) {
   }
 }
 
-function addFile(plan, tool, root, path, content, label) {
+function addFile(plan, tool, root, path, content, label, mode = 0o600) {
   assertSafeAncestors(root, path);
   const baseline = readSafe(path);
+  const baselineMode = baseline === null ? null : lstatSync(path).mode & 0o777;
   const rendered = Buffer.isBuffer(content) ? content : Buffer.from(content);
   plan.push({
     tool: tool.id,
@@ -82,8 +104,16 @@ function addFile(plan, tool, root, path, content, label) {
     destination: path,
     content: rendered,
     baseline,
+    baselineMode,
+    mode,
+    platform: tool.platform ?? process.platform,
     label,
-    status: baseline === null ? "add" : Buffer.compare(baseline, rendered) === 0 ? "unchanged" : "update",
+    status: baseline === null
+      ? "add"
+      : Buffer.compare(baseline, rendered) === 0
+        && modesEquivalent(baselineMode, mode, tool.platform)
+        ? "unchanged"
+        : "update",
   });
 }
 
@@ -116,13 +146,13 @@ function planSkills(plan, catalog, tool, root, assignedSkills) {
         }
         const sourceFiles = walkFiles(sourceRoot);
         const targetFiles = walkFiles(resolved);
-        const targetByPath = new Map(
-          targetFiles.map((file) => [file.relative, file.content]),
-        );
+        const targetByPath = new Map(targetFiles.map((file) => [file.relative, file]));
         const exact = sourceFiles.length === targetFiles.length
           && sourceFiles.every((file) => {
             const candidate = targetByPath.get(file.relative);
-            return candidate && Buffer.compare(file.content, candidate) === 0;
+            return candidate
+              && modesEquivalent(candidate.mode, file.mode, tool.platform)
+              && Buffer.compare(file.content, candidate.content) === 0;
           });
         if (!exact) {
           throw new Error(`refusing mismatched Skill symlink: ${targetRoot}`);
@@ -130,7 +160,7 @@ function planSkills(plan, catalog, tool, root, assignedSkills) {
         continue;
       }
       for (const file of walkFiles(sourceRoot)) {
-        addFile(plan, tool, root, destination(root, configured, join(skill, file.relative)), file.content, `skill:${skill}`);
+        addFile(plan, tool, root, destination(root, configured, join(skill, file.relative)), file.content, `skill:${skill}`, file.mode);
       }
     }
   }
@@ -151,7 +181,7 @@ function renderAgents(plan, packageRoot, catalog, tool, root, agents, codexPaylo
     if (codexPayloadAll) {
       const payload = join(packageRoot, "plugins", "agi-super-team-codex", "payload", "agents");
       for (const file of walkFiles(payload)) {
-        addFile(plan, tool, root, destination(root, tool.agentPaths[0], file.relative), file.content, `agent:${file.relative}`);
+        addFile(plan, tool, root, destination(root, tool.agentPaths[0], file.relative), file.content, `agent:${file.relative}`, file.mode);
       }
     } else {
       for (const agent of agents.filter((item) => item.id !== "ceo")) {
@@ -229,7 +259,7 @@ function renderSpecialists(plan, packageRoot, tool, root, specialists) {
   if (mode !== "combined-rules") throw new Error(`unsupported specialist mode for ${tool.id}: ${mode}`);
 }
 
-export function buildPlan({ packageRoot, catalog, tools, home, projectDir, includeAgents, includeSkills, agentIds, subagentManagers = new Set(), includeCcoSpecialists = false, codexPayloadAll = false }) {
+export function buildPlan({ packageRoot, catalog, tools, home, projectDir, includeAgents, includeSkills, agentIds, subagentManagers = new Set(), includeCcoSpecialists = false, codexPayloadAll = false, platform = process.platform }) {
   const plan = [];
   const selected = agentIds ? catalog.agents.filter((agent) => agentIds.has(agent.id)) : catalog.agents;
   const managers = new Set(subagentManagers);
@@ -237,7 +267,8 @@ export function buildPlan({ packageRoot, catalog, tools, home, projectDir, inclu
   const groups = Object.fromEntries([...managers].map((manager) => [manager, catalog.specialistGroups[manager]]));
   const specialists = Object.values(groups).flatMap((group) => group.specialists);
   const assignedSkills = selectedAssignedSkills(catalog, selected);
-  for (const tool of tools) {
+  for (const configuredTool of tools) {
+    const tool = { ...configuredTool, platform };
     const root = tool.scope === "project" ? projectDir : home;
     if (!root) throw new Error(`${tool.id} is project-scoped; pass --project-dir <path>`);
     if (tool.agentMode === "harness-adapter") {
@@ -320,64 +351,230 @@ export function buildPlan({ packageRoot, catalog, tools, home, projectDir, inclu
   return plan;
 }
 
-function atomicWrite(path, content) {
+function atomicWrite(path, content, mode = 0o600) {
   mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
   if (existsSync(path) && lstatSync(path).isSymbolicLink()) throw new Error(`refusing symlinked destination: ${path}`);
   const temporary = join(dirname(path), `.agi-super-team.${process.pid}.${Date.now()}.tmp`);
   const descriptor = openSync(temporary, "wx", 0o600);
   try { writeFileSync(descriptor, content); } finally { closeSync(descriptor); }
-  chmodSync(temporary, 0o600);
+  chmodSync(temporary, mode);
   renameSync(temporary, path);
 }
 
-export function applyPlan(plan) {
-  const changed = plan.filter((item) => item.status !== "unchanged");
-  if (!changed.length) return [];
-  const roots = [...new Set(changed.map((item) => item.root))];
+function baselineMatches(item, current) {
+  if (current === null || item.baseline === null) return current === null && item.baseline === null;
+  if (Buffer.compare(current, item.baseline) !== 0) return false;
+  return item.baselineMode === null
+    || item.baselineMode === undefined
+    || modesEquivalent(lstatSync(item.destination).mode, item.baselineMode, item.platform);
+}
+
+function releaseLocks(locks) {
+  for (const lock of locks) {
+    closeSync(lock.descriptor);
+    if (existsSync(lock.path)) unlinkSync(lock.path);
+  }
+}
+
+function acquireLocks(roots) {
   const locks = [];
-  const backups = [];
-  const written = [];
   try {
     for (const root of roots) {
-      mkdirSync(root, { recursive: true, mode: 0o700 });
       const lock = join(root, ".agi-super-team-installer.lock");
       locks.push({ path: lock, descriptor: openSync(lock, "wx", 0o600) });
     }
+    return locks;
+  } catch (error) {
+    releaseLocks(locks);
+    throw error;
+  }
+}
+
+function ensureDirectory(path, createdDirectories) {
+  const missing = [];
+  let cursor = resolve(path);
+  while (!existsSync(cursor)) {
+    missing.unshift(cursor);
+    const parent = dirname(cursor);
+    if (parent === cursor) break;
+    cursor = parent;
+  }
+  for (const directory of missing) {
+    try {
+      mkdirSync(directory, { mode: 0o700 });
+      const metadata = lstatSync(directory);
+      createdDirectories.push({ path: directory, dev: metadata.dev, ino: metadata.ino });
+    } catch (error) {
+      if (error.code !== "EEXIST") throw error;
+      const metadata = lstatSync(directory);
+      if (metadata.isSymbolicLink() || !metadata.isDirectory()) {
+        throw new Error(`refusing unsafe destination directory: ${directory}`);
+      }
+    }
+  }
+}
+
+function removeEmptyCreatedDirectories(createdDirectories) {
+  const byPath = new Map(createdDirectories.map((entry) => [entry.path, entry]));
+  const directories = [...byPath.values()].sort((left, right) => right.path.length - left.path.length);
+  for (const directory of directories) {
+    if (!existsSync(directory.path)) continue;
+    const metadata = lstatSync(directory.path);
+    if (metadata.isSymbolicLink() || !metadata.isDirectory()) continue;
+    if (metadata.dev !== directory.dev || metadata.ino !== directory.ino) continue;
+    if (readdirSync(directory.path).length === 0) rmdirSync(directory.path);
+  }
+}
+
+function assertBackupsUnchanged(backupFiles) {
+  for (const backup of backupFiles) {
+    const current = readSafe(backup.path);
+    if (current === null
+      || Buffer.compare(current, backup.content) !== 0
+      || !modesEquivalent(lstatSync(backup.path).mode, backup.mode, backup.platform)) {
+      throw new Error(`backup changed after install; refusing rollback: ${backup.path}`);
+    }
+  }
+}
+
+function removeBackupFiles(backupFiles) {
+  for (const backup of [...backupFiles].reverse()) unlinkSync(backup.path);
+}
+
+function restoreWritten(written) {
+  for (const item of written) {
+    const current = readSafe(item.destination);
+    const currentMode = current === null ? null : lstatSync(item.destination).mode & 0o777;
+    if (current === null
+      || Buffer.compare(current, item.content) !== 0
+      || !modesEquivalent(currentMode, item.installedMode, item.platform)) {
+      throw new Error(`destination changed after install; refusing rollback: ${item.destination}`);
+    }
+  }
+  for (const item of [...written].reverse()) {
+    if (item.baseline === null) unlinkSync(item.destination);
+    else atomicWrite(item.destination, item.baseline, item.baselineMode);
+  }
+}
+
+function completedTransaction(backups, written, backupFiles = [], createdDirectories = []) {
+  let active = true;
+  return {
+    backups: backups.map((entry) => entry.path),
+    commit() {
+      active = false;
+    },
+    rollback() {
+      if (!active) throw new Error("installer transaction is no longer active");
+      const roots = [...new Set(written.map((item) => item.root))];
+      const locks = acquireLocks(roots);
+      let restored = false;
+      try {
+        assertBackupsUnchanged(backupFiles);
+        restoreWritten(written);
+        removeBackupFiles(backupFiles);
+        active = false;
+        restored = true;
+      } finally {
+        releaseLocks(locks);
+      }
+      if (restored) removeEmptyCreatedDirectories(createdDirectories);
+    },
+  };
+}
+
+export function applyPlanTransaction(plan) {
+  const changed = plan
+    .filter((item) => item.status !== "unchanged")
+    .map((item) => ({ ...item }));
+  if (!changed.length) return completedTransaction([], []);
+  const roots = [...new Set(changed.map((item) => item.root))];
+  let locks = [];
+  const backups = [];
+  const backupFiles = [];
+  const createdDirectories = [];
+  const written = [];
+  try {
+    for (const root of roots) {
+      const resolvedRoot = resolve(root);
+      if (safeRoot(root, "target root") !== resolvedRoot) {
+        throw new Error(`refusing unsafe target root: ${root}`);
+      }
+    }
+    for (const item of changed) {
+      assertSafeAncestors(item.root, item.destination);
+      const current = readSafe(item.destination);
+      if (!baselineMatches(item, current)) throw new Error(`destination changed after preview: ${item.destination}`);
+      item.mode ??= 0o600;
+      item.baselineMode ??= current === null ? null : lstatSync(item.destination).mode & 0o777;
+    }
+    for (const root of roots) {
+      ensureDirectory(root, createdDirectories);
+    }
+    locks = acquireLocks(roots);
     for (const root of roots) {
       if (changed.some((item) => item.root === root && item.baseline !== null)) {
         const backupRoot = join(root, ".agi-super-team-backups");
-        mkdirSync(backupRoot, { recursive: true, mode: 0o700 });
-        backups.push({ root, path: mkdtempSync(join(backupRoot, `${new Date().toISOString().replaceAll(":", "")}-`)) });
+        ensureDirectory(backupRoot, createdDirectories);
+        const backupPath = mkdtempSync(join(backupRoot, `${new Date().toISOString().replaceAll(":", "")}-`));
+        const backupMetadata = lstatSync(backupPath);
+        createdDirectories.push({ path: backupPath, dev: backupMetadata.dev, ino: backupMetadata.ino });
+        backups.push({ root, path: backupPath });
       }
     }
     for (const item of changed) {
       const current = readSafe(item.destination);
-      const stable = current === null ? item.baseline === null : item.baseline !== null && Buffer.compare(current, item.baseline) === 0;
-      if (!stable) throw new Error(`destination changed after preview: ${item.destination}`);
+      if (!baselineMatches(item, current)) throw new Error(`destination changed after preview: ${item.destination}`);
       if (item.baseline !== null) {
         const backup = backups.find((entry) => entry.root === item.root);
         const target = join(backup.path, relative(item.root, item.destination));
-        mkdirSync(dirname(target), { recursive: true, mode: 0o700 });
+        ensureDirectory(dirname(target), createdDirectories);
         copyFileSync(item.destination, target);
+        chmodSync(target, item.baselineMode);
+        backupFiles.push({
+          path: target,
+          content: item.baseline,
+          mode: lstatSync(target).mode & 0o777,
+          platform: item.platform,
+        });
       }
-      atomicWrite(item.destination, item.content);
-      written.push(item);
+      ensureDirectory(dirname(item.destination), createdDirectories);
+      atomicWrite(item.destination, item.content, item.mode ?? 0o600);
+      written.push({
+        ...item,
+        installedMode: lstatSync(item.destination).mode & 0o777,
+      });
     }
   } catch (error) {
-    for (const item of written.reverse()) {
-      const current = readSafe(item.destination);
-      if (current === null || Buffer.compare(current, item.content) !== 0) continue;
-      if (item.baseline === null) unlinkSync(item.destination);
-      else atomicWrite(item.destination, item.baseline);
+    let rollbackError = null;
+    try {
+      assertBackupsUnchanged(backupFiles);
+      restoreWritten(written);
+      removeBackupFiles(backupFiles);
+    } catch (caught) {
+      rollbackError = caught;
     }
+    releaseLocks(locks);
+    locks = [];
+    if (!rollbackError) {
+      try {
+        removeEmptyCreatedDirectories(createdDirectories);
+      } catch (caught) {
+        rollbackError = caught;
+      }
+    }
+    if (rollbackError) throw new AggregateError([error, rollbackError], "installation failed and rollback could not complete");
     throw error;
   } finally {
-    for (const lock of locks) {
-      closeSync(lock.descriptor);
-      if (existsSync(lock.path)) unlinkSync(lock.path);
-    }
+    releaseLocks(locks);
   }
-  return backups.map((entry) => entry.path);
+  return completedTransaction(backups, written, backupFiles, createdDirectories);
+}
+
+export function applyPlan(plan) {
+  const transaction = applyPlanTransaction(plan);
+  transaction.commit();
+  return transaction.backups;
 }
 
 export function doctor(plan, tools) {
@@ -387,6 +584,13 @@ export function doctor(plan, tools) {
       const current = readSafe(item.destination);
       if (current === null) issues.push(`missing: ${item.destination}`);
       else if (Buffer.compare(current, item.content) !== 0) issues.push(`drifted: ${item.destination}`);
+      else if (!modesEquivalent(
+        lstatSync(item.destination).mode,
+        item.mode ?? 0o600,
+        item.platform,
+      )) {
+        issues.push(`mode drifted: ${item.destination}`);
+      }
     } catch (error) { issues.push(error.message); }
   }
   return {

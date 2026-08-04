@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, lstatSync, readFileSync, readdirSync, realpathSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { isPhysicalStrictDescendant } from "./path-safety.mjs";
 
@@ -118,17 +118,33 @@ export function openClawFiles(packageRoot, agent, group = null) {
   }));
 }
 
-export function walkFiles(root, prefix = "") {
+function walkPhysicalFiles(root, prefix, physicalRoot) {
   const output = [];
   for (const name of readdirSync(root).sort()) {
     if (name === "__pycache__" || name.endsWith(".pyc")) continue;
     const source = join(root, name);
+    if (!isPhysicalStrictDescendant(physicalRoot, source)) {
+      throw new Error(`refusing source outside physical root: ${source}`);
+    }
     const metadata = lstatSync(source);
     if (metadata.isSymbolicLink()) throw new Error(`refusing symlinked source: ${source}`);
-    if (metadata.isDirectory()) output.push(...walkFiles(source, join(prefix, name)));
-    else if (metadata.isFile()) output.push({ source, relative: join(prefix, name), content: readFileSync(source) });
+    if (metadata.isDirectory()) output.push(...walkPhysicalFiles(source, join(prefix, name), physicalRoot));
+    else if (metadata.isFile()) output.push({
+      source,
+      relative: join(prefix, name),
+      content: readFileSync(source),
+      mode: metadata.mode & 0o100 ? 0o700 : 0o600,
+    });
   }
   return output;
+}
+
+export function walkFiles(root, prefix = "") {
+  const metadata = lstatSync(root);
+  if (metadata.isSymbolicLink()) throw new Error(`refusing symlinked source root: ${root}`);
+  if (!metadata.isDirectory()) throw new Error(`invalid source root: ${root}`);
+  const physicalRoot = realpathSync.native(root);
+  return walkPhysicalFiles(physicalRoot, prefix, physicalRoot);
 }
 
 export function renderManaged(existing, managed, begin = RULES_BEGIN, end = RULES_END) {
@@ -155,7 +171,11 @@ export function combinedRules(packageRoot, agents, skills, groups = {}) {
 }
 
 export function globalCeoPayload(packageRoot) {
-  const path = join(packageRoot, "plugins", "agi-super-team-codex", "payload", "global", "AGENTS.md");
+  const payloadRoot = join(packageRoot, "plugins", "agi-super-team-codex", "payload");
+  const path = join(payloadRoot, "global", "AGENTS.md");
+  if (!isPhysicalStrictDescendant(payloadRoot, path)) {
+    throw new Error(`unsafe global CEO payload: ${path}`);
+  }
   const content = readFileSync(path, "utf8").trim();
   if (content.split(BEGIN_MARKER).length !== 2 || content.split(END_MARKER).length !== 2) {
     throw new Error("global CEO payload has invalid managed markers");

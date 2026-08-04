@@ -876,6 +876,250 @@ test_publish_failure_restores_existing_components() {
 
 test_publish_failure_restores_existing_components
 
+test_publish_signal_restores_existing_components() {
+  local signal_name signal_status destination fake_bin counter output status lock_path
+
+  for signal_name in HUP INT TERM; do
+    case "$signal_name" in HUP) signal_status=129 ;; INT) signal_status=130 ;; TERM) signal_status=143 ;; esac
+    destination="${TEST_TMP}/publish-${signal_name}-destination"
+    fake_bin="${TEST_TMP}/publish-${signal_name}-bin"
+    counter="${TEST_TMP}/publish-${signal_name}-count"
+    lock_path="${TEST_TMP}/.publish-${signal_name}-destination.agi-super-team-install.lock"
+    status=0
+
+    mkdir -p "${destination}/agents" "${destination}/workspace-ceo" "$fake_bin"
+    printf 'old shared state\n' > "${destination}/agents/marker.txt"
+    printf 'old persona\n' > "${destination}/workspace-ceo/SOUL.md"
+    printf '0\n' > "$counter"
+    printf '%s\n' \
+      '#!/usr/bin/env bash' \
+      "counter='$counter'" \
+      "signal_status='$signal_status'" \
+      'count=$(($(cat "$counter") + 1))' \
+      'printf "%s\n" "$count" > "$counter"' \
+      'if [[ "$count" -eq 3 ]]; then' \
+      '  /bin/mv "$@" || exit $?' \
+      '  exit "$signal_status"' \
+      'fi' \
+      'exec /bin/mv "$@"' > "${fake_bin}/mv"
+    chmod +x "${fake_bin}/mv"
+
+    output=$(PATH="${fake_bin}:$PATH" bash "$INSTALLER" \
+      --source "$REPO_ROOT" --destination "$destination" --apply ceo 2>&1) || status=$?
+
+    if [[ "$status" -eq 0 || "$output" != *"Received ${signal_name}; restored the previous destination state"* \
+       || "$(<"${destination}/agents/marker.txt")" != "old shared state" \
+       || "$(<"${destination}/workspace-ceo/SOUL.md")" != "old persona" \
+       || -e "${destination}/workspace-ceo/skills" || -e "$lock_path" ]]; then
+      printf 'not ok - %s publish interruption did not restore state and release its lock\n%s\n' \
+        "$signal_name" "$output"
+      failures=$((failures + 1))
+      return
+    fi
+  done
+  printf 'ok - HUP, INT, and TERM publish interruptions restore state and release locks\n'
+}
+
+test_publish_signal_restores_existing_components
+
+test_new_destination_interruption_quarantines_the_tagged_publish() {
+  local destination="${TEST_TMP}/new-root-signal-destination"
+  local fake_bin="${TEST_TMP}/new-root-signal-bin"
+  local output status=0 recovery_path
+
+  mkdir -p "$fake_bin"
+  printf '%s\n' \
+    '#!/usr/bin/env bash' \
+    '/bin/mv "$@" || exit $?' \
+    'exit 143' > "${fake_bin}/mv"
+  chmod +x "${fake_bin}/mv"
+
+  output=$(PATH="${fake_bin}:$PATH" bash "$INSTALLER" --source "$REPO_ROOT" \
+    --destination "$destination" --apply ceo 2>&1) || status=$?
+  recovery_path=$(printf '%s\n' "$output" | sed -n 's/.*Recovery transaction preserved at: //p' | tail -1)
+
+  if [[ "$status" -ne 0 && "$output" == *"automatic restore is incomplete"* \
+     && -n "$recovery_path" && -d "${recovery_path}/recovery-destination" \
+     && -f "${recovery_path}/recovery-destination/workspace-ceo/AGENTS.md" \
+     && ! -e "$destination" && ! -L "$destination" \
+     && ! -e "${TEST_TMP}/.new-root-signal-destination.agi-super-team-install.lock" ]]; then
+    printf 'ok - interrupted first install quarantines its tagged destination and releases its lock\n'
+  else
+    printf 'not ok - interrupted first install did not preserve a recovery destination\n%s\n' "$output"
+    failures=$((failures + 1))
+  fi
+}
+
+test_new_destination_interruption_quarantines_the_tagged_publish
+
+test_new_destination_drift_during_interruption_is_quarantined() {
+  local destination="${TEST_TMP}/new-root-drift-destination"
+  local fake_bin="${TEST_TMP}/new-root-drift-bin"
+  local counter="${TEST_TMP}/new-root-drift-count"
+  local output status=0 recovery_path
+
+  mkdir -p "$fake_bin"
+  printf '0\n' > "$counter"
+  printf '%s\n' \
+    '#!/usr/bin/env bash' \
+    "counter='$counter'" \
+    'count=$(($(cat "$counter") + 1))' \
+    'printf "%s\n" "$count" > "$counter"' \
+    'if [[ "$count" -eq 1 ]]; then' \
+    '  /bin/mv "$@" || exit $?' \
+    '  printf "user concurrent data\n" > "$2/user-concurrent.txt"' \
+    '  exit 143' \
+    'fi' \
+    'exec /bin/mv "$@"' > "${fake_bin}/mv"
+  chmod +x "${fake_bin}/mv"
+
+  output=$(PATH="${fake_bin}:$PATH" bash "$INSTALLER" --source "$REPO_ROOT" \
+    --destination "$destination" --apply ceo 2>&1) || status=$?
+  recovery_path=$(printf '%s\n' "$output" | sed -n 's/.*Recovery transaction preserved at: //p' | tail -1)
+
+  if [[ "$status" -ne 0 && "$output" == *"automatic restore is incomplete"* \
+     && -n "$recovery_path" && -d "$recovery_path" \
+     && "$(<"${recovery_path}/recovery-destination/user-concurrent.txt")" == "user concurrent data" \
+     && ! -e "$destination" && ! -L "$destination" ]]; then
+    printf 'ok - concurrent data in an interrupted new destination is quarantined, not deleted\n'
+  else
+    printf 'not ok - interrupted new-destination drift was deleted or lost\n%s\n' "$output"
+    failures=$((failures + 1))
+  fi
+}
+
+test_new_destination_drift_during_interruption_is_quarantined
+
+test_new_destination_drift_survives_failed_quarantine() {
+  local destination="${TEST_TMP}/new-root-drift-stays-destination"
+  local fake_bin="${TEST_TMP}/new-root-drift-stays-bin"
+  local counter="${TEST_TMP}/new-root-drift-stays-count"
+  local output status=0 recovery_path
+
+  mkdir -p "$fake_bin"
+  printf '0\n' > "$counter"
+  printf '%s\n' \
+    '#!/usr/bin/env bash' \
+    "counter='$counter'" \
+    'count=$(($(cat "$counter") + 1))' \
+    'printf "%s\n" "$count" > "$counter"' \
+    'if [[ "$count" -eq 1 ]]; then' \
+    '  /bin/mv "$@" || exit $?' \
+    '  printf "user concurrent data\n" > "$2/user-concurrent.txt"' \
+    '  exit 143' \
+    'fi' \
+    'exit 77' > "${fake_bin}/mv"
+  chmod +x "${fake_bin}/mv"
+
+  output=$(PATH="${fake_bin}:$PATH" bash "$INSTALLER" --source "$REPO_ROOT" \
+    --destination "$destination" --apply ceo 2>&1) || status=$?
+  recovery_path=$(printf '%s\n' "$output" | sed -n 's/.*Recovery transaction preserved at: //p' | tail -1)
+
+  if [[ "$status" -ne 0 && "$output" == *"automatic restore is incomplete"* \
+     && -n "$recovery_path" && -d "$recovery_path" \
+     && "$(<"${destination}/user-concurrent.txt")" == "user concurrent data" ]]; then
+    printf 'ok - failed quarantine leaves concurrent data in place and reports recovery state\n'
+  else
+    printf 'not ok - failed quarantine deleted concurrent destination data\n%s\n' "$output"
+    failures=$((failures + 1))
+  fi
+}
+
+test_new_destination_drift_survives_failed_quarantine
+
+test_destination_lock_blocks_a_second_installer() {
+  local destination="${TEST_TMP}/lock-destination"
+  local fake_bin="${TEST_TMP}/lock-bin"
+  local ready="${TEST_TMP}/lock-ready"
+  local release="${TEST_TMP}/lock-release"
+  local first_output="${TEST_TMP}/lock-first-output"
+  local second_output second_status=0 first_status=0 first_pid attempt
+
+  mkdir -p "$destination" "$fake_bin"
+  printf '%s\n' \
+    '#!/usr/bin/env bash' \
+    "ready='$ready'" \
+    "release='$release'" \
+    'if [[ ! -e "$ready" ]]; then' \
+    '  : > "$ready"' \
+    '  while [[ ! -e "$release" ]]; do sleep 0.02; done' \
+    'fi' \
+    'exec /bin/cp "$@"' > "${fake_bin}/cp"
+  chmod +x "${fake_bin}/cp"
+
+  PATH="${fake_bin}:$PATH" bash "$INSTALLER" --source "$REPO_ROOT" \
+    --destination "$destination" --apply ceo > "$first_output" 2>&1 &
+  first_pid=$!
+  for attempt in $(seq 1 100); do
+    [[ -e "$ready" ]] && break
+    sleep 0.02
+  done
+
+  second_output=$(bash "$INSTALLER" --source "$REPO_ROOT" \
+    --destination "$destination" --apply ceo 2>&1) || second_status=$?
+  : > "$release"
+  wait "$first_pid" || first_status=$?
+
+  if [[ "$first_status" -eq 0 && "$second_status" -ne 0 \
+     && "$second_output" == *"Another installation is active for destination"* \
+     && ! -e "${TEST_TMP}/.lock-destination.agi-super-team-install.lock" ]]; then
+    printf 'ok - destination lock blocks a second installer\n'
+  else
+    printf 'not ok - two installers could publish the same destination concurrently\nfirst:\n%s\nsecond:\n%s\n' \
+      "$(<"$first_output")" "$second_output"
+    failures=$((failures + 1))
+  fi
+}
+
+test_destination_lock_blocks_a_second_installer
+
+test_destination_drift_aborts_before_publish() {
+  local destination="${TEST_TMP}/drift-destination"
+  local fake_bin="${TEST_TMP}/drift-bin"
+  local ready="${TEST_TMP}/drift-ready"
+  local release="${TEST_TMP}/drift-release"
+  local install_output="${TEST_TMP}/drift-output"
+  local install_status=0 install_pid attempt
+
+  mkdir -p "${destination}/agents" "${destination}/workspace-ceo" "$fake_bin"
+  printf 'old shared state\n' > "${destination}/agents/marker.txt"
+  printf 'old persona\n' > "${destination}/workspace-ceo/SOUL.md"
+  printf '%s\n' \
+    '#!/usr/bin/env bash' \
+    "ready='$ready'" \
+    "release='$release'" \
+    'if [[ ! -e "$ready" ]]; then' \
+    '  : > "$ready"' \
+    '  while [[ ! -e "$release" ]]; do sleep 0.02; done' \
+    'fi' \
+    'exec /bin/cp "$@"' > "${fake_bin}/cp"
+  chmod +x "${fake_bin}/cp"
+
+  PATH="${fake_bin}:$PATH" bash "$INSTALLER" --source "$REPO_ROOT" \
+    --destination "$destination" --apply ceo > "$install_output" 2>&1 &
+  install_pid=$!
+  for attempt in $(seq 1 100); do
+    [[ -e "$ready" ]] && break
+    sleep 0.02
+  done
+  printf 'user concurrent edit\n' > "${destination}/workspace-ceo/SOUL.md"
+  : > "$release"
+  wait "$install_pid" || install_status=$?
+
+  if [[ "$install_status" -ne 0 \
+     && "$(<"$install_output")" == *"Destination changed after staging began"* \
+     && "$(<"${destination}/workspace-ceo/SOUL.md")" == "user concurrent edit" \
+     && ! -e "${destination}/workspace-ceo/skills" \
+     && ! -e "${TEST_TMP}/.drift-destination.agi-super-team-install.lock" ]]; then
+    printf 'ok - destination drift aborts before publish and preserves the concurrent edit\n'
+  else
+    printf 'not ok - destination drift was overwritten or silently published\n%s\n' "$(<"$install_output")"
+    failures=$((failures + 1))
+  fi
+}
+
+test_destination_drift_aborts_before_publish
+
 test_restore_failure_preserves_recovery_transaction() {
   local destination="${TEST_TMP}/restore-failure-destination"
   local fake_bin="${TEST_TMP}/restore-failure-bin"
@@ -975,8 +1219,9 @@ test_remote_preview_fails_closed_without_a_manifest() {
 
   output=$(HOME="$fake_home" PATH="${fake_bin}:/usr/bin:/bin" bash "$INSTALLER" --destination "$destination" ceo 2>&1) || status=$?
   if [[ "$status" -ne 0 && ! -e "$git_marker" && ! -e "$fake_home" && ! -e "$destination" \
-     && "$output" == *"--source"* && "$output" == *"manifest"* ]]; then
-    printf 'ok - remote preview fails closed without cloning or inventing a manifest plan\n'
+     && "$output" == *"--source"* && "$output" == *"manifest"* \
+     && "$output" == *"v1.4.1"* ]]; then
+    printf 'ok - remote preview names the pinned ref and does not clone or invent a manifest plan\n'
   else
     printf 'not ok - remote preview invented a plan or touched local state\n%s\n' "$output"
     failures=$((failures + 1))
@@ -984,6 +1229,118 @@ test_remote_preview_fails_closed_without_a_manifest() {
 }
 
 test_remote_preview_fails_closed_without_a_manifest
+
+test_remote_ref_resolution_failure_does_not_publish() {
+  local fake_home="${TEST_TMP}/remote-ref-resolution-home"
+  local fake_bin="${TEST_TMP}/remote-ref-resolution-bin"
+  local destination="${TEST_TMP}/remote-ref-resolution-destination"
+  local output status=0
+
+  mkdir -p "${fake_home}/.agi-super-team/.git" "$fake_bin"
+  printf '%s\n' \
+    '#!/usr/bin/env bash' \
+    'case "$*" in' \
+    '  *"status --porcelain"*) exit 0 ;;' \
+    '  *"fetch --depth 1"*) exit 0 ;;' \
+    '  *"rev-parse --verify"*) exit 77 ;;' \
+    'esac' \
+    'exit 0' > "${fake_bin}/git"
+  chmod +x "${fake_bin}/git"
+
+  output=$(HOME="$fake_home" PATH="${fake_bin}:/usr/bin:/bin" bash "$INSTALLER" \
+    --destination "$destination" --apply ceo 2>&1) || status=$?
+
+  if [[ "$status" -ne 0 && "$output" == *"Unable to resolve pinned repository ref: v1.4.1"* \
+     && ! -e "$destination" && ! -L "$destination" ]]; then
+    printf 'ok - unresolved remote ref performs zero destination writes\n'
+  else
+    printf 'not ok - unresolved remote ref continued with unknown source state\n%s\n' "$output"
+    failures=$((failures + 1))
+  fi
+}
+
+test_remote_ref_resolution_failure_does_not_publish
+
+test_remote_checkout_failure_does_not_publish() {
+  local fake_home="${TEST_TMP}/remote-checkout-home"
+  local fake_bin="${TEST_TMP}/remote-checkout-bin"
+  local destination="${TEST_TMP}/remote-checkout-destination"
+  local output status=0
+
+  mkdir -p "${fake_home}/.agi-super-team/.git" "$fake_bin"
+  printf '%s\n' \
+    '#!/usr/bin/env bash' \
+    'case "$*" in' \
+    '  *"status --porcelain"*) exit 0 ;;' \
+    '  *"fetch --depth 1"*) exit 0 ;;' \
+    '  *"rev-parse --verify"*) printf "%040d\n" 1; exit 0 ;;' \
+    '  *"checkout --detach"*) exit 77 ;;' \
+    'esac' \
+    'exit 0' > "${fake_bin}/git"
+  chmod +x "${fake_bin}/git"
+
+  output=$(HOME="$fake_home" PATH="${fake_bin}:/usr/bin:/bin" bash "$INSTALLER" \
+    --destination "$destination" --apply ceo 2>&1) || status=$?
+
+  if [[ "$status" -ne 0 && "$output" == *"Unable to check out pinned repository ref: v1.4.1"* \
+     && ! -e "$destination" && ! -L "$destination" ]]; then
+    printf 'ok - failed pinned checkout performs zero destination writes\n'
+  else
+    printf 'not ok - failed pinned checkout continued with cached source state\n%s\n' "$output"
+    failures=$((failures + 1))
+  fi
+}
+
+test_remote_checkout_failure_does_not_publish
+
+test_remote_cached_checkout_uses_the_exact_pinned_ref() {
+  local fake_home="${TEST_TMP}/remote-pinned-success-home"
+  local source="${fake_home}/.agi-super-team"
+  local fake_bin="${TEST_TMP}/remote-pinned-success-bin"
+  local destination="${TEST_TMP}/remote-pinned-success-destination"
+  local git_log="${TEST_TMP}/remote-pinned-success-git.log"
+  local output skill
+
+  mkdir -p "${source}/.git" "${source}/agents/ceo" "${source}/skills" "$fake_bin"
+  write_shared_workspace_files "$source"
+  write_ceo_manifest "$source"
+  printf '# CEO\n' > "${source}/agents/ceo/SOUL.md"
+  for skill in team-coordinator context-manager healthcheck web-search project-planner; do
+    mkdir -p "${source}/skills/${skill}"
+    printf '# %s\n' "$skill" > "${source}/skills/${skill}/SKILL.md"
+  done
+  printf '%s\n' \
+    '#!/usr/bin/env bash' \
+    "log='$git_log'" \
+    'printf "%s\n" "$*" >> "$log"' \
+    'case "$*" in' \
+    '  *"status --porcelain"*) exit 0 ;;' \
+    '  *"fetch --depth 1"*) exit 0 ;;' \
+    '  *"rev-parse --verify FETCH_HEAD"*) printf "%s\n" aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; exit 0 ;;' \
+    '  *"checkout --detach --quiet"*) exit 0 ;;' \
+    '  *"rev-parse --verify HEAD"*) printf "%s\n" aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; exit 0 ;;' \
+    'esac' \
+    'exit 77' > "${fake_bin}/git"
+  chmod +x "${fake_bin}/git"
+
+  if ! output=$(HOME="$fake_home" PATH="${fake_bin}:$PATH" bash "$INSTALLER" \
+    --destination "$destination" --apply ceo 2>&1); then
+    printf 'not ok - exact pinned cached checkout failed\n%s\n' "$output"
+    failures=$((failures + 1))
+    return
+  fi
+
+  if [[ -f "${destination}/workspace-ceo/SOUL.md" \
+     && "$(<"$git_log")" == *"fetch --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git v1.4.1"* \
+     && "$(<"$git_log")" == *"checkout --detach --quiet aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"* ]]; then
+    printf 'ok - cached remote source fetches and checks out the exact v1.4.1 commit\n'
+  else
+    printf 'not ok - cached remote source did not use the exact pinned ref\n%s\n' "$(<"$git_log")"
+    failures=$((failures + 1))
+  fi
+}
+
+test_remote_cached_checkout_uses_the_exact_pinned_ref
 
 test_repository_tools_skill_references_resolve() {
   local file skill reference_count=0
