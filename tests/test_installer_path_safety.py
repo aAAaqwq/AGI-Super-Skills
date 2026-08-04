@@ -9,6 +9,206 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 
 
 class InstallerPathSafetyTests(unittest.TestCase):
+    def test_safe_root_rejects_posix_windows_drive_and_unc_roots(self):
+        script = r"""
+import path from "node:path";
+import { safeRoot } from "./bin/installer/core.mjs";
+
+const cases = [
+  ["posix", "/", path.posix],
+  ["win32-drive", "C:\\", path.win32],
+  ["win32-unc", "\\\\server\\share\\", path.win32],
+];
+const results = Object.fromEntries(cases.map(([name, candidate, api]) => {
+  try {
+    safeRoot(candidate, "test root", api);
+    return [name, "accepted"];
+  } catch (error) {
+    return [name, error.message];
+  }
+}));
+console.log(JSON.stringify(results));
+"""
+        result = subprocess.run(
+            ["node", "--input-type=module", "--eval", script],
+            cwd=REPOSITORY_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        outcomes = json.loads(result.stdout)
+        for platform, outcome in outcomes.items():
+            with self.subTest(platform=platform):
+                self.assertIn("refusing unsafe test root", outcome)
+
+    def test_safe_root_pins_the_physical_parent_of_a_missing_root(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory)
+            first = fixture / "first"
+            second = fixture / "second"
+            first.mkdir()
+            second.mkdir()
+            alias = fixture / "alias"
+            alias.symlink_to(first, target_is_directory=True)
+
+            script = r"""
+import { unlinkSync, symlinkSync } from "node:fs";
+import { join } from "node:path";
+import { applyPlan, safeRoot } from "./bin/installer/core.mjs";
+
+const [alias, first, second] = process.argv.slice(1);
+const root = safeRoot(join(alias, "new-home"), "home");
+unlinkSync(alias);
+symlinkSync(second, alias, "dir");
+const destination = join(root, "installed.txt");
+applyPlan([{
+  tool: "fixture",
+  root,
+  destination,
+  content: Buffer.from("installed\n"),
+  baseline: null,
+  label: "fixture",
+  status: "add",
+}]);
+console.log(JSON.stringify({ root, destination }));
+"""
+            result = subprocess.run(
+                [
+                    "node",
+                    "--input-type=module",
+                    "--eval",
+                    script,
+                    str(alias),
+                    str(first),
+                    str(second),
+                ],
+                cwd=REPOSITORY_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            output = json.loads(result.stdout)
+            # macOS exposes /var and /tmp through stable system aliases. The
+            # installer pins their physical /private paths before planning.
+            self.assertEqual(Path(output["root"]), first.resolve() / "new-home")
+            self.assertEqual((first / "new-home" / "installed.txt").read_text(), "installed\n")
+            self.assertFalse((second / "new-home").exists())
+
+    def test_apply_rejects_an_unpinned_symlink_ancestor_before_writes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory)
+            outside = fixture / "outside"
+            outside.mkdir()
+            sentinel = outside / "keep.txt"
+            sentinel.write_text("keep\n", encoding="utf-8")
+            alias = fixture / "alias"
+            alias.symlink_to(outside, target_is_directory=True)
+
+            script = r"""
+import { join } from "node:path";
+import { applyPlan } from "./bin/installer/core.mjs";
+
+const root = join(process.argv[1], "new-home");
+try {
+  applyPlan([{
+    tool: "fixture",
+    root,
+    destination: join(root, "installed.txt"),
+    content: Buffer.from("installed\n"),
+    baseline: null,
+    label: "fixture",
+    status: "add",
+  }]);
+  console.log("accepted");
+} catch (error) {
+  console.log(error.message);
+}
+"""
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", script, str(alias)],
+                cwd=REPOSITORY_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("unsafe target root", result.stdout)
+            self.assertEqual(sentinel.read_text(encoding="utf-8"), "keep\n")
+            self.assertEqual(sorted(path.name for path in outside.iterdir()), ["keep.txt"])
+
+    def test_walk_files_rejects_a_symlinked_source_root(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory)
+            physical = fixture / "physical"
+            physical.mkdir()
+            (physical / "payload.txt").write_text("outside\n", encoding="utf-8")
+            linked = fixture / "linked-source"
+            linked.symlink_to(physical, target_is_directory=True)
+            script = r"""
+import { walkFiles } from "./bin/installer/render.mjs";
+
+try {
+  walkFiles(process.argv[1]);
+  console.log("accepted");
+} catch (error) {
+  console.log(error.message);
+}
+"""
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", script, str(linked)],
+                cwd=REPOSITORY_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("refusing symlinked source root", result.stdout)
+
+    def test_global_ceo_payload_rejects_a_symlinked_source_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory)
+            global_root = (
+                fixture
+                / "plugins"
+                / "agi-super-team-codex"
+                / "payload"
+                / "global"
+            )
+            global_root.mkdir(parents=True)
+            outside = fixture / "outside.md"
+            outside.write_text(
+                "<!-- AGI-SUPER-TEAM:CEO:BEGIN -->\noutside\n"
+                "<!-- AGI-SUPER-TEAM:CEO:END -->\n",
+                encoding="utf-8",
+            )
+            (global_root / "AGENTS.md").symlink_to(outside)
+            script = r"""
+import { globalCeoPayload } from "./bin/installer/render.mjs";
+
+try {
+  globalCeoPayload(process.argv[1]);
+  console.log("accepted");
+} catch (error) {
+  console.log(error.message);
+}
+"""
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", script, str(fixture)],
+                cwd=REPOSITORY_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("unsafe global CEO payload", result.stdout)
+
     def test_content_addressed_agent_markdown_pins_lf_checkouts(self):
         result = subprocess.run(
             [
