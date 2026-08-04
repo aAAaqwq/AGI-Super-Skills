@@ -9,6 +9,27 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 
 
 class InstallerPathSafetyTests(unittest.TestCase):
+    def test_content_addressed_agent_markdown_pins_lf_checkouts(self):
+        result = subprocess.run(
+            [
+                "git",
+                "check-attr",
+                "eol",
+                "--",
+                "agents/cto/subagents/frontend-developer/AGENTS.md",
+            ],
+            cwd=REPOSITORY_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            result.stdout.strip(),
+            "agents/cto/subagents/frontend-developer/AGENTS.md: eol: lf",
+        )
+
     def test_posix_and_windows_paths_require_strict_containment(self):
         script = r"""
 import path from "node:path";
