@@ -4,16 +4,36 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import json
 from pathlib import Path
+import signal
 import sys
+from types import FrameType
+from typing import Iterator
 
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 if str(PROJECT_DIR) not in sys.path:
     sys.path.insert(0, str(PROJECT_DIR))
 
-from scanner.pipeline import PipelineConfig, run_shadow_radar
+from scanner.pipeline import PipelineConfig, run_shadow_radar  # noqa: E402
+
+
+@contextmanager
+def _sigterm_as_exception() -> Iterator[None]:
+    """Let pipeline cleanup persist FAILED instead of leaving RUNNING rows."""
+
+    previous = signal.getsignal(signal.SIGTERM)
+
+    def handle_sigterm(_signum: int, _frame: FrameType | None) -> None:
+        raise RuntimeError("received SIGTERM from process supervisor")
+
+    signal.signal(signal.SIGTERM, handle_sigterm)
+    try:
+        yield
+    finally:
+        signal.signal(signal.SIGTERM, previous)
 
 
 def _limit(value: str) -> int:
@@ -33,9 +53,15 @@ def _post_id(value: str) -> str:
 def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
-    mode.add_argument("--real", action="store_true", help="refresh public post details and Futures evidence")
+    mode.add_argument(
+        "--real",
+        action="store_true",
+        help="refresh public post details and Futures evidence",
+    )
     mode.add_argument("--fixture", type=Path, help="offline Square fixture directory")
-    parser.add_argument("--clock", help="UTC decision time; real mode defaults to Binance server time")
+    parser.add_argument(
+        "--clock", help="UTC decision time; real mode defaults to Binance server time"
+    )
     parser.add_argument(
         "--input-snapshot",
         type=Path,
@@ -134,38 +160,39 @@ def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = _arguments(argv)
-    result = run_shadow_radar(
-        PipelineConfig(
-            mode="real" if args.real else "fixture",
-            output_dir=args.output_dir,
-            database=args.database,
-            decision_at=args.clock,
-            fixture_dir=args.fixture,
-            input_snapshot=args.input_snapshot,
-            signals_json=args.signals_json,
-            leaderboard_seed_evidence=args.leaderboard_seed_evidence,
-            smart_money_enabled=(
-                args.smart_money or args.smart_money_fixture is not None
-            ),
-            smart_money_fixture=args.smart_money_fixture,
-            smart_money_square_mapping_evidence=(
-                args.smart_money_square_mapping_evidence
-            ),
-            smart_money_square_mapping_catalog=(
-                args.smart_money_square_mapping_catalog
-            ),
-            official_news_enabled=args.official_news,
-            limit=args.limit,
-            job_namespace=args.job_namespace,
-            production_job_id=args.production_job_id,
-            no_send=True,
-            dedup_baseline_post_ids=(
-                frozenset(args.dedup_baseline_post_id)
-                if args.dedup_baseline_post_id is not None
-                else None
-            ),
+    with _sigterm_as_exception():
+        result = run_shadow_radar(
+            PipelineConfig(
+                mode="real" if args.real else "fixture",
+                output_dir=args.output_dir,
+                database=args.database,
+                decision_at=args.clock,
+                fixture_dir=args.fixture,
+                input_snapshot=args.input_snapshot,
+                signals_json=args.signals_json,
+                leaderboard_seed_evidence=args.leaderboard_seed_evidence,
+                smart_money_enabled=(
+                    args.smart_money or args.smart_money_fixture is not None
+                ),
+                smart_money_fixture=args.smart_money_fixture,
+                smart_money_square_mapping_evidence=(
+                    args.smart_money_square_mapping_evidence
+                ),
+                smart_money_square_mapping_catalog=(
+                    args.smart_money_square_mapping_catalog
+                ),
+                official_news_enabled=args.official_news,
+                limit=args.limit,
+                job_namespace=args.job_namespace,
+                production_job_id=args.production_job_id,
+                no_send=True,
+                dedup_baseline_post_ids=(
+                    frozenset(args.dedup_baseline_post_id)
+                    if args.dedup_baseline_post_id is not None
+                    else None
+                ),
+            )
         )
-    )
     print(
         json.dumps(
             {

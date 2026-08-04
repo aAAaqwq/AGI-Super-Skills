@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import time
 from typing import Callable
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
@@ -33,8 +34,41 @@ class ProductionCycleConfig:
     limit: int = 200
 
 
-def _subprocess_runner(command: list[str]) -> None:
-    subprocess.run(command, cwd=PROJECT_DIR, check=True)
+def _subprocess_runner(
+    command: list[str],
+    *,
+    heartbeat_interval_seconds: float = 30.0,
+) -> None:
+    """Run a foreground child while proving liveness to command schedulers."""
+
+    if heartbeat_interval_seconds <= 0:
+        raise ValueError("heartbeat interval must be positive")
+    process = subprocess.Popen(command, cwd=PROJECT_DIR)
+    started = time.monotonic()
+    child_name = Path(command[1] if len(command) > 1 else command[0]).name
+    try:
+        while True:
+            try:
+                return_code = process.wait(timeout=heartbeat_interval_seconds)
+                break
+            except subprocess.TimeoutExpired:
+                elapsed = int(time.monotonic() - started)
+                print(
+                    f"[HEARTBEAT] child={child_name} elapsed_seconds={elapsed}",
+                    file=sys.stderr,
+                    flush=True,
+                )
+    except BaseException:
+        if process.poll() is None:
+            process.terminate()
+            try:
+                process.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait()
+        raise
+    if return_code != 0:
+        raise subprocess.CalledProcessError(return_code, command)
 
 
 def run_production_cycle(
@@ -58,20 +92,26 @@ def run_production_cycle(
         immutable_snapshot = Path(latest_payload["snapshot_file"])
         immutable_content = immutable_snapshot.read_bytes()
     except (OSError, KeyError, TypeError, UnicodeError, json.JSONDecodeError) as exc:
-        raise RuntimeError("Feed refresh did not produce an immutable snapshot") from exc
+        raise RuntimeError(
+            "Feed refresh did not produce an immutable snapshot"
+        ) from exc
     if (
         previous_latest_content is not None
         and latest_content == previous_latest_content
     ):
         raise RuntimeError("Feed scraper did not refresh the observed latest snapshot")
     if latest_payload.get("status") != "ok" or not latest_payload.get("scanned_at"):
-        raise RuntimeError("Feed refresh result is not a successful timestamped snapshot")
+        raise RuntimeError(
+            "Feed refresh result is not a successful timestamped snapshot"
+        )
     try:
         _, coverage_status, termination_reason, discovery_result = (
             validate_feed_discovery_result(latest_payload, allow_legacy=False)
         )
     except ContractViolation as exc:
-        raise RuntimeError("Feed refresh result has no valid coverage contract") from exc
+        raise RuntimeError(
+            "Feed refresh result has no valid coverage contract"
+        ) from exc
     if not (
         latest_payload.get("eligible_for_coverage_promotion") is True
         and coverage_status == "BOUNDED_COMPLETE"
@@ -83,14 +123,16 @@ def run_production_cycle(
     ):
         raise RuntimeError("Feed refresh result is not eligible for coverage promotion")
     if immutable_content != latest_content:
-        raise RuntimeError("immutable Feed snapshot differs from the refreshed latest payload")
-    eligible_pointer = (
-        config.project_dir / "data" / "binance_raw_posts_eligible.json"
-    )
+        raise RuntimeError(
+            "immutable Feed snapshot differs from the refreshed latest payload"
+        )
+    eligible_pointer = config.project_dir / "data" / "binance_raw_posts_eligible.json"
     try:
         eligible_content = eligible_pointer.read_bytes()
     except OSError as exc:
-        raise RuntimeError("Feed refresh did not produce an eligible Feed pointer") from exc
+        raise RuntimeError(
+            "Feed refresh did not produce an eligible Feed pointer"
+        ) from exc
     if eligible_content != latest_content:
         raise RuntimeError(
             "eligible Feed pointer differs from the refreshed latest payload"

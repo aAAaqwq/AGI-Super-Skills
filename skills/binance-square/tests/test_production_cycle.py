@@ -1,12 +1,16 @@
+import io
 from pathlib import Path
 import json
+import sys
 import tempfile
 import unittest
+from contextlib import redirect_stderr
 
 from scripts.run_production_cycle import (
     PROJECT_DIR,
     ProductionCycleConfig,
     _arguments,
+    _subprocess_runner,
     run_production_cycle,
 )
 
@@ -50,7 +54,9 @@ def _eligible_feed_payload(immutable: Path, *, scanned_at: str) -> dict:
     }
 
 
-def _write_eligible_feed_cycle(root: Path, immutable: Path, *, scanned_at: str) -> bytes:
+def _write_eligible_feed_cycle(
+    root: Path, immutable: Path, *, scanned_at: str
+) -> bytes:
     payload = _eligible_feed_payload(immutable, scanned_at=scanned_at)
     content = json.dumps(payload).encode("utf-8")
     immutable.parent.mkdir(parents=True, exist_ok=True)
@@ -63,6 +69,19 @@ def _write_eligible_feed_cycle(root: Path, immutable: Path, *, scanned_at: str) 
 
 
 class ProductionCycleTests(unittest.TestCase):
+    def test_long_silent_child_emits_progress_heartbeats(self) -> None:
+        stderr = io.StringIO()
+
+        with redirect_stderr(stderr):
+            _subprocess_runner(
+                [sys.executable, "-c", "import time; time.sleep(0.12)"],
+                heartbeat_interval_seconds=0.03,
+            )
+
+        output = stderr.getvalue()
+        self.assertIn("[HEARTBEAT]", output)
+        self.assertIn("elapsed_seconds=", output)
+
     def test_cli_defaults_do_not_consume_legacy_signals(self) -> None:
         args = _arguments([])
 
@@ -121,14 +140,14 @@ class ProductionCycleTests(unittest.TestCase):
 
             self.assertEqual(2, len(calls))
             self.assertTrue(calls[0][-1].endswith("scripts/binance_scraper.py"))
-            self.assertTrue(calls[1][-1].endswith("scripts/run_radar.py") or "--real" in calls[1])
+            self.assertTrue(
+                calls[1][-1].endswith("scripts/run_radar.py") or "--real" in calls[1]
+            )
             self.assertIn("--real", calls[1])
             self.assertIn("--smart-money", calls[1])
             self.assertIn("--no-send", calls[1])
             self.assertIn("canary-test", calls[1])
-            mapping_index = (
-                calls[1].index("--smart-money-square-mapping-evidence") + 1
-            )
+            mapping_index = calls[1].index("--smart-money-square-mapping-evidence") + 1
             self.assertEqual(str(root / "mapping.json"), calls[1][mapping_index])
             snapshot_index = calls[1].index("--input-snapshot") + 1
             self.assertEqual(str(immutable), calls[1][snapshot_index])
@@ -153,9 +172,7 @@ class ProductionCycleTests(unittest.TestCase):
                 ),
                 runner=runner,
             )
-            catalog_index = calls[3].index(
-                "--smart-money-square-mapping-catalog"
-            ) + 1
+            catalog_index = calls[3].index("--smart-money-square-mapping-catalog") + 1
             self.assertEqual(str(root / "catalog.json"), calls[3][catalog_index])
             self.assertNotIn("--signals-json", calls[3])
 
@@ -312,9 +329,9 @@ class ProductionCycleTests(unittest.TestCase):
                     immutable.parent.mkdir(parents=True, exist_ok=True)
                     immutable.write_bytes(content)
                     (root / "data" / "binance_raw_posts.json").write_bytes(content)
-                    (
-                        root / "data" / "binance_raw_posts_eligible.json"
-                    ).write_bytes(content)
+                    (root / "data" / "binance_raw_posts_eligible.json").write_bytes(
+                        content
+                    )
 
                 with self.assertRaisesRegex(
                     RuntimeError,

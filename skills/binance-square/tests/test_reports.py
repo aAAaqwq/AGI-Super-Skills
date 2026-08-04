@@ -3,6 +3,10 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from decimal import Decimal
 import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
 from types import SimpleNamespace
 import unittest
 
@@ -91,6 +95,32 @@ def smart_money_input() -> dict[str, object]:
 
 
 class LocalReportContractTests(unittest.TestCase):
+    def test_latest_report_cli_renders_the_existing_telegram_contract(self) -> None:
+        report = build_local_report(report_input())
+        with tempfile.TemporaryDirectory() as directory:
+            report_path = Path(directory) / "report.json"
+            report_path.write_text(
+                json.dumps(report, ensure_ascii=False), encoding="utf-8"
+            )
+
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(
+                        Path(__file__).parents[1]
+                        / "scripts"
+                        / "render_latest_telegram.py"
+                    ),
+                    "--report",
+                    str(report_path),
+                ],
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        self.assertEqual(render_telegram(report), completed.stdout.rstrip("\n"))
+
     def test_profile_cohort_counts_must_reconcile_to_declared_denominator(self) -> None:
         profile_channel = {
             "status": "PARTIAL",
@@ -197,7 +227,9 @@ class LocalReportContractTests(unittest.TestCase):
         ):
             build_local_report(report_input(profile_channel=profile_channel))
 
-    def test_profile_cohort_coverage_counts_complete_and_empty_but_not_partial(self) -> None:
+    def test_profile_cohort_coverage_counts_complete_and_empty_but_not_partial(
+        self,
+    ) -> None:
         profile_channel = {
             "status": "PARTIAL",
             "smart_money_profiles": {
@@ -255,7 +287,9 @@ class LocalReportContractTests(unittest.TestCase):
             render_local_markdown(report),
         )
 
-    def test_profile_aggregate_status_cannot_claim_complete_over_partial_cohort(self) -> None:
+    def test_profile_aggregate_status_cannot_claim_complete_over_partial_cohort(
+        self,
+    ) -> None:
         profile_channel = {
             "status": "COMPLETE",
             "smart_money_profiles": {
@@ -292,7 +326,9 @@ class LocalReportContractTests(unittest.TestCase):
         ):
             build_local_report(report_input(profile_channel=profile_channel))
 
-    def test_explicit_profile_source_status_must_match_normalized_profile_status(self) -> None:
+    def test_explicit_profile_source_status_must_match_normalized_profile_status(
+        self,
+    ) -> None:
         profile_channel = {
             "status": "PARTIAL",
             "smart_money_profiles": {
@@ -639,7 +675,13 @@ class LocalReportContractTests(unittest.TestCase):
 
         coverage = report["source_coverage"]
         self.assertEqual(
-            ("FEED", "BINANCE_OFFICIAL_NEWS", "SMART_MONEY", "PROFILE", "MARKET_CATALOG"),
+            (
+                "FEED",
+                "BINANCE_OFFICIAL_NEWS",
+                "SMART_MONEY",
+                "PROFILE",
+                "MARKET_CATALOG",
+            ),
             tuple(coverage),
         )
         self.assertEqual("FIXTURE_REPLAY", coverage["FEED"]["provenance"])
@@ -648,12 +690,8 @@ class LocalReportContractTests(unittest.TestCase):
             coverage["FEED"]["source_capture_time_utc"],
         )
         self.assertEqual("/fixtures/feed.json", coverage["FEED"]["evidence_path"])
-        self.assertEqual(
-            "NOT_ATTEMPTED", coverage["BINANCE_OFFICIAL_NEWS"]["status"]
-        )
-        self.assertIsNone(
-            coverage["BINANCE_OFFICIAL_NEWS"]["source_capture_time_utc"]
-        )
+        self.assertEqual("NOT_ATTEMPTED", coverage["BINANCE_OFFICIAL_NEWS"]["status"])
+        self.assertIsNone(coverage["BINANCE_OFFICIAL_NEWS"]["source_capture_time_utc"])
         markdown = render_local_markdown(report)
         self.assertIn("报告生成时间 UTC：2026-08-01T13:00:00Z", markdown)
         self.assertIn(
@@ -665,7 +703,9 @@ class LocalReportContractTests(unittest.TestCase):
             markdown,
         )
 
-    def test_cdo_capture_timing_aliases_are_consumed_without_clock_fallback(self) -> None:
+    def test_cdo_capture_timing_aliases_are_consumed_without_clock_fallback(
+        self,
+    ) -> None:
         report = build_local_report(
             report_input(
                 feed_provenance="LIVE_CAPTURE",
@@ -676,7 +716,7 @@ class LocalReportContractTests(unittest.TestCase):
                     "detail_fetch_completed": "2026-08-01T12:00:03Z",
                     "market_catalog": "2026-08-01T12:00:04Z",
                     "report": "2026-08-01T12:00:10Z",
-                }
+                },
             )
         )
 
@@ -731,7 +771,9 @@ class LocalReportContractTests(unittest.TestCase):
             report["smart_money"]["square_identity_mapping_coverage"]["label"],
         )
         self.assertEqual("PARTIAL", report["source_coverage"]["SMART_MONEY"]["status"])
-        self.assertEqual("UNKNOWN", report["source_coverage"]["SMART_MONEY"]["provenance"])
+        self.assertEqual(
+            "UNKNOWN", report["source_coverage"]["SMART_MONEY"]["provenance"]
+        )
         self.assertIn("OBSERVED_WINDOW", markdown)
         self.assertIn("60行", markdown)
         self.assertIn("Tier A eligible=0", markdown)
@@ -803,25 +845,27 @@ class LocalReportContractTests(unittest.TestCase):
             ["PROFILE_ID", "LEADERBOARD_30D"],
             report["author_coverage"]["tier_a"]["identity_sources"],
         )
-        self.assertEqual(
-            "0/4 (0.0%)", report["leaderboard_coverage"]["label"]
-        )
+        self.assertEqual("0/4 (0.0%)", report["leaderboard_coverage"]["label"])
         self.assertEqual("BLOCKED", report["leaderboard_coverage"]["status"])
         self.assertEqual([], report["top_opportunities"])
         self.assertEqual("/tmp/v4/reports/run-001.json", report["snapshot_path"])
 
     def test_partial_seed_discovery_never_claims_top30_coverage(self) -> None:
-        report = build_local_report(report_input(leaderboard_coverage={
-            "covered": 0,
-            "expected": 4,
-            "status": "PARTIAL_SEED_DISCOVERY",
-            "reason": "official mini-program entry verified; rows not rendered",
-            "verified_seed_profiles": 9,
-            "rendered_rank_rows": 0,
-            "complete_top30": False,
-            "seed_scope": "PROFILE_BACKED",
-            "evidence_captured_at_utc": "2026-08-01T08:50:34Z",
-        }))
+        report = build_local_report(
+            report_input(
+                leaderboard_coverage={
+                    "covered": 0,
+                    "expected": 4,
+                    "status": "PARTIAL_SEED_DISCOVERY",
+                    "reason": "official mini-program entry verified; rows not rendered",
+                    "verified_seed_profiles": 9,
+                    "rendered_rank_rows": 0,
+                    "complete_top30": False,
+                    "seed_scope": "PROFILE_BACKED",
+                    "evidence_captured_at_utc": "2026-08-01T08:50:34Z",
+                }
+            )
+        )
 
         markdown = render_local_markdown(report)
         telegram = render_telegram(report)
@@ -868,23 +912,28 @@ class LocalReportContractTests(unittest.TestCase):
             },
         )
         for claim in invalid_partial_claims:
-            with self.subTest(claim=claim), self.assertRaisesRegex(
-                ReportValidationError, "partial seed discovery"
+            with (
+                self.subTest(claim=claim),
+                self.assertRaisesRegex(ReportValidationError, "partial seed discovery"),
             ):
                 build_local_report(report_input(leaderboard_coverage=claim))
 
     def test_uncomputed_dedup_is_not_rendered_as_zero_or_as_24h_discovery(self) -> None:
-        report = build_local_report(report_input(post_counts={
-            "discovered": 25,
-            "total": 11,
-            "accepted": 11,
-            "quarantine": 14,
-            "dq_quarantine": 0,
-            "window_excluded": 14,
-            "new": None,
-            "duplicate": None,
-            "dedup_status": "NOT_COMPUTED",
-        }))
+        report = build_local_report(
+            report_input(
+                post_counts={
+                    "discovered": 25,
+                    "total": 11,
+                    "accepted": 11,
+                    "quarantine": 14,
+                    "dq_quarantine": 0,
+                    "window_excluded": 14,
+                    "new": None,
+                    "duplicate": None,
+                    "dedup_status": "NOT_COMPUTED",
+                }
+            )
+        )
 
         markdown = render_local_markdown(report)
         telegram = render_telegram(report)
@@ -903,17 +952,21 @@ class LocalReportContractTests(unittest.TestCase):
 
     def test_quarantine_split_must_reconcile(self) -> None:
         with self.assertRaisesRegex(ReportValidationError, "quarantine must equal"):
-            build_local_report(report_input(post_counts={
-                "discovered": 25,
-                "total": 11,
-                "accepted": 11,
-                "quarantine": 14,
-                "dq_quarantine": 1,
-                "window_excluded": 14,
-                "new": None,
-                "duplicate": None,
-                "dedup_status": "NOT_COMPUTED",
-            }))
+            build_local_report(
+                report_input(
+                    post_counts={
+                        "discovered": 25,
+                        "total": 11,
+                        "accepted": 11,
+                        "quarantine": 14,
+                        "dq_quarantine": 1,
+                        "window_excluded": 14,
+                        "new": None,
+                        "duplicate": None,
+                        "dedup_status": "NOT_COMPUTED",
+                    }
+                )
+            )
 
     def test_all_report_count_invariants_are_enforced(self) -> None:
         invalid = (
@@ -947,7 +1000,9 @@ class LocalReportContractTests(unittest.TestCase):
             with self.subTest(counts=counts), self.assertRaises(ReportValidationError):
                 build_local_report(report_input(post_counts=counts))
 
-    def test_normalizes_dto_like_opportunities_and_applies_three_five_caps(self) -> None:
+    def test_normalizes_dto_like_opportunities_and_applies_three_five_caps(
+        self,
+    ) -> None:
         def opportunity(index: int) -> SimpleNamespace:
             return SimpleNamespace(
                 symbol=f"COIN{index}USDT",
@@ -961,13 +1016,11 @@ class LocalReportContractTests(unittest.TestCase):
                 total_score=80 - index,
                 evidence=("4h uptrend", "volume confirms"),
                 source_post_url=f"https://www.binance.com/en/square/post/{1000 + index}",
-                market_captured_at=datetime(
-                    2026, 8, 1, 7, 10, tzinfo=timezone.utc
-                ),
-                evidence_captured_at=datetime(
-                    2026, 8, 1, 7, 5, tzinfo=timezone.utc
-                ),
-                market_source=MarketSource.SPOT_PROXY if index == 0 else MarketSource.FUTURES,
+                market_captured_at=datetime(2026, 8, 1, 7, 10, tzinfo=timezone.utc),
+                evidence_captured_at=datetime(2026, 8, 1, 7, 5, tzinfo=timezone.utc),
+                market_source=MarketSource.SPOT_PROXY
+                if index == 0
+                else MarketSource.FUTURES,
                 missing_market_fields=("mark_price",) if index == 0 else (),
                 parameter_source="AUTHOR",
                 nominal_rr=Decimal("5"),
@@ -1045,13 +1098,12 @@ class LocalReportContractTests(unittest.TestCase):
                 incomplete = dict(complete)
                 incomplete.pop(missing_field)
                 with self.assertRaisesRegex(ReportValidationError, missing_field):
-                    build_local_report(
-                        report_input(top_opportunities=[incomplete])
-                    )
+                    build_local_report(report_input(top_opportunities=[incomplete]))
 
         for unsafe_status in ("NOT_APPLIED", "NOT_CONFIGURED", "UNKNOWN"):
-            with self.subTest(unsafe_status=unsafe_status), self.assertRaisesRegex(
-                ReportValidationError, "cost_model_status"
+            with (
+                self.subTest(unsafe_status=unsafe_status),
+                self.assertRaisesRegex(ReportValidationError, "cost_model_status"),
             ):
                 unsafe = dict(complete, cost_model_status=unsafe_status)
                 build_local_report(report_input(top_opportunities=[unsafe]))

@@ -4,10 +4,10 @@ description: |
   币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子，
   联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。
   触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达
-metadata: {"version":"4.2.1","mode":"shadow","runtime_effects":"read-only-no-send"}
+metadata: {"version":"4.2.2","mode":"shadow","runtime_effects":"read-only-no-send"}
 ---
 
-# 币安广场合约投机雷达 v4.2.1（Shadow）
+# 币安广场合约投机雷达 v4.2.2（Shadow）
 
 > 当前可真实运行的是只读影子报告：不发 Telegram、不创建定时任务、不下单。
 
@@ -32,6 +32,8 @@ metadata: {"version":"4.2.1","mode":"shadow","runtime_effects":"read-only-no-sen
 - 历史 fixture 保留 30D `PNL/ROI/VOLUME/WIN_RATE` 四榜解析合同；当前真实 Smart Money 接入只支持官方 Web UI 已观测的 `PNL/ROI`，每榜必须恰好30个唯一排名与 `topTraderId` 才可标记 `COMPLETE`。
 - Smart Money 公共只读 API 已接入标准 pipeline：`--smart-money` 在线采集，`--smart-money-fixture` 注入带完整性校验的证据；排行、交易员详情与 Square 身份映射分别计数，不能相互代替。
 - 单次生产影子入口 `scripts/run_production_cycle.py` 会先刷新 Feed，再验证 `latest` 与不可变快照逐字节一致，最后以前台、顺序、`--no-send` 方式运行 Smart Money、官方新闻与雷达；Feed 快照超过10分钟或来自未来时失败关闭。
+- 生产 wrapper 为每个长时间子进程每30秒输出一次可刷新的 `[HEARTBEAT]`，避免调度器把正常静默分析误判为无输出挂死；父进程异常退出时会终止并回收子进程。`run_radar.py` 将 `SIGTERM` 转成可审计异常，使已创建的 attempt 进入 `FAILED`，而不是永久遗留 `RUNNING`。
+- `scripts/render_latest_telegram.py --report <committed-report.json>` 只读取已提交报告并复用标准 `render_telegram` 合同输出精简文本；它本身不发送。账号、目标、调度与实际发送仍属于安装环境的外部配置，不随公共 Skill 发布。
 - 生产入口默认不再消费旧版可变 `data/signal_check_input.json`；只有显式传入 `--signals-json` 才把它作为有manifest的补充来源。真实 pipeline 在任何 Profile、Smart Money 或帖子详情网络请求之前获取一次 Futures catalog 并完成 Binance server-time 校验，后续行情复用同一 catalog。
 - 官方 Binance 公告可用 `--official-news` 纳入严格前24小时来源覆盖；列表缺发布时间时必须回源详情，响应 envelope、文章 code、新到旧排序和窗口穷尽性均受合同约束，限流或解析失败会留下 `FAILED` 来源状态而不是伪造空新闻。
 - Smart Money fixture 导入不只校验可重签的 payload hash，还会重新验证固定语义：`30D`、`DESC`、恰好 `PNL+ROI`、每页10行×3页，以及两个 `onlyShow*` filter 均为 `false`；任一不符即拒绝。
@@ -244,6 +246,7 @@ binance-square/
 │   ├── discover_authors.py
 │   ├── run_radar.py
 │   ├── run_production_cycle.py
+│   ├── render_latest_telegram.py
 │   ├── run_shadow_cycle.py
 │   ├── repair_latest.py
 │   └── cleanup_retention.py
