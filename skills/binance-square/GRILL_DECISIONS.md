@@ -368,3 +368,10 @@
 - Feed发布语义进一步冻结为双指针：`binance_raw_posts.json`永远表示本轮observed证据；`binance_raw_posts_eligible.json`只在Discover DOM达到严格有界完成门时推进。PARTIAL不得伪装成功，也不得删除；锁忙必须非零退出。
 - 生产入口不得读取旧eligible来挽救本轮PARTIAL：本轮observed、immutable与eligible必须逐字节一致才进入radar。Profile报告缺分母、缺已尝试作者outcome、状态汇总/source coverage不一致或身份重复时必须失败关闭；`PARTIAL`不计入完成覆盖率，全EMPTY归一为`COMPLETE`。
 - OpenClaw生产迁移采用直接command job，不再由大模型自由分类、决定重试或直接调用消息工具。影子阶段只能运行确定性v4.2 CLI、`--no-send`、无delivery；旧v2.1外发任务必须保持停用。
+
+## 十九、v4.2.1 Unicode 稳定性修复（2026-08-04）
+
+- `2026-08-04T00:00Z` 生产影子任务在 Feed 已完成 DOM 采集后，因正文含孤立 UTF-16 high surrogate `U+D83D`，被 Python `ensure_ascii=false` JSON 写入器拒绝编码为 UTF-8；该故障属于页面文本兼容性问题，不是 Chrome 登录、CDP 连接、币安接口或行情逻辑失败。
+- 处理规则冻结为“保留帖子、最小修复字符”：合法 high/low surrogate pair 合并为原 emoji；孤立 high 或 low surrogate 替换为 `U+FFFD`，并在 Feed `stats` 与 `discovery_result` 记录 `malformed_unicode_replacements`。不得因单个异常字符丢弃整帖或整轮。
+- `atomic_write_json` 必须对任意嵌套字符串执行最终 Unicode scalar 兜底，并在 dump、flush、fsync 或 replace 任一阶段失败时清除本轮临时文件；已经发布的 latest/eligible 仍由原子替换和现有失败关闭合同保护。
+- 回归门覆盖孤立 surrogate、合法代理对、中文/阿拉伯文/原生 emoji 保真、嵌套 JSON 兜底与临时文件清理；当前完整离线测试为281项通过。下一合法 UTC 时槽的真实 no-send 运行仍是动态发布回执，离线测试不冒充线上复跑成功。

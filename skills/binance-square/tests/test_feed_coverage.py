@@ -34,6 +34,51 @@ def _batch(posts: list[dict[str, str]], *, top: int, height: int, bottom: bool) 
 
 
 class FeedCollectionTests(unittest.IsolatedAsyncioTestCase):
+    async def test_malformed_surrogate_is_repaired_and_audited_at_ingress(
+        self,
+    ) -> None:
+        malformed = _post(41)
+        malformed["text"] = "broken " + chr(0xD83D) + " emoji"
+
+        async def evaluator(_websocket: object, expression: str) -> dict:
+            if expression == binance_scraper.SCROLL_TO_TOP_JS:
+                return {
+                    "before": 0,
+                    "after": 0,
+                    "documentHeight": 800,
+                    "viewportHeight": 800,
+                    "reachedBottom": True,
+                }
+            if expression == binance_scraper.COLLECT_POSTS_JS:
+                return _batch([malformed], top=0, height=800, bottom=True)
+            raise AssertionError(expression)
+
+        result = await binance_scraper.collect_feed_discovery(
+            object(),
+            evaluator=evaluator,
+            sleeper=lambda _delay: _no_wait(),
+            preferred_minimum=1,
+            hard_limit=1,
+            max_scrolls=0,
+        )
+
+        self.assertEqual("broken \ufffd emoji", result.posts[0]["text"])
+        self.assertEqual(1, result.stats["malformed_unicode_replacements"])
+        self.assertEqual(1, result.discovery_result["malformed_unicode_replacements"])
+
+    def test_valid_multilingual_text_and_surrogate_pair_are_preserved(self) -> None:
+        collected: dict[str, dict[str, str]] = {}
+        raw = _post(43)
+        raw["text"] = "中文 العربية native 😀 pair " + chr(0xD83D) + chr(0xDE00)
+        hygiene: dict[str, int] = {}
+
+        binance_scraper.merge_posts(collected, [raw], hygiene)
+
+        self.assertEqual(
+            "中文 العربية native 😀 pair 😀", collected[raw["url"]]["text"]
+        )
+        self.assertEqual(0, hygiene["malformed_unicode_replacements"])
+
     async def test_bottom_lazy_load_uses_separate_leave_and_return_phases(self) -> None:
         first_page = [_post(index) for index in range(1, 5)]
         second_page = [_post(index) for index in range(1, 21)]
@@ -75,7 +120,9 @@ class FeedCollectionTests(unittest.IsolatedAsyncioTestCase):
                     "reachedBottom": True,
                 }
             if expression == binance_scraper.SCROLL_JS:
-                raise AssertionError("bottom trigger was collapsed into one JS evaluation")
+                raise AssertionError(
+                    "bottom trigger was collapsed into one JS evaluation"
+                )
             raise AssertionError(expression)
 
         async def sleeper(delay: float) -> None:
@@ -99,9 +146,7 @@ class FeedCollectionTests(unittest.IsolatedAsyncioTestCase):
             result.discovery_result["coverage_scope"],
         )
         self.assertFalse(result.discovery_result["global_denominator_known"])
-        self.assertFalse(
-            result.discovery_result["pagination_api_exhaustion_verified"]
-        )
+        self.assertFalse(result.discovery_result["pagination_api_exhaustion_verified"])
         self.assertEqual(1, result.discovery_result["load_trigger_attempts"])
         self.assertEqual(
             ["LEAVE_BOTTOM", "RETURN_TO_BOTTOM"],
@@ -112,7 +157,9 @@ class FeedCollectionTests(unittest.IsolatedAsyncioTestCase):
         )
         self.assertEqual([0.35, 1.0], waits)
 
-    async def test_valid_post_url_is_discovered_even_when_feed_card_text_is_sparse(self) -> None:
+    async def test_valid_post_url_is_discovered_even_when_feed_card_text_is_sparse(
+        self,
+    ) -> None:
         sparse = _post(42)
         sparse["text"] = ""
 
@@ -144,7 +191,9 @@ class FeedCollectionTests(unittest.IsolatedAsyncioTestCase):
             "https://www.binance.com/en/square/post/42", result.posts[0]["url"]
         )
 
-    async def test_middle_stagnation_does_not_stop_before_later_posts_arrive(self) -> None:
+    async def test_middle_stagnation_does_not_stop_before_later_posts_arrive(
+        self,
+    ) -> None:
         batches = iter(
             [
                 _batch([_post(1)], top=0, height=8000, bottom=False),
@@ -372,6 +421,32 @@ class FeedCollectionTests(unittest.IsolatedAsyncioTestCase):
 
 
 class FeedSnapshotPersistenceTests(unittest.TestCase):
+    def test_nested_malformed_surrogate_cannot_crash_atomic_json_write(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "nested" / "payload.json"
+            malformed = "broken " + chr(0xD83D) + " emoji"
+
+            binance_scraper.atomic_write_json(
+                str(output), {"nested": [{"text": malformed}]}
+            )
+
+            payload = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual("broken \ufffd emoji", payload["nested"][0]["text"])
+            self.assertEqual([], list(output.parent.glob("payload.json.tmp-*")))
+
+    def test_atomic_json_write_removes_temporary_file_after_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "payload.json"
+
+            with patch.object(
+                binance_scraper.json, "dump", side_effect=OSError("disk fault")
+            ):
+                with self.assertRaisesRegex(OSError, "disk fault"):
+                    binance_scraper.atomic_write_json(str(output), {"ok": True})
+
+            self.assertFalse(output.exists())
+            self.assertEqual([], list(output.parent.glob("payload.json.tmp-*")))
+
     def test_partial_observation_writes_latest_and_immutable_without_eligible_pointer(
         self,
     ) -> None:
