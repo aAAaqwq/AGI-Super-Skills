@@ -71,9 +71,7 @@ MAX_SCROLLS = env_int("BINANCE_SQUARE_MAX_SCROLLS", 80, 1, 200)
 STAGNANT_ROUNDS = env_int("BINANCE_SQUARE_STAGNANT_ROUNDS", 10, 2, 30)
 SCROLL_PIXELS = env_int("BINANCE_SQUARE_SCROLL_PIXELS", 1200, 200, 4000)
 SCROLL_DELAY = env_float("BINANCE_SQUARE_SCROLL_DELAY", 1.0, 0.3, 5.0)
-LOAD_TRIGGER_DELAY = env_float(
-    "BINANCE_SQUARE_LOAD_TRIGGER_DELAY", 0.35, 0.1, 2.0
-)
+LOAD_TRIGGER_DELAY = env_float("BINANCE_SQUARE_LOAD_TRIGGER_DELAY", 0.35, 0.1, 2.0)
 CDP_RESPONSE_TIMEOUT = env_float("BINANCE_SQUARE_CDP_TIMEOUT", 15.0, 3.0, 60.0)
 SCRAPE_TIMEOUT = env_float("BINANCE_SQUARE_RUN_TIMEOUT", 240.0, 30.0, 300.0)
 CDP_MESSAGE_IDS = itertools.count(1)
@@ -86,15 +84,78 @@ def timestamp_pair(now=None):
     return utc_text, local_text
 
 
+def normalize_unicode_scalars(value: str) -> tuple[str, int]:
+    """Return valid Unicode text and the number of malformed units replaced.
+
+    Browser/CDP JSON can carry UTF-16 surrogate code units into Python. Valid
+    high/low pairs are combined into their Unicode scalar, while lone units are
+    replaced with U+FFFD so one malformed DOM character cannot abort a batch.
+    """
+
+    if not any(0xD800 <= ord(character) <= 0xDFFF for character in value):
+        return value, 0
+
+    normalized: list[str] = []
+    malformed_replacements = 0
+    index = 0
+    while index < len(value):
+        code_unit = ord(value[index])
+        if 0xD800 <= code_unit <= 0xDBFF:
+            if index + 1 < len(value):
+                low_unit = ord(value[index + 1])
+                if 0xDC00 <= low_unit <= 0xDFFF:
+                    code_point = (
+                        0x10000 + ((code_unit - 0xD800) << 10) + (low_unit - 0xDC00)
+                    )
+                    normalized.append(chr(code_point))
+                    index += 2
+                    continue
+            normalized.append("\ufffd")
+            malformed_replacements += 1
+        elif 0xDC00 <= code_unit <= 0xDFFF:
+            normalized.append("\ufffd")
+            malformed_replacements += 1
+        else:
+            normalized.append(value[index])
+        index += 1
+    return "".join(normalized), malformed_replacements
+
+
+def json_safe_unicode(value: Any) -> Any:
+    """Recursively remove invalid Unicode scalars before UTF-8 serialization."""
+
+    if isinstance(value, str):
+        return normalize_unicode_scalars(value)[0]
+    if isinstance(value, dict):
+        return {
+            json_safe_unicode(key): json_safe_unicode(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [json_safe_unicode(item) for item in value]
+    if isinstance(value, tuple):
+        return tuple(json_safe_unicode(item) for item in value)
+    return value
+
+
 def atomic_write_json(path, payload):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     temporary = f"{path}.tmp-{os.getpid()}"
-    with open(temporary, "w", encoding="utf-8") as handle:
-        json.dump(payload, handle, ensure_ascii=False, indent=2)
-        handle.write("\n")
-        handle.flush()
-        os.fsync(handle.fileno())
-    os.replace(temporary, path)
+    published = False
+    try:
+        with open(temporary, "w", encoding="utf-8") as handle:
+            json.dump(json_safe_unicode(payload), handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        published = True
+    finally:
+        if not published:
+            try:
+                os.unlink(temporary)
+            except OSError:
+                pass
 
 
 def normalize_post_url(url):
@@ -468,9 +529,7 @@ async def evaluate_value(websocket, expression):
             if isinstance(details, dict)
             else None
         )
-        raise RuntimeError(
-            f"Runtime.evaluate failed: {description or details}"
-        )
+        raise RuntimeError(f"Runtime.evaluate failed: {description or details}")
     remote = result.get("result", {})
     if isinstance(remote, dict) and remote.get("subtype") == "error":
         raise RuntimeError(
@@ -479,17 +538,29 @@ async def evaluate_value(websocket, expression):
     return remote.get("value", {})
 
 
-def merge_posts(collected, incoming):
+def merge_posts(collected, incoming, hygiene_stats=None):
+    if hygiene_stats is not None:
+        hygiene_stats.setdefault("malformed_unicode_replacements", 0)
     added = 0
     for raw_post in incoming:
         url = normalize_post_url(raw_post.get("url"))
         if not url:
             continue
+        normalized_fields = {}
+        malformed_replacements = 0
+        for field in ("text", "time", "author"):
+            raw_value = raw_post.get(field)
+            text_value = raw_value if isinstance(raw_value, str) else ""
+            normalized, replacements = normalize_unicode_scalars(text_value)
+            normalized_fields[field] = normalized.strip()
+            malformed_replacements += replacements
+        if hygiene_stats is not None:
+            hygiene_stats["malformed_unicode_replacements"] += malformed_replacements
         item = {
             "url": url,
-            "text": (raw_post.get("text") or "").strip()[:1200],
-            "time": (raw_post.get("time") or "").strip(),
-            "author": (raw_post.get("author") or "").strip(),
+            "text": normalized_fields["text"][:1200],
+            "time": normalized_fields["time"],
+            "author": normalized_fields["author"],
         }
         previous = collected.get(url)
         if previous is None:
@@ -577,6 +648,7 @@ def persist_successful_collection(
         "posts": annotated_posts,
     }
 
+    output = json_safe_unicode(output)
     atomic_write_json(snapshot_path, output)
     atomic_write_json(OUTPUT_FILE, output)
     if eligible_for_promotion:
@@ -601,6 +673,7 @@ async def collect_feed_discovery(
     top_reset = await evaluator(websocket, SCROLL_TO_TOP_JS)
     started_from_top = abs(float(top_reset.get("after") or 0)) <= 1
     collected: dict[str, dict[str, str]] = {}
+    hygiene_stats = {"malformed_unicode_replacements": 0}
     source_observations = 0
     valid_url_observations = 0
     invalid_url_observations = 0
@@ -622,10 +695,8 @@ async def collect_feed_discovery(
         source_observations += candidate_links
         invalid_url_observations += min(candidate_links, invalid_urls)
         valid_url_observations += max(0, candidate_links - invalid_urls)
-        candidate_block_observations += max(
-            0, int(batch.get("candidateBlocks") or 0)
-        )
-        added = merge_posts(collected, batch.get("posts") or [])
+        candidate_block_observations += max(0, int(batch.get("candidateBlocks") or 0))
+        added = merge_posts(collected, batch.get("posts") or [], hygiene_stats)
 
         at_bottom = bool(batch.get("reachedBottom"))
         height = max(0, int(batch.get("documentHeight") or 0))
@@ -749,6 +820,9 @@ async def collect_feed_discovery(
         "scroll_observations": scroll_observations,
         "load_trigger_attempts": load_trigger_attempts,
         "load_trigger_observations": load_trigger_observations,
+        "malformed_unicode_replacements": hygiene_stats[
+            "malformed_unicode_replacements"
+        ],
     }
     stats = {
         "candidate_link_observations": source_observations,
@@ -762,6 +836,9 @@ async def collect_feed_discovery(
         "scroll_observations": scroll_observations,
         "load_trigger_attempts": load_trigger_attempts,
         "load_trigger_observations": load_trigger_observations,
+        "malformed_unicode_replacements": hygiene_stats[
+            "malformed_unicode_replacements"
+        ],
     }
     return FeedDiscoveryCollection(posts, discovery_result, stats)
 
@@ -788,36 +865,43 @@ async def scrape():
 
 
 async def scrape_connected(websocket):
-        await cdp(websocket, "Runtime.enable")
-        await cdp(websocket, "Page.enable")
+    await cdp(websocket, "Runtime.enable")
+    await cdp(websocket, "Page.enable")
 
-        print("[*] Loading page...", file=sys.stderr)
-        current = await evaluate_value(websocket, "location.href")
-        if "binance.com/en/square" in str(current or "") and "cloudflare" not in str(current or "").lower():
-            await cdp(websocket, "Runtime.evaluate", {"expression": "location.reload()", "returnByValue": True})
-        else:
-            await cdp(websocket, "Page.navigate", {"url": BINANCE_SQUARE})
-        await asyncio.sleep(8)
-
-        print(
-            f"[*] Dynamic collection: target={MIN_TARGET}, max={MAX_POSTS}, "
-            f"scrolls<={MAX_SCROLLS}",
-            file=sys.stderr,
+    print("[*] Loading page...", file=sys.stderr)
+    current = await evaluate_value(websocket, "location.href")
+    if (
+        "binance.com/en/square" in str(current or "")
+        and "cloudflare" not in str(current or "").lower()
+    ):
+        await cdp(
+            websocket,
+            "Runtime.evaluate",
+            {"expression": "location.reload()", "returnByValue": True},
         )
+    else:
+        await cdp(websocket, "Page.navigate", {"url": BINANCE_SQUARE})
+    await asyncio.sleep(8)
 
-        collection = await collect_feed_discovery(websocket)
-        output = persist_successful_collection(collection)
-        stats = output["stats"]
+    print(
+        f"[*] Dynamic collection: target={MIN_TARGET}, max={MAX_POSTS}, "
+        f"scrolls<={MAX_SCROLLS}",
+        file=sys.stderr,
+    )
 
-        print(
-            f"[OK] latest={output['scanned_at']} "
-            f"local={output['scanned_at_local']} | "
-            f"valid={stats['unique_valid_posts']} new={stats['new_posts']} "
-            f"duplicates={stats['duplicate_posts']} | "
-            f"snapshot={output['snapshot_file']}",
-            file=sys.stderr,
-        )
-        return output
+    collection = await collect_feed_discovery(websocket)
+    output = persist_successful_collection(collection)
+    stats = output["stats"]
+
+    print(
+        f"[OK] latest={output['scanned_at']} "
+        f"local={output['scanned_at_local']} | "
+        f"valid={stats['unique_valid_posts']} new={stats['new_posts']} "
+        f"duplicates={stats['duplicate_posts']} | "
+        f"snapshot={output['snapshot_file']}",
+        file=sys.stderr,
+    )
+    return output
 
 
 def write_error(error):

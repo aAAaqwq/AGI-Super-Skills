@@ -8,7 +8,7 @@ Scope: public, credential-free Binance Square shadow Skill. This record separate
 
 ## Verified in this optimization
 
-- The full Skill suite passes 277 offline unit, contract, integration, report, storage, migration, CLI, and production-cycle tests on the current candidate tree.
+- The full Skill suite passes 281 offline unit, contract, integration, report, storage, migration, CLI, and production-cycle tests on the current candidate tree.
 - Feed discovery now emits `square-feed-coverage/v1`, starts from the top, records scroll geometry and two-phase lazy-load triggers, and distinguishes `BOUNDED_COMPLETE`, `PARTIAL`, `CAPPED`, and `BLOCKED`. A fresh legacy snapshot is `LEGACY_UNVERIFIED`, never silently `COMPLETE`.
 - The previous false-stagnation defect is covered: moving rounds with no new post do not count as exhaustion, and leaving/returning to the bottom occurs in separate browser evaluation phases.
 - Public Square Profile pagination is wired into the real pipeline with an independent anonymous HTTP client. It filters each item by `firstReleaseTime` in `[decision_at-24h, decision_at)`, handles pinned old posts, validates cursor anchors, and fails closed on offset/schema/request/page-budget uncertainty.
@@ -28,6 +28,7 @@ Scope: public, credential-free Binance Square shadow Skill. This record separate
 - The production wrapper no longer consumes the mutable legacy signal file by default, and its CLI path defaults no longer depend on slotted-dataclass member descriptors. Binance server-time validation now happens before Profile, Smart Money, or detail network collection and the verified catalog is reused.
 - The production wrapper now fails before radar unless the current observation itself advances the strict Feed coverage-eligible pointer. Observed latest, immutable snapshot, and eligible pointer must be byte-identical; a partial capture, stale pointer, missing pointer, lock conflict, or unchanged latest can never fall back to older eligible evidence.
 - Profile reports now fail closed on missing cohort denominators, mismatched planned/status totals, missing attempted-author outcomes, duplicate outcome identities, summary/detail disagreement, or a top-level/source status that contradicts the cohort aggregate. Coverage is reported as `(COMPLETE + EMPTY) / planned`; `PARTIAL` never enters the completed numerator, while an exhausted all-`EMPTY` cohort is normalized to `COMPLETE`.
+- A live Feed observation exposed an isolated UTF-16 surrogate from browser DOM text. The ingress path now combines valid surrogate pairs, replaces only malformed units with `U+FFFD`, and reports the replacement count. Recursive JSON sanitization is retained as a final compatibility boundary, and failed atomic writes remove their exact temporary file. Native emoji, CJK, Arabic, and existing coverage semantics remain unchanged.
 
 ## Bounded live component evidence
 

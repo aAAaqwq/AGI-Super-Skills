@@ -4,10 +4,10 @@ description: |
   币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子，
   联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。
   触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达
-metadata: {"version":"4.2.0","mode":"shadow","runtime_effects":"read-only-no-send"}
+metadata: {"version":"4.2.1","mode":"shadow","runtime_effects":"read-only-no-send"}
 ---
 
-# 币安广场合约投机雷达 v4.2（Shadow）
+# 币安广场合约投机雷达 v4.2.1（Shadow）
 
 > 当前可真实运行的是只读影子报告：不发 Telegram、不创建定时任务、不下单。
 
@@ -25,6 +25,7 @@ metadata: {"version":"4.2.0","mode":"shadow","runtime_effects":"read-only-no-sen
 - 标准入口默认容量 200；Profile 是专业作者帖主通道，Feed 与经过人工/模型提取的参数信号 URL 作有界补充，按 canonical `post_id` 去重且保留全部来源 observation。
 - Feed 使用 `square-feed-coverage/v1`：必须从顶部开始，并记录滚动几何、两相懒加载触发、停止原因和覆盖状态。当前 scope 固定为 `BINANCE_SQUARE_DISCOVER_DOM`，`global_denominator_known=false` 且 `pagination_api_exhaustion_verified=false`；即使达到声明下限并稳定穷尽 DOM 而标 `BOUNDED_COMPLETE`，也只代表该次 DOM surface，不代表内部 feed API 或整个平台。容量、滚动预算、错误或未验证旧快照分别标 `CAPPED/PARTIAL/BLOCKED/LEGACY_UNVERIFIED`。
 - Feed 每次成功观察都写不可变快照和 `binance_raw_posts.json` observed latest；只有严格满足 `BOUNDED_COMPLETE + EXHAUSTED + minimum_target_met + unique>=preferred_minimum` 的 Discover DOM 捕获才推进独立 `binance_raw_posts_eligible.json`。PARTIAL 证据必须保存但不得覆盖既有 eligible 指针；抓取锁忙以非零状态失败，不能复用旧 latest 冒充本轮成功。
+- Feed 文本在 CDP 入站时执行 Unicode scalar 规范化：合法 emoji 代理对保持原义，孤立 UTF-16 surrogate 仅替换为 `U+FFFD` 并计入 `malformed_unicode_replacements`。最终 JSON 写入层再次递归兜底；写入失败必须清除临时文件，单个异常字符不得拖垮整批帖子。
 - 生产wrapper只接受本轮自身推进eligible的捕获，并要求observed latest、immutable snapshot与eligible pointer逐字节一致；PARTIAL、旧指针、缺指针或未刷新latest一律在radar前失败。
 - 逐帖请求币安公开详情接口，使用稳定 `post_id`、`author_id`、权威正文与精确发布时间。
 - Profile + Feed 双通道已接入真实只读 pipeline：Profile 计划只认稳定 `squareUid`，通过匿名公共 GET 从 `timeOffset=-1` 分页；逐条用 `firstReleaseTime` 执行严格24小时窗口，并以可验证 cursor 水位、空页或无 next 作为终止证明。置顶旧帖不会造成提前停止，cursor 停滞/上升、锚点不匹配、schema 漂移、请求失败或页预算耗尽均失败关闭为 `PARTIAL`。

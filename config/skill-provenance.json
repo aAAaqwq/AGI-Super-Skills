@@ -213,7 +213,7 @@
       "authors": ["Daniel Li", "AGI Super Team contributors"],
       "creation_commit": "da4e86d351b5c8d0c3d5b2a81602b93de24fe605",
       "license": {"spdx": "MIT", "evidence": "LICENSE"},
-      "local_tree_digest": "sha256:0705f7b2142a38a3272891a7aa71451d4e83d5e86528479a70416a7a44db1a38",
+      "local_tree_digest": "sha256:af26d092b3392ccbe4af7b506c6c3f276a805b1e596e5b559354c8a56dc897b3",
       "declared_hints": ["The v4 shadow implementation and subsequent production-gate hardening were built in this repository under the maintainer's direction."],
       "evidence": ["commit:da4e86d351b5c8d0c3d5b2a81602b93de24fe605", "commit:437b26c2f3146c61cf9cab6799ac7f01ca659af1", "commit:2f733c5f97c7783c314878b5b3ea3ed39117c9ab", "skills/binance-square/SKILL.md", "skills/binance-square/OPTIMIZATION_VERIFICATION.md"]
     },
