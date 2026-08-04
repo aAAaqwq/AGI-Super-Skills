@@ -39,9 +39,9 @@
           <li><strong>Add the plugin</strong><span>Install the named package, then start a new task so Codex can discover the newly available skills.</span></li>
           <li><strong>Preview agent sync</strong><span>Invoke <code>$agi-super-team-sync</code> without applying. Review creates, updates, backups, and destination paths.</span></li>
         </ol>
-        <pre><code>codex plugin marketplace add aAAaqwq/AGI-Super-Team --ref main
+        <pre><code>codex plugin marketplace add aAAaqwq/AGI-Super-Team --ref v1.4.1
 codex plugin add agi-super-team-codex@agi-super-team</code></pre>
-        <p>For reproducibility, replace <code>main</code> with a reviewed tag or commit when your Codex version accepts that reference. Repository commands may evolve with the client; check <code>codex plugin --help</code> before scripting them.</p>
+        <p>The marketplace reference selects the release tag matching the npm and plugin version. A Git tag is not a cryptographic content pin: verify and record the tag's resolved commit before installation, and stop if it differs from the published release commit. Repository commands may evolve with the client; check <code>codex plugin --help</code> before scripting them.</p>
       </section>
       <section>
         <h2>What the package changes</h2>

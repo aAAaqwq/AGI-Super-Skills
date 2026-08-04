@@ -1,17 +1,17 @@
-import { spawnSync } from "node:child_process";
 import {
   chmodSync,
   closeSync,
-  copyFileSync,
   existsSync,
   lstatSync,
   mkdirSync,
   openSync,
+  readFileSync,
   renameSync,
-  statSync,
+  unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { spawnCli } from "./process.mjs";
 
 
 export function mergeManagedAgents(existing, managed) {
@@ -27,22 +27,36 @@ export function mergeManagedAgents(existing, managed) {
 }
 
 function run(command, args, {environment, input = undefined, allowMissingPath = false}) {
-  const result = spawnSync(command, args, {
+  const result = spawnCli(command, args, {
     encoding: "utf8",
     env: environment,
     input,
     maxBuffer: 16 * 1024 * 1024,
   });
   if (result.status !== 0 && !allowMissingPath) {
-    const detail = (result.stderr || result.stdout || "").trim();
-    throw new Error(`${command} ${args.join(" ")} failed${detail ? `: ${detail}` : ""}`);
+    throw commandFailure(command, args, result);
   }
   return result;
 }
 
-function parseJsonOutput(result, fallback) {
+function commandFailure(command, args, result) {
+  const detail = (
+    result.error?.message
+    || result.stderr
+    || result.stdout
+    || (result.signal ? `terminated by signal ${result.signal}` : "")
+  ).trim();
+  return new Error(`${command} ${args.join(" ")} failed${detail ? `: ${detail}` : ""}`);
+}
+
+function isMissingAgentsList(result) {
+  if (result.status === 0 || result.error || result.signal) return false;
+  const output = `${result.stderr || ""}\n${result.stdout || ""}`;
+  return /Config path not found:\s*agents\.list(?:[.\s]|$)/.test(output);
+}
+
+function parseJsonOutput(result) {
   const text = (result.stdout || "").trim();
-  if (!text || result.status !== 0) return fallback;
   try {
     return JSON.parse(text);
   } catch (error) {
@@ -50,23 +64,102 @@ function parseJsonOutput(result, fallback) {
   }
 }
 
-function backupOpenClawConfig(home) {
-  const stateRoot = join(home, ".openclaw");
-  const config = join(stateRoot, "openclaw.json");
-  if (!existsSync(config)) return null;
+function captureOpenClawConfig(home) {
+  const path = join(home, ".openclaw", "openclaw.json");
+  if (!existsSync(path)) {
+    return {path, exists: false, content: null, mode: null, device: null, inode: null};
+  }
+  const metadata = lstatSync(path);
+  if (metadata.isSymbolicLink() || !metadata.isFile()) {
+    throw new Error(`refusing unsafe OpenClaw config: ${path}`);
+  }
+  return {
+    path,
+    exists: true,
+    content: readFileSync(path),
+    mode: metadata.mode & 0o777,
+    device: metadata.dev,
+    inode: metadata.ino,
+  };
+}
+
+function configMatches(snapshot) {
+  try {
+    if (!existsSync(snapshot.path)) return !snapshot.exists;
+    if (!snapshot.exists) return false;
+    const metadata = lstatSync(snapshot.path);
+    if (metadata.isSymbolicLink() || !metadata.isFile()) return false;
+    return (
+      (metadata.mode & 0o777) === snapshot.mode
+      && metadata.dev === snapshot.device
+      && metadata.ino === snapshot.inode
+      && readFileSync(snapshot.path).equals(snapshot.content)
+    );
+  } catch {
+    return false;
+  }
+}
+
+function backupOpenClawConfig(snapshot) {
+  if (!snapshot.exists) return null;
+  const stateRoot = dirname(snapshot.path);
+  const config = snapshot.path;
   const metadata = lstatSync(config);
-  if (metadata.isSymbolicLink() || !statSync(config).isFile()) {
+  if (metadata.isSymbolicLink() || !metadata.isFile()) {
     throw new Error(`refusing unsafe OpenClaw config: ${config}`);
   }
   const backupRoot = join(stateRoot, ".agi-super-team-backups");
-  mkdirSync(backupRoot, {recursive: true, mode: 0o700});
+  if (existsSync(backupRoot)) {
+    const backupMetadata = lstatSync(backupRoot);
+    if (backupMetadata.isSymbolicLink() || !backupMetadata.isDirectory()) {
+      throw new Error(`refusing unsafe OpenClaw backup directory: ${backupRoot}`);
+    }
+    chmodSync(backupRoot, 0o700);
+  } else {
+    mkdirSync(backupRoot, {recursive: true, mode: 0o700});
+  }
   const timestamp = new Date().toISOString().replaceAll(":", "").replaceAll(".", "");
-  const backup = join(backupRoot, `openclaw.json.${timestamp}.bak`);
-  copyFileSync(config, backup);
+  const backup = join(backupRoot, `openclaw.json.${timestamp}.${process.pid}.bak`);
+  const descriptor = openSync(backup, "wx", 0o600);
+  try {
+    writeFileSync(descriptor, snapshot.content);
+  } finally {
+    closeSync(descriptor);
+  }
+  chmodSync(backup, 0o600);
   return backup;
 }
 
-function connectOpenClaw({home, connection, environment}) {
+function restoreOpenClawConfig({original, expected, backup, failure}) {
+  if (!configMatches(expected)) {
+    const recovery = backup
+      ? `original backup preserved at ${backup}`
+      : "no original config existed; the current config was preserved";
+    throw new Error(
+      `${failure.message}; refusing automatic rollback because OpenClaw config changed concurrently; ${recovery}`,
+      {cause: failure},
+    );
+  }
+  if (!original.exists) {
+    if (existsSync(original.path)) unlinkSync(original.path);
+    return {status: "rolled-back", restored: "removed-new-config", backup};
+  }
+  const temporary = join(
+    dirname(original.path),
+    `.agi-super-team-openclaw-restore.${process.pid}.${Date.now()}.tmp`,
+  );
+  const descriptor = openSync(temporary, "wx", 0o600);
+  try {
+    writeFileSync(descriptor, original.content);
+  } finally {
+    closeSync(descriptor);
+  }
+  chmodSync(temporary, original.mode);
+  renameSync(temporary, original.path);
+  return {status: "rolled-back", restored: "original-config", backup};
+}
+
+function prepareOpenClawConnection({home, connection, environment}) {
   const command = environment.OPENCLAW_CLI || "openclaw";
   const stateRoot = join(home, ".openclaw");
   const env = {
@@ -74,12 +167,16 @@ function connectOpenClaw({home, connection, environment}) {
     OPENCLAW_STATE_DIR: stateRoot,
   };
   const version = run(command, ["--version"], {environment: env}).stdout.trim();
+  const originalConfig = captureOpenClawConfig(home);
   const currentResult = run(
     command,
     ["config", "get", "agents.list", "--json"],
     {environment: env, allowMissingPath: true},
   );
-  const existing = parseJsonOutput(currentResult, []);
+  if (currentResult.status !== 0 && !isMissingAgentsList(currentResult)) {
+    throw commandFailure(command, ["config", "get", "agents.list", "--json"], currentResult);
+  }
+  const existing = currentResult.status === 0 ? parseJsonOutput(currentResult) : [];
   if (!Array.isArray(existing)) throw new Error("OpenClaw agents.list must be an array");
   const managed = connection?.configPatch?.agents?.list;
   if (!Array.isArray(managed)) throw new Error("OpenClaw connection spec is missing configPatch.agents.list");
@@ -109,14 +206,71 @@ function connectOpenClaw({home, connection, environment}) {
     ],
     {environment: env, input},
   );
-  const backup = backupOpenClawConfig(home);
-  run(
-    command,
-    ["config", "patch", "--stdin", "--replace-path", "agents.list"],
-    {environment: env, input},
-  );
-  run(command, ["config", "validate", "--json"], {environment: env});
+  if (!configMatches(originalConfig)) {
+    throw new Error("OpenClaw config changed while preparing the connection; retry without concurrent edits");
+  }
   return {
+    command,
+    env,
+    version,
+    originalConfig,
+    existing,
+    managed,
+    input,
+  };
+}
+
+function connectOpenClawTransaction({home, connection, environment}) {
+  const prepared = prepareOpenClawConnection({home, connection, environment});
+  const {
+    command,
+    env,
+    version,
+    originalConfig,
+    existing,
+    managed,
+    input,
+  } = prepared;
+  const backup = backupOpenClawConfig(originalConfig);
+  if (!configMatches(originalConfig)) {
+    if (backup && existsSync(backup)) unlinkSync(backup);
+    throw new Error("OpenClaw config changed before applying the connection; retry without concurrent edits");
+  }
+  try {
+    run(
+      command,
+      ["config", "patch", "--stdin", "--replace-path", "agents.list"],
+      {environment: env, input},
+    );
+  } catch (failure) {
+    const failedPatchConfig = captureOpenClawConfig(home);
+    const rollback = restoreOpenClawConfig({
+      original: originalConfig,
+      expected: failedPatchConfig,
+      backup,
+      failure,
+    });
+    throw new Error(
+      `${failure.message}; OpenClaw config rollback completed (${rollback.restored})${backup ? `; backup preserved at ${backup}` : ""}`,
+      {cause: failure},
+    );
+  }
+  const appliedConfig = captureOpenClawConfig(home);
+  try {
+    run(command, ["config", "validate", "--json"], {environment: env});
+  } catch (failure) {
+    const rollback = restoreOpenClawConfig({
+      original: originalConfig,
+      expected: appliedConfig,
+      backup,
+      failure,
+    });
+    throw new Error(
+      `${failure.message}; OpenClaw config rollback completed (${rollback.restored})${backup ? `; backup preserved at ${backup}` : ""}`,
+      {cause: failure},
+    );
+  }
+  const receipt = {
     schemaVersion: 1,
     harness: "openclaw",
     status: "connected-structural",
@@ -139,9 +293,58 @@ function connectOpenClaw({home, connection, environment}) {
       "No inbound channel binding was created.",
     ],
   };
+  let state = "active";
+  return {
+    receipt,
+    rollback() {
+      if (state !== "active") return {status: "not-active", state, backup};
+      const rollback = restoreOpenClawConfig({
+        original: originalConfig,
+        expected: appliedConfig,
+        backup,
+        failure: new Error("OpenClaw connection rollback requested"),
+      });
+      state = "rolled-back";
+      return rollback;
+    },
+    commit() {
+      if (state === "committed") return {status: "committed", backup};
+      if (state !== "active") return {status: "not-active", state, backup};
+      state = "committed";
+      return {status: "committed", backup};
+    },
+  };
 }
 
-export function connectHarness({
+export function preflightHarnessConnection({
+  tool,
+  home,
+  connection,
+  environment = process.env,
+}) {
+  if (!tool?.id) throw new Error("preflightHarnessConnection requires a tool id");
+  if (!home) throw new Error("preflightHarnessConnection requires a home path");
+  if (tool.id !== "openclaw") {
+    return {
+      harness: tool.id,
+      status: "ready",
+      checks: ["adapter-artifacts-plan-ready"],
+    };
+  }
+  const prepared = prepareOpenClawConnection({home, connection, environment});
+  return {
+    harness: "openclaw",
+    status: "ready",
+    version: prepared.version,
+    managedAgents: prepared.managed.map((entry) => entry.id),
+    preservedAgents: prepared.existing
+      .filter((entry) => !prepared.managed.some((item) => item.id === entry.id))
+      .map((entry) => entry.id),
+    checks: ["cli-version", "config-get", "config-patch-dry-run"],
+  };
+}
+
+export function connectHarnessTransaction({
   tool,
   home,
   connection,
@@ -150,9 +353,9 @@ export function connectHarness({
   if (!tool?.id) throw new Error("connectHarness requires a tool id");
   if (!home) throw new Error("connectHarness requires a home path");
   if (tool.id === "openclaw") {
-    return connectOpenClaw({home, connection, environment});
+    return connectOpenClawTransaction({home, connection, environment});
   }
-  return {
+  const receipt = {
     schemaVersion: 1,
     harness: tool.id,
     status: "filesystem-connected",
@@ -162,6 +365,27 @@ export function connectHarness({
       "The harness client did not execute a model-backed trigger or delegation canary.",
     ],
   };
+  let state = "active";
+  return {
+    receipt,
+    rollback() {
+      if (state !== "active") return {status: "not-active", state, backup: null};
+      state = "rolled-back";
+      return {status: "not-required", backup: null};
+    },
+    commit() {
+      if (state === "committed") return {status: "committed", backup: null};
+      if (state !== "active") return {status: "not-active", state, backup: null};
+      state = "committed";
+      return {status: "committed", backup: null};
+    },
+  };
+}
+
+export function connectHarness(options) {
+  const transaction = connectHarnessTransaction(options);
+  transaction.commit();
+  return transaction.receipt;
 }
 
 function assertSafeReceiptPath(root, path) {
@@ -194,7 +418,52 @@ function assertSafeReceiptPath(root, path) {
   return resolvedPath;
 }
 
-export function writeHarnessReceipt({root, connectionPath, receipt}) {
+function captureReceipt(path) {
+  if (!existsSync(path)) {
+    return {path, exists: false, content: null, mode: null, device: null, inode: null};
+  }
+  const metadata = lstatSync(path);
+  if (metadata.isSymbolicLink() || !metadata.isFile()) {
+    throw new Error(`refusing unsafe receipt destination: ${path}`);
+  }
+  return {
+    path,
+    exists: true,
+    content: readFileSync(path),
+    mode: metadata.mode & 0o777,
+    device: metadata.dev,
+    inode: metadata.ino,
+  };
+}
+
+function receiptMatches(snapshot) {
+  try {
+    if (!existsSync(snapshot.path)) return !snapshot.exists;
+    if (!snapshot.exists) return false;
+    const metadata = lstatSync(snapshot.path);
+    if (metadata.isSymbolicLink() || !metadata.isFile()) return false;
+    return (
+      (metadata.mode & 0o777) === snapshot.mode
+      && metadata.dev === snapshot.device
+      && metadata.ino === snapshot.inode
+      && readFileSync(snapshot.path).equals(snapshot.content)
+    );
+  } catch {
+    return false;
+  }
+}
+
+function writePrivateFile(path, content, mode = 0o600) {
+  const descriptor = openSync(path, "wx", mode);
+  try {
+    writeFileSync(descriptor, content);
+  } finally {
+    closeSync(descriptor);
+  }
+  chmodSync(path, mode);
+}
+
+export function writeHarnessReceiptTransaction({root, connectionPath, receipt}) {
   if (!root) throw new Error("writeHarnessReceipt requires a target root");
   if (
     typeof connectionPath !== "string"
@@ -209,17 +478,93 @@ export function writeHarnessReceipt({root, connectionPath, receipt}) {
     join(root, dirname(connectionPath), "receipt.json"),
   );
   mkdirSync(dirname(path), {recursive: true, mode: 0o700});
+  const original = captureReceipt(path);
+  const nonce = `${process.pid}.${Date.now()}`;
+  const backup = original.exists
+    ? join(dirname(path), `.agi-super-team-receipt-backup.${nonce}.tmp`)
+    : null;
+  if (backup) writePrivateFile(backup, original.content);
+  const backupSnapshot = backup ? captureReceipt(backup) : null;
   const temporary = join(
     dirname(path),
-    `.agi-super-team-receipt.${process.pid}.${Date.now()}.tmp`,
+    `.agi-super-team-receipt.${nonce}.tmp`,
   );
-  const descriptor = openSync(temporary, "wx", 0o600);
+  let temporarySnapshot = null;
   try {
-    writeFileSync(descriptor, `${JSON.stringify(receipt, null, 2)}\n`);
-  } finally {
-    closeSync(descriptor);
+    writePrivateFile(temporary, `${JSON.stringify(receipt, null, 2)}\n`);
+    temporarySnapshot = captureReceipt(temporary);
+    assertSafeReceiptPath(root, path);
+    if (!receiptMatches(original)) {
+      throw new Error(
+        "refusing receipt replacement because the destination changed concurrently before write",
+      );
+    }
+    renameSync(temporary, path);
+  } catch (error) {
+    const preserved = [];
+    for (const artifact of [temporarySnapshot, backupSnapshot]) {
+      if (!artifact) continue;
+      try {
+        if (receiptMatches(artifact)) unlinkSync(artifact.path);
+        else if (existsSync(artifact.path)) preserved.push(artifact.path);
+      } catch {
+        preserved.push(artifact.path);
+      }
+    }
+    if (preserved.length) {
+      throw new Error(
+        `${error.message}; transaction artifacts preserved for inspection at ${preserved.join(", ")}`,
+        {cause: error},
+      );
+    }
+    throw error;
   }
-  chmodSync(temporary, 0o600);
-  renameSync(temporary, path);
-  return path;
+  const applied = captureReceipt(path);
+  let state = "active";
+  let commitResult = null;
+  return {
+    path,
+    rollback() {
+      if (state !== "active") return {status: "not-active", state, backup};
+      if (!receiptMatches(applied)) {
+        const recovery = backup
+          ? `original receipt backup preserved at ${backup}`
+          : "no original receipt existed; the current receipt was preserved";
+        throw new Error(
+          `refusing automatic receipt rollback because the receipt changed concurrently; ${recovery}`,
+        );
+      }
+      if (original.exists) {
+        const restore = join(
+          dirname(path),
+          `.agi-super-team-receipt-restore.${process.pid}.${Date.now()}.tmp`,
+        );
+        writePrivateFile(restore, original.content, original.mode);
+        renameSync(restore, path);
+      } else if (existsSync(path)) {
+        unlinkSync(path);
+      }
+      if (backup && existsSync(backup)) unlinkSync(backup);
+      state = "rolled-back";
+      return {status: "rolled-back", backup: null};
+    },
+    commit() {
+      if (state === "committed") return commitResult;
+      if (state !== "active") return {status: "not-active", state, backup};
+      state = "committed";
+      try {
+        if (backup && existsSync(backup)) unlinkSync(backup);
+        commitResult = {status: "committed", backup: null};
+      } catch {
+        commitResult = {status: "committed", backup, backupPreserved: true};
+      }
+      return commitResult;
+    },
+  };
+}
+
+export function writeHarnessReceipt(options) {
+  const transaction = writeHarnessReceiptTransaction(options);
+  transaction.commit();
+  return transaction.path;
 }

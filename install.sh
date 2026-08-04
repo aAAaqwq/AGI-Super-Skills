@@ -14,6 +14,7 @@
 set -euo pipefail
 
 REPO_URL="https://github.com/aAAaqwq/AGI-Super-Team.git"
+REPO_REF="${AGI_SUPER_TEAM_REF:-v1.4.1}"
 OPENCLAW_DIR="${AGI_SUPER_TEAM_DESTINATION:-${HOME}/.openclaw}"
 SOURCE_DIR="${AGI_SUPER_TEAM_SOURCE:-}"
 APPLY=0
@@ -24,6 +25,18 @@ SELECTOR_KIND=""
 MANIFEST_PATH=""
 DEPLOY_ROOT=""
 INSTALL_STAGE=""
+INSTALL_LOCK=""
+TRANSACTION_ACTIVE=0
+TRANSACTION_SIGNAL=""
+TRANSACTION_ROOT_MOVE=0
+TRANSACTION_ROOT_TOKEN=""
+declare -a TRANSACTION_COMPONENTS=()
+declare -a TRANSACTION_ORIGINAL_PRESENT=()
+declare -a TRANSACTION_ORIGINAL_DIGESTS=()
+declare -a TRANSACTION_STAGED_DIGESTS=()
+SNAPSHOT_DESTINATION_PRESENT=0
+declare -a SNAPSHOT_COMPONENTS=()
+declare -a SNAPSHOT_DIGESTS=()
 
 # Colors
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; NC='\033[0m'
@@ -42,7 +55,29 @@ check_prereqs() {
 }
 
 # ── Clone or update repo ──────────────────────────────────────
+validate_repo_ref() {
+  [[ "$REPO_REF" =~ ^[A-Za-z0-9][A-Za-z0-9._/-]*$ \
+     && "$REPO_REF" != *..* && "$REPO_REF" != */./* \
+     && "$REPO_REF" != */. && "$REPO_REF" != *.lock ]] \
+    || err "Invalid repository ref: $REPO_REF"
+}
+
+checkout_pinned_ref() {
+  local repo_dir="$1" commit="$2" actual
+  if ! git -C "$repo_dir" checkout --detach --quiet "$commit"; then
+    err "Unable to check out pinned repository ref: $REPO_REF"
+  fi
+  if ! actual=$(git -C "$repo_dir" rev-parse --verify HEAD 2>/dev/null); then
+    err "Unable to verify checked-out repository ref: $REPO_REF"
+  fi
+  [[ "$actual" == "$commit" ]] \
+    || err "Checked-out repository does not match pinned ref: $REPO_REF"
+}
+
 ensure_repo() {
+  local clone_dir="${1:-${HOME}/.agi-super-team}"
+  local clone_parent clone_stage="" status commit
+
   if [[ -n "$SOURCE_DIR" ]]; then
     [[ -d "$SOURCE_DIR/agents" && -d "$SOURCE_DIR/skills" ]] \
       || err "Local source is not an AGI Super Team checkout: $SOURCE_DIR"
@@ -50,19 +85,59 @@ ensure_repo() {
     return
   fi
 
+  validate_repo_ref
   if [[ "$APPLY" -eq 0 ]]; then
-    info "[PREVIEW] Would clone or update ${REPO_URL} at ${HOME}/.agi-super-team"
+    info "[PREVIEW] Would resolve ${REPO_URL} at pinned ref ${REPO_REF} into ${HOME}/.agi-super-team"
     RETVAL_REPO=""
     return
   fi
 
-  local clone_dir="${1:-${HOME}/.agi-super-team}"
   if [[ -d "$clone_dir/.git" ]]; then
-    info "Updating existing repo at $clone_dir"
-    git -C "$clone_dir" pull --ff-only -q 2>/dev/null || warn "Git pull failed, using cached version"
+    info "Resolving pinned repository ref ${REPO_REF} in $clone_dir"
+    if ! status=$(git -C "$clone_dir" status --porcelain --untracked-files=all 2>/dev/null); then
+      err "Unable to inspect cached repository before switching refs: $clone_dir"
+    fi
+    [[ -z "$status" ]] \
+      || err "Cached repository has local changes; refusing to switch refs: $clone_dir"
+    if ! git -C "$clone_dir" fetch --depth 1 "$REPO_URL" "$REPO_REF"; then
+      err "Unable to fetch pinned repository ref: $REPO_REF"
+    fi
+    if ! commit=$(git -C "$clone_dir" rev-parse --verify 'FETCH_HEAD^{commit}' 2>/dev/null); then
+      err "Unable to resolve pinned repository ref: $REPO_REF"
+    fi
+    checkout_pinned_ref "$clone_dir" "$commit"
   else
-    info "Cloning AGI Super Team..."
-    git clone --depth 1 "$REPO_URL" "$clone_dir" -q
+    [[ ! -e "$clone_dir" && ! -L "$clone_dir" ]] \
+      || err "Repository cache path exists but is not a Git checkout: $clone_dir"
+    clone_parent=$(dirname "$clone_dir")
+    mkdir -p "$clone_parent"
+    clone_stage=$(mktemp -d "${clone_parent}/.agi-super-team-source.XXXXXX")
+    rmdir "$clone_stage"
+    info "Cloning AGI Super Team at pinned ref ${REPO_REF}..."
+    if ! git clone --no-checkout --depth 1 --branch "$REPO_REF" "$REPO_URL" "$clone_stage" -q; then
+      rm -rf -- "$clone_stage"
+      err "Unable to clone pinned repository ref: $REPO_REF"
+    fi
+    if ! commit=$(git -C "$clone_stage" rev-parse --verify "${REPO_REF}^{commit}" 2>/dev/null); then
+      rm -rf -- "$clone_stage"
+      err "Unable to resolve pinned repository ref: $REPO_REF"
+    fi
+    if ! git -C "$clone_stage" checkout --detach --quiet "$commit"; then
+      rm -rf -- "$clone_stage"
+      err "Unable to check out pinned repository ref: $REPO_REF"
+    fi
+    if ! status=$(git -C "$clone_stage" rev-parse --verify HEAD 2>/dev/null); then
+      rm -rf -- "$clone_stage"
+      err "Unable to verify checked-out repository ref: $REPO_REF"
+    fi
+    if [[ "$status" != "$commit" ]]; then
+      rm -rf -- "$clone_stage"
+      err "Checked-out repository does not match pinned ref: $REPO_REF"
+    fi
+    if ! mv "$clone_stage" "$clone_dir"; then
+      rm -rf -- "$clone_stage"
+      err "Unable to publish pinned repository checkout: $clone_dir"
+    fi
   fi
   RETVAL_REPO="$clone_dir"
 }
@@ -476,6 +551,224 @@ cleanup_stage() {
   fi
 }
 
+release_destination_lock() {
+  local owner=""
+  [[ -n "$INSTALL_LOCK" ]] || return 0
+  if [[ -d "$INSTALL_LOCK" && ! -L "$INSTALL_LOCK" ]]; then
+    if [[ -f "${INSTALL_LOCK}/pid" ]]; then
+      IFS= read -r owner < "${INSTALL_LOCK}/pid" || true
+    fi
+    if [[ "$owner" == "$$" ]]; then
+      rm -f -- "${INSTALL_LOCK}/pid" "${INSTALL_LOCK}/destination"
+      rmdir "$INSTALL_LOCK" 2>/dev/null || warn "Installer lock could not be removed: $INSTALL_LOCK"
+    else
+      warn "Installer lock ownership changed; left it in place: $INSTALL_LOCK"
+    fi
+  fi
+  INSTALL_LOCK=""
+}
+
+acquire_destination_lock() {
+  local destination_parent destination_name physical_parent
+  destination_parent=$(dirname "$OPENCLAW_DIR")
+  destination_name=$(basename "$OPENCLAW_DIR")
+  [[ -d "$destination_parent" && ! -L "$destination_parent" ]] \
+    || err "Destination parent must be an existing real directory: $destination_parent"
+  physical_parent=$(CDPATH= cd -- "$destination_parent" && pwd -P) \
+    || err "Unable to resolve destination parent: $destination_parent"
+  INSTALL_LOCK="${physical_parent}/.${destination_name}.agi-super-team-install.lock"
+  if ! mkdir "$INSTALL_LOCK" 2>/dev/null; then
+    INSTALL_LOCK=""
+    err "Another installation is active for destination: $OPENCLAW_DIR"
+  fi
+  printf '%s\n' "$$" > "${INSTALL_LOCK}/pid"
+  printf '%s\n' "$OPENCLAW_DIR" > "${INSTALL_LOCK}/destination"
+  trap transaction_on_exit EXIT
+  trap 'transaction_on_signal HUP' HUP
+  trap 'transaction_on_signal INT' INT
+  trap 'transaction_on_signal TERM' TERM
+}
+
+fingerprint_path() {
+  node - "$1" <<'NODE'
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+const root = process.argv[2];
+const hash = crypto.createHash('sha256');
+const visit = (entry, relative = '') => {
+  const stat = fs.lstatSync(entry);
+  const kind = stat.isDirectory() ? 'd' : stat.isFile() ? 'f' : stat.isSymbolicLink() ? 'l' : 'o';
+  hash.update(`${kind}\0${relative}\0${stat.mode & 0o777}\0`);
+  if (stat.isDirectory()) {
+    for (const name of fs.readdirSync(entry).sort()) visit(path.join(entry, name), path.join(relative, name));
+  } else if (stat.isFile()) {
+    hash.update(fs.readFileSync(entry));
+  } else if (stat.isSymbolicLink()) {
+    hash.update(fs.readlinkSync(entry));
+  }
+};
+let rootStat;
+try {
+  rootStat = fs.lstatSync(root);
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error;
+}
+if (!rootStat) {
+  process.stdout.write('absent\n');
+} else {
+  visit(root);
+  process.stdout.write(`${hash.digest('hex')}\n`);
+}
+NODE
+}
+
+snapshot_destination_state() {
+  local agent_key component digest
+  local -a components=(agents)
+  for agent_key in "$@"; do
+    components+=("workspace-${agent_key}")
+  done
+  if [[ "$LAYOUT" == "coordinated" ]]; then
+    components+=(AGENTS.md START_HERE.md TEAM.md RUNBOOK.md team.lock.json)
+  fi
+
+  SNAPSHOT_DESTINATION_PRESENT=0
+  SNAPSHOT_COMPONENTS=()
+  SNAPSHOT_DIGESTS=()
+  if [[ -e "$OPENCLAW_DIR" || -L "$OPENCLAW_DIR" ]]; then
+    SNAPSHOT_DESTINATION_PRESENT=1
+  fi
+  for component in "${components[@]}"; do
+    digest=$(fingerprint_path "${OPENCLAW_DIR}/${component}") \
+      || err "Unable to snapshot destination component: ${OPENCLAW_DIR}/${component}"
+    SNAPSHOT_COMPONENTS+=("$component")
+    SNAPSHOT_DIGESTS+=("$digest")
+  done
+}
+
+verify_destination_snapshot() {
+  local index component expected actual destination_present=0
+  if [[ -e "$OPENCLAW_DIR" || -L "$OPENCLAW_DIR" ]]; then
+    destination_present=1
+  fi
+  if [[ "$destination_present" -ne "$SNAPSHOT_DESTINATION_PRESENT" ]]; then
+    err "Destination changed after staging began: $OPENCLAW_DIR"
+  fi
+  for ((index=0; index < ${#SNAPSHOT_COMPONENTS[@]}; index++)); do
+    component="${SNAPSHOT_COMPONENTS[$index]}"
+    expected="${SNAPSHOT_DIGESTS[$index]}"
+    actual=$(fingerprint_path "${OPENCLAW_DIR}/${component}") \
+      || err "Unable to verify destination component: ${OPENCLAW_DIR}/${component}"
+    if [[ "$actual" != "$expected" ]]; then
+      err "Destination changed after staging began: ${OPENCLAW_DIR}/${component}"
+    fi
+  done
+}
+
+rollback_transaction() {
+  local index component final_component backup_component original_present original_digest staged_digest current_digest marker recovery_destination
+  local restore_failed=0
+
+  if [[ "$TRANSACTION_ROOT_MOVE" -eq 1 ]]; then
+    marker="${OPENCLAW_DIR}/.agi-super-team-transaction"
+    if [[ -f "$marker" && ! -L "$marker" \
+       && "$(<"$marker")" == "$TRANSACTION_ROOT_TOKEN" ]]; then
+      recovery_destination="${INSTALL_STAGE}/recovery-destination"
+      if [[ ! -e "$recovery_destination" && ! -L "$recovery_destination" ]]; then
+        # A digest check cannot authorize recursive deletion: another writer
+        # can add data after the check. Quarantine the entire root atomically
+        # and require explicit recovery review instead.
+        mv "$OPENCLAW_DIR" "$recovery_destination" || true
+      fi
+      restore_failed=1
+    elif [[ -e "$OPENCLAW_DIR" || -L "$OPENCLAW_DIR" ]]; then
+      restore_failed=1
+    fi
+  fi
+
+  for ((index=${#TRANSACTION_COMPONENTS[@]} - 1; index >= 0; index--)); do
+    component="${TRANSACTION_COMPONENTS[$index]}"
+    original_present="${TRANSACTION_ORIGINAL_PRESENT[$index]}"
+    original_digest="${TRANSACTION_ORIGINAL_DIGESTS[$index]}"
+    staged_digest="${TRANSACTION_STAGED_DIGESTS[$index]}"
+    final_component="${OPENCLAW_DIR}/${component}"
+    backup_component="${INSTALL_STAGE}/backup/${component}"
+
+    if [[ "$original_present" -eq 1 ]]; then
+      if [[ -e "$backup_component" || -L "$backup_component" ]]; then
+        if [[ -e "$final_component" || -L "$final_component" ]]; then
+          current_digest=$(fingerprint_path "$final_component") || current_digest="unknown"
+          if [[ "$current_digest" != "$staged_digest" ]]; then
+            restore_failed=1
+            continue
+          fi
+          rm -rf -- "$final_component" || { restore_failed=1; continue; }
+        fi
+        mv "$backup_component" "$final_component" || restore_failed=1
+      else
+        current_digest=$(fingerprint_path "$final_component") || current_digest="unknown"
+        [[ "$current_digest" == "$original_digest" ]] || restore_failed=1
+      fi
+    elif [[ -e "$final_component" || -L "$final_component" ]]; then
+      current_digest=$(fingerprint_path "$final_component") || current_digest="unknown"
+      if [[ "$current_digest" == "$staged_digest" ]]; then
+        rm -rf -- "$final_component" || restore_failed=1
+      else
+        restore_failed=1
+      fi
+    fi
+  done
+
+  return "$restore_failed"
+}
+
+transaction_on_exit() {
+  local status="$?" recovery_path="" restored=1
+  trap - EXIT HUP INT TERM
+  if [[ "$TRANSACTION_ACTIVE" -eq 1 ]]; then
+    rollback_transaction || restored=0
+  fi
+  if [[ "$restored" -eq 1 ]]; then
+    cleanup_stage
+    if [[ -n "$TRANSACTION_SIGNAL" ]]; then
+      warn "Received ${TRANSACTION_SIGNAL}; restored the previous destination state"
+    elif [[ "$status" -ne 0 && "${#TRANSACTION_COMPONENTS[@]}" -gt 0 ]]; then
+      warn "Atomic publish failed; restored the previous destination state"
+    fi
+  else
+    recovery_path="$INSTALL_STAGE"
+    INSTALL_STAGE=""
+    warn "automatic restore is incomplete. Recovery transaction preserved at: $recovery_path"
+  fi
+  release_destination_lock
+  exit "$status"
+}
+
+transaction_on_signal() {
+  TRANSACTION_SIGNAL="$1"
+  case "$1" in
+    HUP) exit 129 ;;
+    INT) exit 130 ;;
+    TERM) exit 143 ;;
+  esac
+}
+
+move_transaction_path() {
+  local status=0
+  if mv "$@"; then
+    return 0
+  else
+    status=$?
+  fi
+  case "$status" in
+    129) TRANSACTION_SIGNAL=HUP; err "Atomic publish interrupted" ;;
+    130) TRANSACTION_SIGNAL=INT; err "Atomic publish interrupted" ;;
+    143) TRANSACTION_SIGNAL=TERM; err "Atomic publish interrupted" ;;
+    *) err "Atomic publish failed" ;;
+  esac
+}
+
 prepare_stage() {
   local destination_parent
   local agent_key final_workspace
@@ -487,7 +780,20 @@ prepare_stage() {
   INSTALL_STAGE=$(mktemp -d "${destination_parent}/.agi-super-team-stage.XXXXXX")
   DEPLOY_ROOT="${INSTALL_STAGE}/destination"
   mkdir -p "${DEPLOY_ROOT}/agents"
-  trap cleanup_stage EXIT HUP INT TERM
+  TRANSACTION_ACTIVE=1
+  TRANSACTION_SIGNAL=""
+  TRANSACTION_ROOT_MOVE=0
+  TRANSACTION_ROOT_TOKEN=""
+  TRANSACTION_COMPONENTS=()
+  TRANSACTION_ORIGINAL_PRESENT=()
+  TRANSACTION_ORIGINAL_DIGESTS=()
+  TRANSACTION_STAGED_DIGESTS=()
+  trap transaction_on_exit EXIT
+  trap 'transaction_on_signal HUP' HUP
+  trap 'transaction_on_signal INT' INT
+  trap 'transaction_on_signal TERM' TERM
+
+  snapshot_destination_state "$@"
 
   if [[ -d "$OPENCLAW_DIR" ]]; then
     if [[ -e "${OPENCLAW_DIR}/agents" || -L "${OPENCLAW_DIR}/agents" ]]; then
@@ -600,10 +906,7 @@ NODE
 publish_stage() {
   local agent_key component staged_component final_component backup_component
   local -a components=(agents)
-  local -a published=()
-  local index published_component published_final published_backup
-  local restore_failed=0 recovery_path
-  local restore_message="Atomic publish failed; restored the previous destination state"
+  local original_present original_digest staged_digest
   for agent_key in "$@"; do
     components+=("workspace-${agent_key}")
   done
@@ -611,10 +914,20 @@ publish_stage() {
     components+=(AGENTS.md START_HERE.md TEAM.md RUNBOOK.md team.lock.json)
   fi
 
+  verify_destination_snapshot
+
   if [[ ! -e "$OPENCLAW_DIR" && ! -L "$OPENCLAW_DIR" ]]; then
-    mv "${DEPLOY_ROOT}" "$OPENCLAW_DIR"
+    TRANSACTION_ROOT_TOKEN=$(node -e "process.stdout.write(require('crypto').randomBytes(32).toString('hex'))") \
+      || err "Unable to create a transaction identifier"
+    printf '%s\n' "$TRANSACTION_ROOT_TOKEN" > "${DEPLOY_ROOT}/.agi-super-team-transaction"
+    TRANSACTION_ROOT_MOVE=1
+    move_transaction_path "${DEPLOY_ROOT}" "$OPENCLAW_DIR"
+    rm -f -- "${OPENCLAW_DIR}/.agi-super-team-transaction"
+    TRANSACTION_ROOT_MOVE=0
+    TRANSACTION_ACTIVE=0
     rmdir "$INSTALL_STAGE"
     INSTALL_STAGE=""
+    release_destination_lock
     trap - EXIT HUP INT TERM
     return
   fi
@@ -624,60 +937,27 @@ publish_stage() {
     staged_component="${DEPLOY_ROOT}/${component}"
     final_component="${OPENCLAW_DIR}/${component}"
     backup_component="${INSTALL_STAGE}/backup/${component}"
+    original_present=0
     if [[ -e "$final_component" || -L "$final_component" ]]; then
-      if ! mv "$final_component" "$backup_component"; then
-        restore_failed=0
-        for ((index=${#published[@]} - 1; index >= 0; index--)); do
-          published_component="${published[$index]}"
-          published_final="${OPENCLAW_DIR}/${published_component}"
-          published_backup="${INSTALL_STAGE}/backup/${published_component}"
-          if ! rm -rf -- "$published_final"; then
-            restore_failed=1
-            continue
-          fi
-          if [[ -e "$published_backup" || -L "$published_backup" ]]; then
-            mv "$published_backup" "$published_final" || restore_failed=1
-          fi
-        done
-        if [[ "$restore_failed" -ne 0 ]]; then
-          recovery_path="$INSTALL_STAGE"
-          INSTALL_STAGE=""
-          trap - EXIT HUP INT TERM
-          err "Atomic publish failed; automatic restore is incomplete. Recovery transaction preserved at: $recovery_path"
-        fi
-        err "$restore_message"
-      fi
+      original_present=1
     fi
-    if ! mv "$staged_component" "$final_component"; then
-      restore_failed=0
-      if [[ -e "$backup_component" || -L "$backup_component" ]]; then
-        mv "$backup_component" "$final_component" || restore_failed=1
-      fi
-      for ((index=${#published[@]} - 1; index >= 0; index--)); do
-        published_component="${published[$index]}"
-        published_final="${OPENCLAW_DIR}/${published_component}"
-        published_backup="${INSTALL_STAGE}/backup/${published_component}"
-        if ! rm -rf -- "$published_final"; then
-          restore_failed=1
-          continue
-        fi
-        if [[ -e "$published_backup" || -L "$published_backup" ]]; then
-          mv "$published_backup" "$published_final" || restore_failed=1
-        fi
-      done
-      if [[ "$restore_failed" -ne 0 ]]; then
-        recovery_path="$INSTALL_STAGE"
-        INSTALL_STAGE=""
-        trap - EXIT HUP INT TERM
-        err "Atomic publish failed; automatic restore is incomplete. Recovery transaction preserved at: $recovery_path"
-      fi
-      err "$restore_message"
+    original_digest=$(fingerprint_path "$final_component") \
+      || err "Unable to fingerprint destination component: $final_component"
+    staged_digest=$(fingerprint_path "$staged_component") || err "Unable to fingerprint staged component: $staged_component"
+    TRANSACTION_COMPONENTS+=("$component")
+    TRANSACTION_ORIGINAL_PRESENT+=("$original_present")
+    TRANSACTION_ORIGINAL_DIGESTS+=("$original_digest")
+    TRANSACTION_STAGED_DIGESTS+=("$staged_digest")
+    if [[ -e "$final_component" || -L "$final_component" ]]; then
+      move_transaction_path "$final_component" "$backup_component"
     fi
-    published+=("$component")
+    move_transaction_path "$staged_component" "$final_component"
   done
 
+  TRANSACTION_ACTIVE=0
   cleanup_stage
   INSTALL_STAGE=""
+  release_destination_lock
   trap - EXIT HUP INT TERM
 }
 
@@ -782,12 +1062,14 @@ deploy_starter_kit() {
   info "Materializing selection: ${kit} (${#agents[@]} agent(s))"
 
   preflight_kit_entrypoint "$repo_dir" "$kit"
-  validate_install_paths "$repo_dir" "${agents[@]}"
   preflight_agents "$repo_dir" "${agents[@]}"
   report_recommended_external_skills "${agents[@]}"
   if [[ "$APPLY" -eq 1 ]]; then
+    acquire_destination_lock
+    validate_install_paths "$repo_dir" "${agents[@]}"
     prepare_stage "${agents[@]}"
   else
+    validate_install_paths "$repo_dir" "${agents[@]}"
     DEPLOY_ROOT="$OPENCLAW_DIR"
   fi
 
@@ -923,7 +1205,7 @@ main() {
     err "Unexpected extra arguments: ${positionals[*]:2}"
   fi
   if [[ -z "$SOURCE_DIR" && "$APPLY" -eq 0 ]]; then
-    err "Preview requires --source PATH so the canonical team manifest can be validated without cloning or inventing a plan."
+    err "Preview for pinned ref ${REPO_REF} requires --source PATH so the canonical team manifest can be validated without cloning or inventing a plan."
   fi
 
   echo ""

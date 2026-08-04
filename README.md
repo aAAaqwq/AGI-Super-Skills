@@ -68,7 +68,7 @@ npx -y agi-super-team@latest --tool claude-code --install --connect
 npx -y agi-super-team@latest --tool claude-code --doctor
 ```
 
-The commands above use the public npm package. For reproducible automation, replace `@latest` with an exact published version such as `@1.4.0`.
+The commands above use the public npm package. For reproducible automation, replace `@latest` with an exact published version such as `@1.4.1`.
 
 The npm distribution keeps all 817 `SKILL.md` entrypoints discoverable and includes the complete files for every Skill assigned by `config/team-manifest.json`. Browse the provenance-backed [Daniel's Original Skills](./skills/original/) collection for reviewed first-party work. Clone the repository when you need every auxiliary asset from the wider Skill library.
 
