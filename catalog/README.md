@@ -33,6 +33,78 @@ Only digest-matched, structurally valid Skills with reviewed provenance and a Cu
 | 📊 Data, Analytics & Research | [`research-evidence-synthesis`](../skills/research-evidence-synthesis/) | Project original · reviewed | 78/100 · Selected | Pending | A disciplined research synthesis workflow that distinguishes sources, confidence, inference, and open questions. |
 | ☁️ Cloud, DevOps & Reliability | [`sre-reliability-governance`](../skills/sre-reliability-governance/) | Project original · reviewed | 78/100 · Selected | Pending | A reliability governance workflow covering SLOs, error budgets, capacity, and recovery ownership. |
 
+## ✨ Browse by provenance
+
+Choose a reviewed origin boundary before browsing by outcome. Provenance and curation evidence remain separate from runtime verification.
+
+| Origin | Meaning | Entries |
+|---|---|---:|
+| [Project original](#project-original-skills) | Digest-backed first-party work with reviewed authorship. | 32 |
+| [Adapted](#adapted-skills) | Modified from a named source with the adaptation recorded. | 0 |
+| [Collected](#collected-skills) | Preserved from a named source with provenance recorded. | 0 |
+| [Unknown origin](#unknown-origin-skills) | Source review is incomplete; inspect before use. | 785 |
+
+<a id="project-original-skills"></a>
+### Project original
+
+Digest-backed first-party work with reviewed authorship.
+
+| Skill | Outcome category | Provenance | Curation evidence | Runtime |
+|---|---|---|---|---|
+| [`5minbtc`](../skills/5minbtc/) | 💹 Finance, Trading & Markets | Project original · reviewed | Unscored | Pending |
+| [`binance-square`](../skills/binance-square/) | 💹 Finance, Trading & Markets | Project original · reviewed | Unscored | Pending |
+| [`content-cover-gen`](../skills/content-cover-gen/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
+| [`content-illustration-strategy`](../skills/content-illustration-strategy/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
+| [`content-typography`](../skills/content-typography/) | ✍️ Content, Media & Publishing | Project original · reviewed | 80/100 · Selected | Pending |
+| [`daily-douyin-content`](../skills/daily-douyin-content/) | 🇨🇳 Chinese Platform Workflows | Project original · reviewed | Unscored | Pending |
+| [`daily-gzh-content`](../skills/daily-gzh-content/) | 🇨🇳 Chinese Platform Workflows | Project original · reviewed | Unscored | Pending |
+| [`daily-xhs-content`](../skills/daily-xhs-content/) | 🇨🇳 Chinese Platform Workflows | Project original · reviewed | Unscored | Pending |
+| [`daniel-x-writer`](../skills/daniel-x-writer/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
+| [`data-contract-quality-governance`](../skills/data-contract-quality-governance/) | 🛡️ Security, Privacy & Legal | Project original · reviewed | 78/100 · Selected | Pending |
+| [`douyin-smart-publish`](../skills/douyin-smart-publish/) | 🇨🇳 Chinese Platform Workflows | Project original · reviewed | Unscored | Pending |
+| [`editorial-content-system`](../skills/editorial-content-system/) | ✍️ Content, Media & Publishing | Project original · reviewed | 82/100 · Selected | Prompt Tested |
+| [`executive-decision-system`](../skills/executive-decision-system/) | 🧭 Business Operations & Strategy | Project original · reviewed | 78/100 · Selected | Pending |
+| [`financial-planning-and-analysis`](../skills/financial-planning-and-analysis/) | 💹 Finance, Trading & Markets | Project original · reviewed | 78/100 · Selected | Pending |
+| [`incident-command-and-review`](../skills/incident-command-and-review/) | ☁️ Cloud, DevOps & Reliability | Project original · reviewed | 78/100 · Selected | Pending |
+| [`independent-assurance-gate`](../skills/independent-assurance-gate/) | 🧭 Business Operations & Strategy | Project original · reviewed | 78/100 · Selected | Pending |
+| [`jimeng-digital-human`](../skills/jimeng-digital-human/) | 🧰 Specialized Domains & Utilities | Project original · reviewed | Unscored | Pending |
+| [`jimeng-login`](../skills/jimeng-login/) | 🧰 Specialized Domains & Utilities | Project original · reviewed | Unscored | Pending |
+| [`jimeng-storyboard`](../skills/jimeng-storyboard/) | ✍️ Content, Media & Publishing | Project original · reviewed | 78/100 · Selected | Pending |
+| [`legal-issue-spotting`](../skills/legal-issue-spotting/) | 🛡️ Security, Privacy & Legal | Project original · reviewed | 78/100 · Selected | Pending |
+| [`meta-cognition`](../skills/meta-cognition/) | 🤖 AI Agents & Orchestration | Project original · reviewed | Unscored | Pending |
+| [`operating-cadence-and-flow`](../skills/operating-cadence-and-flow/) | 🧰 Specialized Domains & Utilities | Project original · reviewed | 78/100 · Selected | Pending |
+| [`orchestrate-agi-super-team`](../skills/orchestrate-agi-super-team/) | 🤖 AI Agents & Orchestration | Project original · reviewed | 80/100 · Selected | Pending |
+| [`positioning-growth-experiment-system`](../skills/positioning-growth-experiment-system/) | 📈 Marketing, SEO & Growth | Project original · reviewed | 82/100 · Selected | Prompt Tested |
+| [`product-discovery-portfolio-governance`](../skills/product-discovery-portfolio-governance/) | 💹 Finance, Trading & Markets | Project original · reviewed | 82/100 · Selected | Prompt Tested |
+| [`relay-image-gen`](../skills/relay-image-gen/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
+| [`relay-video-gen`](../skills/relay-video-gen/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
+| [`research-evidence-synthesis`](../skills/research-evidence-synthesis/) | 📊 Data, Analytics & Research | Project original · reviewed | 78/100 · Selected | Pending |
+| [`revenue-opportunity-governance`](../skills/revenue-opportunity-governance/) | 🤝 Sales, CRM & Customer Success | Project original · reviewed | 82/100 · Selected | Prompt Tested |
+| [`sre-reliability-governance`](../skills/sre-reliability-governance/) | ☁️ Cloud, DevOps & Reliability | Project original · reviewed | 78/100 · Selected | Pending |
+| [`video-merge-send`](../skills/video-merge-send/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
+| [`weixin-channels-publish`](../skills/weixin-channels-publish/) | 🇨🇳 Chinese Platform Workflows | Project original · reviewed | Unscored | Pending |
+
+<a id="adapted-skills"></a>
+### Adapted
+
+Modified from a named source with the adaptation recorded.
+
+No entries currently meet this provenance contract.
+
+<a id="collected-skills"></a>
+### Collected
+
+Preserved from a named source with provenance recorded.
+
+No entries currently meet this provenance contract.
+
+<a id="unknown-origin-skills"></a>
+### Unknown origin
+
+Source review is incomplete; inspect before use.
+
+785 entries are awaiting source review. Use the [machine-readable index](./skill-index.json) or browse by outcome below; they are not promoted as curated recommendations.
+
 ## 🗂️ Browse by outcome
 
 This revision contains 817 canonical catalog entries. The number is generated here rather than used as a product claim.
@@ -504,7 +576,7 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`ai-viral-team-video-generation`](../skills/ai-viral-team-video-generation/) | 视频生成 - AI视频生成与后期剪辑制作 职责：调用Vidu生成视频、模型选择、Prompt调优、视频拼接、质量检测 | Unknown · unreviewed | Unscored | Catalog only |
 | [`arch-video-cut`](../skills/arch-video-cut/) | Automatic architecture video editing workflow with self-learning preferences | Unknown · unreviewed | Unscored | Catalog only |
 | [`article-material-collect`](../skills/article-material-collect/) | 上层编排 Skill，通过 **Brave Search 发现 → 智能选择浏览器截图** 完成结构化素材采集。 | Unknown · unreviewed | Unscored | Catalog only |
-| [`article-to-infographic`](../skills/article-to-infographic/) | 长文/测评文章 → 知识视觉笔记套图（3-5张）。自动提炼核心逻辑、规划分镜、生成高阶图像Prompt（4模块结构）。支持手写笔记/思维导图/架构图/对比矩阵四种风格。Use when: 文章转知识笔记、知识笔记图片、思维导图、视觉笔记、长文转图、知识卡片、文章可视化、article to infographic、knowledge… | Unknown · unreviewed | Unscored | Catalog only |
+| [`article-to-infographic`](../skills/article-to-infographic/) | 长文/测评文章 → 知识视觉笔记套图（3-5张）。自动提炼核心逻辑、规划分镜、生成高阶图像Prompt（4模块结构）。支持手写笔记/思维导图/架构图/对比矩阵四种风格。Use when: 文章转知识笔记、知识笔记图片、思维导图、视觉笔记、长文转图、知识卡片、文章可视化、article to infographic、knowledge… | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
 | [`cinematic-video-gen`](../skills/cinematic-video-gen/) | AI视频生成质量增强引擎。解决AI视频角色僵硬、表情空白、动作机械的问题。通过高级prompt工程+角色卡+运镜指令+表情库，让AI视频角色活起来。触发词：视频质量、角色僵硬、灵动、表情、动作、cinematic video、视频生成增强、MV视频、角色动画 | Unknown · unreviewed | Unscored | Catalog only |
 | [`code-to-image`](../skills/code-to-image/) | 最强免费生图方案：用前端代码(HTML/CSS/JS/Canvas/SVG)设计画面，通过 Playwright 渲染为任意分辨率高清 PNG。 零API成本、无限分辨率、中文100%准确、代码可复用、Git可追踪。 配合 frontend-design / canvas-design / frontend-design-ultimate 产出 HTML… | Unknown · unreviewed | Unscored | Catalog only |
 | [`content-cover-gen`](../skills/content-cover-gen/) | 内容驱动封面生成:从文章标题/核心观点自动生成视觉隐喻提示词,调用 relay-image-gen 出图。 每张封面3秒内传达文章核心观点,杜绝通用背景。 支持小红书(3:4)、抖音(9:16)、公众号(16:9)、知识星球(1:1)、掘金(16:9)。 触发:'生成封面'、'封面生成'、'cover'、'thumbnail'、'封面图'、'缩略图'。 | Project original · reviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |

@@ -33,7 +33,7 @@ class ReadmeContractTests(unittest.TestCase):
             for tier in ("required", "optional", "harnessSpecific")
             for skill in agent["skills"][tier]
         }
-        self.assertEqual(len(assigned_skills), 168)
+        self.assertEqual(len(assigned_skills), 169)
         packaged_skill_roots = {
             entry.removeprefix("skills/").removesuffix("/")
             for entry in package["files"]
@@ -139,6 +139,19 @@ class ReadmeContractTests(unittest.TestCase):
             self.assertIn("./cookbook/", readme)
             self.assertIn("./catalog/", readme)
             self.assertIn("./ARCHITECTURE.md", readme)
+
+    def test_readmes_expose_provenance_navigation_and_use_the_china_flag(self) -> None:
+        self.assertIn('<a href="./README_CN.md">🇨🇳 中文</a>', self.english)
+        for readme in (self.english, self.chinese):
+            self.assertIn("./catalog/#project-original-skills", readme)
+            self.assertIn("./catalog/#adapted-skills", readme)
+            self.assertIn("./catalog/#collected-skills", readme)
+            self.assertIn("./catalog/#unknown-origin-skills", readme)
+
+        skills = (ROOT / "skills/README.md").read_text(encoding="utf-8")
+        self.assertIn("## ✨ Browse by provenance", skills)
+        self.assertIn("../catalog/#project-original-skills", skills)
+        self.assertIn("../catalog/#collected-skills", skills)
 
     def test_legacy_entrypoints_route_to_current_authorities(self) -> None:
         startup = (ROOT / "STARTUP.md").read_text(encoding="utf-8")

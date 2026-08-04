@@ -302,6 +302,7 @@
         ],
         "harnessSpecific": [
           "ai-marketing-videos",
+          "article-to-infographic",
           "content-cover-gen",
           "content-illustration-strategy",
           "content-ops-toolkit",

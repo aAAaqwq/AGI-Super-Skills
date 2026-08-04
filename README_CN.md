@@ -217,6 +217,14 @@ Manifest 会把可移植的 `required`/`optional` Skills、仅适用于特定 Ha
 
 **成功标准：** 预览不写入任何文件；应用会创建三个可检查的角色工作区，并且不覆盖已有文件。
 
+## ✨ 按来源浏览 Skills
+
+先选择你能接受的来源边界，再按成果查找。来源标签表示已审查的来源证据，不等于运行时验证。
+
+| [项目原创](./catalog/#project-original-skills) | [适配改造](./catalog/#adapted-skills) | [来源收录](./catalog/#collected-skills) | [来源待核](./catalog/#unknown-origin-skills) |
+|---|---|---|---|
+| 有摘要凭据的第一方作品 | 基于明确来源修改 | 保留自明确来源 | 等待来源审查 |
+
 ## 🧭 按成果浏览技能
 
 根 README 只保留精选入口。需要完整、可检索库存时，请使用自动生成的 catalog。
