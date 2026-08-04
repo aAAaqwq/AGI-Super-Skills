@@ -4,7 +4,7 @@
   <img src="assets/banner-v2.png" alt="AGI Super Team: an organized cross-harness team of agents and skills" width="760">
 </p>
 
-<h1 align="center">AGI Super Team</h1>
+<h1 align="center">🤖 AGI Super Team</h1>
 
 <p align="center"><strong>An organized, installable team of Agents + Skills for local AI agent frameworks.</strong></p>
 
@@ -18,7 +18,46 @@ The same organizational contract travels across frameworks: 14 top-level roles, 
 
 Each adapter maps that contract to the capabilities its target actually supports.
 
-## Install into your agent framework
+<a id="coding-agent-quick-start"></a>
+## ⚡ Quick Start for Coding Agents
+
+Paste this entire prompt into Claude Code, Codex, OpenClaw, or another coding agent. It authorizes installation only after a clean preview.
+
+```text
+Install AGI Super Team from https://github.com/aAAaqwq/AGI-Super-Team into this coding-agent environment.
+
+1. Detect the current client and run `npx -y agi-super-team@latest --list-tools`.
+2. Choose exactly one matching adapter. Never use `--all-tools` for this installation.
+3. If this client supports native subagents, include `--all-subagents`; otherwise omit it and state the limitation.
+4. Run the selected command without `--install` first. Show the resolved package version, destinations, managed files, and conflicts.
+5. If the target is unambiguous and the preview is clean, run the same selection with `--install --connect`, then run a separate `--doctor` check.
+6. Stop instead of overwriting unmanaged files, using credentials, or guessing when the framework or destination is unclear.
+7. Report what was installed, whether native delegation is available, and whether I must restart or open a new task.
+```
+
+This is one-prompt installation, not blind installation. Ambiguity, unsafe destinations, or conflicts still stop the workflow.
+
+## 🐝 Run your first swarm
+
+After installation, restart the client or open a new task. Start with this reusable prompt:
+
+```text
+Swarm agents: <your outcome>
+
+Act as the CEO coordinator.
+- Define the outcome and acceptance checks.
+- Choose the smallest sufficient team.
+- Parallelize only independent work with explicit file ownership.
+- Use Skills as methods and require an independent Governor review.
+- Synthesize one verified result.
+
+If native multi-agent delegation is unavailable, execute the same role plan sequentially and say so. Do not publish, deploy, spend money, use credentials, or take irreversible action without my approval.
+```
+
+`Swarm agents:` is the routing cue, not a promise of unlimited parallelism. The installed framework controls actual concurrency, nesting, tools, and model access.
+
+<a id="install-into-your-agent-framework"></a>
+## 🛠️ Manual CLI installation
 
 List all 18 adapter targets, preview one target, then apply the same selection:
 
@@ -123,7 +162,7 @@ Run the same `--install` command again to refresh managed content; use `--instal
 The adapter design was inspired in part by [`jnMetaCode/agency-agents-zh`](https://github.com/jnMetaCode/agency-agents-zh) at fixed commit [`2ecfabf8`](https://github.com/jnMetaCode/agency-agents-zh/commit/2ecfabf8e944ccdfed63ad8c44d5241290af6977). AGI Super Team's manifest, payload mapping, safety behavior, and evidence boundaries are maintained here.
 
 <p align="center">
-  <a href="#install-into-your-agent-framework"><strong>Install the team</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#coding-agent-quick-start"><strong>Install the team</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="./.codex/INDEX.md">Inspect the Codex package</a>
 </p>
 
@@ -302,7 +341,11 @@ The animation uses sanitized paths and is illustrative, not runtime evidence. Re
 
 ## 🔌 Choose a distribution
 
-Use the [18-target npm installer](#install-into-your-agent-framework) for a named Agent framework, the [curated Codex package](./.codex/INDEX.md) for Codex-specific details, or the legacy generic workspace materializer above for harness-neutral files. The [Claude Code guide](./docs/guides/claude-code-install.html) and [Harness compatibility guide](./docs/guides/harness-compatibility.html) provide additional background, but the current adapter manifest and commit-matched receipts govern support claims.
+Use the [one-prompt Coding Agent installer](#coding-agent-quick-start) or the manual 18-target npm installer above for a named Agent framework.
+
+Use the [curated Codex package](./.codex/INDEX.md) for Codex-specific details, or the legacy generic workspace materializer for harness-neutral files.
+
+The [Claude Code guide](./docs/guides/claude-code-install.html) and [Harness compatibility guide](./docs/guides/harness-compatibility.html) provide background. Current Adapter manifests and commit-matched receipts govern support claims.
 
 The generic path requires Bash and Node.js; repository verification also requires npm and Python 3. Exact operating-system and client-version support remains bounded by CI and published receipts. Adapter presence never establishes feature parity.
 

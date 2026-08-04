@@ -4,7 +4,7 @@
   <img src="assets/banner-v2.png" alt="AGI Super Team：跨框架、有组织的 Agents 与 Skills 团队" width="760">
 </p>
 
-<h1 align="center">AGI Super Team</h1>
+<h1 align="center">🤖 AGI Super Team</h1>
 
 <p align="center"><strong>面向本地 AI Agent 框架的、有组织、可安装的 Agents + Skills 团队系统。</strong></p>
 
@@ -16,7 +16,46 @@ AGI Super Team 不是 Codex 专属插件，而是一套版本化、有组织的 
 
 同一套组织契约可以跨框架落地：14 个顶层角色、92 个可选直属专家、可复用 Skills、8 支成果型 Team、独立审查与明确人工批准。不同适配器只负责映射目标框架真实支持的能力。
 
-## 安装到你的 Agent 框架
+<a id="coding-agent-quick-start"></a>
+## ⚡ 用 Coding Agent 一键安装
+
+把下面整段提示词粘贴给 Claude Code、Codex、OpenClaw 或其他 Coding Agent。它只授权在安全预览通过后安装。
+
+```text
+把 https://github.com/aAAaqwq/AGI-Super-Team 安装到当前 Coding Agent 环境。
+
+1. 识别当前客户端，并运行 `npx -y agi-super-team@latest --list-tools`。
+2. 只选择一个准确匹配的 Adapter；本次安装绝不使用 `--all-tools`。
+3. 如果当前客户端支持原生子 Agent，则加入 `--all-subagents`；否则省略并说明限制。
+4. 先运行不含 `--install` 的预览，展示实际解析的版本、目标目录、受管理文件和冲突。
+5. 目标明确且预览干净时，用相同选择运行 `--install --connect`，再单独运行 `--doctor`。
+6. 如果存在非托管文件覆盖、凭证需求、框架或目标目录不明确，立即停止，不得猜测。
+7. 汇报安装内容、是否支持原生委派，以及是否需要重启客户端或新建任务。
+```
+
+这是“一段提示词完成安装”，不是盲装。目标不明确、目录不安全或发生冲突时仍会停止。
+
+## 🐝 用 Swarm agents 召集军团
+
+安装后重启客户端或新建任务，再使用这段可复用提示词：
+
+```text
+Swarm agents: <你的目标>
+
+作为 CEO 协调者：
+- 定义成果和验收检查。
+- 选择最小充分团队。
+- 只并发处理相互独立的工作，并明确文件所有权。
+- 用 Skills 提供方法，交给独立 Governor 审查。
+- 最终综合为一个经过验证的结果。
+
+如果当前环境不支持原生多 Agent 委派，就按同一角色方案顺序执行并如实说明。未经我批准，不得发布、部署、付费、使用凭证或执行不可逆操作。
+```
+
+`Swarm agents:` 是路由提示，不代表无限并发。实际并发数、嵌套深度、工具和模型权限由当前框架决定。
+
+<a id="安装到你的-agent-框架"></a>
+## 🛠️ 手动 CLI 安装
 
 先列出全部 18 个适配目标，再预览一个目标，确认后用同一选择安装：
 
@@ -136,7 +175,7 @@ npx -y agi-super-team@latest --tool openclaw \
 适配器设计部分参考了 [`jnMetaCode/agency-agents-zh`](https://github.com/jnMetaCode/agency-agents-zh) 的固定提交 [`2ecfabf8`](https://github.com/jnMetaCode/agency-agents-zh/commit/2ecfabf8e944ccdfed63ad8c44d5241290af6977)。AGI Super Team 在本仓库独立维护 Manifest、Payload 映射、安全行为和证据边界。
 
 <p align="center">
-  <a href="#安装到你的-agent-框架"><strong>安装团队</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#coding-agent-quick-start"><strong>安装团队</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="./.codex/INDEX.md">查看 Codex 包</a>
 </p>
 
@@ -315,7 +354,11 @@ npm run check:architecture
 
 ## 🔌 选择分发方式
 
-为指定 Agent 框架安装时，使用上方的 [18 目标 npm 安装器](#安装到你的-agent-框架)；需要 Codex 专用细节时查看 [Codex 精选包](./.codex/INDEX.md)；需要与客户端无关的文件时使用旧版通用工作区生成器。[Claude Code 指南](./docs/guides/claude-code-install.html)与[客户端兼容说明](./docs/guides/harness-compatibility.html)提供补充背景，但支持状态以当前适配 Manifest 和与 commit 匹配的凭据为准。
+为指定 Agent 框架安装时，优先使用[一段提示词安装](#coding-agent-quick-start)，也可以使用上方的 18 目标 npm CLI。
+
+需要 Codex 专用细节时查看 [Codex 精选包](./.codex/INDEX.md)；需要与客户端无关的文件时使用旧版通用工作区生成器。
+
+[Claude Code 指南](./docs/guides/claude-code-install.html)与[客户端兼容说明](./docs/guides/harness-compatibility.html)提供补充背景。支持状态以当前 Adapter Manifest 和与 commit 匹配的凭据为准。
 
 通用路径需要 Bash 与 Node.js；仓库验证还需要 npm 与 Python 3。操作系统和客户端版本支持范围以 CI 和已发布凭据为准。存在适配文件永远不代表功能完全一致。
 

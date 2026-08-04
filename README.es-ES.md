@@ -4,7 +4,7 @@
   <img src="assets/banner-v2.png" alt="AGI Super Team: un equipo organizado de Agents y Skills para múltiples frameworks" width="760">
 </p>
 
-<h1 align="center">AGI Super Team</h1>
+<h1 align="center">🤖 AGI Super Team</h1>
 
 <p align="center"><strong>Un equipo organizado e instalable de Agents + Skills para frameworks de agentes de IA locales.</strong></p>
 

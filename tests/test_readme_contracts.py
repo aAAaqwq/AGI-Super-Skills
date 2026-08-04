@@ -74,6 +74,21 @@ class ReadmeContractTests(unittest.TestCase):
             self.assertIn(framework, self.english)
             self.assertIn(framework, self.chinese)
 
+    def test_readmes_offer_agent_prompt_install_and_swarm_quick_start(self) -> None:
+        self.assertIn('<h1 align="center">🤖 AGI Super Team</h1>', self.english)
+        self.assertIn('<h1 align="center">🤖 AGI Super Team</h1>', self.chinese)
+        self.assertIn("## ⚡ Quick Start for Coding Agents", self.english)
+        self.assertIn("## 🐝 Run your first swarm", self.english)
+        self.assertIn("## ⚡ 用 Coding Agent 一键安装", self.chinese)
+        self.assertIn("## 🐝 用 Swarm agents 召集军团", self.chinese)
+        for readme in (self.english, self.chinese):
+            self.assertIn("https://github.com/aAAaqwq/AGI-Super-Team", readme)
+            self.assertIn("Swarm agents: <", readme)
+            self.assertIn("--all-subagents", readme)
+            self.assertIn("--all-tools", readme)
+            self.assertIn("--doctor", readme)
+            self.assertIn("Governor", readme)
+
     def test_readmes_expose_all_manifest_outcome_teams(self) -> None:
         manifest = json.loads((ROOT / "config/team-manifest.json").read_text(encoding="utf-8"))
         self.assertEqual(len(manifest["kits"]), 8)
