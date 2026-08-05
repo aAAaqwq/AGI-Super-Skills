@@ -4,10 +4,10 @@ description: |
   币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子，
   联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。
   触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达
-metadata: {"version":"4.2.2","mode":"shadow","runtime_effects":"read-only-no-send"}
+metadata: {"version":"4.2.3","mode":"shadow","runtime_effects":"read-only-no-send"}
 ---
 
-# 币安广场合约投机雷达 v4.2.2（Shadow）
+# 币安广场合约投机雷达 v4.2.3（Shadow）
 
 > 当前可真实运行的是只读影子报告：不发 Telegram、不创建定时任务、不下单。
 
@@ -24,14 +24,14 @@ metadata: {"version":"4.2.2","mode":"shadow","runtime_effects":"read-only-no-sen
 
 - 标准入口默认容量 200；Profile 是专业作者帖主通道，Feed 与经过人工/模型提取的参数信号 URL 作有界补充，按 canonical `post_id` 去重且保留全部来源 observation。
 - Feed 使用 `square-feed-coverage/v1`：必须从顶部开始，并记录滚动几何、两相懒加载触发、停止原因和覆盖状态。当前 scope 固定为 `BINANCE_SQUARE_DISCOVER_DOM`，`global_denominator_known=false` 且 `pagination_api_exhaustion_verified=false`；即使达到声明下限并稳定穷尽 DOM 而标 `BOUNDED_COMPLETE`，也只代表该次 DOM surface，不代表内部 feed API 或整个平台。容量、滚动预算、错误或未验证旧快照分别标 `CAPPED/PARTIAL/BLOCKED/LEGACY_UNVERIFIED`。
-- Feed 每次成功观察都写不可变快照和 `binance_raw_posts.json` observed latest；只有严格满足 `BOUNDED_COMPLETE + EXHAUSTED + minimum_target_met + unique>=preferred_minimum` 的 Discover DOM 捕获才推进独立 `binance_raw_posts_eligible.json`。PARTIAL 证据必须保存但不得覆盖既有 eligible 指针；抓取锁忙以非零状态失败，不能复用旧 latest 冒充本轮成功。
+- Feed 每次成功观察都写不可变快照和 `binance_raw_posts.json` observed latest。`capture_attempt_no`、`capture_attempt_limit` 与表示稳定物理底部事实的 `surface_exhausted` 是 `square-feed-coverage/v1` 的向后兼容可选诊断扩展，旧 v1 证据不会被静默升级。只有严格满足 `BOUNDED_COMPLETE + EXHAUSTED + minimum_target_met + unique>=preferred_minimum` 的 Discover DOM 捕获才推进独立 `binance_raw_posts_eligible.json`。PARTIAL 证据必须保存但不得覆盖既有 eligible 指针；抓取锁忙以非零状态失败，不能复用旧 latest 冒充本轮成功。
 - Feed 文本在 CDP 入站时执行 Unicode scalar 规范化：合法 emoji 代理对保持原义，孤立 UTF-16 surrogate 仅替换为 `U+FFFD` 并计入 `malformed_unicode_replacements`。最终 JSON 写入层再次递归兜底；写入失败必须清除临时文件，单个异常字符不得拖垮整批帖子。
-- 生产wrapper只接受本轮自身推进eligible的捕获，并要求observed latest、immutable snapshot与eligible pointer逐字节一致；PARTIAL、旧指针、缺指针或未刷新latest一律在radar前失败。
+- 生产 wrapper 默认最多执行两次相互独立的 Feed 捕获（`--capture-attempt-limit 1` 可回滚为单次），首次 eligible 立即停止；两次都未 eligible 时只选择最新一次合法捕获进入 radar，不跨次拼接帖子，也不读取旧 eligible。`PARTIAL` 与达到 200 条硬上限的 `CAPPED` 都只作带原始覆盖标签的不完整 Feed 补充，`CAPPED` 不得冒充穷尽。每次 observed latest 都必须刷新、与当次 immutable snapshot 逐字节一致并通过 v1 合同；只有 eligible 捕获才额外要求 eligible pointer 逐字节一致。Feed 是 Profile 主通道的补充，合法不完整捕获不再阻断 Profile，但下游仍必须如实保留覆盖状态；malformed、未刷新、错误或指针不一致继续失败关闭。
 - 逐帖请求币安公开详情接口，使用稳定 `post_id`、`author_id`、权威正文与精确发布时间。
 - Profile + Feed 双通道已接入真实只读 pipeline：Profile 计划只认稳定 `squareUid`，通过匿名公共 GET 从 `timeOffset=-1` 分页；逐条用 `firstReleaseTime` 执行严格24小时窗口，并以可验证 cursor 水位、空页或无 next 作为终止证明。置顶旧帖不会造成提前停止，cursor 停滞/上升、锚点不匹配、schema 漂移、请求失败或页预算耗尽均失败关闭为 `PARTIAL`。
 - 历史 fixture 保留 30D `PNL/ROI/VOLUME/WIN_RATE` 四榜解析合同；当前真实 Smart Money 接入只支持官方 Web UI 已观测的 `PNL/ROI`，每榜必须恰好30个唯一排名与 `topTraderId` 才可标记 `COMPLETE`。
 - Smart Money 公共只读 API 已接入标准 pipeline：`--smart-money` 在线采集，`--smart-money-fixture` 注入带完整性校验的证据；排行、交易员详情与 Square 身份映射分别计数，不能相互代替。
-- 单次生产影子入口 `scripts/run_production_cycle.py` 会先刷新 Feed，再验证 `latest` 与不可变快照逐字节一致，最后以前台、顺序、`--no-send` 方式运行 Smart Money、官方新闻与雷达；Feed 快照超过10分钟或来自未来时失败关闭。
+- 单次生产影子入口 `scripts/run_production_cycle.py` 会按上述独立捕获规则刷新 Feed，再以前台、顺序、`--no-send` 方式运行 Smart Money、官方新闻与雷达；Feed 快照超过10分钟或来自未来时失败关闭。离线测试只验证选择与失败关闭合同，尚无真实双捕获稳定性回执。
 - 生产 wrapper 为每个长时间子进程每30秒输出一次可刷新的 `[HEARTBEAT]`，避免调度器把正常静默分析误判为无输出挂死；父进程异常退出时会终止并回收子进程。`run_radar.py` 将 `SIGTERM` 转成可审计异常，使已创建的 attempt 进入 `FAILED`，而不是永久遗留 `RUNNING`。
 - `scripts/render_latest_telegram.py --report <committed-report.json>` 只读取已提交报告并复用标准 `render_telegram` 合同输出精简文本；它本身不发送。账号、目标、调度与实际发送仍属于安装环境的外部配置，不随公共 Skill 发布。
 - 生产入口默认不再消费旧版可变 `data/signal_check_input.json`；只有显式传入 `--signals-json` 才把它作为有manifest的补充来源。真实 pipeline 在任何 Profile、Smart Money 或帖子详情网络请求之前获取一次 Futures catalog 并完成 Binance server-time 校验，后续行情复用同一 catalog。

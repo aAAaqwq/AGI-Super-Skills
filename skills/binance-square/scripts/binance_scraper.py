@@ -6,6 +6,7 @@ latest-result file for downstream consumers and also writes immutable,
 timestamped snapshots for audit and replay.
 """
 
+import argparse
 import asyncio
 import fcntl
 import itertools
@@ -667,8 +668,15 @@ async def collect_feed_discovery(
     stagnant_rounds: int = STAGNANT_ROUNDS,
     scroll_delay: float = SCROLL_DELAY,
     load_trigger_delay: float = LOAD_TRIGGER_DELAY,
+    capture_attempt_no: int = 1,
+    capture_attempt_limit: int = 1,
 ) -> FeedDiscoveryCollection:
     """Collect one bounded DOM surface and return its auditable stop contract."""
+
+    if capture_attempt_limit not in {1, 2}:
+        raise ValueError("capture attempt limit must be 1 or 2")
+    if capture_attempt_no < 1 or capture_attempt_no > capture_attempt_limit:
+        raise ValueError("capture attempt number must be within the attempt limit")
 
     top_reset = await evaluator(websocket, SCROLL_TO_TOP_JS)
     started_from_top = abs(float(top_reset.get("after") or 0)) <= 1
@@ -799,6 +807,11 @@ async def collect_feed_discovery(
         "pagination_api_exhaustion_verified": False,
         "coverage_status": coverage_status,
         "termination_reason": termination_reason,
+        "capture_attempt_no": capture_attempt_no,
+        "capture_attempt_limit": capture_attempt_limit,
+        # A stable rendered bottom is a physical observation independent of
+        # whether the preferred coverage minimum was reached.
+        "surface_exhausted": bottom_geometry_stable,
         "started_from_top": started_from_top,
         "reached_bottom": reached_bottom,
         "bottom_geometry_stable": bottom_geometry_stable,
@@ -843,7 +856,7 @@ async def collect_feed_discovery(
     return FeedDiscoveryCollection(posts, discovery_result, stats)
 
 
-async def scrape():
+async def scrape(*, capture_attempt_no: int = 1, capture_attempt_limit: int = 1):
     websocket_url, tab_id, dedicated_tab = await get_binance_tab()
     print(
         f"[CDP] Tab: {tab_id} ({'dedicated' if dedicated_tab else 'reused'})",
@@ -861,10 +874,19 @@ async def scrape():
         ping_timeout=20,
     ) as websocket:
         print("[*] Connected", file=sys.stderr)
-        return await scrape_connected(websocket)
+        return await scrape_connected(
+            websocket,
+            capture_attempt_no=capture_attempt_no,
+            capture_attempt_limit=capture_attempt_limit,
+        )
 
 
-async def scrape_connected(websocket):
+async def scrape_connected(
+    websocket,
+    *,
+    capture_attempt_no: int = 1,
+    capture_attempt_limit: int = 1,
+):
     await cdp(websocket, "Runtime.enable")
     await cdp(websocket, "Page.enable")
 
@@ -889,7 +911,11 @@ async def scrape_connected(websocket):
         file=sys.stderr,
     )
 
-    collection = await collect_feed_discovery(websocket)
+    collection = await collect_feed_discovery(
+        websocket,
+        capture_attempt_no=capture_attempt_no,
+        capture_attempt_limit=capture_attempt_limit,
+    )
     output = persist_successful_collection(collection)
     stats = output["stats"]
 
@@ -904,7 +930,12 @@ async def scrape_connected(websocket):
     return output
 
 
-def write_error(error):
+def write_error(
+    error,
+    *,
+    capture_attempt_no: int = 1,
+    capture_attempt_limit: int = 1,
+):
     attempted_at_utc, attempted_at_local = timestamp_pair()
     payload = {
         "status": "error",
@@ -912,6 +943,9 @@ def write_error(error):
         "discovery_result": {
             "coverage_status": "BLOCKED",
             "termination_reason": "ERROR",
+            "capture_attempt_no": capture_attempt_no,
+            "capture_attempt_limit": capture_attempt_limit,
+            "surface_exhausted": False,
             "started_from_top": False,
             "reached_bottom": False,
             "bottom_geometry_stable": False,
@@ -943,7 +977,20 @@ def write_error(error):
     return payload
 
 
-async def main():
+def _arguments(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--capture-attempt-no", type=int, choices=(1, 2), default=1)
+    parser.add_argument(
+        "--capture-attempt-limit", type=int, choices=(1, 2), default=1
+    )
+    args = parser.parse_args(argv)
+    if args.capture_attempt_no > args.capture_attempt_limit:
+        parser.error("--capture-attempt-no cannot exceed --capture-attempt-limit")
+    return args
+
+
+async def main(argv=None):
+    args = _arguments([] if argv is None else argv)
     print("=" * 50, file=sys.stderr)
     print("[START] Binance Square Scraper v3.0", file=sys.stderr)
 
@@ -961,14 +1008,24 @@ async def main():
         try:
             with urllib.request.urlopen(f"{CDP_BASE}/json/version", timeout=3):
                 pass
-            await asyncio.wait_for(scrape(), timeout=SCRAPE_TIMEOUT)
+            await asyncio.wait_for(
+                scrape(
+                    capture_attempt_no=args.capture_attempt_no,
+                    capture_attempt_limit=args.capture_attempt_limit,
+                ),
+                timeout=SCRAPE_TIMEOUT,
+            )
             return True
         except Exception as error:
             print(f"[FAIL] {error}", file=sys.stderr)
-            write_error(error)
+            write_error(
+                error,
+                capture_attempt_no=args.capture_attempt_no,
+                capture_attempt_limit=args.capture_attempt_limit,
+            )
             return False
 
 
 if __name__ == "__main__":
-    success = asyncio.run(main())
+    success = asyncio.run(main(sys.argv[1:]))
     sys.exit(0 if success else 1)
