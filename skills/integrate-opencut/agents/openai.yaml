@@ -1,0 +1,4 @@
+interface:
+  display_name: "Integrate OpenCut"
+  short_description: "Set up and operate the OpenCut rewrite safely"
+  default_prompt: "Use $integrate-opencut to inspect and safely set up the pinned OpenCut rewrite for local development."

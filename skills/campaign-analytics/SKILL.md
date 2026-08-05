@@ -47,6 +47,14 @@ Production-grade campaign performance analysis with multi-touch attribution mode
 
 All scripts accept a JSON file as positional input argument. See `assets/sample_campaign_data.json` for complete examples.
 
+Reusable assets:
+
+- `assets/ab_test_template.md`
+- `assets/campaign_report_template.md`
+- `assets/channel_comparison_template.md`
+- `assets/expected_output.json`
+- `assets/sample_campaign_data.json`
+
 ### Attribution Analyzer
 
 ```json

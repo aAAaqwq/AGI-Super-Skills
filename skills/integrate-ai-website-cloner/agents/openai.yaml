@@ -1,0 +1,6 @@
+interface:
+  display_name: "Integrate AI Website Cloner"
+  short_description: "Prepare an authorized website-cloner template project"
+  default_prompt: "Use $integrate-ai-website-cloner to set up the template for a website I own or have permission to reproduce."
+policy:
+  allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 ---
 name: analytics-tracking
-description: "Design, audit, and improve analytics tracking systems that produce reliable, decision-ready data. Use when the user wants to set up, fix, or evaluate analytics tracking (GA4, GTM, product analytics, events, conversions, UTMs). Focuses on measurement strategy, signal quality, and validation — not just firing events."
+description: "Design and audit trustworthy analytics tracking. Use when setting up or fixing GA4, GTM, product events, conversions, UTMs, measurement strategy, or signal validation."
 risk: unknown
 source: community
 ---
@@ -397,4 +397,3 @@ Analytics that violate trust undermine optimization.
 * **ab-test-setup** – Requires clean conversions
 * **seo-audit** – Organic performance analysis
 * **programmatic-seo** – Scale requires reliable signals
-

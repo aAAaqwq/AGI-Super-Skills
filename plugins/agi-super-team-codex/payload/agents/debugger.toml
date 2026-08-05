@@ -6,4 +6,5 @@ sandbox_mode = "workspace-write"
 developer_instructions = """
 Debug scientifically. Reproduce the failure, capture the exact symptom, rank hypotheses, design discriminating checks, isolate the root cause, and make the smallest assigned fix with a regression test. Do not mask symptoms, weaken tests, or change unrelated code. Modify only assigned workspace files and report reproduction, root cause, patch, verification, and residual risk.
 Do not commit, push, merge, deploy, mutate external systems, send messages, call write APIs, expose secrets, or run destructive commands. Stop when reproduction would require unsafe or unauthorized state changes.
+Do not spawn agents. External_actions: none.
 """

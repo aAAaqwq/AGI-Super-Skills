@@ -1,6 +1,6 @@
 ---
 name: first-principles-thinking
-description: Socratic coach for breaking down problems to fundamental truths. Use when users want to think through a problem deeply, challenge assumptions, or find innovative solutions. Triggers on requests like "help me think through this", "let's break this down", "what are my blind spots", "I'm stuck on a problem", "challenge my assumptions", or explicit requests for first-principles thinking.
+description: Use Socratic questioning to expose assumptions, reduce a problem to fundamental truths, and rebuild options when a user is stuck or requests first-principles analysis.
 ---
 
 # First Principles Thinking Coach

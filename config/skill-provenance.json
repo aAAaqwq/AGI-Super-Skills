@@ -4,6 +4,23 @@
   "scope": "authored-provenance-evidence-not-runtime-verification",
   "entries": [
     {
+      "skill_id": "daniel-content-writing-style",
+      "origin_kind": "unknown",
+      "review_state": "unreviewed",
+      "declared_hints": [
+        "Copied at the project owner's request from a local Daniel personal-IP workspace after multi-agent content, contract, and forward-test review; no immutable creation commit or separately reviewed license evidence is available yet."
+      ],
+      "evidence": [
+        "skills/daniel-content-writing-style/SKILL.md",
+        "skills/daniel-content-writing-style/agents/openai.yaml",
+        "skills/daniel-content-writing-style/references/forward-test-receipt-2026-08-03.md",
+        "skills/daniel-content-writing-style/references/platform-agent-registry.json",
+        "skills/daniel-content-writing-style/references/platform-agent-registry.schema.json",
+        "skills/daniel-content-writing-style/scripts/validate_platform_agent_registry.py",
+        "skills/daniel-content-writing-style/references/writing-style-decisions.md"
+      ]
+    },
+    {
       "skill_id": "agent-team-orchestration",
       "origin_kind": "unknown",
       "review_state": "unreviewed",

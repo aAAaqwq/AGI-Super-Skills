@@ -1,0 +1,6 @@
+interface:
+  display_name: "Integrate Spider XHS"
+  short_description: "Audit Spider_XHS integration without unsafe execution"
+  default_prompt: "Use $integrate-spider-xhs to audit the pinned Spider_XHS repository and identify a compliant integration path."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Integrate OpenCut Classic"
+  short_description: "Set up the archived OpenCut Classic locally"
+  default_prompt: "Use $integrate-opencut-classic to inspect and safely run the pinned archived OpenCut Classic locally."

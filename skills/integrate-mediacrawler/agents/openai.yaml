@@ -1,0 +1,6 @@
+interface:
+  display_name: "Integrate MediaCrawler"
+  short_description: "Assess and connect MediaCrawler within strict limits"
+  default_prompt: "Use $integrate-mediacrawler to assess a non-commercial, authorized MediaCrawler integration before running anything."
+policy:
+  allow_implicit_invocation: false

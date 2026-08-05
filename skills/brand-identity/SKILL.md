@@ -1,6 +1,6 @@
 ---
 name: brand-identity
-description: Build a complete brand identity for a solopreneur business from scratch or refresh an existing one. Covers brand personality, voice and tone, visual identity system (colors, typography, logo direction, imagery style), tagline crafting, and a brand guidelines document. Use when creating a new brand, rebranding, or needing to make brand decisions consistent. Trigger on "create my brand", "brand identity", "brand guidelines", "define my brand voice", "brand personality", "what should my brand look like", "brand strategy", "rebrand", "brand tone".
+description: Define brand strategy, voice, visual direction, tagline, and usage guidelines. Use when creating, refreshing, or standardizing a product or company brand.
 ---
 
 # Brand Identity

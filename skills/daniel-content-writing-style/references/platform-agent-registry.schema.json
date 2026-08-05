@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "platform-agent-registry.schema.json",
+  "title": "A.A platform agent registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "registry_version",
+    "registry_id",
+    "canonicalization",
+    "hash_algorithm",
+    "source_snapshot",
+    "contracts",
+    "capabilities",
+    "canonical_roles",
+    "runtime_mappings",
+    "validation_policy"
+  ],
+  "properties": {
+    "$schema": {"const": "./platform-agent-registry.schema.json"},
+    "schema_version": {"$ref": "#/$defs/semver"},
+    "registry_version": {"$ref": "#/$defs/semver"},
+    "registry_id": {"const": "daniel-content-writing-style.platform-agents"},
+    "canonicalization": {"const": "sorted-json-utf8-v1"},
+    "hash_algorithm": {"const": "sha256"},
+    "source_snapshot": {"$ref": "#/$defs/source_snapshot"},
+    "contracts": {
+      "type": "object",
+      "minProperties": 2,
+      "additionalProperties": {"$ref": "#/$defs/contract"}
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {"$ref": "#/$defs/capability"}
+    },
+    "canonical_roles": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {"$ref": "#/$defs/canonical_role"}
+    },
+    "runtime_mappings": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {"$ref": "#/$defs/runtime_mapping"}
+    },
+    "validation_policy": {"$ref": "#/$defs/validation_policy"}
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "semver": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "string_array": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/nonempty"}
+    },
+    "source_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package",
+        "verified_plugin_version",
+        "verified_at",
+        "max_age_days",
+        "plugin_manifest_locator",
+        "route_locator",
+        "route_schema_version",
+        "route_projection_fields",
+        "route_projection_sha256",
+        "hierarchy_locator",
+        "hierarchy_schema_version",
+        "hierarchy_projection_sha256",
+        "upstream_repository",
+        "upstream_commit",
+        "upstream_license"
+      ],
+      "properties": {
+        "package": {"const": "agi-super-team-codex"},
+        "verified_plugin_version": {"$ref": "#/$defs/semver"},
+        "verified_at": {"type": "string", "format": "date"},
+        "max_age_days": {"type": "integer", "minimum": 1},
+        "plugin_manifest_locator": {"$ref": "#/$defs/nonempty"},
+        "route_locator": {"$ref": "#/$defs/nonempty"},
+        "route_schema_version": {"type": "integer", "minimum": 1},
+        "route_projection_fields": {"$ref": "#/$defs/string_array"},
+        "route_projection_sha256": {"$ref": "#/$defs/sha256"},
+        "hierarchy_locator": {"$ref": "#/$defs/nonempty"},
+        "hierarchy_schema_version": {"type": "integer", "minimum": 1},
+        "hierarchy_projection_sha256": {"$ref": "#/$defs/sha256"},
+        "upstream_repository": {"type": "string", "pattern": "^https://github\\.com/"},
+        "upstream_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+        "upstream_license": {"$ref": "#/$defs/nonempty"}
+      }
+    },
+    "diff_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["must_be_empty", "may_be_nonempty", "on_missing_or_invalid", "on_forbidden_diff"],
+      "properties": {
+        "must_be_empty": {"type": "array", "items": {"$ref": "#/$defs/nonempty"}},
+        "may_be_nonempty": {"type": "array", "items": {"$ref": "#/$defs/nonempty"}},
+        "on_missing_or_invalid": {"const": "BLOCK"},
+        "on_forbidden_diff": {"const": "BLOCK"}
+      }
+    },
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version",
+        "overlay_evidence",
+        "required_inputs",
+        "required_outputs",
+        "delegation_receipt_owner",
+        "delegation_receipt_required_fields",
+        "diff_contract",
+        "baseline_gap_policy"
+      ],
+      "properties": {
+        "contract_version": {"$ref": "#/$defs/semver"},
+        "overlay_evidence": {"enum": ["prompt-contract-only", "runtime-observed"]},
+        "required_inputs": {"$ref": "#/$defs/string_array"},
+        "required_outputs": {"$ref": "#/$defs/string_array"},
+        "delegation_receipt_owner": {"const": "main_agent_runtime_observation"},
+        "delegation_receipt_required_fields": {"$ref": "#/$defs/string_array"},
+        "diff_contract": {"$ref": "#/$defs/diff_contract"},
+        "baseline_gap_policy": {"$ref": "#/$defs/nonempty"}
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability",
+        "capability_revision",
+        "platform",
+        "workflow_stage",
+        "canonical_role_ref",
+        "contract_ref",
+        "skill_overlay_scope"
+      ],
+      "properties": {
+        "capability": {"type": "string", "pattern": "^[a-z][a-z0-9_]+$"},
+        "capability_revision": {"type": "integer", "minimum": 1},
+        "platform": {"$ref": "#/$defs/nonempty"},
+        "workflow_stage": {"enum": ["platform_adaptation", "post_approval_editing"]},
+        "canonical_role_ref": {"type": "string", "pattern": "^urn:agi-super-team:role:cco:"},
+        "contract_ref": {"$ref": "#/$defs/nonempty"},
+        "skill_overlay_scope": {"$ref": "#/$defs/nonempty"}
+      }
+    },
+    "role_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["upstream_source_path"],
+      "properties": {
+        "upstream_source_path": {"type": "string", "pattern": "^[a-zA-Z0-9_./-]+\\.md$"}
+      }
+    },
+    "canonical_role": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_role_ref",
+        "manager",
+        "role_id",
+        "trigger",
+        "do_not_use_when",
+        "role_required_inputs",
+        "baseline_outputs",
+        "acceptance",
+        "boundary",
+        "provenance"
+      ],
+      "properties": {
+        "canonical_role_ref": {"type": "string", "pattern": "^urn:agi-super-team:role:cco:"},
+        "manager": {"const": "cco"},
+        "role_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "trigger": {"$ref": "#/$defs/nonempty"},
+        "do_not_use_when": {"$ref": "#/$defs/nonempty"},
+        "role_required_inputs": {"$ref": "#/$defs/string_array"},
+        "baseline_outputs": {"$ref": "#/$defs/string_array"},
+        "acceptance": {"$ref": "#/$defs/string_array"},
+        "boundary": {"$ref": "#/$defs/nonempty"},
+        "provenance": {"$ref": "#/$defs/role_provenance"}
+      }
+    },
+    "descriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "nickname_candidates", "model_reasoning_effort", "sandbox_mode"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^ast-cco-"},
+        "nickname_candidates": {"$ref": "#/$defs/string_array"},
+        "model_reasoning_effort": {"const": "high"},
+        "sandbox_mode": {"const": "read-only"}
+      }
+    },
+    "runtime_mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime_binding_id",
+        "mapping_version",
+        "canonical_role_ref",
+        "runtime",
+        "agent_type",
+        "accepted_nicknames",
+        "logical_toml_path",
+        "verified_plugin_version",
+        "expected_descriptor",
+        "descriptor_projection_sha256"
+      ],
+      "properties": {
+        "runtime_binding_id": {"$ref": "#/$defs/nonempty"},
+        "mapping_version": {"type": "integer", "minimum": 1},
+        "canonical_role_ref": {"type": "string", "pattern": "^urn:agi-super-team:role:cco:"},
+        "runtime": {"const": "codex"},
+        "agent_type": {"type": "string", "pattern": "^ast-cco-"},
+        "accepted_nicknames": {"$ref": "#/$defs/string_array"},
+        "logical_toml_path": {"type": "string", "pattern": "^payload/agents/[a-z0-9-]+\\.toml$"},
+        "verified_plugin_version": {"$ref": "#/$defs/semver"},
+        "expected_descriptor": {"$ref": "#/$defs/descriptor"},
+        "descriptor_projection_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "validation_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allowed_locator_schemes",
+        "reject_absolute_paths",
+        "reject_unknown_fields",
+        "plugin_version_change",
+        "semantic_projection_change",
+        "missing_runtime_agent",
+        "ambiguous_agent_match",
+        "expired_snapshot_without_plugin",
+        "forbid_implicit_latest",
+        "reason_codes"
+      ],
+      "properties": {
+        "allowed_locator_schemes": {"$ref": "#/$defs/string_array"},
+        "reject_absolute_paths": {"const": true},
+        "reject_unknown_fields": {"const": true},
+        "plugin_version_change": {"const": "STALE_AND_BLOCK"},
+        "semantic_projection_change": {"const": "STALE_AND_BLOCK"},
+        "missing_runtime_agent": {"const": "UNAVAILABLE_AND_BLOCK"},
+        "ambiguous_agent_match": {"const": "UNAVAILABLE_AND_BLOCK"},
+        "expired_snapshot_without_plugin": {"const": "STALE_AND_BLOCK"},
+        "forbid_implicit_latest": {"const": true},
+        "reason_codes": {"$ref": "#/$defs/string_array"}
+      }
+    }
+  }
+}

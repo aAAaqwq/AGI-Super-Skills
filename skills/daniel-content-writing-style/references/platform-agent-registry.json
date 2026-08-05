@@ -1,0 +1,575 @@
+{
+  "$schema": "./platform-agent-registry.schema.json",
+  "schema_version": "1.0.0",
+  "registry_version": "1.0.0",
+  "registry_id": "daniel-content-writing-style.platform-agents",
+  "canonicalization": "sorted-json-utf8-v1",
+  "hash_algorithm": "sha256",
+  "source_snapshot": {
+    "package": "agi-super-team-codex",
+    "verified_plugin_version": "1.4.0",
+    "verified_at": "2026-08-03",
+    "max_age_days": 90,
+    "plugin_manifest_locator": "plugin:agi-super-team-codex@1.4.0:.codex-plugin/plugin.json",
+    "route_locator": "plugin:agi-super-team-codex@1.4.0:skills/c-suite-team/references/routes/cco.json",
+    "route_schema_version": 1,
+    "route_projection_fields": [
+      "id",
+      "sourcePath",
+      "trigger",
+      "doNotUseWhen",
+      "requiredInputs",
+      "outputs",
+      "acceptance",
+      "boundary"
+    ],
+    "route_projection_sha256": "21b33e0933f8ace999fc5d1daf4f827cb5899320e0eb2a0fadb2a243603f7f7a",
+    "hierarchy_locator": "plugin:agi-super-team-codex@1.4.0:skills/c-suite-team/references/agent-hierarchy.json",
+    "hierarchy_schema_version": 1,
+    "hierarchy_projection_sha256": "979f9567187e2a68b4e2b86ea065cd5e5c2f03ae8ca9185d521858055fa73f2e",
+    "upstream_repository": "https://github.com/jnMetaCode/agency-agents-zh",
+    "upstream_commit": "2ecfabf8e944ccdfed63ad8c44d5241290af6977",
+    "upstream_license": "MIT"
+  },
+  "contracts": {
+    "platform_native_adaptation@1": {
+      "contract_version": "1.0.0",
+      "overlay_evidence": "prompt-contract-only",
+      "required_inputs": [
+        "approved_draft_version",
+        "immutable_claims",
+        "immutable_evidence",
+        "public_boundaries",
+        "target_platform",
+        "current_date",
+        "allowed_presentation_changes",
+        "role_required_inputs"
+      ],
+      "required_outputs": [
+        "source_draft_version",
+        "platform_content_candidate",
+        "platform_adaptation_brief",
+        "delegation_receipt",
+        "presentation_changes",
+        "claim_diff",
+        "evidence_diff",
+        "boundary_diff",
+        "unresolved_questions",
+        "dated_platform_assumptions"
+      ],
+      "delegation_receipt_owner": "main_agent_runtime_observation",
+      "delegation_receipt_required_fields": [
+        "capability",
+        "canonical_role_ref",
+        "runtime_binding_id",
+        "registry_version",
+        "contract_version",
+        "resolution_status",
+        "resolution_checked_at",
+        "invocation_count",
+        "task_ref",
+        "completion_status"
+      ],
+      "diff_contract": {
+        "must_be_empty": [
+          "claim_diff",
+          "evidence_diff",
+          "boundary_diff"
+        ],
+        "may_be_nonempty": [
+          "presentation_changes"
+        ],
+        "on_missing_or_invalid": "BLOCK",
+        "on_forbidden_diff": "BLOCK"
+      },
+      "baseline_gap_policy": "角色只返回策略、brief 或框架而没有 platform_content_candidate 时，视为 OUTPUT_CONTRACT_VIOLATION 并 BLOCK；不得由主 Agent 补写冒充专家成稿。"
+    },
+    "short_video_editing_guidance@1": {
+      "contract_version": "1.0.0",
+      "overlay_evidence": "prompt-contract-only",
+      "required_inputs": [
+        "approved_platform_version",
+        "approved_script",
+        "material_manifest",
+        "target_platform",
+        "duration",
+        "technical_specifications",
+        "immutable_claims",
+        "public_boundaries"
+      ],
+      "required_outputs": [
+        "editing_decision_sheet",
+        "timeline_recommendations",
+        "subtitle_sound_export_checklist",
+        "delegation_receipt",
+        "claim_diff",
+        "evidence_diff",
+        "boundary_diff",
+        "unresolved_questions"
+      ],
+      "delegation_receipt_owner": "main_agent_runtime_observation",
+      "delegation_receipt_required_fields": [
+        "capability",
+        "canonical_role_ref",
+        "runtime_binding_id",
+        "registry_version",
+        "contract_version",
+        "resolution_status",
+        "resolution_checked_at",
+        "invocation_count",
+        "task_ref",
+        "completion_status"
+      ],
+      "diff_contract": {
+        "must_be_empty": [
+          "claim_diff",
+          "evidence_diff",
+          "boundary_diff"
+        ],
+        "may_be_nonempty": [],
+        "on_missing_or_invalid": "BLOCK",
+        "on_forbidden_diff": "BLOCK"
+      },
+      "baseline_gap_policy": "缺少已批准脚本或素材时 NEEDS_INPUT；本合同是后续独立工作流，不生成平台适配稿。"
+    }
+  },
+  "capabilities": [
+    {
+      "capability": "xiaohongshu_native_adaptation",
+      "capability_revision": 1,
+      "platform": "xiaohongshu",
+      "workflow_stage": "platform_adaptation",
+      "canonical_role_ref": "urn:agi-super-team:role:cco:xiaohongshu-specialist",
+      "contract_ref": "platform_native_adaptation@1",
+      "skill_overlay_scope": "把已批准核心稿改造成完整小红书笔记候选，并附标题、封面和版式 brief；不负责达人、投放或发布。"
+    },
+    {
+      "capability": "wechat_official_native_adaptation",
+      "capability_revision": 1,
+      "platform": "wechat_official",
+      "workflow_stage": "platform_adaptation",
+      "canonical_role_ref": "urn:agi-super-team:role:cco:wechat-official-account-manager",
+      "contract_ref": "platform_native_adaptation@1",
+      "skill_overlay_scope": "把已批准核心稿改造成完整公众号文章候选，并附标题、摘要和图文排版 brief；不操作公众号后台。"
+    },
+    {
+      "capability": "douyin_native_adaptation",
+      "capability_revision": 1,
+      "platform": "douyin",
+      "workflow_stage": "platform_adaptation",
+      "canonical_role_ref": "urn:agi-super-team:role:cco:douyin-strategist",
+      "contract_ref": "platform_native_adaptation@1",
+      "skill_overlay_scope": "把已批准核心稿改造成抖音脚本级候选，包括钩子、口播和高层镜头建议；不承担逐时间点剪辑。"
+    },
+    {
+      "capability": "bilibili_native_adaptation",
+      "capability_revision": 1,
+      "platform": "bilibili",
+      "workflow_stage": "platform_adaptation",
+      "canonical_role_ref": "urn:agi-super-team:role:cco:bilibili-strategist",
+      "contract_ref": "platform_native_adaptation@1",
+      "skill_overlay_scope": "把已批准核心稿改造成完整 B 站单期脚本候选，并附章节、社区和复盘 brief；不上传或发布。"
+    },
+    {
+      "capability": "x_native_adaptation",
+      "capability_revision": 1,
+      "platform": "x",
+      "workflow_stage": "platform_adaptation",
+      "canonical_role_ref": "urn:agi-super-team:role:cco:twitter-engager",
+      "contract_ref": "platform_native_adaptation@1",
+      "skill_overlay_scope": "把已批准核心稿改造成 X 帖子、线程或回复候选；不扩展为舆情研究、付费增长或账号操作。"
+    },
+    {
+      "capability": "zhihu_native_adaptation",
+      "capability_revision": 1,
+      "platform": "zhihu",
+      "workflow_stage": "platform_adaptation",
+      "canonical_role_ref": "urn:agi-super-team:role:cco:zhihu-strategist",
+      "contract_ref": "platform_native_adaptation@1",
+      "skill_overlay_scope": "把已批准核心稿改造成完整知乎回答候选，并附问题、引用和复用 brief；不刷赞、引流绕规或发布。"
+    },
+    {
+      "capability": "short_video_editing_guidance",
+      "capability_revision": 1,
+      "platform": "short_video",
+      "workflow_stage": "post_approval_editing",
+      "canonical_role_ref": "urn:agi-super-team:role:cco:short-video-editing-coach",
+      "contract_ref": "short_video_editing_guidance@1",
+      "skill_overlay_scope": "仅在脚本和素材已批准后生成剪辑决策、时间轴、字幕声音和导出检查；不得与平台适配同轮调用。"
+    }
+  ],
+  "canonical_roles": [
+    {
+      "canonical_role_ref": "urn:agi-super-team:role:cco:xiaohongshu-specialist",
+      "manager": "cco",
+      "role_id": "xiaohongshu-specialist",
+      "trigger": "需要小红书生活方式定位、趋势研究、审美体系、内容支柱、标题封面方向和自然内容日历。",
+      "do_not_use_when": "任务核心是达人采购、付费投放、商业合作、执行排期或转化项目管理；此时调用小红书运营专家。",
+      "role_required_inputs": [
+        "品牌人格",
+        "目标人群",
+        "内容素材",
+        "差异化观点",
+        "禁用表达"
+      ],
+      "baseline_outputs": [
+        "小红书内容定位",
+        "内容支柱与编辑日历",
+        "笔记 brief 与审美规范"
+      ],
+      "acceptance": [
+        "内容不是模板化搬运",
+        "标题与封面不误导",
+        "趋势信息标注时效和来源"
+      ],
+      "boundary": "不负责付费投放或达人合同，不登录、收藏、评论、私信或发布。",
+      "provenance": {
+        "upstream_source_path": "marketing/marketing-xiaohongshu-specialist.md"
+      }
+    },
+    {
+      "canonical_role_ref": "urn:agi-super-team:role:cco:wechat-official-account-manager",
+      "manager": "cco",
+      "role_id": "wechat-official-account-manager",
+      "trigger": "需要单个公众号的读者洞察、选题、编辑日历、图文格式、菜单、关键词回复、推送和内容数据优化。",
+      "do_not_use_when": "任务跨公众号、社群、企微和小程序，重点是私域转化漏斗；此时调用微信公众号运营。",
+      "role_required_inputs": [
+        "公众号定位",
+        "读者画像",
+        "历史内容或数据",
+        "栏目与频率",
+        "品牌规范"
+      ],
+      "baseline_outputs": [
+        "公众号编辑计划",
+        "文章与栏目 brief",
+        "菜单回复及数据优化建议"
+      ],
+      "acceptance": [
+        "栏目和读者任务一致",
+        "标题摘要不误导",
+        "后台变更只形成待审批清单"
+      ],
+      "boundary": "不得登录后台、改菜单、配置回复、保存草稿、群发或发布。",
+      "provenance": {
+        "upstream_source_path": "marketing/marketing-wechat-official-account.md"
+      }
+    },
+    {
+      "canonical_role_ref": "urn:agi-super-team:role:cco:douyin-strategist",
+      "manager": "cco",
+      "role_id": "douyin-strategist",
+      "trigger": "目标平台是抖音，需要账号定位、选题结构、开场钩子、内容系列、发布节奏或直播与短视频协同方案。",
+      "do_not_use_when": "已有脚本和素材，只需要镜头取舍、节奏、字幕、声音或剪辑交付；此时调用短视频剪辑指导师。",
+      "role_required_inputs": [
+        "账号目标",
+        "受众",
+        "产品或人物定位",
+        "可用素材",
+        "成功指标"
+      ],
+      "baseline_outputs": [
+        "抖音内容策略",
+        "选题与钩子库",
+        "生产排期和测量计划"
+      ],
+      "acceptance": [
+        "策略体现抖音原生表达",
+        "假设和指标可验证",
+        "平台动态结论标注验证日期"
+      ],
+      "boundary": "不刷量、不规避平台规则，不登录、上传、发布或操作直播间。",
+      "provenance": {
+        "upstream_source_path": "marketing/marketing-douyin-strategist.md"
+      }
+    },
+    {
+      "canonical_role_ref": "urn:agi-super-team:role:cco:bilibili-strategist",
+      "manager": "cco",
+      "role_id": "bilibili-strategist",
+      "trigger": "目标平台是 B 站，需要中长视频栏目、系列叙事、脚本结构、社区互动或完播与关注转化设计。",
+      "do_not_use_when": "任务是通用短视频剪辑执行，或已有成片只需诊断优化。",
+      "role_required_inputs": [
+        "账号定位",
+        "受众圈层",
+        "主题证据",
+        "制作资源",
+        "栏目目标"
+      ],
+      "baseline_outputs": [
+        "B站栏目策略",
+        "单期脚本框架",
+        "社区与数据复盘计划"
+      ],
+      "acceptance": [
+        "内容深度匹配受众",
+        "开场与章节结构可执行",
+        "引用与素材权利可追溯"
+      ],
+      "boundary": "不得抓取用户数据、刷互动、投币、评论、私信或发布视频。",
+      "provenance": {
+        "upstream_source_path": "marketing/marketing-bilibili-strategist.md"
+      }
+    },
+    {
+      "canonical_role_ref": "urn:agi-super-team:role:cco:twitter-engager",
+      "manager": "cco",
+      "role_id": "twitter-engager",
+      "trigger": "目标平台是 X/Twitter，需要线程、回复框架、关系网络、对话选题和社区互动节奏。",
+      "do_not_use_when": "只需跨平台品牌战略、付费增长或实时舆情调查。",
+      "role_required_inputs": [
+        "账号定位",
+        "目标圈层",
+        "可信观点",
+        "互动目标",
+        "语气与禁区"
+      ],
+      "baseline_outputs": [
+        "互动地图",
+        "线程与回复候选",
+        "关系建设和测量计划"
+      ],
+      "acceptance": [
+        "回复有具体价值",
+        "不冒充真人经历",
+        "不自动化骚扰或批量互动"
+      ],
+      "boundary": "只生成离线候选；不得浏览登录态、关注、点赞、转发、回复、私信或发布。",
+      "provenance": {
+        "upstream_source_path": "marketing/marketing-twitter-engager.md"
+      }
+    },
+    {
+      "canonical_role_ref": "urn:agi-super-team:role:cco:zhihu-strategist",
+      "manager": "cco",
+      "role_id": "zhihu-strategist",
+      "trigger": "目标平台是知乎，需要问题选择、专业回答结构、搜索沉淀、可信引用和作者权威建设。",
+      "do_not_use_when": "只做通用 SEO 页面或其他社交平台的短内容。",
+      "role_required_inputs": [
+        "专业领域",
+        "可证明经验",
+        "目标问题",
+        "证据来源",
+        "转化边界"
+      ],
+      "baseline_outputs": [
+        "问题机会清单",
+        "知乎回答 brief",
+        "引用与长期复用计划"
+      ],
+      "acceptance": [
+        "回答直接解决问题",
+        "事实与经验清晰分层",
+        "不伪造身份或案例"
+      ],
+      "boundary": "不得抓取登录态内容、刷赞、评论、私信、引流绕规或发布。",
+      "provenance": {
+        "upstream_source_path": "marketing/marketing-zhihu-strategist.md"
+      }
+    },
+    {
+      "canonical_role_ref": "urn:agi-super-team:role:cco:short-video-editing-coach",
+      "manager": "cco",
+      "role_id": "short-video-editing-coach",
+      "trigger": "已有目标、脚本或素材，需要镜头筛选、节奏、转场、字幕、声音、包装和剪辑验收指导。",
+      "do_not_use_when": "尚未决定账号定位、平台策略或选题；先调用对应平台策略师。",
+      "role_required_inputs": [
+        "目标平台",
+        "脚本或口播稿",
+        "素材清单",
+        "时长",
+        "技术规格"
+      ],
+      "baseline_outputs": [
+        "剪辑决策单",
+        "时间轴建议",
+        "字幕声音与导出检查表"
+      ],
+      "acceptance": [
+        "每条剪辑建议可定位到时间点",
+        "信息不因剪辑失真",
+        "导出规格与平台匹配"
+      ],
+      "boundary": "可指导本地编辑但不得上传、发布或调用受版权限制的音乐素材。",
+      "provenance": {
+        "upstream_source_path": "marketing/marketing-short-video-editing-coach.md"
+      }
+    }
+  ],
+  "runtime_mappings": [
+    {
+      "runtime_binding_id": "codex.ast-cco-xiaohongshu-specialist@1",
+      "mapping_version": 1,
+      "canonical_role_ref": "urn:agi-super-team:role:cco:xiaohongshu-specialist",
+      "runtime": "codex",
+      "agent_type": "ast-cco-xiaohongshu-specialist",
+      "accepted_nicknames": [
+        "xiaohongshu-specialist"
+      ],
+      "logical_toml_path": "payload/agents/ast-cco-xiaohongshu-specialist.toml",
+      "verified_plugin_version": "1.4.0",
+      "expected_descriptor": {
+        "name": "ast-cco-xiaohongshu-specialist",
+        "nickname_candidates": [
+          "xiaohongshu-specialist"
+        ],
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only"
+      },
+      "descriptor_projection_sha256": "978a58b759c4940443c520ff05d8b35d8333797083096963879f3d487667adc8"
+    },
+    {
+      "runtime_binding_id": "codex.ast-cco-wechat-official-account-manager@1",
+      "mapping_version": 1,
+      "canonical_role_ref": "urn:agi-super-team:role:cco:wechat-official-account-manager",
+      "runtime": "codex",
+      "agent_type": "ast-cco-wechat-official-account-manager",
+      "accepted_nicknames": [
+        "wechat-official-account-manager"
+      ],
+      "logical_toml_path": "payload/agents/ast-cco-wechat-official-account-manager.toml",
+      "verified_plugin_version": "1.4.0",
+      "expected_descriptor": {
+        "name": "ast-cco-wechat-official-account-manager",
+        "nickname_candidates": [
+          "wechat-official-account-manager"
+        ],
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only"
+      },
+      "descriptor_projection_sha256": "7d1bf1c31817a566f45a8859385d1b0902bee037fbbef771218522c1130cd780"
+    },
+    {
+      "runtime_binding_id": "codex.ast-cco-douyin-strategist@1",
+      "mapping_version": 1,
+      "canonical_role_ref": "urn:agi-super-team:role:cco:douyin-strategist",
+      "runtime": "codex",
+      "agent_type": "ast-cco-douyin-strategist",
+      "accepted_nicknames": [
+        "douyin-strategist"
+      ],
+      "logical_toml_path": "payload/agents/ast-cco-douyin-strategist.toml",
+      "verified_plugin_version": "1.4.0",
+      "expected_descriptor": {
+        "name": "ast-cco-douyin-strategist",
+        "nickname_candidates": [
+          "douyin-strategist"
+        ],
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only"
+      },
+      "descriptor_projection_sha256": "11949920fae6992e807a5ed02de8fa502f557345bb310cac147c7f395b715489"
+    },
+    {
+      "runtime_binding_id": "codex.ast-cco-bilibili-strategist@1",
+      "mapping_version": 1,
+      "canonical_role_ref": "urn:agi-super-team:role:cco:bilibili-strategist",
+      "runtime": "codex",
+      "agent_type": "ast-cco-bilibili-strategist",
+      "accepted_nicknames": [
+        "bilibili-strategist"
+      ],
+      "logical_toml_path": "payload/agents/ast-cco-bilibili-strategist.toml",
+      "verified_plugin_version": "1.4.0",
+      "expected_descriptor": {
+        "name": "ast-cco-bilibili-strategist",
+        "nickname_candidates": [
+          "bilibili-strategist"
+        ],
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only"
+      },
+      "descriptor_projection_sha256": "bf5ee39dc385a5d17d56454ae3deeeb4069b5c40498c72419e43fecee7f43913"
+    },
+    {
+      "runtime_binding_id": "codex.ast-cco-twitter-engager@1",
+      "mapping_version": 1,
+      "canonical_role_ref": "urn:agi-super-team:role:cco:twitter-engager",
+      "runtime": "codex",
+      "agent_type": "ast-cco-twitter-engager",
+      "accepted_nicknames": [
+        "twitter-engager"
+      ],
+      "logical_toml_path": "payload/agents/ast-cco-twitter-engager.toml",
+      "verified_plugin_version": "1.4.0",
+      "expected_descriptor": {
+        "name": "ast-cco-twitter-engager",
+        "nickname_candidates": [
+          "twitter-engager"
+        ],
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only"
+      },
+      "descriptor_projection_sha256": "0a368486267541d5085acaba2c010b0746f00d4de4685b3cdfc7e4495d7a5551"
+    },
+    {
+      "runtime_binding_id": "codex.ast-cco-zhihu-strategist@1",
+      "mapping_version": 1,
+      "canonical_role_ref": "urn:agi-super-team:role:cco:zhihu-strategist",
+      "runtime": "codex",
+      "agent_type": "ast-cco-zhihu-strategist",
+      "accepted_nicknames": [
+        "zhihu-strategist"
+      ],
+      "logical_toml_path": "payload/agents/ast-cco-zhihu-strategist.toml",
+      "verified_plugin_version": "1.4.0",
+      "expected_descriptor": {
+        "name": "ast-cco-zhihu-strategist",
+        "nickname_candidates": [
+          "zhihu-strategist"
+        ],
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only"
+      },
+      "descriptor_projection_sha256": "953d7a37149e64c171a86af074771e716d6c64252a2c735920cc3d889ada7392"
+    },
+    {
+      "runtime_binding_id": "codex.ast-cco-short-video-editing-coach@1",
+      "mapping_version": 1,
+      "canonical_role_ref": "urn:agi-super-team:role:cco:short-video-editing-coach",
+      "runtime": "codex",
+      "agent_type": "ast-cco-short-video-editing-coach",
+      "accepted_nicknames": [
+        "short-video-editing-coach"
+      ],
+      "logical_toml_path": "payload/agents/ast-cco-short-video-editing-coach.toml",
+      "verified_plugin_version": "1.4.0",
+      "expected_descriptor": {
+        "name": "ast-cco-short-video-editing-coach",
+        "nickname_candidates": [
+          "short-video-editing-coach"
+        ],
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only"
+      },
+      "descriptor_projection_sha256": "f18bf782c2b713f9f7e718a9af85676d4e8ac869a68fa97b61cfdbf00a68884a"
+    }
+  ],
+  "validation_policy": {
+    "allowed_locator_schemes": [
+      "plugin",
+      "agent_catalog"
+    ],
+    "reject_absolute_paths": true,
+    "reject_unknown_fields": true,
+    "plugin_version_change": "STALE_AND_BLOCK",
+    "semantic_projection_change": "STALE_AND_BLOCK",
+    "missing_runtime_agent": "UNAVAILABLE_AND_BLOCK",
+    "ambiguous_agent_match": "UNAVAILABLE_AND_BLOCK",
+    "expired_snapshot_without_plugin": "STALE_AND_BLOCK",
+    "forbid_implicit_latest": true,
+    "reason_codes": [
+      "REGISTRY_INVALID",
+      "CAPABILITY_NOT_FOUND",
+      "RUNTIME_MAPPING_NOT_FOUND",
+      "AGENT_UNAVAILABLE",
+      "AGENT_MATCH_AMBIGUOUS",
+      "ROLE_IDENTITY_MISMATCH",
+      "PLUGIN_VERSION_UNVERIFIED",
+      "SOURCE_DRIFT",
+      "SNAPSHOT_EXPIRED",
+      "INPUT_CONTRACT_VIOLATION",
+      "OUTPUT_CONTRACT_VIOLATION"
+    ]
+  }
+}
