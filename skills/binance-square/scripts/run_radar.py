@@ -70,7 +70,8 @@ def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--signals-json",
         type=Path,
-        default=PROJECT_DIR / "data" / "signal_check_input.json",
+        default=None,
+        help="optional legacy signal supplement; disabled unless explicitly supplied",
     )
     parser.add_argument(
         "--leaderboard-seed-evidence",

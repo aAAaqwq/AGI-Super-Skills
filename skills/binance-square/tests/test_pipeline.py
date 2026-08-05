@@ -89,6 +89,7 @@ class ShadowPipelineTests(unittest.TestCase):
             ]
         )
         self.assertEqual(catalog, parsed.smart_money_square_mapping_catalog)
+        self.assertIsNone(parsed.signals_json)
         with self.assertRaises(SystemExit):
             radar_arguments(
                 [

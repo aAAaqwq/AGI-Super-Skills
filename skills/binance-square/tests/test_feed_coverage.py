@@ -34,6 +34,19 @@ def _batch(posts: list[dict[str, str]], *, top: int, height: int, bottom: bool) 
 
 
 class FeedCollectionTests(unittest.IsolatedAsyncioTestCase):
+    def test_scraper_cli_parses_capture_attempt_diagnostics(self) -> None:
+        args = binance_scraper._arguments(
+            [
+                "--capture-attempt-no",
+                "2",
+                "--capture-attempt-limit",
+                "2",
+            ]
+        )
+
+        self.assertEqual(2, args.capture_attempt_no)
+        self.assertEqual(2, args.capture_attempt_limit)
+
     async def test_malformed_surrogate_is_repaired_and_audited_at_ingress(
         self,
     ) -> None:
@@ -300,10 +313,15 @@ class FeedCollectionTests(unittest.IsolatedAsyncioTestCase):
             hard_limit=200,
             max_scrolls=5,
             stagnant_rounds=2,
+            capture_attempt_no=2,
+            capture_attempt_limit=2,
         )
 
         self.assertEqual("PARTIAL", result.discovery_result["coverage_status"])
         self.assertEqual("STAGNANT", result.discovery_result["termination_reason"])
+        self.assertTrue(result.discovery_result["surface_exhausted"])
+        self.assertEqual(2, result.discovery_result["capture_attempt_no"])
+        self.assertEqual(2, result.discovery_result["capture_attempt_limit"])
 
     async def test_exhausted_hard_limit_and_scroll_limit_are_distinct(self) -> None:
         top = {
