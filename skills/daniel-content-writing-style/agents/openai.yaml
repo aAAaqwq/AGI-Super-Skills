@@ -1,0 +1,4 @@
+interface:
+  display_name: "A.A 内容写作准则"
+  short_description: "基于证据起草 A.A 内容，批准后做单平台适配并回审"
+  default_prompt: "Use $daniel-content-writing-style for content explicitly intended under the A.A identity. Build the evidence ledger and platform-neutral core draft, stop for my explicit approval, then route to exactly one platform specialist and perform the main-agent final audit."

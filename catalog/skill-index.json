@@ -2,21 +2,21 @@
   "$schema": "../config/skill-index.schema.json",
   "categories": [
     {
-      "count": 80,
+      "count": 81,
       "description": "Coordinate agents, context, memory, models, prompts, and tool protocols.",
       "emoji": "🤖",
       "id": "ai-agents-orchestration",
       "title": "AI Agents & Orchestration"
     },
     {
-      "count": 82,
+      "count": 83,
       "description": "Build, test, review, debug, and maintain applications and developer tooling.",
       "emoji": "💻",
       "id": "software-engineering",
       "title": "Software Engineering"
     },
     {
-      "count": 34,
+      "count": 35,
       "description": "Deploy, observe, troubleshoot, and operate cloud and local infrastructure.",
       "emoji": "☁️",
       "id": "cloud-devops-reliability",
@@ -44,14 +44,14 @@
       "title": "Product, Design & UX"
     },
     {
-      "count": 48,
+      "count": 49,
       "description": "Acquire audiences through positioning, campaigns, search, ads, and social growth.",
       "emoji": "📈",
       "id": "marketing-seo-growth",
       "title": "Marketing, SEO & Growth"
     },
     {
-      "count": 84,
+      "count": 86,
       "description": "Create, edit, repurpose, and publish writing, images, audio, and video.",
       "emoji": "✍️",
       "id": "content-media-publishing",
@@ -86,7 +86,7 @@
       "title": "Apps & Workflow Automation"
     },
     {
-      "count": 38,
+      "count": 40,
       "description": "Create, analyze, and publish for major Chinese-language platforms and channels.",
       "emoji": "🇨🇳",
       "id": "chinese-platform-workflows",
@@ -100,7 +100,7 @@
       "title": "Specialized Domains & Utilities"
     }
   ],
-  "inventoryCount": 817,
+  "inventoryCount": 825,
   "inventorySemantics": "tracked physical top-level directories with SKILL.md",
   "schemaVersion": 2,
   "skills": [
@@ -1940,7 +1940,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Design, audit, and improve analytics tracking systems that produce reliable, decision-ready data. Use when the user wants to set up, fix, or evaluate analytics tracking (GA4,…",
+      "description": "Design and audit trustworthy analytics tracking. Use when setting up or fixing GA4, GTM, product events, conversions, UTMs, measurement strategy, or signal validation.",
       "description_status": "source-text",
       "path": "skills/analytics-tracking/SKILL.md",
       "portability_class": "portable-required",
@@ -2448,7 +2448,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Systematically evaluate architecture decisions, document trade-offs, and select appropriate patterns. This skill should be used when the user asks about 'architecture decision',…",
+      "description": "Evaluate architecture options, document trade-offs, and write decision records. Use for ADRs, pattern selection, technology choices, or technical-debt decisions.",
       "description_status": "source-text",
       "path": "skills/architecture-decision/SKILL.md",
       "portability_class": "portable-required",
@@ -3345,7 +3345,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Build robust backtesting systems for trading strategies with proper handling of look-ahead bias, survivorship bias, and transaction costs. Use when developing trading algorithms,…",
+      "description": "Build trading-strategy backtests that account for look-ahead bias, survivorship bias, and costs. Use when validating strategies or designing backtest infrastructure.",
       "description_status": "source-text",
       "path": "skills/backtesting-frameworks/SKILL.md",
       "portability_class": "portable-required",
@@ -3931,7 +3931,7 @@
           "spdx": "MIT"
         },
         "origin_kind": "project-original",
-        "review_state": "reviewed"
+        "review_state": "stale"
       },
       "review_signals": [],
       "skill_id": "binance-square",
@@ -4290,7 +4290,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Build a complete brand identity for a solopreneur business from scratch or refresh an existing one. Covers brand personality, voice and tone, visual identity system (colors,…",
+      "description": "Define brand strategy, voice, visual direction, tagline, and usage guidelines. Use when creating, refreshing, or standardizing a product or company brand.",
       "description_status": "source-text",
       "path": "skills/brand-identity/SKILL.md",
       "portability_class": "portable-required",
@@ -7170,7 +7170,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "You are an elite content marketing strategist specializing in AI-powered content creation, omnichannel marketing, and data-driven content optimization",
+      "description": "Design content strategy, distribution, SEO, and conversion experiments. Use when planning or improving measurable, multi-channel content marketing.",
       "description_status": "source-text",
       "path": "skills/content-marketer/SKILL.md",
       "portability_class": "catalog-only",
@@ -9441,6 +9441,59 @@
     {
       "assignments": [],
       "category_id": "content-media-publishing",
+      "classification": "slug:content,writing;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "content",
+          "writing"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "content-media-publishing",
+          "match_count": 2,
+          "matched_signals": [
+            "content",
+            "writing"
+          ],
+          "priority": 100,
+          "tie_detected": false
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "为明确以 A.A 身份发布的文章、教程、复盘或视频脚本建立证据账本并起草、改写或审稿；仅在当前核心版本获明确批准后，调用一个平台专业 Subagent 适配并由主 Agent 回审。不用于其他作者、纯选题或增长研究、摘要、发布或外部操作。",
+      "description_status": "source-text",
+      "path": "skills/daniel-content-writing-style/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "declared_hints": [
+          "Copied at the project owner's request from a local Daniel personal-IP workspace after multi-agent content, contract, and forward-test review; no immutable creation commit or separately reviewed license evidence is available yet."
+        ],
+        "evidence": [
+          "skills/daniel-content-writing-style/SKILL.md",
+          "skills/daniel-content-writing-style/agents/openai.yaml",
+          "skills/daniel-content-writing-style/references/forward-test-receipt-2026-08-03.md",
+          "skills/daniel-content-writing-style/references/platform-agent-registry.json",
+          "skills/daniel-content-writing-style/references/platform-agent-registry.schema.json",
+          "skills/daniel-content-writing-style/scripts/validate_platform_agent_registry.py",
+          "skills/daniel-content-writing-style/references/writing-style-decisions.md"
+        ],
+        "origin_kind": "unknown",
+        "review_state": "unreviewed"
+      },
+      "review_signals": [],
+      "skill_id": "daniel-content-writing-style",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "content-media-publishing",
       "classification": "slug:writer;metadata:frontmatter",
       "classification_details": {
         "matched_signals": [
@@ -9774,7 +9827,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Transform data into compelling narratives using visualization, context, and persuasive structure. Use when presenting analytics to stakeholders, creating data reports, or…",
+      "description": "Turn data into clear narratives with context, visualization, and decision-oriented structure. Use for analytics reports, stakeholder briefings, or executive presentations.",
       "description_status": "source-text",
       "path": "skills/data-storytelling/SKILL.md",
       "portability_class": "portable-required",
@@ -13556,7 +13609,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "Socratic coach for breaking down problems to fundamental truths. Use when users want to think through a problem deeply, challenge assumptions, or find innovative solutions.…",
+      "description": "Use Socratic questioning to expose assumptions, reduce a problem to fundamental truths, and rebuild options when a user is stuck or requests first-principles analysis.",
       "description_status": "source-text",
       "path": "skills/first-principles-thinking/SKILL.md",
       "portability_class": "portable-required",
@@ -15818,6 +15871,308 @@
       },
       "review_signals": [],
       "skill_id": "instagram-automation",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "ai-agents-orchestration",
+      "classification": "description:codex;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "codex"
+        ],
+        "method": "description",
+        "resolution_status": "priority-tie",
+        "review_state": "unreviewed",
+        "runner_ups": [
+          {
+            "category_id": "apps-workflow-automation",
+            "match_count": 1,
+            "matched_signals": [
+              "workflow"
+            ],
+            "priority": 70,
+            "tied_for_first": true
+          },
+          {
+            "category_id": "business-operations-strategy",
+            "match_count": 1,
+            "matched_signals": [
+              "project"
+            ],
+            "priority": 65,
+            "tied_for_first": true
+          }
+        ],
+        "winner": {
+          "category_id": "ai-agents-orchestration",
+          "match_count": 1,
+          "matched_signals": [
+            "codex"
+          ],
+          "priority": 75,
+          "tie_detected": true
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "Create or inspect a project derived from JCodesMore/ai-website-cloner-template, normalize its bundled clone-website workflow for Codex, and verify its Next.js scaffold. Use when…",
+      "description_status": "source-text",
+      "path": "skills/integrate-ai-website-cloner/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "origin_kind": "unknown",
+        "review_state": "unreviewed"
+      },
+      "review_signals": [],
+      "skill_id": "integrate-ai-website-cloner",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "content-media-publishing",
+      "classification": "slug:media;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "media"
+        ],
+        "method": "slug",
+        "resolution_status": "priority-tie",
+        "review_state": "unreviewed",
+        "runner_ups": [
+          {
+            "category_id": "data-analytics-research",
+            "match_count": 1,
+            "matched_signals": [
+              "crawl"
+            ],
+            "priority": 95,
+            "tied_for_first": true
+          }
+        ],
+        "winner": {
+          "category_id": "content-media-publishing",
+          "match_count": 1,
+          "matched_signals": [
+            "media"
+          ],
+          "priority": 100,
+          "tie_detected": true
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "Audit, install for isolated non-commercial research, configure, or invoke the pinned NanmiCoder/MediaCrawler CLI with explicit platform, login, crawl scope, storage, and rate…",
+      "description_status": "source-text",
+      "path": "skills/integrate-mediacrawler/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "origin_kind": "unknown",
+        "review_state": "unreviewed"
+      },
+      "review_signals": [],
+      "skill_id": "integrate-mediacrawler",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "software-engineering",
+      "classification": "description:\\bapi\\b;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "\\bapi\\b"
+        ],
+        "method": "description",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "software-engineering",
+          "match_count": 1,
+          "matched_signals": [
+            "\\bapi\\b"
+          ],
+          "priority": 80,
+          "tie_detected": false
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "Set up, inspect, develop, build, or test the OpenCut rewrite repository with its pinned Proto, Moon, Bun, Rust, web, API, and desktop toolchain. Use when the user explicitly…",
+      "description_status": "source-text",
+      "path": "skills/integrate-opencut/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "origin_kind": "unknown",
+        "review_state": "unreviewed"
+      },
+      "review_signals": [],
+      "skill_id": "integrate-opencut",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "cloud-devops-reliability",
+      "classification": "outcome:\\b(?:datadog|grafana|kubernetes|docker)\\b;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "\\b(?:datadog|grafana|kubernetes|docker)\\b"
+        ],
+        "method": "outcome",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "cloud-devops-reliability",
+          "match_count": 1,
+          "matched_signals": [
+            "\\b(?:datadog|grafana|kubernetes|docker)\\b"
+          ],
+          "priority": 85,
+          "tie_detected": false
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "Set up, inspect, run, build, or test the archived OpenCut Classic repository and its Bun, Next.js web, Docker services, and optional Rust/WASM paths. Use when the user explicitly…",
+      "description_status": "source-text",
+      "path": "skills/integrate-opencut-classic/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "origin_kind": "unknown",
+        "review_state": "unreviewed"
+      },
+      "review_signals": [],
+      "skill_id": "integrate-opencut-classic",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "marketing-seo-growth",
+      "classification": "slug:social;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "social"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "marketing-seo-growth",
+          "match_count": 1,
+          "matched_signals": [
+            "social"
+          ],
+          "priority": 105,
+          "tie_detected": false
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "Audit, install in an isolated environment, or prepare the `sau` CLI for dreammis/social-auto-upload across Douyin, Kuaishou, Xiaohongshu, and Bilibili. Use only when the user…",
+      "description_status": "source-text",
+      "path": "skills/integrate-social-auto-upload/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "origin_kind": "unknown",
+        "review_state": "unreviewed"
+      },
+      "review_signals": [],
+      "skill_id": "integrate-social-auto-upload",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "chinese-platform-workflows",
+      "classification": "slug:xhs;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "xhs"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "chinese-platform-workflows",
+          "match_count": 1,
+          "matched_signals": [
+            "xhs"
+          ],
+          "priority": 130,
+          "tie_detected": false
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "Perform static architecture, dependency, license, and interface assessment of the pinned cv-cat/Spider_XHS repository and design a compliant replacement or integration boundary.…",
+      "description_status": "source-text",
+      "path": "skills/integrate-spider-xhs/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "origin_kind": "unknown",
+        "review_state": "unreviewed"
+      },
+      "review_signals": [],
+      "skill_id": "integrate-spider-xhs",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "chinese-platform-workflows",
+      "classification": "slug:xhs;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "xhs"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "chinese-platform-workflows",
+          "match_count": 1,
+          "matched_signals": [
+            "xhs"
+          ],
+          "priority": 130,
+          "tie_detected": false
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "Audit, install, configure, or invoke the pinned JoeanAmier/XHS-Downloader repository for authorized Xiaohongshu/RedNote link extraction, owned-media download, local API, or local…",
+      "description_status": "source-text",
+      "path": "skills/integrate-xhs-downloader/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "origin_kind": "unknown",
+        "review_state": "unreviewed"
+      },
+      "review_signals": [],
+      "skill_id": "integrate-xhs-downloader",
       "support_level": "catalog",
       "used_by": []
     },
@@ -22673,7 +23028,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "You are an expert in **programmatic SEO strategy**—designing systems that generate",
+      "description": "Design and evaluate template-driven SEO page systems. Use for programmatic SEO, directories, location pages, comparisons, integrations, or scaled keyword patterns.",
       "description_status": "source-text",
       "path": "skills/programmatic-seo/SKILL.md",
       "portability_class": "portable-optional",

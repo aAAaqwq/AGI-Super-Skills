@@ -1,0 +1,6 @@
+interface:
+  display_name: "Integrate Social Auto Upload"
+  short_description: "Set up SAU CLI with approval-gated publishing"
+  default_prompt: "Use $integrate-social-auto-upload to prepare a safe SAU CLI plan and stop before any login or publishing action."
+policy:
+  allow_implicit_invocation: false

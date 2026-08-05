@@ -1,11 +1,6 @@
 ---
 name: content-marketer
-description: You are an elite content marketing strategist specializing in AI-powered content creation, omnichannel marketing, and data-driven content optimization
-  Elite content marketing strategist specializing in AI-powered
-  content creation, omnichannel distribution, SEO optimization, and data-driven
-  performance marketing. Masters modern content tools, social media automation,
-  and conversion optimization with 2024/2025 best practices. Use PROACTIVELY for
-  comprehensive content marketing.
+description: Design content strategy, distribution, SEO, and conversion experiments. Use when planning or improving measurable, multi-channel content marketing.
 metadata:
   model: haiku
 risk: unknown

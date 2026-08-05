@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "scope": "deterministic-structural-evidence-not-semantic-verification",
   "summary": {
-    "inventoryCount": 817,
-    "structureInvalid": 176,
-    "disclosureWarnings": 569,
+    "inventoryCount": 825,
+    "structureInvalid": 175,
+    "disclosureWarnings": 567,
     "executionReviewRequired": 174,
     "issueCounts": {
       "description-missing-trigger": 263,
-      "description-over-180": 293,
+      "description-over-180": 292,
       "invalid-frontmatter-yaml": 35,
       "link-outside-repository": 5,
       "missing-frontmatter": 37,
@@ -16,10 +16,10 @@
       "over-500-lines": 55,
       "personal-absolute-path": 50,
       "scripts-without-test-evidence": 173,
-      "unmentioned-assets": 11,
+      "unmentioned-assets": 10,
       "unmentioned-references": 54,
       "unmentioned-scripts": 75,
-      "unresolved-local-link": 35
+      "unresolved-local-link": 34
     }
   },
   "skills": [
@@ -402,16 +402,6 @@
       ]
     },
     {
-      "skill_id": "analytics-tracking",
-      "path": "skills/analytics-tracking/SKILL.md",
-      "structure_status": "pass",
-      "disclosure_status": "warn",
-      "execution_status": "not-applicable",
-      "issues": [
-        "description-over-180"
-      ]
-    },
-    {
       "skill_id": "api-design",
       "path": "skills/api-design/SKILL.md",
       "structure_status": "pass",
@@ -523,16 +513,6 @@
         "description-missing-trigger",
         "personal-absolute-path",
         "scripts-without-test-evidence"
-      ]
-    },
-    {
-      "skill_id": "architecture-decision",
-      "path": "skills/architecture-decision/SKILL.md",
-      "structure_status": "pass",
-      "disclosure_status": "warn",
-      "execution_status": "not-applicable",
-      "issues": [
-        "description-over-180"
       ]
     },
     {
@@ -684,16 +664,6 @@
     {
       "skill_id": "backtest-expert",
       "path": "skills/backtest-expert/SKILL.md",
-      "structure_status": "pass",
-      "disclosure_status": "warn",
-      "execution_status": "not-applicable",
-      "issues": [
-        "description-over-180"
-      ]
-    },
-    {
-      "skill_id": "backtesting-frameworks",
-      "path": "skills/backtesting-frameworks/SKILL.md",
       "structure_status": "pass",
       "disclosure_status": "warn",
       "execution_status": "not-applicable",
@@ -875,16 +845,6 @@
       ]
     },
     {
-      "skill_id": "brand-identity",
-      "path": "skills/brand-identity/SKILL.md",
-      "structure_status": "pass",
-      "disclosure_status": "warn",
-      "execution_status": "not-applicable",
-      "issues": [
-        "description-over-180"
-      ]
-    },
-    {
       "skill_id": "brand-voice",
       "path": "skills/brand-voice/SKILL.md",
       "structure_status": "pass",
@@ -969,11 +929,10 @@
       "skill_id": "campaign-analytics",
       "path": "skills/campaign-analytics/SKILL.md",
       "structure_status": "pass",
-      "disclosure_status": "warn",
+      "disclosure_status": "pass",
       "execution_status": "review-required",
       "issues": [
-        "scripts-without-test-evidence",
-        "unmentioned-assets"
+        "scripts-without-test-evidence"
       ]
     },
     {
@@ -1189,12 +1148,11 @@
     {
       "skill_id": "code-review-quality",
       "path": "skills/code-review-quality/SKILL.md",
-      "structure_status": "invalid",
+      "structure_status": "pass",
       "disclosure_status": "pass",
       "execution_status": "review-required",
       "issues": [
-        "scripts-without-test-evidence",
-        "unresolved-local-link"
+        "scripts-without-test-evidence"
       ]
     },
     {
@@ -1429,16 +1387,6 @@
       "issues": [
         "personal-absolute-path",
         "unmentioned-references"
-      ]
-    },
-    {
-      "skill_id": "content-marketer",
-      "path": "skills/content-marketer/SKILL.md",
-      "structure_status": "pass",
-      "disclosure_status": "warn",
-      "execution_status": "not-applicable",
-      "issues": [
-        "description-over-180"
       ]
     },
     {
@@ -1879,16 +1827,6 @@
         "description-missing-trigger",
         "over-500-lines",
         "scripts-without-test-evidence"
-      ]
-    },
-    {
-      "skill_id": "data-storytelling",
-      "path": "skills/data-storytelling/SKILL.md",
-      "structure_status": "pass",
-      "disclosure_status": "warn",
-      "execution_status": "not-applicable",
-      "issues": [
-        "description-over-180"
       ]
     },
     {
@@ -2543,16 +2481,6 @@
       ]
     },
     {
-      "skill_id": "first-principles-thinking",
-      "path": "skills/first-principles-thinking/SKILL.md",
-      "structure_status": "pass",
-      "disclosure_status": "warn",
-      "execution_status": "not-applicable",
-      "issues": [
-        "description-over-180"
-      ]
-    },
-    {
       "skill_id": "football-data",
       "path": "skills/football-data/SKILL.md",
       "structure_status": "invalid",
@@ -2969,6 +2897,76 @@
       "execution_status": "not-applicable",
       "issues": [
         "invalid-frontmatter-yaml"
+      ]
+    },
+    {
+      "skill_id": "integrate-ai-website-cloner",
+      "path": "skills/integrate-ai-website-cloner/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
+      ]
+    },
+    {
+      "skill_id": "integrate-mediacrawler",
+      "path": "skills/integrate-mediacrawler/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
+      ]
+    },
+    {
+      "skill_id": "integrate-opencut",
+      "path": "skills/integrate-opencut/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
+      ]
+    },
+    {
+      "skill_id": "integrate-opencut-classic",
+      "path": "skills/integrate-opencut-classic/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
+      ]
+    },
+    {
+      "skill_id": "integrate-social-auto-upload",
+      "path": "skills/integrate-social-auto-upload/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
+      ]
+    },
+    {
+      "skill_id": "integrate-spider-xhs",
+      "path": "skills/integrate-spider-xhs/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
+      ]
+    },
+    {
+      "skill_id": "integrate-xhs-downloader",
+      "path": "skills/integrate-xhs-downloader/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180"
       ]
     },
     {
@@ -4253,16 +4251,6 @@
       "execution_status": "not-applicable",
       "issues": [
         "description-missing-trigger"
-      ]
-    },
-    {
-      "skill_id": "programmatic-seo",
-      "path": "skills/programmatic-seo/SKILL.md",
-      "structure_status": "pass",
-      "disclosure_status": "warn",
-      "execution_status": "not-applicable",
-      "issues": [
-        "description-over-180"
       ]
     },
     {
