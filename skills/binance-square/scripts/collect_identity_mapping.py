@@ -71,6 +71,7 @@ def _default_open(request: Request, timeout: float):
 def collect_identity_mapping(
     *,
     username: str,
+    expected_top_trader_id: str | None = None,
     tenant_id: str,
     output_dir: Path,
     timeout: float = 20.0,
@@ -87,6 +88,11 @@ def collect_identity_mapping(
         raise ContractViolation("username must be a non-empty string")
     if not isinstance(tenant_id, str) or not tenant_id.strip():
         raise ContractViolation("tenant_id must be a non-empty string")
+    if expected_top_trader_id is not None and (
+        not isinstance(expected_top_trader_id, str)
+        or not expected_top_trader_id.strip()
+    ):
+        raise ContractViolation("expected_top_trader_id must be a non-empty string")
     if not isinstance(timeout, (int, float)) or isinstance(timeout, bool) or timeout <= 0:
         raise ContractViolation("timeout must be positive")
     username = username.strip()
@@ -131,6 +137,11 @@ def collect_identity_mapping(
         raise ContractViolation("identity response has no topTraderId")
     if not isinstance(square_uid, str) or not square_uid.strip():
         raise ContractViolation("identity response has no squareUid")
+    if (
+        expected_top_trader_id is not None
+        and top_trader_id.strip() != expected_top_trader_id.strip()
+    ):
+        raise ContractViolation("identity response does not match expected topTraderId")
 
     safe_username = re.sub(r"[^A-Za-z0-9_.-]+", "_", username).strip("._") or "profile"
     timestamp = captured_at.replace("-", "").replace(":", "").replace(".", "")
@@ -223,6 +234,7 @@ def collect_identity_mapping(
 def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--username", required=True)
+    parser.add_argument("--expected-top-trader-id")
     parser.add_argument("--tenant-id", required=True)
     parser.add_argument("--timeout", type=float, default=20.0)
     parser.add_argument(
@@ -238,6 +250,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         receipt = collect_identity_mapping(
             username=args.username,
+            expected_top_trader_id=args.expected_top_trader_id,
             tenant_id=args.tenant_id,
             output_dir=args.output_dir,
             timeout=args.timeout,
