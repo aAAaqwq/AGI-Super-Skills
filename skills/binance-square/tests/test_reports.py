@@ -121,6 +121,44 @@ class LocalReportContractTests(unittest.TestCase):
         self.assertEqual(0, completed.returncode, completed.stderr)
         self.assertEqual(render_telegram(report), completed.stdout.rstrip("\n"))
 
+    def test_latest_report_cli_marks_cached_report_when_capture_is_degraded(
+        self,
+    ) -> None:
+        report = build_local_report(report_input())
+        with tempfile.TemporaryDirectory() as directory:
+            report_path = Path(directory) / "report.json"
+            report_path.write_text(
+                json.dumps(report, ensure_ascii=False), encoding="utf-8"
+            )
+
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(
+                        Path(__file__).parents[1]
+                        / "scripts"
+                        / "render_latest_telegram.py"
+                    ),
+                    "--report",
+                    str(report_path),
+                    "--degraded",
+                    "自动重试 2 次仍未恢复",
+                ],
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        message = completed.stdout.rstrip("\n")
+        self.assertEqual("📡 币安合约雷达", message.splitlines()[0])
+        self.assertEqual(
+            "🔴 状态：本轮数据更新失败，自动重试 2 次仍未恢复",
+            message.splitlines()[1],
+        )
+        self.assertEqual("📌 以下为最近一次成功结果", message.splitlines()[2])
+        self.assertIn("🕒 数据时间：2026-08-01 00:15 PDT", message)
+        self.assertNotIn("/tmp/", message)
+
     def test_profile_cohort_counts_must_reconcile_to_declared_denominator(self) -> None:
         profile_channel = {
             "status": "PARTIAL",

@@ -483,16 +483,26 @@ class ProductionCycleTests(unittest.TestCase):
                 str(partial), calls[2][calls[2].index("--input-snapshot") + 1]
             )
 
-    def test_first_scraper_process_failure_still_fails_closed(self) -> None:
+    def test_first_scraper_process_failure_retries_and_completes_cycle(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             calls: list[tuple[str, ...]] = []
+            recovered = root / "data" / "history" / "recovered.json"
 
             def runner(command: list[str]) -> None:
                 calls.append(tuple(command))
-                raise subprocess.CalledProcessError(1, command)
+                if len(calls) == 1:
+                    raise subprocess.CalledProcessError(1, command)
+                if len(calls) == 2:
+                    _write_eligible_feed_cycle(
+                        root,
+                        recovered,
+                        scanned_at="2026-08-01T08:00:02Z",
+                        capture_attempt_no=2,
+                    )
 
-            with self.assertRaises(subprocess.CalledProcessError):
+            stderr = io.StringIO()
+            with redirect_stderr(stderr):
                 run_production_cycle(
                     ProductionCycleConfig(
                         project_dir=root,
@@ -500,9 +510,18 @@ class ProductionCycleTests(unittest.TestCase):
                         database=root / "radar.sqlite",
                     ),
                     runner=runner,
+                    sleeper=lambda _: None,
                 )
 
-            self.assertEqual(1, len(calls))
+            self.assertEqual(3, len(calls))
+            self.assertEqual(
+                ("--capture-attempt-no", "2", "--capture-attempt-limit", "2"),
+                calls[1][-4:],
+            )
+            self.assertEqual(
+                str(recovered), calls[2][calls[2].index("--input-snapshot") + 1]
+            )
+            self.assertIn("failed; retry=yes", stderr.getvalue())
 
     def test_stale_eligible_pointer_fails_closed_before_radar(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

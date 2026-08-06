@@ -32,6 +32,7 @@ class ProductionCycleConfig:
     smart_money_square_mapping_evidence: Path | None = None
     smart_money_square_mapping_catalog: Path | None = None
     capture_attempt_limit: int = 2
+    capture_retry_delay_seconds: float = 5.0
     limit: int = 200
 
 
@@ -76,11 +77,14 @@ def run_production_cycle(
     config: ProductionCycleConfig,
     *,
     runner: Callable[[list[str]], None] = _subprocess_runner,
+    sleeper: Callable[[float], None] = time.sleep,
 ) -> None:
     """Capture a current Feed snapshot, then run the foreground no-send radar."""
 
     if config.capture_attempt_limit not in {1, 2}:
         raise ValueError("capture attempt limit must be 1 or 2")
+    if config.capture_retry_delay_seconds < 0:
+        raise ValueError("capture retry delay must be non-negative")
 
     scraper = config.project_dir / "scripts" / "binance_scraper.py"
     radar = config.project_dir / "scripts" / "run_radar.py"
@@ -105,7 +109,16 @@ def run_production_cycle(
                 ]
             )
         except subprocess.CalledProcessError as exc:
-            if attempt_no == 1 or fallback_partial_snapshot is None:
+            if attempt_no < config.capture_attempt_limit:
+                print(
+                    f"[FEED_CAPTURE] attempt={attempt_no}/"
+                    f"{config.capture_attempt_limit} failed; retry=yes",
+                    file=sys.stderr,
+                    flush=True,
+                )
+                sleeper(config.capture_retry_delay_seconds)
+                continue
+            if fallback_partial_snapshot is None:
                 raise
             try:
                 fallback_content = fallback_partial_snapshot.read_bytes()
@@ -300,6 +313,7 @@ def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--capture-attempt-limit", type=int, choices=(1, 2), default=2
     )
+    parser.add_argument("--capture-retry-delay-seconds", type=float, default=5.0)
     parser.add_argument("--limit", type=int, default=200)
     parser.add_argument("--no-send", action="store_true", default=True)
     return parser.parse_args(argv)
@@ -324,6 +338,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.smart_money_square_mapping_catalog
             ),
             capture_attempt_limit=args.capture_attempt_limit,
+            capture_retry_delay_seconds=args.capture_retry_delay_seconds,
             limit=args.limit,
         )
     )
