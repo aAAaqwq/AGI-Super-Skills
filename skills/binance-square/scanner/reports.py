@@ -42,6 +42,27 @@ _PROFILE_STATUS_COUNTS = {
     "FAILED": "failed_authors",
     "NOT_ATTEMPTED": "not_attempted_authors",
 }
+_TELEGRAM_FILTER_LABELS = {
+    "RR below 2.0": "风险收益不足",
+    "AMBIGUOUS_OR_MISSING_DIRECTION": "方向不明确",
+    "AMBIGUOUS_OR_MISSING_SYMBOL": "缺少有效合约",
+    "DIRECTIONAL_STRUCTURE_NOT_CONFIRMED": "多周期结构未确认",
+    "STRUCTURAL_TARGETS_UNAVAILABLE": "缺少结构化目标位",
+    "NO_ACTIVE_EXACT_USDT_PERPETUAL": "无对应 USDT 永续合约",
+    "CURRENT_PRICE_TOO_EXTENDED": "当前价格偏离入场区",
+    "EXECUTION_COSTS_NOT_CONFIGURED": "交易成本未配置",
+}
+_TELEGRAM_RISK_LABELS = {
+    "排行榜阻塞": "排行榜数据不完整",
+    "排行榜部分覆盖": "排行榜仅部分覆盖",
+    "Square身份未解析": "交易员身份映射不完整",
+    "SPOT PROXY": "部分行情使用现货代理",
+    "集中风险": "候选信号存在集中风险",
+}
+_TELEGRAM_DIRECTIONS = {
+    "LONG": "做多",
+    "SHORT": "做空",
+}
 
 
 class ReportValidationError(ValueError):
@@ -420,124 +441,96 @@ def render_telegram(report: Mapping[str, Any]) -> str:
     risks = _mapping(report.get("risk_banner"), "risk_banner")
     scanned = _mapping(report.get("scanned_at"), "scanned_at")
     counts = _mapping(report.get("post_counts"), "post_counts")
-    authors = _mapping(report.get("author_coverage"), "author_coverage")
-    tier_a = _mapping(authors.get("tier_a"), "author_coverage.tier_a")
-    tier_b = _mapping(authors.get("tier_b"), "author_coverage.tier_b")
-    leaderboard = _mapping(
-        report.get("leaderboard_coverage"), "leaderboard_coverage"
-    )
-    lines = [
-        str(risks.get("line", "")),
-        "Binance Square 合约雷达 v4",
-        f"抓取 UTC {scanned.get('utc')}｜LA {scanned.get('america_los_angeles')}",
-        (
-            f"发现{counts.get('discovered')}｜窗口内{counts.get('total')}｜"
-            f"有效{counts.get('accepted')}｜窗口排除{counts.get('window_excluded')}｜"
-            f"DQ隔离{counts.get('dq_quarantine')}｜"
-            f"新增{_display_count(counts.get('new'))}｜重复{_display_count(counts.get('duplicate'))}"
-        ),
-        f"作者 A {tier_a.get('label')}｜B {tier_b.get('label')}",
-        (
-            f"排行榜 {leaderboard.get('label')} {leaderboard.get('status', 'UNKNOWN')}"
-            + (
-                f"｜种子{leaderboard.get('verified_seed_profiles')}｜榜单行"
-                f"{leaderboard.get('rendered_rank_rows', 0)}｜非TOP30"
-                if isinstance(leaderboard.get("verified_seed_profiles"), int)
-                else ""
-            )
-        ),
-    ]
-    source_coverage = _mapping(report.get("source_coverage"), "source_coverage")
-    lines.append(
-        "来源 "
-        + " / ".join(
-            (
-                f"{name}="
-                f"{_mapping(source_coverage.get(name), f'source_coverage.{name}').get('status')}"
-                + (
-                    f"({_mapping(source_coverage.get(name), f'source_coverage.{name}').get('coverage_status')}/"
-                    f"{_mapping(source_coverage.get(name), f'source_coverage.{name}').get('termination_reason')})"
-                    if _mapping(source_coverage.get(name), f"source_coverage.{name}").get(
-                        "coverage_status"
-                    )
-                    else ""
-                )
-            )
-            for name in _REPORT_SOURCES
-        )
-    )
-    smart_money = report.get("smart_money")
-    if isinstance(smart_money, Mapping):
-        ranking = _mapping(
-            smart_money.get("ranking_coverage"),
-            "smart_money.ranking_coverage",
-        )
-        details = _mapping(
-            smart_money.get("profile_detail_coverage"),
-            "smart_money.profile_detail_coverage",
-        )
-        identities = _mapping(
-            smart_money.get("square_identity_mapping_coverage"),
-            "smart_money.square_identity_mapping_coverage",
-        )
-        lines.append(
-            "Smart Money "
-            f"{ranking.get('label')} / {ranking.get('rendered_rank_rows')}行｜"
-            f"详情{details.get('label')}｜身份{identities.get('label')}｜"
-            f"Tier A {smart_money.get('tier_a_eligible')}"
-        )
-
     opportunities = report.get("top_opportunities") or []
-    if not opportunities:
-        lines.append("结论：无合格机会 / 等待")
-    else:
-        lines.append("TOP：")
-        for index, item in enumerate(opportunities, start=1):
+    lines = ["📡 币安合约雷达"]
+    if opportunities:
+        lines.extend(
+            [
+                f"🟢 结论：发现 {len(opportunities)} 个可执行信号",
+                _telegram_counts(counts),
+            ]
+        )
+        for index, item in enumerate(opportunities[:3], start=1):
             opportunity = _mapping(item, "top opportunity")
-            source = str(opportunity.get("market_source") or "UNKNOWN").replace(
-                "_", " "
+            direction = _TELEGRAM_DIRECTIONS.get(
+                str(opportunity.get("direction")), "方向待确认"
             )
             lines.extend(
                 [
-                    f"{index}. {opportunity.get('symbol')} {opportunity.get('direction')} [{source}]",
                     (
-                        f"Entry {_display_entry(opportunity.get('entry'))}｜"
-                        f"SL {_display(opportunity.get('stop_loss'))}｜"
-                        f"TP1 {_display(opportunity.get('tp1'))}｜"
-                        f"TP2 {_display(opportunity.get('tp2'))}"
+                        f"🟢 {index}. {opportunity.get('symbol')} {direction}｜"
+                        f"评分 {_display(opportunity.get('score'))}"
                     ),
                     (
-                        f"现价 {_display(opportunity.get('current_price'))}｜"
-                        f"分数 {_display(opportunity.get('score'))}｜"
-                        f"参数 {_display(opportunity.get('parameter_source'))}｜"
+                        f"   入场 {_display_entry(opportunity.get('entry'))}｜"
+                        f"止损 {_display(opportunity.get('stop_loss'))}｜"
+                        f"目标 {_display(opportunity.get('tp1'))} / "
+                        f"{_display(opportunity.get('tp2'))}"
+                    ),
+                    (
+                        f"   现价 {_display(opportunity.get('current_price'))}｜"
+                        f"RR {_display(opportunity.get('nominal_rr'))}｜"
                         f"失效 {_display(opportunity.get('invalidation'))}"
                     ),
-                    (
-                        f"名义RR {_display(opportunity.get('nominal_rr'))}｜"
-                        f"成本模型 {_display(opportunity.get('cost_model_status'))}"
-                    ),
-                    (
-                        f"行情 {opportunity.get('market_captured_at')}｜"
-                        f"来源 {opportunity.get('source_post_url')}"
-                    ),
+                    f"   来源 {opportunity.get('source_post_url')}",
                 ]
             )
-
-    observations = report.get("observations") or []
-    if observations:
-        lines.append("观察：")
-        for item in observations:
-            watch = _mapping(item, "observation")
-            lines.append(
-                f"- {watch.get('symbol')} {watch.get('direction')}：{_display(watch.get('waiting_condition'))}"
-            )
-    lines.extend(
-        [
-            f"过滤：{_format_filters(report.get('filtered'))}",
-            f"快照：{report.get('snapshot_path')}",
-        ]
+    else:
+        lines.extend([
+            "🟡 结论：本轮无可执行信号，继续等待",
+            _telegram_counts(counts),
+            f"🧹 主要过滤：{_telegram_filters(report.get('filtered'))}",
+        ])
+    risk_text = _telegram_risks(risks.get("labels"))
+    if risk_text:
+        lines.append(f"⚠️ 数据提示：{risk_text}")
+    lines.append(
+        f"🕒 数据时间：{_telegram_time(scanned.get('america_los_angeles'))}"
     )
     return "\n".join(lines)
+
+
+def _telegram_counts(counts: Mapping[str, Any]) -> str:
+    return (
+        f"📊 扫描 {counts.get('discovered')}｜"
+        f"有效 {counts.get('accepted')}｜"
+        f"新增 {_display_count(counts.get('new'))}"
+    )
+
+
+def _telegram_time(value: Any) -> str:
+    if not isinstance(value, str) or not value:
+        return "未知"
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return value
+    return parsed.astimezone(_LOS_ANGELES).strftime("%Y-%m-%d %H:%M %Z").strip()
+
+
+def _telegram_filters(value: Any, *, limit: int = 3) -> str:
+    if not isinstance(value, Mapping) or not value:
+        return "无"
+    grouped: dict[str, int] = {}
+    for reason, count in value.items():
+        if not isinstance(count, int) or isinstance(count, bool) or count <= 0:
+            continue
+        label = _TELEGRAM_FILTER_LABELS.get(str(reason), "其他规则")
+        grouped[label] = grouped.get(label, 0) + count
+    shown = sorted(grouped.items(), key=lambda item: (-item[1], item[0]))[:limit]
+    parts = [f"{label} × {count}" for label, count in shown]
+    return "｜".join(parts) if parts else "无"
+
+
+def _telegram_risks(value: Any) -> str:
+    if not isinstance(value, (list, tuple)):
+        return ""
+    labels = [
+        _TELEGRAM_RISK_LABELS.get(str(label), str(label))
+        for label in value
+        if str(label).strip()
+    ]
+    return "；".join(labels)
 
 
 def _format_local(value: datetime) -> str:
