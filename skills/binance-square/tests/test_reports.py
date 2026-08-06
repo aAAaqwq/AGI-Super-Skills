@@ -815,7 +815,10 @@ class LocalReportContractTests(unittest.TestCase):
         self.assertIn("OBSERVED_WINDOW", markdown)
         self.assertIn("60行", markdown)
         self.assertIn("Tier A eligible=0", markdown)
-        self.assertIn("交易员身份映射不完整", telegram)
+        self.assertIn(
+            "排行榜作者映射不完整（不是本轮技术过滤原因）",
+            telegram,
+        )
         self.assertIn("Square身份未解析", report["risk_banner"]["labels"])
 
     def test_smart_money_rank_coverage_cannot_claim_identity_coverage(self) -> None:
