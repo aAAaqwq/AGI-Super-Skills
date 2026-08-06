@@ -18,6 +18,11 @@ from scanner.reports import render_telegram  # noqa: E402
 def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument(
+        "--degraded",
+        metavar="REASON",
+        help="mark the rendered report as cached after a failed refresh",
+    )
     return parser.parse_args(argv)
 
 
@@ -29,7 +34,18 @@ def main(argv: list[str] | None = None) -> int:
         raise RuntimeError("committed report is not readable JSON") from exc
     if not isinstance(payload, dict):
         raise RuntimeError("committed report must be a JSON object")
-    print(render_telegram(payload))
+    message = render_telegram(payload)
+    if args.degraded:
+        lines = message.splitlines()
+        message = "\n".join(
+            [
+                lines[0],
+                f"🔴 状态：本轮数据更新失败，{args.degraded}",
+                "📌 以下为最近一次成功结果",
+                *lines[1:],
+            ]
+        )
+    print(message)
     return 0
 
 
