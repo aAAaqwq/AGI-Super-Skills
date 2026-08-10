@@ -66,7 +66,7 @@ npx -y agi-super-team@latest --tool claude-code --install --connect
 npx -y agi-super-team@latest --tool claude-code --doctor
 ```
 
-以上命令直接使用公开 npm 包。自动化场景建议把 `@latest` 换成明确版本，例如 `@1.4.1`，以获得可复现安装。
+以上命令直接使用公开 npm 包。自动化场景建议把 `@latest` 换成明确版本，例如 `@1.4.2`，以获得可复现安装。
 
 npm 发行包保留全部 817 个 `SKILL.md` 入口，并完整携带 `config/team-manifest.json` 实际分配的所有 Skills。经过来源审查的第一方作品可在 [Daniel 的原创 Skills](./skills/original/) 分类中查看；如果需要整个 Skill 库的全部辅助素材，请克隆仓库。
 
@@ -82,6 +82,8 @@ npm 发行包保留全部 817 个 `SKILL.md` 入口，并完整携带 `config/te
 | **Hermes Agent** | `npx -y agi-super-team@latest --tool hermes` | 角色 Skill + canonical Skills + Profiles/Kanban 蓝图 |
 
 `--install` 负责落盘；`--install --connect` 还会生成接线凭据。OpenClaw 会先 dry-run，再按 `id` 合并 `agents.list`，保留非托管 Agent，且不创建 channel binding。Claude/Codex 采用文件系统发现；Hermes 只生成 Profile 蓝图，不自动创建 Profile、Cron 或 Gateway。完整路径、权限和 receipt 契约见[四个主力框架 Adapter 接入手册](./docs/guides/harness-adapters.md)。
+
+OpenClaw `2026.7.1-2` 要求 Node.js `>=22.22.3 <23`、`>=24.15.0 <25` 或 `>=25.9.0`。AGI Super Team 本身仍支持 Node.js 18+；这个更严格的条件只在调用当前 OpenClaw CLI 时适用。
 
 Claude Code、Codex、OpenClaw、Hermes 都是同一套团队系统的一等入口，不是组织结构不同的四个版本。由于各框架的原生 Agent 与 Skill 能力不同，最终交付形态会有所区别。
 
@@ -118,14 +120,14 @@ Codex 的嵌套调用需要 `max_depth = 2`。在 `max_threads = 4` 下，一次
 
 ### 18 个适配目标矩阵
 
-全局适配器的路径相对于所选 Home；项目适配器的路径相对于所选项目目录。
+全局适配器通常从所选 OS Home 基准解析；项目适配器从所选项目目录解析。OpenClaw 与 Hermes 会优先遵循各自的原生运行时根目录，见下表。
 
 | ID | 客户端/运行时 | 范围 | Agent 交付方式 | Skill 交付方式 | 状态 |
 |---|---|---|---|---|---|
 | `claude-code` | Claude Code | 全局 | 原生 Markdown Agent：`.claude/agents` | canonical：`.claude/skills` | 结构接入；Runtime pending |
 | `codex` | Codex | 全局 | 主会话 CEO + TOML：`.codex/agents` | canonical：`.agents/skills` | 结构接入；Runtime pending |
-| `openclaw` | OpenClaw | 全局 | 原生 Workspace：`.openclaw/agency-agents/agi-super-team` | canonical：`.openclaw/skills/agi-super-team` | 结构接入；Runtime pending |
-| `hermes` | Hermes Agent | 全局 | 角色 Skill：`.hermes/skills/agi-super-team-agents` | canonical：`.hermes/skills/agi-super-team` | 蓝图接入；Runtime pending |
+| `openclaw` | OpenClaw | 全局 | 原生 Workspace：`<当前配置目录>/agency-agents/agi-super-team` | canonical：`<当前配置目录>/skills/agi-super-team` | 结构接入；Runtime pending |
+| `hermes` | Hermes Agent | 全局 | 角色 Skill：`$HERMES_HOME/skills/agi-super-team-agents` | canonical：`$HERMES_HOME/skills/agi-super-team` | 蓝图接入；Runtime pending |
 | `copilot` | GitHub Copilot | 全局 | Markdown Agent：`.github/agents`、`.copilot/agents` | 原生：`.copilot/skills` | 适配器 |
 | `antigravity` | Antigravity | 全局 | Agent：`.gemini/config/agents` | 原生：`.gemini/config/skills` | **实验性** |
 | `gemini-cli` | Gemini CLI | 全局 | Markdown Agent：`.gemini/agents` | 原生：`.gemini/skills` | 适配器 |
@@ -147,7 +149,7 @@ Codex 的嵌套调用需要 `max_depth = 2`。在 `max_threads = 4` 下，一次
 
 ### 指定目录、刷新与验证
 
-`--home` 用于重定向全局目标，`--project-dir` 用于项目范围目标（默认是当前目录）。可用临时目录完成一次隔离审计：
+`--home` 用于重定向 OS Home 基准，`--project-dir` 用于项目范围目标（默认是当前目录）。Hermes 优先读取非空的 `HERMES_HOME`；OpenClaw 遵循 `OPENCLAW_HOME`、`OPENCLAW_STATE_DIR` 与 `OPENCLAW_CONFIG_PATH`。如果显式 `--home` 与运行时覆盖变量冲突，安装器会在写入前拒绝执行。可用临时目录完成一次隔离审计：
 
 ```bash
 AGI_AUDIT_HOME="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-home.XXXXXX")"

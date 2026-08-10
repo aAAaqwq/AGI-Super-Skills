@@ -8,6 +8,7 @@ import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadCatalog, selectTools } from "./installer/catalog.mjs";
 import { applyPlanTransaction, buildPlan, doctor, safeRoot } from "./installer/core.mjs";
+import { configureHarnessRoots } from "./installer/harness-roots.mjs";
 import {
   connectHarnessTransaction,
   preflightHarnessConnection,
@@ -55,7 +56,7 @@ Targets:
   --tool <id>            Select a target (repeatable; default: codex)
   --all-tools            Select all 18 targets
   --list-tools           List supported targets
-  --home <path>          Override the home root for global targets
+  --home <path>          Override the OS-home base for global targets
   --project-dir <path>   Root for project-scoped targets (default: current directory)
 
 Content and actions:
@@ -305,6 +306,13 @@ function main() {
       : { tools, home: safeRoot(options.home, "home") };
     tools = configureCodexRoot(configured.tools, options, configured.home);
     const home = configured.home;
+    tools = configureHarnessRoots({
+      tools,
+      home,
+      homeExplicit: options.homeExplicit,
+      environment: process.env,
+      runtimePlatform: platform(),
+    });
     const projectDir = options.projectDir ? safeRoot(options.projectDir, "project directory") : null;
     const legacyCodex = options.legacy && tools.length === 1 && tools[0].id === "codex";
     const agentIds = selectedAgentIds(catalog, options);
@@ -336,6 +344,7 @@ function main() {
       if (!codexUsesCustomRoot || !options.includeSkills) return artifacts;
       const userSkills = buildPlan({
         ...common,
+        tools: [{...tool, installationRoot: undefined}],
         home,
         includeAgents: false,
         includeSkills: true,

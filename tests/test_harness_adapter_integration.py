@@ -15,6 +15,17 @@ NODE = os.environ.get("NODE", "node")
 PRIORITY_HARNESSES = ("claude-code", "codex", "openclaw", "hermes")
 
 
+def snapshot_tree(root: Path) -> dict[str, tuple[str, bytes | None]]:
+    snapshot: dict[str, tuple[str, bytes | None]] = {}
+    for path in sorted(root.rglob("*")):
+        relative = path.relative_to(root).as_posix()
+        if path.is_dir():
+            snapshot[relative] = ("directory", None)
+        else:
+            snapshot[relative] = ("file", path.read_bytes())
+    return snapshot
+
+
 class HarnessAdapterIntegrationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -27,20 +38,43 @@ class HarnessAdapterIntegrationTests(unittest.TestCase):
         cls.tools = {tool["id"]: tool for tool in cls.adapters["tools"]}
 
     def run_cli(
-        self, home: Path, project: Path, *arguments: str
+        self,
+        home: Path,
+        project: Path,
+        *arguments: str,
+        environment: dict[str, str] | None = None,
+        explicit_home: bool = True,
     ) -> subprocess.CompletedProcess[str]:
         command = [
             NODE,
             str(CLI),
-            "--home",
-            str(home),
             "--project-dir",
             str(project),
             *arguments,
         ]
+        if explicit_home:
+            command[2:2] = ["--home", str(home)]
         if "codex" in arguments:
             command.append("--skip-plugin")
-        return subprocess.run(command, capture_output=True, text=True, check=False)
+        return subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=environment,
+        )
+
+    def sanitized_environment(self, **overrides: str) -> dict[str, str]:
+        environment = os.environ.copy()
+        for name in (
+            "HERMES_HOME",
+            "OPENCLAW_HOME",
+            "OPENCLAW_STATE_DIR",
+            "OPENCLAW_CONFIG_PATH",
+        ):
+            environment.pop(name, None)
+        environment.update(overrides)
+        return environment
 
     def assigned_physical_skills(self) -> set[str]:
         selected = set()
@@ -248,6 +282,305 @@ class HarnessAdapterIntegrationTests(unittest.TestCase):
             )
             Draft202012Validator.check_schema(receipt_schema)
             Draft202012Validator(receipt_schema).validate(receipt)
+
+    def test_hermes_home_controls_preview_install_connect_and_doctor(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "login-home"
+            hermes_home = root / "hermes-runtime"
+            project = root / "project"
+            project.mkdir()
+            environment = self.sanitized_environment(
+                HOME=str(home),
+                HERMES_HOME=str(hermes_home),
+            )
+            resolved_home = home.resolve()
+            resolved_hermes_home = hermes_home.resolve()
+
+            preview = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "hermes",
+                environment=environment,
+                explicit_home=False,
+            )
+            self.assertEqual(preview.returncode, 0, preview.stdout + preview.stderr)
+            self.assertTrue(
+                str(resolved_hermes_home) in preview.stdout,
+                "preview ignored HERMES_HOME and planned a different installation root",
+            )
+            self.assertNotIn(str(resolved_home / ".hermes"), preview.stdout)
+            self.assertFalse(home.exists(), "preview must not create the login home")
+            self.assertFalse(hermes_home.exists(), "preview must not create HERMES_HOME")
+
+            installed = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "hermes",
+                "--install",
+                "--connect",
+                environment=environment,
+                explicit_home=False,
+            )
+            self.assertEqual(installed.returncode, 0, installed.stdout + installed.stderr)
+            connection_path = hermes_home / "agi-super-team/connection.json"
+            receipt_path = hermes_home / "agi-super-team/receipt.json"
+            role_skill = hermes_home / "skills/agi-super-team-agents/ast-ceo/SKILL.md"
+            orchestrator = hermes_home / "skills/agi-super-team-orchestrator/SKILL.md"
+            canonical_skill = hermes_home / "skills/agi-super-team/orchestrate-agi-super-team/SKILL.md"
+            for expected in (
+                connection_path,
+                receipt_path,
+                role_skill,
+                orchestrator,
+                canonical_skill,
+            ):
+                self.assertTrue(expected.is_file(), f"missing Hermes artifact: {expected}")
+            self.assertFalse((home / ".hermes").exists())
+            self.assertFalse((hermes_home / ".hermes").exists())
+
+            connection = json.loads(connection_path.read_text(encoding="utf-8"))
+            self.assertEqual(Path(connection["home"]), resolved_hermes_home)
+            self.assertTrue(
+                all(
+                    str(path).startswith(f"{resolved_hermes_home}{os.sep}")
+                    for path in connection["paths"].values()
+                )
+            )
+            self.assertNotIn(".hermes", json.dumps(connection))
+
+            before_doctor = {
+                path.relative_to(hermes_home): hashlib.sha256(path.read_bytes()).hexdigest()
+                for path in hermes_home.rglob("*")
+                if path.is_file()
+            }
+            checked = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "hermes",
+                "--doctor",
+                environment=environment,
+                explicit_home=False,
+            )
+            self.assertEqual(checked.returncode, 0, checked.stdout + checked.stderr)
+            self.assertIn("FILES_HEALTHY", checked.stdout)
+            after_doctor = {
+                path.relative_to(hermes_home): hashlib.sha256(path.read_bytes()).hexdigest()
+                for path in hermes_home.rglob("*")
+                if path.is_file()
+            }
+            self.assertEqual(after_doctor, before_doctor, "doctor must be read-only")
+
+    def test_openclaw_state_dir_wins_for_managed_installation_roots(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "login-home"
+            openclaw_home = root / "openclaw-home"
+            state = root / "openclaw-state"
+            config = root / "separate-config" / "custom.json"
+            project = root / "project"
+            project.mkdir()
+            environment = self.sanitized_environment(
+                HOME=str(home),
+                OPENCLAW_HOME=str(openclaw_home),
+                OPENCLAW_STATE_DIR=str(state),
+                OPENCLAW_CONFIG_PATH=str(config),
+            )
+
+            installed = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "openclaw",
+                "--no-agents",
+                "--install",
+                environment=environment,
+                explicit_home=False,
+            )
+            self.assertEqual(installed.returncode, 0, installed.stdout + installed.stderr)
+            self.assertTrue(
+                (state / "skills/agi-super-team/orchestrate-agi-super-team/SKILL.md").is_file()
+            )
+            self.assertTrue((state / "agi-super-team/connection.json").is_file())
+            self.assertFalse((home / ".openclaw").exists())
+            self.assertFalse((openclaw_home / ".openclaw").exists())
+            self.assertFalse(config.exists(), "install without --connect must not edit OpenClaw config")
+
+    def test_openclaw_legacy_state_stays_active_after_install(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            legacy = home / ".clawdbot"
+            legacy.mkdir(parents=True)
+            legacy_config = legacy / "clawdbot.json"
+            legacy_config.write_text('{"agents":{"list":[]}}\n', encoding="utf-8")
+            project = root / "project"
+            project.mkdir()
+            environment = self.sanitized_environment(HOME=str(home))
+
+            installed = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "openclaw",
+                "--no-skills",
+                "--install",
+                environment=environment,
+                explicit_home=False,
+            )
+
+            self.assertEqual(installed.returncode, 0, installed.stdout + installed.stderr)
+            self.assertTrue((legacy / "agency-agents/agi-super-team/ast-ceo/AGENTS.md").is_file())
+            self.assertTrue((legacy / "agi-super-team/connection.json").is_file())
+            self.assertEqual(legacy_config.read_text(encoding="utf-8"), '{"agents":{"list":[]}}\n')
+            self.assertFalse(
+                (home / ".openclaw").exists(),
+                "installing into a discovered legacy state must not switch future OpenClaw runs",
+            )
+
+    def test_openclaw_ambiguous_managed_current_and_legacy_user_state_fails_without_writes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            current = home / ".openclaw"
+            legacy = home / ".clawdbot"
+            project = root / "project"
+
+            (current / "agi-super-team").mkdir(parents=True)
+            (current / "agi-super-team/connection.json").write_bytes(
+                b'{"schemaVersion":1,"harness":"openclaw"}\n'
+            )
+            (current / "agi-super-team/receipt.json").write_bytes(
+                b'{"schemaVersion":1,"status":"filesystem-connected"}\n'
+            )
+            (current / "agency-agents/agi-super-team/ast-ceo").mkdir(parents=True)
+            (current / "agency-agents/agi-super-team/ast-ceo/AGENTS.md").write_bytes(
+                b"managed by AGI Super Team\n"
+            )
+
+            (legacy / "credentials").mkdir(parents=True)
+            (legacy / "sessions/session-1").mkdir(parents=True)
+            (legacy / "clawdbot.json").write_bytes(
+                b'{"agents":{"list":[]},"preserve":"legacy-config"}\n'
+            )
+            (legacy / "credentials/provider.json").write_bytes(
+                b'{"token":"fixture-only"}\n'
+            )
+            (legacy / "sessions/session-1/transcript.jsonl").write_bytes(
+                b'{"role":"user","content":"preserve me"}\n'
+            )
+            project.mkdir()
+
+            before = snapshot_tree(root)
+            result = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "openclaw",
+                "--no-skills",
+                "--install",
+                environment=self.sanitized_environment(HOME=str(home)),
+                explicit_home=False,
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn(".openclaw", result.stderr)
+            self.assertIn(".clawdbot", result.stderr)
+            self.assertRegex(
+                result.stderr,
+                r"(?is)\bset\b.*OPENCLAW_STATE_DIR.*OPENCLAW_CONFIG_PATH",
+            )
+            self.assertEqual(
+                snapshot_tree(root),
+                before,
+                "ambiguous OpenClaw roots must fail before changing any directory or file bytes",
+            )
+
+    def test_openclaw_current_config_selects_current_root_when_legacy_state_also_exists(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            current = home / ".openclaw"
+            legacy = home / ".clawdbot"
+            project = root / "project"
+
+            current.mkdir(parents=True)
+            current_config = current / "openclaw.json"
+            current_config.write_bytes(
+                b'{"agents":{"list":[]},"preserve":"current-config"}\n'
+            )
+            (legacy / "credentials").mkdir(parents=True)
+            legacy_config = legacy / "clawdbot.json"
+            legacy_config.write_bytes(
+                b'{"agents":{"list":[]},"preserve":"legacy-config"}\n'
+            )
+            (legacy / "credentials/provider.json").write_bytes(
+                b'{"token":"fixture-only"}\n'
+            )
+            project.mkdir()
+
+            legacy_before = snapshot_tree(legacy)
+            result = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "openclaw",
+                "--no-skills",
+                "--install",
+                environment=self.sanitized_environment(HOME=str(home)),
+                explicit_home=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertTrue(
+                (current / "agency-agents/agi-super-team/ast-ceo/AGENTS.md").is_file()
+            )
+            self.assertTrue((current / "agi-super-team/connection.json").is_file())
+            self.assertEqual(
+                current_config.read_bytes(),
+                b'{"agents":{"list":[]},"preserve":"current-config"}\n',
+            )
+            self.assertEqual(
+                snapshot_tree(legacy),
+                legacy_before,
+                "selecting the official current root must leave legacy user state byte-exact",
+            )
+
+    def test_openclaw_explicit_home_conflicts_fail_before_writes(self) -> None:
+        overrides = {
+            "OPENCLAW_HOME": lambda root: root / "different-home",
+            "OPENCLAW_STATE_DIR": lambda root: root / "different-state",
+            "OPENCLAW_CONFIG_PATH": lambda root: root / "different-config/openclaw.json",
+        }
+        for variable, value_for in overrides.items():
+            with self.subTest(variable=variable), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                home = root / "selected-home"
+                project = root / "project"
+                project.mkdir()
+                environment = self.sanitized_environment(
+                    HOME=str(root / "ambient-home"),
+                    **{variable: str(value_for(root))},
+                )
+
+                result = self.run_cli(
+                    home,
+                    project,
+                    "--tool",
+                    "openclaw",
+                    "--no-skills",
+                    "--install",
+                    environment=environment,
+                )
+
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(f"--home conflicts with {variable}", result.stderr)
+                self.assertFalse(home.exists())
+                self.assertEqual(list(project.iterdir()), [])
+                self.assertFalse(value_for(root).exists())
 
 
 if __name__ == "__main__":

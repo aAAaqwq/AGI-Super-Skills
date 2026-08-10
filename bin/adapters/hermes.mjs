@@ -3,9 +3,9 @@ import { roleBody, specialistBody } from "../installer/render.mjs";
 
 export const ADAPTER_ID = "hermes";
 
-const ROLE_SKILL_ROOT = ".hermes/skills/agi-super-team-agents";
-const ORCHESTRATOR_SKILL = ".hermes/skills/agi-super-team-orchestrator/SKILL.md";
-const BLUEPRINT_ROOT = ".hermes/agi-super-team/profiles";
+const ROLE_SKILL_ROOT = "skills/agi-super-team-agents";
+const ORCHESTRATOR_SKILL = "skills/agi-super-team-orchestrator/SKILL.md";
+const BLUEPRINT_ROOT = "agi-super-team/profiles";
 const MANAGER_IDS = new Set(["cto", "cpo", "cqo", "cmo", "cfo", "cdo", "cco", "clo", "cro", "cso", "coo"]);
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -15,6 +15,28 @@ function yamlText(value) {
 
 function stableJson(value) {
   return `${JSON.stringify(value, null, 2)}\n`;
+}
+
+function resolveHermesHome(home, { required = false } = {}) {
+  if (home == null && !required) return null;
+  if (typeof home !== "string" || !home.trim()) throw new Error("Hermes adapter requires home");
+  const targetHome = resolve(home);
+  if (targetHome === resolve("/")) throw new Error("refusing unsafe Hermes adapter home");
+  return targetHome;
+}
+
+function profileSkillVisibility(home) {
+  const sharedSkills = home ? join(home, "skills") : "skills";
+  return {
+    reason: "Hermes Profiles use separate HERMES_HOME directories and do not inherit the default profile's Skills implicitly.",
+    configurationMode: "human-review-required",
+    configKey: "skills.external_dirs",
+    requiredExternalDirectory: sharedSkills,
+    target: "Hermes Agent",
+    minimumVersion: "2026.8.3",
+    runtimeEvidence: "pending",
+    appliedByAdapter: false,
+  };
 }
 
 function sortedUnique(values, label) {
@@ -190,7 +212,7 @@ ${specialistIndex}
 `;
 }
 
-function profileBlueprint(agent, assigned) {
+function profileBlueprint(home, agent, assigned) {
   const profileId = runtimeRoleName(agent);
   const kind = roleType(agent.id);
   const isManager = kind === "manager";
@@ -205,14 +227,12 @@ function profileBlueprint(agent, assigned) {
     runtimeStateCreated: false,
     runtimeEvidence: "pending",
     canonicalSource: agent.path,
-    roleSkill: `~/.hermes/skills/agi-super-team-agents/${profileId}/SKILL.md`,
+    roleSkill: home
+      ? join(home, ROLE_SKILL_ROOT, profileId, "SKILL.md")
+      : join(ROLE_SKILL_ROOT, profileId, "SKILL.md"),
     assignedSkills: assigned,
     kanbanTaskSkills: [profileId, ...assigned],
-    profileSkillVisibility: {
-      reason: "Hermes Profiles use separate HERMES_HOME directories and do not inherit the default profile's Skills implicitly.",
-      requiredExternalDirectory: "~/.hermes/skills",
-      desiredConfig: { skills: { external_dirs: ["~/.hermes/skills"] } },
-    },
+    profileSkillVisibility: profileSkillVisibility(home),
     desiredCapabilities: {
       kanbanRole: kind === "coordinator" ? "orchestrator" : kind === "independent-reviewer" ? "reviewer" : "worker",
       delegateTask: isManager ? "anonymous-short-task-only" : "disabled",
@@ -230,6 +250,7 @@ function profileBlueprint(agent, assigned) {
 
 export function renderAdapterArtifacts({
   packageRoot,
+  home,
   tool,
   agents,
   groups = {},
@@ -238,6 +259,7 @@ export function renderAdapterArtifacts({
   includeAgents = true,
   includeSkills = true,
 }) {
+  const targetHome = resolveHermesHome(home);
   const normalized = validateInputs(
     { tool, agents, groups, specialists, assignedSkills },
     { allowEmptyAgents: includeAgents === false },
@@ -253,7 +275,7 @@ export function renderAdapterArtifacts({
       });
       artifacts.push({
         relativePath: join(BLUEPRINT_ROOT, runtimeName, "profile.json"),
-        content: Buffer.from(stableJson(profileBlueprint(agent, normalized.byAgent[agent.id]))),
+        content: Buffer.from(stableJson(profileBlueprint(targetHome, agent, normalized.byAgent[agent.id]))),
         label: `hermes-profile-blueprint:${agent.id}`,
       });
     }
@@ -281,9 +303,7 @@ export function buildConnectionSpec({ home, tool, agents, groups = {}, specialis
     { tool, agents, groups, specialists, assignedSkills },
     { allowEmptyAgents: true },
   );
-  if (typeof home !== "string" || !home.trim()) throw new Error("Hermes connection spec requires home");
-  const targetHome = resolve(home);
-  if (targetHome === resolve("/")) throw new Error("refusing unsafe Hermes connection home");
+  const targetHome = resolveHermesHome(home, { required: true });
   const profileMap = Object.fromEntries(agents.map((agent) => [agent.id, {
     profileId: runtimeRoleName(agent),
     roleType: roleType(agent.id),
@@ -348,8 +368,7 @@ export function buildConnectionSpec({ home, tool, agents, groups = {}, specialis
     },
     profileSkillVisibility: {
       namedProfilesHaveSeparateHermesHome: true,
-      requiredExternalDirectory: join(targetHome, ".hermes", "skills"),
-      configKey: "skills.external_dirs",
+      ...profileSkillVisibility(targetHome),
     },
     assignedSkills: { all: normalized.allSkills, byAgent: normalized.byAgent },
     sideEffects: { createProfiles: false, createCron: false, startGateway: false },

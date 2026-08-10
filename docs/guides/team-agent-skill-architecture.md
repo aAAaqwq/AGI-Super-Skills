@@ -105,7 +105,7 @@ sequenceDiagram
 | Claude Code | `CLAUDE.md`、`.claude/agents/`、`.claude/skills/` | 普通 Subagent 独立上下文且不能继续创建 Subagent；Agent Teams 为实验功能 | 默认由主会话/Lead 平铺调用 Manager 与 Leaf；用户批准并启用实验功能后才用 Agent Teams |
 | Codex | `AGENTS.md`、`.codex/agents/*.toml`、`.agents/skills/` | 父 Agent 管理子 Agent 树；真实深度受当前配置与版本限制 | 深度足够时使用两层树，否则由 CEO 平铺或顺序交接，并记录降级 |
 | OpenClaw | `agents.list`、workspace/managed Skills、Agent skill allowlist | `sessions_spawn` 与 `allowAgents` 控制跨 Agent 会话 | 只使用 `connection.json` 中的精确 ID；Governor 从原始子会话证据独立复核 |
-| Hermes | Profile 的 SOUL/Skills/config、`~/.hermes/skills/` | `delegate_task` 是隔离短任务；Kanban 是跨 Profile/人工的持久队列 | 命名 C-suite 用 Profile + Kanban，一次性叶子用 delegation；蓝图存在不等于 Profile 已运行 |
+| Hermes | Profile 的 SOUL/Skills/config、`$HERMES_HOME/skills/` | `delegate_task` 是隔离短任务；Kanban 是跨 Profile/人工的持久队列 | 命名 C-suite 用 Profile + Kanban，一次性叶子用 delegation；蓝图存在不等于 Profile 已运行 |
 
 框架机制、官方链接与证据等级见 Skill 的[框架参考](../../skills/orchestrate-agi-super-team/references/framework-mechanisms.md)。
 

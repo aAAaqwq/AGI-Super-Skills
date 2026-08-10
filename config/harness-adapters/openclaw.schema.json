@@ -20,20 +20,35 @@
   ],
   "properties": {
     "$schema": {"const": "./openclaw.schema.json"},
-    "schemaVersion": {"const": 1},
+    "schemaVersion": {"const": 2},
     "harness": {"const": "openclaw"},
-    "targetVersion": {"type": "string", "pattern": "^[0-9]{4}\\.[0-9]+\\.[0-9]+$"},
+    "targetVersion": {"type": "string", "pattern": "^[0-9]{4}\\.[0-9]+\\.[0-9]+(?:-[0-9]+)?$"},
     "namespace": {"const": "agi-super-team"},
     "coordinator": {"const": "ast-ceo"},
     "independentReviewer": {"const": "ast-governor"},
     "paths": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["config", "workspaceRoot", "skillRoot"],
+      "required": ["installationRoot", "configPath", "workspaceRoot", "managedSkillRoot", "connection"],
       "properties": {
-        "config": {"const": ".openclaw/openclaw.json"},
-        "workspaceRoot": {"const": ".openclaw/agency-agents/agi-super-team"},
-        "skillRoot": {"const": ".openclaw/skills/agi-super-team"}
+        "installationRoot": {"const": "configDir"},
+        "configPath": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["precedence"],
+          "properties": {
+            "precedence": {
+              "const": [
+                "connection.mergeContract.configPath",
+                "OPENCLAW_CONFIG_PATH",
+                "targetStateDir/openclaw.json"
+              ]
+            }
+          }
+        },
+        "workspaceRoot": {"const": "agency-agents/agi-super-team"},
+        "managedSkillRoot": {"const": "skills/agi-super-team"},
+        "connection": {"const": "agi-super-team/connection.json"}
       }
     },
     "connection": {

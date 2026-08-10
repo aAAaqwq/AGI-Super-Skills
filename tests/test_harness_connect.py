@@ -24,9 +24,10 @@ const args = process.argv.slice(2);
 const mode = process.env.OPENCLAW_TEST_MODE || 'success';
 const log = process.env.OPENCLAW_TEST_LOG;
 appendFileSync(log, `${args.join(' ')}\\n`);
-const config = join(process.env.OPENCLAW_STATE_DIR, 'openclaw.json');
+const config = process.env.OPENCLAW_CONFIG_PATH || join(process.env.OPENCLAW_STATE_DIR, 'openclaw.json');
 
 if (args[0] === '--version') {
+  appendFileSync(log, `ENV_HOME=${process.env.OPENCLAW_HOME || ''}\\n`);
   process.stdout.write('OpenClaw test\\n');
   if (mode === 'get-spawn-error') unlinkSync(process.argv[1]);
 } else if (args[0] === 'config' && args[1] === 'get') {
@@ -88,6 +89,7 @@ if (args[0] === '--version') {
         mode: str,
         existing: list[dict] | None = None,
         applied_content: str = '{"applied":true}\n',
+        environment_overrides: dict[str, str] | None = None,
     ) -> subprocess.CompletedProcess[str]:
         connection = {
             "requirements": {"requiredMaxDepth": 2, "maxChildrenPerAgent": 2},
@@ -106,6 +108,7 @@ const result = connectHarness({{
     OPENCLAW_TEST_MODE: {json.dumps(mode)},
     OPENCLAW_EXISTING_JSON: {json.dumps(json.dumps(existing or []))},
     OPENCLAW_APPLIED_CONTENT: {json.dumps(applied_content)},
+    ...{json.dumps(environment_overrides or {})},
   }},
 }});
 process.stdout.write(JSON.stringify(result));
@@ -116,7 +119,19 @@ process.stdout.write(JSON.stringify(result));
             capture_output=True,
             text=True,
             check=False,
+            env=self._sanitized_environment(),
         )
+
+    def _sanitized_environment(self) -> dict[str, str]:
+        environment = os.environ.copy()
+        for name in (
+            "HERMES_HOME",
+            "OPENCLAW_HOME",
+            "OPENCLAW_STATE_DIR",
+            "OPENCLAW_CONFIG_PATH",
+        ):
+            environment.pop(name, None)
+        return environment
 
     def test_openclaw_get_failure_aborts_before_patch(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -272,6 +287,196 @@ process.stdout.write(JSON.stringify(mergeManagedAgents(existing, managed)));
             ],
         )
 
+    def test_openclaw_rejects_redacted_existing_agents_before_patch(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            state = home / ".openclaw"
+            state.mkdir(parents=True)
+            config = state / "openclaw.json"
+            original = b'{"agents":{"list":[{"id":"personal"}]}}\n'
+            config.write_bytes(original)
+            fake, log = self._write_fake_openclaw(root)
+
+            result = self._connect_with_fake(
+                home=home,
+                fake=fake,
+                log=log,
+                mode="success",
+                existing=[
+                    {
+                        "id": "personal",
+                        "memorySearch": {
+                            "remote": {"apiKey": "__OPENCLAW_REDACTED__"}
+                        },
+                    }
+                ],
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("redacted", result.stderr.lower())
+            self.assertFalse(
+                any("config patch" in call for call in log.read_text().splitlines())
+            )
+            self.assertEqual(config.read_bytes(), original)
+
+    def test_openclaw_rejects_include_backed_config_before_patch(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            state = home / ".openclaw"
+            state.mkdir(parents=True)
+            config = state / "openclaw.json"
+            included = state / "agents.json"
+            config_bytes = b'{"agents":{"$include":"./agents.json"}}\n'
+            included_bytes = b'{"list":[{"id":"personal"}]}\n'
+            config.write_bytes(config_bytes)
+            included.write_bytes(included_bytes)
+            fake, log = self._write_fake_openclaw(root)
+
+            result = self._connect_with_fake(
+                home=home,
+                fake=fake,
+                log=log,
+                mode="success",
+                existing=[{"id": "personal"}],
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("$include", result.stderr)
+            self.assertFalse(
+                any("config patch" in call for call in log.read_text().splitlines())
+            )
+            self.assertEqual(config.read_bytes(), config_bytes)
+            self.assertEqual(included.read_bytes(), included_bytes)
+
+    def test_openclaw_rejects_unicode_escaped_include_before_patch(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            state = home / ".openclaw"
+            state.mkdir(parents=True)
+            config = state / "openclaw.json"
+            included = state / "agents.json"
+            config_bytes = b'{"agents":{"$incl\\u0075de":"./agents.json"}}\n'
+            included_bytes = b'{"list":[{"id":"personal"}]}\n'
+            config.write_bytes(config_bytes)
+            included.write_bytes(included_bytes)
+            fake, log = self._write_fake_openclaw(root)
+
+            result = self._connect_with_fake(
+                home=home,
+                fake=fake,
+                log=log,
+                mode="success",
+                existing=[{"id": "personal"}],
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("$include", result.stderr)
+            self.assertFalse(
+                any("config patch" in call for call in log.read_text().splitlines())
+            )
+            self.assertEqual(config.read_bytes(), config_bytes)
+            self.assertEqual(included.read_bytes(), included_bytes)
+
+    def test_openclaw_rejects_other_json5_escaped_include_before_patch(self) -> None:
+        variants = {
+            "non-escape character": b'{"agents":{"$inc\\lude":"./agents.json"}}\n',
+            "quote inside line comment": b'// "\n{"agents":{"$inc\\lude":"./agents.json"}}\n',
+            "unicode line continuation": (
+                b'{"agents":{"$inc\\'
+                + "\u2028".encode("utf-8")
+                + b'lude":"./agents.json"}}\n'
+            ),
+        }
+        for label, config_bytes in variants.items():
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                home = root / "home"
+                state = home / ".openclaw"
+                state.mkdir(parents=True)
+                config = state / "openclaw.json"
+                included = state / "agents.json"
+                included_bytes = b'{"list":[{"id":"personal"}]}\n'
+                config.write_bytes(config_bytes)
+                included.write_bytes(included_bytes)
+                fake, log = self._write_fake_openclaw(root)
+
+                result = self._connect_with_fake(
+                    home=home,
+                    fake=fake,
+                    log=log,
+                    mode="success",
+                    existing=[{"id": "personal"}],
+                )
+
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("$include", result.stderr)
+                self.assertFalse(
+                    any("config patch" in call for call in log.read_text().splitlines())
+                )
+                self.assertEqual(config.read_bytes(), config_bytes)
+                self.assertEqual(included.read_bytes(), included_bytes)
+
+    def test_openclaw_allows_non_directive_include_mentions(self) -> None:
+        variants = {
+            "documentation comment": b'{agents:{list:[]}} // $include documentation\n',
+            "ordinary string value": b'{agents:{list:[]},note:"$include"}\n',
+            "longer property name": b'{agents:{list:[]},"$included":true}\n',
+            "embedded identifier name": b'{agents:{list:[]},foo$include:true}\n',
+            "escaped embedded identifier name": b'{agents:{list:[]},foo\\u0024include:true}\n',
+            "astral identifier start": '{agents:{list:[]},𐐀$include:true}\n'.encode("utf-8"),
+            "astral identifier part": '{agents:{list:[]},foo𐐀$include:true}\n'.encode("utf-8"),
+            "escaped documentation comment": b'{agents:{list:[]}} // $incl\\u0075de\n',
+        }
+        for label, config_bytes in variants.items():
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                home = root / "home"
+                state = home / ".openclaw"
+                state.mkdir(parents=True)
+                config = state / "openclaw.json"
+                config.write_bytes(config_bytes)
+                fake, log = self._write_fake_openclaw(root)
+
+                result = self._connect_with_fake(
+                    home=home,
+                    fake=fake,
+                    log=log,
+                    mode="success",
+                    existing=[],
+                )
+
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertTrue(
+                    any("config patch" in call for call in log.read_text().splitlines())
+                )
+
+    def test_openclaw_connector_pins_the_effective_home_for_child_commands(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "selected-home"
+            state = home / ".openclaw"
+            state.mkdir(parents=True)
+            (state / "openclaw.json").write_text(
+                '{"agents":{"list":[]}}\n', encoding="utf-8"
+            )
+            fake, log = self._write_fake_openclaw(root)
+
+            result = self._connect_with_fake(
+                home=home,
+                fake=fake,
+                log=log,
+                mode="success",
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn(
+                f"ENV_HOME={home}",
+                log.read_text(encoding="utf-8").splitlines(),
+            )
+
     def test_openclaw_patch_failure_restores_existing_config_bytes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -317,6 +522,45 @@ process.stdout.write(JSON.stringify(mergeManagedAgents(existing, managed)));
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("validation failed", result.stderr)
             self.assertEqual(config.read_bytes(), original)
+
+    def test_openclaw_custom_config_is_the_transaction_snapshot_and_rollback_target(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "login-home"
+            default_config = home / ".openclaw/openclaw.json"
+            state = root / "openclaw-state"
+            state_config = state / "openclaw.json"
+            custom_config = root / "separate-config/custom.json"
+            default_config.parent.mkdir(parents=True)
+            state.mkdir(parents=True)
+            custom_config.parent.mkdir(parents=True)
+            default_bytes = b'{"defaultHome":"untouched"}\n'
+            state_bytes = b'{"stateDir":"untouched"}\n'
+            custom_bytes = b'{\r\n  "agents": {"list": [{"id": "legacy"}]}\r\n}\r\n'
+            default_config.write_bytes(default_bytes)
+            state_config.write_bytes(state_bytes)
+            custom_config.write_bytes(custom_bytes)
+            fake, log = self._write_fake_openclaw(root)
+
+            result = self._connect_with_fake(
+                home=home,
+                fake=fake,
+                log=log,
+                mode="patch-fail",
+                existing=[{"id": "legacy"}],
+                environment_overrides={
+                    "OPENCLAW_HOME": str(root / "openclaw-home"),
+                    "OPENCLAW_STATE_DIR": str(state),
+                    "OPENCLAW_CONFIG_PATH": str(custom_config),
+                },
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("patch failed", result.stderr)
+            self.assertIn("rollback completed", result.stderr)
+            self.assertEqual(custom_config.read_bytes(), custom_bytes)
+            self.assertEqual(state_config.read_bytes(), state_bytes)
+            self.assertEqual(default_config.read_bytes(), default_bytes)
 
     def test_openclaw_validation_failure_removes_new_config_when_none_existed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
