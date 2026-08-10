@@ -370,7 +370,7 @@ process.stdout.write(JSON.stringify(mergeManagedAgents(existing, managed)));
 
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertIn(
-                f"ENV_HOME={home.resolve()}",
+                f"ENV_HOME={home}",
                 log.read_text(encoding="utf-8").splitlines(),
             )
 

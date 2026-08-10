@@ -144,7 +144,9 @@ class HarnessRootTests(unittest.TestCase):
                 {"home": str(home), "environment": {}},
             )
 
-            self.assertEqual(Path(resolved["stateDir"]), legacy.resolve())
+            # Installation materializes the official managed-Skills directory
+            # at .openclaw, which becomes the stable post-install state root.
+            self.assertEqual(Path(resolved["stateDir"]), (home / ".openclaw").resolve())
             self.assertEqual(Path(resolved["configPath"]), legacy_config.resolve())
             self.assertEqual(Path(resolved["configDir"]), (home / ".openclaw").resolve())
 
