@@ -1,6 +1,6 @@
 {
   "$schema": "./hermes.schema.json",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "harness": "hermes",
   "adapterMode": "profiles-kanban",
   "coordinator": "ceo",
