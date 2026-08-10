@@ -86,10 +86,13 @@ function decodeEscapedCodePoint(text, offset, marker, width) {
   };
 }
 
-function decodedJson5Strings(content) {
-  const text = content.toString("utf8");
-  const strings = [];
-  for (let cursor = 0; cursor < text.length; cursor += 1) {
+function skipJson5Trivia(text, offset) {
+  let cursor = offset;
+  while (cursor < text.length) {
+    if (/\s/u.test(text[cursor])) {
+      cursor += 1;
+      continue;
+    }
     if (text[cursor] === "/" && text[cursor + 1] === "/") {
       cursor += 2;
       while (
@@ -107,11 +110,52 @@ function decodedJson5Strings(content) {
         cursor + 1 < text.length
         && !(text[cursor] === "*" && text[cursor + 1] === "/")
       ) cursor += 1;
-      if (cursor + 1 < text.length) cursor += 1;
+      cursor = Math.min(cursor + 2, text.length);
       continue;
     }
+    break;
+  }
+  return cursor;
+}
+
+function decodedJson5KeyCandidates(content) {
+  const text = content.toString("utf8");
+  const candidates = [];
+  for (let cursor = 0; cursor < text.length; cursor += 1) {
+    const significant = skipJson5Trivia(text, cursor);
+    if (significant !== cursor) {
+      cursor = significant;
+      if (cursor >= text.length) break;
+    }
     const quote = text[cursor];
-    if (quote !== '"' && quote !== "'") continue;
+    if (quote !== '"' && quote !== "'") {
+      if (text[cursor] !== "$" && text[cursor] !== "\\") continue;
+      let identifier = "";
+      let end = cursor - 1;
+      for (let index = cursor; index < text.length;) {
+        if (/[a-z0-9_$]/i.test(text[index])) {
+          identifier += text[index];
+          end = index;
+          index += 1;
+          continue;
+        }
+        if (text[index] === "\\" && text[index + 1] === "u") {
+          const decoded = decodeEscapedCodePoint(text, index + 1, "u", 4);
+          if (decoded) {
+            identifier += decoded.value;
+            end = decoded.end;
+            index = decoded.end + 1;
+            continue;
+          }
+        }
+        break;
+      }
+      if (end >= cursor) {
+        candidates.push({value: identifier, end});
+        cursor = end;
+      }
+      continue;
+    }
     let value = "";
     let closed = false;
     for (cursor += 1; cursor < text.length; cursor += 1) {
@@ -163,18 +207,15 @@ function decodedJson5Strings(content) {
       }
       value += escaped;
     }
-    if (closed) strings.push(value);
+    if (closed) candidates.push({value, end: cursor});
   }
-  return strings;
+  return {text, candidates};
 }
 
 function containsIncludeDirective(content) {
-  const text = content.toString("utf8");
-  if (text.includes("$include")) return true;
-  const decodedIdentifiers = text.replace(/\\u([0-9a-f]{4})/gi, (_match, digits) =>
-    String.fromCharCode(Number.parseInt(digits, 16)));
-  if (decodedIdentifiers.includes("$include")) return true;
-  return decodedJson5Strings(content).some((value) => value === "$include");
+  const {text, candidates} = decodedJson5KeyCandidates(content);
+  return candidates.some(({value, end}) =>
+    value === "$include" && text[skipJson5Trivia(text, end + 1)] === ":");
 }
 
 function rejectIncludeBackedConfig(snapshot) {
