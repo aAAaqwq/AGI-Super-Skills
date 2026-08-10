@@ -426,6 +426,8 @@ process.stdout.write(JSON.stringify(mergeManagedAgents(existing, managed)));
             "longer property name": b'{agents:{list:[]},"$included":true}\n',
             "embedded identifier name": b'{agents:{list:[]},foo$include:true}\n',
             "escaped embedded identifier name": b'{agents:{list:[]},foo\\u0024include:true}\n',
+            "astral identifier start": '{agents:{list:[]},𐐀$include:true}\n'.encode("utf-8"),
+            "astral identifier part": '{agents:{list:[]},foo𐐀$include:true}\n'.encode("utf-8"),
             "escaped documentation comment": b'{agents:{list:[]}} // $incl\\u0075de\n',
         }
         for label, config_bytes in variants.items():
