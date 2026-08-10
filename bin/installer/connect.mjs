@@ -118,6 +118,33 @@ function skipJson5Trivia(text, offset) {
   return cursor;
 }
 
+const JSON5_IDENTIFIER_START = /[$_\p{ID_Start}]/u;
+const JSON5_IDENTIFIER_PART = /[$_\u200c\u200d\p{ID_Continue}]/u;
+
+function readJson5Identifier(text, offset) {
+  let cursor = offset;
+  let value = "";
+  let first = true;
+  let end = offset - 1;
+  while (cursor < text.length) {
+    let character = text[cursor];
+    let characterEnd = cursor;
+    if (character === "\\" && text[cursor + 1] === "u") {
+      const decoded = decodeEscapedCodePoint(text, cursor + 1, "u", 4);
+      if (!decoded) break;
+      character = decoded.value;
+      characterEnd = decoded.end;
+    }
+    const allowed = first ? JSON5_IDENTIFIER_START : JSON5_IDENTIFIER_PART;
+    if (!allowed.test(character)) break;
+    value += character;
+    end = characterEnd;
+    cursor = characterEnd + 1;
+    first = false;
+  }
+  return first ? null : {value, end};
+}
+
 function decodedJson5KeyCandidates(content) {
   const text = content.toString("utf8");
   const candidates = [];
@@ -129,31 +156,10 @@ function decodedJson5KeyCandidates(content) {
     }
     const quote = text[cursor];
     if (quote !== '"' && quote !== "'") {
-      if (text[cursor] !== "$" && text[cursor] !== "\\") continue;
-      let identifier = "";
-      let end = cursor - 1;
-      for (let index = cursor; index < text.length;) {
-        if (/[a-z0-9_$]/i.test(text[index])) {
-          identifier += text[index];
-          end = index;
-          index += 1;
-          continue;
-        }
-        if (text[index] === "\\" && text[index + 1] === "u") {
-          const decoded = decodeEscapedCodePoint(text, index + 1, "u", 4);
-          if (decoded) {
-            identifier += decoded.value;
-            end = decoded.end;
-            index = decoded.end + 1;
-            continue;
-          }
-        }
-        break;
-      }
-      if (end >= cursor) {
-        candidates.push({value: identifier, end});
-        cursor = end;
-      }
+      const identifier = readJson5Identifier(text, cursor);
+      if (!identifier) continue;
+      candidates.push(identifier);
+      cursor = identifier.end;
       continue;
     }
     let value = "";
