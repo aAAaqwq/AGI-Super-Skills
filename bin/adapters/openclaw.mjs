@@ -269,6 +269,33 @@ function absoluteHome(home) {
   return resolve(home);
 }
 
+function absoluteTarget(value, label) {
+  if (typeof value !== "string" || !value || !isAbsolute(value) || resolve(value) === resolve("/")) {
+    throw new Error(`unsafe ${label}: ${String(value)}`);
+  }
+  return resolve(value);
+}
+
+function connectionTargets(home, tool) {
+  const targetConfigDir = absoluteTarget(
+    tool.installationRoot || home,
+    "OpenClaw config directory",
+  );
+  const targetHome = absoluteTarget(
+    tool.effectiveHome || home,
+    "OpenClaw effective home",
+  );
+  const targetStateDir = absoluteTarget(
+    tool.stateDir || join(targetHome, ".openclaw"),
+    "OpenClaw state directory",
+  );
+  const configPath = absoluteTarget(
+    tool.configPath || join(targetStateDir, "openclaw.json"),
+    "OpenClaw config path",
+  );
+  return { targetHome, targetStateDir, targetConfigDir, configPath };
+}
+
 export function buildConnectionSpec({
   home,
   tool,
@@ -277,7 +304,13 @@ export function buildConnectionSpec({
   specialists = [],
   assignedSkills,
 }) {
-  const targetHome = absoluteHome(home);
+  absoluteHome(home);
+  const {
+    targetHome,
+    targetStateDir,
+    targetConfigDir,
+    configPath,
+  } = connectionTargets(home, tool);
   const input = normalizedInputs({ tool, agents, groups, specialists, assignedSkills }, true);
   const selected = selectedByManager(input.specialists);
   const entries = [];
@@ -290,7 +323,7 @@ export function buildConnectionSpec({
     entries.push({
       id,
       name: agent.name,
-      workspace: resolve(targetHome, input.roots.workspaceRoot, id),
+      workspace: resolve(targetConfigDir, input.roots.workspaceRoot, id),
       skills: [...new Set([...(agent.id === "ceo" ? [ORCHESTRATOR_SKILL] : []), ...(input.assignedSkills.byAgent[agent.id] || [])])].sort(),
       subagents: { allowAgents, requireAgentId: true },
       ...(isLeaf ? { tools: { deny: ["sessions_spawn"] } } : {}),
@@ -301,7 +334,7 @@ export function buildConnectionSpec({
     entries.push({
       id,
       name: specialist.name,
-      workspace: resolve(targetHome, input.roots.workspaceRoot, id),
+      workspace: resolve(targetConfigDir, input.roots.workspaceRoot, id),
       skills: [],
       subagents: { allowAgents: [], requireAgentId: true },
       tools: { deny: ["sessions_spawn"] },
@@ -313,8 +346,10 @@ export function buildConnectionSpec({
     runtimeEvidence: "pending",
     targetVersion: "2026.6.8",
     targetHome,
+    targetStateDir,
+    targetConfigDir,
     mergeContract: {
-      configPath: resolve(targetHome, ".openclaw", "openclaw.json"),
+      configPath,
       path: "agents.list",
       key: "id",
       strategy: "upsert-managed-preserve-unmanaged",

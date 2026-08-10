@@ -64,7 +64,13 @@ class MultiCliInstallerTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def tool_root(self, tool: dict[str, object], home: Path, project: Path) -> Path:
-        return home if tool["scope"] == "global" else project
+        if tool["scope"] != "global":
+            return project
+        if tool["id"] == "openclaw":
+            return home / ".openclaw"
+        if tool["id"] == "hermes":
+            return home / (Path("AppData/Local/hermes") if os.name == "nt" else Path(".hermes"))
+        return home
 
     def assert_contains_artifact(self, path: Path) -> None:
         self.assertTrue(path.exists(), f"expected installer destination: {path}")

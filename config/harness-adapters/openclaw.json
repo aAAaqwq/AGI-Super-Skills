@@ -7,9 +7,17 @@
   "coordinator": "ast-ceo",
   "independentReviewer": "ast-governor",
   "paths": {
-    "config": ".openclaw/openclaw.json",
-    "workspaceRoot": ".openclaw/agency-agents/agi-super-team",
-    "skillRoot": ".openclaw/skills/agi-super-team"
+    "installationRoot": "configDir",
+    "configPath": {
+      "precedence": [
+        "connection.mergeContract.configPath",
+        "OPENCLAW_CONFIG_PATH",
+        "targetStateDir/openclaw.json"
+      ]
+    },
+    "workspaceRoot": "agency-agents/agi-super-team",
+    "managedSkillRoot": "skills/agi-super-team",
+    "connection": "agi-super-team/connection.json"
   },
   "connection": {
     "listPath": "agents.list",

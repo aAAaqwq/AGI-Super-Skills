@@ -275,6 +275,7 @@ export function buildPlan({ packageRoot, catalog, tools, home, projectDir, inclu
       const adapter = adapterFor(tool.id);
       const artifacts = adapter.renderAdapterArtifacts({
         packageRoot,
+        home: root,
         tool,
         agents: includeAgents ? selected : [],
         groups,
