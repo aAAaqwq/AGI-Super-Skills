@@ -891,18 +891,9 @@ async def scrape_connected(
     await cdp(websocket, "Page.enable")
 
     print("[*] Loading page...", file=sys.stderr)
-    current = await evaluate_value(websocket, "location.href")
-    if (
-        "binance.com/en/square" in str(current or "")
-        and "cloudflare" not in str(current or "").lower()
-    ):
-        await cdp(
-            websocket,
-            "Runtime.evaluate",
-            {"expression": "location.reload()", "returnByValue": True},
-        )
-    else:
-        await cdp(websocket, "Page.navigate", {"url": BINANCE_SQUARE})
+    # Always use Page.navigate for a clean load — location.reload() can
+    # silently fail on stale/captcha'd/broken tabs that pass the URL check.
+    await cdp(websocket, "Page.navigate", {"url": BINANCE_SQUARE})
     await asyncio.sleep(8)
 
     print(

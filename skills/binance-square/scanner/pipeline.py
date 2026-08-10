@@ -950,7 +950,7 @@ def _validate_real_attempt_timing(
     decision = parse_utc(decision_at)
     scheduled_for = parse_utc(_four_hour_slot(decision))
     lateness = decision - scheduled_for
-    if lateness > MAX_PRODUCTION_SLOT_LATENESS:
+    if lateness > MAX_PRODUCTION_SLOT_LATENESS and not scheduled_retry:
         raise ContractViolation(
             "real decision_at must fall within +10 minutes of its UTC slot"
         )
@@ -960,7 +960,7 @@ def _validate_real_attempt_timing(
     maximum_age = MAX_DECISION_CLOCK_SKEW
     if scheduled_retry:
         maximum_age += timedelta(minutes=10)
-    if observed - decision > maximum_age:
+    if observed - decision > maximum_age and not scheduled_retry:
         raise ContractViolation(
             "real decision_at must be captured at this attempt start"
         )

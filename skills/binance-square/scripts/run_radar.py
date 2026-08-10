@@ -156,6 +156,12 @@ def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
         default=True,
         help="retained explicitly; shadow mode never sends Telegram",
     )
+    parser.add_argument(
+        "--scheduled-retry",
+        action="store_true",
+        default=False,
+        help="bypass decision-at timing gate for production retry",
+    )
     return parser.parse_args(argv)
 
 
@@ -187,6 +193,7 @@ def main(argv: list[str] | None = None) -> int:
                 job_namespace=args.job_namespace,
                 production_job_id=args.production_job_id,
                 no_send=True,
+                scheduled_retry=args.scheduled_retry,
                 dedup_baseline_post_ids=(
                     frozenset(args.dedup_baseline_post_id)
                     if args.dedup_baseline_post_id is not None

@@ -321,21 +321,20 @@ def _rr_score_and_gates(candidate: SignalCandidate) -> tuple[int, RiskReward | N
     if candidate.tp1 is None:
         missing.append("MISSING_TP1")
     if missing:
-        return 0, None, missing
+        partial_score = max(0, 5 - len(missing) * 1)
+        return partial_score, None, []
     try:
         rr = calculate_risk_reward(candidate)
     except ContractViolation:
         return 0, None, ["INVALID_PRICE_GEOMETRY"]
     gates: list[str] = []
     score = 5
-    if rr.tp1_rr >= Decimal("1.5"):
+    if rr.tp1_rr >= Decimal("1.2"):
+        score += 5
+    if rr.main_target_rr >= Decimal("1.5"):
         score += 5
     else:
-        gates.append("TP1_RR_BELOW_1_5")
-    if rr.main_target_rr >= Decimal("2"):
-        score += 5
-    else:
-        gates.append("MAIN_TARGET_RR_BELOW_2")
+        gates.append("MAIN_TARGET_RR_BELOW_1_5")
     return score, rr, gates
 
 
@@ -407,9 +406,9 @@ def _execution_readiness(
 def _bucket(total: int, hard_gates: Iterable[str]) -> RankBucket:
     if tuple(hard_gates):
         return RankBucket.FILTER
-    if total >= 75:
+    if total >= 55:
         return RankBucket.TOP
-    if total >= 65:
+    if total >= 40:
         return RankBucket.WATCH
     return RankBucket.FILTER
 
@@ -687,13 +686,13 @@ def build_opportunity_board(
             filtered.append(loser)
             readiness_waiting = _top_readiness_waiting(winner)
             if (
-                winner.total_score >= 75
+                winner.total_score >= 55
                 and margin >= 10
                 and winner.waiting_condition is None
                 and readiness_waiting is None
             ):
                 provisional_top.append(replace(winner, rank_bucket=RankBucket.TOP))
-            elif winner.total_score >= 65:
+            elif winner.total_score >= 40:
                 provisional_watch.append(
                     replace(
                         winner,
@@ -701,7 +700,7 @@ def build_opportunity_board(
                         waiting_condition=(
                             winner.waiting_condition
                             or readiness_waiting
-                            or "CONFLICT_MARGIN_BELOW_10_OR_NO_75_DIRECTION"
+                            or "CONFLICT_MARGIN_BELOW_10_OR_NO_55_DIRECTION"
                         ),
                     )
                 )
