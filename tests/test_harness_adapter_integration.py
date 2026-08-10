@@ -15,6 +15,17 @@ NODE = os.environ.get("NODE", "node")
 PRIORITY_HARNESSES = ("claude-code", "codex", "openclaw", "hermes")
 
 
+def snapshot_tree(root: Path) -> dict[str, tuple[str, bytes | None]]:
+    snapshot: dict[str, tuple[str, bytes | None]] = {}
+    for path in sorted(root.rglob("*")):
+        relative = path.relative_to(root).as_posix()
+        if path.is_dir():
+            snapshot[relative] = ("directory", None)
+        else:
+            snapshot[relative] = ("file", path.read_bytes())
+    return snapshot
+
+
 class HarnessAdapterIntegrationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -428,6 +439,114 @@ class HarnessAdapterIntegrationTests(unittest.TestCase):
             self.assertFalse(
                 (home / ".openclaw").exists(),
                 "installing into a discovered legacy state must not switch future OpenClaw runs",
+            )
+
+    def test_openclaw_ambiguous_managed_current_and_legacy_user_state_fails_without_writes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            current = home / ".openclaw"
+            legacy = home / ".clawdbot"
+            project = root / "project"
+
+            (current / "agi-super-team").mkdir(parents=True)
+            (current / "agi-super-team/connection.json").write_bytes(
+                b'{"schemaVersion":1,"harness":"openclaw"}\n'
+            )
+            (current / "agi-super-team/receipt.json").write_bytes(
+                b'{"schemaVersion":1,"status":"filesystem-connected"}\n'
+            )
+            (current / "agency-agents/agi-super-team/ast-ceo").mkdir(parents=True)
+            (current / "agency-agents/agi-super-team/ast-ceo/AGENTS.md").write_bytes(
+                b"managed by AGI Super Team\n"
+            )
+
+            (legacy / "credentials").mkdir(parents=True)
+            (legacy / "sessions/session-1").mkdir(parents=True)
+            (legacy / "clawdbot.json").write_bytes(
+                b'{"agents":{"list":[]},"preserve":"legacy-config"}\n'
+            )
+            (legacy / "credentials/provider.json").write_bytes(
+                b'{"token":"fixture-only"}\n'
+            )
+            (legacy / "sessions/session-1/transcript.jsonl").write_bytes(
+                b'{"role":"user","content":"preserve me"}\n'
+            )
+            project.mkdir()
+
+            before = snapshot_tree(root)
+            result = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "openclaw",
+                "--no-skills",
+                "--install",
+                environment=self.sanitized_environment(HOME=str(home)),
+                explicit_home=False,
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn(".openclaw", result.stderr)
+            self.assertIn(".clawdbot", result.stderr)
+            self.assertRegex(
+                result.stderr,
+                r"(?is)\bset\b.*OPENCLAW_STATE_DIR.*OPENCLAW_CONFIG_PATH",
+            )
+            self.assertEqual(
+                snapshot_tree(root),
+                before,
+                "ambiguous OpenClaw roots must fail before changing any directory or file bytes",
+            )
+
+    def test_openclaw_current_config_selects_current_root_when_legacy_state_also_exists(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            current = home / ".openclaw"
+            legacy = home / ".clawdbot"
+            project = root / "project"
+
+            current.mkdir(parents=True)
+            current_config = current / "openclaw.json"
+            current_config.write_bytes(
+                b'{"agents":{"list":[]},"preserve":"current-config"}\n'
+            )
+            (legacy / "credentials").mkdir(parents=True)
+            legacy_config = legacy / "clawdbot.json"
+            legacy_config.write_bytes(
+                b'{"agents":{"list":[]},"preserve":"legacy-config"}\n'
+            )
+            (legacy / "credentials/provider.json").write_bytes(
+                b'{"token":"fixture-only"}\n'
+            )
+            project.mkdir()
+
+            legacy_before = snapshot_tree(legacy)
+            result = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "openclaw",
+                "--no-skills",
+                "--install",
+                environment=self.sanitized_environment(HOME=str(home)),
+                explicit_home=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertTrue(
+                (current / "agency-agents/agi-super-team/ast-ceo/AGENTS.md").is_file()
+            )
+            self.assertTrue((current / "agi-super-team/connection.json").is_file())
+            self.assertEqual(
+                current_config.read_bytes(),
+                b'{"agents":{"list":[]},"preserve":"current-config"}\n',
+            )
+            self.assertEqual(
+                snapshot_tree(legacy),
+                legacy_before,
+                "selecting the official current root must leave legacy user state byte-exact",
             )
 
     def test_openclaw_explicit_home_conflicts_fail_before_writes(self) -> None:
