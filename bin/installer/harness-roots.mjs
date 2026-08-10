@@ -97,6 +97,18 @@ export function resolveOpenClawRoots({
 
   const configOverride = configured(environment, "OPENCLAW_CONFIG_PATH");
   const discoveredConfig = firstExistingConfig(effectiveHome, stateDir, stateOverride);
+  if (
+    !stateOverride
+    && !configOverride
+    && discoveredConfig
+    && !samePath(dirname(discoveredConfig), stateDir)
+  ) {
+    throw new Error(
+      `OpenClaw state/config roots are ambiguous: state resolves to ${stateDir}, `
+      + `but config was discovered at ${discoveredConfig}. `
+      + "Set OPENCLAW_STATE_DIR and OPENCLAW_CONFIG_PATH to the same intended OpenClaw profile before retrying.",
+    );
+  }
   const configPath = safeConfigPath(
     configOverride
       ? resolveHomePath(configOverride, effectiveHome)
