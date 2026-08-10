@@ -114,6 +114,85 @@ class HarnessRootTests(unittest.TestCase):
             self.assertEqual(Path(state_and_config["configDir"]), state.resolve())
             self.assertEqual(Path(state_and_config["configPath"]), config.resolve())
 
+    def test_openclaw_profile_environment_alone_does_not_project_cli_profile_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory) / "home"
+            resolved = self.assert_resolves(
+                "resolveOpenClawRoots",
+                {
+                    "home": str(home),
+                    "environment": {"OPENCLAW_PROFILE": "research"},
+                },
+            )
+            self.assertEqual(Path(resolved["stateDir"]), (home / ".openclaw").resolve())
+            self.assertEqual(
+                Path(resolved["configPath"]),
+                (home / ".openclaw/openclaw.json").resolve(),
+            )
+            self.assertEqual(Path(resolved["configDir"]), (home / ".openclaw").resolve())
+
+    def test_openclaw_legacy_state_and_config_discovery_matches_target_version(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory) / "home"
+            legacy = home / ".clawdbot"
+            legacy.mkdir(parents=True)
+            legacy_config = legacy / "clawdbot.json"
+            legacy_config.write_text("{}\n", encoding="utf-8")
+
+            resolved = self.assert_resolves(
+                "resolveOpenClawRoots",
+                {"home": str(home), "environment": {}},
+            )
+
+            self.assertEqual(Path(resolved["stateDir"]), legacy.resolve())
+            self.assertEqual(Path(resolved["configPath"]), legacy_config.resolve())
+            self.assertEqual(Path(resolved["configDir"]), (home / ".openclaw").resolve())
+
+    def test_build_plan_honors_a_tool_installation_root_for_direct_callers(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            os_home = root / "os-home"
+            installation_root = root / "openclaw-config"
+            source = f"""
+import {{ loadCatalog }} from './bin/installer/catalog.mjs';
+import {{ buildPlan }} from './bin/installer/core.mjs';
+const packageRoot = process.cwd();
+const catalog = loadCatalog(packageRoot);
+const original = catalog.tools.find((tool) => tool.id === 'openclaw');
+const tool = {{
+  ...original,
+  installationRoot: {json.dumps(str(installation_root))},
+  effectiveHome: {json.dumps(str(os_home))},
+  stateDir: {json.dumps(str(installation_root))},
+  configPath: {json.dumps(str(installation_root / 'openclaw.json'))},
+}};
+const plan = buildPlan({{
+  packageRoot,
+  catalog,
+  tools: [tool],
+  home: {json.dumps(str(os_home))},
+  projectDir: null,
+  includeAgents: true,
+  includeSkills: false,
+}});
+process.stdout.write(JSON.stringify(plan.map((item) => ({{root: item.root, destination: item.destination}}))));
+"""
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", source],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            plan = json.loads(result.stdout)
+            expected_root = installation_root.resolve()
+            self.assertTrue(plan)
+            self.assertTrue(all(Path(item["root"]) == expected_root for item in plan))
+            self.assertTrue(
+                all(Path(item["destination"]).is_relative_to(expected_root) for item in plan)
+            )
+
     def test_conflicting_explicit_home_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
