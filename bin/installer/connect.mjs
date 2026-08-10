@@ -127,8 +127,8 @@ function readJson5Identifier(text, offset) {
   let first = true;
   let end = offset - 1;
   while (cursor < text.length) {
-    let character = text[cursor];
-    let characterEnd = cursor;
+    let character = String.fromCodePoint(text.codePointAt(cursor));
+    let characterEnd = cursor + character.length - 1;
     if (character === "\\" && text[cursor + 1] === "u") {
       const decoded = decodeEscapedCodePoint(text, cursor + 1, "u", 4);
       if (!decoded) break;
