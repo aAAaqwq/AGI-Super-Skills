@@ -68,6 +68,12 @@ function firstExistingConfig(effectiveHome, stateDir, stateOverride) {
   return null;
 }
 
+function defaultOpenClawStateDir(effectiveHome) {
+  const current = join(effectiveHome, ".openclaw");
+  const legacy = join(effectiveHome, ".clawdbot");
+  return !existsSync(current) && existsSync(legacy) ? legacy : current;
+}
+
 export function resolveOpenClawRoots({
   home,
   homeExplicit = false,
@@ -79,13 +85,14 @@ export function resolveOpenClawRoots({
     requireAlignedExplicitHome("OPENCLAW_HOME", effectiveHome, home);
   }
 
-  const defaultStateDir = join(effectiveHome, ".openclaw");
+  const projectedStateDir = join(effectiveHome, ".openclaw");
+  const defaultStateDir = defaultOpenClawStateDir(effectiveHome);
   const stateOverride = configured(environment, "OPENCLAW_STATE_DIR");
   const stateDir = stateOverride
     ? resolveHomePath(stateOverride, effectiveHome)
     : defaultStateDir;
   if (homeExplicit && stateOverride) {
-    requireAlignedExplicitHome("OPENCLAW_STATE_DIR", stateDir, defaultStateDir);
+    requireAlignedExplicitHome("OPENCLAW_STATE_DIR", stateDir, projectedStateDir);
   }
 
   const configOverride = configured(environment, "OPENCLAW_CONFIG_PATH");
@@ -96,18 +103,18 @@ export function resolveOpenClawRoots({
       : discoveredConfig || join(stateDir, "openclaw.json"),
   );
   if (homeExplicit && configOverride) {
-    requireAlignedExplicitHome("OPENCLAW_CONFIG_PATH", configPath, join(defaultStateDir, "openclaw.json"));
+    requireAlignedExplicitHome("OPENCLAW_CONFIG_PATH", configPath, join(projectedStateDir, "openclaw.json"));
   }
 
-  // OpenClaw v2026.6.8 resolves its managed-skill/config directory from an
+  // OpenClaw v2026.7.1-2 resolves its managed-skill/config directory from an
   // explicit state directory first, then dirname(OPENCLAW_CONFIG_PATH), then
-  // the default state directory. OPENCLAW_PROFILE alone does not project paths;
+  // the discovered state directory. OPENCLAW_PROFILE alone does not project paths;
   // the upstream --profile option materializes state/config overrides itself.
   const configDir = stateOverride
     ? stateDir
     : configOverride
       ? dirname(configPath)
-      : defaultStateDir;
+      : stateDir;
 
   return {
     effectiveHome: safeRoot(effectiveHome, "OpenClaw home"),
