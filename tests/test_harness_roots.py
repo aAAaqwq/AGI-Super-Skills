@@ -144,11 +144,9 @@ class HarnessRootTests(unittest.TestCase):
                 {"home": str(home), "environment": {}},
             )
 
-            # Installation materializes the official managed-Skills directory
-            # at .openclaw, which becomes the stable post-install state root.
-            self.assertEqual(Path(resolved["stateDir"]), (home / ".openclaw").resolve())
+            self.assertEqual(Path(resolved["stateDir"]), legacy.resolve())
             self.assertEqual(Path(resolved["configPath"]), legacy_config.resolve())
-            self.assertEqual(Path(resolved["configDir"]), (home / ".openclaw").resolve())
+            self.assertEqual(Path(resolved["configDir"]), legacy.resolve())
 
     def test_build_plan_honors_a_tool_installation_root_for_direct_callers(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
