@@ -9,9 +9,9 @@
   "maxConcurrentChildren": 2,
   "runtimeEvidence": "pending",
   "runtimePaths": {
-    "roleSkillRoot": "~/.hermes/skills/agi-super-team-agents",
-    "orchestratorSkill": "~/.hermes/skills/agi-super-team-orchestrator/SKILL.md",
-    "profileBlueprintRoot": "~/.hermes/agi-super-team/profiles"
+    "roleSkillRoot": "skills/agi-super-team-agents",
+    "orchestratorSkill": "skills/agi-super-team-orchestrator/SKILL.md",
+    "profileBlueprintRoot": "agi-super-team/profiles"
   },
   "profileMap": {
     "ceo": {"profileId": "ast-ceo", "roleType": "coordinator"},

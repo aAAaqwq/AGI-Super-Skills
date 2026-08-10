@@ -118,14 +118,14 @@ Codex 的嵌套调用需要 `max_depth = 2`。在 `max_threads = 4` 下，一次
 
 ### 18 个适配目标矩阵
 
-全局适配器的路径相对于所选 Home；项目适配器的路径相对于所选项目目录。
+全局适配器通常从所选 OS Home 基准解析；项目适配器从所选项目目录解析。OpenClaw 与 Hermes 会优先遵循各自的原生运行时根目录，见下表。
 
 | ID | 客户端/运行时 | 范围 | Agent 交付方式 | Skill 交付方式 | 状态 |
 |---|---|---|---|---|---|
 | `claude-code` | Claude Code | 全局 | 原生 Markdown Agent：`.claude/agents` | canonical：`.claude/skills` | 结构接入；Runtime pending |
 | `codex` | Codex | 全局 | 主会话 CEO + TOML：`.codex/agents` | canonical：`.agents/skills` | 结构接入；Runtime pending |
-| `openclaw` | OpenClaw | 全局 | 原生 Workspace：`.openclaw/agency-agents/agi-super-team` | canonical：`.openclaw/skills/agi-super-team` | 结构接入；Runtime pending |
-| `hermes` | Hermes Agent | 全局 | 角色 Skill：`.hermes/skills/agi-super-team-agents` | canonical：`.hermes/skills/agi-super-team` | 蓝图接入；Runtime pending |
+| `openclaw` | OpenClaw | 全局 | 原生 Workspace：`<当前配置目录>/agency-agents/agi-super-team` | canonical：`<当前配置目录>/skills/agi-super-team` | 结构接入；Runtime pending |
+| `hermes` | Hermes Agent | 全局 | 角色 Skill：`$HERMES_HOME/skills/agi-super-team-agents` | canonical：`$HERMES_HOME/skills/agi-super-team` | 蓝图接入；Runtime pending |
 | `copilot` | GitHub Copilot | 全局 | Markdown Agent：`.github/agents`、`.copilot/agents` | 原生：`.copilot/skills` | 适配器 |
 | `antigravity` | Antigravity | 全局 | Agent：`.gemini/config/agents` | 原生：`.gemini/config/skills` | **实验性** |
 | `gemini-cli` | Gemini CLI | 全局 | Markdown Agent：`.gemini/agents` | 原生：`.gemini/skills` | 适配器 |
@@ -147,7 +147,7 @@ Codex 的嵌套调用需要 `max_depth = 2`。在 `max_threads = 4` 下，一次
 
 ### 指定目录、刷新与验证
 
-`--home` 用于重定向全局目标，`--project-dir` 用于项目范围目标（默认是当前目录）。可用临时目录完成一次隔离审计：
+`--home` 用于重定向 OS Home 基准，`--project-dir` 用于项目范围目标（默认是当前目录）。Hermes 优先读取非空的 `HERMES_HOME`；OpenClaw 遵循 `OPENCLAW_HOME`、`OPENCLAW_STATE_DIR` 与 `OPENCLAW_CONFIG_PATH`。如果显式 `--home` 与运行时覆盖变量冲突，安装器会在写入前拒绝执行。可用临时目录完成一次隔离审计：
 
 ```bash
 AGI_AUDIT_HOME="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-home.XXXXXX")"

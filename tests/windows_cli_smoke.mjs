@@ -255,9 +255,12 @@ if (args.length === 1 && args[0] === "--version") {
     "--project-dir", hermes.project, "--no-skills", "--install", "--connect",
   ], hermes.home);
   expectIncludes(hermesInstall, "Connected: hermes (filesystem-connected)", "hermes install/connect");
-  expectNonEmptyFile(join(hermes.home, ".hermes", "skills", "agi-super-team-agents", "ast-ceo", "SKILL.md"), "Hermes CEO Agent");
-  expectNonEmptyFile(join(hermes.home, ".hermes", "agi-super-team", "connection.json"), "Hermes connection");
-  expectNonEmptyFile(join(hermes.home, ".hermes", "agi-super-team", "receipt.json"), "Hermes receipt");
+  const hermesRuntimeHome = process.platform === "win32"
+    ? join(hermes.home, "AppData", "Local", "hermes")
+    : join(hermes.home, ".hermes");
+  expectNonEmptyFile(join(hermesRuntimeHome, "skills", "agi-super-team-agents", "ast-ceo", "SKILL.md"), "Hermes CEO Agent");
+  expectNonEmptyFile(join(hermesRuntimeHome, "agi-super-team", "connection.json"), "Hermes connection");
+  expectNonEmptyFile(join(hermesRuntimeHome, "agi-super-team", "receipt.json"), "Hermes receipt");
   const hermesDoctor = invoke("hermes doctor", [
     "--tool", "hermes", "--home", hermes.home,
     "--project-dir", hermes.project, "--no-skills", "--doctor",

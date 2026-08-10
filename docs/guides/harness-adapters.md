@@ -37,10 +37,17 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --all-subagents --doctor
 |---|---|---|---|
 | Claude Code | `~/.claude/agents/ast-*.md` | `~/.claude/skills/<skill>` | 文件系统发现；生成 Claude `Agent` 工具专用 orchestrator |
 | Codex | `~/.codex/AGENTS.md` 受管理 CEO 块 + `~/.codex/agents/ast-*.toml` | 官方 `~/.agents/skills/<skill>` | 当前主会话是 CEO，不生成第二个 CEO Agent；其余角色使用 TOML |
-| OpenClaw | `~/.openclaw/agency-agents/agi-super-team/ast-*` | `~/.openclaw/skills/agi-super-team/<skill>` | `--connect` 先 dry-run，再按 `id` 合并 `agents.list`，保留非托管 Agent，不创建 channel binding |
-| Hermes | `~/.hermes/skills/agi-super-team-agents/ast-*/SKILL.md` + Profile 蓝图 | `~/.hermes/skills/agi-super-team/<skill>` | 生成 Profiles + Kanban 蓝图；不自动创建 Profile、Cron 或 Gateway |
+| OpenClaw | `<当前配置目录>/agency-agents/agi-super-team/ast-*` | `<当前配置目录>/skills/agi-super-team/<skill>` | `--connect` 先 dry-run，再按 `id` 合并 `agents.list`，保留非托管 Agent，不创建 channel binding |
+| Hermes | `$HERMES_HOME/skills/agi-super-team-agents/ast-*/SKILL.md` + Profile 蓝图 | `$HERMES_HOME/skills/agi-super-team/<skill>` | 生成 Profiles + Kanban 蓝图；不自动创建 Profile、Cron 或 Gateway |
 
 所有物理存在且已分配的 canonical Skills 均按字节复制。Agent 由目标 Adapter 按框架原生格式生成；canonical `agents/` 与 `skills/` 不会被改写。
+
+### 原生根目录解析
+
+- Hermes：非空 `HERMES_HOME` 是最终安装根；未设置时，POSIX 默认 `~/.hermes`，Windows 默认 `%LOCALAPPDATA%\hermes`。Skills 始终位于该根的 `skills/` 下。
+- OpenClaw：有效 Home 遵循 `OPENCLAW_HOME`；state 遵循 `OPENCLAW_STATE_DIR`；配置文件遵循 `OPENCLAW_CONFIG_PATH`。managed Skills 与 Agent workspace 使用 OpenClaw 的当前配置目录：显式 state 优先，其次是显式配置文件所在目录，最后是默认 state。
+- `--home` 表示 OS Home 基准，不会静默覆盖上述框架变量。两者显式冲突时，安装器在 Preview 阶段失败且不写文件。
+- OpenClaw 接线事务会把解析后的 state 与配置文件路径同时传给官方 CLI，并只对该配置文件做快照、备份、校验与回滚。
 
 ## 权限和委派边界
 
@@ -55,16 +62,16 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --all-subagents --doctor
 
 ## Connection 与 Receipt
 
-每个 Adapter 都会安装：
+每个 Adapter 都会在其解析后的原生根目录安装：
 
 ```text
-~/.<framework>/agi-super-team/connection.json
+<native-root>/agi-super-team/connection.json
 ```
 
 `--connect` 还会生成：
 
 ```text
-~/.<framework>/agi-super-team/receipt.json
+<native-root>/agi-super-team/receipt.json
 ```
 
 Receipt 记录 package 版本、源 revision、工作树是否干净、connection SHA-256 和已执行检查。文件落盘或配置校验通过只代表结构接线成功，`runtimeEvidence` 仍保持 `pending`。只有 clean client 中真实观察到语义触发、CEO→Manager→Leaf 委派和独立 Governor 复核，并把证据绑定到干净的仓库 revision，才能升级运行证据。

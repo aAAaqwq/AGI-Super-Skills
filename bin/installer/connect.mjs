@@ -10,7 +10,7 @@ import {
   unlinkSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { spawnCli } from "./process.mjs";
 
 
@@ -64,8 +64,56 @@ function parseJsonOutput(result) {
   }
 }
 
-function captureOpenClawConfig(home) {
-  const path = join(home, ".openclaw", "openclaw.json");
+function resolveTildePath(value, effectiveHome, label) {
+  if (typeof value !== "string" || !value.trim()) {
+    throw new Error(`invalid ${label}: ${String(value)}`);
+  }
+  const normalized = value.trim();
+  let path;
+  if (normalized === "~") path = resolve(effectiveHome);
+  else if (normalized.startsWith("~/") || normalized.startsWith("~\\")) {
+    path = resolve(effectiveHome, normalized.slice(2));
+  } else if (normalized.startsWith("~")) {
+    throw new Error(`unsupported ${label}: ${normalized}`);
+  } else {
+    path = resolve(normalized);
+  }
+  if (path === resolve("/")) throw new Error(`refusing unsafe ${label}: ${path}`);
+  return path;
+}
+
+function configuredPath(environment, name) {
+  const value = environment?.[name];
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function resolveOpenClawTargets({home, connection, environment}) {
+  const fallbackHome = resolveTildePath(home, resolve(home), "OpenClaw home");
+  const targetHome = resolveTildePath(
+    connection?.targetHome
+      || configuredPath(environment, "OPENCLAW_HOME")
+      || fallbackHome,
+    fallbackHome,
+    "OpenClaw effective home",
+  );
+  const targetStateDir = resolveTildePath(
+    connection?.targetStateDir
+      || configuredPath(environment, "OPENCLAW_STATE_DIR")
+      || join(targetHome, ".openclaw"),
+    targetHome,
+    "OpenClaw state directory",
+  );
+  const targetConfigPath = resolveTildePath(
+    connection?.mergeContract?.configPath
+      || configuredPath(environment, "OPENCLAW_CONFIG_PATH")
+      || join(targetStateDir, "openclaw.json"),
+    targetHome,
+    "OpenClaw config path",
+  );
+  return {targetHome, targetStateDir, targetConfigPath};
+}
+
+function captureOpenClawConfig(path) {
   if (!existsSync(path)) {
     return {path, exists: false, content: null, mode: null, device: null, inode: null};
   }
@@ -119,7 +167,7 @@ function backupOpenClawConfig(snapshot) {
     mkdirSync(backupRoot, {recursive: true, mode: 0o700});
   }
   const timestamp = new Date().toISOString().replaceAll(":", "").replaceAll(".", "");
-  const backup = join(backupRoot, `openclaw.json.${timestamp}.${process.pid}.bak`);
+  const backup = join(backupRoot, `${basename(config)}.${timestamp}.${process.pid}.bak`);
   const descriptor = openSync(backup, "wx", 0o600);
   try {
     writeFileSync(descriptor, snapshot.content);
@@ -161,13 +209,14 @@ function restoreOpenClawConfig({original, expected, backup, failure}) {
 
 function prepareOpenClawConnection({home, connection, environment}) {
   const command = environment.OPENCLAW_CLI || "openclaw";
-  const stateRoot = join(home, ".openclaw");
+  const targets = resolveOpenClawTargets({home, connection, environment});
   const env = {
     ...environment,
-    OPENCLAW_STATE_DIR: stateRoot,
+    OPENCLAW_STATE_DIR: targets.targetStateDir,
+    OPENCLAW_CONFIG_PATH: targets.targetConfigPath,
   };
   const version = run(command, ["--version"], {environment: env}).stdout.trim();
-  const originalConfig = captureOpenClawConfig(home);
+  const originalConfig = captureOpenClawConfig(targets.targetConfigPath);
   const currentResult = run(
     command,
     ["config", "get", "agents.list", "--json"],
@@ -217,6 +266,7 @@ function prepareOpenClawConnection({home, connection, environment}) {
     existing,
     managed,
     input,
+    targets,
   };
 }
 
@@ -230,6 +280,7 @@ function connectOpenClawTransaction({home, connection, environment}) {
     existing,
     managed,
     input,
+    targets,
   } = prepared;
   const backup = backupOpenClawConfig(originalConfig);
   if (!configMatches(originalConfig)) {
@@ -243,7 +294,7 @@ function connectOpenClawTransaction({home, connection, environment}) {
       {environment: env, input},
     );
   } catch (failure) {
-    const failedPatchConfig = captureOpenClawConfig(home);
+    const failedPatchConfig = captureOpenClawConfig(targets.targetConfigPath);
     const rollback = restoreOpenClawConfig({
       original: originalConfig,
       expected: failedPatchConfig,
@@ -255,7 +306,7 @@ function connectOpenClawTransaction({home, connection, environment}) {
       {cause: failure},
     );
   }
-  const appliedConfig = captureOpenClawConfig(home);
+  const appliedConfig = captureOpenClawConfig(targets.targetConfigPath);
   try {
     run(command, ["config", "validate", "--json"], {environment: env});
   } catch (failure) {

@@ -99,9 +99,9 @@ if (action === 'render') {
     def test_renders_fourteen_namespaced_canonical_workspaces_and_only_selected_specialists(self) -> None:
         artifacts = self.rendered_artifacts()
         manifest = json.loads((ROOT / "config" / "team-manifest.json").read_text(encoding="utf-8"))
-        workspace_root = ".openclaw/agency-agents/agi-super-team"
+        workspace_root = "agency-agents/agi-super-team"
         workspace_ids = {
-            Path(path).parts[3]
+            Path(path).parts[2]
             for path in artifacts
             if path.startswith(f"{workspace_root}/")
         }
@@ -116,7 +116,7 @@ if (action === 'render') {
 
     def test_role_files_are_copied_verbatim_except_manager_routing_append(self) -> None:
         artifacts = self.rendered_artifacts()
-        root = ".openclaw/agency-agents/agi-super-team"
+        root = "agency-agents/agi-super-team"
 
         for filename in ("IDENTITY.md", "SOUL.md", "USER.md", "TOOLS.md", "MEMORY.md"):
             with self.subTest(filename=filename):
@@ -142,7 +142,7 @@ if (action === 'render') {
 
     def test_renders_only_openclaw_specific_orchestrator_skill(self) -> None:
         artifacts = self.rendered_artifacts()
-        skill_root = ".openclaw/skills/agi-super-team"
+        skill_root = "skills/agi-super-team"
         entrypoints = {
             path
             for path in artifacts
@@ -171,12 +171,12 @@ if (action === 'render') {
 
     def test_respects_independent_agent_and_skill_switches(self) -> None:
         without_agents = self.rendered_artifacts(include_agents=False, include_skills=True)
-        self.assertFalse(any(path.startswith(".openclaw/agency-agents/") for path in without_agents))
-        self.assertTrue(any(path.startswith(".openclaw/skills/") for path in without_agents))
+        self.assertFalse(any(path.startswith("agency-agents/") for path in without_agents))
+        self.assertTrue(any(path.startswith("skills/") for path in without_agents))
 
         without_skills = self.rendered_artifacts(include_agents=True, include_skills=False)
-        self.assertTrue(any(path.startswith(".openclaw/agency-agents/") for path in without_skills))
-        self.assertFalse(any(path.startswith(".openclaw/skills/") for path in without_skills))
+        self.assertTrue(any(path.startswith("agency-agents/") for path in without_skills))
+        self.assertFalse(any(path.startswith("skills/") for path in without_skills))
 
     def test_connection_spec_preserves_unmanaged_agents_and_never_generates_bindings(self) -> None:
         spec = self.run_adapter("connect")
