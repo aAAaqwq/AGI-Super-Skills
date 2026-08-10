@@ -2,7 +2,7 @@
   "$schema": "./openclaw.schema.json",
   "schemaVersion": 2,
   "harness": "openclaw",
-  "targetVersion": "2026.6.8",
+  "targetVersion": "2026.7.1-2",
   "namespace": "agi-super-team",
   "coordinator": "ast-ceo",
   "independentReviewer": "ast-governor",

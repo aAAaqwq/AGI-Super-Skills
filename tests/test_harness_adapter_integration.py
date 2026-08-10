@@ -430,6 +430,39 @@ class HarnessAdapterIntegrationTests(unittest.TestCase):
                 "installing into a discovered legacy state must not switch future OpenClaw runs",
             )
 
+    def test_openclaw_explicit_home_conflicts_fail_before_writes(self) -> None:
+        overrides = {
+            "OPENCLAW_HOME": lambda root: root / "different-home",
+            "OPENCLAW_STATE_DIR": lambda root: root / "different-state",
+            "OPENCLAW_CONFIG_PATH": lambda root: root / "different-config/openclaw.json",
+        }
+        for variable, value_for in overrides.items():
+            with self.subTest(variable=variable), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                home = root / "selected-home"
+                project = root / "project"
+                project.mkdir()
+                environment = self.sanitized_environment(
+                    HOME=str(root / "ambient-home"),
+                    **{variable: str(value_for(root))},
+                )
+
+                result = self.run_cli(
+                    home,
+                    project,
+                    "--tool",
+                    "openclaw",
+                    "--no-skills",
+                    "--install",
+                    environment=environment,
+                )
+
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(f"--home conflicts with {variable}", result.stderr)
+                self.assertFalse(home.exists())
+                self.assertEqual(list(project.iterdir()), [])
+                self.assertFalse(value_for(root).exists())
+
 
 if __name__ == "__main__":
     unittest.main()

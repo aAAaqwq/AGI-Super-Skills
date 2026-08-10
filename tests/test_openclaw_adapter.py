@@ -92,6 +92,7 @@ if (action === 'render') {
         Draft202012Validator(schema).validate(manifest)
         self.assertEqual(manifest["schemaVersion"], 2)
         self.assertEqual(manifest["harness"], "openclaw")
+        self.assertEqual(manifest["targetVersion"], "2026.7.1-2")
         self.assertEqual(manifest["runtimeEvidence"], "pending")
         self.assertEqual(manifest["requiredMaxDepth"], 2)
         self.assertEqual(manifest["maxChildrenPerAgent"], 2)

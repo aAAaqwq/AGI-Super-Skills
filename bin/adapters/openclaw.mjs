@@ -345,7 +345,7 @@ export function buildConnectionSpec({
     schemaVersion: 1,
     harness: ADAPTER_ID,
     runtimeEvidence: "pending",
-    targetVersion: "2026.6.8",
+    targetVersion: "2026.7.1-2",
     targetHome,
     targetStateDir,
     targetConfigDir,

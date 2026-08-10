@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const cli = resolve(process.argv[2] || join(repositoryRoot, "bin", "agi-super-team.mjs"));
+const sourceModule = extname(cli) === ".mjs";
 const sandbox = mkdtempSync(join(tmpdir(), "agi-super-team-windows-smoke-"));
 
 function isolatedEnvironment(home, extra = {}) {
@@ -24,7 +25,6 @@ function isolatedEnvironment(home, extra = {}) {
 }
 
 function invoke(label, args, home, extraEnvironment = {}) {
-  const sourceModule = extname(cli) === ".mjs";
   const command = sourceModule ? process.execPath : cli;
   const commandArgs = sourceModule ? [cli, ...args] : args;
   const result = spawnSync(command, commandArgs, {
@@ -161,7 +161,7 @@ try {
   const codexCalls = readFileSync(codexLog, "utf8").split(/\r?\n/).filter(Boolean);
   for (const expected of [
     "--version",
-    "plugin marketplace add aAAaqwq/AGI-Super-Team --ref v1.4.1",
+    "plugin marketplace add aAAaqwq/AGI-Super-Team --ref v1.4.2",
     "plugin marketplace upgrade agi-super-team",
     "plugin add agi-super-team-codex@agi-super-team",
   ]) {
@@ -318,7 +318,7 @@ if (args.length === 1 && args[0] === "--version") {
   expectIncludes(allToolsOutput, "Preview only. Add --install to apply.", "--all-tools preview");
   if (tree(dirname(allTools.home)).length !== 0) throw new Error("--all-tools preview mutated its isolated roots");
 
-  console.log(`Packed CLI smoke passed via ${basename(cli)} on ${process.platform}`);
+  console.log(`${sourceModule ? "Source" : "Packed"} CLI smoke passed via ${basename(cli)} on ${process.platform}`);
 } finally {
   rmSync(sandbox, { recursive: true, force: true });
 }
