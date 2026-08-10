@@ -398,6 +398,38 @@ class HarnessAdapterIntegrationTests(unittest.TestCase):
             self.assertFalse((openclaw_home / ".openclaw").exists())
             self.assertFalse(config.exists(), "install without --connect must not edit OpenClaw config")
 
+    def test_openclaw_legacy_state_stays_active_after_install(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            legacy = home / ".clawdbot"
+            legacy.mkdir(parents=True)
+            legacy_config = legacy / "clawdbot.json"
+            legacy_config.write_text('{"agents":{"list":[]}}\n', encoding="utf-8")
+            project = root / "project"
+            project.mkdir()
+            environment = self.sanitized_environment(HOME=str(home))
+
+            installed = self.run_cli(
+                home,
+                project,
+                "--tool",
+                "openclaw",
+                "--no-skills",
+                "--install",
+                environment=environment,
+                explicit_home=False,
+            )
+
+            self.assertEqual(installed.returncode, 0, installed.stdout + installed.stderr)
+            self.assertTrue((legacy / "agency-agents/agi-super-team/ast-ceo/AGENTS.md").is_file())
+            self.assertTrue((legacy / "agi-super-team/connection.json").is_file())
+            self.assertEqual(legacy_config.read_text(encoding="utf-8"), '{"agents":{"list":[]}}\n')
+            self.assertFalse(
+                (home / ".openclaw").exists(),
+                "installing into a discovered legacy state must not switch future OpenClaw runs",
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
