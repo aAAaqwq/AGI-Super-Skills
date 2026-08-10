@@ -27,6 +27,7 @@ appendFileSync(log, `${args.join(' ')}\\n`);
 const config = process.env.OPENCLAW_CONFIG_PATH || join(process.env.OPENCLAW_STATE_DIR, 'openclaw.json');
 
 if (args[0] === '--version') {
+  appendFileSync(log, `ENV_HOME=${process.env.OPENCLAW_HOME || ''}\\n`);
   process.stdout.write('OpenClaw test\\n');
   if (mode === 'get-spawn-error') unlinkSync(process.argv[1]);
 } else if (args[0] === 'config' && args[1] === 'get') {
@@ -285,6 +286,93 @@ process.stdout.write(JSON.stringify(mergeManagedAgents(existing, managed)));
                 {"id": "ast-governor", "workspace": "/governor"},
             ],
         )
+
+    def test_openclaw_rejects_redacted_existing_agents_before_patch(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            state = home / ".openclaw"
+            state.mkdir(parents=True)
+            config = state / "openclaw.json"
+            original = b'{"agents":{"list":[{"id":"personal"}]}}\n'
+            config.write_bytes(original)
+            fake, log = self._write_fake_openclaw(root)
+
+            result = self._connect_with_fake(
+                home=home,
+                fake=fake,
+                log=log,
+                mode="success",
+                existing=[
+                    {
+                        "id": "personal",
+                        "memorySearch": {
+                            "remote": {"apiKey": "__OPENCLAW_REDACTED__"}
+                        },
+                    }
+                ],
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("redacted", result.stderr.lower())
+            self.assertFalse(
+                any("config patch" in call for call in log.read_text().splitlines())
+            )
+            self.assertEqual(config.read_bytes(), original)
+
+    def test_openclaw_rejects_include_backed_config_before_patch(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            state = home / ".openclaw"
+            state.mkdir(parents=True)
+            config = state / "openclaw.json"
+            included = state / "agents.json"
+            config_bytes = b'{"agents":{"$include":"./agents.json"}}\n'
+            included_bytes = b'{"list":[{"id":"personal"}]}\n'
+            config.write_bytes(config_bytes)
+            included.write_bytes(included_bytes)
+            fake, log = self._write_fake_openclaw(root)
+
+            result = self._connect_with_fake(
+                home=home,
+                fake=fake,
+                log=log,
+                mode="success",
+                existing=[{"id": "personal"}],
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("$include", result.stderr)
+            self.assertFalse(
+                any("config patch" in call for call in log.read_text().splitlines())
+            )
+            self.assertEqual(config.read_bytes(), config_bytes)
+            self.assertEqual(included.read_bytes(), included_bytes)
+
+    def test_openclaw_connector_pins_the_effective_home_for_child_commands(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "selected-home"
+            state = home / ".openclaw"
+            state.mkdir(parents=True)
+            (state / "openclaw.json").write_text(
+                '{"agents":{"list":[]}}\n', encoding="utf-8"
+            )
+            fake, log = self._write_fake_openclaw(root)
+
+            result = self._connect_with_fake(
+                home=home,
+                fake=fake,
+                log=log,
+                mode="success",
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn(
+                f"ENV_HOME={home.resolve()}",
+                log.read_text(encoding="utf-8").splitlines(),
+            )
 
     def test_openclaw_patch_failure_restores_existing_config_bytes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

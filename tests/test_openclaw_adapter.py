@@ -181,8 +181,17 @@ if (action === 'render') {
     def test_connection_spec_preserves_unmanaged_agents_and_never_generates_bindings(self) -> None:
         spec = self.run_adapter("connect")
         contract = spec["mergeContract"]
+        expected_config_dir = Path("/tmp/isolated-openclaw-home/.openclaw")
 
         self.assertEqual(spec["runtimeEvidence"], "pending")
+        self.assertEqual(Path(spec["targetConfigDir"]), expected_config_dir)
+        self.assertEqual(Path(contract["configPath"]), expected_config_dir / "openclaw.json")
+        self.assertTrue(
+            all(
+                Path(entry["workspace"]).is_relative_to(expected_config_dir)
+                for entry in spec["configPatch"]["agents"]["list"]
+            )
+        )
         self.assertEqual(contract["path"], "agents.list")
         self.assertEqual(contract["key"], "id")
         self.assertEqual(contract["strategy"], "upsert-managed-preserve-unmanaged")
