@@ -344,6 +344,7 @@ function main() {
       if (!codexUsesCustomRoot || !options.includeSkills) return artifacts;
       const userSkills = buildPlan({
         ...common,
+        tools: [{...tool, installationRoot: undefined}],
         home,
         includeAgents: false,
         includeSkills: true,

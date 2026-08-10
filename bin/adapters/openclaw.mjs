@@ -4,7 +4,7 @@ import {
   readFileSync,
   statSync,
 } from "node:fs";
-import { isAbsolute, join, posix, resolve } from "node:path";
+import { dirname, isAbsolute, join, posix, resolve } from "node:path";
 import { isPhysicalStrictDescendant } from "../installer/path-safety.mjs";
 
 
@@ -277,10 +277,6 @@ function absoluteTarget(value, label) {
 }
 
 function connectionTargets(home, tool) {
-  const targetConfigDir = absoluteTarget(
-    tool.installationRoot || home,
-    "OpenClaw config directory",
-  );
   const targetHome = absoluteTarget(
     tool.effectiveHome || home,
     "OpenClaw effective home",
@@ -292,6 +288,11 @@ function connectionTargets(home, tool) {
   const configPath = absoluteTarget(
     tool.configPath || join(targetStateDir, "openclaw.json"),
     "OpenClaw config path",
+  );
+  const targetConfigDir = absoluteTarget(
+    tool.installationRoot
+      || (tool.stateDir ? targetStateDir : tool.configPath ? dirname(configPath) : join(targetHome, ".openclaw")),
+    "OpenClaw config directory",
   );
   return { targetHome, targetStateDir, targetConfigDir, configPath };
 }

@@ -48,6 +48,11 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --all-subagents --doctor
 - OpenClaw：有效 Home 遵循 `OPENCLAW_HOME`；state 遵循 `OPENCLAW_STATE_DIR`；配置文件遵循 `OPENCLAW_CONFIG_PATH`。managed Skills 与 Agent workspace 使用 OpenClaw 的当前配置目录：显式 state 优先，其次是显式配置文件所在目录，最后是默认 state。
 - `--home` 表示 OS Home 基准，不会静默覆盖上述框架变量。两者显式冲突时，安装器在 Preview 阶段失败且不写文件。
 - OpenClaw 接线事务会把解析后的 state 与配置文件路径同时传给官方 CLI，并只对该配置文件做快照、备份、校验与回滚。
+- 单独设置 `OPENCLAW_PROFILE` 不等于调用官方 CLI 的 `--profile`，因此安装器不会据此猜测目录。Profile 用户应显式提供与该 Profile 一致的 `OPENCLAW_STATE_DIR` 和 `OPENCLAW_CONFIG_PATH`。
+- 无显式覆盖时，安装器仍会发现目标版本支持的 `.clawdbot/{openclaw.json,clawdbot.json}` 旧配置，但把受管理的 Workspace、Skills、connection 和 receipt 放在稳定的 `.openclaw` 配置目录；不会创建第二份 `openclaw.json`。
+- `config get` 若返回 `__OPENCLAW_REDACTED__`，或主配置包含 `$include`，`--connect` 会在 patch 前拒绝执行。前者不能安全整组回写，后者可能修改未纳入本地事务快照的 include 文件；这两类配置需人工接线。
+
+版本化依据：Hermes 路径语义以官方 `v2026.8.3` 的 [`get_hermes_home()`](https://github.com/NousResearch/hermes-agent/blob/3c27eb6234bf91b8ceee9e9071591b31e9b148cb/hermes_constants.py#L53-L74) 与 [`get_skills_dir()`](https://github.com/NousResearch/hermes-agent/blob/3c27eb6234bf91b8ceee9e9071591b31e9b148cb/hermes_constants.py#L1302-L1304) 为准；`skills.external_dirs` 是[当前官方支持的配置](https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md#external-skill-directories)，但本 Adapter 不会替用户自动写入。OpenClaw 路径语义以官方 `v2026.6.8` 的 [`OPENCLAW_HOME`](https://github.com/openclaw/openclaw/blob/v2026.6.8/src/infra/home-dir.ts#L34-L61)、[`OPENCLAW_STATE_DIR` / `OPENCLAW_CONFIG_PATH`](https://github.com/openclaw/openclaw/blob/v2026.6.8/src/config/paths.ts#L57-L90) 及[环境变量说明](https://docs.openclaw.ai/help/environment)为准。
 
 ## 权限和委派边界
 

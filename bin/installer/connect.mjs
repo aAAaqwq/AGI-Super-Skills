@@ -13,6 +13,8 @@ import {
 import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { spawnCli } from "./process.mjs";
 
+const OPENCLAW_REDACTED_SENTINEL = "__OPENCLAW_REDACTED__";
+
 
 export function mergeManagedAgents(existing, managed) {
   const replacements = new Map(managed.map((entry) => [entry.id, entry]));
@@ -61,6 +63,25 @@ function parseJsonOutput(result) {
     return JSON.parse(text);
   } catch (error) {
     throw new Error(`invalid JSON from OpenClaw CLI: ${error.message}`);
+  }
+}
+
+function containsRedactedSentinel(value, seen = new Set()) {
+  if (value === OPENCLAW_REDACTED_SENTINEL) return true;
+  if (!value || typeof value !== "object") return false;
+  if (seen.has(value)) return false;
+  seen.add(value);
+  if (Array.isArray(value)) {
+    return value.some((item) => containsRedactedSentinel(item, seen));
+  }
+  return Object.values(value).some((item) => containsRedactedSentinel(item, seen));
+}
+
+function rejectIncludeBackedConfig(snapshot) {
+  if (snapshot.exists && snapshot.content.includes(Buffer.from("$include"))) {
+    throw new Error(
+      "refusing OpenClaw connection because the active config contains $include; automatic rollback cannot cover included files",
+    );
   }
 }
 
@@ -212,11 +233,13 @@ function prepareOpenClawConnection({home, connection, environment}) {
   const targets = resolveOpenClawTargets({home, connection, environment});
   const env = {
     ...environment,
+    OPENCLAW_HOME: targets.targetHome,
     OPENCLAW_STATE_DIR: targets.targetStateDir,
     OPENCLAW_CONFIG_PATH: targets.targetConfigPath,
   };
   const version = run(command, ["--version"], {environment: env}).stdout.trim();
   const originalConfig = captureOpenClawConfig(targets.targetConfigPath);
+  rejectIncludeBackedConfig(originalConfig);
   const currentResult = run(
     command,
     ["config", "get", "agents.list", "--json"],
@@ -227,6 +250,11 @@ function prepareOpenClawConnection({home, connection, environment}) {
   }
   const existing = currentResult.status === 0 ? parseJsonOutput(currentResult) : [];
   if (!Array.isArray(existing)) throw new Error("OpenClaw agents.list must be an array");
+  if (containsRedactedSentinel(existing)) {
+    throw new Error(
+      "refusing OpenClaw connection because config get returned redacted values that cannot be safely round-tripped",
+    );
+  }
   const managed = connection?.configPatch?.agents?.list;
   if (!Array.isArray(managed)) throw new Error("OpenClaw connection spec is missing configPatch.agents.list");
   const requirements = connection.requirements || {};

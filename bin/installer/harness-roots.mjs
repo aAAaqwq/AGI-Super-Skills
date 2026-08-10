@@ -1,7 +1,8 @@
+import { existsSync } from "node:fs";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { safeRoot } from "./core.mjs";
 
-const OPENCLAW_PROFILE = /^[A-Za-z0-9_-]+$/;
+const OPENCLAW_CONFIG_NAMES = ["openclaw.json", "clawdbot.json"];
 
 function configured(environment, name) {
   const value = environment[name]?.trim();
@@ -54,15 +55,17 @@ export function resolveHermesHome({
   return safeRoot(target, "Hermes home");
 }
 
-function openClawProfileStateDir(effectiveHome, environment) {
-  const profile = configured(environment, "OPENCLAW_PROFILE");
-  if (!profile || profile.toLowerCase() === "default") {
-    return { profile: profile || null, stateDir: join(effectiveHome, ".openclaw"), profileSelected: Boolean(profile) };
+function firstExistingConfig(effectiveHome, stateDir, stateOverride) {
+  const directories = stateOverride
+    ? [stateDir]
+    : [join(effectiveHome, ".openclaw"), join(effectiveHome, ".clawdbot")];
+  for (const directory of directories) {
+    for (const filename of OPENCLAW_CONFIG_NAMES) {
+      const candidate = join(directory, filename);
+      if (existsSync(candidate)) return candidate;
+    }
   }
-  if (!OPENCLAW_PROFILE.test(profile)) {
-    throw new Error(`invalid OPENCLAW_PROFILE: ${profile}`);
-  }
-  return { profile, stateDir: join(effectiveHome, `.openclaw-${profile}`), profileSelected: true };
+  return null;
 }
 
 export function resolveOpenClawRoots({
@@ -76,38 +79,41 @@ export function resolveOpenClawRoots({
     requireAlignedExplicitHome("OPENCLAW_HOME", effectiveHome, home);
   }
 
-  const profile = openClawProfileStateDir(effectiveHome, environment);
+  const defaultStateDir = join(effectiveHome, ".openclaw");
   const stateOverride = configured(environment, "OPENCLAW_STATE_DIR");
   const stateDir = stateOverride
     ? resolveHomePath(stateOverride, effectiveHome)
-    : profile.stateDir;
+    : defaultStateDir;
   if (homeExplicit && stateOverride) {
-    requireAlignedExplicitHome("OPENCLAW_STATE_DIR", stateDir, profile.stateDir);
+    requireAlignedExplicitHome("OPENCLAW_STATE_DIR", stateDir, defaultStateDir);
   }
 
   const configOverride = configured(environment, "OPENCLAW_CONFIG_PATH");
-  const configPath = safeConfigPath(configOverride
-    ? resolveHomePath(configOverride, effectiveHome)
-    : join(stateDir, "openclaw.json"));
+  const discoveredConfig = firstExistingConfig(effectiveHome, stateDir, stateOverride);
+  const configPath = safeConfigPath(
+    configOverride
+      ? resolveHomePath(configOverride, effectiveHome)
+      : discoveredConfig || join(stateDir, "openclaw.json"),
+  );
   if (homeExplicit && configOverride) {
-    requireAlignedExplicitHome("OPENCLAW_CONFIG_PATH", configPath, join(profile.stateDir, "openclaw.json"));
+    requireAlignedExplicitHome("OPENCLAW_CONFIG_PATH", configPath, join(defaultStateDir, "openclaw.json"));
   }
 
   // OpenClaw v2026.6.8 resolves its managed-skill/config directory from an
   // explicit state directory first, then dirname(OPENCLAW_CONFIG_PATH), then
-  // the default state directory. A named profile projects a state override.
-  const configDir = stateOverride || profile.profileSelected
+  // the default state directory. OPENCLAW_PROFILE alone does not project paths;
+  // the upstream --profile option materializes state/config overrides itself.
+  const configDir = stateOverride
     ? stateDir
     : configOverride
       ? dirname(configPath)
-      : stateDir;
+      : defaultStateDir;
 
   return {
     effectiveHome: safeRoot(effectiveHome, "OpenClaw home"),
     stateDir: safeRoot(stateDir, "OpenClaw state directory"),
     configDir: safeRoot(configDir, "OpenClaw config directory"),
     configPath,
-    profile: profile.profile,
   };
 }
 
@@ -138,7 +144,6 @@ export function configureHarnessRoots({
         effectiveHome: roots.effectiveHome,
         stateDir: roots.stateDir,
         configPath: roots.configPath,
-        profile: roots.profile,
       };
     }
     return tool;

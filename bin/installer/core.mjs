@@ -269,7 +269,11 @@ export function buildPlan({ packageRoot, catalog, tools, home, projectDir, inclu
   const assignedSkills = selectedAssignedSkills(catalog, selected);
   for (const configuredTool of tools) {
     const tool = { ...configuredTool, platform };
-    const root = tool.scope === "project" ? projectDir : home;
+    const root = tool.scope === "project"
+      ? projectDir
+      : tool.installationRoot
+        ? safeRoot(tool.installationRoot, `${tool.id} installation root`)
+        : home;
     if (!root) throw new Error(`${tool.id} is project-scoped; pass --project-dir <path>`);
     if (tool.agentMode === "harness-adapter") {
       const adapter = adapterFor(tool.id);
