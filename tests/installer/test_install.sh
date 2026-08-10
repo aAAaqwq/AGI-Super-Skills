@@ -1220,7 +1220,7 @@ test_remote_preview_fails_closed_without_a_manifest() {
   output=$(HOME="$fake_home" PATH="${fake_bin}:/usr/bin:/bin" bash "$INSTALLER" --destination "$destination" ceo 2>&1) || status=$?
   if [[ "$status" -ne 0 && ! -e "$git_marker" && ! -e "$fake_home" && ! -e "$destination" \
      && "$output" == *"--source"* && "$output" == *"manifest"* \
-     && "$output" == *"v1.4.1"* ]]; then
+     && "$output" == *"v1.4.2"* ]]; then
     printf 'ok - remote preview names the pinned ref and does not clone or invent a manifest plan\n'
   else
     printf 'not ok - remote preview invented a plan or touched local state\n%s\n' "$output"
@@ -1250,7 +1250,7 @@ test_remote_ref_resolution_failure_does_not_publish() {
   output=$(HOME="$fake_home" PATH="${fake_bin}:/usr/bin:/bin" bash "$INSTALLER" \
     --destination "$destination" --apply ceo 2>&1) || status=$?
 
-  if [[ "$status" -ne 0 && "$output" == *"Unable to resolve pinned repository ref: v1.4.1"* \
+  if [[ "$status" -ne 0 && "$output" == *"Unable to resolve pinned repository ref: v1.4.2"* \
      && ! -e "$destination" && ! -L "$destination" ]]; then
     printf 'ok - unresolved remote ref performs zero destination writes\n'
   else
@@ -1282,7 +1282,7 @@ test_remote_checkout_failure_does_not_publish() {
   output=$(HOME="$fake_home" PATH="${fake_bin}:/usr/bin:/bin" bash "$INSTALLER" \
     --destination "$destination" --apply ceo 2>&1) || status=$?
 
-  if [[ "$status" -ne 0 && "$output" == *"Unable to check out pinned repository ref: v1.4.1"* \
+  if [[ "$status" -ne 0 && "$output" == *"Unable to check out pinned repository ref: v1.4.2"* \
      && ! -e "$destination" && ! -L "$destination" ]]; then
     printf 'ok - failed pinned checkout performs zero destination writes\n'
   else
@@ -1331,9 +1331,9 @@ test_remote_cached_checkout_uses_the_exact_pinned_ref() {
   fi
 
   if [[ -f "${destination}/workspace-ceo/SOUL.md" \
-     && "$(<"$git_log")" == *"fetch --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git v1.4.1"* \
+     && "$(<"$git_log")" == *"fetch --depth 1 https://github.com/aAAaqwq/AGI-Super-Team.git v1.4.2"* \
      && "$(<"$git_log")" == *"checkout --detach --quiet aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"* ]]; then
-    printf 'ok - cached remote source fetches and checks out the exact v1.4.1 commit\n'
+    printf 'ok - cached remote source fetches and checks out the exact v1.4.2 commit\n'
   else
     printf 'not ok - cached remote source did not use the exact pinned ref\n%s\n' "$(<"$git_log")"
     failures=$((failures + 1))

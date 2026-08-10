@@ -605,7 +605,7 @@ class MultiCliInstallerTests(unittest.TestCase):
             self.assert_success(result)
             calls = log.read_text(encoding="utf-8").splitlines()
             self.assertIn("--version", calls)
-            self.assertIn("plugin marketplace add aAAaqwq/AGI-Super-Team --ref v1.4.1", calls)
+            self.assertIn("plugin marketplace add aAAaqwq/AGI-Super-Team --ref v1.4.2", calls)
             self.assertIn("plugin marketplace upgrade agi-super-team", calls)
             self.assertIn("plugin add agi-super-team-codex@agi-super-team", calls)
 

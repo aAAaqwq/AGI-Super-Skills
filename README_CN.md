@@ -66,7 +66,7 @@ npx -y agi-super-team@latest --tool claude-code --install --connect
 npx -y agi-super-team@latest --tool claude-code --doctor
 ```
 
-以上命令直接使用公开 npm 包。自动化场景建议把 `@latest` 换成明确版本，例如 `@1.4.1`，以获得可复现安装。
+以上命令直接使用公开 npm 包。自动化场景建议把 `@latest` 换成明确版本，例如 `@1.4.2`，以获得可复现安装。
 
 npm 发行包保留全部 817 个 `SKILL.md` 入口，并完整携带 `config/team-manifest.json` 实际分配的所有 Skills。经过来源审查的第一方作品可在 [Daniel 的原创 Skills](./skills/original/) 分类中查看；如果需要整个 Skill 库的全部辅助素材，请克隆仓库。
 
@@ -82,6 +82,8 @@ npm 发行包保留全部 817 个 `SKILL.md` 入口，并完整携带 `config/te
 | **Hermes Agent** | `npx -y agi-super-team@latest --tool hermes` | 角色 Skill + canonical Skills + Profiles/Kanban 蓝图 |
 
 `--install` 负责落盘；`--install --connect` 还会生成接线凭据。OpenClaw 会先 dry-run，再按 `id` 合并 `agents.list`，保留非托管 Agent，且不创建 channel binding。Claude/Codex 采用文件系统发现；Hermes 只生成 Profile 蓝图，不自动创建 Profile、Cron 或 Gateway。完整路径、权限和 receipt 契约见[四个主力框架 Adapter 接入手册](./docs/guides/harness-adapters.md)。
+
+OpenClaw `2026.7.1-2` 要求 Node.js `>=22.22.3 <23`、`>=24.15.0 <25` 或 `>=25.9.0`。AGI Super Team 本身仍支持 Node.js 18+；这个更严格的条件只在调用当前 OpenClaw CLI 时适用。
 
 Claude Code、Codex、OpenClaw、Hermes 都是同一套团队系统的一等入口，不是组织结构不同的四个版本。由于各框架的原生 Agent 与 Skill 能力不同，最终交付形态会有所区别。
 
