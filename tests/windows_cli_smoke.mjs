@@ -185,7 +185,7 @@ try {
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from "node:fs";
 import {dirname, join} from "node:path";
 const args = process.argv.slice(2);
-const config = join(process.env.OPENCLAW_STATE_DIR, "openclaw.json");
+const config = process.env.OPENCLAW_CONFIG_PATH || join(process.env.OPENCLAW_STATE_DIR, "openclaw.json");
 if (args.length === 1 && args[0] === "--version") {
   console.log("openclaw-smoke");
 } else if (args.join(" ") === "config get agents.list --json") {
@@ -239,6 +239,29 @@ if (args.length === 1 && args[0] === "--version") {
     "--project-dir", openclawInstalled.project, "--no-skills", "--install", "--connect",
   ], openclawInstalled.home, openclawEnvironment);
 
+  const openclawOverride = roots("openclaw-override");
+  const openclawOverrideHome = join(sandbox, "openclaw-native-home");
+  const openclawOverrideState = join(sandbox, "openclaw-native-state");
+  const openclawOverrideConfig = join(sandbox, "openclaw-native-config", "custom.json");
+  const openclawOverrideEnvironment = {
+    PATH: fakePath,
+    OPENCLAW_HOME: openclawOverrideHome,
+    OPENCLAW_STATE_DIR: openclawOverrideState,
+    OPENCLAW_CONFIG_PATH: openclawOverrideConfig,
+  };
+  const openclawOverrideOutput = invoke("openclaw native root overrides", [
+    "--tool", "openclaw", "--project-dir", openclawOverride.project,
+    "--no-skills", "--install", "--connect",
+  ], openclawOverride.home, openclawOverrideEnvironment);
+  expectIncludes(openclawOverrideOutput, "Connected: openclaw (connected-structural)", "openclaw native root overrides");
+  expectNonEmptyFile(join(openclawOverrideState, "agency-agents", "agi-super-team", "ast-ceo", "AGENTS.md"), "OpenClaw override CEO Agent");
+  expectNonEmptyFile(join(openclawOverrideState, "agi-super-team", "connection.json"), "OpenClaw override connection");
+  expectNonEmptyFile(join(openclawOverrideState, "agi-super-team", "receipt.json"), "OpenClaw override receipt");
+  expectNonEmptyFile(openclawOverrideConfig, "OpenClaw override config");
+  if (existsSync(join(openclawOverride.home, ".openclaw"))) {
+    throw new Error("OpenClaw native root overrides created a dead directory under OS home");
+  }
+
   const openclaw = roots("openclaw-subagents");
   const openclawOutput = invoke("openclaw --all-subagents preview", [
     "--tool", "openclaw", "--home", openclaw.home,
@@ -270,6 +293,20 @@ if (args.length === 1 && args[0] === "--version") {
     "--tool", "hermes", "--home", hermes.home,
     "--project-dir", hermes.project, "--no-skills", "--install", "--connect",
   ], hermes.home);
+
+  const hermesOverride = roots("hermes-override");
+  const hermesOverrideHome = join(sandbox, "hermes-native-home");
+  const hermesOverrideOutput = invoke("hermes HERMES_HOME install/connect", [
+    "--tool", "hermes", "--project-dir", hermesOverride.project,
+    "--no-skills", "--install", "--connect",
+  ], hermesOverride.home, {HERMES_HOME: hermesOverrideHome});
+  expectIncludes(hermesOverrideOutput, "Connected: hermes (filesystem-connected)", "hermes HERMES_HOME install/connect");
+  expectNonEmptyFile(join(hermesOverrideHome, "skills", "agi-super-team-agents", "ast-ceo", "SKILL.md"), "Hermes override CEO Agent");
+  expectNonEmptyFile(join(hermesOverrideHome, "agi-super-team", "connection.json"), "Hermes override connection");
+  expectNonEmptyFile(join(hermesOverrideHome, "agi-super-team", "receipt.json"), "Hermes override receipt");
+  if (existsSync(join(hermesOverride.home, ".hermes"))) {
+    throw new Error("HERMES_HOME created a dead directory under OS home");
+  }
 
   const allTools = roots("all-tools");
   const allToolsOutput = invoke("--all-tools preview", [
