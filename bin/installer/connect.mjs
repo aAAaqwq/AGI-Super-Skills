@@ -77,8 +77,22 @@ function containsRedactedSentinel(value, seen = new Set()) {
   return Object.values(value).some((item) => containsRedactedSentinel(item, seen));
 }
 
+function normalizeEscapedConfigMarkers(content) {
+  return content
+    .toString("utf8")
+    .replace(/\\(?:\r\n|[\n\r])/g, "")
+    .replace(/\\u\{([0-9a-f]{1,6})\}/gi, (match, digits) => {
+      const codePoint = Number.parseInt(digits, 16);
+      return codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : match;
+    })
+    .replace(/\\u([0-9a-f]{4})/gi, (_match, digits) =>
+      String.fromCharCode(Number.parseInt(digits, 16)))
+    .replace(/\\x([0-9a-f]{2})/gi, (_match, digits) =>
+      String.fromCharCode(Number.parseInt(digits, 16)));
+}
+
 function rejectIncludeBackedConfig(snapshot) {
-  if (snapshot.exists && snapshot.content.includes(Buffer.from("$include"))) {
+  if (snapshot.exists && normalizeEscapedConfigMarkers(snapshot.content).includes("$include")) {
     throw new Error(
       "refusing OpenClaw connection because the active config contains $include; automatic rollback cannot cover included files",
     );

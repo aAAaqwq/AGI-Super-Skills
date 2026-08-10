@@ -54,6 +54,8 @@ npx -y github:aAAaqwq/AGI-Super-Team --tool claude-code --all-subagents --doctor
 
 版本化依据：Hermes 路径语义以官方 `v2026.8.3` 的 [`get_hermes_home()`](https://github.com/NousResearch/hermes-agent/blob/3c27eb6234bf91b8ceee9e9071591b31e9b148cb/hermes_constants.py#L53-L74) 与 [`get_skills_dir()`](https://github.com/NousResearch/hermes-agent/blob/3c27eb6234bf91b8ceee9e9071591b31e9b148cb/hermes_constants.py#L1302-L1304) 为准；`skills.external_dirs` 是[当前官方支持的配置](https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/skills.md#external-skill-directories)，但本 Adapter 不会替用户自动写入。OpenClaw 路径语义以官方 `v2026.6.8` 的 [`OPENCLAW_HOME`](https://github.com/openclaw/openclaw/blob/v2026.6.8/src/infra/home-dir.ts#L34-L61)、[`OPENCLAW_STATE_DIR` / `OPENCLAW_CONFIG_PATH`](https://github.com/openclaw/openclaw/blob/v2026.6.8/src/config/paths.ts#L57-L90) 及[环境变量说明](https://docs.openclaw.ai/help/environment)为准。
 
+Hermes 与 OpenClaw 的静态 Adapter manifest 已升级为 `schemaVersion: 2`：v2 中所有产物路径都相对于解析后的框架原生根目录，不再把默认 `~/.hermes` 或 `~/.openclaw` 写进契约。运行时生成的 connection/receipt 仍使用各自独立的 v1 数据契约。
+
 ## 权限和委派边界
 
 - 统一层级为 CEO → C-suite Manager → Leaf，最大深度为 2。

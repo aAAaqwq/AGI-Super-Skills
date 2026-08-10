@@ -22,7 +22,7 @@
   ],
   "properties": {
     "$schema": {"const": "./hermes.schema.json"},
-    "schemaVersion": {"const": 1},
+    "schemaVersion": {"const": 2},
     "harness": {"const": "hermes"},
     "adapterMode": {"const": "profiles-kanban"},
     "coordinator": {"const": "ceo"},

@@ -1,6 +1,6 @@
 {
   "$schema": "./openclaw.schema.json",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "harness": "openclaw",
   "targetVersion": "2026.6.8",
   "namespace": "agi-super-team",
