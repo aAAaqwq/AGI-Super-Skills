@@ -419,6 +419,36 @@ process.stdout.write(JSON.stringify(mergeManagedAgents(existing, managed)));
                 self.assertEqual(config.read_bytes(), config_bytes)
                 self.assertEqual(included.read_bytes(), included_bytes)
 
+    def test_openclaw_allows_non_directive_include_mentions(self) -> None:
+        variants = {
+            "documentation comment": b'{agents:{list:[]}} // $include documentation\n',
+            "ordinary string value": b'{agents:{list:[]},note:"$include"}\n',
+            "longer property name": b'{agents:{list:[]},"$included":true}\n',
+            "escaped documentation comment": b'{agents:{list:[]}} // $incl\\u0075de\n',
+        }
+        for label, config_bytes in variants.items():
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                home = root / "home"
+                state = home / ".openclaw"
+                state.mkdir(parents=True)
+                config = state / "openclaw.json"
+                config.write_bytes(config_bytes)
+                fake, log = self._write_fake_openclaw(root)
+
+                result = self._connect_with_fake(
+                    home=home,
+                    fake=fake,
+                    log=log,
+                    mode="success",
+                    existing=[],
+                )
+
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertTrue(
+                    any("config patch" in call for call in log.read_text().splitlines())
+                )
+
     def test_openclaw_connector_pins_the_effective_home_for_child_commands(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
