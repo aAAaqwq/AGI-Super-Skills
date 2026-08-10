@@ -58,13 +58,30 @@ class MultiCliInstallerTests(unittest.TestCase):
         ]
         if "codex" in arguments or "--all-tools" in arguments:
             command.append("--skip-plugin")
-        return subprocess.run(command, capture_output=True, text=True, check=False)
+        env = os.environ.copy()
+        for key in (
+            "CODEX_HOME",
+            "HERMES_HOME",
+            "LOCALAPPDATA",
+            "OPENCLAW_CONFIG_PATH",
+            "OPENCLAW_HOME",
+            "OPENCLAW_PROFILE",
+            "OPENCLAW_STATE_DIR",
+        ):
+            env.pop(key, None)
+        return subprocess.run(command, env=env, capture_output=True, text=True, check=False)
 
     def assert_success(self, result: subprocess.CompletedProcess[str]) -> None:
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def tool_root(self, tool: dict[str, object], home: Path, project: Path) -> Path:
-        return home if tool["scope"] == "global" else project
+        if tool["scope"] != "global":
+            return project
+        if tool["id"] == "openclaw":
+            return home / ".openclaw"
+        if tool["id"] == "hermes":
+            return home / (Path("AppData/Local/hermes") if os.name == "nt" else Path(".hermes"))
+        return home
 
     def assert_contains_artifact(self, path: Path) -> None:
         self.assertTrue(path.exists(), f"expected installer destination: {path}")
@@ -588,7 +605,7 @@ class MultiCliInstallerTests(unittest.TestCase):
             self.assert_success(result)
             calls = log.read_text(encoding="utf-8").splitlines()
             self.assertIn("--version", calls)
-            self.assertIn("plugin marketplace add aAAaqwq/AGI-Super-Team --ref v1.4.1", calls)
+            self.assertIn("plugin marketplace add aAAaqwq/AGI-Super-Team --ref v1.4.2", calls)
             self.assertIn("plugin marketplace upgrade agi-super-team", calls)
             self.assertIn("plugin add agi-super-team-codex@agi-super-team", calls)
 

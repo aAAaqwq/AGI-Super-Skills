@@ -68,7 +68,7 @@ npx -y agi-super-team@latest --tool claude-code --install --connect
 npx -y agi-super-team@latest --tool claude-code --doctor
 ```
 
-The commands above use the public npm package. For reproducible automation, replace `@latest` with an exact published version such as `@1.4.1`.
+The commands above use the public npm package. For reproducible automation, replace `@latest` with an exact published version such as `@1.4.2`.
 
 The npm distribution keeps all 817 `SKILL.md` entrypoints discoverable and includes the complete files for every Skill assigned by `config/team-manifest.json`. Browse the provenance-backed [Daniel's Original Skills](./skills/original/) collection for reviewed first-party work. Clone the repository when you need every auxiliary asset from the wider Skill library.
 
@@ -84,6 +84,8 @@ Replace `claude-code` with an ID from `--list-tools`. Use `--all-tools` only whe
 | **Hermes Agent** | `npx -y agi-super-team@latest --tool hermes` | Role Skills + canonical Skills + Profiles/Kanban blueprints |
 
 `--install` materializes files; `--install --connect` also writes a connection receipt. OpenClaw dry-runs and then upserts managed `agents.list` entries while preserving unmanaged Agents and creating no channel bindings. Claude and Codex use filesystem discovery. Hermes emits blueprints but does not create Profiles, Cron jobs, or a Gateway. See the [primary harness Adapter guide](./docs/guides/harness-adapters.md) for paths, permissions, and receipt requirements.
+
+OpenClaw `2026.7.1-2` requires Node.js `>=22.22.3 <23`, `>=24.15.0 <25`, or `>=25.9.0`. AGI Super Team itself still supports Node.js 18+, so this stricter prerequisite applies only when invoking the current OpenClaw CLI.
 
 Claude Code, Codex, OpenClaw, and Hermes are first-class entry points to the same team system, not separate editions with different organizations.
 
@@ -105,14 +107,14 @@ These are **18 AI client/runtime adapter targets**, not 18 interchangeable CLIs.
 
 ### All 18 adapter targets
 
-Paths for global adapters are relative to the selected home; project adapters are relative to the selected project directory.
+Global adapters normally resolve from the selected OS-home base; project adapters resolve from the selected project directory. OpenClaw and Hermes instead honor their native runtime roots, as shown below.
 
 | ID | Client/runtime | Scope | Agent delivery | Skill delivery | Status |
 |---|---|---|---|---|---|
 | `claude-code` | Claude Code | Global | Native Markdown Agent: `.claude/agents` | Canonical: `.claude/skills` | Structurally connected; runtime pending |
 | `codex` | Codex | Global | Main-session CEO + TOML: `.codex/agents` | Canonical: `.agents/skills` | Structurally connected; runtime pending |
-| `openclaw` | OpenClaw | Global | Native workspace: `.openclaw/agency-agents/agi-super-team` | Canonical: `.openclaw/skills/agi-super-team` | Structurally connected; runtime pending |
-| `hermes` | Hermes Agent | Global | Role Skills: `.hermes/skills/agi-super-team-agents` | Canonical: `.hermes/skills/agi-super-team` | Blueprint connected; runtime pending |
+| `openclaw` | OpenClaw | Global | Native workspace: `<active config dir>/agency-agents/agi-super-team` | Canonical: `<active config dir>/skills/agi-super-team` | Structurally connected; runtime pending |
+| `hermes` | Hermes Agent | Global | Role Skills: `$HERMES_HOME/skills/agi-super-team-agents` | Canonical: `$HERMES_HOME/skills/agi-super-team` | Blueprint connected; runtime pending |
 | `copilot` | GitHub Copilot | Global | Markdown Agent: `.github/agents`, `.copilot/agents` | Native: `.copilot/skills` | Adapter |
 | `antigravity` | Antigravity | Global | Agent: `.gemini/config/agents` | Native: `.gemini/config/skills` | **Experimental** |
 | `gemini-cli` | Gemini CLI | Global | Markdown Agent: `.gemini/agents` | Native: `.gemini/skills` | Adapter |
@@ -134,7 +136,7 @@ Use the canonical [`orchestrate-agi-super-team`](./skills/orchestrate-agi-super-
 
 ### Select destinations, refresh, and verify
 
-Use `--home` to redirect global targets and `--project-dir` for project-scoped targets (the project directory defaults to the current directory). This makes a disposable audit easy:
+Use `--home` to redirect the OS-home base and `--project-dir` for project-scoped targets (the project directory defaults to the current directory). Hermes gives a non-empty `HERMES_HOME` precedence; OpenClaw follows `OPENCLAW_HOME`, `OPENCLAW_STATE_DIR`, and `OPENCLAW_CONFIG_PATH`. Combining `--home` with a conflicting runtime override fails before any write. This makes a disposable audit easy:
 
 ```bash
 AGI_AUDIT_HOME="$(mktemp -d "${TMPDIR:-/tmp}/agi-super-team-home.XXXXXX")"

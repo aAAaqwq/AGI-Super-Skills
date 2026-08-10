@@ -66,6 +66,7 @@ class HermesAdapterTests(unittest.TestCase):
         Draft202012Validator.check_schema(schema)
         Draft202012Validator(schema).validate(adapter)
 
+        self.assertEqual(adapter["schemaVersion"], 2)
         canonical_ids = {agent["id"] for agent in manifest["agents"]}
         self.assertEqual(adapter["harness"], "hermes")
         self.assertEqual(adapter["runtimeEvidence"], "pending")
@@ -74,14 +75,14 @@ class HermesAdapterTests(unittest.TestCase):
         self.assertEqual(adapter["maxConcurrentChildren"], 2)
         self.assertEqual(adapter["coordinator"], "ceo")
         self.assertEqual(adapter["independentReviewer"], "governor")
-        self.assertEqual(adapter["runtimePaths"]["roleSkillRoot"], "~/.hermes/skills/agi-super-team-agents")
+        self.assertEqual(adapter["runtimePaths"]["roleSkillRoot"], "skills/agi-super-team-agents")
         self.assertEqual(
             adapter["runtimePaths"]["orchestratorSkill"],
-            "~/.hermes/skills/agi-super-team-orchestrator/SKILL.md",
+            "skills/agi-super-team-orchestrator/SKILL.md",
         )
         self.assertEqual(
             adapter["runtimePaths"]["profileBlueprintRoot"],
-            "~/.hermes/agi-super-team/profiles",
+            "agi-super-team/profiles",
         )
         self.assertEqual(
             {role for role, profile in adapter["profileMap"].items() if profile["roleType"] == "manager"},
@@ -118,10 +119,16 @@ console.log(JSON.stringify({
         self.assertEqual(payload["adapterId"], "hermes")
         self.assertEqual(len(artifacts), 14 + 3 + 1 + 14)
         for role in ("ceo", "cto", "pe", "governor"):
-            role_path = f".hermes/skills/agi-super-team-agents/ast-{role}/SKILL.md"
-            blueprint_path = f".hermes/agi-super-team/profiles/ast-{role}/profile.json"
-            self.assertIn(role_path, artifacts)
-            self.assertIn(blueprint_path, artifacts)
+            role_path = f"skills/agi-super-team-agents/ast-{role}/SKILL.md"
+            blueprint_path = f"agi-super-team/profiles/ast-{role}/profile.json"
+            self.assertTrue(
+                role_path in artifacts,
+                f"Hermes role artifact must be HERMES_HOME-relative; got {list(artifacts)[:3]}",
+            )
+            self.assertTrue(
+                blueprint_path in artifacts,
+                f"Hermes blueprint must be HERMES_HOME-relative; got {list(artifacts)[:3]}",
+            )
             self.assertIn(f"name: ast-{role}", artifacts[role_path]["content"])
             blueprint = json.loads(artifacts[blueprint_path]["content"])
             self.assertEqual(blueprint["profileId"], f"ast-{role}")
@@ -129,11 +136,11 @@ console.log(JSON.stringify({
             self.assertFalse(blueprint["runtimeStateCreated"])
             self.assertEqual(blueprint["kanbanTaskSkills"][0], f"ast-{role}")
 
-        specialist_path = ".hermes/skills/agi-super-team-agents/ast-cpo-ui-designer/SKILL.md"
+        specialist_path = "skills/agi-super-team-agents/ast-cpo-ui-designer/SKILL.md"
         self.assertIn(specialist_path, artifacts)
         self.assertIn("不得创建子 Agent", artifacts[specialist_path]["content"])
 
-        orchestrator_path = ".hermes/skills/agi-super-team-orchestrator/SKILL.md"
+        orchestrator_path = "skills/agi-super-team-orchestrator/SKILL.md"
         self.assertIn(orchestrator_path, artifacts)
         orchestrator = artifacts[orchestrator_path]["content"]
         self.assertIn("Profiles + Kanban", orchestrator)
@@ -144,7 +151,12 @@ console.log(JSON.stringify({
         self.assertIn("skills", orchestrator)
 
         self.assertFalse(
-            any(path.startswith(".hermes/skills/agi-super-team/") for path in artifacts),
+            any("~/.hermes" in artifact["content"] for artifact in artifacts.values()),
+            "Hermes artifacts must resolve from HERMES_HOME instead of a hard-coded default home",
+        )
+
+        self.assertFalse(
+            any(path.startswith("skills/agi-super-team/") for path in artifacts),
             "canonical Skills are copied by the shared installer, not the Hermes adapter",
         )
 
@@ -193,6 +205,20 @@ console.log(JSON.stringify(spec));
         self.assertFalse(spec["sideEffects"]["startGateway"])
         self.assertEqual(spec["assignedSkills"]["all"], ["accessibility-compliance-accessibility-audit", "ux-heuristics"])
         self.assertEqual(spec["assignedSkills"]["byAgent"]["cpo"], ["ux-heuristics"])
+        target_home = Path("/tmp/hermes-adapter-home")
+        self.assertEqual(
+            Path(spec["paths"]["roleSkillRoot"]),
+            target_home / "skills/agi-super-team-agents",
+        )
+        self.assertEqual(
+            Path(spec["paths"]["orchestratorSkill"]),
+            target_home / "skills/agi-super-team-orchestrator/SKILL.md",
+        )
+        self.assertEqual(
+            Path(spec["paths"]["profileBlueprintRoot"]),
+            target_home / "agi-super-team/profiles",
+        )
+        self.assertNotIn(".hermes", json.dumps(spec))
 
     def test_connection_spec_is_pure_and_does_not_create_home(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:

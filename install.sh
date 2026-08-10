@@ -14,7 +14,7 @@
 set -euo pipefail
 
 REPO_URL="https://github.com/aAAaqwq/AGI-Super-Team.git"
-REPO_REF="${AGI_SUPER_TEAM_REF:-v1.4.1}"
+REPO_REF="${AGI_SUPER_TEAM_REF:-v1.4.2}"
 OPENCLAW_DIR="${AGI_SUPER_TEAM_DESTINATION:-${HOME}/.openclaw}"
 SOURCE_DIR="${AGI_SUPER_TEAM_SOURCE:-}"
 APPLY=0

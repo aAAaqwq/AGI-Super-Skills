@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const cli = resolve(process.argv[2] || join(repositoryRoot, "bin", "agi-super-team.mjs"));
+const sourceModule = extname(cli) === ".mjs";
 const sandbox = mkdtempSync(join(tmpdir(), "agi-super-team-windows-smoke-"));
 
 function isolatedEnvironment(home, extra = {}) {
@@ -24,7 +25,6 @@ function isolatedEnvironment(home, extra = {}) {
 }
 
 function invoke(label, args, home, extraEnvironment = {}) {
-  const sourceModule = extname(cli) === ".mjs";
   const command = sourceModule ? process.execPath : cli;
   const commandArgs = sourceModule ? [cli, ...args] : args;
   const result = spawnSync(command, commandArgs, {
@@ -161,7 +161,7 @@ try {
   const codexCalls = readFileSync(codexLog, "utf8").split(/\r?\n/).filter(Boolean);
   for (const expected of [
     "--version",
-    "plugin marketplace add aAAaqwq/AGI-Super-Team --ref v1.4.1",
+    "plugin marketplace add aAAaqwq/AGI-Super-Team --ref v1.4.2",
     "plugin marketplace upgrade agi-super-team",
     "plugin add agi-super-team-codex@agi-super-team",
   ]) {
@@ -185,7 +185,7 @@ try {
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from "node:fs";
 import {dirname, join} from "node:path";
 const args = process.argv.slice(2);
-const config = join(process.env.OPENCLAW_STATE_DIR, "openclaw.json");
+const config = process.env.OPENCLAW_CONFIG_PATH || join(process.env.OPENCLAW_STATE_DIR, "openclaw.json");
 if (args.length === 1 && args[0] === "--version") {
   console.log("openclaw-smoke");
 } else if (args.join(" ") === "config get agents.list --json") {
@@ -239,6 +239,29 @@ if (args.length === 1 && args[0] === "--version") {
     "--project-dir", openclawInstalled.project, "--no-skills", "--install", "--connect",
   ], openclawInstalled.home, openclawEnvironment);
 
+  const openclawOverride = roots("openclaw-override");
+  const openclawOverrideHome = join(sandbox, "openclaw-native-home");
+  const openclawOverrideState = join(sandbox, "openclaw-native-state");
+  const openclawOverrideConfig = join(sandbox, "openclaw-native-config", "custom.json");
+  const openclawOverrideEnvironment = {
+    PATH: fakePath,
+    OPENCLAW_HOME: openclawOverrideHome,
+    OPENCLAW_STATE_DIR: openclawOverrideState,
+    OPENCLAW_CONFIG_PATH: openclawOverrideConfig,
+  };
+  const openclawOverrideOutput = invoke("openclaw native root overrides", [
+    "--tool", "openclaw", "--project-dir", openclawOverride.project,
+    "--no-skills", "--install", "--connect",
+  ], openclawOverride.home, openclawOverrideEnvironment);
+  expectIncludes(openclawOverrideOutput, "Connected: openclaw (connected-structural)", "openclaw native root overrides");
+  expectNonEmptyFile(join(openclawOverrideState, "agency-agents", "agi-super-team", "ast-ceo", "AGENTS.md"), "OpenClaw override CEO Agent");
+  expectNonEmptyFile(join(openclawOverrideState, "agi-super-team", "connection.json"), "OpenClaw override connection");
+  expectNonEmptyFile(join(openclawOverrideState, "agi-super-team", "receipt.json"), "OpenClaw override receipt");
+  expectNonEmptyFile(openclawOverrideConfig, "OpenClaw override config");
+  if (existsSync(join(openclawOverride.home, ".openclaw"))) {
+    throw new Error("OpenClaw native root overrides created a dead directory under OS home");
+  }
+
   const openclaw = roots("openclaw-subagents");
   const openclawOutput = invoke("openclaw --all-subagents preview", [
     "--tool", "openclaw", "--home", openclaw.home,
@@ -255,9 +278,12 @@ if (args.length === 1 && args[0] === "--version") {
     "--project-dir", hermes.project, "--no-skills", "--install", "--connect",
   ], hermes.home);
   expectIncludes(hermesInstall, "Connected: hermes (filesystem-connected)", "hermes install/connect");
-  expectNonEmptyFile(join(hermes.home, ".hermes", "skills", "agi-super-team-agents", "ast-ceo", "SKILL.md"), "Hermes CEO Agent");
-  expectNonEmptyFile(join(hermes.home, ".hermes", "agi-super-team", "connection.json"), "Hermes connection");
-  expectNonEmptyFile(join(hermes.home, ".hermes", "agi-super-team", "receipt.json"), "Hermes receipt");
+  const hermesRuntimeHome = process.platform === "win32"
+    ? join(hermes.home, "AppData", "Local", "hermes")
+    : join(hermes.home, ".hermes");
+  expectNonEmptyFile(join(hermesRuntimeHome, "skills", "agi-super-team-agents", "ast-ceo", "SKILL.md"), "Hermes CEO Agent");
+  expectNonEmptyFile(join(hermesRuntimeHome, "agi-super-team", "connection.json"), "Hermes connection");
+  expectNonEmptyFile(join(hermesRuntimeHome, "agi-super-team", "receipt.json"), "Hermes receipt");
   const hermesDoctor = invoke("hermes doctor", [
     "--tool", "hermes", "--home", hermes.home,
     "--project-dir", hermes.project, "--no-skills", "--doctor",
@@ -267,6 +293,20 @@ if (args.length === 1 && args[0] === "--version") {
     "--tool", "hermes", "--home", hermes.home,
     "--project-dir", hermes.project, "--no-skills", "--install", "--connect",
   ], hermes.home);
+
+  const hermesOverride = roots("hermes-override");
+  const hermesOverrideHome = join(sandbox, "hermes-native-home");
+  const hermesOverrideOutput = invoke("hermes HERMES_HOME install/connect", [
+    "--tool", "hermes", "--project-dir", hermesOverride.project,
+    "--no-skills", "--install", "--connect",
+  ], hermesOverride.home, {HERMES_HOME: hermesOverrideHome});
+  expectIncludes(hermesOverrideOutput, "Connected: hermes (filesystem-connected)", "hermes HERMES_HOME install/connect");
+  expectNonEmptyFile(join(hermesOverrideHome, "skills", "agi-super-team-agents", "ast-ceo", "SKILL.md"), "Hermes override CEO Agent");
+  expectNonEmptyFile(join(hermesOverrideHome, "agi-super-team", "connection.json"), "Hermes override connection");
+  expectNonEmptyFile(join(hermesOverrideHome, "agi-super-team", "receipt.json"), "Hermes override receipt");
+  if (existsSync(join(hermesOverride.home, ".hermes"))) {
+    throw new Error("HERMES_HOME created a dead directory under OS home");
+  }
 
   const allTools = roots("all-tools");
   const allToolsOutput = invoke("--all-tools preview", [
@@ -278,7 +318,7 @@ if (args.length === 1 && args[0] === "--version") {
   expectIncludes(allToolsOutput, "Preview only. Add --install to apply.", "--all-tools preview");
   if (tree(dirname(allTools.home)).length !== 0) throw new Error("--all-tools preview mutated its isolated roots");
 
-  console.log(`Packed CLI smoke passed via ${basename(cli)} on ${process.platform}`);
+  console.log(`${sourceModule ? "Source" : "Packed"} CLI smoke passed via ${basename(cli)} on ${process.platform}`);
 } finally {
   rmSync(sandbox, { recursive: true, force: true });
 }

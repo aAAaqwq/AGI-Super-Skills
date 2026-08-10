@@ -10,8 +10,10 @@ import {
   unlinkSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { spawnCli } from "./process.mjs";
+
+const OPENCLAW_REDACTED_SENTINEL = "__OPENCLAW_REDACTED__";
 
 
 export function mergeManagedAgents(existing, managed) {
@@ -64,8 +66,222 @@ function parseJsonOutput(result) {
   }
 }
 
-function captureOpenClawConfig(home) {
-  const path = join(home, ".openclaw", "openclaw.json");
+function containsRedactedSentinel(value, seen = new Set()) {
+  if (value === OPENCLAW_REDACTED_SENTINEL) return true;
+  if (!value || typeof value !== "object") return false;
+  if (seen.has(value)) return false;
+  seen.add(value);
+  if (Array.isArray(value)) {
+    return value.some((item) => containsRedactedSentinel(item, seen));
+  }
+  return Object.values(value).some((item) => containsRedactedSentinel(item, seen));
+}
+
+function decodeEscapedCodePoint(text, offset, marker, width) {
+  const digits = text.slice(offset + marker.length, offset + marker.length + width);
+  if (!new RegExp(`^[0-9a-f]{${width}}$`, "i").test(digits)) return null;
+  return {
+    value: String.fromCodePoint(Number.parseInt(digits, 16)),
+    end: offset + marker.length + width - 1,
+  };
+}
+
+function skipJson5Trivia(text, offset) {
+  let cursor = offset;
+  while (cursor < text.length) {
+    if (/\s/u.test(text[cursor])) {
+      cursor += 1;
+      continue;
+    }
+    if (text[cursor] === "/" && text[cursor + 1] === "/") {
+      cursor += 2;
+      while (
+        cursor < text.length
+        && text[cursor] !== "\r"
+        && text[cursor] !== "\n"
+        && text[cursor] !== "\u2028"
+        && text[cursor] !== "\u2029"
+      ) cursor += 1;
+      continue;
+    }
+    if (text[cursor] === "/" && text[cursor + 1] === "*") {
+      cursor += 2;
+      while (
+        cursor + 1 < text.length
+        && !(text[cursor] === "*" && text[cursor + 1] === "/")
+      ) cursor += 1;
+      cursor = Math.min(cursor + 2, text.length);
+      continue;
+    }
+    break;
+  }
+  return cursor;
+}
+
+const JSON5_IDENTIFIER_START = /[$_\p{ID_Start}]/u;
+const JSON5_IDENTIFIER_PART = /[$_\u200c\u200d\p{ID_Continue}]/u;
+
+function readJson5Identifier(text, offset) {
+  let cursor = offset;
+  let value = "";
+  let first = true;
+  let end = offset - 1;
+  while (cursor < text.length) {
+    let character = String.fromCodePoint(text.codePointAt(cursor));
+    let characterEnd = cursor + character.length - 1;
+    if (character === "\\" && text[cursor + 1] === "u") {
+      const decoded = decodeEscapedCodePoint(text, cursor + 1, "u", 4);
+      if (!decoded) break;
+      character = decoded.value;
+      characterEnd = decoded.end;
+    }
+    const allowed = first ? JSON5_IDENTIFIER_START : JSON5_IDENTIFIER_PART;
+    if (!allowed.test(character)) break;
+    value += character;
+    end = characterEnd;
+    cursor = characterEnd + 1;
+    first = false;
+  }
+  return first ? null : {value, end};
+}
+
+function decodedJson5KeyCandidates(content) {
+  const text = content.toString("utf8");
+  const candidates = [];
+  for (let cursor = 0; cursor < text.length; cursor += 1) {
+    const significant = skipJson5Trivia(text, cursor);
+    if (significant !== cursor) {
+      cursor = significant;
+      if (cursor >= text.length) break;
+    }
+    const quote = text[cursor];
+    if (quote !== '"' && quote !== "'") {
+      const identifier = readJson5Identifier(text, cursor);
+      if (!identifier) continue;
+      candidates.push(identifier);
+      cursor = identifier.end;
+      continue;
+    }
+    let value = "";
+    let closed = false;
+    for (cursor += 1; cursor < text.length; cursor += 1) {
+      const character = text[cursor];
+      if (character === quote) {
+        closed = true;
+        break;
+      }
+      if (character !== "\\") {
+        value += character;
+        continue;
+      }
+      cursor += 1;
+      if (cursor >= text.length) break;
+      const escaped = text[cursor];
+      if (escaped === "\r") {
+        if (text[cursor + 1] === "\n") cursor += 1;
+        continue;
+      }
+      if (escaped === "\n" || escaped === "\u2028" || escaped === "\u2029") continue;
+      const simpleEscapes = {
+        b: "\b",
+        f: "\f",
+        n: "\n",
+        r: "\r",
+        t: "\t",
+        v: "\v",
+        0: "\0",
+      };
+      if (Object.hasOwn(simpleEscapes, escaped)) {
+        value += simpleEscapes[escaped];
+        continue;
+      }
+      if (escaped === "x") {
+        const decoded = decodeEscapedCodePoint(text, cursor, "x", 2);
+        if (decoded) {
+          value += decoded.value;
+          cursor = decoded.end;
+          continue;
+        }
+      }
+      if (escaped === "u") {
+        const decoded = decodeEscapedCodePoint(text, cursor, "u", 4);
+        if (decoded) {
+          value += decoded.value;
+          cursor = decoded.end;
+          continue;
+        }
+      }
+      value += escaped;
+    }
+    if (closed) candidates.push({value, end: cursor});
+  }
+  return {text, candidates};
+}
+
+function containsIncludeDirective(content) {
+  const {text, candidates} = decodedJson5KeyCandidates(content);
+  return candidates.some(({value, end}) =>
+    value === "$include" && text[skipJson5Trivia(text, end + 1)] === ":");
+}
+
+function rejectIncludeBackedConfig(snapshot) {
+  if (snapshot.exists && containsIncludeDirective(snapshot.content)) {
+    throw new Error(
+      "refusing OpenClaw connection because the active config contains $include; automatic rollback cannot cover included files",
+    );
+  }
+}
+
+function resolveTildePath(value, effectiveHome, label) {
+  if (typeof value !== "string" || !value.trim()) {
+    throw new Error(`invalid ${label}: ${String(value)}`);
+  }
+  const normalized = value.trim();
+  let path;
+  if (normalized === "~") path = resolve(effectiveHome);
+  else if (normalized.startsWith("~/") || normalized.startsWith("~\\")) {
+    path = resolve(effectiveHome, normalized.slice(2));
+  } else if (normalized.startsWith("~")) {
+    throw new Error(`unsupported ${label}: ${normalized}`);
+  } else {
+    path = resolve(normalized);
+  }
+  if (path === resolve("/")) throw new Error(`refusing unsafe ${label}: ${path}`);
+  return path;
+}
+
+function configuredPath(environment, name) {
+  const value = environment?.[name];
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function resolveOpenClawTargets({home, connection, environment}) {
+  const fallbackHome = resolveTildePath(home, resolve(home), "OpenClaw home");
+  const targetHome = resolveTildePath(
+    connection?.targetHome
+      || configuredPath(environment, "OPENCLAW_HOME")
+      || fallbackHome,
+    fallbackHome,
+    "OpenClaw effective home",
+  );
+  const targetStateDir = resolveTildePath(
+    connection?.targetStateDir
+      || configuredPath(environment, "OPENCLAW_STATE_DIR")
+      || join(targetHome, ".openclaw"),
+    targetHome,
+    "OpenClaw state directory",
+  );
+  const targetConfigPath = resolveTildePath(
+    connection?.mergeContract?.configPath
+      || configuredPath(environment, "OPENCLAW_CONFIG_PATH")
+      || join(targetStateDir, "openclaw.json"),
+    targetHome,
+    "OpenClaw config path",
+  );
+  return {targetHome, targetStateDir, targetConfigPath};
+}
+
+function captureOpenClawConfig(path) {
   if (!existsSync(path)) {
     return {path, exists: false, content: null, mode: null, device: null, inode: null};
   }
@@ -119,7 +335,7 @@ function backupOpenClawConfig(snapshot) {
     mkdirSync(backupRoot, {recursive: true, mode: 0o700});
   }
   const timestamp = new Date().toISOString().replaceAll(":", "").replaceAll(".", "");
-  const backup = join(backupRoot, `openclaw.json.${timestamp}.${process.pid}.bak`);
+  const backup = join(backupRoot, `${basename(config)}.${timestamp}.${process.pid}.bak`);
   const descriptor = openSync(backup, "wx", 0o600);
   try {
     writeFileSync(descriptor, snapshot.content);
@@ -161,13 +377,16 @@ function restoreOpenClawConfig({original, expected, backup, failure}) {
 
 function prepareOpenClawConnection({home, connection, environment}) {
   const command = environment.OPENCLAW_CLI || "openclaw";
-  const stateRoot = join(home, ".openclaw");
+  const targets = resolveOpenClawTargets({home, connection, environment});
   const env = {
     ...environment,
-    OPENCLAW_STATE_DIR: stateRoot,
+    OPENCLAW_HOME: targets.targetHome,
+    OPENCLAW_STATE_DIR: targets.targetStateDir,
+    OPENCLAW_CONFIG_PATH: targets.targetConfigPath,
   };
   const version = run(command, ["--version"], {environment: env}).stdout.trim();
-  const originalConfig = captureOpenClawConfig(home);
+  const originalConfig = captureOpenClawConfig(targets.targetConfigPath);
+  rejectIncludeBackedConfig(originalConfig);
   const currentResult = run(
     command,
     ["config", "get", "agents.list", "--json"],
@@ -178,6 +397,11 @@ function prepareOpenClawConnection({home, connection, environment}) {
   }
   const existing = currentResult.status === 0 ? parseJsonOutput(currentResult) : [];
   if (!Array.isArray(existing)) throw new Error("OpenClaw agents.list must be an array");
+  if (containsRedactedSentinel(existing)) {
+    throw new Error(
+      "refusing OpenClaw connection because config get returned redacted values that cannot be safely round-tripped",
+    );
+  }
   const managed = connection?.configPatch?.agents?.list;
   if (!Array.isArray(managed)) throw new Error("OpenClaw connection spec is missing configPatch.agents.list");
   const requirements = connection.requirements || {};
@@ -217,6 +441,7 @@ function prepareOpenClawConnection({home, connection, environment}) {
     existing,
     managed,
     input,
+    targets,
   };
 }
 
@@ -230,6 +455,7 @@ function connectOpenClawTransaction({home, connection, environment}) {
     existing,
     managed,
     input,
+    targets,
   } = prepared;
   const backup = backupOpenClawConfig(originalConfig);
   if (!configMatches(originalConfig)) {
@@ -243,7 +469,7 @@ function connectOpenClawTransaction({home, connection, environment}) {
       {environment: env, input},
     );
   } catch (failure) {
-    const failedPatchConfig = captureOpenClawConfig(home);
+    const failedPatchConfig = captureOpenClawConfig(targets.targetConfigPath);
     const rollback = restoreOpenClawConfig({
       original: originalConfig,
       expected: failedPatchConfig,
@@ -255,7 +481,7 @@ function connectOpenClawTransaction({home, connection, environment}) {
       {cause: failure},
     );
   }
-  const appliedConfig = captureOpenClawConfig(home);
+  const appliedConfig = captureOpenClawConfig(targets.targetConfigPath);
   try {
     run(command, ["config", "validate", "--json"], {environment: env});
   } catch (failure) {

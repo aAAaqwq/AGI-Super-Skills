@@ -22,7 +22,7 @@
   ],
   "properties": {
     "$schema": {"const": "./hermes.schema.json"},
-    "schemaVersion": {"const": 1},
+    "schemaVersion": {"const": 2},
     "harness": {"const": "hermes"},
     "adapterMode": {"const": "profiles-kanban"},
     "coordinator": {"const": "ceo"},
@@ -37,9 +37,9 @@
       "additionalProperties": false,
       "required": ["roleSkillRoot", "orchestratorSkill", "profileBlueprintRoot"],
       "properties": {
-        "roleSkillRoot": {"const": "~/.hermes/skills/agi-super-team-agents"},
-        "orchestratorSkill": {"const": "~/.hermes/skills/agi-super-team-orchestrator/SKILL.md"},
-        "profileBlueprintRoot": {"const": "~/.hermes/agi-super-team/profiles"}
+        "roleSkillRoot": {"const": "skills/agi-super-team-agents"},
+        "orchestratorSkill": {"const": "skills/agi-super-team-orchestrator/SKILL.md"},
+        "profileBlueprintRoot": {"const": "agi-super-team/profiles"}
       }
     },
     "profileMap": {

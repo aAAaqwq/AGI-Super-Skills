@@ -4,7 +4,7 @@ import {
   readFileSync,
   statSync,
 } from "node:fs";
-import { isAbsolute, join, posix, resolve } from "node:path";
+import { dirname, isAbsolute, join, posix, resolve } from "node:path";
 import { isPhysicalStrictDescendant } from "../installer/path-safety.mjs";
 
 
@@ -269,6 +269,34 @@ function absoluteHome(home) {
   return resolve(home);
 }
 
+function absoluteTarget(value, label) {
+  if (typeof value !== "string" || !value || !isAbsolute(value) || resolve(value) === resolve("/")) {
+    throw new Error(`unsafe ${label}: ${String(value)}`);
+  }
+  return resolve(value);
+}
+
+function connectionTargets(home, tool) {
+  const targetHome = absoluteTarget(
+    tool.effectiveHome || home,
+    "OpenClaw effective home",
+  );
+  const targetStateDir = absoluteTarget(
+    tool.stateDir || join(targetHome, ".openclaw"),
+    "OpenClaw state directory",
+  );
+  const configPath = absoluteTarget(
+    tool.configPath || join(targetStateDir, "openclaw.json"),
+    "OpenClaw config path",
+  );
+  const targetConfigDir = absoluteTarget(
+    tool.installationRoot
+      || (tool.stateDir ? targetStateDir : tool.configPath ? dirname(configPath) : join(targetHome, ".openclaw")),
+    "OpenClaw config directory",
+  );
+  return { targetHome, targetStateDir, targetConfigDir, configPath };
+}
+
 export function buildConnectionSpec({
   home,
   tool,
@@ -277,7 +305,13 @@ export function buildConnectionSpec({
   specialists = [],
   assignedSkills,
 }) {
-  const targetHome = absoluteHome(home);
+  absoluteHome(home);
+  const {
+    targetHome,
+    targetStateDir,
+    targetConfigDir,
+    configPath,
+  } = connectionTargets(home, tool);
   const input = normalizedInputs({ tool, agents, groups, specialists, assignedSkills }, true);
   const selected = selectedByManager(input.specialists);
   const entries = [];
@@ -290,7 +324,7 @@ export function buildConnectionSpec({
     entries.push({
       id,
       name: agent.name,
-      workspace: resolve(targetHome, input.roots.workspaceRoot, id),
+      workspace: resolve(targetConfigDir, input.roots.workspaceRoot, id),
       skills: [...new Set([...(agent.id === "ceo" ? [ORCHESTRATOR_SKILL] : []), ...(input.assignedSkills.byAgent[agent.id] || [])])].sort(),
       subagents: { allowAgents, requireAgentId: true },
       ...(isLeaf ? { tools: { deny: ["sessions_spawn"] } } : {}),
@@ -301,7 +335,7 @@ export function buildConnectionSpec({
     entries.push({
       id,
       name: specialist.name,
-      workspace: resolve(targetHome, input.roots.workspaceRoot, id),
+      workspace: resolve(targetConfigDir, input.roots.workspaceRoot, id),
       skills: [],
       subagents: { allowAgents: [], requireAgentId: true },
       tools: { deny: ["sessions_spawn"] },
@@ -311,10 +345,12 @@ export function buildConnectionSpec({
     schemaVersion: 1,
     harness: ADAPTER_ID,
     runtimeEvidence: "pending",
-    targetVersion: "2026.6.8",
+    targetVersion: "2026.7.1-2",
     targetHome,
+    targetStateDir,
+    targetConfigDir,
     mergeContract: {
-      configPath: resolve(targetHome, ".openclaw", "openclaw.json"),
+      configPath,
       path: "agents.list",
       key: "id",
       strategy: "upsert-managed-preserve-unmanaged",
