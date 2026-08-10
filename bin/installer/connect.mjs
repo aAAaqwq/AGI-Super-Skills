@@ -77,22 +77,108 @@ function containsRedactedSentinel(value, seen = new Set()) {
   return Object.values(value).some((item) => containsRedactedSentinel(item, seen));
 }
 
-function normalizeEscapedConfigMarkers(content) {
-  return content
-    .toString("utf8")
-    .replace(/\\(?:\r\n|[\n\r])/g, "")
-    .replace(/\\u\{([0-9a-f]{1,6})\}/gi, (match, digits) => {
-      const codePoint = Number.parseInt(digits, 16);
-      return codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : match;
-    })
-    .replace(/\\u([0-9a-f]{4})/gi, (_match, digits) =>
-      String.fromCharCode(Number.parseInt(digits, 16)))
-    .replace(/\\x([0-9a-f]{2})/gi, (_match, digits) =>
-      String.fromCharCode(Number.parseInt(digits, 16)));
+function decodeEscapedCodePoint(text, offset, marker, width) {
+  const digits = text.slice(offset + marker.length, offset + marker.length + width);
+  if (!new RegExp(`^[0-9a-f]{${width}}$`, "i").test(digits)) return null;
+  return {
+    value: String.fromCodePoint(Number.parseInt(digits, 16)),
+    end: offset + marker.length + width - 1,
+  };
+}
+
+function decodedJson5Strings(content) {
+  const text = content.toString("utf8");
+  const strings = [];
+  for (let cursor = 0; cursor < text.length; cursor += 1) {
+    if (text[cursor] === "/" && text[cursor + 1] === "/") {
+      cursor += 2;
+      while (
+        cursor < text.length
+        && text[cursor] !== "\r"
+        && text[cursor] !== "\n"
+        && text[cursor] !== "\u2028"
+        && text[cursor] !== "\u2029"
+      ) cursor += 1;
+      continue;
+    }
+    if (text[cursor] === "/" && text[cursor + 1] === "*") {
+      cursor += 2;
+      while (
+        cursor + 1 < text.length
+        && !(text[cursor] === "*" && text[cursor + 1] === "/")
+      ) cursor += 1;
+      if (cursor + 1 < text.length) cursor += 1;
+      continue;
+    }
+    const quote = text[cursor];
+    if (quote !== '"' && quote !== "'") continue;
+    let value = "";
+    let closed = false;
+    for (cursor += 1; cursor < text.length; cursor += 1) {
+      const character = text[cursor];
+      if (character === quote) {
+        closed = true;
+        break;
+      }
+      if (character !== "\\") {
+        value += character;
+        continue;
+      }
+      cursor += 1;
+      if (cursor >= text.length) break;
+      const escaped = text[cursor];
+      if (escaped === "\r") {
+        if (text[cursor + 1] === "\n") cursor += 1;
+        continue;
+      }
+      if (escaped === "\n" || escaped === "\u2028" || escaped === "\u2029") continue;
+      const simpleEscapes = {
+        b: "\b",
+        f: "\f",
+        n: "\n",
+        r: "\r",
+        t: "\t",
+        v: "\v",
+        0: "\0",
+      };
+      if (Object.hasOwn(simpleEscapes, escaped)) {
+        value += simpleEscapes[escaped];
+        continue;
+      }
+      if (escaped === "x") {
+        const decoded = decodeEscapedCodePoint(text, cursor, "x", 2);
+        if (decoded) {
+          value += decoded.value;
+          cursor = decoded.end;
+          continue;
+        }
+      }
+      if (escaped === "u") {
+        const decoded = decodeEscapedCodePoint(text, cursor, "u", 4);
+        if (decoded) {
+          value += decoded.value;
+          cursor = decoded.end;
+          continue;
+        }
+      }
+      value += escaped;
+    }
+    if (closed) strings.push(value);
+  }
+  return strings;
+}
+
+function containsIncludeDirective(content) {
+  const text = content.toString("utf8");
+  if (text.includes("$include")) return true;
+  const decodedIdentifiers = text.replace(/\\u([0-9a-f]{4})/gi, (_match, digits) =>
+    String.fromCharCode(Number.parseInt(digits, 16)));
+  if (decodedIdentifiers.includes("$include")) return true;
+  return decodedJson5Strings(content).some((value) => value === "$include");
 }
 
 function rejectIncludeBackedConfig(snapshot) {
-  if (snapshot.exists && normalizeEscapedConfigMarkers(snapshot.content).includes("$include")) {
+  if (snapshot.exists && containsIncludeDirective(snapshot.content)) {
     throw new Error(
       "refusing OpenClaw connection because the active config contains $include; automatic rollback cannot cover included files",
     );
