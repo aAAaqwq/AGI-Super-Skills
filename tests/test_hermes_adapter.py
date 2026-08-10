@@ -66,6 +66,7 @@ class HermesAdapterTests(unittest.TestCase):
         Draft202012Validator.check_schema(schema)
         Draft202012Validator(schema).validate(adapter)
 
+        self.assertEqual(adapter["schemaVersion"], 2)
         canonical_ids = {agent["id"] for agent in manifest["agents"]}
         self.assertEqual(adapter["harness"], "hermes")
         self.assertEqual(adapter["runtimeEvidence"], "pending")

@@ -350,6 +350,36 @@ process.stdout.write(JSON.stringify(mergeManagedAgents(existing, managed)));
             self.assertEqual(config.read_bytes(), config_bytes)
             self.assertEqual(included.read_bytes(), included_bytes)
 
+    def test_openclaw_rejects_unicode_escaped_include_before_patch(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "home"
+            state = home / ".openclaw"
+            state.mkdir(parents=True)
+            config = state / "openclaw.json"
+            included = state / "agents.json"
+            config_bytes = b'{"agents":{"$incl\\u0075de":"./agents.json"}}\n'
+            included_bytes = b'{"list":[{"id":"personal"}]}\n'
+            config.write_bytes(config_bytes)
+            included.write_bytes(included_bytes)
+            fake, log = self._write_fake_openclaw(root)
+
+            result = self._connect_with_fake(
+                home=home,
+                fake=fake,
+                log=log,
+                mode="success",
+                existing=[{"id": "personal"}],
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("$include", result.stderr)
+            self.assertFalse(
+                any("config patch" in call for call in log.read_text().splitlines())
+            )
+            self.assertEqual(config.read_bytes(), config_bytes)
+            self.assertEqual(included.read_bytes(), included_bytes)
+
     def test_openclaw_connector_pins_the_effective_home_for_child_commands(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

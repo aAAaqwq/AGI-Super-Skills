@@ -58,7 +58,18 @@ class MultiCliInstallerTests(unittest.TestCase):
         ]
         if "codex" in arguments or "--all-tools" in arguments:
             command.append("--skip-plugin")
-        return subprocess.run(command, capture_output=True, text=True, check=False)
+        env = os.environ.copy()
+        for key in (
+            "CODEX_HOME",
+            "HERMES_HOME",
+            "LOCALAPPDATA",
+            "OPENCLAW_CONFIG_PATH",
+            "OPENCLAW_HOME",
+            "OPENCLAW_PROFILE",
+            "OPENCLAW_STATE_DIR",
+        ):
+            env.pop(key, None)
+        return subprocess.run(command, env=env, capture_output=True, text=True, check=False)
 
     def assert_success(self, result: subprocess.CompletedProcess[str]) -> None:
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
