@@ -24,7 +24,7 @@ const args = process.argv.slice(2);
 const mode = process.env.OPENCLAW_TEST_MODE || 'success';
 const log = process.env.OPENCLAW_TEST_LOG;
 appendFileSync(log, `${args.join(' ')}\\n`);
-const config = join(process.env.OPENCLAW_STATE_DIR, 'openclaw.json');
+const config = process.env.OPENCLAW_CONFIG_PATH || join(process.env.OPENCLAW_STATE_DIR, 'openclaw.json');
 
 if (args[0] === '--version') {
   process.stdout.write('OpenClaw test\\n');
@@ -88,6 +88,7 @@ if (args[0] === '--version') {
         mode: str,
         existing: list[dict] | None = None,
         applied_content: str = '{"applied":true}\n',
+        environment_overrides: dict[str, str] | None = None,
     ) -> subprocess.CompletedProcess[str]:
         connection = {
             "requirements": {"requiredMaxDepth": 2, "maxChildrenPerAgent": 2},
@@ -106,6 +107,7 @@ const result = connectHarness({{
     OPENCLAW_TEST_MODE: {json.dumps(mode)},
     OPENCLAW_EXISTING_JSON: {json.dumps(json.dumps(existing or []))},
     OPENCLAW_APPLIED_CONTENT: {json.dumps(applied_content)},
+    ...{json.dumps(environment_overrides or {})},
   }},
 }});
 process.stdout.write(JSON.stringify(result));
@@ -116,7 +118,19 @@ process.stdout.write(JSON.stringify(result));
             capture_output=True,
             text=True,
             check=False,
+            env=self._sanitized_environment(),
         )
+
+    def _sanitized_environment(self) -> dict[str, str]:
+        environment = os.environ.copy()
+        for name in (
+            "HERMES_HOME",
+            "OPENCLAW_HOME",
+            "OPENCLAW_STATE_DIR",
+            "OPENCLAW_CONFIG_PATH",
+        ):
+            environment.pop(name, None)
+        return environment
 
     def test_openclaw_get_failure_aborts_before_patch(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -317,6 +331,45 @@ process.stdout.write(JSON.stringify(mergeManagedAgents(existing, managed)));
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("validation failed", result.stderr)
             self.assertEqual(config.read_bytes(), original)
+
+    def test_openclaw_custom_config_is_the_transaction_snapshot_and_rollback_target(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "login-home"
+            default_config = home / ".openclaw/openclaw.json"
+            state = root / "openclaw-state"
+            state_config = state / "openclaw.json"
+            custom_config = root / "separate-config/custom.json"
+            default_config.parent.mkdir(parents=True)
+            state.mkdir(parents=True)
+            custom_config.parent.mkdir(parents=True)
+            default_bytes = b'{"defaultHome":"untouched"}\n'
+            state_bytes = b'{"stateDir":"untouched"}\n'
+            custom_bytes = b'{\r\n  "agents": {"list": [{"id": "legacy"}]}\r\n}\r\n'
+            default_config.write_bytes(default_bytes)
+            state_config.write_bytes(state_bytes)
+            custom_config.write_bytes(custom_bytes)
+            fake, log = self._write_fake_openclaw(root)
+
+            result = self._connect_with_fake(
+                home=home,
+                fake=fake,
+                log=log,
+                mode="patch-fail",
+                existing=[{"id": "legacy"}],
+                environment_overrides={
+                    "OPENCLAW_HOME": str(root / "openclaw-home"),
+                    "OPENCLAW_STATE_DIR": str(state),
+                    "OPENCLAW_CONFIG_PATH": str(custom_config),
+                },
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("patch failed", result.stderr)
+            self.assertIn("rollback completed", result.stderr)
+            self.assertEqual(custom_config.read_bytes(), custom_bytes)
+            self.assertEqual(state_config.read_bytes(), state_bytes)
+            self.assertEqual(default_config.read_bytes(), default_bytes)
 
     def test_openclaw_validation_failure_removes_new_config_when_none_existed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
