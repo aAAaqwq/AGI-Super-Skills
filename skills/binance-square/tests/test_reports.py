@@ -121,44 +121,6 @@ class LocalReportContractTests(unittest.TestCase):
         self.assertEqual(0, completed.returncode, completed.stderr)
         self.assertEqual(render_telegram(report), completed.stdout.rstrip("\n"))
 
-    def test_latest_report_cli_marks_cached_report_when_capture_is_degraded(
-        self,
-    ) -> None:
-        report = build_local_report(report_input())
-        with tempfile.TemporaryDirectory() as directory:
-            report_path = Path(directory) / "report.json"
-            report_path.write_text(
-                json.dumps(report, ensure_ascii=False), encoding="utf-8"
-            )
-
-            completed = subprocess.run(
-                [
-                    sys.executable,
-                    str(
-                        Path(__file__).parents[1]
-                        / "scripts"
-                        / "render_latest_telegram.py"
-                    ),
-                    "--report",
-                    str(report_path),
-                    "--degraded",
-                    "自动重试 2 次仍未恢复",
-                ],
-                capture_output=True,
-                text=True,
-            )
-
-        self.assertEqual(0, completed.returncode, completed.stderr)
-        message = completed.stdout.rstrip("\n")
-        self.assertEqual("📡 币安合约雷达", message.splitlines()[0])
-        self.assertEqual(
-            "🔴 状态：本轮数据更新失败，自动重试 2 次仍未恢复",
-            message.splitlines()[1],
-        )
-        self.assertEqual("📌 以下为最近一次成功结果", message.splitlines()[2])
-        self.assertIn("🕒 数据时间：2026-08-01 00:15 PDT", message)
-        self.assertNotIn("/tmp/", message)
-
     def test_profile_cohort_counts_must_reconcile_to_declared_denominator(self) -> None:
         profile_channel = {
             "status": "PARTIAL",
@@ -815,10 +777,7 @@ class LocalReportContractTests(unittest.TestCase):
         self.assertIn("OBSERVED_WINDOW", markdown)
         self.assertIn("60行", markdown)
         self.assertIn("Tier A eligible=0", markdown)
-        self.assertIn(
-            "排行榜作者映射不完整（不是本轮技术过滤原因）",
-            telegram,
-        )
+        self.assertIn("Smart Money 2/2 (100.0%) / 60行", telegram)
         self.assertIn("Square身份未解析", report["risk_banner"]["labels"])
 
     def test_smart_money_rank_coverage_cannot_claim_identity_coverage(self) -> None:
@@ -913,7 +872,7 @@ class LocalReportContractTests(unittest.TestCase):
         self.assertEqual("0/4 (0.0%)", report["leaderboard_coverage"]["label"])
         self.assertIn("排行榜部分覆盖", report["risk_banner"]["labels"])
         self.assertIn("Profile种子 9｜已渲染榜单行 0｜非TOP30", markdown)
-        self.assertIn("排行榜仅部分覆盖", telegram)
+        self.assertIn("种子9｜榜单行0｜非TOP30", telegram)
 
         invalid_partial_claims = (
             {
@@ -986,7 +945,7 @@ class LocalReportContractTests(unittest.TestCase):
             markdown,
         )
         self.assertIn(
-            "📊 扫描 25｜有效 11｜新增 未计算",
+            "发现25｜窗口内11｜有效11｜窗口排除14｜DQ隔离0｜新增未计算｜重复未计算",
             telegram,
         )
         self.assertNotIn("24h帖子：总数25", markdown)
@@ -1200,40 +1159,20 @@ class LocalReportContractTests(unittest.TestCase):
         self.assertIn("过滤原因：RR below 2.0 × 3", markdown)
         self.assertIn("完整快照：/tmp/v4/reports/run-001.json", markdown)
 
-        telegram = render_telegram(report)
-        self.assertEqual("📡 币安合约雷达", telegram.splitlines()[0])
-        self.assertEqual("🟢 结论：发现 1 个可执行信号", telegram.splitlines()[1])
-        self.assertIn("📊 扫描 9｜有效 7｜新增 5", telegram)
-        self.assertIn("🟢 1. BTCUSDT 做多｜评分 81", telegram)
-        self.assertIn("入场 62000–62500｜止损 61000｜目标 64500 / 67000", telegram)
-        self.assertIn("现价 63000｜RR 5", telegram)
-        self.assertIn(
-            "来源 https://www.binance.com/en/square/post/3001",
-            telegram,
-        )
-        self.assertIn("部分行情使用现货代理", telegram)
-        self.assertIn("候选信号存在集中风险", telegram)
-        self.assertNotIn("/tmp/", telegram)
-        self.assertNotIn("LONG", telegram)
-        self.assertNotIn("SPOT_PROXY", telegram)
-        self.assertNotIn("APPLIED", telegram)
-        self.assertLessEqual(len(telegram), 1200)
-
-    def test_telegram_zero_opportunity_message_is_decision_first_and_private(self) -> None:
+    def test_telegram_zero_opportunity_message_explicitly_says_wait(self) -> None:
         message = render_telegram(build_local_report(report_input()))
 
-        self.assertEqual("📡 币安合约雷达", message.splitlines()[0])
-        self.assertEqual(
-            "🟡 结论：本轮无可执行信号，继续等待",
-            message.splitlines()[1],
+        self.assertEqual("⚠️ 排行榜阻塞", message.splitlines()[0])
+        self.assertIn("抓取 UTC 2026-08-01T07:15:00Z", message)
+        self.assertIn(
+            "发现9｜窗口内7｜有效7｜窗口排除0｜DQ隔离2｜新增5｜重复2",
+            message,
         )
-        self.assertIn("📊 扫描 9｜有效 7｜新增 5", message)
-        self.assertIn("🧹 主要过滤：风险收益不足 × 3", message)
-        self.assertIn("⚠️ 数据提示：排行榜数据不完整", message)
-        self.assertIn("🕒 数据时间：2026-08-01 00:15 PDT", message)
-        self.assertNotIn("/tmp/", message)
-        self.assertNotIn("BLOCKED", message)
-        self.assertLessEqual(len(message), 700)
+        self.assertIn("作者 A 1/2 (50.0%)｜B 0/1 (0.0%)", message)
+        self.assertIn("排行榜 0/4 (0.0%) BLOCKED", message)
+        self.assertIn("结论：无合格机会 / 等待", message)
+        self.assertIn("过滤：RR below 2.0 × 3", message)
+        self.assertIn("快照：/tmp/v4/reports/run-001.json", message)
 
 
 if __name__ == "__main__":

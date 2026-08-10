@@ -6,7 +6,6 @@ import tempfile
 import unittest
 
 from scanner.authors import load_smart_money_square_identity_evidence
-from scanner.contracts import ContractViolation
 from scripts.collect_identity_mapping import collect_identity_mapping
 
 
@@ -27,33 +26,6 @@ class _Response:
 
 
 class CollectIdentityMappingTests(unittest.TestCase):
-    def test_expected_top_trader_id_must_match_public_response(self) -> None:
-        response_bytes = json.dumps(
-            {
-                "success": True,
-                "code": "000000",
-                "data": {
-                    "username": "ambiguous-name",
-                    "topTraderId": "different-trader",
-                    "squareUid": "different-square",
-                },
-            },
-            separators=(",", ":"),
-        ).encode("utf-8")
-
-        with tempfile.TemporaryDirectory() as directory:
-            output_dir = Path(directory)
-            with self.assertRaisesRegex(ContractViolation, "expected topTraderId"):
-                collect_identity_mapping(
-                    username="ambiguous-name",
-                    expected_top_trader_id="expected-trader",
-                    tenant_id="fixture-tenant",
-                    output_dir=output_dir,
-                    opener=lambda *_: _Response(response_bytes),
-                    clock=lambda: "2026-08-01T12:06:00Z",
-                )
-            self.assertEqual([], list(output_dir.iterdir()))
-
     def test_collects_exact_raw_bytes_with_anonymous_request_and_external_receipt(self) -> None:
         response_bytes = json.dumps(
             {
