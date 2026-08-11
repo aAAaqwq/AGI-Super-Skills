@@ -3,7 +3,7 @@
 """
 5minbtc-monitor.py — BTC 5min 预测监控 (Claude Code 适配版 v1.0)
 
-在每根 5min BTC K线的第 2/3 分钟采样 5minbtc-engine-v5.7.py 的预测,
+在每根 5min BTC K线的第 2/3/4 分钟采样 5minbtc-engine-v5.7.py 的预测,
 把事件以「一行一条」流式输出到 stdout — Claude Code 的 Monitor 工具
 会把每行转发为实时通知;命中「明确信号」即自动退出。
 
@@ -40,8 +40,8 @@ ROOT = Path(__file__).resolve().parent.parent
 ENGINE = ROOT / "5minbtc-engine-v5.7.py"
 SETTLE = ROOT / "5minbtc-log.py"
 
-# 每根 5min K线内的采样分钟 (progress ~40-70%, half_body 已激活但不过于末端)
-DEFAULT_SAMPLE_MINUTES = (2, 3)
+# 每根 5min K线内的采样分钟 (progress ~40-80%: 第2/3分钟早捕捉, 第4分钟=原版半K线成熟期)
+DEFAULT_SAMPLE_MINUTES = (2, 3, 4)
 # 明确信号的 strength 集合 — 实测引擎会输出 weak / medium (而非文档的 moderate), 两者都收
 DEFAULT_STRENGTHS = ("medium", "moderate", "strong")
 SAMPLE_SECOND = 5
@@ -96,9 +96,11 @@ def main():
     ap.add_argument("--strengths", nargs="*", default=list(DEFAULT_STRENGTHS),
                     help="明确信号 strength 集合")
     ap.add_argument("--sample-minutes", type=int, nargs="*", default=list(DEFAULT_SAMPLE_MINUTES),
-                    help="每根K线内采样分钟 (默认 2 3)")
+                    help="每根K线内采样分钟 (默认 2 3 4)")
     ap.add_argument("--settle", action="store_true", help="每次采样前 settle 上一根 K线")
     ap.add_argument("--dry-run", action="store_true", help="单次采样打印当前状态后退出")
+    ap.add_argument("--loop-rounds", type=int, default=0,
+                    help="命中 CLEAR-SIGNAL 后自动进入下一轮(每轮重计 max-runs); 0=命中即退出; -1=无限续轮直到手动停")
     args = ap.parse_args()
 
     strengths = set(args.strengths)
@@ -135,6 +137,16 @@ def main():
                  and p["confidence"] >= args.min_conf)
         if clear:
             emit("CLEAR-SIGNAL", d)
+            loop = args.loop_rounds  # -1=无限, N>0=再续N轮, 0=退出
+            if loop != 0:
+                if loop > 0:
+                    args.loop_rounds -= 1
+                runs = 0
+                emit("ROUND", d)
+                now = datetime.datetime.now()
+                t = next_sample(now)
+                time.sleep(max(10, (t - now).total_seconds()))
+                continue
             return 0
         if p["bias"] != last_bias:
             emit("DIR-CHANGE" if last_bias is not None else "START", d)
