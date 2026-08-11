@@ -48,6 +48,7 @@ python3 <SKILL>/scripts/5minbtc-monitor.py --dry-run
 - 事件流: `START` / `DIR-CHANGE` / `CLEAR-SIGNAL` / `ENGINE-ERR` / `MAX-RUNS`
 - 停止: 用户说「停/结束」→ `TaskStop` 停 Monitor
 - `CLEAR-SIGNAL` 后必须拉一次完整引擎快照二次确认
+- 引擎验证: `python3 -m pytest scripts/test_engine_v58.py -v` (12 项)
 
 ## 快速开始
 

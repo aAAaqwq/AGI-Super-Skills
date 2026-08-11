@@ -4,7 +4,8 @@
 
 - v5.7.3 HTTP 并行化: ThreadPoolExecutor 4 路 (klines+depth+FNG+chainlink) ~3s
 - v5.7.4 TREND decel 约束
-- 12 正交因子: momentum / meanrev / RSI / volume / fatigue / imbalance / microprice / decel / position / v_reversal / vol_breakout / half_body
+- v5.8.0 新增 taker_buy 主动买量因子 + fetch_depth_avg 订单簿多时刻采样去噪 (~4-5s)
+- 13 正交因子: momentum / meanrev / RSI / volume / fatigue / imbalance / microprice / decel / position / v_reversal / vol_breakout / half_body / **taker_buy**
 - ATR 乘数 ×0.55, half_range 0.40
 - Chainlink 价格对齐 (Coinbase BTC-USD 偏移补偿, 上限 ±$300)
 

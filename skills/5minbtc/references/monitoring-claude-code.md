@@ -80,6 +80,13 @@ python3 <SKILL>/5minbtc-engine-v5.7.py     # 拉一次预测
 python3 <SKILL>/scripts/5minbtc-monitor.py --dry-run   # 等价, 带事件格式
 ```
 
+### 引擎测试 (v5.8)
+```bash
+cd <SKILL>
+python3 -m pytest scripts/test_engine_v58.py -v
+# 12 项: 契约 / taker_buy 数值 / fetch_depth_avg 合并截断 / 稳定性 / 监控兼容
+```
+
 ## 四、铁律 (从原 SKILL.md 继承)
 
 1. **不缓存**: 每次采样都重新执行引擎脚本。

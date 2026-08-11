@@ -408,14 +408,18 @@ def taker_buy_signal(candles):
     用最近 5根已完成K线(candles[-6:-1], 不含当前未完成K线),
     每根 ratio = tb/v (主动买入占比, 0.5=均衡), 取均值.
     映射到 [-1,1]: 2*(mean_ratio - 0.5)*3, clamp.
-    正值=主动买占优=看多. v 或 tb 为 0 的K线跳过, 全部跳过返回 0.
+    正值=主动买占优=看多. v=0 或 tb 字段缺失的K线跳过, 全部跳过返回 0.
+    tb=0 是有意义信号(主动买量为零=全主动卖), 不跳过.
     """
     ratios = []
     for c in candles[-6:-1]:
         v = c.get("v", 0)
-        tb = c.get("tb", 0)
-        if v > 0 and tb > 0:
-            ratios.append(tb / v)
+        if "tb" not in c or v <= 0:
+            continue
+        tb = c["tb"]
+        if tb > v:
+            tb = v  # 数据容错: 主动买量不可能超过总成交量
+        ratios.append(tb / v)
     if not ratios:
         return 0
     mean_ratio = sum(ratios) / len(ratios)
