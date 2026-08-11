@@ -1,0 +1,95 @@
+# bb-scalper 配置
+# 所有参数集中管理，修改后无需动代码
+
+bb:
+  period: 20
+  std: 2.0
+  squeeze_max: 0.02     # 窄幅阈值 2%
+  squeeze_loose: 0.04   # 偏宽阈值 4%
+  sweet_min: 0.008      # 最小宽度 0.8%
+  sweet_max: 0.025      # 最大宽度 2.5%
+
+trade:
+  leverage: 10
+  stop_buffer: 0.0015   # 止损 = 轨道外 0.15%
+  entry_threshold: 0.002 # 入场区 = 轨道 ± 0.2%
+
+filters:
+  trend_slope_max: 0.0003   # 中轨走平阈值
+  trend_slope_loose: 0.0006 # 弱趋势阈值
+  rsi_long_max: 55          # 做多 RSI <= 55
+  rsi_short_min: 45         # 做空 RSI >= 45
+  cooldown_candles: 3       # SL 后冷却 K 线数
+
+risk:
+  simulated_capital: 500    # 模拟本金
+  risk_per_trade: 0.02      # 单笔风险 2%
+  max_position_usd: 100     # 最大名义仓位
+  max_hold_candles: 12      # 最大持仓 K 线数
+
+binance:
+  base_url: "https://fapi.binance.com"
+  ws_url: "wss://fstream.binance.com/ws"
+  # api_key: ""     # 实盘时填写
+  # api_secret: ""
+
+scan:
+  symbols:
+    - BTCUSDT
+    - ETHUSDT
+    - SOLUSDT
+    - BNBUSDT
+    - DOGEUSDT
+    - ADAUSDT
+    - XRPUSDT
+    - AVAXUSDT
+    - LINKUSDT
+    - DOTUSDT
+    - MATICUSDT
+    - ARBUSDT
+    - OPUSDT
+    - SUIUSDT
+    - APTUSDT
+    - NEARUSDT
+    - ATOMUSDT
+    - INJUSDT
+    - FTMUSDT
+    - LTCUSDT
+
+# 适合该策略的币 (2026-08-11 全币种72h回测筛选)
+# 参考指标: 累计PnL / 期望值 / 胜率
+paper:
+  recommended:      # ⭐ 优先: 正期望显著, 横盘质量好
+    - NEARUSDT      # +126.0%  | 期望 +3.94% | 胜率 44%
+    - DOTUSDT       #  +59.9%  | 期望 +2.56% | 胜率 46%
+    - XRPUSDT       #  +48.6%  | 期望 +3.35% | 胜率 54%
+    - ATOMUSDT      #  +45.5%  | 期望 +1.39% | 胜率 38%
+  acceptable:       # ✅ 可做: 正期望但较弱, 或信号质量一般
+    - ARBUSDT       #  +26.8%  | 期望 +1.22% | 胜率 18%
+    - INJUSDT       #  +26.5%  | 期望 +1.02% | 胜率 23%
+    - AVAXUSDT      #  +26.1%  | 期望 +1.13% | 胜率 35%
+    - ADAUSDT       #  +22.0%  | 期望 +1.22% | 胜率 28%
+    - DOGEUSDT      #  +13.4%  | 期望 +1.22% | 胜率 36%
+  avoid:            # ❌ 回避: 负期望 / 无信号 / 信号质量差
+    - APTUSDT       #  -30.9%  | 期望 -1.55% | 胜率 5%   (窄幅骗信号)
+    - ETHUSDT       #  -10.0%  | 期望 -2.50% | 胜率 0%
+    - LTCUSDT       #   -3.9%  | 期望 -0.87% | 胜率 17%
+    - BNBUSDT       #   -1.0%  | 期望 -2.50% | 胜率 0%
+    - BTCUSDT       #  无信号 (BB宽度常年<0.8%, 太窄)
+    - MATICUSDT     #  无信号
+    - FTMUSDT       #  无信号
+
+# 按天分桶一周回测 (cli/backtest_daily.py, 2026-08-11, 7天, 日均>=2)
+# 更看重「每日 PnL 稳定性」而非累计——单波行情会骗累计数
+daily_stability:
+  stable:           # ⭐ 稳定: 大多数天正PnL, 连续亏损少 (适合每日多次交易)
+    - NEARUSDT      # 日均9.6 | 8/9天正 | 08-04/05仅小亏
+    - DOTUSDT       # 日均8.6 | 8/9天正 | 仅08-08小亏
+    - XRPUSDT       # 日均5.9 | 8/9天正
+    - SUIUSDT       # 日均8.4 | 7/8天正 | 中期有连续小亏段
+  volatile:         # ⚠️ 靠某几日爆发, 稳定性差 (累计高但不可靠)
+    - LINKUSDT      # +152%但08-06单日+93.5%撑起, 多日亏损
+    - APTUSDT       # 3天窗-33% / 7天窗+101%, 窗口漂移严重
+    - DOGEUSDT      # 盈亏交替剧烈 (+44%/-8%/+52%/-10%)
+  needs_scan:       # 📡 每次实盘前必须 scan 确认三重过滤通过
+    - ALL           # 横盘质量随时间漂移, 窗口不同结论会变
