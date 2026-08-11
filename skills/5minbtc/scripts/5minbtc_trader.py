@@ -286,34 +286,47 @@ def find_btc_5m_market():
     return None
 
 
-def get_quote(wallet, token_id, side, amount_usdt):
-    """POST get-quote. 返回响应 dict (含 quoteId). side="BUY".
-    amountIn 用 18位 wei 字符串."""
+def get_quote(wallet, token_id, side, amount_usdt, order_type="LIMIT",
+              price_limit=None):
+    """POST get-quote. 返回响应 dict (含 quoteId).
+    side="BUY"|"SELL"; amountIn 用 18位 wei 字符串.
+    order_type="LIMIT"(默认, 低挂) | "MARKET"(市价).
+    LIMIT 需 price_limit (token 价格, 0~1), 默认 None 则用市价. """
     body = {
         "walletAddress": wallet,
         "tokenId": token_id,
         "side": side,
         "amountIn": str(int(round(amount_usdt * WEI_18))),
-        "orderType": "MARKET",
+        "orderType": order_type,
         "slippageBps": SLIPPAGE_BPS,
     }
+    if order_type == "LIMIT":
+        if price_limit is None:
+            raise ValueError("LIMIT 单需提供 price_limit (token 价格 0~1)")
+        body["priceLimit"] = str(int(round(price_limit * WEI_18)))
     return _signed_request("POST", "/sapi/v1/w3w/wallet/prediction/trade/get-quote", body)
 
 
-def place_order(wallet, wallet_id, quote_id, amount_usdt=None, account_type=ACCOUNT_TYPE):
-    """POST place-order-bundle (真实花钱). 返回响应 dict (含 orderId)."""
+def place_order(wallet, wallet_id, quote_id, amount_usdt=None, account_type=ACCOUNT_TYPE,
+                order_type="LIMIT"):
+    """POST place-order-bundle (真实花钱). 返回响应 dict (含 orderId).
+    LIMIT → timeInForce=GTC (挂单等成交); MARKET → FOK."""
     body = {
         "walletAddress": wallet,
         "walletId": wallet_id,
         "quoteId": quote_id,
-        "timeInForce": "FOK",        # MARKET 单用 FOK
+        "timeInForce": "GTC" if order_type == "LIMIT" else "FOK",
         "accountType": account_type,
-        "orderType": "MARKET",
+        "orderType": order_type,
         "slippageBps": SLIPPAGE_BPS,
     }
-    if amount_usdt is not None:      # 资金从 CEX 划转时带上 (可选)
-        body["fundingSource"] = "CEX"
-        body["fundTransferAmount"] = str(int(round(amount_usdt * WEI_18)))
+    if order_type == "LIMIT":
+        # 限价挂单不自动划转 CEX 资金 (资金来自 MPC 钱包)
+        pass
+    else:
+        if amount_usdt is not None:
+            body["fundingSource"] = "CEX"
+            body["fundTransferAmount"] = str(int(round(amount_usdt * WEI_18)))
     return _signed_request("POST", "/sapi/v1/w3w/wallet/prediction/trade/place-order-bundle",
                            body)
 
@@ -326,6 +339,187 @@ def _order_book(market_id, token_id=None, limit=5):
         params["tokenId"] = token_id
     data = _signed_request("GET", "/sapi/v1/w3w/wallet/prediction/order-book", params)
     return data
+
+
+def get_positions():
+    """GET position/list -> {summary, positions[]}. 当前活跃持仓."""
+    data = _signed_request("GET", "/sapi/v1/w3w/wallet/prediction/position/list",
+                           {"walletAddress": WALLET, "pageSize": 100, "pageNum": 1})
+    return data
+
+
+def sell_token(token_id, amount_usdt, market_id=None):
+    """SELL 卖出持仓 token 锁利/止损 (真实成交). 返回响应 dict."""
+    quote = get_quote(WALLET, token_id, "SELL", amount_usdt, order_type="MARKET")
+    qid = quote.get("quoteId")
+    if not qid:
+        raise RuntimeError(f"SELL 报价失败: {quote}")
+    return place_order(WALLET, WALLET_ID, qid, order_type="MARKET")
+
+
+def get_btc_price():
+    """GET 公开 ticker/price (免签名) -> BTC 实时价 (float)."""
+    url = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
+    req = urllib.request.Request(url, headers={"User-Agent": "5minbtc-trader/1.0"})
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        data = json.loads(resp.read().decode())
+    return float(data.get("price", 0))
+
+
+# ======================== 重试机制 ========================
+
+def _retry(fn, retries=10, base_delay=1.0, desc="操作"):
+    """带退避的重试. 单次失败不致命, 重试 retries 次 (默认10), 间隔 1,2,4...s.
+    全失败抛最后一个异常."""
+    last = None
+    for i in range(retries):
+        try:
+            return fn()
+        except Exception as e:  # noqa: BLE001
+            last = e
+            if i < retries - 1:
+                delay = base_delay * (2 ** i)
+                print(f"  {desc} 失败 (第{i+1}次): {str(e)[:120]}, {delay:.0f}s 后重试",
+                      file=sys.stderr)
+                time.sleep(delay)
+    raise last if last else RuntimeError(f"{desc} 重试耗尽")
+
+
+# ======================== 持仓监控 + 止盈止损 ========================
+
+def _pos_field(p, *keys, default=None):
+    """容错取持仓字段 (多 key 兼容不同响应结构)."""
+    for k in keys:
+        if k in p and p[k] not in (None, ""):
+            return p[k]
+    return default
+
+
+def _pos_token_id(p):
+    v = _pos_field(p, "tokenId", "token_id", "resultToken", "outcomeToken")
+    return str(v) if v is not None else None
+
+
+def _pos_market_id(p):
+    return _pos_field(p, "marketId", "market_id")
+
+
+def _pos_qty(p):
+    v = _pos_field(p, "quantity", "qty", "amount", "shareQty", "makerShareQty")
+    if v is None:
+        return 0.0
+    try:
+        return float(v) / WEI_18 if float(v) > 1e12 else float(v)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _pos_price(p, *keys):
+    v = _pos_field(p, *keys)
+    if v is None:
+        return None
+    try:
+        return float(v) / WEI_18 if float(v) > 1e12 else float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def _pos_side(p):
+    s = str(_pos_field(p, "side", "outcome", "outcomeName", "tokenSide", default="") or "").lower()
+    if "down" in s or "bear" in s:
+        return "DOWN"
+    if "up" in s or "bull" in s:
+        return "UP"
+    return "?"
+
+
+def monitor_positions(tp_mult=1.4, sl_mult=0.4, interval=10, live=False,
+                      max_iters=None):
+    """实时监控持仓: 面板 + 止盈/止损自动卖出.
+    止盈/止损只在 tp_mult/sl_mult 都 >0 且显式启用时自动执行.
+    全部卖出走 SELL, 带重试 (避免单次失败).
+    返回: 卖出次数."""
+    print(f"\n=== 持仓监控开始 (tp={tp_mult:.2f}x, sl={sl_mult:.2f}x, "
+          f"interval={interval}s, live={'YES' if live else 'NO'}) ===")
+    if not (tp_mult > 0 and sl_mult > 0):
+        print("⚠️  未设定 TP/SL, 仅监控不自动卖出", file=sys.stderr)
+    iters = 0
+    sold = 0
+    while max_iters is None or iters < max_iters:
+        iters += 1
+        try:
+            # BTC 实时价
+            try:
+                btc = get_btc_price()
+            except Exception as e:  # noqa: BLE001
+                btc = None
+                print(f"  BTC 价获取失败: {e}", file=sys.stderr)
+            # 持仓
+            data = _retry(get_positions, desc="查询持仓")
+            summary = data.get("summary") or {}
+            positions = data.get("positions") or []
+            if isinstance(positions, dict):
+                positions = positions.values()
+
+            # 面板
+            print("\n" + "-" * 56)
+            print(f"[#{iters}] BTC={btc if btc else 'N/A'}"
+                  f"  总资产={summary.get('totalValue', 'N/A')}"
+                  f"  今日已实现盈亏={summary.get('todayRealizedPnl', 'N/A')}"
+                  f" ({summary.get('todayRealizedPnlPercent', 'N/A')}%)")
+            if not positions:
+                print("  无活跃持仓")
+            for p in positions:
+                tid = _pos_token_id(p)
+                mkt = _pos_market_id(p)
+                side = _pos_side(p)
+                qty = _pos_qty(p)
+                cost = _pos_price(p, "avgPrice", "averagePrice", "entryPrice")
+                cur = _pos_price(p, "currentPrice", "lastPrice", "price")
+                upnl = _pos_price(p, "unrealizedPnl", "unrealizedProfit", "pnl")
+                # 现价缺失则从 order-book 补
+                if cur is None and mkt is not None and tid is not None:
+                    try:
+                        ob = _retry(lambda: _order_book(mkt, tid), desc="盘口")
+                        asks = ob.get("asks") or []
+                        bids = ob.get("bids") or []
+                        cur = float(asks[0]["price"]) if asks else (
+                            float(bids[0]["price"]) if bids else None)
+                    except Exception as e:  # noqa: BLE001
+                        print(f"  [盘口] {e}", file=sys.stderr)
+                print(f"  [{side}] qty={qty:.4f}  cost={cost}  cur={cur}  "
+                      f"uPnL={upnl}")
+                # 止盈/止损判断
+                if not (tp_mult > 0 and sl_mult > 0):
+                    continue
+                if cost is None or cur is None or qty <= 0:
+                    continue
+                mult = cur / cost
+                action = None
+                if mult >= tp_mult:
+                    action = f"止盈 (现价/成本 = {mult:.2f} ≥ {tp_mult})"
+                elif mult <= sl_mult:
+                    action = f"止损 (现价/成本 = {mult:.2f} ≤ {sl_mult})"
+                if action:
+                    print(f"  ⚡ 触发{action} → 自动卖出 {side} qty={qty:.4f} "
+                          f"@ {cur}")
+                    if not live:
+                        print("  (演练模式, 不实际卖出)")
+                        continue
+                    amt = max(cur * qty, 1.5)
+                    try:
+                        res = _retry(lambda: sell_token(tid, amt, mkt),
+                                     desc=f"卖出 {side}")
+                        sold += 1
+                        print(f"  ✅ 卖出完成: {res}")
+                    except Exception as e:  # noqa: BLE001
+                        print(f"  ❌ 卖出失败: {e}", file=sys.stderr)
+        except Exception as e:  # noqa: BLE001
+            print(f"监控轮次异常: {e}", file=sys.stderr)
+        if max_iters is not None and iters >= max_iters:
+            break
+        time.sleep(interval)
+    return sold
 
 
 # ======================== 闸门 / 输出 ========================
@@ -385,7 +579,8 @@ def _print_quote_summary(title, token_side, token_id, amount_usdt, quote):
             print(f"  {k}: {quote[k]}")
 
 
-def run_once(live=False, amount=DEFAULT_AMOUNT):
+def run_once(live=False, amount=DEFAULT_AMOUNT, order_type="LIMIT",
+             limit_price=None):
     """单次: 读引擎 → 判信号 → 发现市场 → 校验余额 → 报价 → (确认后)下单."""
     d = _load_engine()
     if not d:
@@ -401,7 +596,7 @@ def run_once(live=False, amount=DEFAULT_AMOUNT):
         return 0
 
     if amount < 1.5:
-        print(f"金额 {amount:.2f} USDT < MARKET 单最低 ~1.5 USDT, 拒绝", file=sys.stderr)
+        print(f"金额 {amount:.2f} USDT < 最低 ~1.5 USDT, 拒绝", file=sys.stderr)
         return 1
 
     # 余额校验 (get-quote 前先看钱够不够)
@@ -439,7 +634,9 @@ def run_once(live=False, amount=DEFAULT_AMOUNT):
     print(f"  → 买入 {side}: {token_id}")
 
     # order-book 双重确认 token 映射 (响应带 outcome 字段, 最可靠)
+    # 同时捕获目标 token 的 ask 价, 用于 LIMIT 低挂
     tok_ok = True
+    token_ask = None
     for label, tid in (("UP", up_tok), ("DOWN", down_tok)):
         try:
             ob = _order_book(market_id, tid)
@@ -450,6 +647,8 @@ def run_once(live=False, amount=DEFAULT_AMOUNT):
             outcome = ob.get("outcome")
             print(f"  [{label}] token={tid}  outcome={outcome}"
                   f"  top_bid={b0}  top_ask={a0}")
+            if label == side and a0:
+                token_ask = float(a0)
             # 强制校验: order-book outcome 必须与目标方向一致, 否则拒绝 (防误映射)
             if outcome:
                 ol = str(outcome).lower()
@@ -472,9 +671,19 @@ def run_once(live=False, amount=DEFAULT_AMOUNT):
         print(f"⚠️  距收盘仅 {remain}s (< {CLOSE_MARGIN_SEC}s), 风险高, 请自行判断",
               file=sys.stderr)
 
-    # 报价 (不花钱)
+    # 报价 (不花钱) — 默认 LIMIT 低挂
+    lp = limit_price
+    if lp is None and order_type == "LIMIT":
+        if token_ask:
+            lp = round(token_ask * 0.98, 4)   # 低于当前 ask 2% 接货
+        else:
+            print("无法获取盘口价, LIMIT 单无 priceLimit, 拒绝", file=sys.stderr)
+            return 1
+    if order_type == "LIMIT":
+        print(f"\n限价单: 买入 {side} token @ {lp} (当前 ask={token_ask})")
     try:
-        quote = get_quote(WALLET, token_id, "BUY", amount)
+        quote = get_quote(WALLET, token_id, "BUY", amount,
+                          order_type=order_type, price_limit=lp)
     except Exception as e:  # noqa: BLE001
         print(f"获取报价失败: {e}", file=sys.stderr)
         return 1
@@ -489,7 +698,8 @@ def run_once(live=False, amount=DEFAULT_AMOUNT):
         print("已取消下单")
         return 0
     try:
-        res = place_order(WALLET, WALLET_ID, qid, amount_usdt=amount)
+        res = place_order(WALLET, WALLET_ID, qid, amount_usdt=amount,
+                          order_type=order_type)
     except Exception as e:  # noqa: BLE001
         print(f"下单失败: {e}", file=sys.stderr)
         return 1
@@ -500,7 +710,8 @@ def run_once(live=False, amount=DEFAULT_AMOUNT):
     return 0
 
 
-def run_loop(live=False, amount=DEFAULT_AMOUNT, rounds=None):
+def run_loop(live=False, amount=DEFAULT_AMOUNT, rounds=None,
+             order_type="LIMIT", limit_price=None):
     """持续监控: 每根K线第2/3/4分钟采样. 每根K线只处理一次."""
     seen = set()
     n = 0
@@ -514,7 +725,8 @@ def run_loop(live=False, amount=DEFAULT_AMOUNT, rounds=None):
                 if key not in seen:
                     seen.add(key)
                     n += 1
-                    run_once(live=live, amount=amount)
+                    run_once(live=live, amount=amount, order_type=order_type,
+                             limit_price=limit_price)
             time.sleep(20)
         else:
             time.sleep(10)
@@ -526,10 +738,24 @@ def main():
         description="5minbtc→币安预测交易 桥接 (默认只报价不成交)")
     ap.add_argument("--once", action="store_true", help="单次: 判断+报价+确认+可选下单")
     ap.add_argument("--loop", action="store_true", help="持续监控(每根K线2/3/4分钟)")
+    ap.add_argument("--monitor", action="store_true",
+                    help="持仓监控: 实时面板 + 止盈止损自动卖出 (需显式 --tp-mult/--sl-mult)")
     ap.add_argument("--live", action="store_true", help="实盘模式(危险! 双确认)")
     ap.add_argument("--amount", type=float, default=DEFAULT_AMOUNT,
                     help=f"下单金额 USDT (默认 {DEFAULT_AMOUNT})")
     ap.add_argument("--rounds", type=int, default=None, help="loop 轮数上限(默认无限)")
+    ap.add_argument("--order-type", choices=("LIMIT", "MARKET"), default="LIMIT",
+                    help="买入单类型 (默认 LIMIT 低挂)")
+    ap.add_argument("--limit-price", type=float, default=None,
+                    help="LIMIT 单限价 (token 价格 0~1; 默认 = 当前 ask×0.98)")
+    ap.add_argument("--tp-mult", type=float, default=0,
+                    help="止盈倍率: 现价/成本 ≥ 此值自动卖出锁利 (如 1.4=+40%%; 0=不启用)")
+    ap.add_argument("--sl-mult", type=float, default=0,
+                    help="止损倍率: 现价/成本 ≤ 此值自动卖出 (如 0.4=跌60%%; 0=不启用)")
+    ap.add_argument("--monitor-interval", type=int, default=10,
+                    help="持仓监控轮询间隔秒 (默认 10)")
+    ap.add_argument("--monitor-iters", type=int, default=None,
+                    help="持仓监控轮数上限 (默认无限)")
     args = ap.parse_args()
 
     if not os.environ.get("BINANCE_API_KEY") or not os.environ.get("BINANCE_API_SECRET"):
@@ -537,6 +763,16 @@ def main():
         return 1
 
     print("\n⚠️  币安预测交易无 test 模式, 确认下单即真实花钱. 默认只报价不成交。\n")
+
+    # 自动卖出闸门: 止盈/止损都必须显式设定, 否则禁止自动 SELL
+    auto_sell = (args.tp_mult > 0 and args.sl_mult > 0)
+    if args.monitor and not auto_sell:
+        print("⚠️  未显式设定 --tp-mult 和 --sl-mult, 自动卖出未启用。")
+        print("    将仅显示实时面板, 不执行止盈/止损卖出。")
+        print("    启用自动卖出需: --monitor --tp-mult 1.4 --sl-mult 0.4 --live")
+        if not args.live:
+            pass  # 非 live 本就不会真实卖出
+
     if args.live:
         print("\n⚠️⚠️  实盘模式! 将真实下单。\n")
         try:
@@ -547,12 +783,19 @@ def main():
             print("已取消")
             return 0
 
+    if args.monitor:
+        return monitor_positions(tp_mult=args.tp_mult, sl_mult=args.sl_mult,
+                                 interval=args.monitor_interval, live=args.live,
+                                 max_iters=args.monitor_iters)
     if args.once:
-        return run_once(live=args.live, amount=args.amount)
+        return run_once(live=args.live, amount=args.amount,
+                        order_type=args.order_type, limit_price=args.limit_price)
     if args.loop:
-        return run_loop(live=args.live, amount=args.amount, rounds=args.rounds)
+        return run_loop(live=args.live, amount=args.amount, rounds=args.rounds,
+                        order_type=args.order_type, limit_price=args.limit_price)
 
-    print("用法: --once 单次 | --loop 持续 | 加 --live 实盘(危险)")
+    print("用法: --once 单次 | --loop 持续 | --monitor 持仓监控 | 加 --live 实盘(危险)")
+    print("自动卖出止盈止损需: --monitor --tp-mult <x> --sl-mult <x> --live")
     return 0
 
 
