@@ -17,14 +17,37 @@ tools:
 > **SKILL.md 是索引, 详细内容见 `references/`。**
 
 ## 触发
-`5minbtc` / `5min btc` / `btc 5min`
+`5minbtc` / `5min btc` / `btc 5min` / `监控` (配合持续盯盘)
 
 ## 何时使用
 | 场景 | 做法 |
 |------|------|
 | 当前 5min K线 方向+价位 | ✅ 标准流程, 有真实 edge (v5.8 回测 61-70%) |
+| 会话内持续盯盘, 等明确信号 | ✅ 监控模式 (scripts/5minbtc-monitor.py + Monitor 工具) |
 | "今晚 BTC 涨跌" (宽窗口) | ⚠️ 跑当前 K线 + 给方向倾向, 标注"超出引擎置信区间" |
 | "下根 K线" / "1小时后" | 引导在该 K线 起始时间再触发 |
+
+## 监控模式 (Claude Code)
+
+> 详见 [monitoring-claude-code.md](references/monitoring-claude-code.md)
+
+```bash
+# 无限持续, 直到用户喊停 (会话内盯盘推荐)
+Monitor(command: "python3 <SKILL>/scripts/5minbtc-monitor.py --max-runs 0", persistent: true)
+
+# 默认 20 次采样 (约 40 分钟)
+python3 <SKILL>/scripts/5minbtc-monitor.py
+
+# 单次判断 (非持续)
+python3 <SKILL>/scripts/5minbtc-monitor.py --dry-run
+```
+
+- **明确信号** = bias 非中性 + strength∈{medium,moderate,strong} + conf≥50 → 自动停
+  (⚠️ 实测引擎 strength 输出 `medium`, 判定集合需同时含 `medium` 和 `moderate`)
+- 每根 K 线第 2/3 分钟采样 (progress ~40-70%), 比 cron 第 4 分钟更早
+- 事件流: `START` / `DIR-CHANGE` / `CLEAR-SIGNAL` / `ENGINE-ERR` / `MAX-RUNS`
+- 停止: 用户说「停/结束」→ `TaskStop` 停 Monitor
+- `CLEAR-SIGNAL` 后必须拉一次完整引擎快照二次确认
 
 ## 快速开始
 
@@ -84,6 +107,7 @@ python3 $SKILL_DIR/5minbtc-log.py log \
 ### 执行与输出
 - [execution.md](references/execution.md) — 完整执行步骤 + 铁律 + 宽窗口处理
 - [output-template.md](references/output-template.md) — LLM 输出模板 + 裁决规则
+- [monitoring-claude-code.md](references/monitoring-claude-code.md) — **监控模式: Monitor 工具集成 + 事件协议**
 
 ### 数据源 & 网络
 - [news-sources.md](references/news-sources.md) — 新闻源评估 (清理后只剩 CoinDesk)
@@ -172,6 +196,9 @@ backtest/
 ├── backtest/                     # 回测系统
 ├── data/                         # 运行时 (news-risk-level.json 等)
 ├── scripts/                      # 复盘/工具脚本
+│   ├── 5minbtc-monitor.py        # ★ 监控脚本 (Claude Code Monitor 集成, v1.0)
+│   ├── daily-review-stats.py
+│   └── fetch-github-repo.sh
 14. 🔴 高延迟网络 — 引擎timeout临时修补 (2026-06-24)
 15. 🔴 Web搜索不可用时的降级策略
 16. 🔴 并行工具调用延迟评估 = max() not sum() (2026-07-05)
