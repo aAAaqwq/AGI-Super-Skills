@@ -68,10 +68,12 @@ def run_engine():
 def emit(tag, d):
     p = d["prediction"]
     c = d["candle"]
+    tb = d["factors"].get("taker_buy")
+    tb_s = f" tb={tb:+.2f}" if tb is not None else ""
     print(f"{tag} [{c.get('iso')} p{c.get('progress_pct', 0):.0f}%] "
           f"{p['bias']}/{p['strength']} conf={p['confidence']} "
           f"px={d['price']['current']} regime={d.get('regime')} "
-          f"fng={d.get('fng', {}).get('value')}", flush=True)
+          f"fng={d.get('fng', {}).get('value')}{tb_s}", flush=True)
 
 
 def next_sample(now):
@@ -104,6 +106,7 @@ def main():
     SAMPLE_MINUTES = tuple(args.sample_minutes)
     deadline = time.time() + args.hours * 3600 if args.hours else None
     last_bias = None
+    last_tb = None
     runs = 0
 
     def settle():
@@ -136,6 +139,13 @@ def main():
         if p["bias"] != last_bias:
             emit("DIR-CHANGE" if last_bias is not None else "START", d)
             last_bias = p["bias"]
+        # v5.8: taker_buy 正负翻转报警 (方向未变但主动买卖力翻转)
+        tb = d["factors"].get("taker_buy")
+        if tb is not None and last_tb is not None:
+            if (tb >= 0) != (last_tb >= 0):
+                emit("TB-FLIP", d)
+        if tb is not None:
+            last_tb = tb
         now = datetime.datetime.now()
         t = next_sample(now)
         time.sleep(max(10, (t - now).total_seconds()))
