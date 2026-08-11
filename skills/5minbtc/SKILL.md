@@ -1,7 +1,7 @@
 ---
 name: 5minbtc
-version: 5.7.4
-description: "BTC 5分钟K线实时方向预测。v5.7.3引擎HTTP并行化(4路ThreadPoolExecutor→~3s,原12-18s)。半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt Scaling+Bull惩罚。ATR乘数x0.55。黑天鹅防护: ATR spike+FNG<25过滤+新闻冲击熔断。v5.7.2冲突裁决: half_body vs imbalance/microprice(已验证2次实盘)+fatigue≥0.8均值回归预警。Binance端点双向故障切换。"
+version: 5.8.0
+description: "BTC 5分钟K线实时方向预测。v5.8新增: taker_buy主动买量因子(区分主动买/卖) + 订单簿多时刻采样去噪(fetch_depth_avg)。v5.7.3引擎HTTP并行化(4路ThreadPoolExecutor→~3s,原12-18s)。半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt Scaling+Bull惩罚。ATR乘数x0.55。黑天鹅防护: ATR spike+FNG<25过滤+新闻冲击熔断。v5.7.2冲突裁决: half_body vs imbalance/microprice(已验证2次实盘)+fatigue≥0.8均值回归预警。Binance端点双向故障切换。"
 triggers:
   - 5minbtc
   - 5min btc
@@ -11,7 +11,7 @@ tools:
   - web
 ---
 
-# 5minbtc — BTC 5分钟实时预测 v5.7.4
+# 5minbtc — BTC 5分钟实时预测 v5.8.0
 
 > BTC 单根 5min K线 方向 + 收盘价预测。引擎+LLM 混合架构。
 > **SKILL.md 是索引, 详细内容见 `references/`。**
@@ -70,7 +70,7 @@ python3 $SKILL_DIR/5minbtc-log.py log \
 ```
 
 ## 架构 (1 行/组件)
-- **引擎** `5minbtc-engine-v5.7.py`: 12 正交因子 + 半 K线策略 + 4路并行 HTTP (~3s)
+- **引擎** `5minbtc-engine-v5.7.py`: 12+1 正交因子 (v5.8 加 taker_buy) + 半 K线策略 + 4路并行 HTTP (~3s, v5.8 订单簿多时刻采样 ~4-5s)
 - **日志** `5minbtc-log.py`: jsonl 追加 + 增量 settle (写入 logs/)
 - **新闻** `5minbtc-news.py`: CoinDesk RSS (唯一稳定源, ~14min 延迟)
 - **LLM**: 因子打分基准 + LLM 综合裁决 + 模板输出

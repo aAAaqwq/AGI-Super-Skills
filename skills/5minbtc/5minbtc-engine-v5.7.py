@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""5minbtc Engine v5.7 -- 半K线预测策略 + 正交因子体系 + Regime感知
+"""5minbtc Engine v5.8 -- 半K线预测策略 + 正交因子体系 + Regime感知
+
+v5.8 优化 -- taker buy量能因子(区分主动买/主动卖) + 订单簿多时刻采样去噪
 
 v5.7 优化 -- 半K线预测策略 (Daniel提议 2026-05-28):
 - S1: 半K线body动量因子(half_body_momentum) -- K线过半后,已形成的body方向在剩余时间内延续
@@ -33,7 +35,7 @@ v5.0 基础(基于R14审查 14项修复):
 - H-4: 波动率Regime检测(4态)
 - M-1~M-6: 数学修正(BB std, 200K线, vol投影, RSI动量, Wilder ATR, O(n) MACD)
 """
-import json, math, os, urllib.request
+import json, math, os, time, urllib.request
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -51,7 +53,8 @@ def fetch_klines(symbol="BTCUSDT", interval="5m", limit=200):
     with urllib.request.urlopen(req, timeout=10) as resp:
         raw = json.loads(resp.read())
     return [{"o": float(c[1]), "h": float(c[2]), "l": float(c[3]), "c": float(c[4]),
-             "v": float(c[5]), "ct": int(c[6])} for c in raw]
+             "v": float(c[5]), "ct": int(c[6]),
+             "tb": float(c[9]) if len(c) > 9 else 0.0} for c in raw]
 
 def fetch_depth(symbol="BTCUSDT", limit=20):
     try:
@@ -64,6 +67,29 @@ def fetch_depth(symbol="BTCUSDT", limit=20):
         return {"bids": bids, "asks": asks}
     except Exception:
         return None
+
+def fetch_depth_avg(symbol="BTCUSDT", limit=20, samples=3, interval_s=1.0):
+    """v5.8 -- 订单簿多时刻采样去噪
+    循环 samples 次调用 fetch_depth, 每次间隔 interval_s,
+    同价位 bids/asks 取平均合并, 降低单次快照的瞬时报单噪声.
+    全部失败返回 None, 单次失败跳过.
+    """
+    acc = {"bids": {}, "asks": {}}
+    got = 0
+    for i in range(samples):
+        snap = fetch_depth(symbol, limit)
+        if snap is not None:
+            got += 1
+            for side in ("bids", "asks"):
+                for price, qty in snap[side]:
+                    acc[side][price] = acc[side].get(price, 0.0) + qty
+        if i < samples - 1:
+            time.sleep(interval_s)
+    if got == 0:
+        return None
+    bids = sorted(((p, q / got) for p, q in acc["bids"].items()), reverse=True)[:limit]
+    asks = sorted(((p, q / got) for p, q in acc["asks"].items()))[:limit]
+    return {"bids": bids, "asks": asks}
 
 # ======================== O(n) Indicators ========================
 
@@ -377,6 +403,24 @@ def vol_breakout_signal(candles):
         return direction * min(1.0, (ratio - 1.0) * 0.5)
     return 0
 
+def taker_buy_signal(candles):
+    """v5.8 -- 因子 13: taker buy 量能(区分主动买/主动卖)
+    用最近 5根已完成K线(candles[-6:-1], 不含当前未完成K线),
+    每根 ratio = tb/v (主动买入占比, 0.5=均衡), 取均值.
+    映射到 [-1,1]: 2*(mean_ratio - 0.5)*3, clamp.
+    正值=主动买占优=看多. v 或 tb 为 0 的K线跳过, 全部跳过返回 0.
+    """
+    ratios = []
+    for c in candles[-6:-1]:
+        v = c.get("v", 0)
+        tb = c.get("tb", 0)
+        if v > 0 and tb > 0:
+            ratios.append(tb / v)
+    if not ratios:
+        return 0
+    mean_ratio = sum(ratios) / len(ratios)
+    return max(-1.0, min(1.0, 2 * (mean_ratio - 0.5) * 3))
+
 def half_body_momentum(candles, progress, atr_val):
     """因子 12: 半K线body动量 -- v5.7核心新增
     逻辑: K线进行到 45%+ 后,已形成的body方向有延续倾向
@@ -468,29 +512,34 @@ BASE_W = {'momentum': 1.0, 'meanrev': 0.5, 'rsi': 0.4,
           'volume': 0.3, 'fatigue': 0.5, 'imbalance': 0.8, 'microprice': 0.6,
           'decel': 0.7, 'position': 0.5,
           'v_reversal': 0.8, 'vol_breakout': 0.4,
-          'half_body': 1.2}  # v5.7: 半K线body动量,高权重(这是真正的edge)
+          'half_body': 1.2,  # v5.7: 半K线body动量,高权重(这是真正的edge)
+          'taker_buy': 0.7}  # v5.8: 主动买卖量能因子,参考momentum权重水平
 
 REGIME_ADJ = {
     'HIGH_VOL': {'momentum': 0.4, 'meanrev': 0.3, 'rsi': 0.3,
                  'volume': 0.2, 'fatigue': 0.5, 'imbalance': 0.6, 'microprice': 0.5,
                  'decel': 0.8, 'position': 0.6,
                  'v_reversal': 1.0, 'vol_breakout': 0.6,
-                 'half_body': 1.0},  # v5.7: 高vol下body延续仍有效
+                 'half_body': 1.0,  # v5.7: 高vol下body延续仍有效
+                 'taker_buy': 0.7},  # v5.8: 高vol下主动买卖方向信息量适中
     'TREND':    {'momentum': 1.0, 'meanrev': 0.4, 'rsi': 0.5,
                  'volume': 0.4, 'fatigue': 0.4, 'imbalance': 0.7, 'microprice': 0.5,
                  'decel': 0.9, 'position': 0.6,
                  'v_reversal': 0.9, 'vol_breakout': 0.5,
-                 'half_body': 1.0},  # v5.7: 趋势中body延续很强
+                 'half_body': 1.0,  # v5.7: 趋势中body延续很强
+                 'taker_buy': 0.6},  # v5.8: 趋势中主动买卖略弱于震荡(方向已由趋势表达)
     'RANGE':    {'momentum': 0.4, 'meanrev': 1.5, 'rsi': 0.2,
                  'volume': 0.3, 'fatigue': 0.6, 'imbalance': 0.9, 'microprice': 0.7,
                  'decel': 0.5, 'position': 0.8,
                  'v_reversal': 0.7, 'vol_breakout': 0.4,
-                 'half_body': 0.8},  # v5.7: 震荡中body延续稍弱(可能回归)
+                 'half_body': 0.8,  # v5.7: 震荡中body延续稍弱(可能回归)
+                 'taker_buy': 0.8},  # v5.8: 震荡中主动买卖主导方向
     'LOW_VOL':  {'momentum': 0.5, 'meanrev': 1.2, 'rsi': 0.3,
                  'volume': 0.2, 'fatigue': 0.4, 'imbalance': 0.8, 'microprice': 0.6,
                  'decel': 0.6, 'position': 0.7,
                  'v_reversal': 0.5, 'vol_breakout': 0.3,
-                 'half_body': 0.9},  # v5.7: 低vol下body方向信息量适中
+                 'half_body': 0.9,  # v5.7: 低vol下body方向信息量适中
+                 'taker_buy': 0.6},  # v5.8: 低vol下主动买卖方向略弱
 }
 
 def combine_factors(factors, regime):
@@ -596,7 +645,8 @@ def direction_rule_v5(candles, closes, atr_val, vol_ratio,
                'position': price_position(candles),
                'v_reversal': v_reversal_detect(candles),      # v5.6 R2
                'vol_breakout': vol_breakout_signal(candles),   # v5.6 R3
-               'half_body': half_body_momentum(candles, candle_progress, atr_val)}  # v5.7 S1
+               'half_body': half_body_momentum(candles, candle_progress, atr_val),  # v5.7 S1
+               'taker_buy': taker_buy_signal(candles)}  # v5.8 S1: 主动买卖量能因子
 
     regime = detect_regime(vol_ratio, candles, atr_val)  # v5.7.1: 传入atr_val
 
@@ -762,7 +812,7 @@ def run():
     # 最大延迟 = max(各API延迟) ≈ 3s，串行版 ~11s → 提速 ~3.7x
     with ThreadPoolExecutor(max_workers=4) as ex:
         f_klines = ex.submit(fetch_klines, limit=200)
-        f_depth = ex.submit(fetch_depth)
+        f_depth = ex.submit(fetch_depth_avg)  # v5.8: 多时刻采样去噪(3次x1s)
         f_fng = ex.submit(_fetch_fng)
         f_cl = ex.submit(fetch_chainlink_ref)
 
@@ -815,7 +865,7 @@ def run():
     is_spike, spike_ratio, spike_count = atr_spike_detect(candles, atr_val)
 
     result = {
-        "version": "5.7.3",
+        "version": "5.8.0",
         "candle": info,
         "price": {
             "current": cur["c"], "open": cur["o"],
