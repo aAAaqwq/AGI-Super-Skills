@@ -188,11 +188,27 @@ def backtest_symbol(symbol, days, params):
     total_pnl = sum(t["pnl_pct"] for t in trades)
     avg_daily = total / days if days > 0 else 0
     wr = tp_n / (tp_n + sl_n) * 100 if (tp_n + sl_n) > 0 else 0
+
+    # 最大回撤: 基于资金曲线(初始100, 每笔按 notional=100 的百分比增减)
+    # 与策略 max_position_usd=100 一致; 反映最坏连续亏损段
+    capital = 100.0
+    peak = 100.0
+    max_dd = 0.0
+    max_dd_start = 0.0
+    for t in trades:
+        capital += 100.0 * t["pnl_pct"] / 100
+        if capital > peak:
+            peak = capital
+        dd = (peak - capital) / peak * 100 if peak > 0 else 0
+        if dd > max_dd:
+            max_dd = dd
+            max_dd_start = capital
     return {
         "symbol": symbol, "total": total, "tp": tp_n, "sl": sl_n,
         "win_rate": round(wr, 1), "total_pnl": round(total_pnl, 1),
         "avg_daily": round(avg_daily, 1), "daily": daily,
         "days_with_trades": len(daily),
+        "max_drawdown_pct": round(max_dd, 1),
     }
 
 
@@ -227,15 +243,16 @@ def main():
     ranked = [r for r in results if r["avg_daily"] >= args.min_daily]
     ranked.sort(key=lambda r: r["total_pnl"], reverse=True)
 
-    print(f"\n{'─'*78}")
+    print(f"\n{'─'*86}")
     print(f"📊 满足「日均交易 ≥ {args.min_daily}」的币 (按累计PnL排序)")
-    print(f"{'─'*78}")
-    print(f"{'币种':10s} {'总信号':>6s} {'日均':>6s} {'TP/SL':>8s} {'胜率':>7s} {'累计PnL':>10s} {'有交易天数':>9s}")
-    print(f"{'─'*78}")
+    print(f"{'─'*86}")
+    print(f"{'币种':10s} {'总信号':>6s} {'日均':>6s} {'TP/SL':>8s} {'胜率':>7s} {'累计PnL':>10s} {'有交易天数':>10s} {'最大回撤':>8s}")
+    print(f"{'─'*86}")
     for r in ranked:
         print(f"{r['symbol']:10s} {r['total']:>6d} {r['avg_daily']:>6.1f} "
               f"{r['tp']:>3d}/{r['sl']:<3d} {r['win_rate']:>6.0f}% "
-              f"{r['total_pnl']:>+9.1f}% {r['days_with_trades']:>6d}/7")
+              f"{r['total_pnl']:>+9.1f}% {r['days_with_trades']:>5d}/{args.days} "
+              f"{r.get('max_drawdown_pct',0):>7.1f}%")
 
     if not ranked:
         print("  (无币满足日均交易下限)")

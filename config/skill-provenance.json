@@ -778,7 +778,7 @@
         "spdx": "MIT",
         "evidence": "LICENSE"
       },
-      "local_tree_digest": "sha256:0688aa24198fe000b7cf1656947a9591262d105db779df6e6b9413819534a97d",
+      "local_tree_digest": "sha256:6c2be96a4c63ed1889bb4eea51825f2ffc25dea25ca85b6802413e2fc943318b",
       "declared_hints": [
         "BB 双向套利策略为 Daniel Li 自研(布林带均值回归+三重过滤+轨对轨), 在 bb-scalper 项目内开发, 经回测/单元测试/实时模拟盘验证后同步至此。",
         "The Skill entrypoint declares Daniel Li as author."

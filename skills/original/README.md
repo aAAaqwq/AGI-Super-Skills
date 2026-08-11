@@ -51,7 +51,7 @@
 
 ## 💹 Finance, Trading & Markets（5）
 
-- [`5minbtc`](../5minbtc/) — BTC 5分钟K线实时方向预测。v5.7.3引擎HTTP并行化(4路ThreadPoolExecutor→~3s,原12-18s)。半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt…（作者：Daniel Li、AGI Super Team contributors）
+- [`5minbtc`](../5minbtc/) — BTC 5分钟K线实时方向预测。v5.8新增: taker_buy主动买量因子(区分主动买/卖) +…（作者：Daniel Li、AGI Super Team contributors）
 - [`bb-scalper`](../bb-scalper/) — BB 双向套利策略：加密合约 10x 杠杆布林带均值回归。布林带收窄=横盘→在下轨买、上轨卖；三重过滤器(1h趋势/RSI/BB甜区)确认碗平放，轨对轨止盈(RR…（作者：Daniel Li）
 - [`binance-square`](../binance-square/) — 币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达（作者：Daniel Li、AGI Super Team contributors）
 - [`financial-planning-and-analysis`](../financial-planning-and-analysis/) — 为经营决策建立可复算的预算、滚动预测、现金跑道、三表连接、单位经济、实际预算差异、情景敏感性和资本配置备忘录。适用于业务规划、资源分配、定价经济性与下行评估；不用于代替会计税务审计意见、个人化投资建议、保证收益融资估值，或执行付款、转账、交易、借贷、开户和报税。（作者：Daniel Li、AGI Super Team contributors）

@@ -92,19 +92,48 @@ def calc_rsi(closes, period=14):
 class PaperEngine:
     """单币 WS 模拟盘引擎"""
 
-    def __init__(self, symbol: str, config: dict, capital: float = DEFAULT_CAPITAL):
+    def __init__(self, symbol: str, config: dict, capital: float = DEFAULT_CAPITAL,
+                 log_path: Optional[str] = None):
         self.symbol = symbol.upper()
         self.cfg = config
         self.capital = capital
+        self.log_path = log_path
         self.closes_15m = []
         self.closes_1h = []
         self.cur_price = None
         self.position = None  # {"dir","entry","tp","sl","opened_bar","opened_ts","qty_notional"}
         self.last_sl_bar = -999
-        self.trades = []
+        self.trades = self._load_trades()
+        # 重启后恢复资金: 用历史交易的 PnL 重放 close() 的资金公式
+        # capital += notional * pnl_pct / 100
+        for t in self.trades:
+            notional = t.get("notional", self.cfg.get("risk", {}).get("max_position_usd", 100))
+            self.capital += notional * t.get("pnl_pct", 0) / 100
         self._bar_seq = 0
         self._tick_count = 0
         self._last_heartbeat = 0.0
+
+    def _load_trades(self) -> list:
+        """启动时加载已有的模拟交易记录(进程重启不丢历史)。"""
+        if not self.log_path or not os.path.exists(self.log_path):
+            return []
+        try:
+            with open(self.log_path) as f:
+                data = json.load(f)
+            return data if isinstance(data, list) else []
+        except (OSError, json.JSONDecodeError) as e:
+            logger.error("[%s] 加载模拟交易记录失败: %s", self.symbol, e)
+            return []
+
+    def _persist_trades(self):
+        """把全部模拟交易写入 JSON(含已恢复的历史)。"""
+        if not self.log_path:
+            return
+        try:
+            with open(self.log_path, "w") as f:
+                json.dump(self.trades, f, indent=2, ensure_ascii=False)
+        except OSError as e:
+            logger.error("[%s] 保存模拟交易记录失败: %s", self.symbol, e)
 
     # ── 信号 ──
     def check_signal(self):
@@ -201,11 +230,13 @@ class PaperEngine:
         trade = {
             "symbol": self.symbol, "dir": p["dir"], "entry": entry,
             "exit": exit_price, "result": result, "pnl_pct": round(pnl_pct, 2),
+            "notional": p["notional"], "leverage": lev,
             "opened_ts": p["opened_ts"],
             "closed_ts": datetime.now(timezone.utc).isoformat(),
         }
         self.capital += p["notional"] * pnl_pct / 100
         self.trades.append(trade)
+        self._persist_trades()  # 每笔平仓立即落盘
         if result == "SL":
             self.last_sl_bar = self._bar_seq
         self.position = None
@@ -354,11 +385,15 @@ def main():
     parser.add_argument("--symbol", default="NEARUSDT")
     parser.add_argument("--symbols", help="多币逗号分隔(实验)")
     parser.add_argument("--capital", type=float, default=DEFAULT_CAPITAL)
+    parser.add_argument("--log", default="paper_trades.json",
+                        help="模拟交易记录文件 (默认 paper_trades.json)")
+    parser.add_argument("--no-log", action="store_true", help="不落盘模拟交易")
     args = parser.parse_args()
 
     config = _load_config()
     syms = [s.strip().upper() for s in (args.symbols or args.symbol).split(",") if s.strip()]
-    engines = {s: PaperEngine(s, config, args.capital) for s in syms}
+    log_path = None if args.no_log else args.log
+    engines = {s: PaperEngine(s, config, args.capital, log_path) for s in syms}
 
     # 先拉历史K线暖机
     import requests
@@ -380,6 +415,7 @@ def main():
             logger.error("%s 历史K线获取失败: %s", s, e)
 
     print(f"🟡 WS 实时模拟盘启动 | 币种: {syms} | 虚拟资金: ${args.capital:.0f}")
+    print(f"   交易记录: {log_path if log_path else '不落盘'}")
     print("   只读行情流, 无真实下单. Ctrl+C 退出并打印汇总.\n")
 
     streamer = PaperStreamer(engines, config)

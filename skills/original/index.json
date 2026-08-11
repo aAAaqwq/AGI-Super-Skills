@@ -75,7 +75,7 @@
     {
       "skill_id": "5minbtc",
       "path": "skills/5minbtc/SKILL.md",
-      "description": "BTC 5分钟K线实时方向预测。v5.7.3引擎HTTP并行化(4路ThreadPoolExecutor→~3s,原12-18s)。半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt…",
+      "description": "BTC 5分钟K线实时方向预测。v5.8新增: taker_buy主动买量因子(区分主动买/卖) +…",
       "authors": [
         "Daniel Li",
         "AGI Super Team contributors"
