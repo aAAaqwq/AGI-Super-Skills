@@ -65,7 +65,7 @@
       "title": "Sales, CRM & Customer Success"
     },
     {
-      "count": 68,
+      "count": 69,
       "description": "Analyze markets, backtest strategies, track portfolios, and review financial risk.",
       "emoji": "💹",
       "id": "finance-trading-markets",
@@ -100,7 +100,7 @@
       "title": "Specialized Domains & Utilities"
     }
   ],
-  "inventoryCount": 825,
+  "inventoryCount": 826,
   "inventorySemantics": "tracked physical top-level directories with SKILL.md",
   "schemaVersion": 2,
   "skills": [
@@ -153,7 +153,7 @@
           "spdx": "MIT"
         },
         "origin_kind": "project-original",
-        "review_state": "reviewed"
+        "review_state": "stale"
       },
       "review_signals": [],
       "skill_id": "5minbtc",
@@ -3810,6 +3810,62 @@
       },
       "review_signals": [],
       "skill_id": "bb-browser",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "finance-trading-markets",
+      "classification": "override;metadata:frontmatter",
+      "classification_details": {
+        "base_candidates": [],
+        "base_method": "fallback",
+        "matched_signals": [],
+        "method": "override",
+        "rationale": "The core outcome is crypto futures Bollinger mean-reversion trading, not general utilities.",
+        "resolution_status": "override",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "finance-trading-markets",
+          "match_count": 0,
+          "matched_signals": [],
+          "priority": 120,
+          "tie_detected": false
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "BB 双向套利策略：加密合约 10x 杠杆布林带均值回归。布林带收窄=横盘→在下轨买、上轨卖；三重过滤器(1h趋势/RSI/BB甜区)确认碗平放，轨对轨止盈(RR…",
+      "description_status": "source-text",
+      "path": "skills/bb-scalper/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "a3b942f64e1535103fc569f769ba6de07b5f385f",
+        "declared_hints": [
+          "BB 双向套利策略为 Daniel Li 自研(布林带均值回归+三重过滤+轨对轨), 在 bb-scalper 项目内开发, 经回测/单元测试/实时模拟盘验证后同步至此。",
+          "The Skill entrypoint declares Daniel Li as author."
+        ],
+        "evidence": [
+          "skills/bb-scalper/SKILL.md",
+          "skills/bb-scalper/core/strategy.py",
+          "skills/bb-scalper/core/filters.py",
+          "skills/bb-scalper/docs/backtest-records.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "stale"
+      },
+      "review_signals": [],
+      "skill_id": "bb-scalper",
       "support_level": "catalog",
       "used_by": []
     },

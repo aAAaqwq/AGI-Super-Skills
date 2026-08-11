@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "scope": "reviewed-project-original-skills",
   "generatedFrom": "config/skill-provenance.json",
-  "inventoryCount": 32,
+  "inventoryCount": 33,
   "categories": [
     {
       "id": "ai-agents-orchestration",
@@ -50,7 +50,7 @@
       "id": "finance-trading-markets",
       "name": "Finance, Trading & Markets",
       "emoji": "💹",
-      "count": 4
+      "count": 5
     },
     {
       "id": "business-operations-strategy",
@@ -81,6 +81,16 @@
         "AGI Super Team contributors"
       ],
       "creation_commit": "aae3f692c9dedb348e35da534026281e73ebc30c",
+      "category_id": "finance-trading-markets"
+    },
+    {
+      "skill_id": "bb-scalper",
+      "path": "skills/bb-scalper/SKILL.md",
+      "description": "BB 双向套利策略：加密合约 10x 杠杆布林带均值回归。布林带收窄=横盘→在下轨买、上轨卖；三重过滤器(1h趋势/RSI/BB甜区)确认碗平放，轨对轨止盈(RR…",
+      "authors": [
+        "Daniel Li"
+      ],
+      "creation_commit": "a3b942f64e1535103fc569f769ba6de07b5f385f",
       "category_id": "finance-trading-markets"
     },
     {

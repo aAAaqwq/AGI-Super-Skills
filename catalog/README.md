@@ -39,7 +39,7 @@ Choose a reviewed origin boundary before browsing by outcome. Provenance and cur
 
 | Origin | Meaning | Entries |
 |---|---|---:|
-| [Project original](#project-original-skills) | Digest-backed first-party work with reviewed authorship. | 32 |
+| [Project original](#project-original-skills) | Digest-backed first-party work with reviewed authorship. | 33 |
 | [Adapted](#adapted-skills) | Modified from a named source with the adaptation recorded. | 0 |
 | [Collected](#collected-skills) | Preserved from a named source with provenance recorded. | 0 |
 | [Unknown origin](#unknown-origin-skills) | Source review is incomplete; inspect before use. | 793 |
@@ -51,7 +51,8 @@ Digest-backed first-party work with reviewed authorship.
 
 | Skill | Outcome category | Provenance | Curation evidence | Runtime |
 |---|---|---|---|---|
-| [`5minbtc`](../skills/5minbtc/) | 💹 Finance, Trading & Markets | Project original · reviewed | Unscored | Pending |
+| [`5minbtc`](../skills/5minbtc/) | 💹 Finance, Trading & Markets | Project original · stale review | Unscored | Pending |
+| [`bb-scalper`](../skills/bb-scalper/) | 💹 Finance, Trading & Markets | Project original · stale review | Unscored | Pending |
 | [`binance-square`](../skills/binance-square/) | 💹 Finance, Trading & Markets | Project original · stale review | Unscored | Pending |
 | [`content-cover-gen`](../skills/content-cover-gen/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
 | [`content-illustration-strategy`](../skills/content-illustration-strategy/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
@@ -107,7 +108,7 @@ Source review is incomplete; inspect before use.
 
 ## 🗂️ Browse by outcome
 
-This revision contains 825 canonical catalog entries. The number is generated here rather than used as a product claim.
+This revision contains 826 canonical catalog entries. The number is generated here rather than used as a product claim.
 
 | Category | Use it for | Entries |
 |---|---|---:|
@@ -120,7 +121,7 @@ This revision contains 825 canonical catalog entries. The number is generated he
 | [📈 Marketing, SEO & Growth](#marketing-seo-growth) | Acquire audiences through positioning, campaigns, search, ads, and social growth. | 49 |
 | [✍️ Content, Media & Publishing](#content-media-publishing) | Create, edit, repurpose, and publish writing, images, audio, and video. | 86 |
 | [🤝 Sales, CRM & Customer Success](#sales-crm-customer-success) | Find, win, onboard, support, and retain customers with accountable workflows. | 40 |
-| [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 68 |
+| [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 69 |
 | [🧭 Business Operations & Strategy](#business-operations-strategy) | Plan work, make decisions, manage teams, and improve operating systems. | 74 |
 | [⚙️ Apps & Workflow Automation](#apps-workflow-automation) | Connect everyday apps, browsers, messaging systems, and repeatable workflows. | 89 |
 | [🇨🇳 Chinese Platform Workflows](#chinese-platform-workflows) | Create, analyze, and publish for major Chinese-language platforms and channels. | 40 |
@@ -715,7 +716,7 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 
 | Skill | What it helps with | Origin | Curation evidence | Support / review signals |
 |---|---|---|---|---|
-| [`5minbtc`](../skills/5minbtc/) | BTC 5分钟K线实时方向预测。v5.7.3引擎HTTP并行化(4路ThreadPoolExecutor→~3s,原12-18s)。半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt… | Project original · reviewed | Unscored | Catalog only |
+| [`5minbtc`](../skills/5minbtc/) | BTC 5分钟K线实时方向预测。v5.7.3引擎HTTP并行化(4路ThreadPoolExecutor→~3s,原12-18s)。半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt… | Project original · stale review | Unscored | Catalog only |
 | [`a-fund-monitor`](../skills/a-fund-monitor/) | A股基金净值监控：盘中实时估值 + 盘后实际净值，定时推送到 Telegram。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`a-share-analysis`](../skills/a-share-analysis/) | 此Skill实现了三层分析体系： 1. 情报采集层 — 7路并发多源新闻采集，自动匹配板块和个股 2. 盘面阅读层 — 美股映射 + 大盘多空判断 + 实时主线(&gt;9%题材分析) 3. 个股精选层 — 产业逻辑 + 形态8分类 + 盘口分析 + 题材排名 + 综合评分 4. 原始新闻浏览 (news.py) — 分类展示影响股票的新闻，源信息不做任何修改 | Unknown · unreviewed | Unscored | Catalog only |
 | [`afrexai-personal-finance`](../skills/afrexai-personal-finance/) | Complete personal finance system — budgeting, debt payoff, investing, tax optimization, net worth tracking, and financial independence planning. Use when managing money, building… | Unknown · unreviewed | Unscored | Catalog only |
@@ -726,6 +727,7 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 | [`backtesting-trading-strategies`](../skills/backtesting-trading-strategies/) | Backtest crypto and traditional trading strategies against historical data. Calculates performance metrics (Sharpe, Sortino, max drawdown), generates equity curves, and optimizes… | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CQO |
 | [`bankr`](../skills/bankr/) | AI-powered crypto trading agent and LLM gateway via natural language. Use when the user wants to trade crypto, check portfolio balances, view token prices, transfer crypto,… | Unknown · unreviewed | Unscored | Catalog only |
 | [`bankr-signals`](../skills/bankr-signals/) | Transaction-verified trading signals on Base blockchain. Agents publish trades | Unknown · unreviewed | Unscored | Catalog only |
+| [`bb-scalper`](../skills/bb-scalper/) | BB 双向套利策略：加密合约 10x 杠杆布林带均值回归。布林带收窄=横盘→在下轨买、上轨卖；三重过滤器(1h趋势/RSI/BB甜区)确认碗平放，轨对轨止盈(RR… | Project original · stale review | Unscored | Catalog only |
 | [`billing-automation`](../skills/billing-automation/) | Build automated billing systems for recurring payments, invoicing, subscription lifecycle, and dunning management. Use when implementing subscription billing, automating… | Unknown · unreviewed | Unscored | Catalog only |
 | [`binance-square`](../skills/binance-square/) | 币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达 | Project original · stale review | Unscored | Catalog only |
 | [`binance-trending`](../skills/binance-trending/) | Description needs review; inspect source. | Unknown · unreviewed | Unscored | Catalog only |
