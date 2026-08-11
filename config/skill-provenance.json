@@ -36,7 +36,9 @@
       "skill_id": "content-typography",
       "origin_kind": "project-original",
       "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
       "license": {
         "spdx": "MIT",
@@ -57,7 +59,9 @@
       "skill_id": "jimeng-storyboard",
       "origin_kind": "project-original",
       "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
       "license": {
         "spdx": "MIT",
@@ -76,303 +80,716 @@
     },
     {
       "skill_id": "executive-decision-system",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:20f1f38956c7c7cb48575f0a4d2680e00d02f4664f2adaec3b2bfa3d61dfd025",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/executive-decision-system/SKILL.md", "skills/executive-decision-system/agents/openai.yaml"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/executive-decision-system/SKILL.md",
+        "skills/executive-decision-system/agents/openai.yaml"
+      ]
     },
     {
       "skill_id": "operating-cadence-and-flow",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:0c59e7e4b5209926655a66ff981721eb60792ef3def03da6b6a75d2a2e8d7fb1",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/operating-cadence-and-flow/SKILL.md", "skills/operating-cadence-and-flow/agents/openai.yaml"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/operating-cadence-and-flow/SKILL.md",
+        "skills/operating-cadence-and-flow/agents/openai.yaml"
+      ]
     },
     {
       "skill_id": "independent-assurance-gate",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:bc9962650e203d84185e2dc4c478ab4f8fe5018bb4964b4592436f7670fa2843",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/independent-assurance-gate/SKILL.md", "skills/independent-assurance-gate/agents/openai.yaml"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/independent-assurance-gate/SKILL.md",
+        "skills/independent-assurance-gate/agents/openai.yaml"
+      ]
     },
     {
       "skill_id": "incident-command-and-review",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:39256e8255d581e90ce8e977e8c0698011727cdf073d5ef84638c1c7bfc17bf4",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/incident-command-and-review/SKILL.md", "skills/incident-command-and-review/agents/openai.yaml"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/incident-command-and-review/SKILL.md",
+        "skills/incident-command-and-review/agents/openai.yaml"
+      ]
     },
     {
       "skill_id": "sre-reliability-governance",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:fe1f9e84d40c06af9e0007cdcd08b2bd0e8851867d9ef3d8eafba1d6450c999b",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/sre-reliability-governance/SKILL.md", "skills/sre-reliability-governance/agents/openai.yaml"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/sre-reliability-governance/SKILL.md",
+        "skills/sre-reliability-governance/agents/openai.yaml"
+      ]
     },
     {
       "skill_id": "data-contract-quality-governance",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:b013a85f3ae3f0f7eb85b53d1ac332a0d499be5ab8e35d2ae92443b61c9746db",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/data-contract-quality-governance/SKILL.md", "skills/data-contract-quality-governance/agents/openai.yaml"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/data-contract-quality-governance/SKILL.md",
+        "skills/data-contract-quality-governance/agents/openai.yaml"
+      ]
     },
     {
       "skill_id": "product-discovery-portfolio-governance",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:17babac332d1df8a486a8984276020e914a4e3af560f3752a26e552742170622",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/product-discovery-portfolio-governance/SKILL.md", "skills/product-discovery-portfolio-governance/agents/openai.yaml"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/product-discovery-portfolio-governance/SKILL.md",
+        "skills/product-discovery-portfolio-governance/agents/openai.yaml"
+      ]
     },
     {
       "skill_id": "positioning-growth-experiment-system",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:90af6a8ba1116c11bd2cd63dc554750c001baa6ea0ad7a532c67ea06b3710d57",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/positioning-growth-experiment-system/SKILL.md", "skills/positioning-growth-experiment-system/agents/openai.yaml", "skills/positioning-growth-experiment-system/references/artifact-templates.md"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/positioning-growth-experiment-system/SKILL.md",
+        "skills/positioning-growth-experiment-system/agents/openai.yaml",
+        "skills/positioning-growth-experiment-system/references/artifact-templates.md"
+      ]
     },
     {
       "skill_id": "revenue-opportunity-governance",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:3d6af82c357ea6036c08700c143f988ddfbdd6915707c3b020a1a9b1915d03f1",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/revenue-opportunity-governance/SKILL.md", "skills/revenue-opportunity-governance/agents/openai.yaml", "skills/revenue-opportunity-governance/references/artifact-templates.md"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/revenue-opportunity-governance/SKILL.md",
+        "skills/revenue-opportunity-governance/agents/openai.yaml",
+        "skills/revenue-opportunity-governance/references/artifact-templates.md"
+      ]
     },
     {
       "skill_id": "editorial-content-system",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:bfc734e435a72347ef9b9e6c6cb70164816c8f7f2c7ba449adc4cea6b6d8d0ff",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/editorial-content-system/SKILL.md", "skills/editorial-content-system/agents/openai.yaml", "skills/editorial-content-system/references/artifact-templates.md"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/editorial-content-system/SKILL.md",
+        "skills/editorial-content-system/agents/openai.yaml",
+        "skills/editorial-content-system/references/artifact-templates.md"
+      ]
     },
     {
       "skill_id": "research-evidence-synthesis",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:dce6f68c4131e7354b00666d7123116df835315db29bef8fc11a0e5755375a68",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/research-evidence-synthesis/SKILL.md", "skills/research-evidence-synthesis/agents/openai.yaml"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/research-evidence-synthesis/SKILL.md",
+        "skills/research-evidence-synthesis/agents/openai.yaml"
+      ]
     },
     {
       "skill_id": "legal-issue-spotting",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:10af0bf8d511eaa9cae4005acd817dd87543e1735594e4cbdcd4e3c377e43cd4",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/legal-issue-spotting/SKILL.md", "skills/legal-issue-spotting/agents/openai.yaml"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/legal-issue-spotting/SKILL.md",
+        "skills/legal-issue-spotting/agents/openai.yaml"
+      ]
     },
     {
       "skill_id": "financial-planning-and-analysis",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:088d82576cdfc53a323b3f0a37f999d5b677ea29320b59da5ff777d674b630f4",
-      "declared_hints": ["Created in this repository for the C-suite role-pack review; no upstream prompt was copied."],
-      "evidence": ["commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630", "skills/financial-planning-and-analysis/SKILL.md", "skills/financial-planning-and-analysis/agents/openai.yaml"]
+      "declared_hints": [
+        "Created in this repository for the C-suite role-pack review; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:008bde4c0aae5e03b1c3ca46e674455ddc8c1630",
+        "skills/financial-planning-and-analysis/SKILL.md",
+        "skills/financial-planning-and-analysis/agents/openai.yaml"
+      ]
     },
     {
       "skill_id": "orchestrate-agi-super-team",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "44e0092bcf4f02d1c6c59154a709cde313019cb5",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:1da39355c5d9073689b7d9ebd4f09999e5e847d1c50840152db3d8980370e78d",
-      "declared_hints": ["Created in this repository to translate the canonical Team contract into evidence-bounded execution modes for four Agent frameworks; no upstream prompt was copied."],
-      "evidence": ["commit:44e0092bcf4f02d1c6c59154a709cde313019cb5", "skills/orchestrate-agi-super-team/SKILL.md", "skills/orchestrate-agi-super-team/agents/openai.yaml", "skills/orchestrate-agi-super-team/references/execution-contract.md", "skills/orchestrate-agi-super-team/references/framework-mechanisms.md"]
+      "declared_hints": [
+        "Created in this repository to translate the canonical Team contract into evidence-bounded execution modes for four Agent frameworks; no upstream prompt was copied."
+      ],
+      "evidence": [
+        "commit:44e0092bcf4f02d1c6c59154a709cde313019cb5",
+        "skills/orchestrate-agi-super-team/SKILL.md",
+        "skills/orchestrate-agi-super-team/agents/openai.yaml",
+        "skills/orchestrate-agi-super-team/references/execution-contract.md",
+        "skills/orchestrate-agi-super-team/references/framework-mechanisms.md"
+      ]
     },
     {
       "skill_id": "5minbtc",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "aae3f692c9dedb348e35da534026281e73ebc30c",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:294effb8976789998d3d9a9be8e1b615bbbc847fb04c6a6c1930533cc07dc5ca",
-      "declared_hints": ["Created as a first-party CQO Skill and iterated in this repository; the maintainer explicitly identifies it as an original Skill."],
-      "evidence": ["commit:aae3f692c9dedb348e35da534026281e73ebc30c", "skills/5minbtc/SKILL.md", "skills/5minbtc/README.md"]
+      "declared_hints": [
+        "Created as a first-party CQO Skill and iterated in this repository; the maintainer explicitly identifies it as an original Skill."
+      ],
+      "evidence": [
+        "commit:aae3f692c9dedb348e35da534026281e73ebc30c",
+        "skills/5minbtc/SKILL.md",
+        "skills/5minbtc/README.md"
+      ]
     },
     {
       "skill_id": "binance-square",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "da4e86d351b5c8d0c3d5b2a81602b93de24fe605",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:7db5491f1558f8766676ff1b9382999a85b287e8283ce5f52d61765c47878b21",
-      "declared_hints": ["The v4 shadow implementation and subsequent production-gate hardening were built in this repository under the maintainer's direction."],
-      "evidence": ["commit:da4e86d351b5c8d0c3d5b2a81602b93de24fe605", "commit:437b26c2f3146c61cf9cab6799ac7f01ca659af1", "commit:2f733c5f97c7783c314878b5b3ea3ed39117c9ab", "skills/binance-square/SKILL.md", "skills/binance-square/OPTIMIZATION_VERIFICATION.md"]
+      "declared_hints": [
+        "The v4 shadow implementation and subsequent production-gate hardening were built in this repository under the maintainer's direction."
+      ],
+      "evidence": [
+        "commit:da4e86d351b5c8d0c3d5b2a81602b93de24fe605",
+        "commit:437b26c2f3146c61cf9cab6799ac7f01ca659af1",
+        "commit:2f733c5f97c7783c314878b5b3ea3ed39117c9ab",
+        "skills/binance-square/SKILL.md",
+        "skills/binance-square/OPTIMIZATION_VERIFICATION.md"
+      ]
     },
     {
       "skill_id": "daniel-x-writer",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "2f733c5f97c7783c314878b5b3ea3ed39117c9ab",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:3ff13c7e0195c86d3654e373fd1febaa2a258de267fc5f624a59d77dfa949391",
-      "declared_hints": ["The Skill was created in Daniel's personal Codex Skill root for his first-person X voice and then reviewed as a complete normalized copy."],
-      "evidence": ["commit:2f733c5f97c7783c314878b5b3ea3ed39117c9ab", "skills/daniel-x-writer/SKILL.md", "skills/daniel-x-writer/references/style-examples.md", "skills/daniel-x-writer/scripts/check_x_length.py", "skills/daniel-x-writer/scripts/test_check_x_length.py"]
+      "declared_hints": [
+        "The Skill was created in Daniel's personal Codex Skill root for his first-person X voice and then reviewed as a complete normalized copy."
+      ],
+      "evidence": [
+        "commit:2f733c5f97c7783c314878b5b3ea3ed39117c9ab",
+        "skills/daniel-x-writer/SKILL.md",
+        "skills/daniel-x-writer/references/style-examples.md",
+        "skills/daniel-x-writer/scripts/check_x_length.py",
+        "skills/daniel-x-writer/scripts/test_check_x_length.py"
+      ]
     },
     {
       "skill_id": "content-cover-gen",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:0dd2b233349adac95505e47f7a81d9c23e7a1d9129a5680b4b1b4daa6d570716",
-      "declared_hints": ["The creation commit identifies this batch as self-built content tools."],
-      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/content-cover-gen/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "The creation commit identifies this batch as self-built content tools."
+      ],
+      "evidence": [
+        "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "skills/content-cover-gen/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "content-illustration-strategy",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:f0f140932aca3697369429c781bfc89f7f474f261d77e07619794268396a66fe",
-      "declared_hints": ["The creation commit identifies this batch as self-built content tools."],
-      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/content-illustration-strategy/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "The creation commit identifies this batch as self-built content tools."
+      ],
+      "evidence": [
+        "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "skills/content-illustration-strategy/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "daily-douyin-content",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:c6512c802d8aa86df231dbfb6e6f1152abf3ef3809f2538c803dffb70f4571d8",
-      "declared_hints": ["Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."],
-      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/daily-douyin-content/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."
+      ],
+      "evidence": [
+        "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "skills/daily-douyin-content/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "daily-gzh-content",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:b739f4788e006b4d1bea7c81b4a06a016965dc148aa041bc1535ea69639f20a9",
-      "declared_hints": ["Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."],
-      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/daily-gzh-content/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."
+      ],
+      "evidence": [
+        "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "skills/daily-gzh-content/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "daily-xhs-content",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li", "AGI Super Team contributors"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li",
+        "AGI Super Team contributors"
+      ],
       "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:7511ef99e4aa9ab651b41c46f1c2c5ad6c4426563125c327eaa52d627f7e4f11",
-      "declared_hints": ["Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."],
-      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/daily-xhs-content/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "Created in the maintainer's first-party content workflow batch and retained by the historical conservative original-Skills index."
+      ],
+      "evidence": [
+        "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "skills/daily-xhs-content/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "relay-image-gen",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:cc9a73737201023d8b79fdb6686d0a359da0a3fc32b007c3a04e808217b9ba4f",
-      "declared_hints": ["The creation commit identifies this batch as self-built content tools."],
-      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/relay-image-gen/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "The creation commit identifies this batch as self-built content tools."
+      ],
+      "evidence": [
+        "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "skills/relay-image-gen/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "relay-video-gen",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:b4c582898020b7a021db9b7828606dace1800f455d76d7f3375fea094bd00712",
-      "declared_hints": ["The creation commit identifies this batch as self-built content tools."],
-      "evidence": ["commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850", "skills/relay-video-gen/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "The creation commit identifies this batch as self-built content tools."
+      ],
+      "evidence": [
+        "commit:cecc3e42d4b3e1cafd18ea46b82a04b990680850",
+        "skills/relay-video-gen/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "douyin-smart-publish",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "3ab7cdfc8db464b3cc6fdc4775d70d4bf1e32fa1",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:5fe4a13828b3f00bf8de704284170a503643e95b2df285c239001836b6bf6547",
-      "declared_hints": ["The Skill declares Daniel Li as author and was retained by the historical conservative original-Skills index."],
-      "evidence": ["commit:3ab7cdfc8db464b3cc6fdc4775d70d4bf1e32fa1", "skills/douyin-smart-publish/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "The Skill declares Daniel Li as author and was retained by the historical conservative original-Skills index."
+      ],
+      "evidence": [
+        "commit:3ab7cdfc8db464b3cc6fdc4775d70d4bf1e32fa1",
+        "skills/douyin-smart-publish/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "weixin-channels-publish",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:d688d82795c9d2b2cfae4edffca7bda1647efaee285b0d5e6e2fb08902c90876",
-      "declared_hints": ["Created in the maintainer's first-party Jimeng and publishing workflow commit and retained by the historical conservative original-Skills index."],
-      "evidence": ["commit:02262c4ef67b43de4622652f0c10a4718ed3715d", "skills/weixin-channels-publish/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "Created in the maintainer's first-party Jimeng and publishing workflow commit and retained by the historical conservative original-Skills index."
+      ],
+      "evidence": [
+        "commit:02262c4ef67b43de4622652f0c10a4718ed3715d",
+        "skills/weixin-channels-publish/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "meta-cognition",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "8b4010dd6c07cb9809363bd7e733fce70e2992ca",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:5b10ca945c7d36e9344659bcc28f9bfa80288775ba115091a2be852137a5630c",
-      "declared_hints": ["Created by the maintainer and retained by the historical conservative original-Skills index."],
-      "evidence": ["commit:8b4010dd6c07cb9809363bd7e733fce70e2992ca", "skills/meta-cognition/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "Created by the maintainer and retained by the historical conservative original-Skills index."
+      ],
+      "evidence": [
+        "commit:8b4010dd6c07cb9809363bd7e733fce70e2992ca",
+        "skills/meta-cognition/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "jimeng-login",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:c5dbc56c86d5067c61552820cdcee81c420b4ab6bc3db1e5e19cc338cd4df78b",
-      "declared_hints": ["Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."],
-      "evidence": ["commit:02262c4ef67b43de4622652f0c10a4718ed3715d", "skills/jimeng-login/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."
+      ],
+      "evidence": [
+        "commit:02262c4ef67b43de4622652f0c10a4718ed3715d",
+        "skills/jimeng-login/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "jimeng-digital-human",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:a059dbbd44070620d4d144dbad6a4c814676073e468d02f67c023694778de885",
-      "declared_hints": ["Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."],
-      "evidence": ["commit:02262c4ef67b43de4622652f0c10a4718ed3715d", "skills/jimeng-digital-human/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."
+      ],
+      "evidence": [
+        "commit:02262c4ef67b43de4622652f0c10a4718ed3715d",
+        "skills/jimeng-digital-human/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
     },
     {
       "skill_id": "video-merge-send",
-      "origin_kind": "project-original", "review_state": "reviewed",
-      "authors": ["Daniel Li"],
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
       "creation_commit": "02262c4ef67b43de4622652f0c10a4718ed3715d",
-      "license": {"spdx": "MIT", "evidence": "LICENSE"},
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
       "local_tree_digest": "sha256:3f76f0b44fa8446f1ddbaa17754ee53e0864a0c25287b37e5cff7a6221768203",
-      "declared_hints": ["Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."],
-      "evidence": ["commit:02262c4ef67b43de4622652f0c10a4718ed3715d", "skills/video-merge-send/SKILL.md", "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"]
+      "declared_hints": [
+        "Created in the maintainer's first-party Jimeng workflow commit and retained by the historical conservative original-Skills index."
+      ],
+      "evidence": [
+        "commit:02262c4ef67b43de4622652f0c10a4718ed3715d",
+        "skills/video-merge-send/SKILL.md",
+        "git:502532541732a2b2083c6e591f272cc31684e749:skills/docs/original-skills.md"
+      ]
+    },
+    {
+      "skill_id": "bb-scalper",
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
+      "local_tree_digest": "sha256:0688aa24198fe000b7cf1656947a9591262d105db779df6e6b9413819534a97d",
+      "declared_hints": [
+        "BB 双向套利策略为 Daniel Li 自研(布林带均值回归+三重过滤+轨对轨), 在 bb-scalper 项目内开发, 经回测/单元测试/实时模拟盘验证后同步至此。",
+        "The Skill entrypoint declares Daniel Li as author."
+      ],
+      "evidence": [
+        "skills/bb-scalper/SKILL.md",
+        "skills/bb-scalper/core/strategy.py",
+        "skills/bb-scalper/core/filters.py",
+        "skills/bb-scalper/docs/backtest-records.md"
+      ],
+      "creation_commit": "a3b942f64e1535103fc569f769ba6de07b5f385f"
     }
   ]
 }
