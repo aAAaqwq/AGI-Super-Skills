@@ -125,34 +125,33 @@ class Feed:
                               f"UP={cur['up_ask']} DOWN={cur['down_ask']}", flush=True)
                     last_rest = time.time()
                     while True:
+                        # 收 WS 消息 (orderbook 流 — 可能不推送, 但不阻塞刷新)
                         try:
-                            raw = await asyncio.wait_for(ws.recv(), timeout=WS_PING * 3)
+                            raw = await asyncio.wait_for(ws.recv(), timeout=30)
+                            try:
+                                env = json.loads(raw)
+                            except Exception:
+                                env = None
+                            if env and env.get("type") == "TOPIC":
+                                try:
+                                    data = json.loads(env.get("data") or "{}")
+                                except Exception:
+                                    data = {}
+                                if data.get("msgType") == "orderbook":
+                                    mid = data.get("marketId")
+                                    asks = data.get("asks") or []
+                                    bids = data.get("bids") or []
+                                    self.cache["markets"][str(mid)] = {
+                                        "best_ask": asks[0][0] if asks else None,
+                                        "best_bid": bids[0][0] if bids else None,
+                                        "asks": asks, "bids": bids,
+                                        "ts": data.get("updateTimestampMs"),
+                                    }
+                                    self.write()
                         except asyncio.TimeoutError:
-                            continue
-                        try:
-                            env = json.loads(raw)
-                        except Exception:
-                            continue
-                        if env.get("type") != "TOPIC":
-                            continue
-                        try:
-                            data = json.loads(env.get("data") or "{}")
-                        except Exception:
-                            continue
-                        if data.get("msgType") != "orderbook":
-                            continue
-                        mid = data.get("marketId")
-                        asks = data.get("asks") or []
-                        bids = data.get("bids") or []
-                        self.cache["markets"][str(mid)] = {
-                            "best_ask": asks[0][0] if asks else None,
-                            "best_bid": bids[0][0] if bids else None,
-                            "asks": asks, "bids": bids,
-                            "ts": data.get("updateTimestampMs"),
-                        }
-                        self.write()
+                            pass
 
-                        # 周期性 REST 刷新当前市场 UP/DOWN 权威价 (每根K线)
+                        # 周期性 REST 刷新 UP/DOWN 权威价 (不依赖 WS 消息)
                         if time.time() - last_rest >= REST_REFRESH_SEC:
                             cur = rest_current()
                             if cur:
