@@ -193,6 +193,7 @@ def main():
                         _save_state(state)
                         _push(f"✅ 立即成交 | {candle[5:16]} {tag} {side_}\n"
                               f"模拟价 {ask:.2f} (限价 {limit:.2f}内) | p={p_est:.2f}\n"
+                              f"UP {p_up:.2f} | DOWN {1 - p_up:.2f}\n"
                               f"持仓 {args.amount}U | 涨跌幅 0% 起算", args.push)
                     else:
                         state["bets"].append({
@@ -205,6 +206,7 @@ def main():
                         _push(f"📋 LIMIT | {candle[5:16]} {tag}\n"
                               f"{side_} 限价 {limit:.2f} (p={p_est:.2f}) | "
                               f"模拟现价 {ask:.2f}\n"
+                              f"UP {p_up:.2f} | DOWN {1 - p_up:.2f}\n"
                               f"成交时 EV {p_est - limit:+.2f} | 等回调 | {args.amount}U", args.push)
                     return True
 
@@ -217,9 +219,14 @@ def main():
                         # 第2分钟中性 → 第3分钟第二次机会下单
                         if not _place(side, reason, "第3min"):
                             p = d["prediction"]
+                            p_up = (_sim_up_price(candle_open, candle_atr, spot)
+                                    if spot is not None else None)
+                            updown = (f"UP {p_up:.2f} | DOWN {1 - p_up:.2f}"
+                                      if p_up is not None else "UP/DOWN: spot不可用")
                             _push(f"🔎 第3分钟预测 | {candle[5:16]}\n"
                                   f"现价 {d['price']['current']:,.2f} | "
                                   f"{p['bias']}/{p['strength']} conf {p['confidence']}\n"
+                                  f"模拟价: {updown}\n"
                                   f"(仍无信号, 不设LIMIT)", args.push)
                     # 已有活跃单: LIMIT 方向锁定, 静默
 

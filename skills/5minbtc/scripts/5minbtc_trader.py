@@ -1038,11 +1038,15 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                     if not found:
                         return False
                     _, market_id, up_tok, down_tok, title, _ = found
-                    tok = up_tok if side_ == "UP" else down_tok
-                    cur_ask = _token_price(market_id, tok)
+                    up_ask = _token_price(market_id, up_tok)
+                    down_ask = _token_price(market_id, down_tok)
+                    cur_ask = up_ask if side_ == "UP" else down_ask
                     if cur_ask is None:
                         print("无法取 ask, 跳过")
                         return False
+                    ud = (f"UP {up_ask:.2f} | DOWN {down_ask:.2f}"
+                          if up_ask is not None and down_ask is not None
+                          else "UP/DOWN 部分不可用")
                     if cur_ask <= limit:
                         state["bets"].append({
                             "candle": candle, "side": side_,
@@ -1056,6 +1060,7 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                         save_paper(paper_file, state)
                         _push(f"✅ 立即成交 | {candle[5:16]} {tag} {side_}\n"
                               f"@ {cur_ask:.2f} (限价 {limit:.2f}内) | p={p_est:.2f}\n"
+                              f"{ud}\n"
                               f"持仓 {amount}U | 涨跌幅 0% 起算")
                     else:
                         state["bets"].append({
@@ -1070,6 +1075,7 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                         _push(f"📋 LIMIT | {candle[5:16]} {tag}\n"
                               f"{side_} 限价 {limit:.2f} (p={p_est:.2f}) "
                               f"| 现价 {cur_ask:.2f}\n"
+                              f"{ud}\n"
                               f"成交时 EV {p_est - limit:+.2f} | 等回调 | {amount}U")
                     return True
 
@@ -1082,9 +1088,21 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                         # 第2分钟中性 → 第3分钟第二次机会下单
                         if not _place(side, reason, "第3min"):
                             p = d["prediction"]
+                            ud = "UP/DOWN: 不可用"
+                            try:
+                                f3 = find_btc_5m_market()
+                                if f3:
+                                    _, mid3, u3, dn3, _, _ = f3
+                                    ua = _token_price(mid3, u3)
+                                    da = _token_price(mid3, dn3)
+                                    if ua is not None and da is not None:
+                                        ud = f"UP {ua:.2f} | DOWN {da:.2f}"
+                            except Exception:
+                                pass
                             _push(f"🔎 第3分钟预测 | {candle[5:16]}\n"
                                   f"现价 {d['price']['current']:,.2f} | "
                                   f"{p['bias']}/{p['strength']} conf {p['confidence']}\n"
+                                  f"预测市场: {ud}\n"
                                   f"(仍无信号, 不设LIMIT)")
                     # 已有活跃单: LIMIT 方向锁定, 静默
 

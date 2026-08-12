@@ -18,6 +18,7 @@
 import argparse
 import datetime
 import json
+import math
 import os
 import subprocess
 import sys
@@ -107,14 +108,30 @@ def paper_positions():
     return lines
 
 
-def market_line():
-    """组合 UP/DOWN 实时价 + 模拟持仓 文本块."""
+def _sim_prices(d):
+    """从引擎输出计算模拟 UP 价 (无真实价源时回退, 同 keyless 模型)."""
+    try:
+        move_price = d["price"]["current"] - d["price"]["open"]
+        atr = d["indicators"].get("atr") or 40.0
+        z = (move_price / max(atr, 1e-9)) * 1.7
+        p_up = 1.0 / (1.0 + math.exp(-z))
+        return max(0.02, min(0.98, p_up))
+    except Exception:
+        return None
+
+
+def market_line(d):
+    """组合 UP/DOWN 价 (真实优先, 无则模拟) + 模拟持仓 文本块."""
     up, down = fetch_predict_prices()
     out = []
     if up is not None:
         out.append(f"预测市场: UP {up:.2f} | DOWN {down:.2f}")
     else:
-        out.append("预测市场: (未连/无密钥)")
+        p_up = _sim_prices(d)
+        if p_up is not None:
+            out.append(f"预测市场: UP {p_up:.2f} | DOWN {1 - p_up:.2f} (模拟)")
+        else:
+            out.append("预测市场: (不可用)")
     pos = paper_positions()
     if pos:
         out.append("模拟持仓:")
@@ -206,7 +223,7 @@ def fmt_event(tag, d):
         line += "\n⚠️ 达到明确信号门槛 — 人工复核后再考虑动作, 非投资建议"
     if d.get("black_swan_warning"):
         line += "\n🚨 黑天鹅警告: 方向不可靠"
-    line += "\n── 预测市场 ──\n" + market_line()
+    line += "\n── 预测市场 ──\n" + market_line(d)
     return line
 
 
