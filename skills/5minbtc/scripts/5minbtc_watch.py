@@ -18,6 +18,7 @@
 import argparse
 import datetime
 import json
+import os
 import subprocess
 import sys
 import time
@@ -40,6 +41,80 @@ HEARTBEAT_SEC = 3600
 
 EMOJI = {"bull": "🟢", "neutral": "⚪", "bear": "🔴"}
 DIR_CN = {"bull": "看多", "neutral": "中性", "bear": "看空"}
+
+
+# ── 预测市场 UP/DOWN 实时价 + 模拟持仓 (可选增强, 无密钥优雅降级) ──
+
+def _load_predict_env():
+    """从 ~/bb-auto/prediction.env 载入币安预测API密钥 (供取 UP/DOWN 实时价)."""
+    envf = Path.home() / "bb-auto" / "prediction.env"
+    if not envf.exists():
+        return
+    try:
+        for line in envf.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip())
+    except Exception:
+        pass
+
+
+def fetch_predict_prices():
+    """返回 (up_price, down_price) 或 (None, None). 需币安预测API密钥.
+    实时价格表 = 轮询 order-book (非 RSS; RSS 是文章流, 分钟级延迟)."""
+    try:
+        import importlib
+        _load_predict_env()
+        if str(SCRIPTS) not in sys.path:
+            sys.path.insert(0, str(SCRIPTS))
+        trader = importlib.import_module("5minbtc_trader")
+        found = trader.find_btc_5m_market()
+        if not found:
+            return None, None
+        _, market_id, up_tok, down_tok, _, _ = found
+        return trader._token_price(market_id, up_tok), trader._token_price(market_id, down_tok)
+    except Exception:
+        return None, None
+
+
+def paper_positions():
+    """读取 paper 台账, 返回当前模拟持仓/挂单行列表 (无则 None)."""
+    pf = Path.home() / "bb-auto" / "5minbtc-paper.json"
+    if not pf.exists():
+        return None
+    try:
+        state = json.loads(pf.read_text())
+    except Exception:
+        return None
+    open_ = [b for b in state.get("bets", []) if b.get("status") == "open"]
+    pending = [b for b in state.get("bets", []) if b.get("status") == "pending"]
+    if not open_ and not pending:
+        return None
+    lines = []
+    for b in open_:
+        lines.append(f"  ✅ {b.get('side')} @{b.get('ask', 0):.2f} 待结算")
+    for b in pending:
+        lines.append(f"  📋 {b.get('side')} 限价 {b.get('limit', 0):.2f} 挂单")
+    return lines
+
+
+def market_line():
+    """组合 UP/DOWN 实时价 + 模拟持仓 文本块."""
+    up, down = fetch_predict_prices()
+    out = []
+    if up is not None:
+        out.append(f"预测市场: UP {up:.2f} | DOWN {down:.2f}")
+    else:
+        out.append("预测市场: (未连/无密钥)")
+    pos = paper_positions()
+    if pos:
+        out.append("模拟持仓:")
+        out.extend(pos)
+    else:
+        out.append("模拟持仓: 无")
+    return "\n".join(out)
 
 
 def push(msg):
@@ -124,6 +199,7 @@ def fmt_event(tag, d):
         line += "\n⚠️ 达到明确信号门槛 — 人工复核后再考虑动作, 非投资建议"
     if d.get("black_swan_warning"):
         line += "\n🚨 黑天鹅警告: 方向不可靠"
+    line += "\n── 预测市场 ──\n" + market_line()
     return line
 
 
