@@ -60,7 +60,7 @@ def _load_config(path: str = None) -> dict:
 
 
 # ── 指标(与 core.strategy 一致) ──
-def calc_bollinger(closes, period=20, std_mult=2.0):
+def calc_bollinger(closes, period=20, std_mult=2.0, live_price=None):
     if len(closes) < period:
         return None
     sma = float(np.mean(closes[-period:]))
@@ -71,7 +71,9 @@ def calc_bollinger(closes, period=20, std_mult=2.0):
     if len(closes) >= 8:
         y = closes[-8:]
         slope = float(np.polyfit(np.arange(len(y)), y, 1)[0]) / sma
-    pct_b = (closes[-1] - lower) / (upper - lower) if (upper - lower) > 0 else 0.5
+    # live_price 提供时用实时价计算 pct_b(信号判断), 否则用最后收盘
+    price_for_pct = live_price if live_price is not None else closes[-1]
+    pct_b = (price_for_pct - lower) / (upper - lower) if (upper - lower) > 0 else 0.5
     return {"middle": sma, "upper": upper, "lower": lower,
             "width": width, "slope": slope, "pct_b": pct_b, "std": std}
 
@@ -112,6 +114,9 @@ class PaperEngine:
         self._bar_seq = 0
         self._tick_count = 0
         self._last_heartbeat = 0.0
+        # 止损冷却: SL 后 _sl_cooldown_secs 秒内禁止重开, 防插针死循环
+        self._cooldown_until_ts = 0.0
+        self._sl_cooldown_secs = 60.0
 
     def _load_trades(self) -> list:
         """启动时加载已有的模拟交易记录(进程重启不丢历史)。"""
@@ -140,7 +145,11 @@ class PaperEngine:
         """有持仓返回 None; 无持仓时按三重过滤生成新信号。"""
         if self.position:
             return None
-        bb = calc_bollinger(self.closes_15m)
+        # 止损冷却期内禁止重开(防插针死循环)
+        if time.time() < self._cooldown_until_ts:
+            return None
+        # 用实时价(而非最后收盘)判断 %B, 否则会错过贴轨道瞬间
+        bb = calc_bollinger(self.closes_15m, live_price=self.cur_price)
         if bb is None:
             return None
         rsi = calc_rsi(self.closes_15m)
@@ -239,6 +248,8 @@ class PaperEngine:
         self._persist_trades()  # 每笔平仓立即落盘
         if result == "SL":
             self.last_sl_bar = self._bar_seq
+            # 止损冷却: 防止价格在止损位附近插针导致"平仓→立刻重开"死循环
+            self._cooldown_until_ts = time.time() + self._sl_cooldown_secs
         self.position = None
         return trade
 
