@@ -1134,6 +1134,14 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
         has_pending = False
         for b in state["bets"]:
             if b.get("status") == "pending":
+                # 先判蜡烛是否已收盘 → 未成交自动清理 (不依赖盘口价,
+                # 防挂单存的是已轮换的老 market, 取价失败导致假挂单积压)
+                if _candle_remain(b) <= 0:
+                    b["status"] = "unfilled"
+                    save_paper(paper_file, state)
+                    _push(f"❌ 未成交 | {b['candle'][5:16]} {b['side']}\n"
+                          f"限价 {b['limit']:.2f} 收盘未触及 | 放弃")
+                    continue
                 has_pending = True
                 tid, mid = b.get("token_id"), b.get("market_id")
                 if not tid or not mid:
@@ -1150,11 +1158,6 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                     _push(f"✅ 成交 | {b['candle'][5:16]} {b['side']} @ {cur:.2f} "
                           f"(限价 {b['limit']:.2f})\n"
                           f"持仓 {amount}U | 涨跌幅 0% 起算 | 等结算")
-                elif _candle_remain(b) <= 0:
-                    b["status"] = "unfilled"
-                    save_paper(paper_file, state)
-                    _push(f"❌ 未成交 | {b['candle'][5:16]} {b['side']}\n"
-                          f"限价 {b['limit']:.2f} 收盘未触及 | 放弃")
                 continue
             if b.get("status") != "open":
                 continue
