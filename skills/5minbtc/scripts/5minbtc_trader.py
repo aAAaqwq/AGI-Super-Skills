@@ -1053,6 +1053,7 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                     up_ask = _token_price(market_id, up_tok)
                     down_ask = _token_price(market_id, down_tok)
                     cur_ask = up_ask if side_ == "UP" else down_ask
+                    tok = up_tok if side_ == "UP" else down_tok
                     if cur_ask is None:
                         print("无法取 ask, 跳过")
                         return False
