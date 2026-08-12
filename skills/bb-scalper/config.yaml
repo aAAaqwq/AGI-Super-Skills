@@ -30,6 +30,10 @@ risk:
 binance:
   base_url: "https://fapi.binance.com"
   ws_url: "wss://fstream.binance.com/ws"
+  # 币安 Testnet(测试网) 地址 — cli/paper_testnet.py 默认使用, 虚拟资金真实撮合
+  testnet_base_url: "https://testnet.binancefuture.com"
+  testnet_ws_url: "wss://fstream.binancefuture.com/ws"
+  testnet_rest_url: "https://testnet.binancefuture.com"
   # api_key: ""     # 实盘时填写
   # api_secret: ""
 

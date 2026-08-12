@@ -115,15 +115,25 @@ class PaperEngine:
         self._tick_count = 0
         self._last_heartbeat = 0.0
         # 止损冷却: SL 后 _sl_cooldown_secs 秒内禁止重开, 防插针死循环
+        # 默认按 config cooldown_candles(3根15m K线≈2700s)而非60s, 强趋势中避免快速重开
         self._cooldown_until_ts = 0.0
-        self._sl_cooldown_secs = 60.0
+        cool_candles = self.cfg.get("filters", {}).get("cooldown_candles", 3)
+        self._sl_cooldown_secs = cool_candles * 15 * 60
+
+    def _trades_path(self) -> Optional[str]:
+        """每币独立落盘文件(防多币共享文件互相覆盖)。"""
+        if not self.log_path:
+            return None
+        base, ext = os.path.splitext(self.log_path)
+        return f"{base}_{self.symbol}{ext}"
 
     def _load_trades(self) -> list:
-        """启动时加载已有的模拟交易记录(进程重启不丢历史)。"""
-        if not self.log_path or not os.path.exists(self.log_path):
+        """启动时加载本币已有的模拟交易记录(进程重启不丢历史)。"""
+        path = self._trades_path()
+        if not path or not os.path.exists(path):
             return []
         try:
-            with open(self.log_path) as f:
+            with open(path) as f:
                 data = json.load(f)
             return data if isinstance(data, list) else []
         except (OSError, json.JSONDecodeError) as e:
@@ -131,11 +141,12 @@ class PaperEngine:
             return []
 
     def _persist_trades(self):
-        """把全部模拟交易写入 JSON(含已恢复的历史)。"""
-        if not self.log_path:
+        """把本币模拟交易写入独立 JSON(含已恢复的历史)。"""
+        path = self._trades_path()
+        if not path:
             return
         try:
-            with open(self.log_path, "w") as f:
+            with open(path, "w") as f:
                 json.dump(self.trades, f, indent=2, ensure_ascii=False)
         except OSError as e:
             logger.error("[%s] 保存模拟交易记录失败: %s", self.symbol, e)
