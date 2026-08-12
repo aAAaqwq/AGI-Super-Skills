@@ -579,8 +579,10 @@ def _print_quote_summary(title, token_side, token_id, amount_usdt, quote):
 
 
 def run_once(live=False, amount=DEFAULT_AMOUNT, order_type="LIMIT",
-             limit_price=None):
-    """单次: 读引擎 → 判信号 → 发现市场 → 校验余额 → 报价 → (确认后)下单."""
+             limit_price=None, limit_up_max=0.65, limit_down_max=0.50):
+    """单次: 读引擎 → 判信号 → 发现市场 → 校验余额 → 报价 → (确认后)下单.
+    LIMIT 默认限价 = 该方向入场上限 (limit_up_max/limit_down_max),
+    而非 ask×0.98 — 5分钟市场波动快, 挂低 2% 常不成交, 错过整笔 EV."""
     d = _load_engine()
     if not d:
         return 1
@@ -594,8 +596,11 @@ def run_once(live=False, amount=DEFAULT_AMOUNT, order_type="LIMIT",
     if not side:
         return 0
 
-    if amount < 1.5:
-        print(f"金额 {amount:.2f} USDT < 最低 ~1.5 USDT, 拒绝", file=sys.stderr)
+    # 金额下限: LIMIT 单可低至 0.5U (交易所仅 MARKET 强制 ≥1.5U)
+    min_amt = 0.5 if order_type == "LIMIT" else 1.5
+    if amount < min_amt:
+        print(f"金额 {amount:.2f} USDT < {order_type} 单最低 {min_amt:.1f} USDT, 拒绝",
+              file=sys.stderr)
         return 1
 
     # 余额校验 (get-quote 前先看钱够不够)
@@ -670,16 +675,15 @@ def run_once(live=False, amount=DEFAULT_AMOUNT, order_type="LIMIT",
         print(f"⚠️  距收盘仅 {remain}s (< {CLOSE_MARGIN_SEC}s), 风险高, 请自行判断",
               file=sys.stderr)
 
-    # 报价 (不花钱) — 默认 LIMIT 低挂
+    # 报价 (不花钱) — 默认 LIMIT 价格 = 该方向入场上限
     lp = limit_price
     if lp is None and order_type == "LIMIT":
-        if token_ask:
-            lp = round(token_ask * 0.98, 4)   # 低于当前 ask 2% 接货
-        else:
-            print("无法获取盘口价, LIMIT 单无 priceLimit, 拒绝", file=sys.stderr)
-            return 1
+        lp = round(limit_up_max if side == "UP" else limit_down_max, 4)
     if order_type == "LIMIT":
-        print(f"\n限价单: 买入 {side} token @ {lp} (当前 ask={token_ask})")
+        _st = ""
+        if token_ask is not None:
+            _st = "→ 立即成交" if token_ask <= lp else "→ 等回调(可能不成交)"
+        print(f"\n限价单: 买入 {side} token @ {lp} (当前 ask={token_ask}) {_st}")
     try:
         quote = get_quote(WALLET, token_id, "BUY", amount,
                           order_type=order_type, price_limit=lp)
@@ -710,7 +714,8 @@ def run_once(live=False, amount=DEFAULT_AMOUNT, order_type="LIMIT",
 
 
 def run_loop(live=False, amount=DEFAULT_AMOUNT, rounds=None,
-             order_type="LIMIT", limit_price=None):
+             order_type="LIMIT", limit_price=None,
+             limit_up_max=0.65, limit_down_max=0.50):
     """持续监控: 每根K线第2/3/4分钟采样. 每根K线只处理一次."""
     seen = set()
     n = 0
@@ -725,7 +730,8 @@ def run_loop(live=False, amount=DEFAULT_AMOUNT, rounds=None,
                     seen.add(key)
                     n += 1
                     run_once(live=live, amount=amount, order_type=order_type,
-                             limit_price=limit_price)
+                             limit_price=limit_price, limit_up_max=limit_up_max,
+                             limit_down_max=limit_down_max)
             time.sleep(20)
         else:
             time.sleep(10)
@@ -1061,9 +1067,13 @@ def main():
                     help=f"下单金额 USDT (默认 {DEFAULT_AMOUNT})")
     ap.add_argument("--rounds", type=int, default=None, help="loop 轮数上限(默认无限)")
     ap.add_argument("--order-type", choices=("LIMIT", "MARKET"), default="LIMIT",
-                    help="买入单类型 (默认 LIMIT 低挂)")
+                    help="买入单类型 (默认 LIMIT)")
     ap.add_argument("--limit-price", type=float, default=None,
-                    help="LIMIT 单限价 (token 价格 0~1; 默认 = 当前 ask×0.98)")
+                    help="LIMIT 单限价 (token 价格 0~1; 默认 = 该方向入场上限, 即 --limit-up-max/--limit-down-max)")
+    ap.add_argument("--limit-up-max", type=float, default=0.65,
+                    help="UP 入场上限 (默认 0.65; 实测盈亏平衡 ~0.70, 留 margin)")
+    ap.add_argument("--limit-down-max", type=float, default=0.50,
+                    help="DOWN 入场上限 (默认 0.50; 实测盈亏平衡 ~0.57)")
     ap.add_argument("--tp-mult", type=float, default=0,
                     help="止盈倍率: 现价/成本 ≥ 此值自动卖出锁利 (如 1.4=+40%%; 0=不启用)")
     ap.add_argument("--sl-mult", type=float, default=0,
@@ -1163,10 +1173,14 @@ def main():
                                  max_iters=args.monitor_iters)
     if args.once:
         return run_once(live=args.live, amount=args.amount,
-                        order_type=args.order_type, limit_price=args.limit_price)
+                        order_type=args.order_type, limit_price=args.limit_price,
+                        limit_up_max=args.limit_up_max,
+                        limit_down_max=args.limit_down_max)
     if args.loop:
         return run_loop(live=args.live, amount=args.amount, rounds=args.rounds,
-                        order_type=args.order_type, limit_price=args.limit_price)
+                        order_type=args.order_type, limit_price=args.limit_price,
+                        limit_up_max=args.limit_up_max,
+                        limit_down_max=args.limit_down_max)
 
     print("用法: --once 单次 | --loop 持续 | --monitor 持仓监控 | --paper 预测市场模拟(不下单) | 加 --live 实盘(危险)")
     print("自动卖出止盈止损需: --monitor --tp-mult <x> --sl-mult <x> --live")

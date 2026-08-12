@@ -29,9 +29,10 @@
 | `--loop` | - | 持续监控开仓 (每根K线第2/3/4分钟采样) |
 | `--monitor` | - | 持仓监控: 实时面板 + 自动止盈止损 |
 | `--live` | off | 实盘 (双确认: 启动 yes + 每单 y) |
-| `--amount` | 2.0 | 下单金额 USDT (≥1.5) |
-| `--order-type` | `LIMIT` | 买入单类型: LIMIT 低挂 / MARKET 市价 |
-| `--limit-price` | ask×0.98 | LIMIT 限价 (token 价 0~1) |
+| `--amount` | 2.0 | 下单金额 USDT (LIMIT ≥0.5, MARKET ≥1.5) |
+| `--order-type` | `LIMIT` | 买入单类型: LIMIT / MARKET |
+| `--limit-price` | 默认=入场上限 | LIMIT 限价 (token 价 0~1); 不传则用该方向入场上限 (`--limit-up-max`/`--limit-down-max`) |
+| `--limit-up-max` / `--limit-down-max` | 0.65 / 0.50 | 该方向入场上限 = LIMIT 默认限价 (实测盈亏平衡 UP 0.70 / DOWN 0.57) |
 | `--tp-mult` | 0(不启用) | 止盈: 现价/成本 ≥ 此值自动 SELL 锁利 (如 1.4=+40%) |
 | `--sl-mult` | 0(不启用) | 止损: 现价/成本 ≤ 此值自动 SELL (如 0.4=跌60%) |
 | `--monitor-interval` | 10 | 持仓监控轮询间隔秒 |
