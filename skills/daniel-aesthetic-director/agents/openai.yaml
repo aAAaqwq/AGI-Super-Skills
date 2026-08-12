@@ -1,0 +1,4 @@
+interface:
+  display_name: "Daniel 审美导演"
+  short_description: "基于六轴方法选择审美路线，生成可控、可复现的视觉提示词"
+  default_prompt: "使用 $daniel-aesthetic-director 为这个主题选择审美方向，并输出可直接用于生成模型的提示词。"
