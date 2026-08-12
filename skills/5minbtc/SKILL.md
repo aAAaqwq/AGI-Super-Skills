@@ -24,6 +24,7 @@ tools:
 |------|------|
 | 当前 5min K线 方向+价位 | ✅ 标准流程, 有真实 edge (v5.8 回测 61-70%) |
 | 会话内持续盯盘, 等明确信号 | ✅ 监控模式 (scripts/5minbtc-monitor.py + Monitor 工具) |
+| 币安预测市场 Up/Down 5m 交易 | ✅ paper 模拟/实时监控 (见 [预测市场策略](references/prediction-market-strategy.md)) |
 | "今晚 BTC 涨跌" (宽窗口) | ⚠️ 跑当前 K线 + 给方向倾向, 标注"超出引擎置信区间" |
 | "下根 K线" / "1小时后" | 引导在该 K线 起始时间再触发 |
 
@@ -109,7 +110,8 @@ python3 $SKILL_DIR/5minbtc-log.py log \
 - [execution.md](references/execution.md) — 完整执行步骤 + 铁律 + 宽窗口处理
 - [output-template.md](references/output-template.md) — LLM 输出模板 + 裁决规则
 - [monitoring-claude-code.md](references/monitoring-claude-code.md) — **监控模式: Monitor 工具集成 + 事件协议**
-- [prediction-trading-cli.md](references/prediction-trading-cli.md) — **币安预测交易 CLI: 5minbtc_trader.py 用法/参数/安全契约/API端点**
+- [prediction-trading-cli.md](references/prediction-trading-cli.md) — **币安预测交易 CLI: 5minbtc_trader.py 用法/参数/安全契约/API端点 (含 --paper/--paper-monitor 模拟)**
+- [prediction-market-strategy.md](references/prediction-market-strategy.md) — **预测市场盈利策略: EV=p−P, 价格门控, 凯利仓位, paper 模拟**
 
 ### 数据源 & 网络
 - [news-sources.md](references/news-sources.md) — 新闻源评估 (清理后只剩 CoinDesk)
@@ -197,8 +199,12 @@ backtest/
 ├── references/                   # 26 份专项 ref (含 skill-organization 模式)
 ├── backtest/                     # 回测系统
 ├── data/                         # 运行时 (news-risk-level.json 等)
-├── scripts/                      # 复盘/工具脚本
+├── scripts/                      # 复盘/监控/交易脚本
 │   ├── 5minbtc-monitor.py        # ★ 监控脚本 (Claude Code Monitor 集成, v1.0)
+│   ├── 5minbtc_watch.py          # ★ Telegram 推送监控 daemon (事件驱动+预测记录+收盘结算)
+│   ├── 5minbtc_day_stats.py      # 预测战绩查询 (今日/历史, --push 推送)
+│   ├── 5minbtc_trader.py         # ★ 币安预测交易桥接 (--once/--loop/--monitor/--paper/--paper-monitor)
+│   ├── telegram_push.py          # 通用 Telegram 推送助手
 │   ├── daily-review-stats.py
 │   └── fetch-github-repo.sh
 14. 🔴 高延迟网络 — 引擎timeout临时修补 (2026-06-24)

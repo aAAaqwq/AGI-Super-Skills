@@ -96,3 +96,43 @@ python3 scripts/5minbtc_trader.py --once --live --amount 2.0
 - 止盈止损触发逻辑 dry-run: 1.44x→止盈 ✅, 0.36x→止损 ✅, TP/SL 未设→不触发 ✅
 - LIMIT 报价: `orderType=LIMIT`+`priceLimit` 返回 quoteId ✅
 - SELL 无持仓时: `-9000 exceeded available shares` = 报价参数正确, 只是无持仓可卖 ✅
+
+## Paper 模拟 & 实时监控 (2026-08-12 新增, 绝不下单)
+
+> 预测交易无 test 模式, 用 `--paper` / `--paper-monitor` 先做真实报价模拟。
+> 完整盈利策略见 [prediction-market-strategy.md](prediction-market-strategy.md)。
+
+### `--paper` 单次模拟
+```bash
+python3 scripts/5minbtc_trader.py --paper [--paper-up-max 0.65] [--paper-down-max 0.55] \
+  [--paper-fee 0.01] [--paper-push]
+```
+流程: 结算已收盘注单 → 引擎信号 → 真实 ask → **价格门控** (ask≤胜率-费才记录) → 报告。
+状态文件 `~/bb-auto/5minbtc-paper.json`。参数:
+| 参数 | 默认 | 说明 |
+|---|---|---|
+| `--paper-up-max` | 0.65 | UP 入场价上限 (实测盈亏平衡 ~0.70, 留 margin) |
+| `--paper-down-max` | 0.55 | DOWN 入场价上限 (实测盈亏平衡 ~0.57) |
+| `--paper-fee` | 0.01 | 单笔手续费比例 |
+| `--paper-push` | off | 报告推 Telegram |
+| `--paper-min-conf` | 0 | 置信度门槛 (实测 confidence 反校准, 默认不过滤) |
+| `--paper-strength-gate` / `--paper-tb-filter` | off | 未经验证的过滤, 需单独开启 |
+
+### `--paper-monitor` 实时监控
+```bash
+python3 scripts/5minbtc_trader.py --paper-monitor --paper-up-max 0.65 \
+  --paper-p-down 0.50 --paper-push [--paper-poll 20] \
+  [--paper-push-every 60] [--paper-push-delta 5]
+```
+每根 K 线: 信号触发→推送入场 P+机会判断(EV=p−P) → 盘中轮询实时盈亏% → 收盘推最终获利%。
+| 参数 | 默认 | 说明 |
+|---|---|---|
+| `--paper-p-up` / `--paper-p-down` | 0.74 / 0.57 | 该方向预估概率 p (今日实测 bull/bear 胜率) |
+| `--paper-poll` | 20 | 轮询秒数 |
+| `--paper-push-every` | 60 | 实时盈亏最少推送间隔秒 |
+| `--paper-push-delta` | 5 | 实时盈亏变化 ≥ 此百分比才推 |
+
+### 信号判定差异 (paper 版)
+`_signal()` 已参数化: `min_conf` / `tb_filter` / `strength_gate` 均可关。
+**实测洞察**: 引擎 confidence 反校准 (conf<50 胜率 72% > conf 50-59 的 67%), 默认不设 conf 门槛;
+预测全在第 2 分钟 (progress~40%), bull 74% / bear 57%。
