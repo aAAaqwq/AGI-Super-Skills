@@ -62,8 +62,15 @@ def _load_predict_env():
 
 
 def fetch_predict_prices():
-    """返回 (up_price, down_price) 或 (None, None). 需币安预测API密钥.
-    实时价格表 = 轮询 order-book (非 RSS; RSS 是文章流, 分钟级延迟)."""
+    """返回 (up_price, down_price) 或 (None, None).
+    优先读 WS 实时缓存 (~/bb-auto/prediction-ws.json, <200ms), 失败则 REST 轮询兜底."""
+    try:
+        cache = json.loads((Path.home() / "bb-auto" / "prediction-ws.json").read_text())
+        cur = cache.get("current") or {}
+        if cur.get("up_ask") is not None and cur.get("down_ask") is not None:
+            return float(cur["up_ask"]), float(cur["down_ask"])
+    except Exception:
+        pass
     try:
         import importlib
         _load_predict_env()

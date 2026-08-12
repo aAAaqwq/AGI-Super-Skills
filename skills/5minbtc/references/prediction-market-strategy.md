@@ -71,7 +71,10 @@ python3 scripts/5minbtc_trader.py --paper-monitor --paper-up-max 0.65 \
 - 状态文件 `~/bb-auto/5minbtc-paper.json`（含入场 P / 成交价 / 结算 PnL / 未成交记录）
 - 只 get-quote / order-book，**从不 place-order**
 - 需要的环境变量：`BINANCE_API_KEY / BINANCE_API_SECRET / BINANCE_PREDICT_WALLET / BINANCE_PREDICT_WALLET_ID`
-- 实时价格表 = 轮询币安 order-book API（挂单期间 10s 一次）——**不用 RSS**（RSS 是文章流, 分钟级延迟, token 价不在 RSS 里）
+- **实时价格**：`scripts/prediction_ws_feed.py` 用币安 **w3w-prediction WebSocket API**
+  （`wss://api.binance.com/sapi/wss?topic=web3_prediction_orderbook_data`，<200ms）
+  写 `~/bb-auto/prediction-ws.json` 缓存；watch/paper 读缓存即秒级实时。不用 RSS。
+  认证: HMAC SHA256 签名 + `X-MBX-APIKEY` header; 30s PING; 断线重连。
 
 ## 七、实时推送格式（--paper-monitor, LIMIT 单模拟）
 
