@@ -54,7 +54,7 @@
 
 - [`5minbtc`](../5minbtc/) — BTC 5分钟K线实时方向预测。v5.8新增: taker_buy主动买量因子(区分主动买/卖) +…（作者：Daniel Li、AGI Super Team contributors）
 - [`bb-scalper`](../bb-scalper/) — BB 双向套利策略：加密合约 10x 杠杆布林带均值回归。布林带收窄=横盘→在下轨买、上轨卖；三重过滤器(1h趋势/RSI/BB甜区)确认碗平放，轨对轨止盈(RR…（作者：Daniel Li）
-- [`binance-square`](../binance-square/) — 币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达（作者：Daniel Li、AGI Super Team contributors）
+- [`binance-square`](../binance-square/) — 币安广场合约投机雷达 v5：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达（作者：Daniel Li、AGI Super Team contributors）
 - [`financial-planning-and-analysis`](../financial-planning-and-analysis/) — 为经营决策建立可复算的预算、滚动预测、现金跑道、三表连接、单位经济、实际预算差异、情景敏感性和资本配置备忘录。适用于业务规划、资源分配、定价经济性与下行评估；不用于代替会计税务审计意见、个人化投资建议、保证收益融资估值，或执行付款、转账、交易、借贷、开户和报税。（作者：Daniel Li、AGI Super Team contributors）
 - [`product-discovery-portfolio-governance`](../product-discovery-portfolio-governance/) — 将模糊产品想法、客户请求或路线图争议转化为有证据的用户机会、产品组合取舍和阶段门决策。用于产品发现、机会评估、组合优先级、MVP 范围、路线图审查、发布前准备或继续/调整/停止决策；不要用于直接决定技术架构、营销投放、销售承诺、价格、法律结论，也不要把无研究证据的功能清单包装成产品战略。（作者：Daniel Li、AGI Super Team contributors）
 

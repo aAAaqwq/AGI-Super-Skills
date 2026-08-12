@@ -465,14 +465,17 @@
         "spdx": "MIT",
         "evidence": "LICENSE"
       },
-      "local_tree_digest": "sha256:7db5491f1558f8766676ff1b9382999a85b287e8283ce5f52d61765c47878b21",
+      "local_tree_digest": "sha256:9aa204c1dd73e0a121e633bc4047dc109aa00203e13a06980105b1ebcbda16e8",
       "declared_hints": [
-        "The v4 shadow implementation and subsequent production-gate hardening were built in this repository under the maintainer's direction."
+        "The v4 shadow implementation, v5 scoring/report evolution, and subsequent production-gate hardening were built in this repository under the maintainer's direction.",
+        "The v5 synchronization excludes runtime captures, SQLite databases, caches, locks, delivery state, and operator credentials."
       ],
       "evidence": [
         "commit:da4e86d351b5c8d0c3d5b2a81602b93de24fe605",
         "commit:437b26c2f3146c61cf9cab6799ac7f01ca659af1",
         "commit:2f733c5f97c7783c314878b5b3ea3ed39117c9ab",
+        "commit:f7198d203929bcf6a4e266b549c0dbeaf7901b2f",
+        "commit:4ef635c7c1b79eecb33d741e4f027c0aea267551",
         "skills/binance-square/SKILL.md",
         "skills/binance-square/OPTIMIZATION_VERIFICATION.md"
       ]

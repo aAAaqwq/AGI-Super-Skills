@@ -3962,7 +3962,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达",
+      "description": "币安广场合约投机雷达 v5：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达",
       "description_status": "source-text",
       "path": "skills/binance-square/SKILL.md",
       "portability_class": "catalog-only",
@@ -3973,12 +3973,15 @@
         ],
         "creation_commit": "da4e86d351b5c8d0c3d5b2a81602b93de24fe605",
         "declared_hints": [
-          "The v4 shadow implementation and subsequent production-gate hardening were built in this repository under the maintainer's direction."
+          "The v4 shadow implementation, v5 scoring/report evolution, and subsequent production-gate hardening were built in this repository under the maintainer's direction.",
+          "The v5 synchronization excludes runtime captures, SQLite databases, caches, locks, delivery state, and operator credentials."
         ],
         "evidence": [
           "commit:da4e86d351b5c8d0c3d5b2a81602b93de24fe605",
           "commit:437b26c2f3146c61cf9cab6799ac7f01ca659af1",
           "commit:2f733c5f97c7783c314878b5b3ea3ed39117c9ab",
+          "commit:f7198d203929bcf6a4e266b549c0dbeaf7901b2f",
+          "commit:4ef635c7c1b79eecb33d741e4f027c0aea267551",
           "skills/binance-square/SKILL.md",
           "skills/binance-square/OPTIMIZATION_VERIFICATION.md"
         ],
@@ -3987,7 +3990,7 @@
           "spdx": "MIT"
         },
         "origin_kind": "project-original",
-        "review_state": "stale"
+        "review_state": "reviewed"
       },
       "review_signals": [],
       "skill_id": "binance-square",
