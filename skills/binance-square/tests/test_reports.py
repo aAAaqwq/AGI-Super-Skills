@@ -777,7 +777,7 @@ class LocalReportContractTests(unittest.TestCase):
         self.assertIn("OBSERVED_WINDOW", markdown)
         self.assertIn("60行", markdown)
         self.assertIn("Tier A eligible=0", markdown)
-        self.assertIn("Smart Money 2/2 (100.0%) / 60行", telegram)
+        self.assertIn("排行榜作者映射不完整", telegram)
         self.assertIn("Square身份未解析", report["risk_banner"]["labels"])
 
     def test_smart_money_rank_coverage_cannot_claim_identity_coverage(self) -> None:
@@ -872,7 +872,7 @@ class LocalReportContractTests(unittest.TestCase):
         self.assertEqual("0/4 (0.0%)", report["leaderboard_coverage"]["label"])
         self.assertIn("排行榜部分覆盖", report["risk_banner"]["labels"])
         self.assertIn("Profile种子 9｜已渲染榜单行 0｜非TOP30", markdown)
-        self.assertIn("种子9｜榜单行0｜非TOP30", telegram)
+        self.assertIn("排行榜仅部分覆盖", telegram)
 
         invalid_partial_claims = (
             {
@@ -944,10 +944,7 @@ class LocalReportContractTests(unittest.TestCase):
             "发现25 / 窗口内11 / accepted 11 / 窗口排除14 / DQ隔离0 / 新增未计算 / 重复未计算",
             markdown,
         )
-        self.assertIn(
-            "发现25｜窗口内11｜有效11｜窗口排除14｜DQ隔离0｜新增未计算｜重复未计算",
-            telegram,
-        )
+        self.assertIn("扫描 25｜有效 11｜新增 未计算", telegram)
         self.assertNotIn("24h帖子：总数25", markdown)
 
     def test_quarantine_split_must_reconcile(self) -> None:
@@ -1162,17 +1159,12 @@ class LocalReportContractTests(unittest.TestCase):
     def test_telegram_zero_opportunity_message_explicitly_says_wait(self) -> None:
         message = render_telegram(build_local_report(report_input()))
 
-        self.assertEqual("⚠️ 排行榜阻塞", message.splitlines()[0])
-        self.assertIn("抓取 UTC 2026-08-01T07:15:00Z", message)
-        self.assertIn(
-            "发现9｜窗口内7｜有效7｜窗口排除0｜DQ隔离2｜新增5｜重复2",
-            message,
-        )
-        self.assertIn("作者 A 1/2 (50.0%)｜B 0/1 (0.0%)", message)
-        self.assertIn("排行榜 0/4 (0.0%) BLOCKED", message)
-        self.assertIn("结论：无合格机会 / 等待", message)
-        self.assertIn("过滤：RR below 2.0 × 3", message)
-        self.assertIn("快照：/tmp/v4/reports/run-001.json", message)
+        self.assertEqual("📡 币安合约雷达", message.splitlines()[0])
+        self.assertIn("结论：本轮无可执行信号，继续等待", message)
+        self.assertIn("扫描 9｜有效 7｜新增 5", message)
+        self.assertIn("主要过滤：风险收益不足 × 3", message)
+        self.assertIn("数据提示：排行榜数据不完整", message)
+        self.assertIn("数据时间：2026-08-01 00:15 PDT", message)
 
 
 if __name__ == "__main__":
