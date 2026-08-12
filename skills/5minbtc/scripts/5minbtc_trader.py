@@ -66,6 +66,11 @@ SLIPPAGE_BPS = 200        # 滑点容忍 2%
 WEI_18 = 10 ** 18
 CLOSE_MARGIN_SEC = 45     # 距K线收盘 <45s 警告, <=0 拒绝 (防买已过期token)
 
+# ── 真实下单硬闸门 (安全铁律) ──
+# place_order 是唯一会花钱的函数. 默认 LIVE_GATE=False → 任何情况都拒绝真实下单.
+# 只有 --live 且用户双确认后才置 True. paper/模拟 模式永远为 False.
+LIVE_GATE = False
+
 SAMPLE_MINUTES = (2, 3, 4)   # 每根 5min K线采样分钟
 SAMPLE_SECOND = 5
 
@@ -309,7 +314,13 @@ def get_quote(wallet, token_id, side, amount_usdt, order_type="LIMIT",
 def place_order(wallet, wallet_id, quote_id, amount_usdt=None, account_type=ACCOUNT_TYPE,
                 order_type="LIMIT"):
     """POST place-order-bundle (真实花钱). 返回响应 dict (含 orderId).
-    LIMIT → timeInForce=GTC (挂单等成交); MARKET → FOK."""
+    LIMIT → timeInForce=GTC (挂单等成交); MARKET → FOK.
+
+    🔒 硬闸门: LIVE_GATE 必须为 True (仅 --live 双确认后), 否则拒绝.
+    paper/模拟 模式绝不允许调用此函数."""
+    if not LIVE_GATE:
+        raise RuntimeError(
+            "🔒 真实下单被硬性禁用 (LIVE_GATE=False). 当前为模拟模式, 绝不下单.")
     body = {
         "walletAddress": wallet,
         "walletId": wallet_id,
@@ -989,7 +1000,8 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                    and b.get("status") in ("open", "pending")
                    for b in state["bets"])
 
-    print(f"📡 预测市场实时 paper 监控 (LIMIT模拟) | 本金 ${bankroll:.0f} 每注 {amount}U "
+    print(f"📡 模拟预测市场实时 paper 监控 (LIMIT模拟) 🔒 纯模拟, 绝不下单 | "
+          f"本金 ${bankroll:.0f} 每注 {amount}U "
           f"| UP限价≤{up_max:.2f} DOWN≤{down_max:.2f} | poll={poll}s", flush=True)
     while True:
         now = datetime.datetime.now()
@@ -1005,11 +1017,11 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                                    if b.get("outcome") == "win"
                                    else -100 - b.get("fee", fee) * 100)
                         mark = "✅ 中" if b.get("outcome") == "win" else "❌ 未中"
-                        _push(f"🏁 结算 {b['candle'][5:16]} {b['side']} @{b['ask']:.2f} {mark}\n"
+                        _push(f"🏁 模拟结算{b['candle'][5:16]} {b['side']} @{b['ask']:.2f} {mark}\n"
                               f"获利 {pnl_pct:+.1f}% | ${b.get('pnl', 0):+.2f}")
                         b["pushed_final"] = True
                 br = state.get("bankroll", bankroll)
-                _push(f"💼 账户 ${br:.0f} → ${_equity():.2f} "
+                _push(f"💼 模拟账户${br:.0f} → ${_equity():.2f} "
                       f"({(_equity() - br) / br * 100:+.2f}%)")
                 save_paper(paper_file, state)
 
@@ -1051,28 +1063,28 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                         state["bets"].append({
                             "candle": candle, "side": side_,
                             "ask": round(cur_ask, 4), "amount": amount,
-                            "fee": fee, "status": "open",
+                            "fee": fee, "status": "open", "mode": "paper",
                             "market_id": market_id, "token_id": tok,
                             "p_est": p_est,
                             "ts": datetime.datetime.now().isoformat(),
                             "reason": reason_,
                         })
                         save_paper(paper_file, state)
-                        _push(f"✅ 立即成交 | {candle[5:16]} {tag} {side_}\n"
+                        _push(f"✅ 模拟成交 |{candle[5:16]} {tag} {side_}\n"
                               f"@ {cur_ask:.2f} (限价 {limit:.2f}内) | p={p_est:.2f}\n"
                               f"{ud}\n"
                               f"持仓 {amount}U | 涨跌幅 0% 起算")
                     else:
                         state["bets"].append({
                             "candle": candle, "side": side_,
-                            "limit": round(limit, 4), "status": "pending",
+                            "limit": round(limit, 4), "status": "pending", "mode": "paper",
                             "p_est": p_est, "market_id": market_id,
                             "token_id": tok,
                             "ts": datetime.datetime.now().isoformat(),
                             "reason": reason_,
                         })
                         save_paper(paper_file, state)
-                        _push(f"📋 LIMIT | {candle[5:16]} {tag}\n"
+                        _push(f"📋 模拟LIMIT |{candle[5:16]} {tag}\n"
                               f"{side_} 限价 {limit:.2f} (p={p_est:.2f}) "
                               f"| 现价 {cur_ask:.2f}\n"
                               f"{ud}\n"
@@ -1099,7 +1111,7 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                                         ud = f"UP {ua:.2f} | DOWN {da:.2f}"
                             except Exception:
                                 pass
-                            _push(f"🔎 第3分钟预测 | {candle[5:16]}\n"
+                            _push(f"🔎 第3分钟预测(模拟) |{candle[5:16]}\n"
                                   f"现价 {d['price']['current']:,.2f} | "
                                   f"{p['bias']}/{p['strength']} conf {p['confidence']}\n"
                                   f"预测市场: {ud}\n"
@@ -1146,7 +1158,7 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
             if (last is None or abs(pnl_pct - last) >= push_delta
                     or now_ts - last_live_ts.get(tid, 0) >= push_every):
                 remain = _candle_remain(b)
-                _push(f"📡 {b['side']} @{b['ask']:.2f} → 现价 {cur:.2f}\n"
+                _push(f"📡 模拟{b['side']} @{b['ask']:.2f} → 现价 {cur:.2f}\n"
                       f"涨跌幅 {pnl_pct:+.1f}% | 剩余 "
                       f"{int(max(remain, 0)) // 60}m{int(max(remain, 0)) % 60:02d}s")
                 last_pnl[tid] = pnl_pct
@@ -1239,6 +1251,7 @@ def main():
             pass  # 非 live 本就不会真实卖出
 
     if args.live:
+        global LIVE_GATE
         print("\n⚠️⚠️  实盘模式! 将真实下单。\n")
         try:
             confirm = input("确认真实下单? 输入 yes: ").strip().lower()
@@ -1247,6 +1260,7 @@ def main():
         if confirm != "yes":
             print("已取消")
             return 0
+        LIVE_GATE = True   # 唯一放行真实下单的地方 (双确认后)
 
     if args.paper_monitor:
         return run_paper_monitor(amount=args.amount, fee=args.paper_fee,
