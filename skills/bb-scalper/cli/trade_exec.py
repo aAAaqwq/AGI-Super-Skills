@@ -71,6 +71,10 @@ class LiveTrader:
         ps = resp if isinstance(resp, list) else ([resp] if isinstance(resp, dict) else [])
         return next((p for p in ps if _f(p.get("positionAmt")) != 0.0), None)
 
+    def get_user_trades(self, symbol: str, limit: int = 5) -> list:
+        """查询用户成交记录(真实成交价), 供 testnet poll 记账。"""
+        return self._call("get_user_trades", symbol, limit)
+
     def _round(self, symbol: str, value: float, kind: str) -> float:
         """价格/数量按合约精度修正; 优先 client._round_*, 失败本地兜底
 

@@ -101,7 +101,8 @@ class TestnetEngine(PaperEngine):
             return None
         if abs(amt) < 1e-12:
             p = self.position
-            exit_price = self.cur_price or p["entry"]
+            # 用真实平仓成交价(若可取)而非轮询现价, 跳空时 PnL 不失真
+            exit_price = self.executor.get_real_close_price(self.symbol, p) or self.cur_price or p["entry"]
             result = self._classify_close(exit_price)
             try:
                 self.executor.cancel_symbol_orders(self.symbol)
@@ -207,6 +208,15 @@ class TestnetStreamer(PaperStreamer):
                 pos["notional"], pos["leverage"])
         except Exception as e:
             logger.error("[%s] testnet 开仓失败(30s内不再尝试): %s", eng.symbol, e)
+            # 裸仓预警: 入场单可能已成交但无SL/TP且兜底平仓失败 → 置位position让poll接管平仓
+            if "裸仓预警" in str(e) or "平仓失败" in str(e):
+                pos["entry"] = pos.get("entry", 0)
+                pos["qty"] = pos.get("qty", 0)
+                pos["_bare"] = True  # 标记无保护仓, poll 平掉后记录
+                eng.position = pos
+                eng._sl_client_id = None
+                eng._tp_client_id = None
+                logger.error("[%s] ⚠️ 已标记待接管裸仓, poll 将尽快市价平掉", eng.symbol)
             eng._open_fail_until_ts = time.time() + 30
             return
         # 用真实成交价覆盖计划入场价, 供 close() 计算真实 PnL

@@ -265,6 +265,19 @@ class BinanceClient:
             params["symbol"] = symbol
         return self._signed_request("GET", "/fapi/v1/openOrders", params)
 
+    def get_user_trades(self, symbol: str, limit: int = 5) -> list:
+        """查询用户成交记录(含真实成交价 avgPrice 由 price 字段体现)。
+
+        Args:
+            symbol: 交易对
+            limit: 返回条数(默认5)
+
+        Returns:
+            成交记录列表, 每条含 price/qty/side/time
+        """
+        params: Dict[str, Any] = {"symbol": symbol, "limit": limit}
+        return self._signed_request("GET", "/fapi/v1/userTrades", params)
+
     def get_position_risk(self, symbol: Optional[str] = None) -> list:
         """查询持仓风险（含 positionAmt/entryPrice/unRealizedProfit）。
 

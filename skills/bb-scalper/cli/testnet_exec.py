@@ -80,13 +80,19 @@ class TestnetExecutor:
         except Exception as e:
             # 止损/止盈没挂上 → 立即市价平掉入场, 避免无保护裸仓
             logger.error("[%s] 条件单挂单失败, 立即市价平掉入场以防裸仓: %s", symbol, e)
+            close_ok = False
             try:
                 self.trader.place_order(symbol, close_side, "MARKET", qty,
                                         reduce_only=True,
                                         client_order_id="bcl-%s-%d" % (symbol, ts))
-            except Exception:
-                pass
-            raise
+                close_ok = True
+            except Exception as ce:
+                # 平仓兜底也失败 → 记录裸仓预警, 让 poll 层能检测并接管
+                logger.error("[%s] 平仓兜底失败, 存在无SL/TP裸仓风险! 请立即手动平仓. 错误: %s",
+                             symbol, ce)
+            raise TradeError(
+                "%s 条件单挂单失败且%s平仓: %s"
+                % (symbol, "已市价平掉" if close_ok else "平仓失败(裸仓预警!)", e))
         logger.info("[%s] testnet 条件单已挂 sl=%.6f tp=%.6f qty=%s", symbol, sl_r, tp_r, qty)
         return {"entry": fill, "qty": qty, "sl": sl_r, "tp": tp_r,
                 "sl_client_id": sl_cid, "tp_client_id": tp_cid}
@@ -113,6 +119,20 @@ class TestnetExecutor:
         if pos is None:
             return 0.0
         return _f(pos.get("positionAmt"))
+
+    def get_real_close_price(self, symbol: str, pos: dict) -> Optional[float]:
+        """取最近一笔平仓成交价(真实 avgPrice), 供 poll 记账用; 取不到返回 None。"""
+        try:
+            trades = self.trader._call("get_user_trades", symbol, limit=5)
+        except Exception as e:
+            logger.warning("[%s] 成交记录查询失败, 用轮询现价记账: %s", symbol, e)
+            return None
+        # 取最近一笔 reduceOnly 平仓方向的成交价
+        close_side = "SELL" if pos.get("dir") == "LONG" else "BUY"
+        for t in trades or []:
+            if t.get("side") == close_side and t.get("qty"):
+                return _f(t.get("price"))
+        return None
 
     def get_usdt_balance(self) -> float:
         bal = self.trader._call("get_balance", asset="USDT") or {}
