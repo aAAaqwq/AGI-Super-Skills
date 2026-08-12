@@ -63,11 +63,21 @@ p=0.74, P=0.55 → f*≈42% → 实盘用 1/4 ≈ 10% 账户/注
 # 单次：结算已收盘 → 引擎信号 → 真实报价 → 价格门控记录 → 报告
 python3 scripts/5minbtc_trader.py --paper --paper-up-max 0.65 --paper-push
 
-# 实时监控：LIMIT 单模拟 → 设单/成交/未成交 → 盘中实时盈亏% → 结算，推 Telegram
+# 实时监控：LIMIT 单模拟 → 每根K线精确节奏 → 推 Telegram
 python3 scripts/5minbtc_trader.py --paper-monitor --paper-up-max 0.65 \
-  --paper-p-down 0.50 --paper-push
+  --paper-p-down 0.50 --paper-push --amount 1 --paper-bankroll 100
 ```
 
+### 每根 5min K 线节奏（--paper-monitor）
+| 时刻 | 动作 |
+|------|------|
+| 第0分钟 | 结算上一轮 → 推送获利% + 账户权益 |
+| 第2分钟 | 引擎确认方向+入场价 → 设纸面 LIMIT（限价=入场上限, 方向锁定） |
+| 第2分钟后 | 轮询 order-book: ask≤限价 → 成交 → 记录持仓 + 实时涨跌幅推送 |
+| 第3分钟 | 只预测（无活跃单时推送引擎读数）, **不改变 LIMIT 方向** |
+| 收盘未触及 | 未成交 → 放弃 |
+
+- **账户**：`--paper-bankroll` 模拟本金（默认 $100），每注 `--amount`（默认 1U），`paper_report`/推送显示 账户余额+收益率。
 - 状态文件 `~/bb-auto/5minbtc-paper.json`（含入场 P / 成交价 / 结算 PnL / 未成交记录）
 - 只 get-quote / order-book，**从不 place-order**
 - 需要的环境变量：`BINANCE_API_KEY / BINANCE_API_SECRET / BINANCE_PREDICT_WALLET / BINANCE_PREDICT_WALLET_ID`
@@ -79,22 +89,25 @@ python3 scripts/5minbtc_trader.py --paper-monitor --paper-up-max 0.65 \
 ## 七、实时推送格式（--paper-monitor, LIMIT 单模拟）
 
 ```
-📋 LIMIT 单已设 | 19:32 p40%            ← 设单: 限价 + 现价参考
+🏁 结算 19:30 UP @0.60 ✅ 中            ← 第0分钟: 上一轮获利
+获利 +66.7% | +$0.67
+💼 账户 $100 → $100.67 (+0.67%)
+
+📋 LIMIT | 19:35 第2min                  ← 第2分钟: 设单 (方向锁定)
 UP 限价 0.65 (p=0.74) | 现价 0.72
-成交时 EV = +0.09 | 等回调
+成交时 EV +0.09 | 等回调 | 1U
 
-✅ 成交 | UP @ 0.60 (限价 0.65)         ← 成交: 记录真实成交价
-入场 P = 0.60 | p = 0.74 | EV = +0.14
-假设 1 USDT
+✅ 成交 | UP @ 0.60 (限价 0.65)          ← 成交: 记录持仓
+持仓 1U | 涨跌幅 0% 起算 | 等结算
 
-❌ 未成交 | UP 限价 0.65                ← 收盘未触及: 放弃该笔
-收盘仍未触及限价
+🔎 第3分钟预测 | 19:35                   ← 第3分钟: 只预测
+现价 64,000 | bull/medium conf 55 | (仅预测, 不设LIMIT)
 
-📡 实时 | UP @0.60 → 现价 0.78          ← 盘中: 实时盈亏%
-实时盈亏 +30.0% | 剩余 2m40s
+📡 UP @0.60 → 现价 0.78                  ← 盘中: 实时涨跌幅
+涨跌幅 +30.0% | 剩余 2m40s
 
-🏁 结算 19:35 UP @0.60 ✅ 中            ← 收盘: 最终获利%
-最终 PnL: +66.7% | $+0.67
+🏁 结算 19:35 UP @0.60 ✅ 中             ← 收盘: 最终获利%
+获利 +66.7% | +$0.67 | 💼 账户 $101.34
 ```
 
 ## 八、诚实局限
