@@ -103,6 +103,7 @@ class PaperEngine:
         self.cur_price = None
         self.position = None  # {"dir","entry","tp","sl","opened_bar","opened_ts","qty_notional"}
         self.last_sl_bar = -999
+        self.last_sl_time = 0.0   # SL 冷却用 (时间基, 不依赖 WS K线收盘)
         self.trades = self._load_trades()
         # 重启后恢复资金: 用历史交易的 PnL 重放 close() 的资金公式
         # capital += notional * pnl_pct / 100
@@ -139,6 +140,10 @@ class PaperEngine:
     def check_signal(self):
         """有持仓返回 None; 无持仓时按三重过滤生成新信号。"""
         if self.position:
+            return None
+        # SL 冷却: 止损后 cooldown_candles 根 15m K线内不开新仓 (防追跌循环)
+        cooldown = self.cfg.get("filters", {}).get("cooldown_candles", 3)
+        if time.time() - self.last_sl_time < cooldown * 15 * 60:
             return None
         bb = calc_bollinger(self.closes_15m)
         if bb is None:
@@ -239,6 +244,7 @@ class PaperEngine:
         self._persist_trades()  # 每笔平仓立即落盘
         if result == "SL":
             self.last_sl_bar = self._bar_seq
+            self.last_sl_time = time.time()   # 冷却计时起点
         self.position = None
         return trade
 
