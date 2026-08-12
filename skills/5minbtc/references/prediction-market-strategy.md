@@ -63,28 +63,35 @@ p=0.74, P=0.55 → f*≈42% → 实盘用 1/4 ≈ 10% 账户/注
 # 单次：结算已收盘 → 引擎信号 → 真实报价 → 价格门控记录 → 报告
 python3 scripts/5minbtc_trader.py --paper --paper-up-max 0.65 --paper-push
 
-# 实时监控：信号→入场P+机会判断(EV)→盘中实时盈亏%→结算，推 Telegram
+# 实时监控：LIMIT 单模拟 → 设单/成交/未成交 → 盘中实时盈亏% → 结算，推 Telegram
 python3 scripts/5minbtc_trader.py --paper-monitor --paper-up-max 0.65 \
   --paper-p-down 0.50 --paper-push
 ```
 
-- 状态文件 `~/bb-auto/5minbtc-paper.json`（含入场 P / 结算 PnL）
+- 状态文件 `~/bb-auto/5minbtc-paper.json`（含入场 P / 成交价 / 结算 PnL / 未成交记录）
 - 只 get-quote / order-book，**从不 place-order**
 - 需要的环境变量：`BINANCE_API_KEY / BINANCE_API_SECRET / BINANCE_PREDICT_WALLET / BINANCE_PREDICT_WALLET_ID`
+- 实时价格表 = 轮询币安 order-book API（挂单期间 10s 一次）——**不用 RSS**（RSS 是文章流, 分钟级延迟, token 价不在 RSS 里）
 
-## 七、实时推送格式（--paper-monitor）
+## 七、实时推送格式（--paper-monitor, LIMIT 单模拟）
 
 ```
-🎯 入场机会 | 19:32 p40%            ← 触发: 入场 P + 机会判断
-UP ask = 0.56 | 预估 p = 0.74
-EV = p − P = +0.18 ✅ 入场 (≤0.65)
-假设 2 USDT | 1/4凯利≈10%账户
+📋 LIMIT 单已设 | 19:32 p40%            ← 设单: 限价 + 现价参考
+UP 限价 0.65 (p=0.74) | 现价 0.72
+成交时 EV = +0.09 | 等回调
 
-📡 实时 | UP @0.56 → 现价 0.78      ← 盘中: 实时盈亏%
-实时盈亏 +39.3% | 剩余 2m40s
+✅ 成交 | UP @ 0.60 (限价 0.65)         ← 成交: 记录真实成交价
+入场 P = 0.60 | p = 0.74 | EV = +0.14
+假设 1 USDT
 
-🏁 结算 19:35 UP @0.56 ✅ 中         ← 收盘: 最终获利%
-最终 PnL: +81.8% | $+1.64
+❌ 未成交 | UP 限价 0.65                ← 收盘未触及: 放弃该笔
+收盘仍未触及限价
+
+📡 实时 | UP @0.60 → 现价 0.78          ← 盘中: 实时盈亏%
+实时盈亏 +30.0% | 剩余 2m40s
+
+🏁 结算 19:35 UP @0.60 ✅ 中            ← 收盘: 最终获利%
+最终 PnL: +66.7% | $+0.67
 ```
 
 ## 八、诚实局限

@@ -810,10 +810,13 @@ def settle_paper(state, fee=0.0):
 def paper_report(state):
     settled = [b for b in state["bets"] if b.get("status") == "settled"]
     open_ = [b for b in state["bets"] if b.get("status") == "open"]
+    pending = [b for b in state["bets"] if b.get("status") == "pending"]
+    unfilled = [b for b in state["bets"] if b.get("status") == "unfilled"]
     wins = sum(1 for b in settled if b.get("outcome") == "win")
     total = len(settled)
     lines = ["📊 5minbtc 预测市场 Paper 模拟"]
-    lines.append(f"注单 {len(state['bets'])} (已结算 {total} / 持仓 {len(open_)})")
+    lines.append(f"注单 {len(state['bets'])} (已结算 {total} / 成交持仓 {len(open_)} "
+                 f"/ 挂单 {len(pending)} / 未成交 {len(unfilled)})")
     if total:
         lines.append(f"胜率 {wins}/{total} = {wins / total * 100:.0f}% | "
                      f"已实现 ${state['realized']:.2f}")
@@ -823,6 +826,10 @@ def paper_report(state):
                      f"PnL {b.get('pnl', 0):+.2f}$")
     for b in open_:
         lines.append(f"  ⏳ {b['candle'][5:16]} {b['side']:4s} @{b['ask']:.2f} 待结算")
+    for b in pending:
+        lines.append(f"  📋 {b['candle'][5:16]} {b['side']:4s} 限价 {b['limit']:.2f} 挂单中")
+    for b in unfilled:
+        lines.append(f"  💨 {b['candle'][5:16]} {b['side']:4s} 限价 {b['limit']:.2f} 未成交")
     return "\n".join(lines)
 
 
@@ -934,15 +941,18 @@ def run_paper_monitor(amount=2.0, fee=0.0, up_max=0.65, down_max=0.55,
                       paper_file=None, push=True, tb_filter=False, min_conf=0,
                       strength_gate=False, poll=20, p_up=0.74, p_down=0.57,
                       push_every=60, push_delta=5.0):
-    """实时 paper 监控 (绝不下单, 真实报价):
-      第2/3/4分钟信号触发 → 取真实 ask → 机会判断(ask vs p) → 记录注单+推送
-      盘中轮询 token 现价 → 实时盈亏%推送 (变化≥push_delta% 或 ≥push_every s)
-      收盘结算 → 最终获利%推送
+    """实时 paper 监控: LIMIT 单模拟 + 成交/结算推送 (绝不下单, 真实报价).
+
+    第2/3/4分钟信号 → 设纸面 LIMIT 单 (限价=该方向入场上限) → 推送"已设"
+    轮询 token 现价 (order-book, 即实时价格表):
+      ask ≤ 限价 → 成交 (记录成交价 + 推送"成交")
+      收盘仍未触及 → 未成交 (推送"未成交", 放弃)
+    成交注单盘中推实时盈亏%, 收盘推最终获利%.
     """
     import subprocess
     paper_file = paper_file or PAPER_FILE_DEFAULT
     state = load_paper(paper_file)
-    seen_candles = set()          # 本进程已处理的K线 (防重复触发)
+    seen_candles = set()          # 本进程已处理的K线
     last_pnl = {}                 # token_id -> 上次推送的 pnl%
     last_live_ts = {}             # token_id -> 上次推送时间
 
@@ -955,30 +965,35 @@ def run_paper_monitor(amount=2.0, fee=0.0, up_max=0.65, down_max=0.55,
         except Exception:
             pass
 
-    print(f"📡 预测市场实时 paper 监控 | UP≤{up_max:.2f} DOWN≤{down_max:.2f} "
+    def _candle_remain(b):
+        try:
+            close_ts = datetime.datetime.fromisoformat(b["candle"]).timestamp() + 300
+            return close_ts - time.time()
+        except Exception:
+            return 999.0
+
+    print(f"📡 预测市场实时 paper 监控 (LIMIT模拟) | UP限价≤{up_max:.2f} DOWN限价≤{down_max:.2f} "
           f"| p_up={p_up:.2f} p_down={p_down:.2f} | poll={poll}s", flush=True)
     while True:
         now = datetime.datetime.now()
         minute = now.minute % 5
 
         # ── 1. 结算已收盘注单 + 推送最终结果 ──
-        if now.second < 15:
-            settled = settle_paper(state, fee)
-            if settled:
-                for b in state["bets"]:
-                    if (b.get("status") == "settled"
-                            and not b.get("pushed_final")):
-                        if b.get("outcome") == "win":
-                            pnl_pct = (1 - b["ask"]) / b["ask"] * 100 - b.get("fee", fee) * 100
-                        else:
-                            pnl_pct = -100 - b.get("fee", fee) * 100
-                        mark = "✅ 中" if b.get("outcome") == "win" else "❌ 未中"
-                        _push(f"🏁 结算 {b['candle'][5:16]} {b['side']} @{b['ask']:.2f} {mark}\n"
-                              f"最终 PnL: {pnl_pct:+.1f}% | ${b.get('pnl', 0):+.2f}")
-                        b["pushed_final"] = True
-                save_paper(paper_file, state)
+        settled = settle_paper(state, fee)
+        if settled:
+            for b in state["bets"]:
+                if b.get("status") == "settled" and not b.get("pushed_final"):
+                    if b.get("outcome") == "win":
+                        pnl_pct = (1 - b["ask"]) / b["ask"] * 100 - b.get("fee", fee) * 100
+                    else:
+                        pnl_pct = -100 - b.get("fee", fee) * 100
+                    mark = "✅ 中" if b.get("outcome") == "win" else "❌ 未中"
+                    _push(f"🏁 结算 {b['candle'][5:16]} {b['side']} @{b['ask']:.2f} {mark}\n"
+                          f"最终 PnL: {pnl_pct:+.1f}% | ${b.get('pnl', 0):+.2f}")
+                    b["pushed_final"] = True
+            save_paper(paper_file, state)
 
-        # ── 2. 信号触发 → 入场机会判断 + 记录 ──
+        # ── 2. 信号 → 设纸面 LIMIT 单 (ask≤限价则立即成交) ──
         if minute in SAMPLE_MINUTES and now.second >= SAMPLE_SECOND:
             key = now.strftime("%H:%M")
             if key not in seen_candles:
@@ -989,47 +1004,80 @@ def run_paper_monitor(amount=2.0, fee=0.0, up_max=0.65, down_max=0.55,
                     side, reason = _signal(d, min_conf=min_conf,
                                            tb_filter=tb_filter,
                                            strength_gate=strength_gate)
-                    if side and not any(b.get("candle") == candle
-                                        and b.get("status") == "open"
-                                        for b in state["bets"]):
+                    has = any(b.get("candle") == candle
+                              and b.get("status") in ("open", "pending")
+                              for b in state["bets"])
+                    if side and not has:
                         p_est = p_up if side == "UP" else p_down
-                        max_p = up_max if side == "UP" else down_max
+                        limit = up_max if side == "UP" else down_max
                         try:
                             found = find_btc_5m_market()
                         except Exception as e:
                             print(f"发现市场失败: {e}", file=sys.stderr)
                             found = None
-                        if found:
-                            _, market_id, up_tok, down_tok, title, _ = found
-                            tok = up_tok if side == "UP" else down_tok
-                            ask = _token_price(market_id, tok)
-                            if ask is not None:
-                                ev = p_est - ask
-                                if ask <= max_p:
-                                    state["bets"].append({
-                                        "candle": candle, "side": side,
-                                        "ask": round(ask, 4), "amount": amount,
-                                        "fee": fee, "status": "open",
-                                        "market_id": market_id, "token_id": tok,
-                                        "p_est": p_est,
-                                        "ts": datetime.datetime.now().isoformat(),
-                                        "reason": reason,
-                                    })
-                                    save_paper(paper_file, state)
-                                    _push(f"🎯 入场机会 | {candle[5:16]} p{minute * 20:.0f}%\n"
-                                          f"{side} ask = {ask:.2f} | 预估 p = {p_est:.2f}\n"
-                                          f"EV = p − P = {ev:+.2f} ✅ (≤{max_p:.2f})\n"
-                                          f"假设 {amount} USDT | 1/4凯利≈10%账户")
-                                else:
-                                    _push(f"⏭️ 机会不足 | {candle[5:16]} {side}\n"
-                                          f"ask = {ask:.2f} > 上限 {max_p:.2f} | "
-                                          f"EV = {ev:+.2f} 跳过")
-                            else:
-                                print("无法取 ask, 跳过")
+                        if not found:
+                            print("未发现市场, 跳过")
+                            continue
+                        _, market_id, up_tok, down_tok, title, _ = found
+                        tok = up_tok if side == "UP" else down_tok
+                        cur_ask = _token_price(market_id, tok)
+                        if cur_ask is None:
+                            print("无法取 ask, 跳过")
+                            continue
+                        if cur_ask <= limit:
+                            # 立即成交 (marketable limit)
+                            state["bets"].append({
+                                "candle": candle, "side": side, "ask": round(cur_ask, 4),
+                                "amount": amount, "fee": fee, "status": "open",
+                                "market_id": market_id, "token_id": tok, "p_est": p_est,
+                                "ts": datetime.datetime.now().isoformat(), "reason": reason,
+                            })
+                            save_paper(paper_file, state)
+                            _push(f"✅ 立即成交 | {candle[5:16]} p{minute * 20:.0f}%\n"
+                                  f"{side} @ {cur_ask:.2f} (限价 {limit:.2f} 内)\n"
+                                  f"入场 P = {cur_ask:.2f} | p = {p_est:.2f} | EV = {p_est - cur_ask:+.2f}\n"
+                                  f"假设 {amount} USDT")
+                        else:
+                            # 挂单等回调
+                            state["bets"].append({
+                                "candle": candle, "side": side, "limit": round(limit, 4),
+                                "status": "pending", "p_est": p_est,
+                                "market_id": market_id, "token_id": tok,
+                                "ts": datetime.datetime.now().isoformat(), "reason": reason,
+                            })
+                            save_paper(paper_file, state)
+                            _push(f"📋 LIMIT 单已设 | {candle[5:16]} p{minute * 20:.0f}%\n"
+                                  f"{side} 限价 {limit:.2f} (p={p_est:.2f}) | 现价 {cur_ask:.2f}\n"
+                                  f"成交时 EV = p − P = {p_est - limit:+.2f} | 等回调")
 
-        # ── 3. 盘中实时 PnL% 推送 ──
+        # ── 3. 成交检测 + 盘中实时 PnL% ──
         now_ts = time.time()
+        has_pending = False
         for b in state["bets"]:
+            if b.get("status") == "pending":
+                has_pending = True
+                tid, mid = b.get("token_id"), b.get("market_id")
+                if not tid or not mid:
+                    continue
+                cur = _token_price(mid, tid)
+                if cur is None:
+                    continue
+                if cur <= b["limit"]:
+                    b["status"] = "open"
+                    b["ask"] = round(cur, 4)
+                    b["amount"] = amount
+                    b["fee"] = fee
+                    save_paper(paper_file, state)
+                    _push(f"✅ 成交 | {b['candle'][5:16]} {b['side']} @ {cur:.2f} "
+                          f"(限价 {b['limit']:.2f})\n"
+                          f"入场 P = {cur:.2f} | p = {b['p_est']:.2f} | EV = {b['p_est'] - cur:+.2f}\n"
+                          f"假设 {amount} USDT")
+                elif _candle_remain(b) <= 0:
+                    b["status"] = "unfilled"
+                    save_paper(paper_file, state)
+                    _push(f"❌ 未成交 | {b['candle'][5:16]} {b['side']}\n"
+                          f"限价 {b['limit']:.2f} 收盘仍未触及 | 放弃该笔")
+                continue
             if b.get("status") != "open":
                 continue
             tid, mid = b.get("token_id"), b.get("market_id")
@@ -1042,17 +1090,15 @@ def run_paper_monitor(amount=2.0, fee=0.0, up_max=0.65, down_max=0.55,
             last = last_pnl.get(tid)
             if (last is None or abs(pnl_pct - last) >= push_delta
                     or now_ts - last_live_ts.get(tid, 0) >= push_every):
-                try:
-                    elapsed = (now - datetime.datetime.fromisoformat(b["candle"])).seconds
-                    remain = 300 - elapsed % 300
-                except Exception:
-                    remain = 0
+                remain = _candle_remain(b)
                 _push(f"📡 实时 | {b['side']} @{b['ask']:.2f} → 现价 {cur:.2f}\n"
-                      f"实时盈亏 {pnl_pct:+.1f}% | 剩余 {remain // 60}m{remain % 60:02d}s")
+                      f"实时盈亏 {pnl_pct:+.1f}% | 剩余 {int(max(remain, 0)) // 60}m"
+                      f"{int(max(remain, 0)) % 60:02d}s")
                 last_pnl[tid] = pnl_pct
                 last_live_ts[tid] = now_ts
 
-        time.sleep(poll)
+        # 挂单期间加快轮询 (10s), 提升成交检测精度
+        time.sleep(10 if has_pending else poll)
 
 
 def main():
