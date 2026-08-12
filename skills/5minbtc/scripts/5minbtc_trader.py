@@ -24,8 +24,8 @@ scripts/5minbtc_trader.py - 5minbtc 预测 → 币安「Web3 Wallet 预测交易
 
 环境变量:
   BINANCE_API_KEY / BINANCE_API_SECRET   (必填, 签名用)
-  BINANCE_PREDICT_WALLET                  (钱包地址, 默认已验证值)
-  BINANCE_PREDICT_WALLET_ID               (钱包 ID,  默认已验证值)
+  BINANCE_PREDICT_WALLET                  (必填, 预测钱包地址, 从环境变量注入)
+  BINANCE_PREDICT_WALLET_ID               (必填, 预测钱包 ID)
 
 依赖: 纯 Python 标准库 (urllib/hmac/hashlib/json). 不打印密钥.
 非投资建议 — 仅供量化研究, 市场风险自负.
@@ -50,12 +50,8 @@ ENGINE = ROOT / "5minbtc-engine-v5.7.py"
 API_BASE = "https://api.binance.com"
 API_KEY = os.environ.get("BINANCE_API_KEY", "")
 API_SECRET = os.environ.get("BINANCE_API_SECRET", "")
-WALLET = os.environ.get(
-    "BINANCE_PREDICT_WALLET",
-    "0x0000000000000000000000000000000000000000")   # 已验证钱包地址
-WALLET_ID = os.environ.get(
-    "BINANCE_PREDICT_WALLET_ID",
-    "00000000000000000000000000000000")              # 已验证钱包 ID
+WALLET = os.environ.get("BINANCE_PREDICT_WALLET", "")          # 预测钱包地址 (必填, 从环境变量注入)
+WALLET_ID = os.environ.get("BINANCE_PREDICT_WALLET_ID", "")    # 预测钱包 ID (必填)
 ACCOUNT_TYPE = os.environ.get("BINANCE_PREDICT_ACCOUNT", "SPOT")  # SPOT|FUNDING
 
 # ---- 信号门槛 ----
@@ -760,6 +756,10 @@ def main():
 
     if not os.environ.get("BINANCE_API_KEY") or not os.environ.get("BINANCE_API_SECRET"):
         print("需要 BINANCE_API_KEY/BINANCE_API_SECRET 环境变量", file=sys.stderr)
+        return 1
+    if not WALLET or not WALLET_ID:
+        print("需要 BINANCE_PREDICT_WALLET / BINANCE_PREDICT_WALLET_ID 环境变量"
+              " (预测钱包地址/ID, 安全起见不从代码读取)", file=sys.stderr)
         return 1
 
     print("\n⚠️  币安预测交易无 test 模式, 确认下单即真实花钱. 默认只报价不成交。\n")

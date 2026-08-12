@@ -109,6 +109,7 @@ python3 $SKILL_DIR/5minbtc-log.py log \
 - [execution.md](references/execution.md) — 完整执行步骤 + 铁律 + 宽窗口处理
 - [output-template.md](references/output-template.md) — LLM 输出模板 + 裁决规则
 - [monitoring-claude-code.md](references/monitoring-claude-code.md) — **监控模式: Monitor 工具集成 + 事件协议**
+- [prediction-trading-cli.md](references/prediction-trading-cli.md) — **币安预测交易 CLI: 5minbtc_trader.py 用法/参数/安全契约/API端点**
 
 ### 数据源 & 网络
 - [news-sources.md](references/news-sources.md) — 新闻源评估 (清理后只剩 CoinDesk)
