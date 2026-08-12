@@ -68,7 +68,18 @@ python3 scripts/5minbtc_trader.py --paper-monitor --paper-up-max 0.65 \
   --paper-p-down 0.50 --paper-push --amount 1 --paper-bankroll 100
 ```
 
-### 每根 5min K 线节奏（--paper-monitor）
+### 免密钥模拟盘（keyless, 无需币安 API 密钥）
+```bash
+python3 scripts/5minbtc_keyless_paper.py --up-max 0.65 --down-max 0.50 \
+  --amount 1 --bankroll 100 --push
+```
+- 用**公开 BTC 数据**（`data-api.binance.vision` spot + 引擎）模拟 UP/DOWN token 价：
+  `P_up = sigmoid(1.7 × 当前涨跌幅 / ATR)`（纯价格走势模型 = "市场"定价），DOWN = 1−P_up。
+- 引擎信号（含订单簿/taker 信息）= 你的 edge；`P_up < p` 时买入 = EV+。
+- 与真实 paper 监控同一套 LIMIT/成交/结算/账户节奏（台账 `~/bb-auto/5minbtc-paper-keyless.json`）。
+- 真实市场价源（需密钥）就绪后切回 `--paper-monitor`。`SIGMOID_K` 可调灵敏度。
+
+### 每根 5min K 线节奏（--paper-monitor / keyless）
 | 时刻 | 动作 |
 |------|------|
 | 第0分钟 | 结算上一轮 → 推送获利% + 账户权益 |
