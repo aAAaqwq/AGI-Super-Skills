@@ -91,22 +91,25 @@ def subprocess_run():
                           capture_output=True, text=True, timeout=45).stdout
 
 
-def _signal(d):
+def _signal(d, min_conf=MIN_CONF, tb_filter=TB_FILTER, strength_gate=True):
     """从引擎输出判定预测交易信号. 返回 (token_side, reason) 或 (None, reason).
-    token_side: "UP" | "DOWN"."""
+    token_side: "UP" | "DOWN".
+    min_conf: 置信度门槛 (paper 模式可关掉, 实测 confidence 校准不可靠)
+    tb_filter: 是否要求方向与 taker_buy 一致 (paper 可关掉, 未经验证)
+    strength_gate: 是否要求 strength∈medium+ (paper 可关掉)"""
     p = d["prediction"]
     f = d["factors"]
     bias, strength, conf = p["bias"], p["strength"], p["confidence"]
     tb = f.get("taker_buy", 0.0)
 
-    if conf < MIN_CONF:
-        return None, f"conf {conf} < {MIN_CONF}"
-    if strength not in ALLOWED_STRENGTHS:
-        return None, f"strength {strength} 不足"
     if bias == "neutral":
         return None, "neutral"
+    if conf < min_conf:
+        return None, f"conf {conf} < {min_conf}"
+    if strength_gate and strength not in ALLOWED_STRENGTHS:
+        return None, f"strength {strength} 不足"
 
-    if TB_FILTER:
+    if tb_filter:
         if bias == "bear" and tb >= 0:
             return None, f"bear 但 taker_buy {tb:+.2f} ≥ 0, 方向不一致"
         if bias == "bull" and tb <= 0:
@@ -729,6 +732,323 @@ def run_loop(live=False, amount=DEFAULT_AMOUNT, rounds=None,
     return 0
 
 
+# ======================== 预测市场 Paper 模拟 (真实报价, 绝不下单) ========================
+# 策略: 引擎方向信号 + 入场价门控 (ask < 该方向胜率-手续费) → 记录假设成交 → K线收盘结算.
+# 与实盘共用同一套 API 客户端, 但只 get-quote/order-book, 从不 place-order (不花钱).
+# 实测教训 (2026-08-12): 引擎 confidence 校准不可靠 (反相关), 默认不设 conf 门槛;
+# strength/taker_buy 过滤未经验证, 默认关闭 — 用 --paper-strength-gate / --paper-tb-filter 开启.
+
+PAPER_FILE_DEFAULT = os.path.expanduser("~/bb-auto/5minbtc-paper.json")
+
+
+def _fetch_klines(symbol="BTCUSDT", interval="5m", start_ms=None, limit=1):
+    """免签名拉取 K 线 (结算用). 返回 [(open, close)]."""
+    base = "https://data-api.binance.vision/api/v3/klines"
+    params = {"symbol": symbol, "interval": interval, "limit": str(limit)}
+    if start_ms:
+        params["startTime"] = str(int(start_ms))
+    url = base + "?" + urllib.parse.urlencode(params)
+    req = urllib.request.Request(url, headers={"User-Agent": "5minbtc-paper/1"})
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        data = json.loads(resp.read().decode())
+    return [(float(k[1]), float(k[4])) for k in data]
+
+
+def load_paper(path):
+    if os.path.exists(path):
+        try:
+            with open(path) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"bets": [], "realized": 0.0,
+            "started": datetime.datetime.now().isoformat()}
+
+
+def save_paper(path, state):
+    with open(path, "w") as f:
+        json.dump(state, f, indent=2, ensure_ascii=False)
+
+
+def settle_paper(state, fee=0.0):
+    """结算所有已收盘的未结算纸面注单. 返回本次结算数."""
+    now_ms = int(time.time() * 1000)
+    settled = 0
+    for b in state["bets"]:
+        if b.get("status") != "open":
+            continue
+        try:
+            dt = datetime.datetime.fromisoformat(b["candle"])
+            close_ms = int(dt.timestamp() * 1000) + 5 * 60 * 1000
+        except Exception:
+            continue
+        if now_ms < close_ms:
+            continue
+        ohlc = _fetch_klines(start_ms=int(dt.timestamp() * 1000))
+        if not ohlc:
+            continue
+        o, c = ohlc[0]
+        side = b["side"]
+        won = (side == "UP" and c > o) or (side == "DOWN" and c < o)
+        ask, amt, f = b["ask"], b["amount"], b.get("fee", fee)
+        pnl = (amt * (1 - ask) - amt * f) if won else (-amt * ask - amt * f)
+        b["status"] = "settled"
+        b["outcome"] = "win" if won else "loss"
+        b["actual_open"], b["actual_close"] = o, c
+        b["pnl"] = round(pnl, 4)
+        state["realized"] = round(state["realized"] + pnl, 4)
+        settled += 1
+    return settled
+
+
+def paper_report(state):
+    settled = [b for b in state["bets"] if b.get("status") == "settled"]
+    open_ = [b for b in state["bets"] if b.get("status") == "open"]
+    wins = sum(1 for b in settled if b.get("outcome") == "win")
+    total = len(settled)
+    lines = ["📊 5minbtc 预测市场 Paper 模拟"]
+    lines.append(f"注单 {len(state['bets'])} (已结算 {total} / 持仓 {len(open_)})")
+    if total:
+        lines.append(f"胜率 {wins}/{total} = {wins / total * 100:.0f}% | "
+                     f"已实现 ${state['realized']:.2f}")
+    for b in settled[-5:]:
+        mark = "✅" if b.get("outcome") == "win" else "❌"
+        lines.append(f"  {mark} {b['candle'][5:16]} {b['side']:4s} @{b['ask']:.2f} "
+                     f"PnL {b.get('pnl', 0):+.2f}$")
+    for b in open_:
+        lines.append(f"  ⏳ {b['candle'][5:16]} {b['side']:4s} @{b['ask']:.2f} 待结算")
+    return "\n".join(lines)
+
+
+def run_paper(amount=2.0, fee=0.0, up_max=0.65, down_max=0.55,
+              paper_file=None, push=False, tb_filter=False, min_conf=0,
+              strength_gate=False):
+    """一次 paper 周期: 结算已收盘 → 引擎信号 → 真实报价 → 价格门控记录 → 报告."""
+    paper_file = paper_file or PAPER_FILE_DEFAULT
+    state = load_paper(paper_file)
+    settled = settle_paper(state, fee)
+
+    d = _load_engine()
+    if not d:
+        return 1
+    side, reason = _signal(d, min_conf=min_conf, tb_filter=tb_filter,
+                           strength_gate=strength_gate)
+    c = d["candle"]
+    candle = c.get("iso")
+    print(f"[{candle} p{c.get('progress_pct', 0):.0f}%] "
+          f"bias={d['prediction']['bias']} conf={d['prediction']['confidence']} "
+          f"信号={side or '无'} ({reason})")
+    print(f"本次结算 {settled} 笔")
+
+    if side and not any(b.get("candle") == candle and b.get("status") == "open"
+                        for b in state["bets"]):
+        try:
+            found = find_btc_5m_market()
+        except Exception as e:
+            print(f"发现市场失败: {e}", file=sys.stderr)
+            found = None
+        if found:
+            _, market_id, up_tok, down_tok, title, _ = found
+            tok = up_tok if side == "UP" else down_tok
+            ask = None
+            try:
+                ob = _order_book(market_id, tok)
+                asks = ob.get("asks") or []
+                if asks:
+                    ask = float(asks[0]["price"])
+            except Exception as e:
+                print(f"盘口失败: {e}", file=sys.stderr)
+            max_price = up_max if side == "UP" else down_max
+            if ask is not None:
+                if ask <= max_price:
+                    state["bets"].append({
+                        "candle": candle, "side": side, "ask": round(ask, 4),
+                        "amount": amount, "fee": fee, "status": "open",
+                        "market_id": market_id, "token_id": tok,
+                        "ts": datetime.datetime.now().isoformat(), "reason": reason,
+                    })
+                    print(f"✅ Paper 记录: BUY {side} @ {ask:.4f} (≤{max_price:.2f}) "
+                          f"{amount} USDT")
+                else:
+                    print(f"⏭️ 价格门控跳过: {side} ask {ask:.4f} > 上限 {max_price:.2f}")
+            else:
+                print("无法获取 ask, 跳过")
+    save_paper(paper_file, state)
+
+    report = paper_report(state)
+    print("\n" + report)
+    if push:
+        try:
+            import subprocess
+            subprocess.run(["python3", str(ROOT / "scripts" / "telegram_push.py"), report],
+                           capture_output=True, timeout=20)
+        except Exception:
+            pass
+    return 0
+
+
+def run_paper_loop(amount=2.0, fee=0.0, up_max=0.65, down_max=0.55,
+                   paper_file=None, push=False, tb_filter=False, min_conf=0,
+                   strength_gate=False, rounds=None):
+    """持续 paper 模拟: 每根K线第2/3/4分钟采样, 每根K线处理一次."""
+    seen = set()
+    n = 0
+    while rounds is None or n < rounds:
+        now = datetime.datetime.now()
+        if now.minute % 5 in SAMPLE_MINUTES and now.second >= SAMPLE_SECOND:
+            key = now.strftime("%H:%M")
+            if key not in seen:
+                seen.add(key)
+                n += 1
+                run_paper(amount=amount, fee=fee, up_max=up_max, down_max=down_max,
+                          paper_file=paper_file, push=push, tb_filter=tb_filter,
+                          min_conf=min_conf, strength_gate=strength_gate)
+            time.sleep(20)
+        else:
+            time.sleep(10)
+    return 0
+
+
+def _token_price(market_id, token_id):
+    """查询 token 当前 ask 价 (实时 PnL 用). 返回 float 或 None."""
+    try:
+        ob = _order_book(market_id, token_id)
+        asks = ob.get("asks") or []
+        bids = ob.get("bids") or []
+        if asks:
+            return float(asks[0]["price"])
+        if bids:
+            return float(bids[0]["price"])
+    except Exception:
+        pass
+    return None
+
+
+def run_paper_monitor(amount=2.0, fee=0.0, up_max=0.65, down_max=0.55,
+                      paper_file=None, push=True, tb_filter=False, min_conf=0,
+                      strength_gate=False, poll=20, p_up=0.74, p_down=0.57,
+                      push_every=60, push_delta=5.0):
+    """实时 paper 监控 (绝不下单, 真实报价):
+      第2/3/4分钟信号触发 → 取真实 ask → 机会判断(ask vs p) → 记录注单+推送
+      盘中轮询 token 现价 → 实时盈亏%推送 (变化≥push_delta% 或 ≥push_every s)
+      收盘结算 → 最终获利%推送
+    """
+    import subprocess
+    paper_file = paper_file or PAPER_FILE_DEFAULT
+    state = load_paper(paper_file)
+    seen_candles = set()          # 本进程已处理的K线 (防重复触发)
+    last_pnl = {}                 # token_id -> 上次推送的 pnl%
+    last_live_ts = {}             # token_id -> 上次推送时间
+
+    def _push(msg):
+        if not push:
+            return
+        try:
+            subprocess.run(["python3", str(ROOT / "scripts" / "telegram_push.py"), msg],
+                           capture_output=True, timeout=20)
+        except Exception:
+            pass
+
+    print(f"📡 预测市场实时 paper 监控 | UP≤{up_max:.2f} DOWN≤{down_max:.2f} "
+          f"| p_up={p_up:.2f} p_down={p_down:.2f} | poll={poll}s", flush=True)
+    while True:
+        now = datetime.datetime.now()
+        minute = now.minute % 5
+
+        # ── 1. 结算已收盘注单 + 推送最终结果 ──
+        if now.second < 15:
+            settled = settle_paper(state, fee)
+            if settled:
+                for b in state["bets"]:
+                    if (b.get("status") == "settled"
+                            and not b.get("pushed_final")):
+                        if b.get("outcome") == "win":
+                            pnl_pct = (1 - b["ask"]) / b["ask"] * 100 - b.get("fee", fee) * 100
+                        else:
+                            pnl_pct = -100 - b.get("fee", fee) * 100
+                        mark = "✅ 中" if b.get("outcome") == "win" else "❌ 未中"
+                        _push(f"🏁 结算 {b['candle'][5:16]} {b['side']} @{b['ask']:.2f} {mark}\n"
+                              f"最终 PnL: {pnl_pct:+.1f}% | ${b.get('pnl', 0):+.2f}")
+                        b["pushed_final"] = True
+                save_paper(paper_file, state)
+
+        # ── 2. 信号触发 → 入场机会判断 + 记录 ──
+        if minute in SAMPLE_MINUTES and now.second >= SAMPLE_SECOND:
+            key = now.strftime("%H:%M")
+            if key not in seen_candles:
+                seen_candles.add(key)
+                d = _load_engine()
+                if d:
+                    candle = d["candle"]["iso"]
+                    side, reason = _signal(d, min_conf=min_conf,
+                                           tb_filter=tb_filter,
+                                           strength_gate=strength_gate)
+                    if side and not any(b.get("candle") == candle
+                                        and b.get("status") == "open"
+                                        for b in state["bets"]):
+                        p_est = p_up if side == "UP" else p_down
+                        max_p = up_max if side == "UP" else down_max
+                        try:
+                            found = find_btc_5m_market()
+                        except Exception as e:
+                            print(f"发现市场失败: {e}", file=sys.stderr)
+                            found = None
+                        if found:
+                            _, market_id, up_tok, down_tok, title, _ = found
+                            tok = up_tok if side == "UP" else down_tok
+                            ask = _token_price(market_id, tok)
+                            if ask is not None:
+                                ev = p_est - ask
+                                if ask <= max_p:
+                                    state["bets"].append({
+                                        "candle": candle, "side": side,
+                                        "ask": round(ask, 4), "amount": amount,
+                                        "fee": fee, "status": "open",
+                                        "market_id": market_id, "token_id": tok,
+                                        "p_est": p_est,
+                                        "ts": datetime.datetime.now().isoformat(),
+                                        "reason": reason,
+                                    })
+                                    save_paper(paper_file, state)
+                                    _push(f"🎯 入场机会 | {candle[5:16]} p{minute * 20:.0f}%\n"
+                                          f"{side} ask = {ask:.2f} | 预估 p = {p_est:.2f}\n"
+                                          f"EV = p − P = {ev:+.2f} ✅ (≤{max_p:.2f})\n"
+                                          f"假设 {amount} USDT | 1/4凯利≈10%账户")
+                                else:
+                                    _push(f"⏭️ 机会不足 | {candle[5:16]} {side}\n"
+                                          f"ask = {ask:.2f} > 上限 {max_p:.2f} | "
+                                          f"EV = {ev:+.2f} 跳过")
+                            else:
+                                print("无法取 ask, 跳过")
+
+        # ── 3. 盘中实时 PnL% 推送 ──
+        now_ts = time.time()
+        for b in state["bets"]:
+            if b.get("status") != "open":
+                continue
+            tid, mid = b.get("token_id"), b.get("market_id")
+            if not tid or not mid:
+                continue
+            cur = _token_price(mid, tid)
+            if cur is None:
+                continue
+            pnl_pct = (cur - b["ask"]) / b["ask"] * 100
+            last = last_pnl.get(tid)
+            if (last is None or abs(pnl_pct - last) >= push_delta
+                    or now_ts - last_live_ts.get(tid, 0) >= push_every):
+                try:
+                    elapsed = (now - datetime.datetime.fromisoformat(b["candle"])).seconds
+                    remain = 300 - elapsed % 300
+                except Exception:
+                    remain = 0
+                _push(f"📡 实时 | {b['side']} @{b['ask']:.2f} → 现价 {cur:.2f}\n"
+                      f"实时盈亏 {pnl_pct:+.1f}% | 剩余 {remain // 60}m{remain % 60:02d}s")
+                last_pnl[tid] = pnl_pct
+                last_live_ts[tid] = now_ts
+
+        time.sleep(poll)
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="5minbtc→币安预测交易 桥接 (默认只报价不成交)")
@@ -752,6 +1072,36 @@ def main():
                     help="持仓监控轮询间隔秒 (默认 10)")
     ap.add_argument("--monitor-iters", type=int, default=None,
                     help="持仓监控轮数上限 (默认无限)")
+    ap.add_argument("--paper", action="store_true",
+                    help="预测市场 paper 模拟 (真实报价, 绝不下单)")
+    ap.add_argument("--paper-file", default=None,
+                    help="paper 状态文件 (默认 ~/bb-auto/5minbtc-paper.json)")
+    ap.add_argument("--paper-up-max", type=float, default=0.65,
+                    help="UP 入场价上限 (默认 0.65; 实测盈亏平衡 ~0.70, 留 margin)")
+    ap.add_argument("--paper-down-max", type=float, default=0.55,
+                    help="DOWN 入场价上限 (默认 0.55; 实测盈亏平衡 ~0.57)")
+    ap.add_argument("--paper-fee", type=float, default=0.01,
+                    help="单笔手续费比例 (默认 0.01=1%%)")
+    ap.add_argument("--paper-push", action="store_true",
+                    help="paper 报告推送到 Telegram")
+    ap.add_argument("--paper-min-conf", type=float, default=0,
+                    help="paper 置信度门槛 (默认 0=不过滤; 实测 confidence 校准不可靠)")
+    ap.add_argument("--paper-strength-gate", action="store_true",
+                    help="paper 开启 strength≥medium 过滤 (未经验证)")
+    ap.add_argument("--paper-tb-filter", action="store_true",
+                    help="paper 开启 taker_buy 方向一致性过滤 (未经验证)")
+    ap.add_argument("--paper-monitor", action="store_true",
+                    help="实时 paper 监控: 信号→入场P→实时盈亏%%→结算(推送)")
+    ap.add_argument("--paper-p-up", type=float, default=0.74,
+                    help="UP 信号预估概率 p (默认 0.74, 今日实测 bull 胜率)")
+    ap.add_argument("--paper-p-down", type=float, default=0.57,
+                    help="DOWN 信号预估概率 p (默认 0.57, 今日实测 bear 胜率)")
+    ap.add_argument("--paper-poll", type=int, default=20,
+                    help="实时监控轮询秒数 (默认 20)")
+    ap.add_argument("--paper-push-every", type=int, default=60,
+                    help="实时盈亏最少推送间隔秒 (默认 60)")
+    ap.add_argument("--paper-push-delta", type=float, default=5.0,
+                    help="实时盈亏变化≥此百分比才推送, 单位%% (默认 5)")
     args = ap.parse_args()
 
     if not os.environ.get("BINANCE_API_KEY") or not os.environ.get("BINANCE_API_SECRET"):
@@ -783,6 +1133,30 @@ def main():
             print("已取消")
             return 0
 
+    if args.paper_monitor:
+        return run_paper_monitor(amount=args.amount, fee=args.paper_fee,
+                                 up_max=args.paper_up_max, down_max=args.paper_down_max,
+                                 paper_file=args.paper_file, push=args.paper_push,
+                                 tb_filter=args.paper_tb_filter,
+                                 min_conf=args.paper_min_conf,
+                                 strength_gate=args.paper_strength_gate,
+                                 poll=args.paper_poll, p_up=args.paper_p_up,
+                                 p_down=args.paper_p_down,
+                                 push_every=args.paper_push_every,
+                                 push_delta=args.paper_push_delta)
+    if args.paper:
+        if args.loop:
+            return run_paper_loop(amount=args.amount, fee=args.paper_fee,
+                                  up_max=args.paper_up_max, down_max=args.paper_down_max,
+                                  paper_file=args.paper_file, push=args.paper_push,
+                                  tb_filter=args.paper_tb_filter, min_conf=args.paper_min_conf,
+                                  strength_gate=args.paper_strength_gate,
+                                  rounds=args.rounds)
+        return run_paper(amount=args.amount, fee=args.paper_fee,
+                         up_max=args.paper_up_max, down_max=args.paper_down_max,
+                         paper_file=args.paper_file, push=args.paper_push,
+                         tb_filter=args.paper_tb_filter, min_conf=args.paper_min_conf,
+                         strength_gate=args.paper_strength_gate)
     if args.monitor:
         return monitor_positions(tp_mult=args.tp_mult, sl_mult=args.sl_mult,
                                  interval=args.monitor_interval, live=args.live,
@@ -794,8 +1168,9 @@ def main():
         return run_loop(live=args.live, amount=args.amount, rounds=args.rounds,
                         order_type=args.order_type, limit_price=args.limit_price)
 
-    print("用法: --once 单次 | --loop 持续 | --monitor 持仓监控 | 加 --live 实盘(危险)")
+    print("用法: --once 单次 | --loop 持续 | --monitor 持仓监控 | --paper 预测市场模拟(不下单) | 加 --live 实盘(危险)")
     print("自动卖出止盈止损需: --monitor --tp-mult <x> --sl-mult <x> --live")
+    print("预测市场模拟: --paper [--paper-up-max 0.65 --paper-down-max 0.55 --paper-push]")
     return 0
 
 
