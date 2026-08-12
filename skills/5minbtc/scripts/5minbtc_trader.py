@@ -60,7 +60,7 @@ ALLOWED_STRENGTHS = ("medium", "moderate", "strong")
 TB_FILTER = True       # 方向必须与 taker_buy 一致
 
 # ---- 下单参数 (预测交易, 无杠杆无止损) ----
-DEFAULT_AMOUNT = 2.0      # 默认金额 USDT (小注)
+DEFAULT_AMOUNT = 1.0      # 默认金额 USDT (模拟/实盘均每注 1U, 小注)
 MIN_ORDER_WEI = 1500000000000000000   # MARKET 单 ~1.5 USDT = 1.5e18 wei
 SLIPPAGE_BPS = 200        # 滑点容忍 2%
 WEI_18 = 10 ** 18
