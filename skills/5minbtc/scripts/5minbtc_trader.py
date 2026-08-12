@@ -1024,61 +1024,68 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                     did_2 = did_3 = False
                 side, reason = _signal(d, min_conf=min_conf, tb_filter=tb_filter,
                                        strength_gate=strength_gate)
+                def _place(side_, reason_, tag):
+                    """设纸面 LIMIT (立即成交或挂单). 返回是否下单."""
+                    if not side_ or _active_for(candle):
+                        return False
+                    p_est = p_up if side_ == "UP" else p_down
+                    limit = up_max if side_ == "UP" else down_max
+                    try:
+                        found = find_btc_5m_market()
+                    except Exception as e:
+                        print(f"发现市场失败: {e}", file=sys.stderr)
+                        return False
+                    if not found:
+                        return False
+                    _, market_id, up_tok, down_tok, title, _ = found
+                    tok = up_tok if side_ == "UP" else down_tok
+                    cur_ask = _token_price(market_id, tok)
+                    if cur_ask is None:
+                        print("无法取 ask, 跳过")
+                        return False
+                    if cur_ask <= limit:
+                        state["bets"].append({
+                            "candle": candle, "side": side_,
+                            "ask": round(cur_ask, 4), "amount": amount,
+                            "fee": fee, "status": "open",
+                            "market_id": market_id, "token_id": tok,
+                            "p_est": p_est,
+                            "ts": datetime.datetime.now().isoformat(),
+                            "reason": reason_,
+                        })
+                        save_paper(paper_file, state)
+                        _push(f"✅ 立即成交 | {candle[5:16]} {tag} {side_}\n"
+                              f"@ {cur_ask:.2f} (限价 {limit:.2f}内) | p={p_est:.2f}\n"
+                              f"持仓 {amount}U | 涨跌幅 0% 起算")
+                    else:
+                        state["bets"].append({
+                            "candle": candle, "side": side_,
+                            "limit": round(limit, 4), "status": "pending",
+                            "p_est": p_est, "market_id": market_id,
+                            "token_id": tok,
+                            "ts": datetime.datetime.now().isoformat(),
+                            "reason": reason_,
+                        })
+                        save_paper(paper_file, state)
+                        _push(f"📋 LIMIT | {candle[5:16]} {tag}\n"
+                              f"{side_} 限价 {limit:.2f} (p={p_est:.2f}) "
+                              f"| 现价 {cur_ask:.2f}\n"
+                              f"成交时 EV {p_est - limit:+.2f} | 等回调 | {amount}U")
+                    return True
+
                 if minute == 2 and not did_2:
                     did_2 = True
-                    if side and not _active_for(candle):
-                        p_est = p_up if side == "UP" else p_down
-                        limit = up_max if side == "UP" else down_max
-                        try:
-                            found = find_btc_5m_market()
-                        except Exception as e:
-                            print(f"发现市场失败: {e}", file=sys.stderr)
-                            found = None
-                        if found:
-                            _, market_id, up_tok, down_tok, title, _ = found
-                            tok = up_tok if side == "UP" else down_tok
-                            cur_ask = _token_price(market_id, tok)
-                            if cur_ask is not None:
-                                if cur_ask <= limit:
-                                    state["bets"].append({
-                                        "candle": candle, "side": side,
-                                        "ask": round(cur_ask, 4), "amount": amount,
-                                        "fee": fee, "status": "open",
-                                        "market_id": market_id, "token_id": tok,
-                                        "p_est": p_est,
-                                        "ts": datetime.datetime.now().isoformat(),
-                                        "reason": reason,
-                                    })
-                                    save_paper(paper_file, state)
-                                    _push(f"✅ 立即成交 | {candle[5:16]} 第2min {side}\n"
-                                          f"@ {cur_ask:.2f} (限价 {limit:.2f}内) | p={p_est:.2f}\n"
-                                          f"持仓 {amount}U | 涨跌幅 0% 起算")
-                                else:
-                                    state["bets"].append({
-                                        "candle": candle, "side": side,
-                                        "limit": round(limit, 4), "status": "pending",
-                                        "p_est": p_est, "market_id": market_id,
-                                        "token_id": tok,
-                                        "ts": datetime.datetime.now().isoformat(),
-                                        "reason": reason,
-                                    })
-                                    save_paper(paper_file, state)
-                                    _push(f"📋 LIMIT | {candle[5:16]} 第2min\n"
-                                          f"{side} 限价 {limit:.2f} (p={p_est:.2f}) "
-                                          f"| 现价 {cur_ask:.2f}\n"
-                                          f"成交时 EV {p_est - limit:+.2f} | 等回调 | {amount}U")
-                            else:
-                                print("无法取 ask, 跳过")
-                    elif side:
-                        print("第2min已有活跃单, 不重复设")
+                    _place(side, reason, "第2min")
                 elif minute == 3 and not did_3:
                     did_3 = True
                     if not _active_for(candle):
-                        p = d["prediction"]
-                        _push(f"🔎 第3分钟预测 | {candle[5:16]}\n"
-                              f"现价 {d['price']['current']:,.2f} | "
-                              f"{p['bias']}/{p['strength']} conf {p['confidence']}\n"
-                              f"(仅预测, 不设LIMIT)")
+                        # 第2分钟中性 → 第3分钟第二次机会下单
+                        if not _place(side, reason, "第3min"):
+                            p = d["prediction"]
+                            _push(f"🔎 第3分钟预测 | {candle[5:16]}\n"
+                                  f"现价 {d['price']['current']:,.2f} | "
+                                  f"{p['bias']}/{p['strength']} conf {p['confidence']}\n"
+                                  f"(仍无信号, 不设LIMIT)")
                     # 已有活跃单: LIMIT 方向锁定, 静默
 
         # ── 成交检测 + 盘中实时涨跌幅 ──
