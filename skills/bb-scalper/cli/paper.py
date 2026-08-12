@@ -178,9 +178,14 @@ class PaperEngine:
                     "leverage": leverage}
 
         if pct < 0.15 and slope_1h > -slope_loose and rsi <= rsi_long_max:
+            # 深跌保护: pct_b 太负(价格远跌破下轨)说明下跌动能强, 禁止接飞刀
+            if pct < -0.5:
+                return None
             entry = bb["lower"] * (1 + entry_th / 2)
             return ("LONG", _open("LONG", entry, bb["lower"] * (1 - stop_buf), bb["upper"]))
         if pct > 0.85 and slope_1h < slope_loose and rsi >= rsi_short_min:
+            if pct > 1.5:  # 深涨保护
+                return None
             entry = bb["upper"] * (1 - entry_th / 2)
             return ("SHORT", _open("SHORT", entry, bb["upper"] * (1 + stop_buf), bb["lower"]))
         return None
@@ -200,14 +205,15 @@ class PaperEngine:
         p = self.position
         if p["dir"] == "LONG":
             if price <= p["sl"]:
-                return self.close("SL", price)
+                # 止损单按止损价成交(模拟真实市价止损, 而非越过后第一个tick价)
+                return self.close("SL", p["sl"])
             if price >= p["tp"]:
-                return self.close("TP", price)
+                return self.close("TP", p["tp"])
         else:
             if price >= p["sl"]:
-                return self.close("SL", price)
+                return self.close("SL", p["sl"])
             if price <= p["tp"]:
-                return self.close("TP", price)
+                return self.close("TP", p["tp"])
         return None
 
     def on_bar(self, low, high, ts):
