@@ -1100,6 +1100,12 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                         # 第2分钟中性 → 第3分钟第二次机会下单
                         if not _place(side, reason, "第3min"):
                             p = d["prediction"]
+                            cc = d["candle"]
+                            f = d["factors"]
+                            tb = f.get("taker_buy", 0.0)
+                            fng = d.get("fng", {})
+                            fng_s = (f" | FNG {fng.get('value')} {fng.get('label', '')}"
+                                     if fng.get("value") is not None else "")
                             ud = "UP/DOWN: 不可用"
                             try:
                                 f3 = find_btc_5m_market()
@@ -1111,9 +1117,13 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                                         ud = f"UP {ua:.2f} | DOWN {da:.2f}"
                             except Exception:
                                 pass
-                            _push(f"🔎 第3分钟预测(模拟) |{candle[5:16]}\n"
+                            _push(f"🔎 第3分钟预测(模拟) | {candle[5:16]} "
+                                  f"p{cc.get('progress_pct', 0):.0f}%\n"
+                                  f"方向: {p['bias']} ({p['strength']}) | 置信 {p['confidence']}\n"
                                   f"现价 {d['price']['current']:,.2f} | "
-                                  f"{p['bias']}/{p['strength']} conf {p['confidence']}\n"
+                                  f"预测收 {p['pred_close']:,} "
+                                  f"(低{p['pred_low']:,}/高{p['pred_high']:,})\n"
+                                  f"regime {d.get('regime')}{fng_s} | 买力 tb={tb:+.2f}\n"
                                   f"预测市场: {ud}\n"
                                   f"(仍无信号, 不设LIMIT)")
                     # 已有活跃单: LIMIT 方向锁定, 静默
