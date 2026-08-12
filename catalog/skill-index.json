@@ -51,7 +51,7 @@
       "title": "Marketing, SEO & Growth"
     },
     {
-      "count": 86,
+      "count": 87,
       "description": "Create, edit, repurpose, and publish writing, images, audio, and video.",
       "emoji": "✍️",
       "id": "content-media-publishing",
@@ -100,7 +100,7 @@
       "title": "Specialized Domains & Utilities"
     }
   ],
-  "inventoryCount": 826,
+  "inventoryCount": 827,
   "inventorySemantics": "tracked physical top-level directories with SKILL.md",
   "schemaVersion": 2,
   "skills": [
@@ -9491,6 +9491,63 @@
       },
       "review_signals": [],
       "skill_id": "daily-xhs-content",
+      "support_level": "catalog",
+      "used_by": []
+    },
+    {
+      "assignments": [],
+      "category_id": "content-media-publishing",
+      "classification": "description:image;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "image"
+        ],
+        "method": "description",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "content-media-publishing",
+          "match_count": 1,
+          "matched_signals": [
+            "image"
+          ],
+          "priority": 100,
+          "tie_detected": false
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "将主题、内容或品牌意图转化为有审美依据、可执行、可迭代的视觉方向与生成式图像提示词。适用于选择艺术/摄影/设计/东方美学/3D 风格，分析参考图，设计封面、海报、品牌视觉、产品图、插画或概念图，为 Midjourney、SDXL、GPT Image、即梦等模型生成提示词，以及解决“画面好看但不对题”“风格堆砌”“多张图不统一”等问题。",
+      "description_status": "source-text",
+      "path": "skills/daniel-aesthetic-director/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "authors": [
+          "Daniel Li"
+        ],
+        "creation_commit": "d887131448eaa2945f755d5c3e26835aceb6b57d",
+        "declared_hints": [
+          "Created in this repository from Daniel Li's curated aesthetic-style source material; the D-A-N-I-E-L six-axis direction method and execution contract were authored for this Skill.",
+          "The public art movements and traditional visual styles in the reference atlas are not claimed as personal inventions."
+        ],
+        "evidence": [
+          "commit:d887131448eaa2945f755d5c3e26835aceb6b57d",
+          "skills/daniel-aesthetic-director/SKILL.md",
+          "skills/daniel-aesthetic-director/agents/openai.yaml",
+          "skills/daniel-aesthetic-director/references/style-atlas.md"
+        ],
+        "license": {
+          "evidence": "LICENSE",
+          "spdx": "MIT"
+        },
+        "origin_kind": "project-original",
+        "review_state": "reviewed"
+      },
+      "review_signals": [],
+      "skill_id": "daniel-aesthetic-director",
       "support_level": "catalog",
       "used_by": []
     },

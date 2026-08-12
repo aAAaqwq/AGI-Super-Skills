@@ -4,6 +4,30 @@
   "scope": "authored-provenance-evidence-not-runtime-verification",
   "entries": [
     {
+      "skill_id": "daniel-aesthetic-director",
+      "origin_kind": "project-original",
+      "review_state": "reviewed",
+      "authors": [
+        "Daniel Li"
+      ],
+      "creation_commit": "d887131448eaa2945f755d5c3e26835aceb6b57d",
+      "license": {
+        "spdx": "MIT",
+        "evidence": "LICENSE"
+      },
+      "local_tree_digest": "sha256:f34aa039f96c90eb4b8a462c0f07ed084ea255fc8d1012214225e9c691ad1a0b",
+      "declared_hints": [
+        "Created in this repository from Daniel Li's curated aesthetic-style source material; the D-A-N-I-E-L six-axis direction method and execution contract were authored for this Skill.",
+        "The public art movements and traditional visual styles in the reference atlas are not claimed as personal inventions."
+      ],
+      "evidence": [
+        "commit:d887131448eaa2945f755d5c3e26835aceb6b57d",
+        "skills/daniel-aesthetic-director/SKILL.md",
+        "skills/daniel-aesthetic-director/agents/openai.yaml",
+        "skills/daniel-aesthetic-director/references/style-atlas.md"
+      ]
+    },
+    {
       "skill_id": "daniel-content-writing-style",
       "origin_kind": "unknown",
       "review_state": "unreviewed",
