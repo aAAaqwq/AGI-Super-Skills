@@ -294,7 +294,7 @@ class PaperStreamer:
             await asyncio.sleep(30)
             for sym, eng in self.engines.items():
                 try:
-                    resp = requests.get("https://fapi.binance.com/fapi/v1/ticker/price",
+                    resp = requests.get("https://data-api.binance.vision/api/v3/ticker/price",
                                         params={"symbol": sym}, timeout=8)
                     resp.raise_for_status()
                     price = float(resp.json()["price"])
@@ -399,12 +399,12 @@ def main():
     import requests
     for s in syms:
         try:
-            resp = requests.get("https://fapi.binance.com/fapi/v1/klines",
+            resp = requests.get("https://data-api.binance.vision/api/v3/klines",
                                 params={"symbol": s, "interval": "15m", "limit": 400},
                                 timeout=15)
             resp.raise_for_status()
             engines[s].closes_15m = [float(k[4]) for k in resp.json()]
-            resp = requests.get("https://fapi.binance.com/fapi/v1/klines",
+            resp = requests.get("https://data-api.binance.vision/api/v3/klines",
                                 params={"symbol": s, "interval": "1h", "limit": 200},
                                 timeout=15)
             resp.raise_for_status()
