@@ -1219,10 +1219,13 @@ def main():
     if not os.environ.get("BINANCE_API_KEY") or not os.environ.get("BINANCE_API_SECRET"):
         print("需要 BINANCE_API_KEY/BINANCE_API_SECRET 环境变量", file=sys.stderr)
         return 1
+    paper_mode = args.paper or args.paper_monitor
     if not WALLET or not WALLET_ID:
-        print("需要 BINANCE_PREDICT_WALLET / BINANCE_PREDICT_WALLET_ID 环境变量"
-              " (预测钱包地址/ID, 安全起见不从代码读取)", file=sys.stderr)
-        return 1
+        if not paper_mode:
+            print("需要 BINANCE_PREDICT_WALLET / BINANCE_PREDICT_WALLET_ID 环境变量"
+                  " (预测钱包地址/ID, 安全起见不从代码读取)", file=sys.stderr)
+            return 1
+        print("⚠️ 预测钱包未设置 — paper 模拟模式无需钱包 (只读报价, 绝不下单)")
 
     print("\n⚠️  币安预测交易无 test 模式, 确认下单即真实花钱. 默认只报价不成交。\n")
 

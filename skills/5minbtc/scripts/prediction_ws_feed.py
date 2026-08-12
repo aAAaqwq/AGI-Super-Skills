@@ -116,7 +116,14 @@ class Feed:
                 async with websockets.connect(
                         url, additional_headers={"X-MBX-APIKEY": os.environ["BINANCE_API_KEY"]},
                         ping_interval=WS_PING, ping_timeout=WS_PING * 2) as ws:
-                    last_rest = 0.0
+                    # 连接后立即 REST 刷新当前市场 UP/DOWN 权威价 (不等 300s)
+                    cur = rest_current()
+                    if cur:
+                        self.cache["current"] = cur
+                        self.write()
+                        print(f"REST 初始刷新: market={cur['market_id']} "
+                              f"UP={cur['up_ask']} DOWN={cur['down_ask']}", flush=True)
+                    last_rest = time.time()
                     while True:
                         try:
                             raw = await asyncio.wait_for(ws.recv(), timeout=WS_PING * 3)
