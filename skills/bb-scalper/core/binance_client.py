@@ -5,7 +5,7 @@ core/binance_client.py — 币安 USDT 永续合约 REST 客户端
 统一签名 + 错误处理，供 cli/trade_exec.py 等上层模块调用。
 
 签名方式（Binance 要求）:
-  - params 加入 timestamp（以及 recvWindow=10000）后按字母序排序
+  - params 加入 timestamp（以及 recvWindow=30000）后按字母序排序
   - 用 urllib.parse.urlencode 生成 query string（不手工拼接）
   - HMAC-SHA256 对 query string 签名，结果作为 signature 参数
 
@@ -78,7 +78,7 @@ class BinanceClient:
         """统一签名 + 请求 + 错误处理。
 
         signed=True 时：
-          - 自动加入 timestamp 与 recvWindow=10000
+          - 自动加入 timestamp 与 recvWindow=30000
           - urlencode(排序后的 params) 作为待签 query string
           - HMAC-SHA256 签名，signature 追加到 query string
         GET 请求把 query string 作为 requests 的 params 参数直接发送。
@@ -93,7 +93,8 @@ class BinanceClient:
 
         if signed:
             params["timestamp"] = int(time.time() * 1000)
-            params["recvWindow"] = 10000
+            # recvWindow 放宽到 30s: 网络/代理延迟大时避免 -1021 时间戳超窗
+            params["recvWindow"] = 30000
             query = urllib.parse.urlencode(sorted(params.items()))
             signature = hmac.new(
                 self.api_secret.encode(), query.encode(), hashlib.sha256
@@ -179,42 +180,41 @@ class BinanceClient:
                                 test: bool = False) -> dict:
         """下条件单（止损/止盈）。
 
-        币安已把 STOP_MARKET / TAKE_PROFIT_MARKET 迁到 Algo Order API
-        （/fapi/v1/algo/order），普通 /fapi/v1/order 会返回 -4120。
+        币安把 STOP_MARKET / TAKE_PROFIT_MARKET 迁到 Algo Order API,
+        正确端点 POST /fapi/v1/algoOrder + algoType=CONDITIONAL。
+        参数用 triggerPrice(触发价) + closePosition(全平), 而非 stopPrice+quantity。
 
         Args:
             symbol: 交易对
             side: BUY / SELL（自动转大写）
             order_type: STOP_MARKET / TAKE_PROFIT_MARKET
-            quantity: 数量
+            quantity: 数量（closePosition 时可不传, 但保留用于兼容）
             stop_price: 触发价
             reduce_only: 是否只减仓单（默认 True，风控要求）
-            test: True 优先走 /fapi/v1/algo/order/test；若该端点不存在(404)
-                  则降级为本地参数校验，绝不发真实单
+            test: True 只做本地参数校验, 不发真实单
 
         Returns:
-            币安响应 dict；test 降级时为 {"status": "VALIDATED", ...}
+            币安响应 dict（含 algoId/algoStatus）
         """
         params: Dict[str, Any] = {
+            "algoType": "CONDITIONAL",
             "symbol": symbol,
             "side": side.upper(),
             "type": order_type.upper(),
-            "quantity": quantity,
-            "stopPrice": stop_price,
+            "triggerPrice": stop_price,
+            "workingType": "MARK_PRICE",
         }
-        if reduce_only:
-            params["reduceOnly"] = "true"
+        # closePosition=true 全平(与 quantity 互斥); 有持仓用全平更稳
+        params["closePosition"] = "true"
+        # 按合约 pricePrecision 修正触发价, 避免 -1111 精度超限
+        params["triggerPrice"] = self._round_price(symbol, stop_price)
+        if not reduce_only:
+            params["quantity"] = quantity
 
-        path = "/fapi/v1/algo/order/test" if test else "/fapi/v1/algo/order"
-        try:
-            return self._signed_request("POST", path, params)
-        except BinanceAPIError as e:
-            if test and e.status == 404:
-                self.logger.warning(
-                    "algo test 端点不可用(HTTP 404), 降级为本地参数校验: %s %s qty=%s stop=%s red=%s",
-                    symbol, order_type, quantity, stop_price, reduce_only)
-                return self._validate_conditional_params(params)
-            raise
+        if test:
+            return self._validate_conditional_params(params)
+
+        return self._signed_request("POST", "/fapi/v1/algoOrder", params)
 
     @staticmethod
     def _validate_conditional_params(params: Dict[str, Any]) -> dict:
@@ -224,18 +224,17 @@ class BinanceClient:
             problems.append("symbol 缺失")
         if params.get("type") not in ("STOP_MARKET", "TAKE_PROFIT_MARKET", "STOP", "TAKE_PROFIT"):
             problems.append("type 不支持: %s" % params.get("type"))
-        if not params.get("quantity") or float(params["quantity"]) <= 0:
-            problems.append("quantity 必须为正")
-        if not params.get("stopPrice") or float(params["stopPrice"]) <= 0:
-            problems.append("stopPrice 必须为正")
-        notional = float(params.get("quantity", 0)) * float(params.get("stopPrice", 0))
-        if notional < 5 and params.get("reduceOnly") != "true":
-            problems.append("名义 %.2f < 最小 5 USDT" % notional)
+        if not params.get("triggerPrice") or float(params["triggerPrice"]) <= 0:
+            problems.append("triggerPrice 必须为正")
+        if params.get("closePosition") != "true" and (
+                not params.get("quantity") or float(params["quantity"]) <= 0):
+            problems.append("quantity 必须为正(或使用 closePosition=true)")
         if problems:
             raise BinanceAPIError(code=-1, message="; ".join(problems), status=400)
-        return {"status": "VALIDATED",
+        return {"status": "VALIDATED", "algoType": "CONDITIONAL",
                 "symbol": params["symbol"], "type": params["type"],
-                "quantity": params["quantity"], "stopPrice": params["stopPrice"]}
+                "triggerPrice": params.get("triggerPrice"),
+                "closePosition": params.get("closePosition", "true")}
 
     def cancel_order(self, symbol: str, order_id: Optional[int] = None,
                      orig_client_order_id: Optional[str] = None) -> dict:

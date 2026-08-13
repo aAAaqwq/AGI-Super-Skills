@@ -62,7 +62,10 @@ class TestnetExecutor:
             order_id = order_res.get("order_id") or order_res.get("orderId")
             cid = order_res.get("client_order_id") or order_res.get("clientOrderId")
         if status == "FILLED":
-            return {"status": status, "orderId": order_id}
+            price = getattr(order_res, "price", None)
+            if price is None and isinstance(order_res, dict):
+                price = order_res.get("price") or order_res.get("avgPrice")
+            return {"status": status, "orderId": order_id, "price": price}
         import time as _t
         deadline = _t.time() + timeout
         while _t.time() < deadline:
@@ -114,7 +117,7 @@ class TestnetExecutor:
         entry_res = self._wait_filled(symbol, entry_res)
         if entry_res.get("status") != "FILLED":
             raise TradeError("testnet 入场未成交 status=%s" % entry_res.get("status"))
-        fill = _f(entry_res.price) or entry
+        fill = _f(entry_res.get("price") or entry_res.get("avgPrice")) or entry
 
         sl_r = self.trader._round(symbol, sl, "price")
         tp_r = self.trader._round(symbol, tp, "price")
