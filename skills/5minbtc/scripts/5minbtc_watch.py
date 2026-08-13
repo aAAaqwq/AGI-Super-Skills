@@ -141,7 +141,12 @@ def market_line(d):
     return "\n".join(out)
 
 
+MUTE = False  # 全局静默开关 (--mute 时关闭事件推送, 保留记录+结算)
+
+
 def push(msg):
+    if MUTE:
+        return
     try:
         subprocess.run([PY, str(PUSH), msg], timeout=20, capture_output=True)
     except Exception:
@@ -280,7 +285,12 @@ def main():
     ap.add_argument("--heartbeat", type=int, default=HEARTBEAT_SEC)
     ap.add_argument("--no-daily-stats", action="store_true",
                     help="关闭每日战绩汇总推送")
+    ap.add_argument("--mute", action="store_true",
+                    help="关闭事件推送(保留预测记录+结算+每日战绩), 推送交给实时重大信号监控")
     args = ap.parse_args()
+
+    global MUTE
+    MUTE = args.mute
 
     mode = "每根K线推预测" if args.every_candle else \
         f"事件驱动+每{args.heartbeat // 3600}h心跳"
