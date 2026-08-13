@@ -70,12 +70,11 @@ def save_paper(state):
     PAPER.write_text(json.dumps(state, indent=2, ensure_ascii=False))
 
 
-def record_paper(d):
+def record_paper(d, up=None, down=None):
     """重大信号自动记录一笔模拟预测到台账 (验证 conf≥阈值 的胜率)."""
     p = d["prediction"]
     c = d["candle"]
     side = "UP" if p["bias"] == "bull" else "DOWN"
-    up, down = get_up_down_price()
     ask = up if side == "UP" else down
     if ask is None:
         # 真实价拿不到, 用引擎预测方向折算近似价
@@ -111,21 +110,27 @@ def push(msg, enabled=True):
         pass
 
 
-def fmt_signal(d):
+def fmt_signal(d, up=None, down=None):
     p = d["prediction"]
     c = d["candle"]
     price = d["price"]
     open_p = price["open"]
     cur = price["current"]
-    chg = (cur - open_p) / open_p * 100 if open_p else 0
+    chg = cur - open_p
+    chg_pct = chg / open_p * 100 if open_p else 0
     dir_cn = DIR_CN.get(p["bias"], p["bias"])
+    side = "UP" if p["bias"] == "bull" else "DOWN"
+    up_s = f"{up:.2f}" if up is not None else "?"
+    down_s = f"{down:.2f}" if down is not None else "?"
     return (f"🎯 [重大信号] {dir_cn}\n"
             f"{c['candle_start']} progress {c['progress_pct']:.0f}% | "
             f"置信 {p['confidence']}\n"
-            f"开 {open_p:.2f} → 现 {cur:.2f} ({chg:+.3f}%)\n"
+            f"开 {open_p:.2f} → 现 {cur:.2f} ({chg:+.0f}$ {chg_pct:+.3f}%)\n"
             f"预测收 {p['pred_close']:,} | 强度 {p['strength']}\n"
-            f"── 模拟下单(1U) ──\n"
-            f"回复「下单」确认买入, 回复「跳过」忽略")
+            f"盘口: UP {up_s} | DOWN {down_s}\n"
+            f"── 下单指令 ──\n"
+            f"模拟: 回复「下单」买入 {side} 1U\n"
+            f"真实: 回复「真实下单」买入 {side} 1U (当前5min, 真钱需确认)")
 
 
 def main():
@@ -162,17 +167,19 @@ def main():
         is_signal = bias != "neutral" and conf >= args.conf
 
         if is_signal:
+            # 拿真实 UP/DOWN 盘口价 (每次命中拿一次, 供记录+推送复用)
+            up, down = get_up_down_price()
             # 自动记录模拟预测 (同一根K线只记一次, 验证重大信号胜率)
             if candle != recorded_candle:
-                side, ask = record_paper(d)
+                side, ask = record_paper(d, up, down)
                 recorded_candle = candle
                 print(f"📝 自动记录模拟预测: {side} @ {ask:.2f} conf={conf}", flush=True)
             # 推送去重: 首次命中 / 置信度显著提升(≥5) / 方向翻转 才推
             new_peak = conf >= last_signal_conf + 5 or last_bias is None
             flip = bias != last_bias and last_bias is not None
             if new_peak or flip:
-                push(fmt_signal(d), args.push)
-                print(fmt_signal(d), flush=True)
+                push(fmt_signal(d, up, down), args.push)
+                print(fmt_signal(d, up, down), flush=True)
                 print("─" * 40, flush=True)
                 last_signal_conf = conf
                 last_bias = bias
