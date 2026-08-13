@@ -324,38 +324,13 @@ class PaperStreamer:
                 await asyncio.sleep(3)
 
     async def _poll_prices(self):
-        """trade 流稀疏时兜底: 每 30s 拉一次现价检查触发(弥补秒级缺口)。
-        同时每 ~60s 用 REST 刷新 15m/1h closes — 实测 fstream kline 流
-        在部分网络下不推送, 会导致 closes 冻结、策略永不触发信号。"""
+        """trade 流稀疏时兜底: 每 30s 拉一次现价检查触发(弥补秒级缺口)。"""
         import requests
-        kline_refresh = 0
         while True:
             await asyncio.sleep(30)
-            kline_refresh += 1
-            if kline_refresh >= 2:   # 每 2 轮 (~60s)
-                kline_refresh = 0
-                for sym, eng in self.engines.items():
-                    try:
-                        resp = requests.get(
-                            "https://data-api.binance.vision/api/v3/klines",
-                            params={"symbol": sym, "interval": "15m", "limit": 400},
-                            timeout=15)
-                        resp.raise_for_status()
-                        eng.closes_15m = [float(k[4]) for k in resp.json()]
-                    except Exception as e:
-                        logger.warning("[%s] 15m closes 刷新失败: %s", sym, e)
-                    try:
-                        resp = requests.get(
-                            "https://data-api.binance.vision/api/v3/klines",
-                            params={"symbol": sym, "interval": "1h", "limit": 200},
-                            timeout=15)
-                        resp.raise_for_status()
-                        eng.closes_1h = [float(k[4]) for k in resp.json()]
-                    except Exception as e:
-                        logger.warning("[%s] 1h closes 刷新失败: %s", sym, e)
             for sym, eng in self.engines.items():
                 try:
-                    resp = requests.get("https://data-api.binance.vision/api/v3/ticker/price",
+                    resp = requests.get("https://fapi.binance.com/fapi/v1/ticker/price",
                                         params={"symbol": sym}, timeout=8)
                     resp.raise_for_status()
                     price = float(resp.json()["price"])
@@ -462,12 +437,12 @@ def main():
     import requests
     for s in syms:
         try:
-            resp = requests.get("https://data-api.binance.vision/api/v3/klines",
+            resp = requests.get("https://fapi.binance.com/fapi/v1/klines",
                                 params={"symbol": s, "interval": "15m", "limit": 400},
                                 timeout=15)
             resp.raise_for_status()
             engines[s].closes_15m = [float(k[4]) for k in resp.json()]
-            resp = requests.get("https://data-api.binance.vision/api/v3/klines",
+            resp = requests.get("https://fapi.binance.com/fapi/v1/klines",
                                 params={"symbol": s, "interval": "1h", "limit": 200},
                                 timeout=15)
             resp.raise_for_status()
