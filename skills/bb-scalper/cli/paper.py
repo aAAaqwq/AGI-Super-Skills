@@ -256,6 +256,21 @@ class PaperEngine:
             return self.close("TIMEOUT", self.cur_price or p["entry"])
         return None
 
+    def _record_open(self):
+        """记录建仓(OPEN状态), 作为复盘证据; 平仓时由 close() 更新为最终结果。"""
+        p = self.position
+        if p is None:
+            return
+        trade = {
+            "symbol": self.symbol, "dir": p["dir"],
+            "entry": p["entry"], "exit": None, "result": "OPEN",
+            "pnl_pct": None, "sl": p.get("sl"), "tp": p.get("tp"),
+            "notional": p["notional"], "leverage": p.get("leverage", 10),
+            "opened_ts": p["opened_ts"], "closed_ts": None,
+        }
+        self.trades.append(trade)
+        self._persist_trades()
+
     def close(self, result: str, exit_price: float) -> dict:
         p = self.position
         entry, lev = p["entry"], p["leverage"]
@@ -269,7 +284,13 @@ class PaperEngine:
             "closed_ts": datetime.now(timezone.utc).isoformat(),
         }
         self.capital += p["notional"] * pnl_pct / 100
-        self.trades.append(trade)
+        # 更新对应的 OPEN 建仓记录为最终结果(复盘证据: 建仓+平仓一条记录)
+        for t in reversed(self.trades):
+            if t.get("result") == "OPEN" and t.get("symbol") == self.symbol:
+                t.update(trade)
+                break
+        else:
+            self.trades.append(trade)
         self._persist_trades()  # 每笔平仓立即落盘
         if result == "SL":
             self.last_sl_bar = self._bar_seq
@@ -406,6 +427,7 @@ class PaperStreamer:
         logger.info("[%s] 📈 新信号 %s @%.6f (sl=%.6f tp=%.6f) 名义 %.0f",
                     eng.symbol, direction, pos["entry"], pos["sl"], pos["tp"], pos["notional"])
         eng.position = pos
+        eng._record_open()  # 建仓即落盘(OPEN), 作为复盘证据
 
     def _report(self, eng: PaperEngine, trade):
         if not trade:
