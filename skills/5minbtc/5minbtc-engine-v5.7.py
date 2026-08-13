@@ -512,12 +512,17 @@ def detect_regime(vol_ratio, candles, atr_val=None):
 
 # ======================== Factor Combination ========================
 
-BASE_W = {'momentum': 1.0, 'meanrev': 0.5, 'rsi': 0.4,
-          'volume': 0.3, 'fatigue': 0.5, 'imbalance': 0.8, 'microprice': 0.6,
-          'decel': 0.7, 'position': 0.5,
-          'v_reversal': 0.8, 'vol_breakout': 0.4,
-          'half_body': 1.2,  # v5.7: 半K线body动量,高权重(这是真正的edge)
-          'taker_buy': 0.7}  # v5.8: 主动买卖量能因子,参考momentum权重水平
+# v5.9 对抗式审查修复 (2026-08-13):
+# 实测回测证伪了 11/13 因子(47-49%硬币), 且 momentum/rsi 反向。
+# 权重与证据完全倒挂 —— 收敛到 3 个有证据的信号:
+#   half_body(延续, 主信号) + volume(唯一独立alpha 58%) + meanrev(唯一正向价格因子 51.7%)
+# 其余因子(占37%权重无信息 + 25%权重未验证)清零。
+BASE_W = {'momentum': 0.0, 'meanrev': 0.3, 'rsi': 0.0,
+          'volume': 0.8, 'fatigue': 0.0, 'imbalance': 0.0, 'microprice': 0.0,
+          'decel': 0.0, 'position': 0.0,
+          'v_reversal': 0.0, 'vol_breakout': 0.0,
+          'half_body': 1.2,  # 延续主信号 (真正 edge)
+          'taker_buy': 0.0}  # 未验证, 清零 (待纳入公平回测后再评估)
 
 REGIME_ADJ = {
     'HIGH_VOL': {'momentum': 0.4, 'meanrev': 0.3, 'rsi': 0.3,
@@ -697,13 +702,13 @@ def direction_rule_v5(candles, closes, atr_val, vol_ratio,
         if factors.get("decel", 0) * ts < -0.5:
             score *= 0.5   # decel > reduce confidence, not direction
     elif regime == "HIGH_VOL":
-        score *= 0.45  # v5.5: 0.6>0.45 更强压制 (P1-2: 高vol准确率更低)
+        score *= 0.6  # v5.9: 0.45>0.6 放宽 (审查: 三层惩罚去掉一层, 低conf高vol桶实测62.5%不该过度压制)
 
-    # ---- P1-1: Bull bias惩罚 ----
-    # 历史数据: bear准确率 69.1% > bull 63.5%
-    # bull方向score衰减 0.92,迫使引擎只在强信号时出bull
-    if score > 0:
-        score *= 0.92
+    # ---- P1-1: Bull bias惩罚 (v5.9 移除) ----
+    # 原假设 "bear 69.1% > bull 63.5%" 已被最新 317 笔实测推翻 (bull 64% > bear 50%)
+    # 该惩罚现在压制唯一真 edge, 移除。方向偏差改由滚动窗口经验胜率校准。
+    # if score > 0:
+    #     score *= 0.92
 
     # ---- Direction threshold (v5.5: neutral区收缩 [-2,2]>[-1,1]) ----
     nz = 12 if regime == "HIGH_VOL" else 6
