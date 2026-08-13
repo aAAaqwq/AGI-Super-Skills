@@ -1,7 +1,7 @@
 ---
 name: 5minbtc
-version: 5.8.0
-description: "BTC 5分钟K线实时方向预测。v5.8新增: taker_buy主动买量因子(区分主动买/卖) + 订单簿多时刻采样去噪(fetch_depth_avg)。v5.7.3引擎HTTP并行化(4路ThreadPoolExecutor→~3s,原12-18s)。半K线策略——第2分钟执行(progress~40%)，12正交因子含half_body实体延续+momentum/decel冲突降权+V反转+放量突破+Chainlink价格对齐+Platt Scaling+Bull惩罚。ATR乘数x0.55。黑天鹅防护: ATR spike+FNG<25过滤+新闻冲击熔断。v5.7.2冲突裁决: half_body vs imbalance/microprice(已验证2次实盘)+fatigue≥0.8均值回归预警。Binance端点双向故障切换。"
+version: 5.9.0
+description: "BTC 5分钟K线实时方向预测。v5.9对抗式审查重构: 13因子收敛到3个有证据信号(half_body延续+volume放量+meanrev回归, 11个47-49%硬币因子清零) + 三层独立信息过滤(多周期4h/1h/15m趋势 + 跨资产ETH/SOL广度 + 真订单流OFI) + 移除bull×0.92惩罚/Platt置信度门控。半K线策略第2分钟执行。黑天鹅防护: ATR spike+FNG<25。Binance端点双向故障切换。"
 triggers:
   - 5minbtc
   - 5min btc
@@ -11,10 +11,11 @@ tools:
   - web
 ---
 
-# 5minbtc — BTC 5分钟实时预测 v5.8.0
+# 5minbtc — BTC 5分钟实时预测 v5.9.0
 
 > BTC 单根 5min K线 方向 + 收盘价预测。引擎+LLM 混合架构。
 > **SKILL.md 是索引, 详细内容见 `references/`。**
+> **v5.9 核心转变**: 从"13因子预测器"→"3信号错价检测器"(见 [对抗式审查报告](references/strategy-adversarial-review.md))
 
 ## 触发
 `5minbtc` / `5min btc` / `btc 5min` / `监控` (配合持续盯盘)
@@ -72,7 +73,8 @@ python3 $SKILL_DIR/5minbtc-log.py log \
 ```
 
 ## 架构 (1 行/组件)
-- **引擎** `5minbtc-engine-v5.7.py`: 12+1 正交因子 (v5.8 加 taker_buy) + 半 K线策略 + 4路并行 HTTP (~3s, v5.8 订单簿多时刻采样 ~4-5s)
+- **引擎** `5minbtc-engine-v5.7.py` (v5.9): 3信号方向判断(half_body延续1.2 + volume放量0.8 + meanrev回归0.3) + 三层独立过滤(多周期4h/1h/15m + 跨资产ETH/SOL + 真订单流OFI) + 9路并行HTTP
+- **订单流** `scripts/ofi_feed.py`: trade+bookTicker 组合流 tick规则推断主动买卖, 写 ~/bb-auto/ofi.json (launchd: com.daniel.ofi-feed)
 - **日志** `5minbtc-log.py`: jsonl 追加 + 增量 settle (写入 logs/)
 - **新闻** `5minbtc-news.py`: CoinDesk RSS (唯一稳定源, ~14min 延迟)
 - **LLM**: 因子打分基准 + LLM 综合裁决 + 模板输出
@@ -100,6 +102,7 @@ python3 $SKILL_DIR/5minbtc-log.py log \
 ## 📚 引用索引 (references/)
 
 ### 核心方法论
+- [strategy-adversarial-review.md](references/strategy-adversarial-review.md) — **对抗式审查报告: 第一性原理 + 13因子证伪 + 该留/删/缺失 + P0/P1/P2行动清单** (v5.9 依据)
 - [lessons.md](references/lessons.md) — **25 条核心教训** (必读, 含 2026-07-05 新增 23-25)
 - [pitfalls.md](references/pitfalls.md) — **17 条 pitfalls 集中索引** (必读, 含并行 max() 评估陷阱)
 - [changelog.md](references/changelog.md) — v5.0 ~ v5.7.4 详细变更
@@ -204,6 +207,9 @@ backtest/
 │   ├── 5minbtc_watch.py          # ★ Telegram 推送监控 daemon (事件驱动+预测记录+收盘结算)
 │   ├── 5minbtc_day_stats.py      # 预测战绩查询 (今日/历史, --push 推送)
 │   ├── 5minbtc_trader.py         # ★ 币安预测交易桥接 (--once/--loop/--monitor/--paper/--paper-monitor)
+│   ├── prediction_ws_feed.py     # 币安 w3w-prediction WS 实时价源 (<200ms)
+│   ├── ofi_feed.py               # ★ 真订单流采集 (trade+bookTicker tick规则, launchd com.daniel.ofi-feed)
+│   ├── 5minbtc_keyless_paper.py  # 免密钥模拟盘 (公开BTC数据模拟UP/DOWN价)
 │   ├── telegram_push.py          # 通用 Telegram 推送助手
 │   ├── daily-review-stats.py
 │   └── fetch-github-repo.sh
