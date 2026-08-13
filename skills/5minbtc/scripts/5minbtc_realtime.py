@@ -122,6 +122,16 @@ def push(msg, enabled=True):
         pass
 
 
+def fmt_order(d, side, ask):
+    """自动下单的订单信息 (推送群用)."""
+    p = d["prediction"]
+    c = d["candle"]
+    dir_cn = DIR_CN.get(p["bias"], p["bias"])
+    return (f"📝 模拟下单 | {dir_cn}\n"
+            f"{c['candle_start']} | {side} @ {ask:.2f} | 1U\n"
+            f"置信 {p['confidence']} | 已记录, 收盘结算")
+
+
 def fmt_signal(d, up=None, down=None):
     p = d["prediction"]
     c = d["candle"]
@@ -181,11 +191,13 @@ def main():
         if is_signal:
             # 拿真实 UP/DOWN 盘口价 (每次命中拿一次, 供记录+推送复用)
             up, down = get_up_down_price()
-            # 自动记录模拟预测 (同一根K线只记一次, 验证重大信号胜率)
+            # 自动记录模拟单 (同一根K线只下一次单, recorded_candle 去重)
             if candle != recorded_candle:
                 side, ask = record_paper(d, up, down)
                 recorded_candle = candle
-                print(f"📝 自动记录模拟预测: {side} @ {ask:.2f} conf={conf}", flush=True)
+                print(f"📝 自动记录模拟单: {side} @ {ask:.2f} conf={conf}", flush=True)
+                # 推送订单信息到群
+                push(fmt_order(d, side, ask), args.push)
             # 推送去重: 首次命中 / 置信度显著提升(≥5) / 方向翻转 才推
             new_peak = conf >= last_signal_conf + 5 or last_bias is None
             flip = bias != last_bias and last_bias is not None
