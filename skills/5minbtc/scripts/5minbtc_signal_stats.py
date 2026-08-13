@@ -44,11 +44,11 @@ def fetch_close(candle_iso):
 
 
 def settle_bets(state):
-    """结算已收盘的 open 单 + 给 skipped 单算假设结果. 返回本次结算数."""
+    """结算已收盘的 open 单 (pending 单由 realtime check_pending 处理). 返回本次结算数."""
     now_ms = int(datetime.now(CST).timestamp() * 1000)
     settled = 0
     for b in state.get("bets", []):
-        if b.get("status") not in ("open", "skipped"):
+        if b.get("status") != "open":
             continue
         try:
             dt = datetime.fromisoformat(b["candle"])
@@ -63,21 +63,14 @@ def settle_bets(state):
         o, c = ohlc
         side = b["side"]
         won = (side == "UP" and c > o) or (side == "DOWN" and c < o)
-        if b.get("status") == "open":
-            b["status"] = "settled"
-            b["outcome"] = "win" if won else "loss"
-            b["actual_open"] = o
-            b["actual_close"] = c
-            b["direction_correct"] = won
-            b["pnl"] = round((b.get("amount", 1) * (1 - b["ask"]) - b.get("amount", 1) * b.get("fee", 0.01))
-                              if won else (-b.get("amount", 1) * b["ask"] - b.get("amount", 1) * b.get("fee", 0.01)), 4)
-            settled += 1
-        else:
-            # skipped 单: 只算"如果买了会怎样"(假设结果), 不改 status
-            b["hypothetical_direction_correct"] = won
-            b["hypothetical_ask"] = b.get("ask")
-            b["hypothetical_pnl"] = round((1 - b["ask"]) - 0.01 if won else (-b["ask"] - 0.01), 4) \
-                if b.get("ask") else None
+        b["status"] = "settled"
+        b["outcome"] = "win" if won else "loss"
+        b["actual_open"] = o
+        b["actual_close"] = c
+        b["direction_correct"] = won
+        b["pnl"] = round((b.get("amount", 1) * (1 - b["ask"]) - b.get("amount", 1) * b.get("fee", 0.01))
+                          if won else (-b.get("amount", 1) * b["ask"] - b.get("amount", 1) * b.get("fee", 0.01)), 4)
+        settled += 1
     return settled
 
 
@@ -97,11 +90,13 @@ def save_state(state):
 def fmt_report(state, by_hour=False):
     auto = [b for b in state.get("bets", []) if b.get("auto")]
     settled = [b for b in auto if b.get("status") == "settled"]
-    skipped = [b for b in auto if b.get("status") == "skipped"]
+    pending = [b for b in auto if b.get("status") == "pending"]
+    unfilled = [b for b in auto if b.get("status") == "unfilled"]
     open_ = [b for b in auto if b.get("status") == "open"]
     lines = ["📊 重大信号回测 | " + ("按小时" if by_hour else "按日期")]
     lines.append("━" * 26)
-    lines.append(f"信号 {len(auto)} | 下单 {len(settled)} | 追高跳过 {len(skipped)} | 待结算 {len(open_)}")
+    lines.append(f"信号 {len(auto)} | 已结算 {len(settled)} | 挂单 {len(pending)} | "
+                 f"未成交 {len(unfilled)} | 持仓 {len(open_)}")
 
     # 下单统计
     if settled:
@@ -111,17 +106,7 @@ def fmt_report(state, by_hour=False):
         lines.append(f"✅下单: 胜率 {wins}/{len(settled)} = {wins/len(settled)*100:.0f}% | "
                      f"PnL ${pnl:+.2f} | 均ask {avg_ask:.2f}")
 
-    # 跳过统计 (假设买了会怎样)
-    if skipped:
-        skip_settled = [b for b in skipped if b.get("hypothetical_direction_correct") is not None]
-        if skip_settled:
-            sw = sum(1 for b in skip_settled if b.get("hypothetical_direction_correct"))
-            sp = sum(b.get("hypothetical_pnl", 0) or 0 for b in skip_settled)
-            sask = sum(b.get("ask", 0) for b in skip_settled) / len(skip_settled)
-            lines.append(f"⏭️跳过(假设买): 胜率 {sw}/{len(skip_settled)} = {sw/len(skip_settled)*100:.0f}% | "
-                         f"假设PnL ${sp:+.2f} | 均ask {sask:.2f}")
-
-    if not settled and not skipped:
+    if not settled:
         lines.append("暂无已结算信号")
         return "\n".join(lines)
 
