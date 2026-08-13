@@ -71,9 +71,10 @@ def save_paper(state):
 
 
 def record_paper(d, up=None, down=None):
-    """重大信号自动记录一笔模拟预测到台账 (验证 conf≥阈值 的胜率)."""
+    """重大信号自动记录一笔模拟单到台账 (完整入场快照 + 后续结算回测)."""
     p = d["prediction"]
     c = d["candle"]
+    price = d["price"]
     side = "UP" if p["bias"] == "bull" else "DOWN"
     ask = up if side == "UP" else down
     if ask is None:
@@ -86,6 +87,17 @@ def record_paper(d, up=None, down=None):
         "p_est": p["confidence"] / 100, "auto": True,
         "ts": datetime.now(CST).isoformat(),
         "reason": f"重大信号自动记录 conf={p['confidence']}",
+        # 入场完整快照 (回测用)
+        "entry": {
+            "progress": c.get("progress_pct"),
+            "open": price["open"],
+            "current": price["current"],
+            "body": price.get("body"),
+            "confidence": p["confidence"],
+            "strength": p["strength"],
+            "regime": d.get("regime"),
+            "mtf": d.get("mtf", {}),
+        },
     }
     state["bets"].append(bet)
     save_paper(state)
