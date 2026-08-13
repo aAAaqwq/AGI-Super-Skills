@@ -66,6 +66,8 @@ class TestnetEngine(PaperEngine):
         self._real_position_amt = 0.0
         self._last_price_ts = 0.0
         self._open_fail_until_ts = 0.0
+        # 开仓保护期: 下MARKET单到置位position的间隙, poll不接管(防误伤自己刚开的仓)
+        self._opening_until_ts = 0.0
 
     # ── 覆盖价格触发: 不在本地模拟成交 ──
     def on_tick(self, price: float):
@@ -100,7 +102,10 @@ class TestnetEngine(PaperEngine):
             logger.warning("[%s] 持仓轮询失败: %s", self.symbol, e)
             return None
         # 发现 testnet 有仓位但引擎不认识(残留/接管) → 置位 position 管理它
+        # 开仓保护期内不接管: 避免把自己刚下的单误判为残留仓立即平掉
         if not self.position and abs(amt) > 1e-12:
+            if time.time() < self._opening_until_ts:
+                return None
             logger.warning("[%s] 发现残留仓位 amt=%s, 接管管理(无保护, 将尽快平掉)",
                            self.symbol, amt)
             self.position = {
@@ -226,6 +231,8 @@ class TestnetStreamer(PaperStreamer):
         # 按币波动率覆盖杠杆: config.trade.leverage_by_symbol 优先, 否则用默认
         lev_map = (self.cfg.get("trade", {}) or {}).get("leverage_by_symbol", {}) or {}
         pos["leverage"] = lev_map.get(eng.symbol, pos.get("leverage", 10))
+        # 开仓保护期: 下MARKET单到置位position的间隙, poll不得接管(防误伤)
+        eng._opening_until_ts = time.time() + 3.0
         try:
             res = eng.executor.open_position(
                 eng.symbol, direction, pos["entry"], pos["sl"], pos["tp"],
