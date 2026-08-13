@@ -94,26 +94,37 @@ def calc_rsi(closes, period=14):
     return 100.0 - 100.0 / (1.0 + avg_gain / avg_loss) if avg_loss > 0 else 100.0
 
 
-def simulate_trade(closes, idx, entry, stop, tp, direction, ts, leverage=10):
-    """逐根模拟一笔交易到 TP/SL 或超时(48根)。返回带时间戳的记录。"""
-    future = closes[idx + 1:idx + 49]
-    for fc in future:
+def simulate_trade(bars, idx, entry, stop, tp, direction, ts, leverage=10,
+                   fee_rate=0.0004):
+    """逐根模拟一笔交易到 TP/SL 或超时(48根)。返回带时间戳的记录。
+
+    用 bar 高低点判断 SL/TP 穿透(更接近实盘 tick 行为, 而非只看收盘价),
+    并扣除双边手续费(接近实盘成本)。
+    """
+    future = bars[idx + 1:idx + 49]
+    fee = fee_rate * 100 * 2  # 双边手续费
+    for b in future:
+        hi, lo = float(b["high"]), float(b["low"])
         if direction == "LONG":
-            if fc <= stop:
+            if lo <= stop:
                 return {"time": ts, "dir": "LONG", "entry": entry, "exit": stop,
-                        "pnl_pct": (stop - entry) / entry * leverage * 100, "result": "SL"}
-            if fc >= tp:
+                        "pnl_pct": (stop - entry) / entry * leverage * 100 - fee,
+                        "result": "SL"}
+            if hi >= tp:
                 return {"time": ts, "dir": "LONG", "entry": entry, "exit": tp,
-                        "pnl_pct": (tp - entry) / entry * leverage * 100, "result": "TP"}
+                        "pnl_pct": (tp - entry) / entry * leverage * 100 - fee,
+                        "result": "TP"}
         else:
-            if fc >= stop:
+            if hi >= stop:
                 return {"time": ts, "dir": "SHORT", "entry": entry, "exit": stop,
-                        "pnl_pct": (entry - stop) / entry * leverage * 100, "result": "SL"}
-            if fc <= tp:
+                        "pnl_pct": (entry - stop) / entry * leverage * 100 - fee,
+                        "result": "SL"}
+            if lo <= tp:
                 return {"time": ts, "dir": "SHORT", "entry": entry, "exit": tp,
-                        "pnl_pct": (entry - tp) / entry * leverage * 100, "result": "TP"}
-    exit_price = future[-1] if len(future) > 0 else closes[idx]
-    pnl = (exit_price - entry) / entry * leverage * 100
+                        "pnl_pct": (entry - tp) / entry * leverage * 100 - fee,
+                        "result": "TP"}
+    exit_price = float(future[-1]["close"]) if len(future) > 0 else float(bars[idx]["close"])
+    pnl = (exit_price - entry) / entry * leverage * 100 - fee
     if direction == "SHORT":
         pnl = -pnl
     return {"time": ts, "dir": direction, "entry": entry, "exit": exit_price,
@@ -154,15 +165,20 @@ def backtest_symbol(symbol, days, params):
             continue
         lower, upper = bb["lower"], bb["upper"]
         if bb["pct_b"] < 0.15 and slope_1h > -slope_loose and rsi <= rsi_long:
+            # 深跌保护(与实盘 paper.py 一致): pct_b 太负禁止接飞刀
+            if bb["pct_b"] < -0.5:
+                continue
             entry = lower * (1 + entry_th / 2)
-            t = simulate_trade(closes, i, entry, lower * (1 - stop_buf), upper,
+            t = simulate_trade(bars, i, entry, lower * (1 - stop_buf), upper,
                                "LONG", bars[i]["time"])
             trades.append(t)
             if t["result"] == "SL":
                 last_sl = i
         if bb["pct_b"] > 0.85 and slope_1h < slope_loose and rsi >= rsi_short:
+            if bb["pct_b"] > 1.5:  # 深涨保护
+                continue
             entry = upper * (1 - entry_th / 2)
-            t = simulate_trade(closes, i, entry, upper * (1 + stop_buf), lower,
+            t = simulate_trade(bars, i, entry, upper * (1 + stop_buf), lower,
                                "SHORT", bars[i]["time"])
             trades.append(t)
             if t["result"] == "SL":
