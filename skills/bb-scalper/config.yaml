@@ -18,6 +18,7 @@ trade:
   leverage_by_symbol:
     ZECUSDT: 5      # 15m BB宽 2.01% 波动大 → 低杠杆
     NEARUSDT: 5     # 15m BB宽 2.09% 波动大 → 低杠杆
+    VIRTUALUSDT: 5  # 15m BB宽 3.58% 偏宽 → 低杠杆
     DOTUSDT: 10     # 15m BB宽 1.42% 适中
     SOLUSDT: 15     # 15m BB宽 1.13% 窄 → 高杠杆提收益
 
