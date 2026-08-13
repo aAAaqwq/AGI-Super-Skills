@@ -575,7 +575,7 @@ def load_ofi():
     try:
         cache = json.load(open(os.path.expanduser("~/bb-auto/ofi.json")))
         if isinstance(cache, dict) and "ofi" in cache:
-            return {"ofi": cache["ofi"]}
+            return {"ofi": cache["ofi"], "ofi_window_sec": cache.get("window_sec", 0)}
     except Exception:
         pass
     return {}
@@ -828,15 +828,20 @@ def direction_rule_v5(candles, closes, atr_val, vol_ratio,
         elif breadth > 0.001 and score < 0:   # ETH+SOL 同涨, BTC 做空不可信
             score *= 0.5
 
-    # ---- v5.9: 真订单流 OFI 确认 — half_body 方向必须与真实资金流一致 ----
-    # 对抗审查: OFI 不做第14个方向因子(与token价共线), 只做"延续有没有真钱支撑"
-    # 信号方向 vs 订单流方向冲突 = 假信号 (挂单虚晃), 降权
+    # ---- v5.9.1: 真订单流 OFI — 双重用法: 确认 + 极端值独立给方向 ----
+    # 对抗审查: OFI 不做第14个方向因子(与token价共线), 但极端值=真钱抢筹/砸盘,
+    # 是 half_body 未激活(progress<45%)时唯一的独立方向信号.
     if mtf and "ofi" in mtf:
         ofi = mtf["ofi"]
-        if score > 0 and ofi < -0.15:   # 看多但真实资金在流出
+        win = mtf.get("ofi_window_sec", 0)
+        # 1) 确认: 信号方向 vs 订单流方向冲突 = 假信号, 降权
+        if score > 0 and ofi < -0.15:
             score *= 0.5
-        elif score < 0 and ofi > 0.15:  # 看空但真实资金在流入
+        elif score < 0 and ofi > 0.15:
             score *= 0.5
+        # 2) 独立方向: OFI 极端(净流入/流出>60%)且窗口≥60s(避免短窗口噪声) → 直接强化方向
+        if abs(ofi) > 0.6 and win >= 60:
+            score += ofi * 12   # 0.6*12=7.2 突破 weak, 0.8*12=9.6 突破 medium
 
     # ---- Direction threshold (v5.5: neutral区收缩 [-2,2]>[-1,1]) ----
     nz = 12 if regime == "HIGH_VOL" else 6
