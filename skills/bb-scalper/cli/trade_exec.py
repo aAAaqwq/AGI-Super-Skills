@@ -90,14 +90,16 @@ class LiveTrader:
         """价格/数量按合约精度修正; 优先 client._round_*, 失败本地兜底
 
         数量(kind="qty")向上取整到最小步长, 保证名义下单额达标(含币安最小
-        名义约束); 价格四舍五入到 tickSize。
+        名义约束), 并 round() 到精度去除浮点尾巴; 价格四舍五入到 tickSize。
         """
         if kind == "qty":
             step = self._step(symbol, kind)
             if step > 0:
                 import math
                 qty = float(value)
-                return float(math.ceil(qty / step) * step)
+                # 向上取整到步长, 再用 round() 消除浮点尾巴(0.20400000000000001 → 0.204)
+                step_digits = max(0, -math.floor(math.log10(step)))
+                return round(math.ceil(qty / step - 1e-9) * step, step_digits)
             return float(value)
         fn = getattr(self.client, "_round_price", None)
         if callable(fn):
