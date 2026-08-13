@@ -483,6 +483,81 @@ def fetch_chainlink_ref():
     except Exception:
         return None, None
 
+# ======================== Multi-Timeframe Structure (v5.9) ========================
+
+def _linreg_slope(values, n=10):
+    """线性回归斜率, 按均值归一化 (返回 %/根). 纯 Python 无 numpy."""
+    y = values[-n:]
+    m = len(y)
+    if m < 2:
+        return 0.0
+    x_mean = (m - 1) / 2
+    y_mean = sum(y) / m
+    num = sum((i - x_mean) * (y[i] - y_mean) for i in range(m))
+    den = sum((i - x_mean) ** 2 for i in range(m))
+    slope = num / den if den > 0 else 0.0
+    return slope / y_mean if y_mean > 0 else 0.0
+
+
+def wilder_adx(candles, period=14):
+    """Wilder's ADX — 趋势强度(0-100). 纯 Python.
+    <20 震荡 / 20-25 过渡 / >25 明确趋势."""
+    if len(candles) < period + 1:
+        return 0.0
+    trs, pdm, ndm = [], [], []
+    for i in range(1, len(candles)):
+        h, l, pc = candles[i]["h"], candles[i]["l"], candles[i - 1]["c"]
+        ph, pl = candles[i - 1]["h"], candles[i - 1]["l"]
+        trs.append(max(h - l, abs(h - pc), abs(l - pc)))
+        up, dn = h - ph, pl - l
+        pdm.append(up if (up > dn and up > 0) else 0.0)
+        ndm.append(dn if (dn > up and dn > 0) else 0.0)
+
+    def _wilder(vals, p):
+        s = sum(vals[:p])
+        out = [s]
+        for i in range(p, len(vals)):
+            s = s - s / p + vals[i]
+            out.append(s)
+        return out
+
+    tr_s = _wilder(trs, period)
+    pdm_s = _wilder(pdm, period)
+    ndm_s = _wilder(ndm, period)
+    dxs = []
+    for i in range(len(tr_s)):
+        pdi = 100 * pdm_s[i] / tr_s[i] if tr_s[i] > 0 else 0.0
+        ndi = 100 * ndm_s[i] / tr_s[i] if tr_s[i] > 0 else 0.0
+        s = pdi + ndi
+        dxs.append(100 * abs(pdi - ndi) / s if s > 0 else 0.0)
+    if len(dxs) < period:
+        return sum(dxs) / len(dxs) if dxs else 0.0
+    s = sum(dxs[:period])
+    for i in range(period, len(dxs)):
+        s = s - s / period + dxs[i]
+    return s / period
+
+
+def multi_timeframe_signal(k_4h, k_1h, k_15m):
+    """多周期结构: 4h大方向斜率 + 1h趋势强度(ADX) + 15m区间位置(%B).
+    参数为完整 candle 字典列表 (含 h/l/c). 返回 dict."""
+    mtf = {}
+    if k_4h and len(k_4h) >= 8:
+        mtf["tf_4h_slope"] = round(_linreg_slope([c["c"] for c in k_4h], 10), 6)
+    if k_1h and len(k_1h) >= 20:
+        mtf["tf_1h_adx"] = round(wilder_adx(k_1h, 14), 1)
+        mtf["tf_1h_slope"] = round(_linreg_slope([c["c"] for c in k_1h], 20), 6)
+    if k_15m and len(k_15m) >= 20:
+        closes = [c["c"] for c in k_15m]
+        sma = sum(closes) / 20
+        var = sum((x - sma) ** 2 for x in closes) / 19
+        std = var ** 0.5
+        up, lo = sma + 2 * std, sma - 2 * std
+        if up > lo:
+            mtf["tf_15m_pctb"] = round((closes[-1] - lo) / (up - lo), 3)
+    return mtf
+
+
 # ======================== Regime Detection ========================
 
 def detect_regime(vol_ratio, candles, atr_val=None):
@@ -616,8 +691,9 @@ def calibrate_confidence(raw_score, bias, regime):
 
 
 def direction_rule_v5(candles, closes, atr_val, vol_ratio,
-                      depth_data=None, candle_progress=1.0, fng_value=None):
-    """v5.7.1 -- 增加fng_value参数用于黑天鹅过滤(P0-2)"""
+                      depth_data=None, candle_progress=1.0, fng_value=None,
+                      mtf=None):
+    """v5.9 -- 增加 mtf(多周期信号)参数用于趋势过滤"""
     mom = momentum_tstat(closes)
     mr = zscore_meanrev(closes)
     rsi_val = rsi(closes)
@@ -709,6 +785,16 @@ def direction_rule_v5(candles, closes, atr_val, vol_ratio,
     # 该惩罚现在压制唯一真 edge, 移除。方向偏差改由滚动窗口经验胜率校准。
     # if score > 0:
     #     score *= 0.92
+
+    # ---- v5.9: 多周期趋势过滤 — 逆大趋势的信号大幅降权 ----
+    # 4h 大方向: 明显下跌时压制做多, 明显上涨时压制做空
+    # 这是对抗审查 P0: 趋势日逆势押单(尤其 bear)是最大亏损源
+    if mtf:
+        tf4 = mtf.get("tf_4h_slope", 0.0)
+        if tf4 < -0.0004 and score > 0:   # 4h 每根跌 0.04% = 明显下跌
+            score *= 0.35
+        elif tf4 > 0.0004 and score < 0:  # 4h 每根涨 0.04% = 明显上涨
+            score *= 0.35
 
     # ---- Direction threshold (v5.5: neutral区收缩 [-2,2]>[-1,1]) ----
     nz = 12 if regime == "HIGH_VOL" else 6
@@ -817,20 +903,26 @@ def _fetch_fng():
 def run():
     info = current_candle_info()
 
-    # v5.7.3: 4路并行HTTP — klines + depth + FNG + chainlink 同时发射
-    # 最大延迟 = max(各API延迟) ≈ 3s，串行版 ~11s → 提速 ~3.7x
-    with ThreadPoolExecutor(max_workers=4) as ex:
+    # v5.9: 7路并行HTTP — klines + depth + FNG + chainlink + 多周期(4h/1h/15m)
+    with ThreadPoolExecutor(max_workers=7) as ex:
         f_klines = ex.submit(fetch_klines, limit=200)
         f_depth = ex.submit(fetch_depth_avg)  # v5.8: 多时刻采样去噪(3次x1s)
         f_fng = ex.submit(_fetch_fng)
         f_cl = ex.submit(fetch_chainlink_ref)
+        f_4h = ex.submit(fetch_klines, interval="4h", limit=30)
+        f_1h = ex.submit(fetch_klines, interval="1h", limit=40)
+        f_15m = ex.submit(fetch_klines, interval="15m", limit=30)
 
         candles = f_klines.result()
         depth = f_depth.result()
         fng = f_fng.result()
         chainlink_ref, cl_source = f_cl.result()
+        k_4h = f_4h.result()
+        k_1h = f_1h.result()
+        k_15m = f_15m.result()
 
     closes = [c["c"] for c in candles]
+    mtf = multi_timeframe_signal(k_4h, k_1h, k_15m)  # v5.9 多周期结构
 
     e9 = ema(closes, 9)
     e21 = ema(closes, 21)
@@ -842,7 +934,8 @@ def run():
 
     progress = min(info["progress_pct"] / 100, 1.0)
     bias, strength, confidence, score, factors, regime, fng_black_swan = direction_rule_v5(
-        candles, closes, atr_val, vr, depth, progress, fng_value=fng.get("value"))
+        candles, closes, atr_val, vr, depth, progress, fng_value=fng.get("value"),
+        mtf=mtf)
 
     # v5.7.1 P0-3: news risk circuit breaker
     news_risk, news_black_swan = load_news_risk()
@@ -896,6 +989,7 @@ def run():
         "fng": fng,
         "factors": {k: round(v, 3) if isinstance(v, float) else v for k, v in factors.items()},
         "regime": regime,
+        "mtf": mtf,  # v5.9: 多周期结构 (tf_4h_slope/tf_1h_adx/tf_1h_slope/tf_15m_pctb)
         "chainlink_offset": cl_offset,  # v5.6: Binance>Chainlink 价格偏移
         "atr_spike": {"detected": is_spike, "ratio": round(spike_ratio, 2),
                       "consecutive": spike_count},  # v5.7.1 P0-1
