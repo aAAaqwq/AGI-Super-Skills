@@ -83,8 +83,13 @@ class TestnetExecutor:
         return {"status": status or "NEW", "orderId": order_id}  # 超时返回, 由调用方处理
 
     def open_position(self, symbol: str, direction: str, entry: float,
-                      sl: float, tp: float, notional: float, leverage: int) -> dict:
-        """对 testnet 真实开仓并挂止损/止盈。返回成交详情 dict。"""
+                      sl: float, tp: float, notional: float, leverage: int,
+                      place_only: bool = False) -> dict:
+        """对 testnet 真实开仓并挂止损/止盈。返回成交详情 dict。
+
+        place_only=True 时只开仓(下MARKET单)不挂条件单, 供调用方立即置位
+        position后再挂SL/TP, 缩小poll误判残留的竞态窗口。
+        """
         long = direction == "LONG"
         side = "BUY" if long else "SELL"
         close_side = "SELL" if long else "BUY"
@@ -118,6 +123,11 @@ class TestnetExecutor:
         if entry_res.get("status") != "FILLED":
             raise TradeError("testnet 入场未成交 status=%s" % entry_res.get("status"))
         fill = _f(entry_res.get("price") or entry_res.get("avgPrice")) or entry
+
+        # 只开仓模式: 立即返回, 由调用方置位position后再挂条件单
+        if place_only:
+            return {"entry": fill, "qty": qty, "sl": sl, "tp": tp,
+                    "sl_client_id": None, "tp_client_id": None}
 
         sl_r = self.trader._round(symbol, sl, "price")
         tp_r = self.trader._round(symbol, tp, "price")
@@ -161,6 +171,24 @@ class TestnetExecutor:
                                           stop_price=stop_price, reduce_only=True,
                                           client_order_id=cid)
         return res, cid
+
+    def place_conditional_after_open(self, symbol: str, direction: str,
+                                     qty: float, sl: float, tp: float) -> dict:
+        """开仓后(已置位position)挂止损/止盈。返回 sl/tp client_id。"""
+        long = direction == "LONG"
+        close_side = "SELL" if long else "BUY"
+        ts = int(time.time() * 1000)
+        sl_r = self.trader._round(symbol, sl, "price")
+        tp_r = self.trader._round(symbol, tp, "price")
+        try:
+            sl_res, sl_cid = self._place_conditional(
+                symbol, close_side, "STOP_MARKET", qty, sl_r, ts)
+            tp_res, tp_cid = self._place_conditional(
+                symbol, close_side, "TAKE_PROFIT_MARKET", qty, tp_r, ts)
+        except Exception as e:
+            logger.error("[%s] 挂条件单失败, 持仓无保护, 将由poll接管平掉: %s", symbol, e)
+            return {"sl_client_id": None, "tp_client_id": None}
+        return {"sl_client_id": sl_cid, "tp_client_id": tp_cid}
 
     def get_real_position_amt(self, symbol: str) -> float:
         """查询真实持仓数量; 无持仓返回 0。"""

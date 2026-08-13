@@ -106,6 +106,9 @@ class TestnetEngine(PaperEngine):
         if not self.position and abs(amt) > 1e-12:
             if time.time() < self._opening_until_ts:
                 return None
+            # 有最近开仓的 client_id 说明是引擎自己开的(可能条件单还没挂完), 不接管
+            if self._sl_client_id or self._tp_client_id:
+                return None
             logger.warning("[%s] 发现残留仓位 amt=%s, 接管管理(无保护, 将尽快平掉)",
                            self.symbol, amt)
             self.position = {
@@ -234,9 +237,10 @@ class TestnetStreamer(PaperStreamer):
         # 开仓保护期: 下MARKET单到置位position的间隙, poll不得接管(防误伤)
         eng._opening_until_ts = time.time() + 3.0
         try:
+            # 两步开仓: 先下MARKET单(place_only), 立即置位position, 再挂SL/TP
             res = eng.executor.open_position(
                 eng.symbol, direction, pos["entry"], pos["sl"], pos["tp"],
-                pos["notional"], pos["leverage"])
+                pos["notional"], pos["leverage"], place_only=True)
         except Exception as e:
             logger.error("[%s] testnet 开仓失败(30s内不再尝试): %s", eng.symbol, e)
             # 裸仓预警: 入场单可能已成交但无SL/TP且兜底平仓失败 → 置位position让poll接管平仓
@@ -250,15 +254,24 @@ class TestnetStreamer(PaperStreamer):
                 logger.error("[%s] ⚠️ 已标记待接管裸仓, poll 将尽快市价平掉", eng.symbol)
             eng._open_fail_until_ts = time.time() + 30
             return
-        # 用真实成交价覆盖计划入场价, 供 close() 计算真实 PnL
+        # 立即置位 position(在挂条件单前), 缩小 poll 误判残留的竞态窗口
         pos["entry"] = res["entry"]
         pos["qty"] = res["qty"]
+        pos["_bare"] = True  # 条件单挂上前标记无保护, 避免 poll 当成正常持仓
         eng.position = pos
-        eng._sl_client_id = res["sl_client_id"]
-        eng._tp_client_id = res["tp_client_id"]
-        logger.info("[%s] ✅ testnet 开仓 %s @%.6f qty=%s sl=%.6f tp=%.6f",
+        # 再挂止损/止盈
+        cond = eng.executor.place_conditional_after_open(
+            eng.symbol, direction, res["qty"], res["sl"], res["tp"])
+        eng._sl_client_id = cond["sl_client_id"]
+        eng._tp_client_id = cond["tp_client_id"]
+        if not eng._sl_client_id:
+            pos["_bare"] = True  # 条件单没挂上, 保持无保护标记, poll 接管
+            logger.error("[%s] ⚠️ 止损单未挂上, 标记无保护, poll 将接管", eng.symbol)
+        else:
+            pos["_bare"] = False
+        logger.info("[%s] ✅ testnet 开仓 %s @%.6f qty=%s sl=%.6f tp=%.6f bare=%s",
                     eng.symbol, direction, res["entry"], res["qty"],
-                    res["sl"], res["tp"])
+                    res["sl"], res["tp"], pos["_bare"])
 
     def _report(self, eng: TestnetEngine, trade: dict):
         if not trade:
