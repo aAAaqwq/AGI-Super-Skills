@@ -1015,7 +1015,7 @@ def run():
     is_spike, spike_ratio, spike_count = atr_spike_detect(candles, atr_val)
 
     result = {
-        "version": "5.8.0",
+        "version": "5.9.0",
         "candle": info,
         "price": {
             "current": cur["c"], "open": cur["o"],
