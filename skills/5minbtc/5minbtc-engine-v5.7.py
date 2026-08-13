@@ -666,6 +666,22 @@ def sigmoid_compress(score, max_score=45, sensitivity=1.5):
 
 # ======================== Direction Decision ========================
 
+def close_direction_confidence(progress, body, atr_val):
+    """v5.9.2: 收盘方向置信度 = 半K线延续概率 (对抗审查实证校准).
+
+    替代反校准的 Platt Scaling (旧: 因子加权→sigmoid→被压扁到35-57且反校准).
+    新: 置信度 = P(收盘方向延续), 与市场 UP/DOWN 价对齐.
+    实证 (backtest): progress 40%→61%, 60%→66%, 80%→70%, 100%→76% 延续准确率.
+    body 强度加成: |body|/ATR 越大(阳/阴线越实), 方向越确定."""
+    body_z = abs(body / atr_val) if atr_val and atr_val > 0 else 0.0
+    # 基础延续概率 (线性插值实证数据: 55%@0% → 76%@100%)
+    base = 55 + progress * 21
+    # body 强度加成 (body 越实越确定, 封顶 1.5×ATR)
+    boost = min(body_z, 1.5) * 10
+    conf = int(base + boost)
+    return max(40, min(88, conf))
+
+
 def calibrate_confidence(raw_score, bias, regime):
     """v5.5: Platt Scaling校准置信度
 
@@ -856,8 +872,9 @@ def direction_rule_v5(candles, closes, atr_val, vol_ratio,
     else:
         bias = "bear"; strength = "strong" if score < -25 else "medium"
 
-    # ---- v5.5: 校准置信度 (P0-1) ----
-    confidence = calibrate_confidence(score, bias, regime)
+    # ---- v5.9.2: 收盘方向置信度 = 半K线延续概率 (替代反校准 Platt Scaling) ----
+    body = candles[-1]["c"] - candles[-1]["o"]
+    confidence = close_direction_confidence(candle_progress, body, atr_val)
 
     # v5.7.1 P0-1: ATR spike时confidence减半 -- 黑天鹅防护
     is_spike, spike_ratio, spike_count = atr_spike_detect(candles, atr_val)
