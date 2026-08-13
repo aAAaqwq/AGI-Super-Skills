@@ -15,6 +15,7 @@ import os
 import subprocess
 import sys
 import time
+import urllib.request
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -144,6 +145,83 @@ def record_limit(d, side, limit):
     save_paper(state)
 
 
+def fetch_close(candle_iso):
+    """拉该 5min K线的 (open, close). 返回 (open, close) 或 None."""
+    try:
+        dt = datetime.fromisoformat(candle_iso)
+        start_ms = int(dt.timestamp() * 1000)
+        url = (f"https://data-api.binance.vision/api/v3/klines"
+               f"?symbol=BTCUSDT&interval=5m&startTime={start_ms}&limit=1")
+        req = urllib.request.Request(url, headers={"User-Agent": "realtime/1"})
+        data = json.loads(urllib.request.urlopen(req, timeout=10).read())
+        if data:
+            return float(data[0][1]), float(data[0][4])
+    except Exception:
+        pass
+    return None
+
+
+def fmt_account(state, last_pnl=None):
+    """账户总览: 总资金(权益) + 本次盈亏 + 总盈亏(已实现)."""
+    bankroll = state.get("bankroll", 100.0)
+    realized = state.get("realized", 0.0)
+    up, down = get_up_down_price()
+    unrealized = 0.0
+    for b in state.get("bets", []):
+        if b.get("status") == "open":
+            ask = b.get("ask", 0)
+            cur = up if b["side"] == "UP" else down
+            if cur is not None and ask and ask > 0:
+                unrealized += b.get("amount", 1) * (cur - ask) / ask
+    equity = bankroll + realized + unrealized
+    last_s = f" | 本次 ${last_pnl:+.2f}" if last_pnl is not None else ""
+    return (f"💰 总资金 ${equity:.2f}{last_s} | 总盈亏 ${realized:+.2f} "
+            f"| 持仓浮盈 ${unrealized:+.2f}")
+
+
+def settle_open(state, push_enabled=True):
+    """结算已收盘的 open 单, 推送结算结果 + 账户总览. 返回结算数."""
+    now_ms = int(time.time() * 1000)
+    settled = 0
+    for b in state.get("bets", []):
+        if b.get("status") != "open" or not b.get("auto"):
+            continue
+        try:
+            dt = datetime.fromisoformat(b["candle"])
+            close_ms = int(dt.timestamp() * 1000) + 5 * 60 * 1000
+        except Exception:
+            continue
+        if now_ms < close_ms:
+            continue
+        ohlc = fetch_close(b["candle"])
+        if ohlc is None:
+            continue
+        o, c = ohlc
+        won = (b["side"] == "UP" and c > o) or (b["side"] == "DOWN" and c < o)
+        b["status"] = "settled"
+        b["outcome"] = "win" if won else "loss"
+        b["actual_open"] = o
+        b["actual_close"] = c
+        b["direction_correct"] = won
+        b["pnl"] = round((b.get("amount", 1) * (1 - b["ask"]) - b.get("amount", 1) * b.get("fee", 0.01))
+                          if won else (-b.get("amount", 1) * b["ask"] - b.get("amount", 1) * b.get("fee", 0.01)), 4)
+        settled += 1
+    # 重建 realized (所有 settled 单 pnl 总和)
+    state["realized"] = round(sum(x.get("pnl", 0) for x in state.get("bets", [])
+                                  if x.get("status") == "settled"), 4)
+    if settled:
+        save_paper(state)
+        for b in state.get("bets", []):
+            if b.get("status") == "settled" and b.get("auto") and not b.get("pushed_final"):
+                mark = "✅ 中" if b.get("direction_correct") else "❌ 未中"
+                acct = fmt_account(state, b["pnl"])
+                push(f"🏁 结算 {b['candle'][5:16]} {b['side']} @{b['ask']:.2f} {mark}\n"
+                     f"本次 PnL {b['pnl']:+.2f}$\n{acct}", push_enabled)
+                b["pushed_final"] = True
+        save_paper(state)
+    return settled
+
+
 def check_pending(push_enabled=True):
     """检查挂单: 回调到限价→成交, 收盘未触及→未成交. 返回是否有变化."""
     up, down = get_up_down_price()
@@ -161,8 +239,9 @@ def check_pending(push_enabled=True):
             b["status"] = "unfilled"
             changed = True
             print(f"❌ 未成交: {b['side']} 限价{b.get('limit')}", flush=True)
-            push(f"❌ 未成交 | {b['candle'][5:16]} {b['side']} 限价{b.get('limit')} 收盘未触及",
-                 push_enabled)
+            acct = fmt_account(state)
+            push(f"❌ 未成交 | {b['candle'][5:16]} {b['side']} 限价{b.get('limit')} 收盘未触及\n"
+                 f"{acct}", push_enabled)
             continue
         # 回调到限价 → 成交
         ask = up if b["side"] == "UP" else down
@@ -284,8 +363,9 @@ def main():
                 last_signal_conf = conf
                 last_bias = bias
 
-        # 检查挂单: 回调到限价→成交, 收盘未触及→未成交 (每5秒, 信号外也查)
+        # 检查挂单 + 结算已收盘持仓 (每5秒)
         check_pending(args.push)
+        settle_open(load_paper(), args.push)
 
         time.sleep(args.refresh)
 
