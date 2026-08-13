@@ -11,8 +11,8 @@ CST = timezone(timedelta(hours=8))
 def _ensure_logs_dir():
     os.makedirs(LOGS_DIR, exist_ok=True)
 
-def log_prediction(candle_start_iso, predicted_close, predicted_high, predicted_low, confidence, bias, news_sentiment, vol_pct):
-    """记录预测（在K线进行中调用）"""
+def log_prediction(candle_start_iso, predicted_close, predicted_high, predicted_low, confidence, bias, news_sentiment, vol_pct, extra=None):
+    """记录预测（在K线进行中调用）. extra=dict 存 score/regime/factors/mtf 快照 (v5.9)"""
     _ensure_logs_dir()
     entry = {
         "ts": datetime.now(CST).isoformat(timespec="seconds"),
@@ -28,6 +28,8 @@ def log_prediction(candle_start_iso, predicted_close, predicted_high, predicted_
         "actual_low": None,
         "settled": False
     }
+    if extra:
+        entry["extra"] = extra
     with open(LOG_FILE, "a") as f:
         f.write(json.dumps(entry) + "\n")
     print(f"✅ Logged prediction for {candle_start_iso}: ${predicted_close:.0f}")
@@ -230,8 +232,14 @@ if __name__ == "__main__":
         sys.exit(1)
     cmd = sys.argv[1]
     if cmd == "log":
-        # log <candle_iso> <pred_close> <pred_high> <pred_low> <confidence> <bias> <news> <vol_pct>
-        log_prediction(sys.argv[2], float(sys.argv[3]), float(sys.argv[4]), float(sys.argv[5]), int(sys.argv[6]), sys.argv[7], sys.argv[8], float(sys.argv[9]))
+        # log <candle_iso> <pred_close> <pred_high> <pred_low> <confidence> <bias> <news> <vol_pct> [extra_json]
+        extra = None
+        if len(sys.argv) > 10:
+            try:
+                extra = json.loads(sys.argv[10])
+            except Exception:
+                extra = None
+        log_prediction(sys.argv[2], float(sys.argv[3]), float(sys.argv[4]), float(sys.argv[5]), int(sys.argv[6]), sys.argv[7], sys.argv[8], float(sys.argv[9]), extra)
     elif cmd == "settle":
         settle_candle(sys.argv[2])
     elif cmd == "last-unsettled":

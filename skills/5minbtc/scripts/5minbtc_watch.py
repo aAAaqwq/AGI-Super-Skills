@@ -194,14 +194,46 @@ def already_logged(candle_iso):
 def log_prediction(d, candle_iso):
     p = d["prediction"]
     ind = d["indicators"]
+    # v5.9: 补记 score/regime/factors/mtf 快照 (对抗审查 P0 数据地基)
+    extra = {
+        "score": p.get("score"),
+        "strength": p.get("strength"),
+        "regime": d.get("regime"),
+        "mtf": d.get("mtf", {}),
+        "half_body": round(d.get("factors", {}).get("half_body", 0), 3),
+        "volume": round(d.get("factors", {}).get("volume", 0), 3),
+        "meanrev": round(d.get("factors", {}).get("meanrev", 0), 3),
+    }
     try:
         subprocess.run([PY, str(SETTLE), "log", candle_iso,
                         str(p["pred_close"]), str(p["pred_high"]), str(p["pred_low"]),
                         str(p["confidence"]), p["bias"],
-                        str(d.get("news_risk", "UNKNOWN")), str(ind.get("vol_pct", 0))],
+                        str(d.get("news_risk", "UNKNOWN")), str(ind.get("vol_pct", 0)),
+                        json.dumps(extra)],
                        capture_output=True, text=True, timeout=30)
     except Exception:
         pass
+
+
+def _mtf_line(mtf):
+    """多周期/跨资产/OFI 状态行 (v5.9)."""
+    if not mtf:
+        return ""
+    parts = []
+    tf4 = mtf.get("tf_4h_slope", 0)
+    adx = mtf.get("tf_1h_adx", 0)
+    if tf4:
+        parts.append(f"4h{'↓' if tf4 < -0.0004 else '↑' if tf4 > 0.0004 else '→'}")
+    if adx:
+        parts.append(f"ADX{adx:.0f}")
+    eth = mtf.get("ca_eth_mom", 0)
+    sol = mtf.get("ca_sol_mom", 0)
+    if eth or sol:
+        parts.append(f"ETH{eth*100:+.1f}% SOL{sol*100:+.1f}%")
+    if "ofi" in mtf:
+        ofi = mtf["ofi"]
+        parts.append(f"OFI{ofi:+.2f}")
+    return " | ".join(parts)
 
 
 def fmt_event(tag, d):
@@ -212,6 +244,7 @@ def fmt_event(tag, d):
     tb_s = f" | 买力 tb={tb:+.2f}" if tb is not None else ""
     fng = d.get("fng", {})
     fng_s = f" | FNG {fng.get('value')} {fng.get('label', '')}" if fng.get("value") is not None else ""
+    mtf_line = _mtf_line(d.get("mtf", {}))
     head = f"{EMOJI.get(p['bias'], '⚪')} [5minbtc] {tag} {c.get('iso')} p{c.get('progress_pct', 0):.0f}%"
     line = (
         f"{head}\n"
@@ -219,6 +252,8 @@ def fmt_event(tag, d):
         f"现价 {px:,.2f} | 预测收 {p['pred_close']:,} (低{p['pred_low']:,}/高{p['pred_high']:,})\n"
         f"regime {d.get('regime')}{fng_s}{tb_s}"
     )
+    if mtf_line:
+        line += f"\n信号源: {mtf_line}"
     if tag == "CLEAR-SIGNAL":
         line += "\n⚠️ 达到明确信号门槛 — 人工复核后再考虑动作, 非投资建议"
     if d.get("black_swan_warning"):
