@@ -122,6 +122,29 @@ def push(msg, enabled=True):
         pass
 
 
+def record_skip(d, side, ask):
+    """重大信号但 ask 追高 → 只记录信号(标注跳过), 不下单 (回测对比用)."""
+    p = d["prediction"]
+    c = d["candle"]
+    price = d["price"]
+    state = load_paper()
+    bet = {
+        "candle": c["iso"], "side": side, "ask": round(ask, 4) if ask else None,
+        "amount": 0.0, "fee": 0.0, "status": "skipped", "mode": "paper",
+        "p_est": p["confidence"] / 100, "auto": True,
+        "skip_reason": f"追高 ask={ask}",
+        "ts": datetime.now(CST).isoformat(),
+        "entry": {
+            "progress": c.get("progress_pct"),
+            "open": price["open"], "current": price["current"],
+            "confidence": p["confidence"], "strength": p["strength"],
+            "regime": d.get("regime"), "mtf": d.get("mtf", {}),
+        },
+    }
+    state["bets"].append(bet)
+    save_paper(state)
+
+
 def fmt_order(d, side, ask):
     """自动下单的订单信息 (推送群用)."""
     p = d["prediction"]
@@ -130,6 +153,17 @@ def fmt_order(d, side, ask):
     return (f"📝 模拟下单 | {dir_cn}\n"
             f"{c['candle_start']} | {side} @ {ask:.2f} | 1U\n"
             f"置信 {p['confidence']} | 已记录, 收盘结算")
+
+
+def fmt_skip(d, side, ask):
+    """追高跳过的推送."""
+    p = d["prediction"]
+    c = d["candle"]
+    dir_cn = DIR_CN.get(p["bias"], p["bias"])
+    max_ask = 0.65 if side == "UP" else 0.50
+    return (f"⏭️ 追高跳过 | {dir_cn}\n"
+            f"{c['candle_start']} | {side} ask {ask:.2f} > 甜区 {max_ask:.2f}\n"
+            f"置信 {p['confidence']} | 已记录信号, 未下单")
 
 
 def fmt_signal(d, up=None, down=None):
@@ -191,13 +225,22 @@ def main():
         if is_signal:
             # 拿真实 UP/DOWN 盘口价 (每次命中拿一次, 供记录+推送复用)
             up, down = get_up_down_price()
-            # 自动记录模拟单 (同一根K线只下一次单, recorded_candle 去重)
+            # 自动下单 (同一根K线只下一次, recorded_candle 去重)
             if candle != recorded_candle:
-                side, ask = record_paper(d, up, down)
+                side = "UP" if bias == "bull" else "DOWN"
+                ask = up if side == "UP" else down
+                max_ask = 0.65 if side == "UP" else 0.50
+                if ask is not None and ask <= max_ask:
+                    # 甜区内 → 下模拟单
+                    record_paper(d, up, down)
+                    print(f"📝 自动下模拟单: {side} @ {ask:.2f} conf={conf}", flush=True)
+                    push(fmt_order(d, side, ask), args.push)
+                else:
+                    # 追高 → 只记录信号, 标注跳过
+                    record_skip(d, side, ask if ask is not None else max_ask + 0.01)
+                    print(f"⏭️ 追高跳过: {side} ask={ask} > 甜区{max_ask}", flush=True)
+                    push(fmt_skip(d, side, ask if ask is not None else max_ask + 0.01), args.push)
                 recorded_candle = candle
-                print(f"📝 自动记录模拟单: {side} @ {ask:.2f} conf={conf}", flush=True)
-                # 推送订单信息到群
-                push(fmt_order(d, side, ask), args.push)
             # 推送去重: 首次命中 / 置信度显著提升(≥5) / 方向翻转 才推
             new_peak = conf >= last_signal_conf + 5 or last_bias is None
             flip = bias != last_bias and last_bias is not None
