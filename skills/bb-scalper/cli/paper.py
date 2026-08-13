@@ -105,6 +105,9 @@ class PaperEngine:
         self.cur_price = None
         self.position = None  # {"dir","entry","tp","sl","opened_bar","opened_ts","qty_notional"}
         self.last_sl_bar = -999
+        # 归档旧落盘: 若已有历史记录文件, 先重命名为带时间戳的归档(保留复盘证据),
+        # 再从头统计(避免旧数据污染新统计)。归档不删除, 证据保留。
+        self._archive_old_trades()
         self.trades = self._load_trades()
         # 重启后恢复资金: 用历史交易的 PnL 重放 close() 的资金公式
         # capital += notional * pnl_pct / 100
@@ -129,6 +132,25 @@ class PaperEngine:
             return None
         base, ext = os.path.splitext(self.log_path)
         return f"{base}_{self.symbol}{ext}"
+
+    def _archive_old_trades(self):
+        """归档旧的落盘文件(带时间戳), 保留复盘证据, 新统计从干净开始。"""
+        path = self._trades_path()
+        if not path or not os.path.exists(path):
+            return
+        try:
+            with open(path) as f:
+                old = json.load(f)
+            if not isinstance(old, list) or not old:
+                return
+            # 归档: 重命名为 paper_trades_<SYMBOL>_<YYYYMMDD_HHMMSS>.archived.json
+            import time as _t
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+            archived = f"{os.path.splitext(path)[0]}_{stamp}.archived.json"
+            os.rename(path, archived)
+            logger.info("[%s] 归档 %d 笔历史交易 → %s", self.symbol, len(old), archived)
+        except (OSError, json.JSONDecodeError) as e:
+            logger.error("[%s] 归档失败: %s", self.symbol, e)
 
     def _load_trades(self) -> list:
         """启动时加载本币已有的模拟交易记录(进程重启不丢历史)。"""
