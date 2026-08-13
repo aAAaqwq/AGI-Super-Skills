@@ -5,7 +5,7 @@ core/binance_client.py — 币安 USDT 永续合约 REST 客户端
 统一签名 + 错误处理，供 cli/trade_exec.py 等上层模块调用。
 
 签名方式（Binance 要求）:
-  - params 加入 timestamp（以及 recvWindow=10000）后按字母序排序
+  - params 加入 timestamp（以及 recvWindow=30000）后按字母序排序
   - 用 urllib.parse.urlencode 生成 query string（不手工拼接）
   - HMAC-SHA256 对 query string 签名，结果作为 signature 参数
 
@@ -78,7 +78,7 @@ class BinanceClient:
         """统一签名 + 请求 + 错误处理。
 
         signed=True 时：
-          - 自动加入 timestamp 与 recvWindow=10000
+          - 自动加入 timestamp 与 recvWindow=30000
           - urlencode(排序后的 params) 作为待签 query string
           - HMAC-SHA256 签名，signature 追加到 query string
         GET 请求把 query string 作为 requests 的 params 参数直接发送。
@@ -93,7 +93,8 @@ class BinanceClient:
 
         if signed:
             params["timestamp"] = int(time.time() * 1000)
-            params["recvWindow"] = 10000
+            # recvWindow 放宽到 30s: 网络/代理延迟大时避免 -1021 时间戳超窗
+            params["recvWindow"] = 30000
             query = urllib.parse.urlencode(sorted(params.items()))
             signature = hmac.new(
                 self.api_secret.encode(), query.encode(), hashlib.sha256
