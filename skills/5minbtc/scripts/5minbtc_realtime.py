@@ -122,17 +122,16 @@ def push(msg, enabled=True):
         pass
 
 
-def record_skip(d, side, ask):
-    """重大信号但 ask 追高 → 只记录信号(标注跳过), 不下单 (回测对比用)."""
+def record_limit(d, side, limit):
+    """重大信号但 ask 追高 → 挂 LIMIT 单(限价=甜区上限), 等回调成交."""
     p = d["prediction"]
     c = d["candle"]
     price = d["price"]
     state = load_paper()
     bet = {
-        "candle": c["iso"], "side": side, "ask": round(ask, 4) if ask else None,
-        "amount": 0.0, "fee": 0.0, "status": "skipped", "mode": "paper",
+        "candle": c["iso"], "side": side, "limit": round(limit, 4),
+        "amount": 1.0, "fee": 0.01, "status": "pending", "mode": "paper",
         "p_est": p["confidence"] / 100, "auto": True,
-        "skip_reason": f"追高 ask={ask}",
         "ts": datetime.now(CST).isoformat(),
         "entry": {
             "progress": c.get("progress_pct"),
@@ -145,6 +144,40 @@ def record_skip(d, side, ask):
     save_paper(state)
 
 
+def check_pending(push_enabled=True):
+    """检查挂单: 回调到限价→成交, 收盘未触及→未成交. 返回是否有变化."""
+    up, down = get_up_down_price()
+    state = load_paper()
+    changed = False
+    for b in state.get("bets", []):
+        if b.get("status") != "pending" or not b.get("auto"):
+            continue
+        try:
+            close_ts = datetime.fromisoformat(b["candle"]).timestamp() + 300
+        except Exception:
+            continue
+        # 收盘未触及 → 未成交
+        if time.time() >= close_ts:
+            b["status"] = "unfilled"
+            changed = True
+            print(f"❌ 未成交: {b['side']} 限价{b.get('limit')}", flush=True)
+            push(f"❌ 未成交 | {b['candle'][5:16]} {b['side']} 限价{b.get('limit')} 收盘未触及",
+                 push_enabled)
+            continue
+        # 回调到限价 → 成交
+        ask = up if b["side"] == "UP" else down
+        if ask is not None and ask <= b["limit"]:
+            b["status"] = "open"
+            b["ask"] = round(ask, 4)
+            changed = True
+            print(f"✅ 成交: {b['side']} @ {ask:.2f} (限价{b.get('limit')})", flush=True)
+            push(f"✅ LIMIT成交 | {b['candle'][5:16]} {b['side']} @ {ask:.2f} (限价{b.get('limit')})",
+                 push_enabled)
+    if changed:
+        save_paper(state)
+    return changed
+
+
 def fmt_order(d, side, ask):
     """自动下单的订单信息 (推送群用)."""
     p = d["prediction"]
@@ -155,15 +188,14 @@ def fmt_order(d, side, ask):
             f"置信 {p['confidence']} | 已记录, 收盘结算")
 
 
-def fmt_skip(d, side, ask):
-    """追高跳过的推送."""
+def fmt_limit(d, side, limit, ask):
+    """挂 LIMIT 单的推送."""
     p = d["prediction"]
     c = d["candle"]
     dir_cn = DIR_CN.get(p["bias"], p["bias"])
-    max_ask = 0.65 if side == "UP" else 0.50
-    return (f"⏭️ 追高跳过 | {dir_cn}\n"
-            f"{c['candle_start']} | {side} ask {ask:.2f} > 甜区 {max_ask:.2f}\n"
-            f"置信 {p['confidence']} | 已记录信号, 未下单")
+    return (f"📋 LIMIT挂单 | {dir_cn}\n"
+            f"{c['candle_start']} | {side} 限价 {limit:.2f} (现ask {ask:.2f})\n"
+            f"置信 {p['confidence']} | 等回调成交")
 
 
 def fmt_signal(d, up=None, down=None):
@@ -231,15 +263,16 @@ def main():
                 ask = up if side == "UP" else down
                 max_ask = 0.65 if side == "UP" else 0.50
                 if ask is not None and ask <= max_ask:
-                    # 甜区内 → 下模拟单
+                    # 甜区内 → 立即成交
                     record_paper(d, up, down)
                     print(f"📝 自动下模拟单: {side} @ {ask:.2f} conf={conf}", flush=True)
                     push(fmt_order(d, side, ask), args.push)
                 else:
-                    # 追高 → 只记录信号, 标注跳过
-                    record_skip(d, side, ask if ask is not None else max_ask + 0.01)
-                    print(f"⏭️ 追高跳过: {side} ask={ask} > 甜区{max_ask}", flush=True)
-                    push(fmt_skip(d, side, ask if ask is not None else max_ask + 0.01), args.push)
+                    # 追高 → 挂 LIMIT 单(限价=甜区上限), 等回调成交
+                    record_limit(d, side, max_ask)
+                    ask_s = f"{ask:.2f}" if ask is not None else "?"
+                    print(f"📋 挂LIMIT单: {side} 限价{max_ask} (现ask {ask_s})", flush=True)
+                    push(fmt_limit(d, side, max_ask, ask_s), args.push)
                 recorded_candle = candle
             # 推送去重: 首次命中 / 置信度显著提升(≥5) / 方向翻转 才推
             new_peak = conf >= last_signal_conf + 5 or last_bias is None
@@ -250,6 +283,9 @@ def main():
                 print("─" * 40, flush=True)
                 last_signal_conf = conf
                 last_bias = bias
+
+        # 检查挂单: 回调到限价→成交, 收盘未触及→未成交 (每5秒, 信号外也查)
+        check_pending(args.push)
 
         time.sleep(args.refresh)
 
