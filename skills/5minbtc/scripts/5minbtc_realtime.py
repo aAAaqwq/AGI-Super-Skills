@@ -71,6 +71,13 @@ def save_paper(state):
     PAPER.write_text(json.dumps(state, indent=2, ensure_ascii=False))
 
 
+def has_auto_bet(candle):
+    """台账去重: 该 K线是否已自动下单/挂单 (进程重启也不重复)."""
+    state = load_paper()
+    return any(b.get("candle") == candle and b.get("auto")
+               for b in state.get("bets", []))
+
+
 def record_paper(d, up=None, down=None):
     """重大信号自动记录一笔模拟单到台账 (完整入场快照 + 后续结算回测)."""
     p = d["prediction"]
@@ -270,8 +277,9 @@ def fmt_limit(d, side, limit, ask):
     p = d["prediction"]
     c = d["candle"]
     dir_cn = DIR_CN.get(p["bias"], p["bias"])
+    ask_s = f"{ask:.2f}" if ask is not None else "?"
     return (f"📋 LIMIT挂单 | {dir_cn}\n"
-            f"{c['candle_start']} | {side} 限价 {limit:.2f} (现ask {ask:.2f})\n"
+            f"{c['candle_start']} | {side} 限价 {limit:.2f} (现ask {ask_s})\n"
             f"置信 {p['confidence']} | 等回调成交")
 
 
@@ -308,7 +316,6 @@ def main():
     last_candle = None
     last_signal_conf = 0
     last_bias = None
-    recorded_candle = None  # 自动记录去重 (同一根K线只记一次)
     print(f"🟢 5minbtc 实时监控启动 | {args.refresh}s刷新 | 重大信号阈值 conf≥{args.conf}", flush=True)
 
     while True:
@@ -334,8 +341,8 @@ def main():
         if is_signal:
             # 拿真实 UP/DOWN 盘口价 (每次命中拿一次, 供记录+推送复用)
             up, down = get_up_down_price()
-            # 自动下单 (同一根K线只下一次, recorded_candle 去重)
-            if candle != recorded_candle:
+            # 自动下单 (台账去重, 进程重启也不重复)
+            if not has_auto_bet(candle):
                 side = "UP" if bias == "bull" else "DOWN"
                 ask = up if side == "UP" else down
                 max_ask = 0.65 if side == "UP" else 0.50
@@ -349,8 +356,7 @@ def main():
                     record_limit(d, side, max_ask)
                     ask_s = f"{ask:.2f}" if ask is not None else "?"
                     print(f"📋 挂LIMIT单: {side} 限价{max_ask} (现ask {ask_s})", flush=True)
-                    push(fmt_limit(d, side, max_ask, ask_s), args.push)
-                recorded_candle = candle
+                    push(fmt_limit(d, side, max_ask, ask), args.push)
             # 不再单独推"重大信号"(与下单/挂单重复), 避免刷屏
 
         # 检查挂单 + 结算已收盘持仓 (每5秒)
