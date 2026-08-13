@@ -953,6 +953,14 @@ def load_news_risk():
 
 # ======================== Main ========================
 
+def _safe_result(future, default=None):
+    """容错取 future.result(): 请求失败返回 default, 不让单路网络抖动拖垮引擎."""
+    try:
+        return future.result()
+    except Exception:
+        return default
+
+
 def _fetch_fng():
     """P0-2黑天鹅过滤: Fetch Fear & Greed Index (parallel-safe)"""
     try:
@@ -983,11 +991,11 @@ def run():
         depth = f_depth.result()
         fng = f_fng.result()
         chainlink_ref, cl_source = f_cl.result()
-        k_4h = f_4h.result()
-        k_1h = f_1h.result()
-        k_15m = f_15m.result()
-        k_eth = f_eth.result()
-        k_sol = f_sol.result()
+        k_4h = _safe_result(f_4h, [])
+        k_1h = _safe_result(f_1h, [])
+        k_15m = _safe_result(f_15m, [])
+        k_eth = _safe_result(f_eth, [])
+        k_sol = _safe_result(f_sol, [])
 
     closes = [c["c"] for c in candles]
     mtf = multi_timeframe_signal(k_4h, k_1h, k_15m)  # v5.9 多周期结构
