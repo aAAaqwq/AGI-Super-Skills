@@ -292,6 +292,19 @@ class BinanceClient:
             params["symbol"] = symbol
         return self._signed_request("GET", "/fapi/v2/positionRisk", params)
 
+    def set_margin_type(self, symbol: str, margin_type: str) -> dict:
+        """设置合约保证金模式(逐仓/全仓)。
+
+        Args:
+            symbol: 交易对
+            margin_type: ISOLATED(逐仓) / CROSSED(全仓)
+
+        Returns:
+            设置结果 dict
+        """
+        params: Dict[str, Any] = {"symbol": symbol, "marginType": margin_type.upper()}
+        return self._signed_request("POST", "/fapi/v1/marginType", params)
+
     def get_balance(self, asset: str = "USDT") -> dict:
         """查询资产余额。
 

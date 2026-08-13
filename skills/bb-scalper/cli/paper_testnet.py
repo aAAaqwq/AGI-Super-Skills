@@ -92,12 +92,32 @@ class TestnetEngine(PaperEngine):
 
     # ── 轮询: 交易所真实持仓 ──
     def poll(self):
-        if not self.position:
-            return None
+        """轮询 testnet 真实持仓: 管理引擎已知仓位, 并发现/接管残留裸仓。"""
         try:
             amt = self.executor.get_real_position_amt(self.symbol)
         except Exception as e:
             logger.warning("[%s] 持仓轮询失败: %s", self.symbol, e)
+            return None
+        # 发现 testnet 有仓位但引擎不认识(残留/接管) → 置位 position 管理它
+        if not self.position and abs(amt) > 1e-12:
+            logger.warning("[%s] 发现残留仓位 amt=%s, 接管管理(无保护, 将尽快平掉)",
+                           self.symbol, amt)
+            self.position = {
+                "dir": "LONG" if amt > 0 else "SHORT",
+                "entry": self.cur_price or 0.0,
+                "sl": None, "tp": None,
+                "opened_bar": self._bar_seq,
+                "opened_ts": datetime.now(timezone.utc).isoformat(),
+                "notional": abs(amt) * (self.cur_price or 0),
+                "leverage": 1,
+                "qty": abs(amt),
+                "_bare": True,
+            }
+            self._sl_client_id = None
+            self._tp_client_id = None
+            # 残留仓无保护 → 立即市价平掉
+            return self._timeout_close()
+        if not self.position:
             return None
         if abs(amt) < 1e-12:
             p = self.position
@@ -202,6 +222,9 @@ class TestnetStreamer(PaperStreamer):
         if sig is None:
             return
         direction, pos = sig
+        # 按币波动率覆盖杠杆: config.trade.leverage_by_symbol 优先, 否则用默认
+        lev_map = (self.cfg.get("trade", {}) or {}).get("leverage_by_symbol", {}) or {}
+        pos["leverage"] = lev_map.get(eng.symbol, pos.get("leverage", 10))
         try:
             res = eng.executor.open_position(
                 eng.symbol, direction, pos["entry"], pos["sl"], pos["tp"],

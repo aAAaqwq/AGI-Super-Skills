@@ -49,6 +49,11 @@ class TestnetExecutor:
         ts = int(time.time() * 1000)
 
         logger.info("设置杠杆 %s %dx", symbol, leverage)
+        # 逐仓模式: 每笔仓位独立保证金, 亏损锁死在该仓, 符合策略"小仓扛连亏"风控
+        try:
+            self.trader.set_margin_type(symbol, "ISOLATED")
+        except Exception as e:
+            logger.warning("[%s] 设逐仓模式失败(可能已是逐仓): %s", symbol, str(e)[:80])
         self.trader._call("set_leverage", symbol, leverage)
 
         bal = self.trader._call("get_balance", asset="USDT") or {}

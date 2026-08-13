@@ -119,6 +119,9 @@ class PaperEngine:
         self._cooldown_until_ts = 0.0
         cool_candles = self.cfg.get("filters", {}).get("cooldown_candles", 3)
         self._sl_cooldown_secs = cool_candles * 15 * 60
+        # 每根15m K线最多触发一次入场: 防止同一固定下轨(收盘价序列滞后)在
+        # 15分钟内被实时价反复触发同一入场价(DOT 10连亏根因)
+        self._signal_fired_this_bar = False
 
     def _trades_path(self) -> Optional[str]:
         """每币独立落盘文件(防多币共享文件互相覆盖)。"""
@@ -155,6 +158,9 @@ class PaperEngine:
     def check_signal(self):
         """有持仓返回 None; 无持仓时按三重过滤生成新信号。"""
         if self.position:
+            return None
+        # 本根15m K线已触发过入场 → 不再重复(防止同一固定下轨反复触发)
+        if self._signal_fired_this_bar:
             return None
         # 止损冷却期内禁止重开(防插针死循环)
         if time.time() < self._cooldown_until_ts:
@@ -230,6 +236,8 @@ class PaperEngine:
     def on_bar(self, low, high, ts):
         """每根 15m K线结束: 用 K线高低点判断穿透 + 超时平仓。"""
         self._bar_seq += 1
+        # 新K线: 重置"本K线已触发"标记, 允许基于新轨道再次判断
+        self._signal_fired_this_bar = False
         if not self.position:
             return None
         p = self.position
@@ -393,6 +401,8 @@ class PaperStreamer:
         if sig is None:
             return
         direction, pos = sig
+        # 标记本K线已触发, 防止同一固定下轨反复开仓
+        eng._signal_fired_this_bar = True
         logger.info("[%s] 📈 新信号 %s @%.6f (sl=%.6f tp=%.6f) 名义 %.0f",
                     eng.symbol, direction, pos["entry"], pos["sl"], pos["tp"], pos["notional"])
         eng.position = pos

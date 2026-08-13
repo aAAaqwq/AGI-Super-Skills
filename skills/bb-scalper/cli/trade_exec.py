@@ -75,6 +75,10 @@ class LiveTrader:
         """查询用户成交记录(真实成交价), 供 testnet poll 记账。"""
         return self._call("get_user_trades", symbol, limit)
 
+    def set_margin_type(self, symbol: str, margin_type: str) -> dict:
+        """设置保证金模式(逐仓/全仓)。"""
+        return self._call("set_margin_type", symbol, margin_type)
+
     def _round(self, symbol: str, value: float, kind: str) -> float:
         """价格/数量按合约精度修正; 优先 client._round_*, 失败本地兜底
 
