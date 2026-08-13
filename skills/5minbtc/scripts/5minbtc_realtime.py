@@ -54,7 +54,9 @@ def fmt_signal(d):
             f"{c['candle_start']} progress {c['progress_pct']:.0f}% | "
             f"置信 {p['confidence']}\n"
             f"开 {open_p:.2f} → 现 {cur:.2f} ({chg:+.3f}%)\n"
-            f"预测收 {p['pred_close']:,} | 强度 {p['strength']}")
+            f"预测收 {p['pred_close']:,} | 强度 {p['strength']}\n"
+            f"── 模拟下单(1U) ──\n"
+            f"回复「下单」确认买入, 回复「跳过」忽略")
 
 
 def main():
