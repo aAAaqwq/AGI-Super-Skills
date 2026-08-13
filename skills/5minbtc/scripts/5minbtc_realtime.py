@@ -243,15 +243,13 @@ def check_pending(push_enabled=True):
             push(f"❌ 未成交 | {b['candle'][5:16]} {b['side']} 限价{b.get('limit')} 收盘未触及\n"
                  f"{acct}", push_enabled)
             continue
-        # 回调到限价 → 成交
+        # 回调到限价 → 成交 (静默, 结算时统一推送账户)
         ask = up if b["side"] == "UP" else down
         if ask is not None and ask <= b["limit"]:
             b["status"] = "open"
             b["ask"] = round(ask, 4)
             changed = True
             print(f"✅ 成交: {b['side']} @ {ask:.2f} (限价{b.get('limit')})", flush=True)
-            push(f"✅ LIMIT成交 | {b['candle'][5:16]} {b['side']} @ {ask:.2f} (限价{b.get('limit')})",
-                 push_enabled)
     if changed:
         save_paper(state)
     return changed
@@ -353,15 +351,7 @@ def main():
                     print(f"📋 挂LIMIT单: {side} 限价{max_ask} (现ask {ask_s})", flush=True)
                     push(fmt_limit(d, side, max_ask, ask_s), args.push)
                 recorded_candle = candle
-            # 推送去重: 首次命中 / 置信度显著提升(≥5) / 方向翻转 才推
-            new_peak = conf >= last_signal_conf + 5 or last_bias is None
-            flip = bias != last_bias and last_bias is not None
-            if new_peak or flip:
-                push(fmt_signal(d, up, down), args.push)
-                print(fmt_signal(d, up, down), flush=True)
-                print("─" * 40, flush=True)
-                last_signal_conf = conf
-                last_bias = bias
+            # 不再单独推"重大信号"(与下单/挂单重复), 避免刷屏
 
         # 检查挂单 + 结算已收盘持仓 (每5秒)
         check_pending(args.push)
