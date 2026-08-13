@@ -79,6 +79,13 @@ class LiveTrader:
         """设置保证金模式(逐仓/全仓)。"""
         return self._call("set_margin_type", symbol, margin_type)
 
+    def get_order(self, symbol: str, order_id: int = None,
+                  orig_client_order_id: str = None) -> dict:
+        """查询订单状态(用于成交确认)。"""
+        if order_id is not None:
+            return self._call("get_order", symbol, order_id=order_id)
+        return self._call("get_order", symbol, orig_client_order_id=orig_client_order_id)
+
     def _round(self, symbol: str, value: float, kind: str) -> float:
         """价格/数量按合约精度修正; 优先 client._round_*, 失败本地兜底
 

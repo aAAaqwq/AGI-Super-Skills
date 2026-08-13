@@ -40,6 +40,45 @@ class TestnetExecutor:
     def __init__(self, trader: LiveTrader):
         self.trader = trader
 
+    def _wait_filled(self, symbol: str, order_res, timeout: float = 5.0,
+                     interval: float = 0.5) -> dict:
+        """market 单发出后轮询等 FILLED(处理 testnet 撮合延迟)。
+
+        Args:
+            symbol: 交易对
+            order_res: 下单响应(OrderResult 或 dict, 含 status/orderId/clientOrderId)
+            timeout: 最长等待秒数
+            interval: 轮询间隔秒数
+
+        Returns:
+            最终订单状态 dict(含 status/orderId)
+        """
+        if hasattr(order_res, "status"):  # OrderResult dataclass
+            status = order_res.status
+            order_id = order_res.order_id or None
+            cid = order_res.client_order_id or None
+        else:
+            status = order_res.get("status")
+            order_id = order_res.get("order_id") or order_res.get("orderId")
+            cid = order_res.get("client_order_id") or order_res.get("clientOrderId")
+        if status == "FILLED":
+            return {"status": status, "orderId": order_id}
+        import time as _t
+        deadline = _t.time() + timeout
+        while _t.time() < deadline:
+            try:
+                o = (self.trader.get_order(symbol, order_id=int(order_id))
+                     if order_id else self.trader.get_order(symbol, orig_client_order_id=str(cid)))
+                if o.get("status") == "FILLED":
+                    o["orderId"] = o.get("orderId") or order_id
+                    return o
+                if o.get("status") in ("CANCELED", "EXPIRED", "REJECTED"):
+                    break
+            except Exception as e:
+                logger.warning("[%s] 查单失败(重试): %s", symbol, str(e)[:60])
+            _t.sleep(interval)
+        return {"status": status or "NEW", "orderId": order_id}  # 超时返回, 由调用方处理
+
     def open_position(self, symbol: str, direction: str, entry: float,
                       sl: float, tp: float, notional: float, leverage: int) -> dict:
         """对 testnet 真实开仓并挂止损/止盈。返回成交详情 dict。"""
@@ -71,8 +110,10 @@ class TestnetExecutor:
         qty = self.trader._round(symbol, notional / entry, "qty")
         entry_res = self.trader.place_order(symbol, side, "MARKET", qty,
                                             client_order_id="bse-%s-%d" % (symbol, ts))
-        if entry_res.status != "FILLED":
-            raise TradeError("testnet 入场未成交 status=%s" % entry_res.status)
+        # 轮询等 FILLED(处理 testnet 撮合延迟), 未成交再判失败
+        entry_res = self._wait_filled(symbol, entry_res)
+        if entry_res.get("status") != "FILLED":
+            raise TradeError("testnet 入场未成交 status=%s" % entry_res.get("status"))
         fill = _f(entry_res.price) or entry
 
         sl_r = self.trader._round(symbol, sl, "price")
@@ -170,6 +211,8 @@ class TestnetExecutor:
         ts = int(time.time() * 1000)
         res = self.trader.place_order(symbol, side, "MARKET", qty, reduce_only=True,
                                       client_order_id="bcx-%s-%d" % (symbol, ts))
-        if res.status != "FILLED":
-            raise TradeError("testnet 平仓未成交 status=%s" % res.status)
+        # 轮询等 FILLED(处理 testnet 撮合延迟)
+        res_f = self._wait_filled(symbol, res)
+        if res_f.get("status") != "FILLED":
+            raise TradeError("testnet 平仓未成交 status=%s" % res_f.get("status"))
         return res
