@@ -13,7 +13,7 @@
     "missing-frontmatter": 38,
     "name-folder-mismatch": 71,
     "over-500-lines": 55,
-    "personal-absolute-path": 50,
+    "personal-absolute-path": 51,
     "scripts-without-test-evidence": 173,
     "unmentioned-assets": 11,
     "unmentioned-references": 54,

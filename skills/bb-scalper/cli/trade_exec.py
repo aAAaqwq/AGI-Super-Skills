@@ -71,6 +71,21 @@ class LiveTrader:
         ps = resp if isinstance(resp, list) else ([resp] if isinstance(resp, dict) else [])
         return next((p for p in ps if _f(p.get("positionAmt")) != 0.0), None)
 
+    def get_user_trades(self, symbol: str, limit: int = 5) -> list:
+        """查询用户成交记录(真实成交价), 供 testnet poll 记账。"""
+        return self._call("get_user_trades", symbol, limit)
+
+    def set_margin_type(self, symbol: str, margin_type: str) -> dict:
+        """设置保证金模式(逐仓/全仓)。"""
+        return self._call("set_margin_type", symbol, margin_type)
+
+    def get_order(self, symbol: str, order_id: int = None,
+                  orig_client_order_id: str = None) -> dict:
+        """查询订单状态(用于成交确认)。"""
+        if order_id is not None:
+            return self._call("get_order", symbol, order_id=order_id)
+        return self._call("get_order", symbol, orig_client_order_id=orig_client_order_id)
+
     def _round(self, symbol: str, value: float, kind: str) -> float:
         """价格/数量按合约精度修正; 优先 client._round_*, 失败本地兜底
 

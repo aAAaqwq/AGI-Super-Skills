@@ -13,6 +13,13 @@ trade:
   leverage: 10
   stop_buffer: 0.0015   # 止损 = 轨道外 0.15%
   entry_threshold: 0.002 # 入场区 = 轨道 ± 0.2%
+  # 按币波动率建议杠杆 (BB宽度大→低杠杆防爆, 小→高杠杆提收益)
+  # 未列出的币用 leverage 默认值; testnet 引擎按此设置
+  leverage_by_symbol:
+    ZECUSDT: 5      # 15m BB宽 2.01% 波动大 → 低杠杆
+    NEARUSDT: 5     # 15m BB宽 2.09% 波动大 → 低杠杆
+    DOTUSDT: 10     # 15m BB宽 1.42% 适中
+    SOLUSDT: 15     # 15m BB宽 1.13% 窄 → 高杠杆提收益
 
 filters:
   trend_slope_max: 0.0003   # 中轨走平阈值
@@ -30,6 +37,10 @@ risk:
 binance:
   base_url: "https://fapi.binance.com"
   ws_url: "wss://fstream.binance.com/ws"
+  # 币安 Testnet(测试网) 地址 — cli/paper_testnet.py 默认使用, 虚拟资金真实撮合
+  testnet_base_url: "https://testnet.binancefuture.com"
+  testnet_ws_url: "wss://fstream.binancefuture.com/ws"
+  testnet_rest_url: "https://testnet.binancefuture.com"
   # api_key: ""     # 实盘时填写
   # api_secret: ""
 

@@ -4,7 +4,7 @@
 
 这里收录经 `config/skill-provenance.json` 审查为 `project-original + reviewed` 的第一方 Skills。
 
-当前共 **33** 个。目录是索引视图；Skill 仍保留在 `skills/<skill-id>/` 的规范位置，避免复制、漂移和重复加载。
+当前共 **34** 个。目录是索引视图；Skill 仍保留在 `skills/<skill-id>/` 的规范位置，避免复制、漂移和重复加载。
 
 > 原创身份只说明可审计的作者与来源，不代表已经通过生产运行、投资有效性或跨平台兼容性验证。
 
@@ -33,11 +33,12 @@
 
 - [`positioning-growth-experiment-system`](../positioning-growth-experiment-system/) — 基于真实市场、受众与产品证据设计定位、信息架构、渠道组合、增长实验和增量测量。用于市场细分、品牌定位、价值主张、渠道选择、活动实验、SEO/GEO 方向、归因复盘或扩张/停止决策；不要用于直接制作大量内容、自动发布、投放广告、群发消息、购买流量、修改产品事实或在证据不足时宣称 ROI、CAC 和增长因果。（作者：Daniel Li、AGI Super Team contributors）
 
-## ✍️ Content, Media & Publishing（9）
+## ✍️ Content, Media & Publishing（10）
 
 - [`content-cover-gen`](../content-cover-gen/) — 内容驱动封面生成:从文章标题/核心观点自动生成视觉隐喻提示词,调用 relay-image-gen 出图。 每张封面3秒内传达文章核心观点,杜绝通用背景。 支持小红书(3:4)、抖音(9:16)、公众号(16:9)、知识星球(1:1)、掘金(16:9)。 触发:'生成封面'、'封面生成'、'cover'、'thumbnail'、'封面图'、'缩略图'。（作者：Daniel Li）
 - [`content-illustration-strategy`](../content-illustration-strategy/) — 文章配图决策 skill：根据文章内容判断该配什么图、图从哪里来、什么时候该用 Telegram 真实对话截图，什么时候该用工具界面图、官网图、生成插图或流程图。 适用于公众号、小红书长图文、知识星球、掘金、博客等内容配图。触发词包括：'配图'、'插图'、'素材图'、'这篇文章该配什么图'、'截图进素材库'、'给这篇稿子补图'、'根据内容选图'。（作者：Daniel Li）
 - [`content-typography`](../content-typography/) — 这不是“选个字体” skill。（作者：Daniel Li）
+- [`daniel-aesthetic-director`](../daniel-aesthetic-director/) — 将主题、内容或品牌意图转化为有审美依据、可执行、可迭代的视觉方向与生成式图像提示词。适用于选择艺术/摄影/设计/东方美学/3D 风格，分析参考图，设计封面、海报、品牌视觉、产品图、插画或概念图，为 Midjourney、SDXL、GPT Image、即梦等模型生成提示词，以及解决“画面好看但不对题”“风格堆砌”“多张图不统一”等问题。（作者：Daniel Li）
 - [`daniel-x-writer`](../daniel-x-writer/) — Use for concise Chinese X/Twitter posts in Daniel's first-person voice, mixing human tension, numerical evidence, explicit decision rules, and a sharp reflective ending.（作者：Daniel Li、AGI Super Team contributors）
 - [`editorial-content-system`](../editorial-content-system/) — 为组织设计或审计内容战略、编辑组合、内容 brief、主张来源与素材权利清单、生产质量门、发布交接和实验复盘。适用于搭建可持续内容生产系统、定义编辑标准、治理多渠道母版和修复内容流程失控；不用于只改一句文案、决定营销投放/渠道增长、登录账号或自动发布内容。（作者：Daniel Li、AGI Super Team contributors）
 - [`jimeng-storyboard`](../jimeng-storyboard/) — 将口播视频剧本拆解为即梦AI数字人平台的分镜头脚本。输出格式为每个镜头的角色说（台词）和动作描述（镜头语言/数字人动作），适配即梦 jimeng.jianying.com 数字人视频生成界面。触发场景：用户需要生成口播视频分镜、数字人视频剧本拆解、即梦分镜脚本、短视频口播脚本分镜、数字人台词加动作拆分。（作者：Daniel Li）
@@ -53,7 +54,7 @@
 
 - [`5minbtc`](../5minbtc/) — BTC 5分钟K线实时方向预测。v5.8新增: taker_buy主动买量因子(区分主动买/卖) +…（作者：Daniel Li、AGI Super Team contributors）
 - [`bb-scalper`](../bb-scalper/) — BB 双向套利策略：加密合约 10x 杠杆布林带均值回归。布林带收窄=横盘→在下轨买、上轨卖；三重过滤器(1h趋势/RSI/BB甜区)确认碗平放，轨对轨止盈(RR…（作者：Daniel Li）
-- [`binance-square`](../binance-square/) — 币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达（作者：Daniel Li、AGI Super Team contributors）
+- [`binance-square`](../binance-square/) — 币安广场合约投机雷达 v5：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达（作者：Daniel Li、AGI Super Team contributors）
 - [`financial-planning-and-analysis`](../financial-planning-and-analysis/) — 为经营决策建立可复算的预算、滚动预测、现金跑道、三表连接、单位经济、实际预算差异、情景敏感性和资本配置备忘录。适用于业务规划、资源分配、定价经济性与下行评估；不用于代替会计税务审计意见、个人化投资建议、保证收益融资估值，或执行付款、转账、交易、借贷、开户和报税。（作者：Daniel Li、AGI Super Team contributors）
 - [`product-discovery-portfolio-governance`](../product-discovery-portfolio-governance/) — 将模糊产品想法、客户请求或路线图争议转化为有证据的用户机会、产品组合取舍和阶段门决策。用于产品发现、机会评估、组合优先级、MVP 范围、路线图审查、发布前准备或继续/调整/停止决策；不要用于直接决定技术架构、营销投放、销售承诺、价格、法律结论，也不要把无研究证据的功能清单包装成产品战略。（作者：Daniel Li、AGI Super Team contributors）
 

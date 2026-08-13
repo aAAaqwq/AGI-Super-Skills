@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "scope": "reviewed-project-original-skills",
   "generatedFrom": "config/skill-provenance.json",
-  "inventoryCount": 33,
+  "inventoryCount": 34,
   "categories": [
     {
       "id": "ai-agents-orchestration",
@@ -38,7 +38,7 @@
       "id": "content-media-publishing",
       "name": "Content, Media & Publishing",
       "emoji": "✍️",
-      "count": 9
+      "count": 10
     },
     {
       "id": "sales-crm-customer-success",
@@ -96,7 +96,7 @@
     {
       "skill_id": "binance-square",
       "path": "skills/binance-square/SKILL.md",
-      "description": "币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达",
+      "description": "币安广场合约投机雷达 v5：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达",
       "authors": [
         "Daniel Li",
         "AGI Super Team contributors"
@@ -166,6 +166,16 @@
       ],
       "creation_commit": "cecc3e42d4b3e1cafd18ea46b82a04b990680850",
       "category_id": "chinese-platform-workflows"
+    },
+    {
+      "skill_id": "daniel-aesthetic-director",
+      "path": "skills/daniel-aesthetic-director/SKILL.md",
+      "description": "将主题、内容或品牌意图转化为有审美依据、可执行、可迭代的视觉方向与生成式图像提示词。适用于选择艺术/摄影/设计/东方美学/3D 风格，分析参考图，设计封面、海报、品牌视觉、产品图、插画或概念图，为 Midjourney、SDXL、GPT Image、即梦等模型生成提示词，以及解决“画面好看但不对题”“风格堆砌”“多张图不统一”等问题。",
+      "authors": [
+        "Daniel Li"
+      ],
+      "creation_commit": "d887131448eaa2945f755d5c3e26835aceb6b57d",
+      "category_id": "content-media-publishing"
     },
     {
       "skill_id": "daniel-x-writer",

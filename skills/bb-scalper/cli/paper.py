@@ -60,7 +60,7 @@ def _load_config(path: str = None) -> dict:
 
 
 # ── 指标(与 core.strategy 一致) ──
-def calc_bollinger(closes, period=20, std_mult=2.0):
+def calc_bollinger(closes, period=20, std_mult=2.0, live_price=None):
     if len(closes) < period:
         return None
     sma = float(np.mean(closes[-period:]))
@@ -71,7 +71,9 @@ def calc_bollinger(closes, period=20, std_mult=2.0):
     if len(closes) >= 8:
         y = closes[-8:]
         slope = float(np.polyfit(np.arange(len(y)), y, 1)[0]) / sma
-    pct_b = (closes[-1] - lower) / (upper - lower) if (upper - lower) > 0 else 0.5
+    # live_price 提供时用实时价计算 pct_b(信号判断), 否则用最后收盘
+    price_for_pct = live_price if live_price is not None else closes[-1]
+    pct_b = (price_for_pct - lower) / (upper - lower) if (upper - lower) > 0 else 0.5
     return {"middle": sma, "upper": upper, "lower": lower,
             "width": width, "slope": slope, "pct_b": pct_b, "std": std}
 
@@ -103,7 +105,6 @@ class PaperEngine:
         self.cur_price = None
         self.position = None  # {"dir","entry","tp","sl","opened_bar","opened_ts","qty_notional"}
         self.last_sl_bar = -999
-        self.last_sl_time = 0.0   # SL 冷却用 (时间基, 不依赖 WS K线收盘)
         self.trades = self._load_trades()
         # 重启后恢复资金: 用历史交易的 PnL 重放 close() 的资金公式
         # capital += notional * pnl_pct / 100
@@ -113,13 +114,29 @@ class PaperEngine:
         self._bar_seq = 0
         self._tick_count = 0
         self._last_heartbeat = 0.0
+        # 止损冷却: SL 后 _sl_cooldown_secs 秒内禁止重开, 防插针死循环
+        # 默认按 config cooldown_candles(3根15m K线≈2700s)而非60s, 强趋势中避免快速重开
+        self._cooldown_until_ts = 0.0
+        cool_candles = self.cfg.get("filters", {}).get("cooldown_candles", 3)
+        self._sl_cooldown_secs = cool_candles * 15 * 60
+        # 每根15m K线最多触发一次入场: 防止同一固定下轨(收盘价序列滞后)在
+        # 15分钟内被实时价反复触发同一入场价(DOT 10连亏根因)
+        self._signal_fired_this_bar = False
+
+    def _trades_path(self) -> Optional[str]:
+        """每币独立落盘文件(防多币共享文件互相覆盖)。"""
+        if not self.log_path:
+            return None
+        base, ext = os.path.splitext(self.log_path)
+        return f"{base}_{self.symbol}{ext}"
 
     def _load_trades(self) -> list:
-        """启动时加载已有的模拟交易记录(进程重启不丢历史)。"""
-        if not self.log_path or not os.path.exists(self.log_path):
+        """启动时加载本币已有的模拟交易记录(进程重启不丢历史)。"""
+        path = self._trades_path()
+        if not path or not os.path.exists(path):
             return []
         try:
-            with open(self.log_path) as f:
+            with open(path) as f:
                 data = json.load(f)
             return data if isinstance(data, list) else []
         except (OSError, json.JSONDecodeError) as e:
@@ -127,11 +144,12 @@ class PaperEngine:
             return []
 
     def _persist_trades(self):
-        """把全部模拟交易写入 JSON(含已恢复的历史)。"""
-        if not self.log_path:
+        """把本币模拟交易写入独立 JSON(含已恢复的历史)。"""
+        path = self._trades_path()
+        if not path:
             return
         try:
-            with open(self.log_path, "w") as f:
+            with open(path, "w") as f:
                 json.dump(self.trades, f, indent=2, ensure_ascii=False)
         except OSError as e:
             logger.error("[%s] 保存模拟交易记录失败: %s", self.symbol, e)
@@ -141,11 +159,14 @@ class PaperEngine:
         """有持仓返回 None; 无持仓时按三重过滤生成新信号。"""
         if self.position:
             return None
-        # SL 冷却: 止损后 cooldown_candles 根 15m K线内不开新仓 (防追跌循环)
-        cooldown = self.cfg.get("filters", {}).get("cooldown_candles", 3)
-        if time.time() - self.last_sl_time < cooldown * 15 * 60:
+        # 本根15m K线已触发过入场 → 不再重复(防止同一固定下轨反复触发)
+        if self._signal_fired_this_bar:
             return None
-        bb = calc_bollinger(self.closes_15m)
+        # 止损冷却期内禁止重开(防插针死循环)
+        if time.time() < self._cooldown_until_ts:
+            return None
+        # 用实时价(而非最后收盘)判断 %B, 否则会错过贴轨道瞬间
+        bb = calc_bollinger(self.closes_15m, live_price=self.cur_price)
         if bb is None:
             return None
         rsi = calc_rsi(self.closes_15m)
@@ -174,9 +195,14 @@ class PaperEngine:
                     "leverage": leverage}
 
         if pct < 0.15 and slope_1h > -slope_loose and rsi <= rsi_long_max:
+            # 深跌保护: pct_b 太负(价格远跌破下轨)说明下跌动能强, 禁止接飞刀
+            if pct < -0.5:
+                return None
             entry = bb["lower"] * (1 + entry_th / 2)
             return ("LONG", _open("LONG", entry, bb["lower"] * (1 - stop_buf), bb["upper"]))
         if pct > 0.85 and slope_1h < slope_loose and rsi >= rsi_short_min:
+            if pct > 1.5:  # 深涨保护
+                return None
             entry = bb["upper"] * (1 - entry_th / 2)
             return ("SHORT", _open("SHORT", entry, bb["upper"] * (1 + stop_buf), bb["lower"]))
         return None
@@ -196,19 +222,22 @@ class PaperEngine:
         p = self.position
         if p["dir"] == "LONG":
             if price <= p["sl"]:
-                return self.close("SL", price)
+                # 止损单按止损价成交(模拟真实市价止损, 而非越过后第一个tick价)
+                return self.close("SL", p["sl"])
             if price >= p["tp"]:
-                return self.close("TP", price)
+                return self.close("TP", p["tp"])
         else:
             if price >= p["sl"]:
-                return self.close("SL", price)
+                return self.close("SL", p["sl"])
             if price <= p["tp"]:
-                return self.close("TP", price)
+                return self.close("TP", p["tp"])
         return None
 
     def on_bar(self, low, high, ts):
         """每根 15m K线结束: 用 K线高低点判断穿透 + 超时平仓。"""
         self._bar_seq += 1
+        # 新K线: 重置"本K线已触发"标记, 允许基于新轨道再次判断
+        self._signal_fired_this_bar = False
         if not self.position:
             return None
         p = self.position
@@ -244,7 +273,8 @@ class PaperEngine:
         self._persist_trades()  # 每笔平仓立即落盘
         if result == "SL":
             self.last_sl_bar = self._bar_seq
-            self.last_sl_time = time.time()   # 冷却计时起点
+            # 止损冷却: 防止价格在止损位附近插针导致"平仓→立刻重开"死循环
+            self._cooldown_until_ts = time.time() + self._sl_cooldown_secs
         self.position = None
         return trade
 
@@ -396,6 +426,8 @@ class PaperStreamer:
         if sig is None:
             return
         direction, pos = sig
+        # 标记本K线已触发, 防止同一固定下轨反复开仓
+        eng._signal_fired_this_bar = True
         logger.info("[%s] 📈 新信号 %s @%.6f (sl=%.6f tp=%.6f) 名义 %.0f",
                     eng.symbol, direction, pos["entry"], pos["sl"], pos["tp"], pos["notional"])
         eng.position = pos

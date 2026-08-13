@@ -483,7 +483,7 @@ class ProductionCycleTests(unittest.TestCase):
                 str(partial), calls[2][calls[2].index("--input-snapshot") + 1]
             )
 
-    def test_first_scraper_process_failure_still_fails_closed(self) -> None:
+    def test_two_scraper_process_failures_still_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             calls: list[tuple[str, ...]] = []
@@ -502,7 +502,7 @@ class ProductionCycleTests(unittest.TestCase):
                     runner=runner,
                 )
 
-            self.assertEqual(1, len(calls))
+            self.assertEqual(2, len(calls))
 
     def test_stale_eligible_pointer_fails_closed_before_radar(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

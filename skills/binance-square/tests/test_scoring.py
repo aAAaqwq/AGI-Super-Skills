@@ -14,6 +14,7 @@ from scanner.opportunities import (
 )
 from scanner.scoring import (
     ExecutionCostConfig,
+    ExecutionReadinessStatus,
     RankBucket,
     build_opportunity_board,
     score_opportunity,
@@ -382,7 +383,7 @@ class OpportunityScoringTests(unittest.TestCase):
             copied_board.top[0].conflict_evidence,
         )
 
-    def test_missing_tp_is_hard_filtered_even_when_other_evidence_is_strong(self) -> None:
+    def test_missing_tp_gets_partial_credit_but_is_not_execution_ready(self) -> None:
         author = qualified_author()
         signal = extract_signal(
             post(
@@ -394,8 +395,13 @@ class OpportunityScoringTests(unittest.TestCase):
 
         result = score_opportunity(signal, author, market_snapshot())
 
-        self.assertEqual(RankBucket.FILTER, result.rank_bucket)
-        self.assertIn("MISSING_TP1", result.hard_gate_reasons)
+        self.assertEqual(RankBucket.WATCH, result.rank_bucket)
+        self.assertEqual(4, result.score_breakdown.risk_reward)
+        self.assertNotIn("MISSING_TP1", result.hard_gate_reasons)
+        self.assertEqual(
+            ExecutionReadinessStatus.NOT_CONFIGURED,
+            result.execution_readiness_status,
+        )
 
     def test_no_active_contract_is_a_hard_filter(self) -> None:
         author = qualified_author()

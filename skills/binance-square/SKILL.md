@@ -1,13 +1,13 @@
 ---
 name: binance-square
 description: |
-  币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子，
+  币安广场合约投机雷达 v5：以最近24小时专业交易帖为主要证据，回源核验帖子，
   联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。
   触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达
-metadata: {"version":"4.2.3","mode":"shadow","runtime_effects":"read-only-no-send"}
+metadata: {"version":"5.0.0","mode":"shadow","runtime_effects":"read-only-no-send"}
 ---
 
-# 币安广场合约投机雷达 v4.2.3（Shadow）
+# 币安广场合约投机雷达 v5.0（Shadow）
 
 > 当前可真实运行的是只读影子报告：不发 Telegram、不创建定时任务、不下单。
 
@@ -21,6 +21,10 @@ metadata: {"version":"4.2.3","mode":"shadow","runtime_effects":"read-only-no-sen
 不得把设计目标描述成已经上线的能力。最终结论必须来自当次生成的 JSON/Markdown 和测试结果。
 
 ## 当前已实现
+
+- v5.0 对候选分层做了探索性放宽：`TOP >= 55`、`WATCH >= 40`；缺少 Entry/SL/TP 时按字段完整度部分计分，不再仅因缺字段进入评分硬过滤，但执行就绪状态保持 `UNAVAILABLE`，不能成为可执行 TOP。TP1 RR `1.2` 与主要目标 RR `1.5` 是评分线；主要目标低于 `1.5` 仍硬过滤。
+- v5.0 增加 `--scheduled-retry` 入口和最多两次相互独立的 Feed 捕获；重试不得跨次拼接帖子或复用旧快照冒充本轮成功。
+- Telegram renderer 改为面向用户的简洁摘要；完整 JSON/Markdown、manifest 与 SQLite 仍是唯一审计事实源，精简消息不能替代证据文件。
 
 - 标准入口默认容量 200；Profile 是专业作者帖主通道，Feed 与经过人工/模型提取的参数信号 URL 作有界补充，按 canonical `post_id` 去重且保留全部来源 observation。
 - Feed 使用 `square-feed-coverage/v1`：必须从顶部开始，并记录滚动几何、两相懒加载触发、停止原因和覆盖状态。当前 scope 固定为 `BINANCE_SQUARE_DISCOVER_DOM`，`global_denominator_known=false` 且 `pagination_api_exhaustion_verified=false`；即使达到声明下限并稳定穷尽 DOM 而标 `BOUNDED_COMPLETE`，也只代表该次 DOM surface，不代表内部 feed API 或整个平台。容量、滚动预算、错误或未验证旧快照分别标 `CAPPED/PARTIAL/BLOCKED/LEGACY_UNVERIFIED`。
@@ -52,7 +56,7 @@ metadata: {"version":"4.2.3","mode":"shadow","runtime_effects":"read-only-no-sen
 - Futures 暂时不可用时，只允许 Spot Proxy 补价格和 OHLC；不得用 Spot 量冒充合约量。
 - 指标：BB20、%B、BandWidth、ATR14、Futures volume ratio、多周期趋势。
 - 固定 100 分评分、硬门槛、TOP3/WATCH5、同币多空冲突降级。
-- 手续费、滑点、资金费率和深度模型不在本轮帖子覆盖改造范围；现有评分/报告的名义与净值边界保持不变，本轮不新增相关接口或门槛。
+- 手续费、滑点、资金费率和深度模型默认未配置；只有完整注入成本参数且成本调整后主要目标 RR `>=2` 才可标记执行就绪，不能把名义 RR 报成净 RR。
 - 本地不可变 raw/market/report JSON、Markdown、单一 `latest` 目录指针原子替换、SQLite logical run/attempt/manifest。
 - 生产 logical run 仍由固定 UTC 四小时 slot 唯一标识；首次 attempt 的 `decision_at` 取 attempt-start UTC，并必须由 Binance server time 在30秒偏差内验证、且位于 slot 后 0–10 分钟。验证失败则 `market_catalog/FAILED`，禁止用本机时钟降级成功。SQLite `production_run_cutoff` 每轮只写一次；唯一一次 +10 分钟 retry 必须精确复用，不能改写 cutoff。帖子资格与已闭合 K 线以它为 cutoff；标量行情是随后抓取的实时验证值，必须单独显示 `captured_at`。
 - `job_namespace + production_job_id + scheduled_for_utc` 共同隔离 production/canary 身份，避免不同账本生成相同逻辑运行或 attempt 标识。
@@ -175,19 +179,19 @@ Fixture 只证明合同、完整性校验和失败路径可复现，不证明当
 | 风险收益比 | 15 |
 | 新闻/独立作者共识 | 5 |
 
-- `>=75`：TOP
-- `65–74`：WATCH
-- `<65`：FILTER
+- `>=55`：TOP 候选；仍须通过硬门与执行就绪检查，否则降级 WATCH/FILTER
+- `40–54`：WATCH
+- `<40`：FILTER
 
 硬门槛：
 
 - 无活跃合约。
 - 信号过期或已失效。
-- 缺 Entry、SL 或 TP1。
-- TP1 RR `<1.5` 或主目标 RR `<2.0`。
 - 价格几何关系无效。
+- 主要目标 RR `<1.5`。
+- 信号已触发止损、达到主要目标或其他失效条件。
 
-不得为了输出机会而静默补齐参数。仅允许按 `DERIVATION_POLICY_V1` 生成明确标记、带完整证据的系统再推导计划；任何门槛失败即拒绝。没有合格机会时必须输出 `WAIT`。
+缺 Entry、SL 或 TP1 只允许进入部分完整度评分，并因执行就绪不可用而保持 WATCH/FILTER；不得为了输出机会静默补齐参数。仅允许按 `DERIVATION_POLICY_V1` 生成明确标记、带完整证据的系统再推导计划；任何硬门失败即拒绝。没有合格机会时必须输出 `WAIT`。
 
 ## 报告硬约束
 

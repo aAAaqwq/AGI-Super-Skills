@@ -2,23 +2,23 @@
   "schemaVersion": 1,
   "scope": "deterministic-structural-evidence-not-semantic-verification",
   "summary": {
-    "inventoryCount": 825,
+    "inventoryCount": 827,
     "structureInvalid": 175,
-    "disclosureWarnings": 567,
-    "executionReviewRequired": 174,
+    "disclosureWarnings": 568,
+    "executionReviewRequired": 173,
     "issueCounts": {
       "description-missing-trigger": 263,
-      "description-over-180": 292,
+      "description-over-180": 293,
       "invalid-frontmatter-yaml": 35,
       "link-outside-repository": 5,
       "missing-frontmatter": 37,
       "name-folder-mismatch": 71,
       "over-500-lines": 55,
-      "personal-absolute-path": 50,
-      "scripts-without-test-evidence": 173,
+      "personal-absolute-path": 51,
+      "scripts-without-test-evidence": 172,
       "unmentioned-assets": 10,
       "unmentioned-references": 54,
-      "unmentioned-scripts": 75,
+      "unmentioned-scripts": 74,
       "unresolved-local-link": 34
     }
   },
@@ -28,13 +28,11 @@
       "path": "skills/5minbtc/SKILL.md",
       "structure_status": "invalid",
       "disclosure_status": "warn",
-      "execution_status": "review-required",
+      "execution_status": "test-evidence-present",
       "issues": [
         "description-missing-trigger",
         "description-over-180",
         "personal-absolute-path",
-        "scripts-without-test-evidence",
-        "unmentioned-scripts",
         "unresolved-local-link"
       ]
     },
@@ -747,6 +745,17 @@
       "execution_status": "not-applicable",
       "issues": [
         "description-over-180"
+      ]
+    },
+    {
+      "skill_id": "bb-scalper",
+      "path": "skills/bb-scalper/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "not-applicable",
+      "issues": [
+        "description-over-180",
+        "personal-absolute-path"
       ]
     },
     {

@@ -39,7 +39,7 @@ Choose a reviewed origin boundary before browsing by outcome. Provenance and cur
 
 | Origin | Meaning | Entries |
 |---|---|---:|
-| [Project original](#project-original-skills) | Digest-backed first-party work with reviewed authorship. | 33 |
+| [Project original](#project-original-skills) | Digest-backed first-party work with reviewed authorship. | 34 |
 | [Adapted](#adapted-skills) | Modified from a named source with the adaptation recorded. | 0 |
 | [Collected](#collected-skills) | Preserved from a named source with provenance recorded. | 0 |
 | [Unknown origin](#unknown-origin-skills) | Source review is incomplete; inspect before use. | 793 |
@@ -53,13 +53,14 @@ Digest-backed first-party work with reviewed authorship.
 |---|---|---|---|---|
 | [`5minbtc`](../skills/5minbtc/) | 💹 Finance, Trading & Markets | Project original · stale review | Unscored | Pending |
 | [`bb-scalper`](../skills/bb-scalper/) | 💹 Finance, Trading & Markets | Project original · stale review | Unscored | Pending |
-| [`binance-square`](../skills/binance-square/) | 💹 Finance, Trading & Markets | Project original · stale review | Unscored | Pending |
+| [`binance-square`](../skills/binance-square/) | 💹 Finance, Trading & Markets | Project original · reviewed | Unscored | Pending |
 | [`content-cover-gen`](../skills/content-cover-gen/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
 | [`content-illustration-strategy`](../skills/content-illustration-strategy/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
 | [`content-typography`](../skills/content-typography/) | ✍️ Content, Media & Publishing | Project original · reviewed | 80/100 · Selected | Pending |
 | [`daily-douyin-content`](../skills/daily-douyin-content/) | 🇨🇳 Chinese Platform Workflows | Project original · reviewed | Unscored | Pending |
 | [`daily-gzh-content`](../skills/daily-gzh-content/) | 🇨🇳 Chinese Platform Workflows | Project original · reviewed | Unscored | Pending |
 | [`daily-xhs-content`](../skills/daily-xhs-content/) | 🇨🇳 Chinese Platform Workflows | Project original · reviewed | Unscored | Pending |
+| [`daniel-aesthetic-director`](../skills/daniel-aesthetic-director/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
 | [`daniel-x-writer`](../skills/daniel-x-writer/) | ✍️ Content, Media & Publishing | Project original · reviewed | Unscored | Pending |
 | [`data-contract-quality-governance`](../skills/data-contract-quality-governance/) | 🛡️ Security, Privacy & Legal | Project original · reviewed | 78/100 · Selected | Pending |
 | [`douyin-smart-publish`](../skills/douyin-smart-publish/) | 🇨🇳 Chinese Platform Workflows | Project original · reviewed | Unscored | Pending |
@@ -108,7 +109,7 @@ Source review is incomplete; inspect before use.
 
 ## 🗂️ Browse by outcome
 
-This revision contains 826 canonical catalog entries. The number is generated here rather than used as a product claim.
+This revision contains 827 canonical catalog entries. The number is generated here rather than used as a product claim.
 
 | Category | Use it for | Entries |
 |---|---|---:|
@@ -119,7 +120,7 @@ This revision contains 826 canonical catalog entries. The number is generated he
 | [🛡️ Security, Privacy & Legal](#security-privacy-legal) | Review security, privacy, compliance, permissions, contracts, and legal risk. | 34 |
 | [🎨 Product, Design & UX](#product-design-ux) | Shape product requirements, interfaces, design systems, and user experience. | 22 |
 | [📈 Marketing, SEO & Growth](#marketing-seo-growth) | Acquire audiences through positioning, campaigns, search, ads, and social growth. | 49 |
-| [✍️ Content, Media & Publishing](#content-media-publishing) | Create, edit, repurpose, and publish writing, images, audio, and video. | 86 |
+| [✍️ Content, Media & Publishing](#content-media-publishing) | Create, edit, repurpose, and publish writing, images, audio, and video. | 87 |
 | [🤝 Sales, CRM & Customer Success](#sales-crm-customer-success) | Find, win, onboard, support, and retain customers with accountable workflows. | 40 |
 | [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 69 |
 | [🧭 Business Operations & Strategy](#business-operations-strategy) | Plan work, make decisions, manage teams, and improve operating systems. | 74 |
@@ -600,6 +601,7 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`copy-editing`](../skills/copy-editing/) | When the user wants to edit, review, or improve existing marketing copy. Also use when the user mentions 'edit this copy,' 'review my copy,' 'copy feedback,' 'proofread,' 'polish… | Unknown · unreviewed | Unscored | Portable required assignment · structure checked · CCO |
 | [`copywriting`](../skills/copywriting/) | Write, rewrite, or improve marketing copy for homepages, landing pages, pricing pages, feature pages, and about pages. Use when the user needs conversion-focused copy with clear… | Unknown · unreviewed | Unscored | Portable required assignment · structure checked · CCO, CMO |
 | [`cross-platform-poster`](../skills/cross-platform-poster/) | Publish one piece of content across MoltX, Twitter/X, Discord, and Telegram | Unknown · unreviewed | Unscored | Catalog only |
+| [`daniel-aesthetic-director`](../skills/daniel-aesthetic-director/) | 将主题、内容或品牌意图转化为有审美依据、可执行、可迭代的视觉方向与生成式图像提示词。适用于选择艺术/摄影/设计/东方美学/3D 风格，分析参考图，设计封面、海报、品牌视觉、产品图、插画或概念图，为 Midjourney、SDXL、GPT Image、即梦等模型生成提示词，以及解决“画面好看但不对题”“风格堆砌”“多张图不统一”等问题。 | Project original · reviewed | Unscored | Catalog only |
 | [`daniel-content-writing-style`](../skills/daniel-content-writing-style/) | 为明确以 A.A 身份发布的文章、教程、复盘或视频脚本建立证据账本并起草、改写或审稿；仅在当前核心版本获明确批准后，调用一个平台专业 Subagent 适配并由主 Agent 回审。不用于其他作者、纯选题或增长研究、摘要、发布或外部操作。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`daniel-x-writer`](../skills/daniel-x-writer/) | Use for concise Chinese X/Twitter posts in Daniel's first-person voice, mixing human tension, numerical evidence, explicit decision rules, and a sharp reflective ending. | Project original · reviewed | Unscored | Catalog only |
 | [`doc-coauthoring`](../skills/doc-coauthoring/) | Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar… | Unknown · unreviewed | Unscored | Portable optional assignment · structure checked · CCO, CMO, CPO, CSO |
@@ -729,7 +731,7 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 | [`bankr-signals`](../skills/bankr-signals/) | Transaction-verified trading signals on Base blockchain. Agents publish trades | Unknown · unreviewed | Unscored | Catalog only |
 | [`bb-scalper`](../skills/bb-scalper/) | BB 双向套利策略：加密合约 10x 杠杆布林带均值回归。布林带收窄=横盘→在下轨买、上轨卖；三重过滤器(1h趋势/RSI/BB甜区)确认碗平放，轨对轨止盈(RR… | Project original · stale review | Unscored | Catalog only |
 | [`billing-automation`](../skills/billing-automation/) | Build automated billing systems for recurring payments, invoicing, subscription lifecycle, and dunning management. Use when implementing subscription billing, automating… | Unknown · unreviewed | Unscored | Catalog only |
-| [`binance-square`](../skills/binance-square/) | 币安广场合约投机雷达 v4：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达 | Project original · stale review | Unscored | Catalog only |
+| [`binance-square`](../skills/binance-square/) | 币安广场合约投机雷达 v5：以最近24小时专业交易帖为主要证据，回源核验帖子， 联合币安公共合约行情、4周期K线、布林带、ATR、量能和RR，生成可审计的本地影子报告。 触发词：币安广场、扫描币安、binance square、合约机会、交易信号雷达、4小时雷达 | Project original · reviewed | Unscored | Catalog only |
 | [`binance-trending`](../skills/binance-trending/) | Description needs review; inspect source. | Unknown · unreviewed | Unscored | Catalog only |
 | [`bookkeeping-basics`](../skills/bookkeeping-basics/) | Set up and maintain basic bookkeeping for a solopreneur business. Use when tracking income and expenses, preparing for taxes, managing invoices and receipts, understanding cash… | Unknown · unreviewed | Unscored | Portable optional assignment · structure checked · CFO |
 | [`btc-5min-scalper`](../skills/btc-5min-scalper/) | BTC 5-minute Up/Down paper trading on Polymarket. Scans Binance 1m candles for momentum/mean-reversion/volume signals, makes virtual trades on Polymarket 5-min markets, tracks… | Unknown · unreviewed | Unscored | Catalog only |

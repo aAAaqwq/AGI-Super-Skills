@@ -265,6 +265,38 @@ class BinanceClient:
             params["symbol"] = symbol
         return self._signed_request("GET", "/fapi/v1/openOrders", params)
 
+    def get_user_trades(self, symbol: str, limit: int = 5) -> list:
+        """查询用户成交记录(含真实成交价 avgPrice 由 price 字段体现)。
+
+        Args:
+            symbol: 交易对
+            limit: 返回条数(默认5)
+
+        Returns:
+            成交记录列表, 每条含 price/qty/side/time
+        """
+        params: Dict[str, Any] = {"symbol": symbol, "limit": limit}
+        return self._signed_request("GET", "/fapi/v1/userTrades", params)
+
+    def get_order(self, symbol: str, order_id: int = None,
+                  orig_client_order_id: str = None) -> dict:
+        """查询单个订单状态(用于 market 单成交确认)。
+
+        Args:
+            symbol: 交易对
+            order_id: 订单ID
+            orig_client_order_id: 客户端订单ID(与order_id至少给一个)
+
+        Returns:
+            订单状态 dict, 含 status(FILLED/NEW/CANCELED...)
+        """
+        params: Dict[str, Any] = {"symbol": symbol}
+        if order_id is not None:
+            params["orderId"] = order_id
+        if orig_client_order_id is not None:
+            params["origClientOrderId"] = orig_client_order_id
+        return self._signed_request("GET", "/fapi/v1/order", params)
+
     def get_position_risk(self, symbol: Optional[str] = None) -> list:
         """查询持仓风险（含 positionAmt/entryPrice/unRealizedProfit）。
 
@@ -278,6 +310,19 @@ class BinanceClient:
         if symbol:
             params["symbol"] = symbol
         return self._signed_request("GET", "/fapi/v2/positionRisk", params)
+
+    def set_margin_type(self, symbol: str, margin_type: str) -> dict:
+        """设置合约保证金模式(逐仓/全仓)。
+
+        Args:
+            symbol: 交易对
+            margin_type: ISOLATED(逐仓) / CROSSED(全仓)
+
+        Returns:
+            设置结果 dict
+        """
+        params: Dict[str, Any] = {"symbol": symbol, "marginType": margin_type.upper()}
+        return self._signed_request("POST", "/fapi/v1/marginType", params)
 
     def get_balance(self, asset: str = "USDT") -> dict:
         """查询资产余额。
