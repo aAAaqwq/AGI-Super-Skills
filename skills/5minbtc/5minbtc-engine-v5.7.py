@@ -558,6 +558,29 @@ def multi_timeframe_signal(k_4h, k_1h, k_15m):
     return mtf
 
 
+def cross_asset_signal(k_eth, k_sol):
+    """跨资产广度 (v5.9): ETH/SOL 5m 动量方向 = BTC 趋势的确认.
+    对抗审查 P0: 趋势日(跨资产同向)强制压 bear 是最差 failure 的根因修复."""
+    ca = {}
+    for name, k in (("eth", k_eth), ("sol", k_sol)):
+        if k and len(k) >= 6:
+            closes = [c["c"] for c in k]
+            if closes[-6] > 0:
+                ca[f"ca_{name}_mom"] = round((closes[-1] - closes[-6]) / closes[-6], 6)
+    return ca
+
+
+def load_ofi():
+    """读真订单流 OFI 缓存 (ofi_feed.py 写的净主动买卖流). 失败返回 {}."""
+    try:
+        cache = json.load(open(os.path.expanduser("~/bb-auto/ofi.json")))
+        if isinstance(cache, dict) and "ofi" in cache:
+            return {"ofi": cache["ofi"]}
+    except Exception:
+        pass
+    return {}
+
+
 # ======================== Regime Detection ========================
 
 def detect_regime(vol_ratio, candles, atr_val=None):
@@ -796,6 +819,25 @@ def direction_rule_v5(candles, closes, atr_val, vol_ratio,
         elif tf4 > 0.0004 and score < 0:  # 4h 每根涨 0.04% = 明显上涨
             score *= 0.35
 
+    # ---- v5.9: 跨资产广度过滤 — ETH/SOL 同向涨跌时, BTC 逆势信号不可信 ----
+    # 跨资产合力方向 = 市场真实情绪, 单币假信号(尤其震荡日)在此被过滤
+    if mtf:
+        breadth = mtf.get("ca_eth_mom", 0.0) + mtf.get("ca_sol_mom", 0.0)
+        if breadth < -0.001 and score > 0:    # ETH+SOL 同跌, BTC 做多不可信
+            score *= 0.5
+        elif breadth > 0.001 and score < 0:   # ETH+SOL 同涨, BTC 做空不可信
+            score *= 0.5
+
+    # ---- v5.9: 真订单流 OFI 确认 — half_body 方向必须与真实资金流一致 ----
+    # 对抗审查: OFI 不做第14个方向因子(与token价共线), 只做"延续有没有真钱支撑"
+    # 信号方向 vs 订单流方向冲突 = 假信号 (挂单虚晃), 降权
+    if mtf and "ofi" in mtf:
+        ofi = mtf["ofi"]
+        if score > 0 and ofi < -0.15:   # 看多但真实资金在流出
+            score *= 0.5
+        elif score < 0 and ofi > 0.15:  # 看空但真实资金在流入
+            score *= 0.5
+
     # ---- Direction threshold (v5.5: neutral区收缩 [-2,2]>[-1,1]) ----
     nz = 12 if regime == "HIGH_VOL" else 6
     if score > nz:
@@ -903,8 +945,8 @@ def _fetch_fng():
 def run():
     info = current_candle_info()
 
-    # v5.9: 7路并行HTTP — klines + depth + FNG + chainlink + 多周期(4h/1h/15m)
-    with ThreadPoolExecutor(max_workers=7) as ex:
+    # v5.9: 9路并行HTTP — klines + depth + FNG + chainlink + 多周期(4h/1h/15m) + 跨资产(ETH/SOL)
+    with ThreadPoolExecutor(max_workers=9) as ex:
         f_klines = ex.submit(fetch_klines, limit=200)
         f_depth = ex.submit(fetch_depth_avg)  # v5.8: 多时刻采样去噪(3次x1s)
         f_fng = ex.submit(_fetch_fng)
@@ -912,6 +954,8 @@ def run():
         f_4h = ex.submit(fetch_klines, interval="4h", limit=30)
         f_1h = ex.submit(fetch_klines, interval="1h", limit=40)
         f_15m = ex.submit(fetch_klines, interval="15m", limit=30)
+        f_eth = ex.submit(fetch_klines, symbol="ETHUSDT", limit=20)
+        f_sol = ex.submit(fetch_klines, symbol="SOLUSDT", limit=20)
 
         candles = f_klines.result()
         depth = f_depth.result()
@@ -920,9 +964,13 @@ def run():
         k_4h = f_4h.result()
         k_1h = f_1h.result()
         k_15m = f_15m.result()
+        k_eth = f_eth.result()
+        k_sol = f_sol.result()
 
     closes = [c["c"] for c in candles]
     mtf = multi_timeframe_signal(k_4h, k_1h, k_15m)  # v5.9 多周期结构
+    mtf.update(cross_asset_signal(k_eth, k_sol))     # v5.9 跨资产广度
+    mtf.update(load_ofi())                            # v5.9 真订单流 OFI
 
     e9 = ema(closes, 9)
     e21 = ema(closes, 21)
