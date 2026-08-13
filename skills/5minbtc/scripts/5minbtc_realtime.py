@@ -11,17 +11,86 @@
 """
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 SKILL = Path(__file__).resolve().parent.parent
 ENGINE = SKILL / "5minbtc-engine-v5.7.py"
 PUSH = SKILL / "scripts" / "telegram_push.py"
 PY = "/usr/bin/python3"
+PAPER = Path.home() / "bb-auto" / "5minbtc-paper.json"
+CST = timezone(timedelta(hours=8))
 
 DIR_CN = {"bull": "看多·收阳", "bear": "看空·收阴"}
+
+
+def load_env():
+    envf = Path.home() / "bb-auto" / "prediction.env"
+    if envf.exists():
+        for line in envf.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            if v.strip():
+                os.environ.setdefault(k.strip(), v.strip())
+
+
+def get_up_down_price():
+    """拉当前 BTC 5m 预测市场 UP/DOWN 真实价. 失败返回 (None, None)."""
+    try:
+        load_env()
+        sys.path.insert(0, str(SKILL / "scripts"))
+        import importlib
+        trader = importlib.import_module("5minbtc_trader")
+        found = trader.find_btc_5m_market()
+        if not found:
+            return None, None
+        _, mid, up_tok, dn_tok, _, _ = found
+        return trader._token_price(mid, up_tok), trader._token_price(mid, dn_tok)
+    except Exception:
+        return None, None
+
+
+def load_paper():
+    if PAPER.exists():
+        try:
+            return json.loads(PAPER.read_text())
+        except Exception:
+            pass
+    return {"bets": [], "realized": 0.0, "bankroll": 100.0,
+            "started": datetime.now(CST).isoformat()}
+
+
+def save_paper(state):
+    PAPER.write_text(json.dumps(state, indent=2, ensure_ascii=False))
+
+
+def record_paper(d):
+    """重大信号自动记录一笔模拟预测到台账 (验证 conf≥阈值 的胜率)."""
+    p = d["prediction"]
+    c = d["candle"]
+    side = "UP" if p["bias"] == "bull" else "DOWN"
+    up, down = get_up_down_price()
+    ask = up if side == "UP" else down
+    if ask is None:
+        # 真实价拿不到, 用引擎预测方向折算近似价
+        ask = round(max(0.05, min(0.95, p["confidence"] / 100)), 4)
+    state = load_paper()
+    bet = {
+        "candle": c["iso"], "side": side, "ask": round(ask, 4),
+        "amount": 1.0, "fee": 0.01, "status": "open", "mode": "paper",
+        "p_est": p["confidence"] / 100, "auto": True,
+        "ts": datetime.now(CST).isoformat(),
+        "reason": f"重大信号自动记录 conf={p['confidence']}",
+    }
+    state["bets"].append(bet)
+    save_paper(state)
+    return side, ask
 
 
 def run_engine():
@@ -69,6 +138,7 @@ def main():
     last_candle = None
     last_signal_conf = 0
     last_bias = None
+    recorded_candle = None  # 自动记录去重 (同一根K线只记一次)
     print(f"🟢 5minbtc 实时监控启动 | {args.refresh}s刷新 | 重大信号阈值 conf≥{args.conf}", flush=True)
 
     while True:
@@ -82,7 +152,7 @@ def main():
         bias = p["bias"]
         conf = p["confidence"]
 
-        # 新K线重置去重状态
+        # 新K线重置推送去重状态
         if candle != last_candle:
             last_candle = candle
             last_signal_conf = 0
@@ -92,7 +162,12 @@ def main():
         is_signal = bias != "neutral" and conf >= args.conf
 
         if is_signal:
-            # 去重: 首次命中 / 置信度显著提升(≥5) / 方向翻转 才推
+            # 自动记录模拟预测 (同一根K线只记一次, 验证重大信号胜率)
+            if candle != recorded_candle:
+                side, ask = record_paper(d)
+                recorded_candle = candle
+                print(f"📝 自动记录模拟预测: {side} @ {ask:.2f} conf={conf}", flush=True)
+            # 推送去重: 首次命中 / 置信度显著提升(≥5) / 方向翻转 才推
             new_peak = conf >= last_signal_conf + 5 or last_bias is None
             flip = bias != last_bias and last_bias is not None
             if new_peak or flip:
