@@ -128,6 +128,10 @@ class TestnetEngine(PaperEngine):
             return self._timeout_close()
         if not self.position:
             return None
+        # 无保护仓(bare=True, 条件单没挂上) → 不能裸持, 立即市价平掉
+        if self.position.get("_bare") and abs(amt) > 1e-12:
+            logger.warning("[%s] 无保护仓 bare=True, 立即市价平掉", self.symbol)
+            return self._timeout_close()
         if abs(amt) < 1e-12:
             p = self.position
             # 用真实平仓成交价(若可取)而非轮询现价, 跳空时 PnL 不失真
