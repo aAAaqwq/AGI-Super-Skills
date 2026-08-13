@@ -953,10 +953,11 @@ def _token_price(market_id, token_id):
     return None
 
 
-def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
+def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.50, down_max=0.55,
                       paper_file=None, push=True, tb_filter=False, min_conf=0,
                       strength_gate=False, poll=20, p_up=0.74, p_down=0.57,
-                      push_every=60, push_delta=5.0, bankroll=100.0):
+                      push_every=60, push_delta=5.0, bankroll=100.0,
+                      up_min=0.40, skip_trend=True):
     """实时 paper 监控: LIMIT 单模拟, 每根K线精确节奏 (绝不下单, 真实报价).
 
     第0分钟: 结算上一轮 → 推送获利 + 账户权益 (本金 bankroll, 每注 amount)
@@ -1037,11 +1038,15 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                 side, reason = _signal(d, min_conf=min_conf, tb_filter=tb_filter,
                                        strength_gate=strength_gate)
                 def _place(side_, reason_, tag):
-                    """设纸面 LIMIT (立即成交或挂单). 返回是否下单."""
+                    """最小规则集下单: 只做 UP + 甜区价立即成交 (禁 DOWN/趋势停手)."""
                     if not side_ or _active_for(candle):
                         return False
-                    p_est = p_up if side_ == "UP" else p_down
-                    limit = up_max if side_ == "UP" else down_max
+                    if side_ == "DOWN":
+                        return False   # 规则1: 禁 DOWN (实测21%胜率, 全亏 -5.09)
+                    if skip_trend and d.get("regime") == "TREND":
+                        print(f"跳过: TREND 趋势市停手 (规则3, regime={d.get('regime')})")
+                        return False
+                    p_est = p_up
                     try:
                         found = find_btc_5m_market()
                     except Exception as e:
@@ -1052,44 +1057,29 @@ def run_paper_monitor(amount=1.0, fee=0.0, up_max=0.65, down_max=0.55,
                     _, market_id, up_tok, down_tok, title, _ = found
                     up_ask = _token_price(market_id, up_tok)
                     down_ask = _token_price(market_id, down_tok)
-                    cur_ask = up_ask if side_ == "UP" else down_ask
-                    tok = up_tok if side_ == "UP" else down_tok
-                    if cur_ask is None:
-                        print("无法取 ask, 跳过")
+                    if up_ask is None:
+                        print("无法取 UP ask, 跳过")
+                        return False
+                    if not (up_min <= up_ask <= up_max):
+                        print(f"跳过: UP ask {up_ask:.2f} 不在甜区 "
+                              f"[{up_min:.2f},{up_max:.2f}] (规则2)")
                         return False
                     ud = (f"UP {up_ask:.2f} | DOWN {down_ask:.2f}"
-                          if up_ask is not None and down_ask is not None
-                          else "UP/DOWN 部分不可用")
-                    if cur_ask <= limit:
-                        state["bets"].append({
-                            "candle": candle, "side": side_,
-                            "ask": round(cur_ask, 4), "amount": amount,
-                            "fee": fee, "status": "open", "mode": "paper",
-                            "market_id": market_id, "token_id": tok,
-                            "p_est": p_est,
-                            "ts": datetime.datetime.now().isoformat(),
-                            "reason": reason_,
-                        })
-                        save_paper(paper_file, state)
-                        _push(f"✅ 模拟成交 |{candle[5:16]} {tag} {side_}\n"
-                              f"@ {cur_ask:.2f} (限价 {limit:.2f}内) | p={p_est:.2f}\n"
-                              f"{ud}\n"
-                              f"持仓 {amount}U | 涨跌幅 0% 起算")
-                    else:
-                        state["bets"].append({
-                            "candle": candle, "side": side_,
-                            "limit": round(limit, 4), "status": "pending", "mode": "paper",
-                            "p_est": p_est, "market_id": market_id,
-                            "token_id": tok,
-                            "ts": datetime.datetime.now().isoformat(),
-                            "reason": reason_,
-                        })
-                        save_paper(paper_file, state)
-                        _push(f"📋 模拟LIMIT |{candle[5:16]} {tag}\n"
-                              f"{side_} 限价 {limit:.2f} (p={p_est:.2f}) "
-                              f"| 现价 {cur_ask:.2f}\n"
-                              f"{ud}\n"
-                              f"成交时 EV {p_est - limit:+.2f} | 等回调 | {amount}U")
+                          if down_ask is not None else f"UP {up_ask:.2f} | DOWN ?")
+                    state["bets"].append({
+                        "candle": candle, "side": "UP",
+                        "ask": round(up_ask, 4), "amount": amount,
+                        "fee": fee, "status": "open", "mode": "paper",
+                        "market_id": market_id, "token_id": up_tok,
+                        "p_est": p_est,
+                        "ts": datetime.datetime.now().isoformat(),
+                        "reason": reason_,
+                    })
+                    save_paper(paper_file, state)
+                    _push(f"✅ 模拟成交 | {candle[5:16]} {tag} UP\n"
+                          f"@ {up_ask:.2f} (甜区[{up_min:.2f},{up_max:.2f}]) | p={p_est:.2f}\n"
+                          f"{ud}\n"
+                          f"持仓 {amount}U | 涨跌幅 0% 起算")
                     return True
 
                 if minute == 2 and not did_2:
@@ -1212,10 +1202,14 @@ def main():
                     help="预测市场 paper 模拟 (真实报价, 绝不下单)")
     ap.add_argument("--paper-file", default=None,
                     help="paper 状态文件 (默认 ~/bb-auto/5minbtc-paper.json)")
-    ap.add_argument("--paper-up-max", type=float, default=0.65,
-                    help="UP 入场价上限 (默认 0.65; 实测盈亏平衡 ~0.70, 留 margin)")
-    ap.add_argument("--paper-down-max", type=float, default=0.55,
-                    help="DOWN 入场价上限 (默认 0.55; 实测盈亏平衡 ~0.57)")
+    ap.add_argument("--paper-up-min", type=float, default=0.40,
+                    help="UP 甜区下限 (默认 0.40; 实测 <0.40 接飞刀, <0.30 必亏)")
+    ap.add_argument("--paper-up-max", type=float, default=0.50,
+                    help="UP 甜区上限 (默认 0.50; 实测 >0.50 买贵, 胜率对但亏大)")
+    ap.add_argument("--paper-down-max", type=float, default=0.50,
+                    help="DOWN 已禁用(实测21%%胜率全亏); 此参数保留兼容")
+    ap.add_argument("--paper-trend-ok", action="store_true",
+                    help="允许 TREND 趋势市交易 (默认趋势市停手)")
     ap.add_argument("--paper-fee", type=float, default=0.01,
                     help="单笔手续费比例 (默认 0.01=1%%)")
     ap.add_argument("--paper-push", action="store_true",
@@ -1287,7 +1281,9 @@ def main():
                                  p_down=args.paper_p_down,
                                  push_every=args.paper_push_every,
                                  push_delta=args.paper_push_delta,
-                                 bankroll=args.paper_bankroll)
+                                 bankroll=args.paper_bankroll,
+                                 up_min=args.paper_up_min,
+                                 skip_trend=not args.paper_trend_ok)
     if args.paper:
         if args.loop:
             return run_paper_loop(amount=args.amount, fee=args.paper_fee,
