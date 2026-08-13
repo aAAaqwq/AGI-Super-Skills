@@ -70,8 +70,41 @@ def settle_bets(state):
         b["direction_correct"] = won
         b["pnl"] = round((b.get("amount", 1) * (1 - b["ask"]) - b.get("amount", 1) * b.get("fee", 0.01))
                           if won else (-b.get("amount", 1) * b["ask"] - b.get("amount", 1) * b.get("fee", 0.01)), 4)
+        # 同步累计已实现盈亏
+        state["realized"] = round(state.get("realized", 0.0) + b["pnl"], 4)
         settled += 1
+    # 重建 realized = 所有 settled 单 pnl 总和 (修正历史遗漏)
+    state["realized"] = round(sum(b.get("pnl", 0) for b in state.get("bets", [])
+                                  if b.get("status") == "settled"), 4)
     return settled
+
+
+def load_env():
+    envf = Path.home() / "bb-auto" / "prediction.env"
+    if envf.exists():
+        for line in envf.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            if v.strip():
+                os.environ.setdefault(k.strip(), v.strip())
+
+
+def get_up_down_price():
+    """拉当前 BTC 5m 预测市场 UP/DOWN 真实价 (算持仓未实现盈亏)."""
+    try:
+        load_env()
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import importlib
+        trader = importlib.import_module("5minbtc_trader")
+        found = trader.find_btc_5m_market()
+        if not found:
+            return None, None
+        _, mid, up_tok, dn_tok, _, _ = found
+        return trader._token_price(mid, up_tok), trader._token_price(mid, dn_tok)
+    except Exception:
+        return None, None
 
 
 def load_state():
@@ -97,6 +130,20 @@ def fmt_report(state, by_hour=False):
     lines.append("━" * 26)
     lines.append(f"信号 {len(auto)} | 已结算 {len(settled)} | 挂单 {len(pending)} | "
                  f"未成交 {len(unfilled)} | 持仓 {len(open_)}")
+
+    # 账户总览 (本金 + 已实现 + 持仓浮盈 + 总权益)
+    bankroll = state.get("bankroll", 100.0)
+    realized = state.get("realized", 0.0)
+    up_px, down_px = get_up_down_price()
+    unrealized = 0.0
+    for b in open_:
+        ask = b.get("ask", 0)
+        cur = up_px if b["side"] == "UP" else down_px
+        if cur is not None and ask and ask > 0:
+            unrealized += b.get("amount", 1) * (cur - ask) / ask
+    equity = bankroll + realized + unrealized
+    lines.append(f"💰 本金 ${bankroll:.0f} | 已实现 ${realized:+.2f} | "
+                 f"持仓浮盈 ${unrealized:+.2f} | 权益 ${equity:.2f}")
 
     # 下单统计
     if settled:
