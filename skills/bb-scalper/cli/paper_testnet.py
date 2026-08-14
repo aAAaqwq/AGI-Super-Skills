@@ -134,9 +134,15 @@ class TestnetEngine(PaperEngine):
             return self._timeout_close()
         if abs(amt) < 1e-12:
             p = self.position
-            # 用真实平仓成交价(若可取)而非轮询现价, 跳空时 PnL 不失真
-            exit_price = self.executor.get_real_close_price(self.symbol, p) or self.cur_price or p["entry"]
-            result = self._classify_close(exit_price)
+            # 先判断平仓类型(SL/TP), 再用对应触发价作为平仓价(条件单触发价≈真实成交)
+            # 比回退现价更准(现价在跳空时偏离成交价很大)
+            result = self._classify_close(self.cur_price or p["entry"])
+            if result == "SL":
+                exit_price = p.get("sl") or self.cur_price or p["entry"]
+            elif result == "TP":
+                exit_price = p.get("tp") or self.cur_price or p["entry"]
+            else:
+                exit_price = self.executor.get_real_close_price(self.symbol, p) or self.cur_price or p["entry"]
             try:
                 self.executor.cancel_symbol_orders(self.symbol)
             except Exception:
