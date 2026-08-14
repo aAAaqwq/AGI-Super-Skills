@@ -87,7 +87,10 @@ class TestnetEngine(PaperEngine):
         p = self.position
         try:
             res = self.executor.close_position_market(self.symbol, p["dir"], p.get("qty", 0))
-            exit_price = _f(res.price) or self.cur_price or p["entry"]
+            # 优先取本次市价单的真实成交价(加权均价); 取不到回退现价
+            exit_price = _f(res.get("avgPrice") or res.get("price")) or \
+                self.executor.get_real_close_price(self.symbol, p) or \
+                self.cur_price or p["entry"]
             return self.close("TIMEOUT", exit_price)
         except Exception as e:
             logger.error("[%s] 超时平仓失败(稍后由轮询兜底): %s", self.symbol, e)
@@ -142,7 +145,9 @@ class TestnetEngine(PaperEngine):
             elif result == "TP":
                 exit_price = p.get("tp") or self.cur_price or p["entry"]
             else:
-                exit_price = self.executor.get_real_close_price(self.symbol, p) or self.cur_price or p["entry"]
+                # EXIT(超时/其他): 用真实平仓成交价(weighted avg), 不再回退现价
+                exit_price = self.executor.get_real_close_price(self.symbol, p) or \
+                    self.cur_price or p["entry"]
             try:
                 self.executor.cancel_symbol_orders(self.symbol)
             except Exception:

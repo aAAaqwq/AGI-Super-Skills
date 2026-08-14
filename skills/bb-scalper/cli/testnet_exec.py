@@ -16,6 +16,7 @@
 import os
 import sys
 import time
+from datetime import datetime, timezone
 from typing import Optional
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,6 +33,24 @@ def _f(v) -> float:
         return float(v or 0)
     except (TypeError, ValueError):
         return 0.0
+
+
+def _parse_ts_ms(v) -> Optional[int]:
+    """把 opened_ts(ISO 字符串或毫秒时间戳)转成毫秒; 取不到返回 None。"""
+    if v is None:
+        return None
+    if isinstance(v, (int, float)):
+        return int(v)
+    s = str(v).strip()
+    if not s:
+        return None
+    try:
+        dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return int(dt.timestamp() * 1000)
+    except (ValueError, TypeError, OverflowError):
+        return None
 
 
 class TestnetExecutor:
@@ -65,7 +84,8 @@ class TestnetExecutor:
             price = getattr(order_res, "price", None)
             if price is None and isinstance(order_res, dict):
                 price = order_res.get("price") or order_res.get("avgPrice")
-            return {"status": status, "orderId": order_id, "price": price}
+            return {"status": status, "orderId": order_id, "price": price,
+                    "avgPrice": price}
         import time as _t
         deadline = _t.time() + timeout
         while _t.time() < deadline:
@@ -122,7 +142,26 @@ class TestnetExecutor:
         entry_res = self._wait_filled(symbol, entry_res)
         if entry_res.get("status") != "FILLED":
             raise TradeError("testnet 入场未成交 status=%s" % entry_res.get("status"))
-        fill = _f(entry_res.get("price") or entry_res.get("avgPrice")) or entry
+        # 入场价: 优先用交易所真实 avgPrice(等单后 get_order 会聚合), 兜底用订单价
+        exch_avg = _f(entry_res.get("avgPrice") or entry_res.get("price"))
+        fill = exch_avg or entry
+        # 立即成交时交易所 avgPrice 常为 0: 用 userTrades 按量加权取真实入场价
+        # (只取本单 ts 之后的成交, 避免误吞上一仓的同方向成交)
+        if not exch_avg:
+            try:
+                t = self.trader._call("get_user_trades", symbol, limit=5)
+                qty_fill, wsum = 0.0, 0.0
+                for x in t or []:
+                    if x.get("side") != side:
+                        continue
+                    if _f(x.get("time") or 0) < ts:
+                        continue
+                    qty_fill += _f(x.get("qty"))
+                    wsum += _f(x.get("qty")) * _f(x.get("price"))
+                if qty_fill > 0:
+                    fill = wsum / qty_fill
+            except Exception as e:
+                logger.warning("[%s] 入场价按量加权修正失败(用订单价记账): %s", symbol, e)
 
         # 只开仓模式: 立即返回, 由调用方置位position后再挂条件单
         if place_only:
@@ -197,19 +236,71 @@ class TestnetExecutor:
             return 0.0
         return _f(pos.get("positionAmt"))
 
-    def get_real_close_price(self, symbol: str, pos: dict) -> Optional[float]:
-        """取最近一笔平仓成交价(真实 avgPrice), 供 poll 记账用; 取不到返回 None。"""
+    def get_fill_price(self, symbol: str, pos: dict,
+                       after_ts_ms: Optional[int] = None,
+                       before_ts_ms: Optional[int] = None,
+                       side: Optional[str] = None,
+                       qty_floor: float = 0.0,
+                       max_fills: int = 5) -> Optional[float]:
+        """取真实成交加权均价(数量加权)。默认取最近一笔、平仓方向(side)的成交。
+
+        Args:
+            symbol: 交易对
+            pos: 持仓 dict(需含 dir; 有 opened_ts 时自动作为时间下界)
+            after_ts_ms: 只取该毫秒时间戳之后的成交; None 用 pos.opened_ts 推导
+            before_ts_ms: 只取该毫秒时间戳之前的成交(离线复盘用); None 不限
+            side: 过滤成交方向; None 用 pos.dir 推导平仓方向
+            qty_floor: >0 时从最近的成交往前累加, 累计量达到该值即停(≈按持仓量
+                圈定平仓成交, 避免吞掉后续仓位的同方向成交); <=0 时只取最近 N 笔
+            max_fills: 最多取多少笔做加权
+        """
+        if side is None:
+            side = "SELL" if pos.get("dir") == "LONG" else "BUY"
+        if after_ts_ms is None:
+            after_ts_ms = _parse_ts_ms(pos.get("opened_ts"))
         try:
-            trades = self.trader._call("get_user_trades", symbol, limit=5)
+            trades = self.trader._call("get_user_trades", symbol,
+                                       limit=max(50, max_fills))
         except Exception as e:
-            logger.warning("[%s] 成交记录查询失败, 用轮询现价记账: %s", symbol, e)
+            logger.warning("[%s] 成交记录查询失败: %s", symbol, e)
             return None
-        # 取最近一笔 reduceOnly 平仓方向的成交价
-        close_side = "SELL" if pos.get("dir") == "LONG" else "BUY"
-        for t in trades or []:
-            if t.get("side") == close_side and t.get("qty"):
-                return _f(t.get("price"))
-        return None
+        # qty_floor>0: 按时间正序取 after_ts_ms 之后的第一批 close_side 成交, 累计到
+        # 持仓量即停 —— 该批就是本仓的平仓成交(仓位严格串行, 本仓平仓成交永远
+        # 早于下一仓的成交), 避免误吞后续仓位的同方向成交。
+        order = sorted(trades or [], key=lambda d: d.get("time") or 0,
+                       reverse=(qty_floor <= 0))
+        picks = []
+        acc = 0.0
+        for t in order:
+            if t.get("side") != side:
+                continue
+            ttime = t.get("time") or t.get("timestamp") or 0
+            if after_ts_ms is not None and _f(ttime) < after_ts_ms:
+                continue
+            if before_ts_ms is not None and _f(ttime) > before_ts_ms:
+                continue
+            qty = _f(t.get("qty"))
+            if qty <= 0:
+                continue
+            picks.append((qty, _f(t.get("price"))))
+            acc += qty
+            if qty_floor > 0 and acc >= qty_floor:
+                break
+            if len(picks) >= max_fills:
+                break
+        if not picks:
+            return None
+        tot = sum(q for q, _ in picks)
+        if tot <= 0:
+            return None
+        return sum(q * p for q, p in picks) / tot
+
+    def get_real_close_price(self, symbol: str, pos: dict) -> Optional[float]:
+        """取真实平仓成交价(数量加权均价)。用 pos.opened_ts 之后、平仓方向的
+        真实成交(userTrades 的 price), 并按持仓量 qty 圈定最近那笔平仓成交,
+        避免误吞后续仓位的同方向成交。取不到返回 None。
+        """
+        return self.get_fill_price(symbol, pos, qty_floor=_f(pos.get("qty")))
 
     def get_usdt_balance(self) -> float:
         bal = self.trader._call("get_balance", asset="USDT") or {}
@@ -233,7 +324,7 @@ class TestnetExecutor:
                 logger.warning("[%s] 撤单失败 %s: %s", symbol, cid or o.get("orderId"), e)
 
     def close_position_market(self, symbol: str, direction: str, qty: float):
-        """市价 reduceOnly 平仓(先撤条件单)。"""
+        """市价 reduceOnly 平仓(先撤条件单)。返回原始响应 dict(尽量含真实均价)。"""
         side = "SELL" if direction == "LONG" else "BUY"
         try:
             self.cancel_symbol_orders(symbol)
@@ -246,4 +337,18 @@ class TestnetExecutor:
         res_f = self._wait_filled(symbol, res)
         if res_f.get("status") != "FILLED":
             raise TradeError("testnet 平仓未成交 status=%s" % res_f.get("status"))
+        # 尽量返回真实成交均价(部分成交时交易所 avgPrice 可能未聚合)
+        avg = _f(res_f.get("avgPrice") or res_f.get("price")) or _f(
+            getattr(res, "price", None))
+        if avg > 0:
+            try:
+                import dataclasses
+                if dataclasses.is_dataclass(res):
+                    res = dataclasses.replace(res, price=avg)
+                else:
+                    res = dict(res)
+                    res["avgPrice"] = avg
+                    res["price"] = avg
+            except Exception:
+                pass
         return res
