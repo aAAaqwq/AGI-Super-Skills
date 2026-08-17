@@ -294,6 +294,18 @@ def fmt_order(d, side, ask, probability=None):
             f"{prob_s} vs 市场 {ask:.2f}{edge_s} | 已记录")
 
 
+def fmt_prediction(d, side, ask, probability, edge, action):
+    """每根K线的预测快照 (方向+概率+市场价+edge+是否下单)."""
+    p = d["prediction"]
+    c = d["candle"]
+    dir_cn = DIR_CN.get(p["bias"], p["bias"])
+    ask_s = f"{ask:.2f}" if ask is not None else "?"
+    edge_s = f"edge {edge:+.2f}" if edge is not None else "edge ?"
+    return (f"📊 预测 {dir_cn} | {c['candle_start']} p{c.get('progress_pct', 0):.0f}%\n"
+            f"概率 {probability:.2f} | 市场 {side} {ask_s} | {edge_s}\n"
+            f"→ {action}")
+
+
 def fmt_no_edge(d, side, ask, probability):
     """无 edge 跳过推送."""
     p = d["prediction"]
@@ -368,18 +380,33 @@ def main():
         bias = p["bias"]
         conf = p["confidence"]
 
-        # 新K线重置推送去重状态
+        now_hour = datetime.now(CST).hour
+
+        # 新K线 → 推预测快照 (每根K线一次: 方向+概率+市场价+edge+是否下单)
         if candle != last_candle:
             last_candle = candle
             last_signal_conf = 0
             last_bias = None
+            up0, down0 = get_up_down_price()
+            side0 = "UP" if bias == "bull" else "DOWN"
+            ask0 = up0 if side0 == "UP" else down0
+            prob0 = p.get("probability", p.get("confidence", 50) / 100)
+            edge0 = prob0 - ask0 if ask0 is not None else None
+            if now_hour not in active_hours:
+                action = "非活跃时段"
+            elif ask0 is None:
+                action = "市场价不可用"
+            elif edge0 >= args.min_edge:
+                action = "🎯 下单"
+            else:
+                action = "⏭️ 跳过(无edge)"
+            push(fmt_prediction(d, side0, ask0, prob0, edge0, action), args.push)
 
         # 活跃时段内才下单 (概率套利: 引擎概率 > 市场价才买)
-        now_hour = datetime.now(CST).hour
         if now_hour in active_hours:
-            up, down = get_up_down_price()
             if not has_auto_bet(candle):
                 side = "UP" if bias == "bull" else "DOWN"
+                up, down = get_up_down_price()
                 ask = up if side == "UP" else down
                 probability = p.get("probability", p.get("confidence", 50) / 100)
                 if ask is not None and probability - ask >= args.min_edge:
@@ -388,10 +415,6 @@ def main():
                     print(f"📝 概率套利下单: {side} 概率{probability:.2f} > 市场{ask:.2f} "
                           f"(edge {probability-ask:+.2f})", flush=True)
                     push(fmt_order(d, side, ask, probability), args.push)
-                elif ask is not None:
-                    # 概率 ≤ 市场价 → 无 edge, 跳过
-                    print(f"⏭️ 无edge跳过: {side} 概率{probability:.2f} ≤ 市场{ask:.2f}", flush=True)
-                    push(fmt_no_edge(d, side, ask, probability), args.push)
 
         # 检查挂单 + 结算已收盘持仓 (每5秒)
         check_pending(args.push)
