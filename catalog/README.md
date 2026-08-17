@@ -718,7 +718,7 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 
 | Skill | What it helps with | Origin | Curation evidence | Support / review signals |
 |---|---|---|---|---|
-| [`5minbtc`](../skills/5minbtc/) | BTC 5分钟K线实时方向预测。v5.8新增: taker_buy主动买量因子(区分主动买/卖) +… | Project original · stale review | Unscored | Catalog only |
+| [`5minbtc`](../skills/5minbtc/) | BTC 5分钟K线实时方向预测。v5.9对抗式审查重构: 13因子收敛到3个有证据信号(half_body延续+volume放量+meanrev回归, 11个47-49%硬币因子清零) + 三层独立信息过滤(多周期4h/1h/15m趋势 + 跨资产ETH/SOL广度 + 真订单流OFI) +… | Project original · stale review | Unscored | Catalog only |
 | [`a-fund-monitor`](../skills/a-fund-monitor/) | A股基金净值监控：盘中实时估值 + 盘后实际净值，定时推送到 Telegram。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`a-share-analysis`](../skills/a-share-analysis/) | 此Skill实现了三层分析体系： 1. 情报采集层 — 7路并发多源新闻采集，自动匹配板块和个股 2. 盘面阅读层 — 美股映射 + 大盘多空判断 + 实时主线(&gt;9%题材分析) 3. 个股精选层 — 产业逻辑 + 形态8分类 + 盘口分析 + 题材排名 + 综合评分 4. 原始新闻浏览 (news.py) — 分类展示影响股票的新闻，源信息不做任何修改 | Unknown · unreviewed | Unscored | Catalog only |
 | [`afrexai-personal-finance`](../skills/afrexai-personal-finance/) | Complete personal finance system — budgeting, debt payoff, investing, tax optimization, net worth tracking, and financial independence planning. Use when managing money, building… | Unknown · unreviewed | Unscored | Catalog only |

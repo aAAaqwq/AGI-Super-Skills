@@ -4,7 +4,7 @@
   "scope": "ratchet-current-structural-debt-without-claiming-semantic-verification",
   "structureInvalid": 177,
   "disclosureWarnings": 569,
-  "executionReviewRequired": 174,
+  "executionReviewRequired": 175,
   "issueCounts": {
     "description-missing-trigger": 263,
     "description-over-180": 293,
@@ -14,10 +14,10 @@
     "name-folder-mismatch": 71,
     "over-500-lines": 55,
     "personal-absolute-path": 51,
-    "scripts-without-test-evidence": 173,
+    "scripts-without-test-evidence": 174,
     "unmentioned-assets": 11,
-    "unmentioned-references": 54,
-    "unmentioned-scripts": 75,
+    "unmentioned-references": 55,
+    "unmentioned-scripts": 76,
     "unresolved-local-link": 35
   }
 }
