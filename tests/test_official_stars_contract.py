@@ -1,3 +1,4 @@
+import json
 import unittest
 from pathlib import Path
 
@@ -40,6 +41,29 @@ class OfficialStarsContractTests(unittest.TestCase):
         self.assertIn("contents: read", workflow)
         self.assertIn("persist-credentials: false", workflow)
         self.assertNotIn("git push origin HEAD:main", workflow)
+
+    def test_pages_workflow_uses_a_site_scoped_quality_gate(self) -> None:
+        workflow = (ROOT / ".github/workflows/pages.yml").read_text(
+            encoding="utf-8"
+        )
+        repository_workflow = (
+            ROOT / ".github/workflows/validate-repository.yml"
+        ).read_text(encoding="utf-8")
+        package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+        site_test = package["scripts"].get("test:site", "")
+
+        for module in (
+            "tests.test_site_contracts",
+            "tests.test_site_data",
+            "tests.test_official_stars_contract",
+            "tests.test_readme_contracts",
+        ):
+            self.assertIn(module, site_test)
+        self.assertIn("npm run test:site", workflow)
+        self.assertNotIn("run: npm test", workflow)
+        self.assertNotIn("npm run validate:strict", workflow)
+        self.assertIn("run: npm test", repository_workflow)
+        self.assertIn("run: npm run validate:strict", repository_workflow)
 
     def test_homepage_shows_current_github_signal_instead_of_an_empty_history(self) -> None:
         homepage = (ROOT / "docs/index.html").read_text(encoding="utf-8")

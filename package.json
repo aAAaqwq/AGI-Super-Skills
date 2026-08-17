@@ -224,6 +224,7 @@
   "scripts": {
     "prepublishOnly": "npm test && npm run validate:strict && git diff --check",
     "test": "npm run test:repository && npm run test:installer && npm run check:subagent-sources && npm run check:agent-indexes && npm run check:codex-team && npm run check:skills && npm run check:skill-quality && npm run check:taxonomy-evaluation && npm run check:architecture",
+    "test:site": "python3 -m unittest -v tests.test_site_contracts tests.test_site_data tests.test_official_stars_contract tests.test_readme_contracts",
     "test:repository": "python3 -m unittest discover -s tests -p 'test_*.py'",
     "test:windows-cli": "node tests/windows_cli_smoke.mjs",
     "test:installer": "bash tests/installer/test_install.sh",

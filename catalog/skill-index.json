@@ -130,7 +130,7 @@
         "runtime_evidence": "pending",
         "status": "unscored"
       },
-      "description": "BTC 5分钟K线实时方向预测。v5.8新增: taker_buy主动买量因子(区分主动买/卖) +…",
+      "description": "BTC 5分钟K线实时方向预测。v5.9对抗式审查重构: 13因子收敛到3个有证据信号(half_body延续+volume放量+meanrev回归, 11个47-49%硬币因子清零) + 三层独立信息过滤(多周期4h/1h/15m趋势 + 跨资产ETH/SOL广度 + 真订单流OFI) +…",
       "description_status": "source-text",
       "path": "skills/5minbtc/SKILL.md",
       "portability_class": "catalog-only",
