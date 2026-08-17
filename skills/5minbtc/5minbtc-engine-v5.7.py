@@ -859,21 +859,12 @@ def direction_rule_v5(candles, closes, atr_val, vol_ratio,
         if abs(ofi) > 0.6 and win >= 60:
             score += ofi * 12   # 0.6*12=7.2 突破 weak, 0.8*12=9.6 突破 medium
 
-    # ---- Direction threshold (v5.5: neutral区收缩 [-2,2]>[-1,1]) ----
-    nz = 12 if regime == "HIGH_VOL" else 6
-    if score > nz:
-        bias = "bull"; strength = "strong" if score > 25 else "medium"
-    elif score > 1:  # v5.5: 2>1 收缩neutral区
-        bias = "bull"; strength = "weak"
-    elif score > -1:  # v5.5: -2>-1 收缩neutral区
-        bias = "neutral"; strength = "weak"
-    elif score > -nz:
-        bias = "bear"; strength = "weak"
-    else:
-        bias = "bear"; strength = "strong" if score < -25 else "medium"
-
-    # ---- v5.9.2: 收盘方向置信度 = 半K线延续概率 (替代反校准 Platt Scaling) ----
+    # ---- v5.10: 二选一方向(无neutral), 方向由半K线body决定(延续核心信号) ----
     body = candles[-1]["c"] - candles[-1]["o"]
+    bias = "bull" if body > 0 else "bear"
+    strength = "strong" if abs(score) > 25 else ("medium" if abs(score) > 6 else "weak")
+
+    # ---- v5.9.2: 收盘方向概率 = 半K线延续概率 ----
     confidence = close_direction_confidence(candle_progress, body, atr_val)
 
     # v5.7.1 P0-1: ATR spike时confidence减半 -- 黑天鹅防护
@@ -1076,7 +1067,8 @@ def run():
         "black_swan_warning": "⚠ News black swan active, direction unreliable" if news_black_swan else None,
         "prediction": {
             "bias": bias, "strength": strength,
-            "confidence": confidence, "score": score,
+            "confidence": confidence, "probability": round(confidence / 100, 3),
+            "score": score,
             "pred_close": pred_close, "pred_high": pred_high, "pred_low": pred_low
         }
     }

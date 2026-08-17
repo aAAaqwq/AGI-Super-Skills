@@ -210,8 +210,15 @@ def settle_open(state, push_enabled=True):
         b["actual_open"] = o
         b["actual_close"] = c
         b["direction_correct"] = won
-        b["pnl"] = round((b.get("amount", 1) * (1 - b["ask"]) - b.get("amount", 1) * b.get("fee", 0.01))
-                          if won else (-b.get("amount", 1) * b["ask"] - b.get("amount", 1) * b.get("fee", 0.01)), 4)
+        amount = b.get("amount", 1.0)
+        ask = b.get("ask", 0.0)
+        fee = b.get("fee", 0.0)
+        # 投入 amount 买 token @ ask: 赢→token变1,赚 amount*(1-ask)/ask; 输→token变0,亏 amount(全额)
+        if won:
+            b["pnl"] = round(amount * (1 - ask) / ask - amount * fee, 4)
+        else:
+            b["pnl"] = round(-amount - amount * fee, 4)
+        b["pnl_pct"] = round(b["pnl"] / amount * 100, 2) if amount else 0.0
         settled += 1
     # 重建 realized (所有 settled 单 pnl 总和)
     state["realized"] = round(sum(x.get("pnl", 0) for x in state.get("bets", [])
@@ -222,8 +229,10 @@ def settle_open(state, push_enabled=True):
             if b.get("status") == "settled" and b.get("auto") and not b.get("pushed_final"):
                 mark = "✅ 中" if b.get("direction_correct") else "❌ 未中"
                 acct = fmt_account(state, b["pnl"])
-                push(f"🏁 结算 {b['candle'][5:16]} {b['side']} @{b['ask']:.2f} {mark}\n"
-                     f"本次 PnL {b['pnl']:+.2f}$\n{acct}", push_enabled)
+                push(f"🏁 结算 {b['candle'][5:16]} {b['side']} {mark}\n"
+                     f"买入 {b.get('amount', 1):.0f}U @{b['ask']:.2f} | "
+                     f"涨跌 {b.get('pnl_pct', 0):+.1f}% | PnL {b['pnl']:+.2f}$\n"
+                     f"{acct}", push_enabled)
                 b["pushed_final"] = True
         save_paper(state)
     return settled
@@ -262,14 +271,37 @@ def check_pending(push_enabled=True):
     return changed
 
 
-def fmt_order(d, side, ask):
-    """自动下单的订单信息 (推送群用)."""
+def fmt_skip_knife(d, side, ask):
+    """接飞刀跳过的推送 (ask 低于甜区下限, 市场强烈反向)."""
     p = d["prediction"]
     c = d["candle"]
     dir_cn = DIR_CN.get(p["bias"], p["bias"])
-    return (f"📝 模拟下单 | {dir_cn}\n"
+    ask_s = f"{ask:.2f}" if ask is not None else "?"
+    return (f"⚠️ 接飞刀跳过 | {dir_cn}\n"
+            f"{c['candle_start']} | {side} ask {ask_s} < 甜区下限 0.40\n"
+            f"置信 {p['confidence']} | 市场强烈反向, 不接飞刀")
+
+
+def fmt_order(d, side, ask, probability=None):
+    """概率套利下单推送."""
+    p = d["prediction"]
+    c = d["candle"]
+    dir_cn = DIR_CN.get(p["bias"], p["bias"])
+    edge_s = f" | edge {probability - ask:+.2f}" if probability is not None and ask is not None else ""
+    prob_s = f"概率 {probability:.2f}" if probability is not None else f"置信 {p['confidence']}"
+    return (f"🎯 概率套利·下单 | {dir_cn}\n"
             f"{c['candle_start']} | {side} @ {ask:.2f} | 1U\n"
-            f"置信 {p['confidence']} | 已记录, 收盘结算")
+            f"{prob_s} vs 市场 {ask:.2f}{edge_s} | 已记录")
+
+
+def fmt_no_edge(d, side, ask, probability):
+    """无 edge 跳过推送."""
+    p = d["prediction"]
+    c = d["candle"]
+    dir_cn = DIR_CN.get(p["bias"], p["bias"])
+    return (f"⏭️ 无edge跳过 | {dir_cn}\n"
+            f"{c['candle_start']} | {side} 概率 {probability:.2f} ≤ 市场 {ask:.2f}\n"
+            f"无 edge, 不下单")
 
 
 def fmt_limit(d, side, limit, ask):
@@ -278,7 +310,7 @@ def fmt_limit(d, side, limit, ask):
     c = d["candle"]
     dir_cn = DIR_CN.get(p["bias"], p["bias"])
     ask_s = f"{ask:.2f}" if ask is not None else "?"
-    return (f"📋 LIMIT挂单 | {dir_cn}\n"
+    return (f"🎯 重大信号·挂单 | {dir_cn}\n"
             f"{c['candle_start']} | {side} 限价 {limit:.2f} (现ask {ask_s})\n"
             f"置信 {p['confidence']} | 等回调成交")
 
@@ -311,12 +343,19 @@ def main():
     ap.add_argument("--conf", type=int, default=70, help="重大信号置信度阈值(默认70)")
     ap.add_argument("--refresh", type=int, default=5, help="刷新间隔秒(默认5)")
     ap.add_argument("--push", action="store_true", help="推送 Telegram")
+    ap.add_argument("--active-hours", type=str, default="20,21,22,23",
+                    help="只在此时段下单(逗号分隔CST小时)")
+    ap.add_argument("--min-edge", type=float, default=0.03,
+                    help="最小edge(引擎概率-市场价), 低于此不下单(默认0.03)")
     args = ap.parse_args()
+
+    active_hours = set(int(h) for h in args.active_hours.split(",") if h.strip())
 
     last_candle = None
     last_signal_conf = 0
     last_bias = None
-    print(f"🟢 5minbtc 实时监控启动 | {args.refresh}s刷新 | 重大信号阈值 conf≥{args.conf}", flush=True)
+    print(f"🟢 5minbtc 实时监控启动 | {args.refresh}s刷新 | conf≥{args.conf} | "
+          f"下单时段 {sorted(active_hours)}点", flush=True)
 
     while True:
         d = run_engine()
@@ -335,29 +374,24 @@ def main():
             last_signal_conf = 0
             last_bias = None
 
-        # 重大确定性信号: 方向明确 + 高延续概率
-        is_signal = bias != "neutral" and conf >= args.conf
-
-        if is_signal:
-            # 拿真实 UP/DOWN 盘口价 (每次命中拿一次, 供记录+推送复用)
+        # 活跃时段内才下单 (概率套利: 引擎概率 > 市场价才买)
+        now_hour = datetime.now(CST).hour
+        if now_hour in active_hours:
             up, down = get_up_down_price()
-            # 自动下单 (台账去重, 进程重启也不重复)
             if not has_auto_bet(candle):
                 side = "UP" if bias == "bull" else "DOWN"
                 ask = up if side == "UP" else down
-                max_ask = 0.65 if side == "UP" else 0.50
-                if ask is not None and ask <= max_ask:
-                    # 甜区内 → 立即成交
+                probability = p.get("probability", p.get("confidence", 50) / 100)
+                if ask is not None and probability - ask >= args.min_edge:
+                    # 概率 > 市场价 → 买 (EV = p - P > 0)
                     record_paper(d, up, down)
-                    print(f"📝 自动下模拟单: {side} @ {ask:.2f} conf={conf}", flush=True)
-                    push(fmt_order(d, side, ask), args.push)
-                else:
-                    # 追高 → 挂 LIMIT 单(限价=甜区上限), 等回调成交
-                    record_limit(d, side, max_ask)
-                    ask_s = f"{ask:.2f}" if ask is not None else "?"
-                    print(f"📋 挂LIMIT单: {side} 限价{max_ask} (现ask {ask_s})", flush=True)
-                    push(fmt_limit(d, side, max_ask, ask), args.push)
-            # 不再单独推"重大信号"(与下单/挂单重复), 避免刷屏
+                    print(f"📝 概率套利下单: {side} 概率{probability:.2f} > 市场{ask:.2f} "
+                          f"(edge {probability-ask:+.2f})", flush=True)
+                    push(fmt_order(d, side, ask, probability), args.push)
+                elif ask is not None:
+                    # 概率 ≤ 市场价 → 无 edge, 跳过
+                    print(f"⏭️ 无edge跳过: {side} 概率{probability:.2f} ≤ 市场{ask:.2f}", flush=True)
+                    push(fmt_no_edge(d, side, ask, probability), args.push)
 
         # 检查挂单 + 结算已收盘持仓 (每5秒)
         check_pending(args.push)

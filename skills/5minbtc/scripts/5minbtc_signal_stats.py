@@ -68,10 +68,15 @@ def settle_bets(state):
         b["actual_open"] = o
         b["actual_close"] = c
         b["direction_correct"] = won
-        b["pnl"] = round((b.get("amount", 1) * (1 - b["ask"]) - b.get("amount", 1) * b.get("fee", 0.01))
-                          if won else (-b.get("amount", 1) * b["ask"] - b.get("amount", 1) * b.get("fee", 0.01)), 4)
-        # 同步累计已实现盈亏
-        state["realized"] = round(state.get("realized", 0.0) + b["pnl"], 4)
+        amount = b.get("amount", 1.0)
+        ask = b.get("ask", 0.0)
+        fee = b.get("fee", 0.0)
+        # 投入 amount 买 token @ ask: 赢→token变1,赚 amount*(1-ask)/ask; 输→token变0,亏 amount(全额)
+        if won:
+            b["pnl"] = round(amount * (1 - ask) / ask - amount * fee, 4)
+        else:
+            b["pnl"] = round(-amount - amount * fee, 4)
+        b["pnl_pct"] = round(b["pnl"] / amount * 100, 2) if amount else 0.0
         settled += 1
     # 重建 realized = 所有 settled 单 pnl 总和 (修正历史遗漏)
     state["realized"] = round(sum(b.get("pnl", 0) for b in state.get("bets", [])
