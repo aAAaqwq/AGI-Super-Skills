@@ -46,7 +46,7 @@ jobs:
 
       - name: Build current repository statistics
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.STAR_HISTORY_TOKEN || github.token }}
         run: python3 scripts/build_site_data.py
 
       - name: Mark artifact as static

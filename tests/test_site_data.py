@@ -40,6 +40,21 @@ class RawResponse(FakeResponse):
 
 
 class SiteDataTests(unittest.TestCase):
+    @mock.patch("scripts.build_site_data.urllib.request.urlopen")
+    def test_github_requests_use_the_current_api_contract(
+        self, urlopen: mock.Mock
+    ) -> None:
+        urlopen.return_value = FakeResponse({"ok": True})
+
+        _request_json(
+            "https://api.github.test/repo", None, "application/vnd.github+json"
+        )
+
+        request = urlopen.call_args.args[0]
+        self.assertEqual(
+            request.get_header("X-github-api-version"), "2026-03-10"
+        )
+
     @mock.patch("scripts.build_site_data.time.sleep", return_value=None)
     @mock.patch("scripts.build_site_data.urllib.request.urlopen")
     def test_github_request_retries_rate_limit_then_fails(
