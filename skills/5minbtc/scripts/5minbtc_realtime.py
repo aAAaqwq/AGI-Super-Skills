@@ -443,7 +443,7 @@ def main():
                     action = "🎯 下单"
                 else:
                     action = "⏭️ 跳过(无edge)"
-                push(fmt_prediction(d, side0, ask0, prob0, edge0, action), args.push)
+                push(fmt_prediction(d, side0, ask0, prob_side0, edge0, action), args.push)
 
         # 活跃时段内才下单 (真 OFI 方向 vs token 价: 引擎 OFI 概率 > 市场价 且方向明确才买)
         if now_hour in active_hours and bias in ("bull", "bear"):
@@ -465,11 +465,12 @@ def main():
                 elif ask is not None and (probability if side == "UP" else (1 - probability)) - ask >= args.min_edge:
                     # 真 OFI 方向 vs token 价: EV = p - P > 0 才买
                     # (DOWN 腿用 P(close<open)=1-P, 否则 bear 永远不触发)
+                    prob_side = probability if side == "UP" else (1 - probability)
                     record_paper(d, up, down)
-                    print(f"📝 真OFI下单: {side} 概率{probability:.2f} > 市场{ask:.2f} "
-                          f"(edge {probability-ask:+.2f}) ofi_n={(d.get('ofi') or {}).get('ofi_n')}",
+                    print(f"📝 真OFI下单: {side} 概率{prob_side:.2f} > 市场{ask:.2f} "
+                          f"(edge {prob_side-ask:+.2f}) ofi_n={(d.get('ofi') or {}).get('ofi_n')}",
                           flush=True)
-                    push(fmt_order(d, side, ask, probability), args.push)
+                    push(fmt_order(d, side, ask, prob_side), args.push)
 
         # 检查挂单 + 结算已收盘持仓 (每5秒)
         check_pending(args.push)
