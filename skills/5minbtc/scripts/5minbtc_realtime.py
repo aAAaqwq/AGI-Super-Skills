@@ -400,6 +400,8 @@ def main():
     last_candle = None
     last_signal_conf = 0
     last_bias = None
+    prev_candle = None   # 上一根K线 (结算上一轮预测结果用)
+    prev_bias = None     # 上一根K线的预测方向
     _ofi_gate_alert_ts = 0.0  # D2 有效性闸告警节流 (1h 一次)
     print(f"🟢 5minbtc 实时监控启动(真OFI驱动) | {args.refresh}s刷新 | conf≥{args.conf} | "
           f"min-edge {args.min_edge} | 下单时段 {sorted(active_hours)}点", flush=True)
@@ -417,16 +419,33 @@ def main():
 
         now_hour = datetime.now(CST).hour
 
-        # 新K线 → 推预测快照 (每根K线一次: 方向+概率+市场价+edge+是否下单)
+        # 新K线 → 结算上一轮预测结果 + 推预测快照
         if candle != last_candle:
             last_candle = candle
             last_signal_conf = 0
             last_bias = None
+
+            # 上一轮方向预测结果 (上一根K线的方向 vs 实际收盘)
+            prev_line = ""
+            if prev_candle is not None and prev_bias in ("bull", "bear"):
+                ohlc = fetch_close(prev_candle)
+                if ohlc:
+                    o, cl = ohlc
+                    actual = "收阳" if cl > o else "收阴"
+                    correct = (prev_bias == "bull" and cl > o) or (prev_bias == "bear" and cl < o)
+                    prev_line = (f"上一轮 {prev_candle[11:16]} "
+                                 f"{DIR_CN.get(prev_bias, prev_bias)} → {actual} "
+                                 f"{'✅' if correct else '❌'}")
+
+            # 记录当前预测为下一轮的"上一轮"
+            prev_candle = candle
+            prev_bias = bias
+
             if bias == "neutral":
                 # 真 OFI 无显著信号 → 宁缺毋滥不交易
                 push(f"🧭 预测 中性(OFI无显著信号/流量不足) | {c['candle_start']} "
                      f"p{c.get('progress_pct', 0):.0f}% | ofi_n {(d.get('ofi') or {}).get('ofi_n')} "
-                     f"| 不交易(宁缺毋滥)", args.push)
+                     f"| 不交易(宁缺毋滥)" + (f"\n{prev_line}" if prev_line else ""), args.push)
             else:
                 up0, down0 = get_up_down_price()
                 side0 = "UP" if bias == "bull" else "DOWN"
@@ -443,7 +462,10 @@ def main():
                     action = "🎯 下单"
                 else:
                     action = "⏭️ 跳过(无edge)"
-                push(fmt_prediction(d, side0, ask0, prob_side0, edge0, action), args.push)
+                msg = fmt_prediction(d, side0, ask0, prob_side0, edge0, action)
+                if prev_line:
+                    msg += f"\n{prev_line}"
+                push(msg, args.push)
 
         # 活跃时段内才下单 (真 OFI 方向 vs token 价: 引擎 OFI 概率 > 市场价 且方向明确才买)
         if now_hour in active_hours and bias in ("bull", "bear"):
