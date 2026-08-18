@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""5minbtc 实时监控 — 5秒刷新, 捕捉重大确定性信号.
+"""5minbtc 实时监控 — 5秒刷新, 真 OFI 驱动下单.
 
-每 5 秒跑一次引擎, 判定"重大确定性信号":
-  - 方向明确 (bias != neutral)
-  - 高延续概率 (confidence ≥ 阈值, v5.9.2 半K线延续概率)
-命中时推送 Telegram. 同一根K线去重(仅置信度显著提升或方向翻转才重推).
+每 5 秒跑一次引擎 (v6.0 真 OFI 驱动):
+  - 方向: 引擎 bias 来自真 OFI 净流 (净流入→UP, 净流出→DOWN, 无信号→neutral 不交易)
+  - 下单: OFI 概率 p vs UP/DOWN token 市场价 ask → EV = p − ask ≥ min_edge 才买
+          (OFI 已净流入但 UP token 价未涨 = gap>0 = edge)
+  - D2 有效性闸: 滚动 200 笔 OFI 方向胜率 < 0.55 → 自动暂停 + 告警 (防第二次 52.6%)
+命中时推送 Telegram. 同一根K线去重. 只写 paper 台账, 绝不调 place_order (LIVE_GATE 硬闸门在 trader).
 
 用法:
-  python3 5minbtc_realtime.py [--conf 70] [--refresh 5] [--push]
+  python3 5minbtc_realtime.py [--conf 70] [--refresh 5] [--push] [--min-edge 0.05]
 """
 import argparse
 import json
@@ -78,6 +80,32 @@ def has_auto_bet(candle):
                for b in state.get("bets", []))
 
 
+def ofi_snapshot(d):
+    """从引擎输出提取真 OFI 入场快照 (D2 有效性闸与分桶复盘用)."""
+    o = d.get("ofi") or {}
+    return {
+        "ofi_n": o.get("ofi_n"), "ofi_60": o.get("ofi_60"),
+        "ofi_gap": o.get("gap"), "ofi_p_cal": o.get("p_cal"),
+        "ofi_cal_n": o.get("cal_n"),
+        "ofi_cr": o.get("cr"), "ofi_feed_fresh": o.get("feed_fresh"),
+        "ofi_agg_native": o.get("agg_native"), "ofi_vol_gate": o.get("vol_gate"),
+    }
+
+
+def ofi_win_rate(state):
+    """D2 实盘有效性闸: 已结算 auto 单中带 OFI 快照的最近 200 笔的 OFI 方向胜率.
+    防第二次 52.6% — 只在真 OFI 驱动后产生的新单上统计.
+    返回 (n, win_rate)."""
+    bets = [b for b in state.get("bets", [])
+            if b.get("status") == "settled" and b.get("auto")
+            and b.get("entry", {}).get("ofi_n") is not None]
+    recent = bets[-200:]
+    if not recent:
+        return 0, 0.0
+    wins = sum(1 for b in recent if b.get("outcome") == "win")
+    return len(recent), wins / len(recent)
+
+
 def record_paper(d, up=None, down=None):
     """重大信号自动记录一笔模拟单到台账 (完整入场快照 + 后续结算回测)."""
     p = d["prediction"]
@@ -92,11 +120,12 @@ def record_paper(d, up=None, down=None):
     bet = {
         "candle": c["iso"], "side": side, "ask": round(ask, 4),
         "amount": 1.0, "fee": 0.01, "status": "open", "mode": "paper",
-        "p_est": p["confidence"] / 100, "auto": True,
+        "p_est": (p["confidence"] / 100) if side == "UP" else (1 - p["confidence"] / 100), "auto": True,
         "ts": datetime.now(CST).isoformat(),
-        "reason": f"重大信号自动记录 conf={p['confidence']}",
-        # 入场完整快照 (回测用)
+        "reason": f"真OFI信号自动记录 ofi_n={ofi_snapshot(d).get('ofi_n')}",
+        # 入场完整快照 (回测用) + 真 OFI 快照 (D2 分桶复盘用)
         "entry": {
+            **ofi_snapshot(d),
             "progress": c.get("progress_pct"),
             "open": price["open"],
             "current": price["current"],
@@ -139,9 +168,10 @@ def record_limit(d, side, limit):
     bet = {
         "candle": c["iso"], "side": side, "limit": round(limit, 4),
         "amount": 1.0, "fee": 0.01, "status": "pending", "mode": "paper",
-        "p_est": p["confidence"] / 100, "auto": True,
+        "p_est": (p["confidence"] / 100) if side == "UP" else (1 - p["confidence"] / 100), "auto": True,
         "ts": datetime.now(CST).isoformat(),
         "entry": {
+            **ofi_snapshot(d),
             "progress": c.get("progress_pct"),
             "open": price["open"], "current": price["current"],
             "confidence": p["confidence"], "strength": p["strength"],
@@ -289,7 +319,7 @@ def fmt_order(d, side, ask, probability=None):
     dir_cn = DIR_CN.get(p["bias"], p["bias"])
     edge_s = f" | edge {probability - ask:+.2f}" if probability is not None and ask is not None else ""
     prob_s = f"概率 {probability:.2f}" if probability is not None else f"置信 {p['confidence']}"
-    return (f"🎯 概率套利·下单 | {dir_cn}\n"
+    return (f"🎯 真OFI·下单 | {dir_cn}\n"
             f"{c['candle_start']} | {side} @ {ask:.2f} | 1U\n"
             f"{prob_s} vs 市场 {ask:.2f}{edge_s} | 已记录")
 
@@ -357,8 +387,12 @@ def main():
     ap.add_argument("--push", action="store_true", help="推送 Telegram")
     ap.add_argument("--active-hours", type=str, default="20,21,22,23",
                     help="只在此时段下单(逗号分隔CST小时)")
-    ap.add_argument("--min-edge", type=float, default=0.03,
-                    help="最小edge(引擎概率-市场价), 低于此不下单(默认0.03)")
+    ap.add_argument("--min-edge", type=float, default=0.05,
+                    help="最小edge(引擎OFI概率-市场价), 低于此不下单(默认0.05, 覆盖0.01U手续费+校准噪声)")
+    ap.add_argument("--ofi-min-n", type=int, default=100,
+                    help="OFI有效性闸最少样本数(默认100)")
+    ap.add_argument("--ofi-min-win", type=float, default=0.55,
+                    help="OFI有效性闸最低方向胜率, 低于则暂停下单(默认0.55, 防第二次 52.6 硬币)")
     args = ap.parse_args()
 
     active_hours = set(int(h) for h in args.active_hours.split(",") if h.strip())
@@ -366,8 +400,9 @@ def main():
     last_candle = None
     last_signal_conf = 0
     last_bias = None
-    print(f"🟢 5minbtc 实时监控启动 | {args.refresh}s刷新 | conf≥{args.conf} | "
-          f"下单时段 {sorted(active_hours)}点", flush=True)
+    _ofi_gate_alert_ts = 0.0  # D2 有效性闸告警节流 (1h 一次)
+    print(f"🟢 5minbtc 实时监控启动(真OFI驱动) | {args.refresh}s刷新 | conf≥{args.conf} | "
+          f"min-edge {args.min_edge} | 下单时段 {sorted(active_hours)}点", flush=True)
 
     while True:
         d = run_engine()
@@ -387,33 +422,53 @@ def main():
             last_candle = candle
             last_signal_conf = 0
             last_bias = None
-            up0, down0 = get_up_down_price()
-            side0 = "UP" if bias == "bull" else "DOWN"
-            ask0 = up0 if side0 == "UP" else down0
-            prob0 = p.get("probability", p.get("confidence", 50) / 100)
-            edge0 = prob0 - ask0 if ask0 is not None else None
-            if now_hour not in active_hours:
-                action = "非活跃时段"
-            elif ask0 is None:
-                action = "市场价不可用"
-            elif edge0 >= args.min_edge:
-                action = "🎯 下单"
+            if bias == "neutral":
+                # 真 OFI 无显著信号 → 宁缺毋滥不交易
+                push(f"🧭 预测 中性(OFI无显著信号/流量不足) | {c['candle_start']} "
+                     f"p{c.get('progress_pct', 0):.0f}% | ofi_n {(d.get('ofi') or {}).get('ofi_n')} "
+                     f"| 不交易(宁缺毋滥)", args.push)
             else:
-                action = "⏭️ 跳过(无edge)"
-            push(fmt_prediction(d, side0, ask0, prob0, edge0, action), args.push)
+                up0, down0 = get_up_down_price()
+                side0 = "UP" if bias == "bull" else "DOWN"
+                ask0 = up0 if side0 == "UP" else down0
+                prob0 = p.get("probability", p.get("confidence", 50) / 100)
+                # 引擎 probability 恒为 P(close>open); DOWN 腿用 P(close<open)=1-P
+                prob_side0 = prob0 if side0 == "UP" else (1 - prob0)
+                edge0 = prob_side0 - ask0 if ask0 is not None else None
+                if now_hour not in active_hours:
+                    action = "非活跃时段"
+                elif ask0 is None:
+                    action = "市场价不可用"
+                elif edge0 >= args.min_edge:
+                    action = "🎯 下单"
+                else:
+                    action = "⏭️ 跳过(无edge)"
+                push(fmt_prediction(d, side0, ask0, prob0, edge0, action), args.push)
 
-        # 活跃时段内才下单 (概率套利: 引擎概率 > 市场价才买)
-        if now_hour in active_hours:
+        # 活跃时段内才下单 (真 OFI 方向 vs token 价: 引擎 OFI 概率 > 市场价 且方向明确才买)
+        if now_hour in active_hours and bias in ("bull", "bear"):
             if not has_auto_bet(candle):
                 side = "UP" if bias == "bull" else "DOWN"
                 up, down = get_up_down_price()
                 ask = up if side == "UP" else down
                 probability = p.get("probability", p.get("confidence", 50) / 100)
-                if ask is not None and probability - ask >= args.min_edge:
-                    # 概率 > 市场价 → 买 (EV = p - P > 0)
+                # D2 实盘有效性闸: 滚动 OFI 方向胜率过低 → 自动暂停 (防第二次 52.6%)
+                ofi_n_samples, ofi_wr = ofi_win_rate(load_paper())
+                if (ofi_n_samples >= args.ofi_min_n
+                        and ofi_wr < args.ofi_min_win):
+                    if time.time() - _ofi_gate_alert_ts > 3600:
+                        _ofi_gate_alert_ts = time.time()
+                        push(f"⛔ OFI有效性闸触发: {ofi_n_samples}笔 OFI 方向胜率 "
+                             f"{ofi_wr:.1%} < {args.ofi_min_win:.0%} → 暂停下单", args.push)
+                    print(f"⛔ OFI有效性闸: {ofi_n_samples}笔胜率 {ofi_wr:.1%} < "
+                          f"{args.ofi_min_win:.0%}, 暂停", flush=True)
+                elif ask is not None and (probability if side == "UP" else (1 - probability)) - ask >= args.min_edge:
+                    # 真 OFI 方向 vs token 价: EV = p - P > 0 才买
+                    # (DOWN 腿用 P(close<open)=1-P, 否则 bear 永远不触发)
                     record_paper(d, up, down)
-                    print(f"📝 概率套利下单: {side} 概率{probability:.2f} > 市场{ask:.2f} "
-                          f"(edge {probability-ask:+.2f})", flush=True)
+                    print(f"📝 真OFI下单: {side} 概率{probability:.2f} > 市场{ask:.2f} "
+                          f"(edge {probability-ask:+.2f}) ofi_n={(d.get('ofi') or {}).get('ofi_n')}",
+                          flush=True)
                     push(fmt_order(d, side, ask, probability), args.push)
 
         # 检查挂单 + 结算已收盘持仓 (每5秒)

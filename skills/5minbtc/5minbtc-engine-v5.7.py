@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
-"""5minbtc Engine v5.8 -- 半K线预测策略 + 正交因子体系 + Regime感知
+"""5minbtc Engine v6.0 -- 真 OFI 驱动 (替代方向延续统计) + 正交因子体系 + Regime感知
+
+v6.0 核心改造 (对抗审查: 方向预测已证硬币 52.6%, 彻底转真订单流驱动):
+- 方向: bias 由真 OFI 净流方向一票决定 (净流入→bull / 净流出→bear / 无信号→neutral 宁缺毋滥),
+  替代 v5.10 的 body>0→bull/body<0→bear 纯延续统计.
+  主源 = 当前K线原生 in-candle ofi_n = 2*(tb/v)-1 (REST kline[9] taker buy base volume,
+  原生 aggressor 聚合, 天然按K线对齐, 零 WS 依赖); 辅源 = WS ofi.json (ofi_candle/ofi_60)
+  做新鲜度反转保护与交叉校准.
+- 概率: confidence = P(close>open | ofi), 三层 = 经验校准表(Bayesian shrink) + flow-gap
+  (净流已发生价格未定价) + 最近60s流, 替代 close_direction_confidence 的延续概率.
+- edge: 错价检测 EV = p − ask (真 OFI 概率 vs UP/DOWN token 市场价), 由 realtime 执行.
+- 保留: ATR spike / FNG<25 / news 黑天鹅断路器, MTF 4h 降权(只降权不翻方向), EV 下单框架.
 
 v5.8 优化 -- taker buy量能因子(区分主动买/主动卖) + 订单簿多时刻采样去噪
 
@@ -571,14 +582,178 @@ def cross_asset_signal(k_eth, k_sol):
 
 
 def load_ofi():
-    """读真订单流 OFI 缓存 (ofi_feed.py 写的净主动买卖流). 失败返回 {}."""
+    """读真订单流 OFI 缓存 (ofi_feed.py v2 用原生 m 聚合的净主动买卖流).
+    v6.0: 加 ts 保鲜校验 — 过期(>30s)时 feed_fresh=False, 引擎只信任 REST 原生主源,
+    WS 分量 (ofi_60/ofi_candle 交叉) 自动降级. 失败返回 {}."""
     try:
         cache = json.load(open(os.path.expanduser("~/bb-auto/ofi.json")))
-        if isinstance(cache, dict) and "ofi" in cache:
-            return {"ofi": cache["ofi"], "ofi_window_sec": cache.get("window_sec", 0)}
+        if not isinstance(cache, dict):
+            return {}
+        now_ms = int(time.time() * 1000)
+        ts = cache.get("ts", 0) or 0
+        age_ms = now_ms - ts
+        fresh = bool(ts) and 0 < age_ms <= 30_000
+        cr = cache.get("classification_ratio")
+        return {
+            "ofi": cache.get("ofi", 0.0) or 0.0,
+            "ofi_candle": cache.get("ofi_candle", cache.get("ofi", 0.0)) or 0.0,
+            "ofi_60": cache.get("ofi_60", 0.0) or 0.0,
+            "ofi_window_sec": cache.get("window_sec", 0) or 0,
+            "feed_fresh": fresh,
+            "ts_age_ms": int(age_ms) if ts else None,
+            "classification_ratio": cr if isinstance(cr, (int, float)) else 1.0,
+            "agg_native": cache.get("agg_native"),
+            "low_vol": bool(cache.get("low_vol", False)),
+            "last_trade_ts": cache.get("last_trade_ts", 0) or 0,
+        }
     except Exception:
-        pass
-    return {}
+        return {}
+
+
+# ======================== 真 OFI 方向与概率 (v6.0 核心改造) ========================
+# 原则 (对抗审查结论): 方向预测在 5min 尺度接近硬币 (body 延续 52.6% = 硬币已证).
+# edge 定义改为错价检测: 真 OFI 净流方向 = 真实资金流方向 (净流入→bull/净流出→bear),
+# 概率 = P(close>open | ofi), 与 UP/DOWN token 价比较决定 EV = p − ask.
+# OFI 领先 token 价: 净流已发生但价格未定价 (flow-gap) = 真正的 edge 来源.
+
+T_OFI_GATE = 0.20        # |ofi_n| 方向门限 (校准参数; 对应 ≥60% 量单边)
+T_OFI_60 = 0.35          # 最近60s 新鲜度反转门限
+MIN_VOL_FRAC = 0.25      # in-candle 成交量 ≥ 平均已完成K线量*该比例 才认可流量强度
+MIN_PROGRESS = 0.15      # progress ≥ 15% (≥45s) 才判方向, 防 K线开头噪声
+OFI_CR_MIN = 0.80        # classification_ratio 质量闸 (WS 辅源)
+OFI_BAYES_N = 30         # Bayesian shrink 先验样本数 (向 0.5)
+
+_OFI_BUCKETS = [(-1.0, -0.5), (-0.5, -0.25), (-0.25, -0.1),
+                (-0.1, 0.1), (0.1, 0.25), (0.25, 0.5), (0.5, 1.0)]
+
+
+def _ofi_native(candle):
+    """当前K线原生 in-candle OFI: ofi_n = 2*(tb/v) − 1 ∈ [-1,1].
+    原生 aggressor 聚合 (kline[9] = taker buy base volume, 已在 fetch_klines 取到),
+    天然按K线对齐、零 WS 依赖. 无有效量返回 None."""
+    if not candle:
+        return None
+    v = candle.get("v", 0.0) or 0.0
+    if v <= 0:
+        return None
+    tb = candle.get("tb", 0.0) or 0.0
+    tb = min(tb, v)
+    return 2.0 * (tb / v) - 1.0
+
+
+def _ofi_bucket(ofi_n):
+    for lo, hi in _OFI_BUCKETS:
+        if lo <= ofi_n < hi:
+            return lo, hi
+    return _OFI_BUCKETS[0] if ofi_n < -1.0 else _OFI_BUCKETS[-1]
+
+
+def ofi_calibration_table(candles):
+    """真 OFI→方向 经验校准表 (先证后上 D1: 离线校准的在线近似).
+    用已完成K线的 in-candle ofi_n (最终 tb/v) 与 close>open 建表,
+    每格 Bayesian shrink 向 0.5 (prior n=30), 替代 body 延续概率.
+    返回 {(lo, hi): {"n": n, "p": p}}."""
+    agg = {k: {"n": 0, "up": 0} for k in _OFI_BUCKETS}
+    for c in candles[:-1]:  # 已完成K线 (不含当前未完成)
+        ofi_n = _ofi_native(c)
+        if ofi_n is None:
+            continue
+        up = 1 if c["c"] > c["o"] else 0
+        agg[_ofi_bucket(ofi_n)]["n"] += 1
+        agg[_ofi_bucket(ofi_n)]["up"] += up
+    table = {}
+    for k, st in agg.items():
+        n = st["n"]
+        f = st["up"] / n if n > 0 else 0.5
+        p = (n * f + OFI_BAYES_N * 0.5) / (n + OFI_BAYES_N)
+        table[k] = {"n": n, "p": p}
+    return table
+
+
+def ofi_direction(candles, ofi_cache, progress, atr_val=None):
+    """真 OFI 方向判定 (v6.0 二选一版, 无中性):
+    - 主源: 当前K线原生 in-candle ofi_n (REST, 天然K线对齐)
+    - 方向: ofi_n>0→bull, ofi_n<0→bear (永远二选一); ofi_n 无/为0 用 body 符号兜底
+    - 弱信号/流量低/反向冲突 记录到 meta, 供概率层降权 (概率近0.5→EV过滤不买)
+    返回 (direction, meta)."""
+    cur = candles[-1] if candles else None
+    if cur is None:
+        return "bull", {"no_data": True}
+    ofi_n = _ofi_native(cur)
+    body = cur.get("c", 0) - cur.get("o", 0)
+
+    # 流量强度 (供概率层降权, 不再把方向变中性)
+    v = cur.get("v", 0.0) or 0.0
+    avg_v = 0.0
+    if len(candles) >= 2:
+        avg_v = sum(c.get("v", 0.0) or 0.0 for c in candles[:-1]) / (len(candles) - 1)
+    vol_gate = avg_v > 0 and v >= avg_v * MIN_VOL_FRAC
+
+    cr = 1.0
+    if ofi_cache:
+        cr = ofi_cache.get("classification_ratio")
+        cr = cr if isinstance(cr, (int, float)) else 1.0
+    cr_ok = cr >= OFI_CR_MIN
+
+    meta = {"ofi_n": round(ofi_n, 4) if ofi_n is not None else None,
+            "vol_gate": bool(vol_gate),
+            "vol_frac": round(v / avg_v, 3) if avg_v > 0 else 0.0,
+            "cr": round(cr, 3), "cr_ok": bool(cr_ok)}
+
+    # 方向二选一: 优先 OFI 符号, 无 OFI 用 body 兜底
+    if ofi_n is not None and ofi_n != 0:
+        direction = "bull" if ofi_n > 0 else "bear"
+    else:
+        direction = "bull" if body > 0 else "bear"
+        meta["body_fallback"] = True
+
+    # 60s 反向 / WS 冲突: 记 meta (概率层降权), 不翻方向
+    if ofi_cache and ofi_cache.get("feed_fresh"):
+        ofi_60 = ofi_cache.get("ofi_60", 0.0) or 0.0
+        if abs(ofi_60) >= T_OFI_60 and (ofi_60 > 0) != (ofi_n is not None and ofi_n > 0):
+            meta["reversed_60"] = True
+        ws_candle = ofi_cache.get("ofi_candle", 0.0) or 0.0
+        if abs(ws_candle) >= T_OFI_GATE and (ws_candle > 0) != (ofi_n is not None and ofi_n > 0):
+            meta["ws_conflict"] = True
+
+    return direction, meta
+
+
+def ofi_probability(candles, ofi_cache, body, atr_val, progress, remaining_sec):
+    """真 OFI 概率 (v6.0, 替代 close_direction_confidence 延续概率): P(close>open | ofi).
+    三层:
+      层1 经验校准表 p_cal = P(close>open | ofi_n 桶) (Bayesian shrink)
+      层2 flow-gap: gap = ofi_n − clamp(body_s, −0.5, 0.5) — 净流已发生但价格未定价的缺口
+      层3 剩余走势: E_rem = 0.6·ofi_60 + 0.4·gap, 按剩余时间比例衰减
+    p = clamp(0.5 + (p_cal−0.5) + 0.30·sign(E_rem)·min(|E_rem|,1)·rem_frac, 0.15, 0.88)
+    返回 (p, meta)."""
+    ofi_n = _ofi_native(candles[-1] if candles else None)
+    if ofi_n is None:
+        return 0.5, {}
+
+    table = ofi_calibration_table(candles)
+    k = _ofi_bucket(ofi_n)
+    p_cal = table[k]["p"]
+    n_cal = table[k]["n"]
+
+    body_s = (body / atr_val) if atr_val and atr_val > 0 else 0.0
+    gap = ofi_n - max(-0.5, min(0.5, body_s))
+
+    # 最近60s 净流: WS 新鲜用 WS, 否则用主源 ofi_n 近似
+    ofi_60 = ofi_n
+    if ofi_cache and ofi_cache.get("feed_fresh"):
+        ofi_60 = ofi_cache.get("ofi_60", 0.0) or 0.0
+
+    rem_frac = max(0.0, min(1.0, (remaining_sec or 0) / 300.0))
+    E_rem = 0.6 * ofi_60 + 0.4 * gap
+    sign_e = 1 if E_rem > 0 else (-1 if E_rem < 0 else 0)
+    p = 0.5 + (p_cal - 0.5) + 0.30 * sign_e * min(abs(E_rem), 1.0) * rem_frac
+    p = max(0.15, min(0.88, p))
+
+    meta = {"ofi_n": round(ofi_n, 4), "p_cal": round(p_cal, 3), "cal_n": n_cal,
+            "cal_bucket": k, "gap": round(gap, 4), "ofi_60": round(ofi_60, 4),
+            "rem_frac": round(rem_frac, 3)}
+    return p, meta
 
 
 # ======================== Regime Detection ========================
@@ -666,21 +841,8 @@ def sigmoid_compress(score, max_score=45, sensitivity=1.5):
 
 # ======================== Direction Decision ========================
 
-def close_direction_confidence(progress, body, atr_val):
-    """v5.9.2: 收盘方向置信度 = 半K线延续概率 (对抗审查实证校准).
-
-    替代反校准的 Platt Scaling (旧: 因子加权→sigmoid→被压扁到35-57且反校准).
-    新: 置信度 = P(收盘方向延续), 与市场 UP/DOWN 价对齐.
-    实证 (backtest): progress 40%→61%, 60%→66%, 80%→70%, 100%→76% 延续准确率.
-    body 强度加成: |body|/ATR 越大(阳/阴线越实), 方向越确定."""
-    body_z = abs(body / atr_val) if atr_val and atr_val > 0 else 0.0
-    # 基础延续概率 (线性插值实证数据: 55%@0% → 76%@100%)
-    base = 55 + progress * 21
-    # body 强度加成 (body 越实越确定, 封顶 1.5×ATR)
-    boost = min(body_z, 1.5) * 10
-    conf = int(base + boost)
-    return max(40, min(88, conf))
-
+# v6.0: close_direction_confidence (body 延续概率) 已删除 —
+# 方向预测被证明是硬币 (52.6%), 置信度改由真 OFI 概率 ofi_probability 提供.
 
 def calibrate_confidence(raw_score, bias, regime):
     """v5.5: Platt Scaling校准置信度
@@ -844,35 +1006,34 @@ def direction_rule_v5(candles, closes, atr_val, vol_ratio,
         elif breadth > 0.001 and score < 0:   # ETH+SOL 同涨, BTC 做空不可信
             score *= 0.5
 
-    # ---- v5.9.1: 真订单流 OFI — 双重用法: 确认 + 极端值独立给方向 ----
-    # 对抗审查: OFI 不做第14个方向因子(与token价共线), 但极端值=真钱抢筹/砸盘,
-    # 是 half_body 未激活(progress<45%)时唯一的独立方向信号.
-    if mtf and "ofi" in mtf:
-        ofi = mtf["ofi"]
-        win = mtf.get("ofi_window_sec", 0)
-        # 1) 确认: 信号方向 vs 订单流方向冲突 = 假信号, 降权
-        if score > 0 and ofi < -0.15:
-            score *= 0.5
-        elif score < 0 and ofi > 0.15:
-            score *= 0.5
-        # 2) 独立方向: OFI 极端(净流入/流出>60%)且窗口≥60s(避免短窗口噪声) → 直接强化方向
-        if abs(ofi) > 0.6 and win >= 60:
-            score += ofi * 12   # 0.6*12=7.2 突破 weak, 0.8*12=9.6 突破 medium
-
-    # ---- v5.10: 二选一方向(无neutral), 方向由半K线body决定(延续核心信号) ----
+    # ---- v6.0: 真 OFI 方向判定 (替代 v5.10 body 延续) ----
+    # 主源 = 当前K线原生 in-candle ofi_n (REST tb 聚合, 天然K线对齐, 零 WS 依赖)
+    # 辅源 = WS ofi.json (ofi_candle/ofi_60/feed_fresh) 做新鲜度反转保护与交叉校准
+    # 净流入 → bull, 净流出 → bear, 无显著信号/流量不足 → neutral (宁缺毋滥).
+    # 方向一票交给 OFI: body 不再决定 bias, 只作 display.
     body = candles[-1]["c"] - candles[-1]["o"]
-    bias = "bull" if body > 0 else "bear"
+    ofi_dir, ofi_meta = ("neutral", {})
+    if isinstance(mtf, dict):
+        ofi_dir, ofi_meta = ofi_direction(candles, mtf, candle_progress, atr_val)
+    bias = ofi_dir  # 'bull' / 'bear' / 'neutral'
     strength = "strong" if abs(score) > 25 else ("medium" if abs(score) > 6 else "weak")
 
-    # ---- v5.9.2: 收盘方向概率 = 半K线延续概率 ----
-    confidence = close_direction_confidence(candle_progress, body, atr_val)
+    # ---- v6.0: 收盘方向概率 = OFI 校准概率 (替代 close_direction_confidence 延续概率) ----
+    remaining_sec = max(0, int(300 - (candle_progress or 0) * 300))
+    ofi_p, ofi_p_meta = ofi_probability(
+        candles, mtf if isinstance(mtf, dict) else None, body, atr_val,
+        candle_progress, remaining_sec)
+    confidence = max(35, int(round(ofi_p * 100)))
+    if bias == "neutral":
+        confidence = min(confidence, 50)  # 中性不装强
+    ofi_meta.update(ofi_p_meta)
 
     # v5.7.1 P0-1: ATR spike时confidence减半 -- 黑天鹅防护
     is_spike, spike_ratio, spike_count = atr_spike_detect(candles, atr_val)
     if is_spike:
         confidence = max(35, int(confidence * 0.5))
 
-    return bias, strength, confidence, int(score), factors, regime, fng_black_swan
+    return bias, strength, confidence, int(score), factors, regime, fng_black_swan, ofi_meta
 
 # ======================== Price Prediction ========================
 
@@ -1002,7 +1163,7 @@ def run():
     vr = vol_regime_ratio(closes)
 
     progress = min(info["progress_pct"] / 100, 1.0)
-    bias, strength, confidence, score, factors, regime, fng_black_swan = direction_rule_v5(
+    (bias, strength, confidence, score, factors, regime, fng_black_swan, ofi_meta) = direction_rule_v5(
         candles, closes, atr_val, vr, depth, progress, fng_value=fng.get("value"),
         mtf=mtf)
 
@@ -1036,7 +1197,7 @@ def run():
     is_spike, spike_ratio, spike_count = atr_spike_detect(candles, atr_val)
 
     result = {
-        "version": "5.9.0",
+        "version": "6.0.0",
         "candle": info,
         "price": {
             "current": cur["c"], "open": cur["o"],
@@ -1058,7 +1219,25 @@ def run():
         "fng": fng,
         "factors": {k: round(v, 3) if isinstance(v, float) else v for k, v in factors.items()},
         "regime": regime,
-        "mtf": mtf,  # v5.9: 多周期结构 (tf_4h_slope/tf_1h_adx/tf_1h_slope/tf_15m_pctb)
+        "mtf": mtf,  # v5.9: 多周期结构 (tf_4h_slope/tf_1h_adx/tf_1h_slope/tf_15m_pctb) + ofi 缓存
+        "ofi": {  # v6.0: 真 OFI 决策元数据 (realtime 记账与复盘用)
+            "direction": bias,
+            "ofi_n": ofi_meta.get("ofi_n"),
+            "ofi_60": ofi_meta.get("ofi_60"),
+            "gap": ofi_meta.get("gap"),
+            "p_cal": ofi_meta.get("p_cal"),
+            "cal_n": ofi_meta.get("cal_n"),
+            "cal_bucket": list(ofi_meta.get("cal_bucket", ())) or None,
+            "vol_gate": ofi_meta.get("vol_gate"),
+            "vol_frac": ofi_meta.get("vol_frac"),
+            "cr": ofi_meta.get("cr"),
+            "cr_ok": ofi_meta.get("cr_ok"),
+            "feed_fresh": mtf.get("feed_fresh"),
+            "agg_native": mtf.get("agg_native"),
+            "reversed_60": ofi_meta.get("reversed_60", False),
+            "ws_conflict": ofi_meta.get("ws_conflict", False),
+            "early": ofi_meta.get("early", False),
+        },
         "chainlink_offset": cl_offset,  # v5.6: Binance>Chainlink 价格偏移
         "atr_spike": {"detected": is_spike, "ratio": round(spike_ratio, 2),
                       "consecutive": spike_count},  # v5.7.1 P0-1
