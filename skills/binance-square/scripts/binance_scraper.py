@@ -14,6 +14,7 @@ import json
 import os
 import re
 import sys
+import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -25,6 +26,9 @@ import websockets
 
 
 CDP_BASE = "http://127.0.0.1:9222"
+# 本地 CDP 请求必须绕过 macOS 系统代理：否则代理会把 127.0.0.1:9222
+# 转成 HTTP 503，掩盖真实的 "CDP 未启动" 状态。
+_LOCAL_CDP_OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 BINANCE_SQUARE = "https://www.binance.com/en/square"
 LOCAL_TIMEZONE = "America/Los_Angeles"
 
@@ -204,7 +208,7 @@ def annotate_against_history(posts, state):
 
 
 async def get_binance_tab():
-    with urllib.request.urlopen(f"{CDP_BASE}/json", timeout=5) as response:
+    with _LOCAL_CDP_OPENER.open(f"{CDP_BASE}/json", timeout=5) as response:
         tabs = json.loads(response.read())
     for tab in tabs:
         url = tab.get("url", "")
@@ -997,8 +1001,30 @@ async def main(argv=None):
             return False
 
         try:
-            with urllib.request.urlopen(f"{CDP_BASE}/json/version", timeout=3):
+            with _LOCAL_CDP_OPENER.open(f"{CDP_BASE}/json/version", timeout=3):
                 pass
+        except urllib.error.HTTPError as error:
+            print(f"[FAIL] CDP HTTP {error.code}: {error}", file=sys.stderr)
+            write_error(
+                error,
+                capture_attempt_no=args.capture_attempt_no,
+                capture_attempt_limit=args.capture_attempt_limit,
+            )
+            return False
+        except urllib.error.URLError as error:
+            print(f"[FAIL] CDP {CDP_BASE} 未启动: {error}", file=sys.stderr)
+            write_error(
+                RuntimeError(
+                    "Chrome CDP (127.0.0.1:9222) 未启动，采集环境缺失。"
+                    "请启动带 --remote-debugging-port=9222 的 Chrome 并打开 "
+                    "https://www.binance.com/en/square 登录后重试。"
+                ),
+                capture_attempt_no=args.capture_attempt_no,
+                capture_attempt_limit=args.capture_attempt_limit,
+            )
+            return False
+
+        try:
             await asyncio.wait_for(
                 scrape(
                     capture_attempt_no=args.capture_attempt_no,

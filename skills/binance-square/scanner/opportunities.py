@@ -196,7 +196,7 @@ def build_consensus_index(
 
 
 _NUMBER = r"(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?"
-_FIELD_END = r"(?=\s*(?:\n|$))"
+_FIELD_END = r"(?=\s*(?:\n|$|[-–—~]))"
 
 
 def _decimal(value: str | None) -> Decimal | None:
@@ -247,15 +247,15 @@ def _symbol(text: str) -> str:
 
 def _field_price(text: str, names: str) -> Decimal | None:
     match = re.search(
-        rf"(?im)^\s*(?:{names})\s*[:：]\s*({_NUMBER}){_FIELD_END}", text
+        rf"(?im)^\s*(?:{names})\s*[:：]?\s*\$?({_NUMBER}){_FIELD_END}", text
     )
     return _decimal(match.group(1)) if match else None
 
 
 def _entry(text: str) -> tuple[Decimal | None, Decimal | None, Decimal | None]:
     match = re.search(
-        rf"(?im)^\s*(?:entry(?:\s+(?:zone|price))?|buy\s+zone|sell\s+zone)\s*[:：]\s*"
-        rf"({_NUMBER})(?:\s*(?:-|–|—|~|to)\s*({_NUMBER}))?{_FIELD_END}",
+        rf"(?im)^\s*(?:entry(?:\s+(?:zone|price|range))?|buy\s+zone|sell\s+zone)\s*[:：]?\s*"
+        rf"\$?({_NUMBER})(?:\s*(?:-|–|—|~|to)\s*\$?({_NUMBER}))?{_FIELD_END}",
         text,
     )
     if not match:
@@ -329,9 +329,9 @@ def _extract_from_text(text: str) -> dict[str, Any]:
         "entry_low": entry_low,
         "entry_high": entry_high,
         "entry_price": entry_price,
-        "stop_loss": _field_price(text, r"sl|stop\s*loss|stop"),
-        "tp1": _field_price(text, r"tp\s*1|target\s*1|take\s*profit\s*1"),
-        "tp2": _field_price(text, r"tp\s*2|target\s*2|take\s*profit\s*2"),
+        "stop_loss": _field_price(text, r"sl\b|stop\s*loss|stop\b"),
+        "tp1": _field_price(text, r"tp\s*[:：]|tp\s*1\b|target\s*1\b|take\s*profit\s*1\b"),
+        "tp2": _field_price(text, r"tp\s*2\b|target\s*2\b|take\s*profit\s*2\b"),
         "invalidation": _invalidation(text),
     }
 
