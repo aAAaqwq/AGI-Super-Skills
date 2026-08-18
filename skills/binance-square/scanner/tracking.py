@@ -155,10 +155,10 @@ def tracking_signal_from_scored(
         raise ContractViolation("only publishable TOP/WATCH opportunities can be tracked")
     if (
         opportunity.rank_bucket is RankBucket.TOP
-        and opportunity.total_score < 75
+        and opportunity.total_score < 55
     ) or (
         opportunity.rank_bucket is RankBucket.WATCH
-        and opportunity.total_score < 65
+        and opportunity.total_score < 40
     ):
         raise ContractViolation("tracking rank bucket and score are inconsistent")
     candidate = opportunity.candidate
