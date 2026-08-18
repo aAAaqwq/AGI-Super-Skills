@@ -16,6 +16,7 @@ v2 特性：
 
 import json
 import sys
+import time
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
@@ -24,12 +25,22 @@ from typing import Any
 FAPI = "https://fapi.binance.com"
 _OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 
+# 节流：Binance 公共 API 对突发请求有风控（-1003 封 IP），
+# 全局保证每次请求间隔 >= 0.35s，把 ~140 次请求分散到 ~50s，避免触发封禁。
+_LAST_REQ = 0.0
+_MIN_REQ_INTERVAL = 0.35
+
 
 def _get(path: str, params: dict[str, str] | None = None, timeout: float = 10) -> Any:
+    global _LAST_REQ
+    wait = _MIN_REQ_INTERVAL - (time.monotonic() - _LAST_REQ)
+    if wait > 0:
+        time.sleep(wait)
     url = FAPI + path
     if params:
         url += "?" + "&".join(f"{k}={v}" for k, v in params.items())
     req = urllib.request.Request(url, headers={"User-Agent": "swing-scanner/1.0"})
+    _LAST_REQ = time.monotonic()
     with _OPENER.open(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode())
 
