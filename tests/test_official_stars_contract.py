@@ -42,6 +42,17 @@ class OfficialStarsContractTests(unittest.TestCase):
         self.assertIn("persist-credentials: false", workflow)
         self.assertNotIn("git push origin HEAD:main", workflow)
 
+    def test_pages_workflow_uses_the_dedicated_star_history_token(self) -> None:
+        workflow = (ROOT / ".github/workflows/pages.yml").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn(
+            "GITHUB_TOKEN: ${{ secrets.STAR_HISTORY_TOKEN || github.token }}",
+            workflow,
+        )
+        self.assertNotIn("GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}", workflow)
+
     def test_pages_workflow_uses_a_site_scoped_quality_gate(self) -> None:
         workflow = (ROOT / ".github/workflows/pages.yml").read_text(
             encoding="utf-8"

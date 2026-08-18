@@ -3990,7 +3990,7 @@
           "spdx": "MIT"
         },
         "origin_kind": "project-original",
-        "review_state": "reviewed"
+        "review_state": "stale"
       },
       "review_signals": [],
       "skill_id": "binance-square",

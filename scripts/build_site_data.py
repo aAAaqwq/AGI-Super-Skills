@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 
-API_VERSION = "2022-11-28"
+API_VERSION = "2026-03-10"
 DEFAULT_REPOSITORY = "aAAaqwq/AGI-Super-Team"
 USER_AGENT = "agi-super-team-site-data/1.0"
 HISTORY_UNAVAILABLE_STATUS_CODES = frozenset({401, 403, 429})
