@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "scope": "deterministic-structural-evidence-not-semantic-verification",
   "summary": {
-    "inventoryCount": 827,
+    "inventoryCount": 829,
     "structureInvalid": 175,
-    "disclosureWarnings": 568,
-    "executionReviewRequired": 175,
+    "disclosureWarnings": 569,
+    "executionReviewRequired": 176,
     "issueCounts": {
-      "description-missing-trigger": 263,
+      "description-missing-trigger": 264,
       "description-over-180": 293,
       "invalid-frontmatter-yaml": 35,
       "link-outside-repository": 5,
@@ -15,7 +15,7 @@
       "name-folder-mismatch": 71,
       "over-500-lines": 55,
       "personal-absolute-path": 51,
-      "scripts-without-test-evidence": 174,
+      "scripts-without-test-evidence": 175,
       "unmentioned-assets": 10,
       "unmentioned-references": 55,
       "unmentioned-scripts": 76,
@@ -3023,6 +3023,17 @@
       "issues": [
         "description-missing-trigger",
         "personal-absolute-path"
+      ]
+    },
+    {
+      "skill_id": "jiuyangongshe-stock-industry-logic",
+      "path": "skills/jiuyangongshe-stock-industry-logic/SKILL.md",
+      "structure_status": "pass",
+      "disclosure_status": "warn",
+      "execution_status": "review-required",
+      "issues": [
+        "description-missing-trigger",
+        "scripts-without-test-evidence"
       ]
     },
     {

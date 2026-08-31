@@ -42,7 +42,7 @@ Choose a reviewed origin boundary before browsing by outcome. Provenance and cur
 | [Project original](#project-original-skills) | Digest-backed first-party work with reviewed authorship. | 34 |
 | [Adapted](#adapted-skills) | Modified from a named source with the adaptation recorded. | 0 |
 | [Collected](#collected-skills) | Preserved from a named source with provenance recorded. | 0 |
-| [Unknown origin](#unknown-origin-skills) | Source review is incomplete; inspect before use. | 793 |
+| [Unknown origin](#unknown-origin-skills) | Source review is incomplete; inspect before use. | 795 |
 
 <a id="project-original-skills"></a>
 ### Project original
@@ -105,11 +105,11 @@ No entries currently meet this provenance contract.
 
 Source review is incomplete; inspect before use.
 
-793 entries are awaiting source review. Use the [machine-readable index](./skill-index.json) or browse by outcome below; they are not promoted as curated recommendations.
+795 entries are awaiting source review. Use the [machine-readable index](./skill-index.json) or browse by outcome below; they are not promoted as curated recommendations.
 
 ## 🗂️ Browse by outcome
 
-This revision contains 827 canonical catalog entries. The number is generated here rather than used as a product claim.
+This revision contains 829 canonical catalog entries. The number is generated here rather than used as a product claim.
 
 | Category | Use it for | Entries |
 |---|---|---:|
@@ -120,9 +120,9 @@ This revision contains 827 canonical catalog entries. The number is generated he
 | [🛡️ Security, Privacy & Legal](#security-privacy-legal) | Review security, privacy, compliance, permissions, contracts, and legal risk. | 34 |
 | [🎨 Product, Design & UX](#product-design-ux) | Shape product requirements, interfaces, design systems, and user experience. | 22 |
 | [📈 Marketing, SEO & Growth](#marketing-seo-growth) | Acquire audiences through positioning, campaigns, search, ads, and social growth. | 49 |
-| [✍️ Content, Media & Publishing](#content-media-publishing) | Create, edit, repurpose, and publish writing, images, audio, and video. | 87 |
+| [✍️ Content, Media & Publishing](#content-media-publishing) | Create, edit, repurpose, and publish writing, images, audio, and video. | 88 |
 | [🤝 Sales, CRM & Customer Success](#sales-crm-customer-success) | Find, win, onboard, support, and retain customers with accountable workflows. | 40 |
-| [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 69 |
+| [💹 Finance, Trading & Markets](#finance-trading-markets) | Analyze markets, backtest strategies, track portfolios, and review financial risk. | 70 |
 | [🧭 Business Operations & Strategy](#business-operations-strategy) | Plan work, make decisions, manage teams, and improve operating systems. | 74 |
 | [⚙️ Apps & Workflow Automation](#apps-workflow-automation) | Connect everyday apps, browsers, messaging systems, and repeatable workflows. | 89 |
 | [🇨🇳 Chinese Platform Workflows](#chinese-platform-workflows) | Create, analyze, and publish for major Chinese-language platforms and channels. | 40 |
@@ -583,6 +583,7 @@ Create, edit, repurpose, and publish writing, images, audio, and video.
 | [`arch-video-cut`](../skills/arch-video-cut/) | Automatic architecture video editing workflow with self-learning preferences | Unknown · unreviewed | Unscored | Catalog only |
 | [`article-material-collect`](../skills/article-material-collect/) | 上层编排 Skill，通过 **Brave Search 发现 → 智能选择浏览器截图** 完成结构化素材采集。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`article-to-infographic`](../skills/article-to-infographic/) | 长文/测评文章 → 知识视觉笔记套图（3-5张）。自动提炼核心逻辑、规划分镜、生成高阶图像Prompt（4模块结构）。支持手写笔记/思维导图/架构图/对比矩阵四种风格。Use when: 文章转知识笔记、知识笔记图片、思维导图、视觉笔记、长文转图、知识卡片、文章可视化、article to infographic、knowledge… | Unknown · unreviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
+| [`atlas-video-gen`](../skills/atlas-video-gen/) | Generate one Veo 3.1 Lite video through Atlas Cloud. Use when text-to-video needs an Atlas route, explicit paid-request confirmation, bounded polling, and a local MP4. | Unknown · unreviewed | Unscored | Catalog only |
 | [`cinematic-video-gen`](../skills/cinematic-video-gen/) | AI视频生成质量增强引擎。解决AI视频角色僵硬、表情空白、动作机械的问题。通过高级prompt工程+角色卡+运镜指令+表情库，让AI视频角色活起来。触发词：视频质量、角色僵硬、灵动、表情、动作、cinematic video、视频生成增强、MV视频、角色动画 | Unknown · unreviewed | Unscored | Catalog only |
 | [`code-to-image`](../skills/code-to-image/) | 最强免费生图方案：用前端代码(HTML/CSS/JS/Canvas/SVG)设计画面，通过 Playwright 渲染为任意分辨率高清 PNG。 零API成本、无限分辨率、中文100%准确、代码可复用、Git可追踪。 配合 frontend-design / canvas-design / frontend-design-ultimate 产出 HTML… | Unknown · unreviewed | Unscored | Catalog only |
 | [`content-cover-gen`](../skills/content-cover-gen/) | 内容驱动封面生成:从文章标题/核心观点自动生成视觉隐喻提示词,调用 relay-image-gen 出图。 每张封面3秒内传达文章核心观点,杜绝通用背景。 支持小红书(3:4)、抖音(9:16)、公众号(16:9)、知识星球(1:1)、掘金(16:9)。 触发:'生成封面'、'封面生成'、'cover'、'thumbnail'、'封面图'、'缩略图'。 | Project original · reviewed | Unscored | Harness-specific assignment · generic installer skips · CCO |
@@ -759,6 +760,7 @@ Analyze markets, backtest strategies, track portfolios, and review financial ris
 | [`invoice`](../skills/invoice/) | Manual invoice generation without CRM | Unknown · unreviewed | Unscored | Catalog only |
 | [`invoice-generator-agent`](../skills/invoice-generator-agent/) | Automatic invoice generation with CRM integration | Unknown · unreviewed | Unscored | Catalog only |
 | [`invoice-organizer`](../skills/invoice-organizer/) | Use when "organizing invoices", "sorting receipts", "tax preparation", "expense tracking", or asking about "invoice renaming", "financial documents", "bookkeeping automation" | Unknown · unreviewed | Unscored | Portable optional assignment · structure checked · CFO |
+| [`jiuyangongshe-stock-industry-logic`](../skills/jiuyangongshe-stock-industry-logic/) | 爬取韭研公社个股产业逻辑与异动解析。输入个股名（如白银有色），自动获取该股异动解析、题材标签、相关文章与产业逻辑内容。 | Unknown · unreviewed | Unscored | Catalog only |
 | [`llm-stock-analyzer`](../skills/llm-stock-analyzer/) | stock analysis, 个股分析, A股分析, 港股分析, 美股分析, daily analysis, 决策仪表盘 | Unknown · unreviewed | Unscored | Catalog only |
 | [`market-movers-scanner`](../skills/market-movers-scanner/) | Description needs review; inspect source. | Unknown · unreviewed | Unscored | Catalog only |
 | [`market-price-tracker`](../skills/market-price-tracker/) | Foundation skill providing real-time and historical cryptocurrency price data. This skill is the data layer for the crypto plugin ecosystem - 10+ othe | Unknown · unreviewed | Unscored | Catalog only |
