@@ -51,7 +51,7 @@
       "title": "Marketing, SEO & Growth"
     },
     {
-      "count": 87,
+      "count": 88,
       "description": "Create, edit, repurpose, and publish writing, images, audio, and video.",
       "emoji": "✍️",
       "id": "content-media-publishing",
@@ -65,7 +65,7 @@
       "title": "Sales, CRM & Customer Success"
     },
     {
-      "count": 69,
+      "count": 70,
       "description": "Analyze markets, backtest strategies, track portfolios, and review financial risk.",
       "emoji": "💹",
       "id": "finance-trading-markets",
@@ -100,7 +100,7 @@
       "title": "Specialized Domains & Utilities"
     }
   ],
-  "inventoryCount": 827,
+  "inventoryCount": 829,
   "inventorySemantics": "tracked physical top-level directories with SKILL.md",
   "schemaVersion": 2,
   "skills": [
@@ -2770,6 +2770,45 @@
       "used_by": [
         "COO"
       ]
+    },
+    {
+      "assignments": [],
+      "category_id": "content-media-publishing",
+      "classification": "slug:video;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "video"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "content-media-publishing",
+          "match_count": 1,
+          "matched_signals": [
+            "video"
+          ],
+          "priority": 100,
+          "tie_detected": false
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "Generate one Veo 3.1 Lite video through Atlas Cloud. Use when text-to-video needs an Atlas route, explicit paid-request confirmation, bounded polling, and a local MP4.",
+      "description_status": "source-text",
+      "path": "skills/atlas-video-gen/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "origin_kind": "unknown",
+        "review_state": "unreviewed"
+      },
+      "review_signals": [],
+      "skill_id": "atlas-video-gen",
+      "support_level": "catalog",
+      "used_by": []
     },
     {
       "assignments": [],
@@ -16814,6 +16853,45 @@
       "used_by": [
         "COO"
       ]
+    },
+    {
+      "assignments": [],
+      "category_id": "finance-trading-markets",
+      "classification": "slug:stock;metadata:frontmatter",
+      "classification_details": {
+        "matched_signals": [
+          "stock"
+        ],
+        "method": "slug",
+        "resolution_status": "rule-match",
+        "review_state": "unreviewed",
+        "runner_ups": [],
+        "winner": {
+          "category_id": "finance-trading-markets",
+          "match_count": 1,
+          "matched_signals": [
+            "stock"
+          ],
+          "priority": 120,
+          "tie_detected": false
+        }
+      },
+      "curation": {
+        "runtime_evidence": "pending",
+        "status": "unscored"
+      },
+      "description": "爬取韭研公社个股产业逻辑与异动解析。输入个股名（如白银有色），自动获取该股异动解析、题材标签、相关文章与产业逻辑内容。",
+      "description_status": "source-text",
+      "path": "skills/jiuyangongshe-stock-industry-logic/SKILL.md",
+      "portability_class": "catalog-only",
+      "provenance": {
+        "origin_kind": "unknown",
+        "review_state": "unreviewed"
+      },
+      "review_signals": [],
+      "skill_id": "jiuyangongshe-stock-industry-logic",
+      "support_level": "catalog",
+      "used_by": []
     },
     {
       "assignments": [],
